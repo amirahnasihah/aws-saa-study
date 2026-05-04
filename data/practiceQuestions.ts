@@ -295,4 +295,54 @@ export const practiceQuestions: PracticeQuestion[] = [
     },
     keywords: ['DLQ', 'Dead Letter Queue', 'maxReceiveCount', 'poison pill', 'SQS retry'],
   },
+  {
+    id: 'q-cicd-pipeline',
+    domain: 'd3',
+    domainLabel: 'High-Performing Architectures',
+    difficulty: 'Easy',
+    scenario:
+      'A development team wants to automate their software release process on AWS. Every time a developer pushes code, the system should automatically compile and test the code, then deploy it to their EC2 fleet. Which combination of AWS services should the Solutions Architect recommend?',
+    options: [
+      { id: 'a', text: 'AWS CodeCommit + AWS CodeBuild + AWS CodeDeploy + AWS CodePipeline' },
+      { id: 'b', text: 'AWS CodeCommit + AWS Lambda + Amazon S3' },
+      { id: 'c', text: 'Amazon S3 + AWS CloudFormation + AWS Elastic Beanstalk' },
+      { id: 'd', text: 'AWS CodeCommit + AWS Systems Manager + Amazon EC2' },
+    ],
+    correctId: 'a',
+    explanation: {
+      correct:
+        'CodeCommit + CodeBuild + CodeDeploy + CodePipeline is the correct full CI/CD suite on AWS. CodeCommit stores the source code (Git). CodeBuild compiles and runs tests on every push. CodeDeploy pushes the built artifact to the EC2 fleet. CodePipeline is the orchestrator — it detects the push to CodeCommit and triggers each step in sequence automatically. Together they form a fully managed, end-to-end pipeline.',
+      incorrects: {
+        b: 'CodeCommit + Lambda + S3 is incorrect. While Lambda can be triggered by events and S3 can store artifacts, this is not a standard CI/CD pipeline. Lambda is not a build service, and there is no deployment orchestration here. You would have to build all the pipeline logic manually.',
+        c: 'S3 + CloudFormation + Elastic Beanstalk is incorrect. CloudFormation provisions infrastructure and Beanstalk deploys applications, but there is no source control (no CodeCommit) and no build/test step. This combination cannot automatically trigger on a code push.',
+        d: 'CodeCommit + SSM + EC2 is incorrect. SSM Run Command can run scripts on EC2 instances but is not a build or deployment pipeline tool. There is no build/test step, no artifact management, and no automated trigger on code push.',
+      },
+    },
+    keywords: ['CodePipeline', 'CodeCommit', 'CodeBuild', 'CodeDeploy', 'CI/CD', 'DevOps pipeline'],
+  },
+  {
+    id: 'q-codecommit-vs-github',
+    domain: 'd1',
+    domainLabel: 'Secure Architectures',
+    difficulty: 'Easy',
+    scenario:
+      'A company wants to store their application source code in a private Git repository. The security policy requires that access to the repository must be controlled using AWS IAM and the code must never be exposed to the public internet. Which AWS service should the Solutions Architect choose?',
+    options: [
+      { id: 'a', text: 'Host a self-managed GitLab server on EC2' },
+      { id: 'b', text: 'AWS CodeCommit' },
+      { id: 'c', text: 'Amazon S3 with versioning enabled' },
+      { id: 'd', text: 'GitHub with private repositories' },
+    ],
+    correctId: 'b',
+    explanation: {
+      correct:
+        'AWS CodeCommit is correct. CodeCommit is a fully managed private Git repository service that lives entirely within AWS. Access is controlled natively via IAM policies — no separate user accounts needed. It never exposes data to the public internet, integrates directly with CodePipeline/CodeBuild, and supports standard Git operations.',
+      incorrects: {
+        a: 'Self-managed GitLab on EC2 is incorrect. While technically possible, running GitLab on EC2 means you manage the server, patching, scaling, and backups yourself. It also does not natively integrate with IAM. For a managed solution in AWS, CodeCommit is the correct answer.',
+        c: 'S3 with versioning is incorrect. S3 stores objects (files) with version history, but it is not a Git repository. It has no concept of branches, commits, pull requests, or diff tracking. You cannot run git clone or git push against S3.',
+        d: 'GitHub with private repos is incorrect. GitHub is a third-party service outside AWS. Even with private repos, code leaves the AWS network. Access is managed through GitHub accounts, not IAM. This violates the "must be controlled via IAM" requirement.',
+      },
+    },
+    keywords: ['CodeCommit', 'IAM', 'private Git', 'source control', 'AWS-native'],
+  },
 ]
