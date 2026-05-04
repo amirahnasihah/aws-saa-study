@@ -33,7 +33,7 @@ jobs:
 
             - name: Run linter
               if: steps.check_package.outputs.exists == 'true'
-              run: bun run lint --if-present
+              run: bun run lint
 
             - name: Run tests
               if: steps.check_package.outputs.exists == 'true'
