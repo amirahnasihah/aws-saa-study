@@ -15,6 +15,7 @@ export interface PracticeQuestion {
     correct: string
     incorrects: Record<string, string>
   }
+  reference?: string
   keywords: string[]
 }
 
@@ -468,6 +469,137 @@ export const practiceQuestions: PracticeQuestion[] = [
         d: 'Moving to public subnet is incorrect. This exposes the EC2 instances to the internet, creating a security risk. The requirement is to keep instances private while reducing NAT costs.',
       },
     },
+    reference: 'https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints.html',
     keywords: ['VPC endpoint', 'Gateway endpoint', 'S3', 'free', 'NAT cost reduction', 'private subnet'],
+  },
+  {
+    id: 'q-elb-cross-vpc',
+    domain: 'd2',
+    domainLabel: 'Resilient Architectures',
+    difficulty: 'Hard',
+    scenario:
+      'A company has multiple Amazon VPCs that are peered with each other within the same region. The company wants to use a single Elastic Load Balancer to route traffic to multiple EC2 instances across these peered VPCs. How can this be achieved?',
+    options: [
+      { id: 'a', text: 'This is possible using the Classic Load Balancer (CLB) if using Instance IDs' },
+      { id: 'b', text: 'This is possible using the NLB and ALB if using IP addresses as targets' },
+      { id: 'c', text: 'This is not possible — the instances that an ELB routes traffic to must be in the same VPC' },
+      { id: 'd', text: 'This is not possible with ELB — you would need to use Route 53' },
+    ],
+    correctId: 'b',
+    explanation: {
+      correct:
+        'NLB and ALB support IP address-based targets, which allows routing to instances in peered VPCs. With IP targets you can register: instances in a peered VPC, AWS resources addressable by IP and port, and on-premises resources linked via Direct Connect or a VPN connection. The key is using IP addresses (not instance IDs) as the target type.',
+      incorrects: {
+        a: 'Classic Load Balancer (CLB) is incorrect. CLB only supports instance ID-based targets and only within the same VPC. It does NOT support cross-VPC routing even with instance IDs.',
+        c: 'Incorrect. ALB and NLB CAN route traffic to instances in peered VPCs — this is a supported and documented feature when IP addresses are used as the target type.',
+        d: 'Route 53 is incorrect for this use case. While Route 53 handles DNS routing, the requirement is load balancing across instances. NLB and ALB with IP targets solve this directly without needing Route 53.',
+      },
+    },
+    reference: 'https://aws.amazon.com/blogs/aws/new-application-load-balancing-via-ip-address-to-aws-on-premises-resources/',
+    keywords: ['ALB', 'NLB', 'cross-VPC', 'IP target', 'peered VPC', 'load balancer', 'CLB limitation'],
+  },
+  {
+    id: 'q-rds-cross-region',
+    domain: 'd2',
+    domainLabel: 'Resilient Architectures',
+    difficulty: 'Hard',
+    scenario:
+      'A large multi-national company needs a multi-region database design. The master database will be in EU (Frankfurt) and databases will be located in 4 other regions to service local read traffic. The solution must be a fully managed service including replication, cost-effective, and secure. Which AWS service delivers these requirements?',
+    options: [
+      { id: 'a', text: 'RDS with cross-region Read Replicas' },
+      { id: 'b', text: 'ElastiCache with Redis and clustering mode enabled' },
+      { id: 'c', text: 'RDS with Multi-AZ' },
+      { id: 'd', text: 'EC2 instances with EBS replication' },
+    ],
+    correctId: 'a',
+    explanation: {
+      correct:
+        'RDS with cross-region Read Replicas is correct. Read Replicas can be created in different AWS regions, providing: data replication across multiple regions, read scalability (local users read from nearby replica without sending all traffic to Frankfurt), and optional promotion to master for disaster recovery. RDS is fully managed including replication.',
+      incorrects: {
+        b: 'ElastiCache with Redis is incorrect. ElastiCache is a caching layer — it is not a relational database. It does not provide database replication or structured data availability for the scenario described. It could enhance performance but cannot replace a database.',
+        c: 'RDS Multi-AZ is incorrect. Multi-AZ provides high availability within a SINGLE region by maintaining a synchronous standby in a different AZ. It does NOT replicate across multiple regions. Remember: Multi-AZ = same-region HA. Cross-Region Read Replicas = multi-region read scaling.',
+        d: 'EC2 with EBS replication is incorrect. This is not a managed service — you would need to manage the database engine, replication logic, patching, backups, and scaling yourself. This violates the "fully managed service including replication" requirement.',
+      },
+    },
+    reference: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html',
+    keywords: ['RDS', 'cross-region Read Replicas', 'multi-region', 'Multi-AZ vs Read Replicas', 'managed database', 'read scaling'],
+  },
+  {
+    id: 'q-sg-default-state',
+    domain: 'd1',
+    domainLabel: 'Secure Architectures',
+    difficulty: 'Easy',
+    scenario:
+      'A Solutions Architect creates a new custom security group in a VPC with no rules added. Which statement correctly describes the default behavior of this new custom security group?',
+    options: [
+      { id: 'a', text: 'All inbound traffic is denied and all outbound traffic to all IP addresses is allowed' },
+      { id: 'b', text: 'All inbound traffic is allowed and all outbound traffic is denied' },
+      { id: 'c', text: 'There is an inbound rule allowing traffic from the Internet Gateway' },
+      { id: 'd', text: 'All inbound and all outbound traffic is denied' },
+    ],
+    correctId: 'a',
+    explanation: {
+      correct:
+        'A custom security group created with no rules has: no inbound rules (all inbound traffic is implicitly denied — there are zero allow rules), and one default outbound rule that allows ALL traffic to all IP addresses (0.0.0.0/0 and ::/0). This is the standard default state for any custom security group.',
+      incorrects: {
+        b: 'Reversed. Inbound is DENIED (not allowed) and outbound is ALLOWED (not denied). Default outbound allows all traffic.',
+        c: 'Incorrect. A new custom security group has NO inbound rules at all. There is no default rule allowing traffic from an Internet Gateway. All inbound traffic is denied until you explicitly add allow rules.',
+        d: 'Incorrect. Outbound is NOT denied by default. Security groups always have a default outbound rule that allows all traffic to all destinations. Only inbound is blocked by default.',
+      },
+    },
+    reference: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html',
+    keywords: ['Security Group', 'default rules', 'inbound denied', 'outbound allowed', 'custom SG', 'implicit deny'],
+  },
+  {
+    id: 'q-redshift-encryption',
+    domain: 'd1',
+    domainLabel: 'Secure Architectures',
+    difficulty: 'Medium',
+    scenario:
+      'A client has unencrypted data in an Amazon Redshift cluster and wants to encrypt the data at rest. What is the recommended approach?',
+    options: [
+      { id: 'a', text: 'Move the Redshift cluster from a public subnet to a private subnet' },
+      { id: 'b', text: 'Enable AWS KMS encryption on the Redshift cluster' },
+      { id: 'c', text: 'Use SSL/TLS connections to the cluster' },
+      { id: 'd', text: 'Attach Amazon EBS volumes with encryption enabled' },
+    ],
+    correctId: 'b',
+    explanation: {
+      correct:
+        'AWS KMS is the correct answer for encrypting Redshift data AT REST. Enabling KMS encryption causes Redshift to encrypt all data blocks and system metadata using AES-256. You can use an AWS-managed key or a customer-managed key (CMK). For an existing unencrypted cluster, you can modify it to enable KMS — Redshift automatically migrates the data to a new encrypted cluster. Snapshots from an encrypted cluster are also automatically encrypted.',
+      incorrects: {
+        a: 'Moving to a private subnet improves network security (restricts direct internet access) but does NOT encrypt data stored on disk. Network isolation and encryption at rest are completely separate security controls.',
+        c: 'SSL/TLS is incorrect for encrypting data AT REST. SSL/TLS encrypts data IN TRANSIT — data moving between the client application and the Redshift cluster over the network. The question asks about encrypting data stored on disk, which requires KMS.',
+        d: 'EBS volumes is incorrect. Amazon Redshift manages its own internal storage and does NOT use Amazon EBS volumes. You cannot encrypt Redshift storage by attaching EBS volumes. Redshift encryption is configured through KMS or CloudHSM, not EBS.',
+      },
+    },
+    reference: 'https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html',
+    keywords: ['Redshift', 'KMS', 'encryption at rest', 'SSL transit', 'AES-256', 'at rest vs in transit'],
+  },
+  {
+    id: 'q-aws-batch',
+    domain: 'd4',
+    domainLabel: 'Cost-Optimized Architectures',
+    difficulty: 'Medium',
+    scenario:
+      'A financial services company regularly runs analysis of daily transaction costs, execution reporting, and market performance. They currently use third-party commercial software for provisioning, managing, monitoring, and scaling a large fleet of EC2 instances for these computing jobs. The company wants to reduce costs and use AWS services. Which AWS service should replace the third-party software?',
+    options: [
+      { id: 'a', text: 'Amazon Lex' },
+      { id: 'b', text: 'AWS Batch' },
+      { id: 'c', text: 'AWS Systems Manager' },
+      { id: 'd', text: 'Amazon Athena' },
+    ],
+    correctId: 'b',
+    explanation: {
+      correct:
+        'AWS Batch is the correct answer. AWS Batch eliminates the need for third-party batch processing software by managing all the infrastructure: provisioning the right type and quantity of compute resources, job queue management and scheduling, monitoring, and automatic scaling. You define the batch jobs and Batch handles the rest — no batch software or servers to install or manage.',
+      incorrects: {
+        a: 'Amazon Lex is incorrect. Lex is a service for building conversational interfaces (chatbots) using voice and text. It has no relevance to batch computing or managing EC2 fleets.',
+        c: 'AWS Systems Manager is incorrect. SSM gives visibility and control over your existing infrastructure (patch management, Run Command, Parameter Store). It is not a batch job scheduling or EC2 fleet provisioning service.',
+        d: 'Amazon Athena is incorrect. Athena is an interactive query service for analyzing data in S3 using standard SQL. It is for ad-hoc data analysis, not for managing batch computing jobs across an EC2 fleet.',
+      },
+    },
+    reference: 'https://aws.amazon.com/batch/',
+    keywords: ['AWS Batch', 'batch computing', 'managed service', 'EC2 fleet', 'job scheduling', 'replace third-party'],
   },
 ]

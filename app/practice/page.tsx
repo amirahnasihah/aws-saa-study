@@ -428,6 +428,20 @@ function ExplanationBlock({
             </span>
           ))}
         </div>
+
+        {q.reference && (
+          <div className="pt-2 border-t border-aws-border/40">
+            <a
+              href={q.reference}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 font-space-mono text-[0.62rem] text-aws-muted hover:text-c4 transition-colors"
+            >
+              <span>📎</span>
+              <span>Official Reference →</span>
+            </a>
+          </div>
+        )}
       </div>
     </div>
   )
