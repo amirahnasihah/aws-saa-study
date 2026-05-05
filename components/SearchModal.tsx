@@ -75,13 +75,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
 
   useEffect(() => {
     if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 50)
-      setQuery('')
-      setActive(0)
+      setTimeout(() => {
+        inputRef.current?.focus()
+        setQuery('')
+        setActive(0)
+      }, 50)
     }
   }, [isOpen])
-
-  useEffect(() => { setActive(0) }, [query])
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -136,7 +136,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
           <div ref={listRef} className="mt-2 bg-aws-card border border-aws-border rounded-2xl overflow-hidden shadow-2xl">
             {results.length === 0 ? (
               <div className="px-5 py-8 text-center">
-                <p className="text-aws-muted text-sm">No results for <span className="text-aws-text">"{query}"</span></p>
+                <p className="text-aws-muted text-sm">No results for <span className="text-aws-text">&ldquo;{query}&rdquo;</span></p>
                 <p className="font-space-mono text-[0.65rem] text-aws-muted/60 mt-1">Try: IAM, Lambda, S3, DynamoDB...</p>
               </div>
             ) : (

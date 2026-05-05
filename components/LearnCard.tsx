@@ -65,6 +65,22 @@ export default function LearnCard({ service, category }: LearnCardProps) {
             </div>
           )}
 
+          {service.tips && service.tips.length > 0 && (
+            <div className="bg-amber-500/5 border border-amber-500/15 rounded-lg px-3 py-2.5">
+              <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-amber-400/70 mb-1.5">
+                🧠 Cara Mudah Ingat
+              </p>
+              <ul className="space-y-1">
+                {service.tips.map((tip) => (
+                  <li key={tip} className="text-[0.82rem] text-aws-text leading-relaxed flex gap-2">
+                    <span className="text-amber-400/60 shrink-0">→</span>
+                    <span>{tip}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {/* guna untuk */}
           <div className={`rounded-lg px-3 py-2 border border-dashed ${styles.scenario}`}>
             <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-aws-muted mb-1">Guna Bila</p>
@@ -80,6 +96,22 @@ export default function LearnCard({ service, category }: LearnCardProps) {
             </span>
           ))}
         </div>
+
+        {service.docs && service.docs.length > 0 && (
+          <div className="flex flex-wrap gap-2 mt-2 pt-2 border-t border-aws-border/40">
+            {service.docs.map((doc) => (
+              <a
+                key={doc.url}
+                href={doc.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-space-mono text-[0.6rem] border border-white/10 rounded-full px-2.5 py-0.5 text-aws-muted hover:text-aws-text hover:border-white/20 transition-colors"
+              >
+                📎 {doc.label}
+              </a>
+            ))}
+          </div>
+        )}
       </div>
     </article>
   )

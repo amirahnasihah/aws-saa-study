@@ -6,7 +6,7 @@ import { navDomains } from '@/data/awsServices'
 import SearchModal from './SearchModal'
 
 interface NavProps {
-  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'visual'
+  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'visual' | 'vpc'
 }
 
 export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
@@ -37,6 +37,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
         <PageLink href="/learn" label="Deep Notes" active={activePage === 'learn'} />
         <PageLink href="/practice" label="Practice" active={activePage === 'practice'} />
         <PageLink href="/visual" label="Visual" active={activePage === 'visual'} />
+        <PageLink href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
 
         <span className="text-aws-border text-sm shrink-0">·</span>
 
@@ -112,6 +113,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                 { href: '/learn',     label: 'Deep Notes',  icon: '📖', active: activePage === 'learn' },
                 { href: '/practice',  label: 'Practice',    icon: '✏️', active: activePage === 'practice' },
                 { href: '/visual',    label: 'Visual',      icon: '🗺️', active: activePage === 'visual' },
+                { href: '/vpc',       label: 'VPC Guide',   icon: '🏘️', active: activePage === 'vpc' },
               ].map((p) => (
                 <Link
                   key={p.href}
