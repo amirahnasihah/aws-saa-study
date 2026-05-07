@@ -1,4 +1,5 @@
 import Nav from '@/components/Nav'
+import GlossaryText from '@/components/GlossaryText'
 
 export const metadata = {
   title: 'AWS SAA-C03 — VPC Study Guide',
@@ -72,7 +73,7 @@ export default function VpcPage() {
                   <span className="text-xl shrink-0">{item.icon}</span>
                   <div>
                     <p className="font-space-mono text-[0.68rem] font-bold text-c4">{item.label}</p>
-                    <p className="text-[0.75rem] text-aws-muted leading-snug">{item.desc}</p>
+                    <p className="text-[0.75rem] text-aws-muted leading-snug"><GlossaryText text={item.desc} /></p>
                   </div>
                 </div>
               ))}
@@ -152,7 +153,7 @@ export default function VpcPage() {
                   'Guna untuk: web servers, ALB, NAT GW',
                 ].map((item) => (
                   <li key={item} className="flex gap-2 text-[0.78rem] text-aws-text leading-snug">
-                    <span className="text-c4 shrink-0 mt-0.5">✓</span> {item}
+                    <span className="text-c4 shrink-0 mt-0.5">✓</span> <GlossaryText text={item} />
                   </li>
                 ))}
               </ul>
@@ -171,7 +172,7 @@ export default function VpcPage() {
                   'Guna untuk: databases, app servers, Lambda',
                 ].map((item) => (
                   <li key={item} className="flex gap-2 text-[0.78rem] text-aws-text leading-snug">
-                    <span className="text-c3 shrink-0 mt-0.5">✓</span> {item}
+                    <span className="text-c3 shrink-0 mt-0.5">✓</span> <GlossaryText text={item} />
                   </li>
                 ))}
               </ul>
@@ -210,8 +211,8 @@ export default function VpcPage() {
                   ].map((row, i) => (
                     <tr key={row.f} className={`border-b border-aws-border/40 ${i % 2 !== 0 ? 'bg-white/[0.015]' : ''}`}>
                       <td className="font-space-mono font-bold text-[0.65rem] text-aws-muted p-3">{row.f}</td>
-                      <td className="text-aws-text p-3 bg-c2/[0.03]">{row.sg}</td>
-                      <td className="text-aws-text p-3 bg-c5/[0.03]">{row.nacl}</td>
+                      <td className="text-aws-text p-3 bg-c2/[0.03]"><GlossaryText text={row.sg} /></td>
+                      <td className="text-aws-text p-3 bg-c5/[0.03]"><GlossaryText text={row.nacl} /></td>
                     </tr>
                   ))}
                 </tbody>
@@ -256,7 +257,7 @@ export default function VpcPage() {
                   </div>
                   <div className={`flex-1 rounded-lg px-3 py-2 border mb-1 ${item.bg} ${item.border}`}>
                     <span className={`font-space-mono font-bold text-[0.68rem] ${item.color}`}>{item.label}</span>
-                    <p className="text-[0.72rem] text-aws-muted leading-snug">{item.desc}</p>
+                    <p className="text-[0.72rem] text-aws-muted leading-snug"><GlossaryText text={item.desc} /></p>
                   </div>
                 </div>
               ))}
@@ -270,7 +271,7 @@ export default function VpcPage() {
                 IGW → Internet
               </p>
               <p className="text-[0.72rem] text-amber-400/80 mt-1">
-                ⚠ NACL stateless = kena explicit outbound rule. SG stateful = auto allow reply. Ini selalu keluar dalam exam!
+                <GlossaryText text="⚠ NACL stateless = kena explicit outbound rule. SG stateful = auto allow reply. Ini selalu keluar dalam exam!" />
               </p>
             </div>
           </div>
@@ -334,8 +335,8 @@ export default function VpcPage() {
                   <span className="ml-auto font-space-mono text-[0.58rem] text-aws-muted bg-white/3 px-2 py-0.5 rounded-full border border-aws-border/40">{item.cost}</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[0.75rem]">
-                  <p><span className="text-c4 font-semibold">Guna bila: </span><span className="text-aws-text">{item.when}</span></p>
-                  <p><span className="text-aws-muted font-semibold">Tapi: </span><span className="text-aws-muted">{item.caveat}</span></p>
+                  <p><span className="text-c4 font-semibold">Guna bila: </span><span className="text-aws-text"><GlossaryText text={item.when} /></span></p>
+                  <p><span className="text-aws-muted font-semibold">Tapi: </span><span className="text-aws-muted"><GlossaryText text={item.caveat} /></span></p>
                 </div>
               </div>
             ))}
@@ -364,7 +365,7 @@ export default function VpcPage() {
                   <span className="text-amber-400 shrink-0 font-bold mt-0.5">→</span>
                   <div>
                     <span className="font-space-mono font-bold text-[0.68rem] text-amber-300/90">{item.label}: </span>
-                    <span className="text-[0.78rem] text-aws-text">{item.tip}</span>
+                    <span className="text-[0.78rem] text-aws-text"><GlossaryText text={item.tip} /></span>
                   </div>
                 </div>
               ))}
@@ -393,8 +394,8 @@ export default function VpcPage() {
               { s: 'Access SSM, ECR dari private subnet secara private', a: 'Interface VPC Endpoint (PrivateLink) — berbayar', c: 'text-c4' },
             ].map((row, i) => (
               <div key={i} className={`grid grid-cols-2 border-b border-aws-border/40 ${i % 2 !== 0 ? 'bg-white/[0.015]' : ''}`}>
-                <div className="px-4 py-2.5 text-[0.75rem] text-aws-muted">{row.s}</div>
-                <div className={`px-4 py-2.5 text-[0.75rem] font-semibold border-l border-aws-border/40 ${row.c}`}>{row.a}</div>
+                <div className="px-4 py-2.5 text-[0.75rem] text-aws-muted"><GlossaryText text={row.s} /></div>
+                <div className={`px-4 py-2.5 text-[0.75rem] font-semibold border-l border-aws-border/40 ${row.c}`}><GlossaryText text={row.a} /></div>
               </div>
             ))}
           </div>
