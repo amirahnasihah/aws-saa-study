@@ -91,7 +91,9 @@ export default function LearnCard({ service, category }: LearnCardProps) {
           {/* guna untuk */}
           <div className={`rounded-lg px-3 py-2 border border-dashed ${styles.scenario}`}>
             <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-aws-muted mb-1">Guna Bila</p>
-            <p className={`text-[0.82rem] font-semibold ${styles.title}`}>{service.gunaUntuk}</p>
+            <p className={`text-[0.82rem] font-semibold ${styles.title}`}>
+              <GlossaryText text={service.gunaUntuk} />
+            </p>
           </div>
         </div>
 
