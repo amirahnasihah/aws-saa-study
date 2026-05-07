@@ -21,7 +21,7 @@ export default function LearnCard({ service, category }: LearnCardProps) {
             <h3 className={`font-space-mono text-base font-bold ${styles.title}`}>{service.shortName}</h3>
             <p className="font-space-mono text-[0.7rem] text-aws-muted">{service.fullName}</p>
           </div>
-          <span className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-[0.72rem] text-slate-300 italic shrink-0">
+          <span className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-[0.72rem] text-slate-300 italic min-w-0 break-words">
             {service.ingat}
           </span>
         </div>
