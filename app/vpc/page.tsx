@@ -134,6 +134,111 @@ export default function VpcPage() {
               </p>
             </div>
           </div>
+
+          {/* Step-by-step calculation */}
+          <div className="mt-4 bg-aws-card border border-aws-border rounded-xl p-5">
+            <p className="font-space-mono text-[0.65rem] uppercase tracking-[0.12em] text-c4/70 mb-4">📐 Cara Kira — Step by Step</p>
+
+            {/* Method */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+              {[
+                { step: '1', label: 'Cari host bits', formula: '32 − prefix', eg: '32 − 26 = 6 bits' },
+                { step: '2', label: 'Kira total IPs', formula: '2 ^ host bits', eg: '2⁶ = 64 IPs' },
+                { step: '3', label: 'Tolak 5 reserved', formula: 'total − 5', eg: '64 − 5 = 59 usable' },
+              ].map((s) => (
+                <div key={s.step} className="bg-c4/6 border border-c4/15 rounded-lg px-3 py-3">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="w-5 h-5 rounded-full bg-c4/20 flex items-center justify-center font-space-mono text-[0.6rem] font-bold text-c4">{s.step}</span>
+                    <span className="font-space-mono text-[0.62rem] uppercase tracking-wide text-aws-muted">{s.label}</span>
+                  </div>
+                  <p className="font-mono text-[0.82rem] font-semibold text-aws-text">{s.formula}</p>
+                  <p className="text-[0.72rem] text-c4 mt-1">{s.eg}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Worked examples */}
+            <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted mb-2">Contoh pengiraan</p>
+            <div className="space-y-2 mb-5">
+              {[
+                {
+                  prefix: '/24', bits: '32−24 = 8', total: '2⁸ = 256', usable: '256−5 = 251',
+                  range: '10.0.1.0 – 10.0.1.255', note: 'Standard subnet, exam kerap guna',
+                },
+                {
+                  prefix: '/26', bits: '32−26 = 6', total: '2⁶ = 64', usable: '64−5 = 59',
+                  range: '10.0.1.0 – 10.0.1.63', note: 'Small subnet, boleh buat 4 subnet dalam /24',
+                },
+                {
+                  prefix: '/27', bits: '32−27 = 5', total: '2⁵ = 32', usable: '32−5 = 27',
+                  range: '10.0.1.0 – 10.0.1.31', note: 'Exam favourite — hafal 27 usable IPs',
+                },
+                {
+                  prefix: '/28', bits: '32−28 = 4', total: '2⁴ = 16', usable: '16−5 = 11',
+                  range: '10.0.1.0 – 10.0.1.15', note: 'AWS minimum subnet size',
+                },
+              ].map((ex) => (
+                <div key={ex.prefix} className="grid grid-cols-[2.5rem_1fr] gap-3 bg-white/3 border border-aws-border/40 rounded-lg px-3 py-2.5">
+                  <span className="font-space-mono text-[0.85rem] font-bold text-c4 self-center">{ex.prefix}</span>
+                  <div>
+                    <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-[0.72rem] font-mono mb-1">
+                      <span className="text-aws-muted">{ex.bits}</span>
+                      <span className="text-aws-muted">→ {ex.total}</span>
+                      <span className="font-bold text-aws-text">→ {ex.usable}</span>
+                    </div>
+                    <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-[0.68rem]">
+                      <span className="text-aws-muted font-mono">{ex.range}</span>
+                      <span className="text-aws-muted italic">{ex.note}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* 5 reserved IPs — from official AWS docs */}
+            <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted mb-2">
+              5 IPs yang AWS reserve setiap subnet{' '}
+              <a
+                href="https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-c4/60 hover:text-c4 transition-colors normal-case tracking-normal"
+              >
+                (official docs ↗)
+              </a>
+            </p>
+            <div className="rounded-lg overflow-hidden border border-aws-border/40">
+              <table className="w-full text-[0.75rem]">
+                <thead>
+                  <tr className="bg-white/3 border-b border-aws-border/40">
+                    <th className="font-space-mono text-[0.58rem] uppercase tracking-widest text-aws-muted text-left px-3 py-2">IP Address</th>
+                    <th className="font-space-mono text-[0.58rem] uppercase tracking-widest text-aws-muted text-left px-3 py-2">Reserved For</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { ip: '10.0.0.0', role: 'Network address', note: '' },
+                    { ip: '10.0.0.1', role: 'VPC router', note: 'AWS reserved' },
+                    { ip: '10.0.0.2', role: 'DNS server', note: 'Base of VPC CIDR + 2' },
+                    { ip: '10.0.0.3', role: 'Future use', note: 'AWS reserved' },
+                    { ip: '10.0.0.255', role: 'Broadcast address', note: 'Broadcast not supported in VPC' },
+                  ].map((r, i) => (
+                    <tr key={r.ip} className={`border-b border-aws-border/30 ${i % 2 !== 0 ? 'bg-white/[0.015]' : ''}`}>
+                      <td className="font-mono text-[0.75rem] text-c4 font-semibold px-3 py-2">{r.ip}</td>
+                      <td className="px-3 py-2 text-aws-text">
+                        {r.role}
+                        {r.note && <span className="text-aws-muted text-[0.68rem] ml-2">— {r.note}</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-[0.68rem] text-aws-muted mt-2 leading-relaxed">
+              Contoh di atas untuk subnet <code className="text-c4">10.0.0.0/24</code>. IP values berubah mengikut CIDR kau, tapi <strong className="text-aws-text">sentiasa 5 IPs</strong> dikira dari mana-mana subnet.{' '}
+              <a href="https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html" target="_blank" rel="noopener noreferrer" className="text-c4/70 hover:text-c4 transition-colors">Sumber: AWS Subnet Sizing docs</a>
+            </p>
+          </div>
         </section>
 
         {/* Public vs Private */}
