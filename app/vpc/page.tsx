@@ -25,7 +25,7 @@ export default function VpcPage() {
           <div className="flex flex-wrap justify-center gap-2 mt-4">
             {[
               { href: '#mental-model', label: 'Mental Model' },
-              { href: '#cidr', label: 'CIDR' },
+              { href: '#cidr', label: 'CIDR & IP Structure' },
               { href: '#subnets', label: 'Subnets' },
               { href: '#sg-nacl', label: 'SG vs NACL' },
               { href: '#traffic', label: 'Traffic Flow' },
@@ -128,6 +128,86 @@ export default function VpcPage() {
               </div>
               <p className="text-[0.68rem] text-aws-muted mt-2">
                 Sebab tu dalam route table kau nampak <code className="text-c4">172.31.0.0/16</code> — itu AWS default VPC range yang kau pilih masa setup.
+              </p>
+            </div>
+          </div>
+
+          {/* Network vs Host Division */}
+          <div className="bg-aws-card border border-aws-border rounded-xl p-5 mb-4">
+            <p className="font-space-mono text-[0.65rem] uppercase tracking-[0.12em] text-c4/70 mb-3">Structure IP Address — Network vs Host</p>
+            <p className="text-[0.78rem] text-aws-muted leading-relaxed mb-4">
+              Setiap IPv4 address ada <strong className="text-aws-text">32 bits</strong>, dibahagi kepada 4 kumpulan 8-bit (octet).
+              Subnet mask tentukan mana bahagian <strong className="text-c2">Network</strong> (prefix) dan mana bahagian <strong className="text-c1">Host</strong>.
+            </p>
+
+            {/* Visual octet breakdown */}
+            <div className="mb-5">
+              <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted mb-2">Contoh: 192.168.100.10 dengan /24 (255.255.255.0)</p>
+              <div className="grid grid-cols-4 gap-1.5 mb-1.5">
+                {[
+                  { oct: '192', bits: '11000000', part: 'network' },
+                  { oct: '168', bits: '10101000', part: 'network' },
+                  { oct: '100', bits: '01100100', part: 'network' },
+                  { oct: '10',  bits: '00001010', part: 'host' },
+                ].map((o, i) => (
+                  <div key={i} className={`rounded-lg border text-center py-2.5 px-1 ${o.part === 'network' ? 'bg-c2/10 border-c2/30' : 'bg-c1/10 border-c1/30'}`}>
+                    <p className={`font-mono font-bold text-[1rem] leading-none ${o.part === 'network' ? 'text-c2' : 'text-c1'}`}>{o.oct}</p>
+                    <p className="font-mono text-[0.55rem] text-aws-muted mt-1 leading-none">{o.bits}</p>
+                    <p className="font-space-mono text-[0.5rem] uppercase tracking-wide mt-1.5 text-aws-muted">8 bits</p>
+                  </div>
+                ))}
+              </div>
+              <div className="grid grid-cols-4 gap-1.5 mb-3">
+                {[
+                  { mask: '255', bits: '11111111', part: 'network' },
+                  { mask: '255', bits: '11111111', part: 'network' },
+                  { mask: '255', bits: '11111111', part: 'network' },
+                  { mask: '0',   bits: '00000000', part: 'host' },
+                ].map((m, i) => (
+                  <div key={i} className={`rounded-lg border text-center py-2 px-1 ${m.part === 'network' ? 'bg-c2/5 border-c2/20' : 'bg-c1/5 border-c1/20'}`}>
+                    <p className={`font-mono text-[0.82rem] font-semibold ${m.part === 'network' ? 'text-c2/80' : 'text-c1/80'}`}>{m.mask}</p>
+                    <p className="font-mono text-[0.5rem] text-aws-muted mt-0.5">{m.bits}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="flex gap-3 text-[0.72rem]">
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-c2/40 border border-c2/40 shrink-0" /><span className="text-c2 font-semibold">Network portion</span><span className="text-aws-muted">— 24 bits (3 octets) dikunci oleh /24</span></span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-c1/40 border border-c1/40 shrink-0" /><span className="text-c1 font-semibold">Host portion</span><span className="text-aws-muted">— 8 bits bebas, boleh assign ke devices</span></span>
+              </div>
+            </div>
+
+            {/* Simple rule */}
+            <div className="bg-white/3 border border-aws-border/40 rounded-lg px-3 py-2.5 mb-4">
+              <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted mb-1.5">Peraturan mudah</p>
+              <p className="text-[0.78rem] text-aws-text leading-relaxed">
+                <strong className="text-c4">192.168.100</strong><strong className="text-aws-muted">.</strong><strong className="text-c1">10</strong>
+                {' '}— bahagian depan (<span className="text-c2">192.168.100</span>) = <strong>Network Address</strong>, bahagian belakang (<span className="text-c1">10</span>) = <strong>Host Address</strong>.
+                Semua devices dalam subnet yang sama berkongsi bahagian Network yang sama.
+              </p>
+            </div>
+
+            {/* Worked example: find network address */}
+            <div className="bg-c4/5 border border-c4/20 rounded-lg px-4 py-3">
+              <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-c4/70 mb-2">Contoh soalan exam: Cari Network Address</p>
+              <p className="text-[0.82rem] text-aws-text font-semibold mb-3">
+                PC diberi IP <code className="text-c4">192.168.50.191/26</code>. Apa Network Address-nya?
+              </p>
+              <div className="space-y-2 text-[0.75rem] mb-3">
+                <div className="flex gap-3">
+                  <span className="w-5 h-5 rounded-full bg-c4/20 flex items-center justify-center font-space-mono text-[0.6rem] font-bold text-c4 shrink-0">1</span>
+                  <p className="text-aws-text"><strong>/26</strong> → 26 bits network, 6 bits host. Subnet mask octet terakhir: 256 − 2⁶ = 256 − 64 = <strong className="text-c4">192</strong> → mask = 255.255.255.<strong className="text-c4">192</strong></p>
+                </div>
+                <div className="flex gap-3">
+                  <span className="w-5 h-5 rounded-full bg-c4/20 flex items-center justify-center font-space-mono text-[0.6rem] font-bold text-c4 shrink-0">2</span>
+                  <p className="text-aws-text">Octet terakhir IP = <strong>191</strong> (<code className="font-mono text-aws-muted">10111111</code>). AND dengan mask 192 (<code className="font-mono text-aws-muted">11000000</code>) = <code className="font-mono text-c1">10000000</code> = <strong className="text-c1">128</strong></p>
+                </div>
+                <div className="flex gap-3">
+                  <span className="w-5 h-5 rounded-full bg-c4/20 flex items-center justify-center font-space-mono text-[0.6rem] font-bold text-c4 shrink-0">3</span>
+                  <p className="text-aws-text">Network Address = <strong className="text-c2">192.168.50</strong>.<strong className="text-c1">128</strong></p>
+                </div>
+              </div>
+              <p className="text-[0.68rem] text-aws-muted">
+                Shortcut: /26 = blok saiz 64 (2⁶). Cari gandaan 64 yang ≤ 191 → 0, 64, 128, 192... → <strong className="text-c1">128</strong> ✓
               </p>
             </div>
           </div>
@@ -582,6 +662,8 @@ export default function VpcPage() {
               {[
                 { label: 'CIDR — IP Dari Mana?', tip: 'Kau pilih sendiri dari RFC 1918 private ranges: 10.x, 172.16–31.x, 192.168.x. Bukan public IP. AWS default VPC guna 172.31.0.0/16.' },
                 { label: 'Slash bukan bilangan IP', tip: '/16 bukan 16 IPs — ia 16 bits dikunci. 32−16=16 bits bebas → 2^16 = 65,536 IPs. /24 = 256 IPs, /27 = 32 IPs.' },
+                { label: 'Network vs Host', tip: '192.168.100.10/24 → 192.168.100 = Network (3 octets, 24 bits), .10 = Host. Semua devices dalam subnet sama berkongsi network portion yang sama.' },
+                { label: 'Cari Network Address', tip: 'IP/26: blok saiz 64. Cari gandaan 64 ≤ last octet. 191 → 128 ✓. Atau AND binary: 10111111 AND 11000000 = 10000000 = 128.' },
                 { label: 'CIDR Formula', tip: '32 − prefix = bits. 2^bits = total. Tolak 5 = usable. Hafal: /24=251, /26=59, /27=27' },
                 { label: 'IGW vs NAT', tip: 'IGW = dua arah (in + out), free. NAT = outbound je, berbayar. NAT DUDUK DALAM PUBLIC SUBNET!' },
                 { label: 'SG = Stateful', tip: '"SG ingat siapa dia bagi masuk — reply auto OK". NACL = "check tiap packet dua arah, kena ada explicit rules"' },
