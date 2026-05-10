@@ -136,7 +136,7 @@ export default function VpcPage() {
           <div className="bg-aws-card border border-aws-border rounded-xl p-5 mb-4">
             <p className="font-space-mono text-[0.65rem] uppercase tracking-[0.12em] text-c4/70 mb-3">Structure IP Address — Network vs Host</p>
             <p className="text-[0.78rem] text-aws-muted leading-relaxed mb-4">
-              Setiap IPv4 address ada <strong className="text-aws-text">32 bits</strong>, dibahagi kepada 4 kumpulan 8-bit (octet).
+              Setiap IPv4 address ada <strong className="text-aws-text">32 bits</strong>, dibahagi kepada 4 kumpulan 8-bit (<GlossaryText text="octet" />).
               Subnet mask tentukan mana bahagian <strong className="text-c2">Network</strong> (prefix) dan mana bahagian <strong className="text-c1">Host</strong>.
             </p>
 
@@ -171,8 +171,8 @@ export default function VpcPage() {
                 ))}
               </div>
               <div className="flex gap-3 text-[0.72rem]">
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-c2/40 border border-c2/40 shrink-0" /><span className="text-c2 font-semibold">Network portion</span><span className="text-aws-muted">— 24 bits (3 octets) dikunci oleh /24</span></span>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-c1/40 border border-c1/40 shrink-0" /><span className="text-c1 font-semibold">Host portion</span><span className="text-aws-muted">— 8 bits bebas, boleh assign ke devices</span></span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-c2/40 border border-c2/40 shrink-0" /><span className="text-c2 font-semibold">Network portion</span><span className="text-aws-muted"><GlossaryText text="— 24 bits (3 octets) dikunci oleh /24" /></span></span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm bg-c1/40 border border-c1/40 shrink-0" /><span className="text-c1 font-semibold">Host portion</span><span className="text-aws-muted"><GlossaryText text="— 8 bits bebas, boleh assign ke devices" /></span></span>
               </div>
             </div>
 
@@ -195,11 +195,11 @@ export default function VpcPage() {
               <div className="space-y-2 text-[0.75rem] mb-3">
                 <div className="flex gap-3">
                   <span className="w-5 h-5 rounded-full bg-c4/20 flex items-center justify-center font-space-mono text-[0.6rem] font-bold text-c4 shrink-0">1</span>
-                  <p className="text-aws-text"><strong>/26</strong> → 26 bits network, 6 bits host. Subnet mask octet terakhir: 256 − 2⁶ = 256 − 64 = <strong className="text-c4">192</strong> → mask = 255.255.255.<strong className="text-c4">192</strong></p>
+                  <p className="text-aws-text"><strong>/26</strong> → 26 bits network, 6 bits host. Subnet mask <GlossaryText text="octet" /> terakhir: 256 − 2⁶ = 256 − 64 = <strong className="text-c4">192</strong> → mask = 255.255.255.<strong className="text-c4">192</strong></p>
                 </div>
                 <div className="flex gap-3">
                   <span className="w-5 h-5 rounded-full bg-c4/20 flex items-center justify-center font-space-mono text-[0.6rem] font-bold text-c4 shrink-0">2</span>
-                  <p className="text-aws-text">Octet terakhir IP = <strong>191</strong> (<code className="font-mono text-aws-muted">10111111</code>). AND dengan mask 192 (<code className="font-mono text-aws-muted">11000000</code>) = <code className="font-mono text-c1">10000000</code> = <strong className="text-c1">128</strong></p>
+                  <p className="text-aws-text"><GlossaryText text="Octet" /> terakhir IP = <strong>191</strong> (<code className="font-mono text-aws-muted">10111111</code>). AND dengan mask 192 (<code className="font-mono text-aws-muted">11000000</code>) = <code className="font-mono text-c1">10000000</code> = <strong className="text-c1">128</strong></p>
                 </div>
                 <div className="flex gap-3">
                   <span className="w-5 h-5 rounded-full bg-c4/20 flex items-center justify-center font-space-mono text-[0.6rem] font-bold text-c4 shrink-0">3</span>

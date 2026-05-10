@@ -43,6 +43,7 @@ export const glossary: Record<string, string> = {
   'BGP': 'Border Gateway Protocol — dynamic routing protocol that exchanges routes between networks; used in Direct Connect and VPN',
   'IPSec': 'Internet Protocol Security — encryption suite used to secure VPN tunnels over the public internet',
   'CIDR': 'Classless Inter-Domain Routing — defines an IP address range. /16 = 65 536 IPs, /24 = 256 IPs',
+  'octet': 'Kumpulan 8 bits. IPv4 address ada 4 octets (4 × 8 = 32 bits). Nilai setiap octet = 0–255 kerana 2⁸ = 256 kemungkinan. Contoh: 192.168.100.10 → octet 1=192, octet 2=168, octet 3=100, octet 4=10',
   'subnet': 'A subdivision of a VPC. Public subnet has a route to an Internet Gateway; private subnet has no direct internet access',
   'inbound': 'Traffic flowing INTO your resource (e.g. an HTTP request arriving at your web server)',
   'outbound': 'Traffic flowing OUT FROM your resource (e.g. your server connecting to a database)',
