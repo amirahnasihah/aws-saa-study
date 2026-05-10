@@ -236,6 +236,28 @@ export const architectures: Architecture[] = [
     ],
   },
   {
+    id: 'arch-nat-gateway',
+    title: 'NAT Gateway Flow',
+    description: 'NAT Gateway enables outbound-only internet for private subnet instances. NAT sits in the public subnet with an Elastic IP. Private-IP → NAT (Private-IP) → NAT (Elastic-IP) → IGW → Internet. Internet cannot initiate connections back into the private subnet.',
+    domain: 'd1',
+    tags: ['NAT Gateway', 'Elastic IP', 'Private Subnet', 'Route Table', 'Outbound-only', 'IGW'],
+    nodes: [
+      { id: 'internet', type: 'archNode', position: { x: 300, y: 0 }, data: { label: 'Internet', icon: '🌍', color: 'gray' } },
+      { id: 'igw', type: 'archNode', position: { x: 300, y: 110 }, data: { label: 'Internet Gateway', sub: 'attached to VPC', icon: '🚪', color: 'c4' } },
+      { id: 'nat', type: 'archNode', position: { x: 80, y: 240 }, data: { label: 'NAT Gateway', sub: 'Public subnet · Elastic-IP + Private-IP', icon: '🔁', color: 'c2' } },
+      { id: 'ec2', type: 'archNode', position: { x: 80, y: 380 }, data: { label: 'EC2 Instance', sub: 'Private subnet · Private-IP only', icon: '🖥️', color: 'c1' } },
+      { id: 'rt-pub', type: 'archNode', position: { x: 480, y: 170 }, data: { label: 'Public Subnet Route Table', sub: '172.31.0.0/16 → local\n0.0.0.0/0 → igw-id', icon: '📋', color: 'c4' } },
+      { id: 'rt-priv', type: 'archNode', position: { x: 480, y: 330 }, data: { label: 'Private Subnet Route Table', sub: '172.31.0.0/16 → local\n0.0.0.0/0 → nat-gateway-id', icon: '📋', color: 'c3' } },
+    ],
+    edges: [
+      { id: 'e1', source: 'ec2', target: 'nat', ...edgeBase, label: 'Private-IP' },
+      { id: 'e2', source: 'nat', target: 'igw', ...edgeBase, label: 'Elastic-IP' },
+      { id: 'e3', source: 'igw', target: 'internet', ...edgeBase, label: 'outbound only' },
+      { id: 'e4', source: 'rt-pub', target: 'igw', ...edgeBase, animated: false, style: { stroke: 'rgba(255,255,255,0.08)', strokeDasharray: '4 3', strokeWidth: 1.5 } },
+      { id: 'e5', source: 'rt-priv', target: 'nat', ...edgeBase, animated: false, style: { stroke: 'rgba(255,255,255,0.08)', strokeDasharray: '4 3', strokeWidth: 1.5 } },
+    ],
+  },
+  {
     id: 'arch-sg-nacl',
     title: 'SG & NACL — Defence Layers',
     description: 'Shows the two firewall layers in a VPC: NACL (stateless, subnet-level) checks all packets at the subnet boundary. Security Group (stateful, instance-level) guards each EC2. Replies from EC2 are auto-allowed by SG (stateful) but need an explicit outbound rule in NACL (stateless).',

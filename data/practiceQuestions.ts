@@ -577,6 +577,58 @@ export const practiceQuestions: PracticeQuestion[] = [
     keywords: ['Redshift', 'KMS', 'encryption at rest', 'SSL transit', 'AES-256', 'at rest vs in transit'],
   },
   {
+    id: 'q-vpc-nat-gateway-outbound',
+    domain: 'd2',
+    domainLabel: 'Resilient Architectures',
+    difficulty: 'Medium',
+    scenario:
+      'An application running in a private subnet of an Amazon VPC must have outbound internet access for downloading updates. The Solutions Architect does not want the application exposed to inbound connection attempts. Which steps should be taken?',
+    options: [
+      { id: 'a', text: 'Attach an internet gateway to the private subnet and create a NAT gateway' },
+      { id: 'b', text: 'Create a NAT gateway but do not attach an internet gateway to the VPC' },
+      { id: 'c', text: 'Attach an internet gateway to the VPC but do not create a NAT gateway' },
+      { id: 'd', text: 'Create a NAT gateway and attach an internet gateway to the VPC' },
+    ],
+    correctId: 'd',
+    explanation: {
+      correct:
+        'Create a NAT gateway and attach an internet gateway to the VPC is correct. The NAT gateway is created in a public subnet and a route must be created in the private subnet pointing to the NAT gateway for internet-bound traffic. An internet gateway must be attached to the VPC to facilitate outbound connections. You cannot directly connect to a private subnet instance from the internet — a bastion/jump host would be required — so the application will not be exposed to inbound connection attempts.',
+      incorrects: {
+        a: 'Attaching an internet gateway to the private subnet is incorrect. Internet gateways attach to a VPC, not to individual subnets. You cannot attach an IGW directly to a subnet.',
+        b: 'NAT gateway without an internet gateway is incorrect. An internet gateway must be attached to the VPC for any outbound connections to work. Without an IGW, the NAT gateway has no path to the internet.',
+        c: 'Internet gateway only without a NAT gateway is incorrect. An IGW on its own would make the subnet public — private subnet instances would need a public/Elastic IP to use the IGW route. Without a NAT gateway, private instances cannot reach the internet for updates.',
+      },
+    },
+    reference: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html',
+    keywords: ['NAT Gateway', 'internet gateway', 'private subnet', 'outbound internet', 'no inbound', 'VPC'],
+  },
+  {
+    id: 'q-aws-penetration-testing',
+    domain: 'd1',
+    domainLabel: 'Secure Architectures',
+    difficulty: 'Easy',
+    scenario:
+      'The AWS Acceptable Use Policy describes permitted and prohibited behavior on AWS and includes descriptions of prohibited security violations and network abuse. According to the policy, what is AWS\'s position on penetration testing?',
+    options: [
+      { id: 'a', text: 'AWS do not allow any form of penetration testing' },
+      { id: 'b', text: 'AWS allow penetration testing by customers on their own VPC resources only' },
+      { id: 'c', text: 'AWS allow penetration for some resources without prior authorization' },
+      { id: 'd', text: 'AWS allow penetration testing for all resources' },
+    ],
+    correctId: 'c',
+    explanation: {
+      correct:
+        'AWS allow penetration for some resources without prior authorization is correct. AWS customers are welcome to carry out security assessments or penetration tests against their AWS infrastructure without prior approval for 8 permitted services (including EC2, RDS, CloudFront, Aurora, API Gateways, Lambda, Lightsail, and Elastic Beanstalk environments). Activities that are always prohibited include DoS/DDoS simulations, port/protocol/request flooding, and DNS zone walking.',
+      incorrects: {
+        a: 'AWS do not allow any form of penetration testing is incorrect. AWS explicitly permits customers to perform penetration testing on their own AWS infrastructure for a defined list of services without needing prior approval.',
+        b: 'Restricted to VPC resources only is incorrect. The permitted services are not limited to VPC resources — they include services like Lambda, CloudFront, and API Gateways which are not strictly VPC-bound.',
+        d: 'Allowed for all resources is incorrect. Penetration testing is not permitted for all AWS resources. There is a specific list of permitted services, and certain activities (like DoS attacks or DNS zone walking) are always prohibited regardless of what resources you own.',
+      },
+    },
+    reference: 'https://aws.amazon.com/security/penetration-testing/',
+    keywords: ['penetration testing', 'security assessment', 'Acceptable Use Policy', 'AUP', 'no prior approval', '8 services'],
+  },
+  {
     id: 'q-aws-batch',
     domain: 'd4',
     domainLabel: 'Cost-Optimized Architectures',

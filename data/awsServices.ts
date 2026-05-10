@@ -112,6 +112,16 @@ export const domains: DomainData[] = [
             keywords: ['SSO', 'single sign-on', 'multiple accounts', 'federation', 'SAML 2.0'],
           },
           {
+            shortName: 'Penetration Testing',
+            fullName: 'AWS Penetration Testing Policy',
+            ingat: '"Boleh test sendiri — tapi ada had"',
+            gunaUntuk: 'Security assessments on your own AWS infrastructure',
+            fungsi: 'AWS membenarkan pelanggan menjalankan security assessments atau penetration tests terhadap infrastruktur AWS mereka sendiri tanpa kelulusan awal untuk 8 perkhidmatan yang dibenarkan. Activities yang dilarang termasuk DoS/DDoS simulation, port flooding, dan DNS zone walking.',
+            contohGuna: 'Security team nak test EC2 instances atau RDS databases untuk vulnerabilities — dibenarkan tanpa minta izin AWS terlebih dahulu.',
+            scenario: '"AWS Acceptable Use Policy", "penetration testing position", "security assessments on AWS" → AWS allow for SOME resources WITHOUT prior authorization (not all, not none). 8 permitted services include EC2, RDS, CloudFront, Aurora, API Gateways, Lambda, Lightsail, Elastic Beanstalk.',
+            keywords: ['penetration testing', 'security assessment', 'Acceptable Use Policy', 'AUP', 'no prior approval', '8 services', 'prohibited activities'],
+          },
+          {
             shortName: 'AWS Organizations',
             fullName: 'AWS Organizations + Control Tower + SCPs',
             ingat: '"HQ yang kawal semua anak syarikat"',
