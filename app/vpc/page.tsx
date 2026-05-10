@@ -1,4 +1,5 @@
 import Nav from '@/components/Nav'
+import GlossaryText from '@/components/GlossaryText'
 
 export const metadata = {
   title: 'AWS SAA-C03 — VPC Study Guide',
@@ -28,6 +29,7 @@ export default function VpcPage() {
               { href: '#subnets', label: 'Subnets' },
               { href: '#sg-nacl', label: 'SG vs NACL' },
               { href: '#traffic', label: 'Traffic Flow' },
+              { href: '#nat-flow', label: 'NAT Flow' },
               { href: '#connectivity', label: 'Connectivity' },
               { href: '#tips', label: 'Memory Tricks' },
               { href: '#exam', label: 'Exam Wins' },
@@ -72,7 +74,7 @@ export default function VpcPage() {
                   <span className="text-xl shrink-0">{item.icon}</span>
                   <div>
                     <p className="font-space-mono text-[0.68rem] font-bold text-c4">{item.label}</p>
-                    <p className="text-[0.75rem] text-aws-muted leading-snug">{item.desc}</p>
+                    <p className="text-[0.75rem] text-aws-muted leading-snug"><GlossaryText text={item.desc} /></p>
                   </div>
                 </div>
               ))}
@@ -133,6 +135,111 @@ export default function VpcPage() {
               </p>
             </div>
           </div>
+
+          {/* Step-by-step calculation */}
+          <div className="mt-4 bg-aws-card border border-aws-border rounded-xl p-5">
+            <p className="font-space-mono text-[0.65rem] uppercase tracking-[0.12em] text-c4/70 mb-4">📐 Cara Kira — Step by Step</p>
+
+            {/* Method */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-5">
+              {[
+                { step: '1', label: 'Cari host bits', formula: '32 − prefix', eg: '32 − 26 = 6 bits' },
+                { step: '2', label: 'Kira total IPs', formula: '2 ^ host bits', eg: '2⁶ = 64 IPs' },
+                { step: '3', label: 'Tolak 5 reserved', formula: 'total − 5', eg: '64 − 5 = 59 usable' },
+              ].map((s) => (
+                <div key={s.step} className="bg-c4/6 border border-c4/15 rounded-lg px-3 py-3">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span className="w-5 h-5 rounded-full bg-c4/20 flex items-center justify-center font-space-mono text-[0.6rem] font-bold text-c4">{s.step}</span>
+                    <span className="font-space-mono text-[0.62rem] uppercase tracking-wide text-aws-muted">{s.label}</span>
+                  </div>
+                  <p className="font-mono text-[0.82rem] font-semibold text-aws-text">{s.formula}</p>
+                  <p className="text-[0.72rem] text-c4 mt-1">{s.eg}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Worked examples */}
+            <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted mb-2">Contoh pengiraan</p>
+            <div className="space-y-2 mb-5">
+              {[
+                {
+                  prefix: '/24', bits: '32−24 = 8', total: '2⁸ = 256', usable: '256−5 = 251',
+                  range: '10.0.1.0 – 10.0.1.255', note: 'Standard subnet, exam kerap guna',
+                },
+                {
+                  prefix: '/26', bits: '32−26 = 6', total: '2⁶ = 64', usable: '64−5 = 59',
+                  range: '10.0.1.0 – 10.0.1.63', note: 'Small subnet, boleh buat 4 subnet dalam /24',
+                },
+                {
+                  prefix: '/27', bits: '32−27 = 5', total: '2⁵ = 32', usable: '32−5 = 27',
+                  range: '10.0.1.0 – 10.0.1.31', note: 'Exam favourite — hafal 27 usable IPs',
+                },
+                {
+                  prefix: '/28', bits: '32−28 = 4', total: '2⁴ = 16', usable: '16−5 = 11',
+                  range: '10.0.1.0 – 10.0.1.15', note: 'AWS minimum subnet size',
+                },
+              ].map((ex) => (
+                <div key={ex.prefix} className="grid grid-cols-[2.5rem_1fr] gap-3 bg-white/3 border border-aws-border/40 rounded-lg px-3 py-2.5">
+                  <span className="font-space-mono text-[0.85rem] font-bold text-c4 self-center">{ex.prefix}</span>
+                  <div>
+                    <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-[0.72rem] font-mono mb-1">
+                      <span className="text-aws-muted">{ex.bits}</span>
+                      <span className="text-aws-muted">→ {ex.total}</span>
+                      <span className="font-bold text-aws-text">→ {ex.usable}</span>
+                    </div>
+                    <div className="flex flex-wrap gap-x-4 gap-y-0.5 text-[0.68rem]">
+                      <span className="text-aws-muted font-mono">{ex.range}</span>
+                      <span className="text-aws-muted italic">{ex.note}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* 5 reserved IPs — from official AWS docs */}
+            <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted mb-2">
+              5 IPs yang AWS reserve setiap subnet{' '}
+              <a
+                href="https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-c4/60 hover:text-c4 transition-colors normal-case tracking-normal"
+              >
+                (official docs ↗)
+              </a>
+            </p>
+            <div className="rounded-lg overflow-hidden border border-aws-border/40">
+              <table className="w-full text-[0.75rem]">
+                <thead>
+                  <tr className="bg-white/3 border-b border-aws-border/40">
+                    <th className="font-space-mono text-[0.58rem] uppercase tracking-widest text-aws-muted text-left px-3 py-2">IP Address</th>
+                    <th className="font-space-mono text-[0.58rem] uppercase tracking-widest text-aws-muted text-left px-3 py-2">Reserved For</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { ip: '10.0.0.0', role: 'Network address', note: '' },
+                    { ip: '10.0.0.1', role: 'VPC router', note: 'AWS reserved' },
+                    { ip: '10.0.0.2', role: 'DNS server', note: 'Base of VPC CIDR + 2' },
+                    { ip: '10.0.0.3', role: 'Future use', note: 'AWS reserved' },
+                    { ip: '10.0.0.255', role: 'Broadcast address', note: 'Broadcast not supported in VPC' },
+                  ].map((r, i) => (
+                    <tr key={r.ip} className={`border-b border-aws-border/30 ${i % 2 !== 0 ? 'bg-white/[0.015]' : ''}`}>
+                      <td className="font-mono text-[0.75rem] text-c4 font-semibold px-3 py-2">{r.ip}</td>
+                      <td className="px-3 py-2 text-aws-text">
+                        {r.role}
+                        {r.note && <span className="text-aws-muted text-[0.68rem] ml-2">— {r.note}</span>}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-[0.68rem] text-aws-muted mt-2 leading-relaxed">
+              Contoh di atas untuk subnet <code className="text-c4">10.0.0.0/24</code>. IP values berubah mengikut CIDR kau, tapi <strong className="text-aws-text">sentiasa 5 IPs</strong> dikira dari mana-mana subnet.{' '}
+              <a href="https://docs.aws.amazon.com/vpc/latest/userguide/subnet-sizing.html" target="_blank" rel="noopener noreferrer" className="text-c4/70 hover:text-c4 transition-colors">Sumber: AWS Subnet Sizing docs</a>
+            </p>
+          </div>
         </section>
 
         {/* Public vs Private */}
@@ -152,7 +259,7 @@ export default function VpcPage() {
                   'Guna untuk: web servers, ALB, NAT GW',
                 ].map((item) => (
                   <li key={item} className="flex gap-2 text-[0.78rem] text-aws-text leading-snug">
-                    <span className="text-c4 shrink-0 mt-0.5">✓</span> {item}
+                    <span className="text-c4 shrink-0 mt-0.5">✓</span> <GlossaryText text={item} />
                   </li>
                 ))}
               </ul>
@@ -171,7 +278,7 @@ export default function VpcPage() {
                   'Guna untuk: databases, app servers, Lambda',
                 ].map((item) => (
                   <li key={item} className="flex gap-2 text-[0.78rem] text-aws-text leading-snug">
-                    <span className="text-c3 shrink-0 mt-0.5">✓</span> {item}
+                    <span className="text-c3 shrink-0 mt-0.5">✓</span> <GlossaryText text={item} />
                   </li>
                 ))}
               </ul>
@@ -210,8 +317,8 @@ export default function VpcPage() {
                   ].map((row, i) => (
                     <tr key={row.f} className={`border-b border-aws-border/40 ${i % 2 !== 0 ? 'bg-white/[0.015]' : ''}`}>
                       <td className="font-space-mono font-bold text-[0.65rem] text-aws-muted p-3">{row.f}</td>
-                      <td className="text-aws-text p-3 bg-c2/[0.03]">{row.sg}</td>
-                      <td className="text-aws-text p-3 bg-c5/[0.03]">{row.nacl}</td>
+                      <td className="text-aws-text p-3 bg-c2/[0.03]"><GlossaryText text={row.sg} /></td>
+                      <td className="text-aws-text p-3 bg-c5/[0.03]"><GlossaryText text={row.nacl} /></td>
                     </tr>
                   ))}
                 </tbody>
@@ -256,7 +363,7 @@ export default function VpcPage() {
                   </div>
                   <div className={`flex-1 rounded-lg px-3 py-2 border mb-1 ${item.bg} ${item.border}`}>
                     <span className={`font-space-mono font-bold text-[0.68rem] ${item.color}`}>{item.label}</span>
-                    <p className="text-[0.72rem] text-aws-muted leading-snug">{item.desc}</p>
+                    <p className="text-[0.72rem] text-aws-muted leading-snug"><GlossaryText text={item.desc} /></p>
                   </div>
                 </div>
               ))}
@@ -270,8 +377,86 @@ export default function VpcPage() {
                 IGW → Internet
               </p>
               <p className="text-[0.72rem] text-amber-400/80 mt-1">
-                ⚠ NACL stateless = kena explicit outbound rule. SG stateful = auto allow reply. Ini selalu keluar dalam exam!
+                <GlossaryText text="⚠ NACL stateless = kena explicit outbound rule. SG stateful = auto allow reply. Ini selalu keluar dalam exam!" />
               </p>
+            </div>
+          </div>
+        </section>
+
+        {/* NAT Gateway Outbound Flow */}
+        <section className="mb-10">
+          <SectionHeader id="nat-flow" emoji="🔁" title="NAT Gateway — Private Subnet Outbound Flow" />
+          <div className="bg-aws-card border border-aws-border rounded-xl p-5 space-y-5">
+            <p className="text-[0.78rem] text-aws-muted">EC2 dalam private subnet nak download patches atau call external API:</p>
+
+            {/* Step-by-step flow */}
+            <div className="space-y-1">
+              {[
+                { step: '1', label: 'EC2 Instance (Private Subnet)', desc: 'Initiate outbound request — ada Private IP sahaja, internet tak kenal IP ni', color: 'text-c1', bg: 'bg-c1/8', border: 'border-c1/20' },
+                { step: '2', label: 'Private Route Table', desc: '0.0.0.0/0 → nat-gateway-id — traffic keluar dihalakan ke NAT Gateway dalam public subnet', color: 'text-c3', bg: 'bg-c3/8', border: 'border-c3/20' },
+                { step: '3', label: 'NAT Gateway (Public Subnet)', desc: 'Translate Private IP → Elastic IP. Internet nampak Elastic IP sahaja, bukan IP EC2 sebenar.', color: 'text-c2', bg: 'bg-c2/8', border: 'border-c2/20' },
+                { step: '4', label: 'Public Route Table', desc: '0.0.0.0/0 → igw-id — traffic dari NAT GW keluar ke internet melalui Internet Gateway', color: 'text-c4', bg: 'bg-c4/8', border: 'border-c4/20' },
+                { step: '5', label: 'Internet Gateway → Internet', desc: 'Request sampai ke internet. Reply balik melalui path yang sama (EC2 ← NAT ← IGW ← Internet).', color: 'text-aws-muted', bg: 'bg-white/3', border: 'border-white/8' },
+              ].map((item, i, arr) => (
+                <div key={item.step} className="flex items-stretch gap-3">
+                  <div className="flex flex-col items-center shrink-0">
+                    <div className={`w-7 h-7 rounded-full border flex items-center justify-center ${item.border} ${item.bg}`}>
+                      <span className={`font-space-mono text-[0.6rem] font-bold ${item.color}`}>{item.step}</span>
+                    </div>
+                    {i < arr.length - 1 && <div className="w-px flex-1 bg-aws-border/30 my-0.5" />}
+                  </div>
+                  <div className={`flex-1 rounded-lg px-3 py-2 border mb-1 ${item.bg} ${item.border}`}>
+                    <span className={`font-space-mono font-bold text-[0.68rem] ${item.color}`}>{item.label}</span>
+                    <p className="text-[0.72rem] text-aws-muted leading-snug">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Route table comparison from the diagram */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-c4/5 border border-c4/20 rounded-xl p-3">
+                <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-c4 font-bold mb-2">Public Subnet Route Table</p>
+                <table className="w-full text-[0.72rem]">
+                  <thead>
+                    <tr className="text-aws-muted font-space-mono text-[0.6rem]">
+                      <th className="text-left pb-1 font-normal">Destination</th>
+                      <th className="text-left pb-1 font-normal">Target</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-aws-text">
+                    <tr><td className="py-0.5 pr-3 font-mono">172.31.0.0/16</td><td className="py-0.5 text-aws-muted">local</td></tr>
+                    <tr><td className="py-0.5 pr-3 font-mono">0.0.0.0/0</td><td className="py-0.5 text-c4 font-mono">igw-id</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div className="bg-c3/5 border border-c3/20 rounded-xl p-3">
+                <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-c3 font-bold mb-2">Private Subnet Route Table</p>
+                <table className="w-full text-[0.72rem]">
+                  <thead>
+                    <tr className="text-aws-muted font-space-mono text-[0.6rem]">
+                      <th className="text-left pb-1 font-normal">Destination</th>
+                      <th className="text-left pb-1 font-normal">Target</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-aws-text">
+                    <tr><td className="py-0.5 pr-3 font-mono">172.31.0.0/16</td><td className="py-0.5 text-aws-muted">local</td></tr>
+                    <tr><td className="py-0.5 pr-3 font-mono">0.0.0.0/0</td><td className="py-0.5 text-c3 font-mono">nat-gateway-id</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* No inbound + bastion note */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="bg-red-500/8 border border-red-500/25 rounded-xl px-3 py-2.5">
+                <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-red-400/80 font-bold mb-1">⛔ Tiada Inbound</p>
+                <p className="text-[0.75rem] text-aws-text leading-relaxed">Internet TIDAK BOLEH initiate connection ke private subnet — tiada route dari IGW ke private subnet. NAT GW = outbound only.</p>
+              </div>
+              <div className="bg-amber-500/8 border border-amber-500/25 rounded-xl px-3 py-2.5">
+                <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-amber-400/80 font-bold mb-1">🏰 Bastion / Jump Host</p>
+                <p className="text-[0.75rem] text-aws-text leading-relaxed">Nak SSH ke private instance? Letak EC2 (bastion host) dalam public subnet. Connect ke bastion dulu, then SSH ke private instance dari dalam.</p>
+              </div>
             </div>
           </div>
         </section>
@@ -334,8 +519,8 @@ export default function VpcPage() {
                   <span className="ml-auto font-space-mono text-[0.58rem] text-aws-muted bg-white/3 px-2 py-0.5 rounded-full border border-aws-border/40">{item.cost}</span>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[0.75rem]">
-                  <p><span className="text-c4 font-semibold">Guna bila: </span><span className="text-aws-text">{item.when}</span></p>
-                  <p><span className="text-aws-muted font-semibold">Tapi: </span><span className="text-aws-muted">{item.caveat}</span></p>
+                  <p><span className="text-c4 font-semibold">Guna bila: </span><span className="text-aws-text"><GlossaryText text={item.when} /></span></p>
+                  <p><span className="text-aws-muted font-semibold">Tapi: </span><span className="text-aws-muted"><GlossaryText text={item.caveat} /></span></p>
                 </div>
               </div>
             ))}
@@ -364,7 +549,7 @@ export default function VpcPage() {
                   <span className="text-amber-400 shrink-0 font-bold mt-0.5">→</span>
                   <div>
                     <span className="font-space-mono font-bold text-[0.68rem] text-amber-300/90">{item.label}: </span>
-                    <span className="text-[0.78rem] text-aws-text">{item.tip}</span>
+                    <span className="text-[0.78rem] text-aws-text"><GlossaryText text={item.tip} /></span>
                   </div>
                 </div>
               ))}
@@ -393,8 +578,8 @@ export default function VpcPage() {
               { s: 'Access SSM, ECR dari private subnet secara private', a: 'Interface VPC Endpoint (PrivateLink) — berbayar', c: 'text-c4' },
             ].map((row, i) => (
               <div key={i} className={`grid grid-cols-2 border-b border-aws-border/40 ${i % 2 !== 0 ? 'bg-white/[0.015]' : ''}`}>
-                <div className="px-4 py-2.5 text-[0.75rem] text-aws-muted">{row.s}</div>
-                <div className={`px-4 py-2.5 text-[0.75rem] font-semibold border-l border-aws-border/40 ${row.c}`}>{row.a}</div>
+                <div className="px-4 py-2.5 text-[0.75rem] text-aws-muted"><GlossaryText text={row.s} /></div>
+                <div className={`px-4 py-2.5 text-[0.75rem] font-semibold border-l border-aws-border/40 ${row.c}`}><GlossaryText text={row.a} /></div>
               </div>
             ))}
           </div>
