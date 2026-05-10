@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { createPortal } from 'react-dom'
 
 interface Props {
   term: string
@@ -12,25 +11,7 @@ export default function GlossaryTerm({ term, definition }: Props) {
   const [show, setShow] = useState(false)
   const [side, setSide] = useState<'left' | 'right'>('left')
   const wrapperRef = useRef<HTMLSpanElement>(null)
-  const [pos, setPos] = useState({ top: 0, left: 0 })
-  const spanRef = useRef<HTMLSpanElement>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const [mounted, setMounted] = useState(false)
-
-  useEffect(() => { setMounted(true) }, [])
-
-  const updatePos = () => {
-    if (!spanRef.current) return
-    const r = spanRef.current.getBoundingClientRect()
-    const tooltipW = 208
-    setPos({
-      top: r.top + window.scrollY - 8, // above the term; adjusted below
-      left: Math.min(
-        r.left + window.scrollX,
-        window.innerWidth + window.scrollX - tooltipW - 8,
-      ),
-    })
-  }
 
   const reveal = () => {
     if (timerRef.current) clearTimeout(timerRef.current)
@@ -38,10 +19,8 @@ export default function GlossaryTerm({ term, definition }: Props) {
       const { left } = wrapperRef.current.getBoundingClientRect()
       setSide(left > window.innerWidth / 2 ? 'right' : 'left')
     }
-    updatePos()
     setShow(true)
   }
-
   const hide = () => {
     timerRef.current = setTimeout(() => setShow(false), 150)
   }
@@ -50,7 +29,7 @@ export default function GlossaryTerm({ term, definition }: Props) {
   useEffect(() => {
     if (!show) return
     const handler = (e: MouseEvent | TouchEvent) => {
-      if (!spanRef.current?.contains(e.target as Node)) setShow(false)
+      if (!wrapperRef.current?.contains(e.target as Node)) setShow(false)
     }
     document.addEventListener('mousedown', handler)
     document.addEventListener('touchstart', handler)
@@ -60,21 +39,17 @@ export default function GlossaryTerm({ term, definition }: Props) {
     }
   }, [show])
 
-  const tooltipTop = spanRef.current
-    ? spanRef.current.getBoundingClientRect().top + window.scrollY - (10 * 16) - 8
-    : pos.top
-
   return (
-    <span ref={spanRef} className="relative inline-block" onMouseEnter={reveal} onMouseLeave={hide}>
+    <span ref={wrapperRef} className="relative inline-block" onMouseEnter={reveal} onMouseLeave={hide}>
       <span
         className="underline decoration-dotted decoration-amber-400/50 cursor-help text-inherit"
-        onClick={(e) => { e.stopPropagation(); show ? setShow(false) : reveal() }}
+        onClick={(e) => { e.stopPropagation(); setShow(s => !s) }}
       >
         {term}
       </span>
 
-      {mounted && show && createPortal(
-        <div
+      {show && (
+        <span
           role="tooltip"
           className={`absolute bottom-full mb-1.5 z-50 block
             w-52 max-w-[min(208px,calc(100vw-1.5rem))] rounded-xl
@@ -82,24 +57,13 @@ export default function GlossaryTerm({ term, definition }: Props) {
             shadow-xl shadow-black/40 text-[0.75rem] text-slate-200 leading-relaxed
             ${side === 'left' ? 'left-0' : 'right-0'}`}
           onMouseEnter={reveal}
-          className="fixed z-[9999] w-52 max-w-[min(208px,80vw)] rounded-xl border border-slate-700 bg-slate-900 px-3 py-2.5 shadow-xl shadow-black/40 text-[0.75rem] text-slate-200 leading-relaxed pointer-events-auto"
-          style={{
-            top: (spanRef.current?.getBoundingClientRect().top ?? 0) - 8,
-            left: Math.min(
-              spanRef.current?.getBoundingClientRect().left ?? 0,
-              window.innerWidth - 216,
-            ),
-            transform: 'translateY(-100%)',
-          }}
-          onMouseEnter={() => { if (timerRef.current) clearTimeout(timerRef.current) }}
           onMouseLeave={hide}
         >
           <span className="font-space-mono text-amber-400 font-bold text-[0.62rem] uppercase tracking-widest block mb-1">
             {term}
           </span>
           {definition}
-        </div>,
-        document.body,
+        </span>
       )}
     </span>
   )
