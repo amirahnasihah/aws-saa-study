@@ -640,6 +640,20 @@ export const practiceQuestions: PracticeQuestion[] = [
       { id: 'b', text: 'AWS allow penetration testing by customers on their own VPC resources only' },
       { id: 'c', text: 'AWS allow penetration for some resources without prior authorization' },
       { id: 'd', text: 'AWS allow penetration testing for all resources' },
+    ],
+    correctId: 'c',
+    explanation: {
+      correct:
+        'AWS membenarkan customers menjalankan security assessments dan penetration tests terhadap AWS infrastructure mereka TANPA kelulusan awal untuk 8 services yang dibenarkan: EC2, RDS, CloudFront, Aurora, API Gateway, Lambda, Lightsail, dan Elastic Beanstalk. Ini bukan semua resources, dan bukan tiada langsung — 8 services spesifik sahaja yang boleh ditest tanpa prior approval.',
+      incorrects: {
+        a: 'Tidak tepat. AWS memang membenarkan penetration testing — hanya perlu follow guidelines dan limitasi yang ditetapkan. Mengatakan "tidak benarkan langsung" adalah salah.',
+        b: 'Terlalu spesifik dan tidak tepat. AWS tidak menyatakan "VPC resources only" — ia berdasarkan senarai 8 services spesifik, bukan berdasarkan samada ia dalam VPC atau tidak.',
+        d: 'Tidak tepat. AWS tidak membenarkan pentest untuk SEMUA resources. Ada services dan aktiviti tertentu yang dilarang seperti DoS/DDoS simulation, DNS zone walking, dan port flooding.',
+      },
+    },
+    reference: 'https://aws.amazon.com/security/penetration-testing/',
+    keywords: ['penetration testing', 'pentest', 'AUP', 'Acceptable Use Policy', 'security assessment', 'no prior approval', '8 services'],
+  },
 
   // ── D1 · IAM & Identity ──────────────────────────────────────────────────
   {
@@ -1191,15 +1205,6 @@ export const practiceQuestions: PracticeQuestion[] = [
     correctId: 'c',
     explanation: {
       correct:
-        'AWS membenarkan customers menjalankan security assessments dan penetration tests terhadap AWS infrastructure mereka TANPA kelulusan awal untuk 8 services yang dibenarkan: EC2, RDS, CloudFront, Aurora, API Gateway, Lambda, Lightsail, dan Elastic Beanstalk. Ini bukan semua resources, dan bukan tiada langsung — 8 services spesifik sahaja yang boleh ditest tanpa prior approval.',
-      incorrects: {
-        a: 'Tidak tepat. AWS memang membenarkan penetration testing — hanya perlu follow guidelines dan limitasi yang ditetapkan. Mengatakan "tidak benarkan langsung" adalah salah.',
-        b: 'Terlalu spesifik dan tidak tepat. AWS tidak menyatakan "VPC resources only" — ia berdasarkan senarai 8 services spesifik, bukan berdasarkan samada ia dalam VPC atau tidak.',
-        d: 'Tidak tepat. AWS tidak membenarkan pentest untuk SEMUA resources. Ada services dan aktiviti tertentu yang dilarang seperti DoS/DDoS simulation, DNS zone walking, dan port flooding.',
-      },
-    },
-    reference: 'https://aws.amazon.com/security/penetration-testing/',
-    keywords: ['penetration testing', 'pentest', 'AUP', 'Acceptable Use Policy', 'security assessment', 'no prior approval', '8 services'],
         'Amazon MQ is correct. Amazon MQ is a managed message broker service for Apache ActiveMQ and RabbitMQ. It supports industry-standard protocols including AMQP, MQTT, STOMP, and OpenWire — so existing applications work without code changes.',
       incorrects: {
         a: 'Amazon SQS is incorrect. SQS uses AWS-proprietary APIs. An application built for AMQP/MQTT would require significant code changes to integrate with SQS. SQS is ideal for new, cloud-native applications — not for migrating legacy message broker clients.',
