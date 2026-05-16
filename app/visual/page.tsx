@@ -48,20 +48,34 @@ export default function VisualPage() {
         </div>
 
         {/* diagram selector */}
-        <div className="flex flex-wrap gap-2 mb-5">
-          {architectures.map((arch) => (
-            <button
-              key={arch.id}
-              onClick={() => setActive(arch)}
-              className={`font-space-mono text-[0.65rem] px-3 py-1.5 rounded-lg border transition-all duration-150 ${
-                active.id === arch.id
-                  ? domainColors[arch.domain]
-                  : 'text-aws-muted border-aws-border/60 bg-transparent hover:border-aws-border hover:text-aws-text'
-              }`}
-            >
-              {arch.title}
-            </button>
-          ))}
+        <div className="flex flex-wrap gap-2 mb-5 items-center">
+          {architectures.map((arch, i) => {
+            const prevIsAws = i > 0 && !architectures[i - 1].extra
+            const isFirstExtra = arch.extra && prevIsAws
+            return (
+              <div key={arch.id} className="flex items-center gap-2">
+                {isFirstExtra && (
+                  <div className="flex items-center gap-2 mr-1">
+                    <div className="w-px h-5 bg-aws-border/60" />
+                    <span className="font-space-mono text-[0.55rem] text-aws-muted/50 uppercase tracking-widest whitespace-nowrap">extra · not in exam</span>
+                    <div className="w-px h-5 bg-aws-border/60" />
+                  </div>
+                )}
+                <button
+                  onClick={() => setActive(arch)}
+                  className={`font-space-mono text-[0.65rem] px-3 py-1.5 rounded-lg border transition-all duration-150 ${
+                    active.id === arch.id
+                      ? arch.extra
+                        ? 'text-c5 border-c5/30 bg-c5/8'
+                        : domainColors[arch.domain]
+                      : 'text-aws-muted border-aws-border/60 bg-transparent hover:border-aws-border hover:text-aws-text'
+                  }`}
+                >
+                  {arch.title}
+                </button>
+              </div>
+            )
+          })}
         </div>
 
         {/* diagram */}
@@ -81,10 +95,16 @@ function DiagramPanel({ arch }: { arch: Architecture }) {
       <div className="px-5 py-4 border-b border-aws-border/60">
         <div className="flex items-start justify-between gap-4 flex-wrap">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded border ${domainColors[arch.domain]}`}>
-                {domainLabels[arch.domain]}
-              </span>
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              {arch.extra ? (
+                <span className="font-space-mono text-[0.6rem] px-2 py-0.5 rounded border text-c5 border-c5/30 bg-c5/8">
+                  Extra · Not AWS
+                </span>
+              ) : (
+                <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded border ${domainColors[arch.domain]}`}>
+                  {domainLabels[arch.domain]}
+                </span>
+              )}
               {arch.tags.map((t) => (
                 <span key={t} className="font-space-mono text-[0.58rem] text-aws-muted border border-aws-border/50 rounded px-1.5 py-0.5">
                   {t}

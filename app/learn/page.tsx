@@ -29,9 +29,18 @@ export default function LearnPage() {
 
         {domains.map((domain, index) => (
           <div key={domain.id}>
-            {index > 0 && (
+            {index > 0 && !domain.extra && (
               <div className="relative my-12 border-t-2 border-aws-border">
                 <div className="absolute -top-px left-1/2 -translate-x-1/2 w-16 h-0.5 bg-gradient-to-r from-c6 to-c5" />
+              </div>
+            )}
+
+            {domain.extra && (
+              <div className="relative my-14">
+                <div className="border-t-2 border-dashed border-aws-border/60" />
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-1 bg-aws-bg border border-aws-border/60 rounded-full">
+                  <span className="text-[0.6rem] font-space-mono text-aws-muted/70 uppercase tracking-widest">not in SAA-C03 exam</span>
+                </div>
               </div>
             )}
 

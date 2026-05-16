@@ -8,6 +8,7 @@ export interface Architecture {
   tags: string[]
   nodes: Node[]
   edges: Edge[]
+  extra?: boolean
 }
 
 const edgeBase = {
@@ -259,6 +260,29 @@ export const architectures: Architecture[] = [
       { id: 'e5', source: 'priv-rt', target: 'ec2',     ...edgeBase, animated: false, style: { stroke: 'rgba(255,255,255,0.07)', strokeDasharray: '4 3', strokeWidth: 1.5 } },
       { id: 'e6', source: 'bastion', target: 'ec2',     ...edgeBase, label: 'SSH hop', animated: false, style: { stroke: 'rgba(255,255,255,0.12)', strokeDasharray: '4 3', strokeWidth: 1.5 } },
       { id: 'e7', source: 'internet',target: 'no-in',   ...edgeBase, animated: false, style: { stroke: 'rgba(239,68,68,0.3)', strokeDasharray: '4 3', strokeWidth: 1.5 }, label: 'blocked' },
+    ],
+  },
+  {
+    id: 'arch-litestream',
+    title: 'Litestream — SQLite → S3 Replication',
+    description: 'Litestream runs as a sidecar alongside your app. It shadows the SQLite WAL and streams every write to S3 in real-time. On startup, it restores the latest snapshot + WAL before handing off to the app.',
+    domain: 'd4',
+    tags: ['Litestream', 'SQLite', 'S3', 'WAL', 'Open-Source'],
+    extra: true,
+    nodes: [
+      { id: 'app',       type: 'archNode', position: { x: 0,   y: 180 }, data: { label: 'App Process',    sub: 'Node / Go / Python / etc.', icon: '📦', color: 'c1' } },
+      { id: 'sqlite',    type: 'archNode', position: { x: 220, y: 180 }, data: { label: 'SQLite DB',       sub: 'local disk · WAL mode', icon: '🗃️', color: 'c5' } },
+      { id: 'litestream',type: 'archNode', position: { x: 220, y: 320 }, data: { label: 'Litestream',      sub: 'sidecar · reads WAL', icon: '🔄', color: 'c2' } },
+      { id: 's3',        type: 'archNode', position: { x: 440, y: 320 }, data: { label: 'S3 Bucket',       sub: 'snapshots + WAL segments', icon: '🪣', color: 'c6' } },
+      { id: 'restore',   type: 'archNode', position: { x: 440, y: 60  }, data: { label: 'Restore on Boot', sub: 'S3 → SQLite before app starts', icon: '♻️', color: 'gray' } },
+      { id: 'note',      type: 'archNode', position: { x: 660, y: 180 }, data: { label: '⚠️ Not AWS',      sub: 'open-source · not in SAA-C03', icon: '📌', color: 'gray' } },
+    ],
+    edges: [
+      { id: 'e1', source: 'app',        target: 'sqlite',     ...edgeBase, label: 'read / write' },
+      { id: 'e2', source: 'sqlite',     target: 'litestream', ...edgeBase, label: 'WAL stream' },
+      { id: 'e3', source: 'litestream', target: 's3',         ...edgeBase, label: 'replicate' },
+      { id: 'e4', source: 's3',         target: 'restore',    ...edgeBase, label: 'on startup', animated: false, style: { stroke: 'rgba(255,255,255,0.12)', strokeDasharray: '4 3', strokeWidth: 1.5 } },
+      { id: 'e5', source: 'restore',    target: 'sqlite',     ...edgeBase, label: 'restore DB', animated: false, style: { stroke: 'rgba(255,255,255,0.12)', strokeDasharray: '4 3', strokeWidth: 1.5 } },
     ],
   },
   {

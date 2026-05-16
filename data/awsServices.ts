@@ -18,6 +18,7 @@ export type ColorCategory =
   | 'd2migrate'
   | 'd3db'
   | 'd3analytics'
+  | 'tools'
 
 export interface ServiceCard {
   shortName: string
@@ -49,6 +50,7 @@ export interface DomainData {
   subtitle: string
   variant: 'd1' | 'd2' | 'd3' | 'd4'
   sections: SectionData[]
+  extra?: boolean
 }
 
 export const categoryStyles: Record<
@@ -74,6 +76,7 @@ export const categoryStyles: Record<
   d2migrate: { title: 'text-c2', accent: 'bg-c2',  keyword: 'text-c2 border-c2/20 bg-c2/5',   nav: 'text-c2 border-c2/20',   scenario: 'bg-c6/5 border-c6/15' },
   d3db:      { title: 'text-c1', accent: 'bg-c1',  keyword: 'text-c1 border-c1/20 bg-c1/5',   nav: 'text-c1 border-c1/20',   scenario: 'bg-c6/5 border-c6/15' },
   d3analytics: { title: 'text-c3', accent: 'bg-c3',  keyword: 'text-c3 border-c3/20 bg-c3/5',   nav: 'text-c3 border-c3/20',   scenario: 'bg-c6/5 border-c6/15' },
+  tools:       { title: 'text-c5', accent: 'bg-c5',  keyword: 'text-c5 border-c5/20 bg-c5/5',   nav: 'text-c5 border-c5/20',   scenario: 'bg-c5/5 border-c5/15' },
 }
 
 export const domains: DomainData[] = [
@@ -1461,6 +1464,45 @@ export const domains: DomainData[] = [
             fungsi: 'Menyediakan kapasiti database NoSQL yang skala secara automatik dan dikenakan caj berdasarkan permintaan sebenar',
             scenario: 'App baru yang tak tahu lagi berapa reads/writes per second. DynamoDB On-Demand auto-scale dan kau bayar per request je — tak perlu provision capacity in advance. Kalau traffic rendah, bayar rendah.',
             keywords: ['NoSQL', 'pay per request', 'serverless', 'auto-scale', 'unpredictable traffic'],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    id: 'domain-extras',
+    badge: 'BONUS · NOT IN EXAM',
+    title: 'Extra Tools & Open-Source',
+    subtitle: 'Bukan AWS native — tapi berguna untuk real-world. Tak keluar dalam SAA-C03.',
+    variant: 'd4',
+    extra: true,
+    sections: [
+      {
+        id: 'extras-tools',
+        icon: '🛠️',
+        title: 'Open-Source Database Tools',
+        category: 'tools',
+        services: [
+          {
+            shortName: 'Litestream',
+            fullName: 'Litestream (SQLite Streaming Replication)',
+            ingat: '"SQLite backup ke S3 secara real-time — murah, mudah, auto"',
+            gunaUntuk: 'Continuously replicate a SQLite database to S3 (or GCS / Azure Blob) for near-zero-cost backup and restore',
+            fungsi: 'Litestream berjalan sebagai sidecar process sebelah app kau. Ia shadow-read SQLite WAL (Write-Ahead Log) dan stream setiap perubahan ke S3 secara real-time tanpa kena pause app. Bila server restart atau crash, Litestream restore snapshot + WAL terbaru dari S3 sebelum app start. Kos storage = S3 rate sahaja (~$0.023/GB). Tiada managed DB fee.',
+            contohGuna: 'Deploy app di single EC2 atau fly.io dengan SQLite. Litestream stream WAL ke S3. Kalau instance crash, launch baru → Litestream restore dari S3 dalam beberapa saat → app up semula. Zero data loss.',
+            scenario: 'Bukan SAA-C03 exam content. Guna dalam real-world: small SaaS, indie apps, side projects yang nak avoid RDS cost ($50–300+/month) tapi masih nak reliable backup.',
+            tips: [
+              'SQLite MUST be in WAL mode: PRAGMA journal_mode=WAL',
+              'Litestream mesti start SEBELUM app process',
+              'Config dalam litestream.yml: dbs path + S3 bucket URL',
+              'Boleh guna dengan fly.io, Railway, Render, Coolify, bare EC2',
+              'Max practical DB size: ~10 GB sebelum SQLite mula slow',
+            ],
+            docs: [
+              { label: 'litestream.io', url: 'https://litestream.io' },
+              { label: 'GitHub: benbjohnson/litestream', url: 'https://github.com/benbjohnson/litestream' },
+            ],
+            keywords: ['SQLite', 'WAL', 'S3 replication', 'sidecar', 'open-source', 'backup', 'not AWS native', 'single server', 'cheap DB'],
           },
         ],
       },
