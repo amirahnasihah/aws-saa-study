@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Space_Mono, Inter } from 'next/font/google'
+import { BookmarksProvider } from '@/components/BookmarksContext'
 import './globals.css'
 
 const inter = Inter({
@@ -49,7 +50,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className={`${inter.variable} ${spaceMono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <BookmarksProvider>{children}</BookmarksProvider>
+      </body>
     </html>
   )
 }

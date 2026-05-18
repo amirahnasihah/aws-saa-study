@@ -119,7 +119,7 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search services, keywords..."
-            className="flex-1 bg-transparent text-aws-text placeholder:text-aws-muted text-sm outline-none font-syne"
+            className="flex-1 bg-transparent text-aws-text placeholder:text-aws-muted text-base md:text-sm outline-none font-syne"
           />
           {query && (
             <button onClick={() => setQuery('')} className="text-aws-muted hover:text-aws-text transition-colors text-xs">

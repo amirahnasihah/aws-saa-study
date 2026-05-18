@@ -2,9 +2,13 @@
 
 import { useState, useEffect } from 'react'
 import SearchModal from './SearchModal'
+import BookmarksPanel from './BookmarksPanel'
+import { useBookmarksCtx } from './BookmarksContext'
 
 export default function FloatingSearch() {
   const [searchOpen, setSearchOpen] = useState(false)
+  const [bookmarksOpen, setBookmarksOpen] = useState(false)
+  const { count } = useBookmarksCtx()
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -19,6 +23,33 @@ export default function FloatingSearch() {
 
   return (
     <>
+      {/* bookmarks button */}
+      <button
+        type="button"
+        onClick={() => setBookmarksOpen(true)}
+        aria-label="View bookmarks"
+        className="fixed bottom-5 right-[calc(5rem+0.5rem)] z-[55] flex items-center gap-2 rounded-full border border-aws-border/80 bg-aws-card/95 px-3.5 py-3 font-space-mono text-[0.65rem] text-aws-text shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md transition-all duration-150 hover:border-amber-400/40 hover:shadow-[0_8px_40px_rgba(0,0,0,0.55)] hover:ring-1 hover:ring-amber-400/20 md:bottom-6"
+      >
+        <svg
+          className={count > 0 ? 'text-amber-400 shrink-0' : 'text-aws-muted shrink-0'}
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill={count > 0 ? 'currentColor' : 'none'}
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden
+        >
+          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+        </svg>
+        {count > 0 && (
+          <span className="text-amber-400 font-space-mono text-[0.6rem] leading-none">{count}</span>
+        )}
+      </button>
+
+      {/* search button */}
       <button
         type="button"
         onClick={() => setSearchOpen(true)}
@@ -46,6 +77,7 @@ export default function FloatingSearch() {
       </button>
 
       <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+      <BookmarksPanel isOpen={bookmarksOpen} onClose={() => setBookmarksOpen(false)} />
     </>
   )
 }
