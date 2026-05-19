@@ -16,9 +16,12 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
     <>
       {/* ── Desktop nav ── */}
       <nav className="nav-scroll hidden md:flex fixed top-0 left-0 right-0 h-14 z-50 items-center gap-2 px-4 overflow-x-auto bg-aws-bg/92 backdrop-blur-md border-b border-aws-border">
-        <span className="font-space-mono text-[0.7rem] font-bold text-c1 whitespace-nowrap mr-2 pr-2 border-r border-aws-border shrink-0">
+        <Link
+          href="/about"
+          className="font-space-mono text-[0.7rem] font-bold text-c1 whitespace-nowrap mr-2 pr-2 border-r border-aws-border shrink-0 hover:text-aws-text transition-colors"
+        >
           AWS SAA-C03
-        </span>
+        </Link>
 
         <PageLink href="/" label="Cheat Sheet" active={activePage === 'cheatsheet'} />
         <PageLink href="/learn" label="Deep Notes" active={activePage === 'learn'} />
@@ -46,7 +49,9 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
 
       {/* ── Mobile nav ── */}
       <nav className="md:hidden fixed top-0 left-0 right-0 h-14 z-50 flex items-center justify-between px-4 bg-aws-bg/95 backdrop-blur-md border-b border-aws-border">
-        <span className="font-space-mono text-[0.7rem] font-bold text-c1">AWS SAA-C03</span>
+        <Link href="/about" className="font-space-mono text-[0.7rem] font-bold text-c1 hover:text-aws-text transition-colors">
+          AWS SAA-C03
+        </Link>
         <div>
           <button onClick={() => setMenuOpen(true)} className="text-aws-muted hover:text-aws-text transition-colors p-2" aria-label="Open menu">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">

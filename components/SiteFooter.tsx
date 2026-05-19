@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react'
-
-const PORTFOLIO_URL = 'https://amirahnasihah.my'
+import { PORTFOLIO_URL } from '@/data/siteLinks'
 
 type SiteFooterProps = {
   tagline: string
