@@ -75,7 +75,7 @@ export default function PracticePage() {
   return (
     <>
       <Nav activePage="practice" />
-      <main className="max-w-[720px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-16">
+      <main className="max-w-[720px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-28 md:pb-16">
         {/* header */}
         <div className="mb-8 flex items-start justify-between gap-4">
           <div>
@@ -242,10 +242,10 @@ function ReviewMode() {
 
       {/* bottom padding so content doesn't hide behind floating bar */}
       <ExplanationBlock q={q} selected={q.correctId} isCorrect={true} reviewMode={true} />
-      <div className="h-24" />
+      <div className="h-28 md:h-24" />
 
-      {/* floating nav bar */}
-      <div className="fixed bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[720px] px-4 z-50">
+      {/* floating nav bar — z-50; FABs sit above on mobile (see FloatingSearch) */}
+      <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] md:bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[720px] px-4 z-50">
         <div className="flex gap-2 bg-aws-card/80 backdrop-blur-md border border-aws-border rounded-2xl p-2 shadow-xl">
           <button
             onClick={() => setIndex((i) => i - 1)}

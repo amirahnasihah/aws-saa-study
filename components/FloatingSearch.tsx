@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import SearchModal from './SearchModal'
 import BookmarksPanel from './BookmarksPanel'
 import { useBookmarksCtx } from './BookmarksContext'
@@ -9,6 +10,9 @@ export default function FloatingSearch() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [bookmarksOpen, setBookmarksOpen] = useState(false)
   const { count } = useBookmarksCtx()
+  const pathname = usePathname()
+  const fabBottomClass =
+    pathname === '/practice' ? 'bottom-24 md:bottom-6' : 'bottom-5 md:bottom-6'
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
@@ -28,7 +32,7 @@ export default function FloatingSearch() {
         type="button"
         onClick={() => setBookmarksOpen(true)}
         aria-label="View bookmarks"
-        className="fixed bottom-5 right-[calc(5rem+0.5rem)] z-[55] flex items-center gap-2 rounded-full border border-aws-border/80 bg-aws-card/95 px-3.5 py-3 font-space-mono text-[0.65rem] text-aws-text shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md transition-all duration-150 hover:border-amber-400/40 hover:shadow-[0_8px_40px_rgba(0,0,0,0.55)] hover:ring-1 hover:ring-amber-400/20 md:bottom-6"
+        className={`fixed ${fabBottomClass} right-[calc(5rem+0.5rem)] z-[55] flex items-center gap-2 rounded-full border border-aws-border/80 bg-aws-card/95 px-3.5 py-3 font-space-mono text-[0.65rem] text-aws-text shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md transition-all duration-150 hover:border-amber-400/40 hover:shadow-[0_8px_40px_rgba(0,0,0,0.55)] hover:ring-1 hover:ring-amber-400/20`}
       >
         <svg
           className={count > 0 ? 'text-amber-400 shrink-0' : 'text-aws-muted shrink-0'}
@@ -54,7 +58,7 @@ export default function FloatingSearch() {
         type="button"
         onClick={() => setSearchOpen(true)}
         aria-label="Search services and keywords"
-        className="fixed bottom-5 right-5 z-[55] flex items-center gap-2.5 rounded-full border border-aws-border/80 bg-aws-card/95 px-4 py-3 font-space-mono text-[0.65rem] text-aws-text shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md transition-all duration-150 hover:border-c1/40 hover:bg-aws-card hover:shadow-[0_8px_40px_rgba(0,0,0,0.55)] hover:ring-1 hover:ring-c1/20 md:bottom-6 md:right-6"
+        className={`fixed ${fabBottomClass} right-5 z-[55] flex items-center gap-2.5 rounded-full border border-aws-border/80 bg-aws-card/95 px-4 py-3 font-space-mono text-[0.65rem] text-aws-text shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md transition-all duration-150 hover:border-c1/40 hover:bg-aws-card hover:shadow-[0_8px_40px_rgba(0,0,0,0.55)] hover:ring-1 hover:ring-c1/20 md:right-6`}
       >
         <svg
           className="shrink-0 text-c1"
