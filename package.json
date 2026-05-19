@@ -9,7 +9,7 @@
     "start": "next start",
     "test": "echo \"No tests configured\"",
     "lint": "eslint",
-    "deploy": "next build && bunx wrangler pages deploy --commit-dirty=true"
+    "deploy": "next build && bunx wrangler pages deploy out --project-name=aws-saa-study --commit-dirty=true"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.2",
