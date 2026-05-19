@@ -12,7 +12,7 @@ export default function VpcPage() {
     <>
       <Nav activePage="vpc" />
 
-      <main id="top" className="max-w-[860px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-16">
+      <main id="top" className="max-w-[860px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
 
         {/* Hero */}
         <div className="text-center mb-10">

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import { practiceQuestions, PracticeQuestion } from '@/data/practiceQuestions'
@@ -22,6 +22,7 @@ type QuizState = 'question' | 'revealed'
 type PageMode = 'quiz' | 'review'
 
 export default function PracticePage() {
+  const [questions, setQuestions] = useState<PracticeQuestion[]>(practiceQuestions)
   const [mode, setMode] = useState<PageMode>('quiz')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
@@ -29,7 +30,16 @@ export default function PracticePage() {
   const [score, setScore] = useState({ correct: 0, total: 0 })
   const [finished, setFinished] = useState(false)
 
-  const q = practiceQuestions[currentIndex]
+  useEffect(() => {
+    fetch('/api/questions')
+      .then((r) => r.json())
+      .then((data: unknown) => {
+        if (Array.isArray(data) && data.length > 0) setQuestions(data as PracticeQuestion[])
+      })
+      .catch(() => {})
+  }, [])
+
+  const q = questions[currentIndex]
   const isCorrect = selected === q.correctId
 
   const handleSelect = useCallback((id: string) => {
@@ -43,7 +53,7 @@ export default function PracticePage() {
   }, [quizState, q.correctId])
 
   const handleNext = useCallback(() => {
-    if (currentIndex + 1 >= practiceQuestions.length) {
+    if (currentIndex + 1 >= questions.length) {
       setFinished(true)
     } else {
       setCurrentIndex((i) => i + 1)
@@ -75,7 +85,7 @@ export default function PracticePage() {
   return (
     <>
       <Nav activePage="practice" />
-      <main className="max-w-[720px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-28 md:pb-16">
+      <main className="max-w-[720px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-28">
         {/* header */}
         <div className="mb-8 flex items-start justify-between gap-4">
           <div>
@@ -109,14 +119,14 @@ export default function PracticePage() {
         </div>
 
         {mode === 'review' ? (
-          <ReviewMode />
+          <ReviewMode questions={questions} />
         ) : finished ? (
           <FinishedScreen score={score} onRestart={handleRestart} />
         ) : (
           <QuestionCard
             q={q}
             index={currentIndex}
-            total={practiceQuestions.length}
+            total={questions.length}
             selected={selected}
             quizState={quizState}
             isCorrect={isCorrect}
@@ -179,11 +189,11 @@ function QuestionGrid({
   )
 }
 
-function ReviewMode() {
+function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
   const [index, setIndex] = useState(0)
   const [showPicker, setShowPicker] = useState(false)
-  const total = practiceQuestions.length
-  const q = practiceQuestions[index]
+  const total = questions.length
+  const q = questions[index]
 
   return (
     <div>
@@ -375,7 +385,7 @@ function QuestionCard({
           onClick={onNext}
           className="w-full mt-4 py-3 rounded-xl font-space-mono text-sm font-bold bg-c1/15 border border-c1/40 text-c1 hover:bg-c1/25 transition-all duration-150"
         >
-          {index + 1 >= practiceQuestions.length ? 'See Results →' : 'Next Question →'}
+          {index + 1 >= total ? 'See Results →' : 'Next Question →'}
         </button>
       )}
 

@@ -41,7 +41,7 @@ export default function VisualPage() {
   return (
     <>
       <Nav activePage="visual" />
-      <main className="max-w-[1100px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-16">
+      <main className="max-w-[1100px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
         {/* header */}
         <div className="mb-6">
           <h1 className="font-space-mono text-2xl font-bold text-aws-text mb-1">Visual Architectures</h1>
