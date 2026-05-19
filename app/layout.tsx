@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Space_Mono, Inter } from 'next/font/google'
 import { BookmarksProvider } from '@/components/BookmarksContext'
+import { SITE_URL } from '@/data/siteLinks'
 import './globals.css'
 
 const inter = Inter({
@@ -14,8 +15,6 @@ const spaceMono = Space_Mono({
   weight: ['400', '700'],
   variable: '--font-space-mono',
 })
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aws-saa-study.pages.dev'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -35,11 +34,13 @@ export const metadata: Metadata = {
     siteName: 'AWS SAA Study',
     title: 'AWS SAA-C03 Study',
     description: 'Design Secure, Resilient, High-Performing & Cost-Optimized Architectures — AWS Solutions Architect Associate study reference',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630, type: 'image/png', alt: 'AWS SAA-C03 Study — Solutions Architect Associate exam prep' }],
   },
   twitter: {
     card: 'summary_large_image',
     title: 'AWS SAA-C03 Study',
     description: 'Design Secure, Resilient, High-Performing & Cost-Optimized Architectures — AWS Solutions Architect Associate study reference',
+    images: ['/twitter-image.png'],
   },
   other: {
     'color-scheme': 'dark',
