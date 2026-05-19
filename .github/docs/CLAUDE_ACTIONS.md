@@ -33,12 +33,6 @@ The workflow uses **Claude 3.5 Haiku** (~$0.80/$4 per 1M tokens) and `--max-turn
 
 ---
 
-## Deploy (`.github/workflows/deploy.yml`)
+## Deploy
 
-| Trigger | Push to `main`, or manual **workflow_dispatch** |
-|---------|--------------------------------------------------|
-| Action | `bun run build` → `wrangler pages deploy` to **aws-saa-study** (via `wrangler.jsonc`) |
-
-**Secrets:** `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID` (see README Deploy section).
-
-Release merges to the `release` branch also deploy via `.github/workflows/release.yml`.
+Cloudflare **Pages Git integration** — push to `main` and Cloudflare builds/deploys. No GitHub Actions deploy workflow or repository secrets needed. See README Deploy section for dashboard settings.

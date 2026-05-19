@@ -7,41 +7,9 @@ on:
       - release
 
 jobs:
-  deployment:
-    name: Deploy
-    # 'merged == true' to prevent from being triggered when PR is closed
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-
-      - name: Set up Bun
-        uses: oven-sh/setup-bun@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
-
-      - name: Build
-        run: bun run build
-        env:
-          NEXT_PUBLIC_SITE_URL: https://aws.amrhnshh.com
-
-      - name: Deploy to Cloudflare Pages
-        run: bunx wrangler pages deploy out --project-name=aws-saa-study --commit-dirty=true
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-
   publish-release-note:
     name: Publish release note
     if: github.event.pull_request.merged == true
-    needs: deployment
     permissions:
       contents: write
       pull-requests: write

@@ -18,7 +18,7 @@ Personal study reference for the **AWS Solutions Architect Associate (SAA-C03)**
 - **Tailwind CSS v4**
 - **React Flow** (`@xyflow/react`) for interactive architecture diagrams
 - **Bun** as package manager
-- **Cloudflare Pages** for hosting (via `wrangler pages deploy`)
+- **Cloudflare Pages** for hosting (Git integration — push to deploy)
 
 ## Local dev
 
@@ -29,21 +29,35 @@ bun dev
 
 ## Deploy
 
+Push to `main` — Cloudflare builds and deploys automatically.
+
+**One-time setup** in [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**:
+
+| Setting | Value |
+|---------|-------|
+| Repository | `amirahnasihah/aws-saa-study` |
+| Production branch | `main` |
+| Framework preset | None (or Next.js Static HTML Export) |
+| Build command | `bun run build` |
+| Build output directory | `out` |
+| Root directory | `/` |
+
+**Environment variable** (Production):
+
+| Name | Value |
+|------|-------|
+| `NEXT_PUBLIC_SITE_URL` | `https://aws.amrhnshh.com` |
+
+If the project already exists from the old repo name, open **Settings → Builds & deployments** and reconnect Git to `aws-saa-study`.
+
+Live: **https://aws.amrhnshh.com** (also **https://aws-saa-study.pages.dev**)
+
+Manual deploy from your machine (optional):
+
 ```bash
 bunx wrangler login   # once
-bun run deploy        # next build + wrangler pages deploy
+bun run deploy
 ```
-
-Live: **https://aws-saa-study.pages.dev**
-
-### GitHub Actions
-
-Push to `main` runs [.github/workflows/deploy.yml](.github/workflows/deploy.yml). Add repository secrets:
-
-| Secret | Where to get it |
-|--------|-----------------|
-| `CLOUDFLARE_API_TOKEN` | Cloudflare dashboard → My Profile → API Tokens (template: Edit Cloudflare Workers, include **Pages Edit**) |
-| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard → Workers & Pages → right sidebar |
 
 ## Data files
 
