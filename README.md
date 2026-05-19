@@ -1,4 +1,4 @@
-# AWS Messy Notes
+# AWS SAA Study
 
 Personal study reference for the **AWS Solutions Architect Associate (SAA-C03)** exam. Built as a Next.js app, deployed to Cloudflare Pages.
 
@@ -30,7 +30,20 @@ bun dev
 ## Deploy
 
 ```bash
-bun run deploy   # next build + wrangler pages deploy ```
+bunx wrangler login   # once
+bun run deploy        # next build + wrangler pages deploy
+```
+
+Live: **https://aws-saa-study.pages.dev**
+
+### GitHub Actions
+
+Push to `main` runs [.github/workflows/deploy.yml](.github/workflows/deploy.yml). Add repository secrets:
+
+| Secret | Where to get it |
+|--------|-----------------|
+| `CLOUDFLARE_API_TOKEN` | Cloudflare dashboard → My Profile → API Tokens (template: Edit Cloudflare Workers, include **Pages Edit**) |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare dashboard → Workers & Pages → right sidebar |
 
 ## Data files
 

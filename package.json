@@ -1,5 +1,5 @@
 {
-  "name": "aws-cheatsheet",
+  "name": "aws-saa-study",
   "version": "0.1.0",
   "private": true,
   "packageManager": "bun@1.3.11",
@@ -9,7 +9,7 @@
     "start": "next start",
     "test": "echo \"No tests configured\"",
     "lint": "eslint",
-    "deploy": "next build && wrangler pages deploy out --project-name=aws-cheatsheet"
+    "deploy": "next build && bunx wrangler pages deploy --commit-dirty=true"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.2",
@@ -29,6 +29,7 @@
     "eslint": "^10",
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
-    "typescript": "^6"
+    "typescript": "^6",
+    "wrangler": "^4.93.0"
   }
 }

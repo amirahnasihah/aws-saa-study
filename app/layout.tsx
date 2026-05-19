@@ -15,30 +15,30 @@ const spaceMono = Space_Mono({
   variable: '--font-space-mono',
 })
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aws-messy-notes.pages.dev'
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://aws-saa-study.pages.dev'
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: 'AWS SAA-C03 — Cheat Sheet',
+  title: 'AWS SAA-C03 Study',
   description: 'Design Secure, Resilient, High-Performing & Cost-Optimized Architectures — AWS Solutions Architect Associate study reference',
   keywords: [
-    'AWS', 'SAA-C03', 'Solutions Architect', 'cheat sheet', 'study guide',
+    'AWS', 'SAA-C03', 'Solutions Architect', 'study guide', 'exam prep',
     'VPC', 'EC2', 'S3', 'IAM', 'RDS', 'Lambda', 'CloudFront',
-    'exam prep', 'certification', 'cloud computing',
+    'certification', 'cloud computing',
   ],
-  authors: [{ name: 'AWS Messy Notes' }],
+  authors: [{ name: 'AWS SAA Study' }],
   robots: { index: true, follow: true },
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: SITE_URL,
-    siteName: 'AWS SAA-C03 Cheat Sheet',
-    title: 'AWS SAA-C03 — Cheat Sheet',
+    siteName: 'AWS SAA Study',
+    title: 'AWS SAA-C03 Study',
     description: 'Design Secure, Resilient, High-Performing & Cost-Optimized Architectures — AWS Solutions Architect Associate study reference',
   },
   twitter: {
-    card: 'summary',
-    title: 'AWS SAA-C03 — Cheat Sheet',
+    card: 'summary_large_image',
+    title: 'AWS SAA-C03 Study',
     description: 'Design Secure, Resilient, High-Performing & Cost-Optimized Architectures — AWS Solutions Architect Associate study reference',
   },
   other: {
