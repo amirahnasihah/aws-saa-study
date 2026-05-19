@@ -70,7 +70,12 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
           <div className="relative ml-auto w-72 h-full bg-aws-card border-l border-aws-border overflow-y-auto animate-modal-in">
             <div className="flex items-center justify-between px-4 py-4 border-b border-aws-border">
               <span className="font-space-mono text-[0.7rem] font-bold text-c1">Navigation</span>
-              <button onClick={() => setMenuOpen(false)} className="text-aws-muted hover:text-aws-text transition-colors p-1">
+              <button
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                className="text-aws-muted hover:text-aws-text transition-colors p-1"
+                aria-label="Close menu"
+              >
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                   <path d="M13 3L3 13M3 3l10 10" />
                 </svg>
