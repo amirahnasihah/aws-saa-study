@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "pages:build": "bunx next-on-pages",
+    "pages:build": "next build && bunx next-on-pages",
     "start": "next start",
     "test": "echo \"No tests configured\"",
     "lint": "eslint",
