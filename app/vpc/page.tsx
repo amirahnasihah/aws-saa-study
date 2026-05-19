@@ -738,7 +738,7 @@ export default function VpcPage() {
                   { label: 'VPC Endpoints (PrivateLink)', url: 'https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints.html' },
                   { label: 'Transit Gateway', url: 'https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html' },
                 ].map((link) => (
-                  <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer"
+                  <a key={link.label} href={link.url} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-2 text-[0.75rem] text-aws-muted hover:text-c4 transition-colors group">
                     <span className="text-aws-border group-hover:text-c4 transition-colors shrink-0">→</span>
                     {link.label}
@@ -756,9 +756,9 @@ export default function VpcPage() {
                   { label: 'VPC Pricing', url: 'https://aws.amazon.com/vpc/pricing/' },
                   { label: 'AWS Networking Blog', url: 'https://aws.amazon.com/blogs/networking-and-content-delivery/' },
                   { label: 'SAA-C03 Exam Guide (PDF)', url: 'https://aws.amazon.com/certification/certified-solutions-architect-associate/' },
-                  { label: 'NAT Gateway Pricing', url: 'https://aws.amazon.com/vpc/pricing/' },
+                  { label: 'NAT Gateway Pricing', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-pricing.html' },
                 ].map((link) => (
-                  <a key={link.url} href={link.url} target="_blank" rel="noopener noreferrer"
+                  <a key={link.label} href={link.url} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-2 text-[0.75rem] text-aws-muted hover:text-c4 transition-colors group">
                     <span className="text-aws-border group-hover:text-c4 transition-colors shrink-0">→</span>
                     {link.label}
