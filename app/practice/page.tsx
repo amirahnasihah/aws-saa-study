@@ -60,7 +60,7 @@ export default function PracticePage() {
       setSelected(null)
       setQuizState('question')
     }
-  }, [currentIndex])
+  }, [currentIndex, questions.length])
 
   const handleJump = useCallback((i: number) => {
     setCurrentIndex(i)

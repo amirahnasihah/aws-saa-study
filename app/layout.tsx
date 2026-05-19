@@ -27,6 +27,9 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'AWS SAA Study' }],
   robots: { index: true, follow: true },
+  icons: {
+    icon: [{ url: '/favicon.ico' }, { url: '/icon.svg', type: 'image/svg+xml' }],
+  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
