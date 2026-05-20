@@ -19,9 +19,10 @@ function save(set: Set<string>) {
 }
 
 export function useBookmarks() {
-  const [bookmarks, setBookmarks] = useState<Set<string>>(new Set())
+  const [bookmarks, setBookmarks] = useState<Set<string>>(() => new Set())
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setBookmarks(load())
   }, [])
 

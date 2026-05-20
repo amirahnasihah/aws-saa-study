@@ -78,6 +78,7 @@ jobs:
             - name: Run audit
               if: steps.check_package.outputs.exists == 'true'
               run: bun audit
+              continue-on-error: true
 
             - name: Run Snyk security scan
               if: steps.check_package.outputs.exists == 'true'

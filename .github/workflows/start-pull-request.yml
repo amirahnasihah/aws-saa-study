@@ -37,7 +37,7 @@ jobs:
           exit 1
 
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v4
 
       - name: Get issue labels
         id: get_labels
