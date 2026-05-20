@@ -5,8 +5,6 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
-    cooldown:
-      min-release-age: "3 days"
     commit-message:
       prefix: "chore"
       include: "scope"
