@@ -21,7 +21,7 @@ const difficultyColors: Record<string, string> = {
 type QuizState = 'question' | 'revealed'
 type PageMode = 'quiz' | 'review'
 
-type FilterSource = 'all' | 'whizlab' | 'custom' | 'mobile'
+type FilterSource = 'all' | 'whizlab' | 'others'
 type FilterDomain = 'all' | 'd1' | 'd2' | 'd3' | 'd4'
 type FilterDifficulty = 'all' | 'Easy' | 'Medium' | 'Hard'
 
@@ -222,9 +222,9 @@ function FilterBar({ filters, onChange }: { filters: FilterState; onChange: (f: 
       {/* Source */}
       <div className="flex flex-wrap items-center gap-1.5">
         <span className="font-space-mono text-[0.58rem] text-aws-muted w-14 shrink-0">Source</span>
-        {(['all', 'custom', 'whizlab', 'mobile'] as FilterSource[]).map((s) => (
+        {(['all', 'whizlab', 'others'] as FilterSource[]).map((s) => (
           <button key={s} type="button" onClick={() => onChange({ ...filters, source: s })} className={pill(filters.source === s)}>
-            {s === 'all' ? 'All' : s === 'custom' ? 'Custom' : s === 'whizlab' ? 'Whizlab' : 'Mobile'}
+            {s === 'all' ? 'All' : s === 'whizlab' ? 'Whizlab' : 'Others'}
           </button>
         ))}
       </div>
