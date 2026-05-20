@@ -7,23 +7,9 @@ on:
       - release
 
 jobs:
-  deployment:
-    name: Deploy
-    # 'merged == true' to prevent from being triggered when PR is closed
-    if: github.event.pull_request.merged == true
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Deployment
-        run: |
-          echo "Deployment pipeline here"
-
   publish-release-note:
     name: Publish release note
     if: github.event.pull_request.merged == true
-    needs: deployment
     permissions:
       contents: write
       pull-requests: write

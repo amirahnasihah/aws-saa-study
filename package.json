@@ -1,0 +1,38 @@
+{
+  "name": "aws-saa-study",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "bun@1.3.11",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "pages:build": "next build && bunx next-on-pages",
+    "start": "next start",
+    "test": "echo \"No tests configured\"",
+    "lint": "eslint",
+    "deploy": "next build && bunx next-on-pages && bunx wrangler pages deploy --commit-dirty=true"
+  },
+  "dependencies": {
+    "@xyflow/react": "^12.10.2",
+    "next": "16.2.4",
+    "postcss": "^8.5.13",
+    "react": "19.2.6",
+    "react-dom": "19.2.4"
+  },
+  "overrides": {
+    "postcss": "^8.5.13"
+  },
+  "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
+    "@cloudflare/workers-types": "^4.20260519.1",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^25",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^10",
+    "eslint-config-next": "16.2.4",
+    "tailwindcss": "^4",
+    "typescript": "^6",
+    "wrangler": "^4.93.0"
+  }
+}

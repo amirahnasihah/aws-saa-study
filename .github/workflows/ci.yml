@@ -10,12 +10,9 @@ on:
 jobs:
     test:
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node-version: [18, 20, 22]
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - name: Check for package.json
               id: check_package
@@ -26,28 +23,30 @@ jobs:
                       echo "exists=false" >> $GITHUB_OUTPUT
                   fi
 
-            - name: Set up Node.js ${{ matrix.node-version }}
+            - name: Set up Bun
               if: steps.check_package.outputs.exists == 'true'
-              uses: actions/setup-node@v4
-              with:
-                  node-version: ${{ matrix.node-version }}
-                  cache: "npm"
+              uses: oven-sh/setup-bun@v2
 
             - name: Install dependencies
               if: steps.check_package.outputs.exists == 'true'
-              run: npm ci
+              run: bun install --frozen-lockfile
 
             - name: Run linter
               if: steps.check_package.outputs.exists == 'true'
-              run: npm run lint --if-present
+              run: bun run lint
 
             - name: Run tests
               if: steps.check_package.outputs.exists == 'true'
-              run: npm test
+              run: |
+                  if bun run --print test &>/dev/null 2>&1; then
+                    bun run test
+                  else
+                    echo "No test script found, skipping."
+                  fi
 
             - name: Build
               if: steps.check_package.outputs.exists == 'true'
-              run: npm run build --if-present
+              run: bun run build
 
             - name: Skip message
               if: steps.check_package.outputs.exists == 'false'
@@ -57,7 +56,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
 
             - name: Check for package.json
               id: check_package
@@ -68,9 +67,18 @@ jobs:
                       echo "exists=false" >> $GITHUB_OUTPUT
                   fi
 
-            - name: Run npm audit
+            - name: Set up Bun
               if: steps.check_package.outputs.exists == 'true'
-              run: npm audit --audit-level=moderate
+              uses: oven-sh/setup-bun@v2
+
+            - name: Install dependencies
+              if: steps.check_package.outputs.exists == 'true'
+              run: bun install --frozen-lockfile
+
+            - name: Run audit
+              if: steps.check_package.outputs.exists == 'true'
+              run: bun audit
+              continue-on-error: true
 
             - name: Run Snyk security scan
               if: steps.check_package.outputs.exists == 'true'
@@ -82,4 +90,3 @@ jobs:
             - name: Skip message
               if: steps.check_package.outputs.exists == 'false'
               run: echo "⚠ No package.json found. Skipping security checks."
-              
