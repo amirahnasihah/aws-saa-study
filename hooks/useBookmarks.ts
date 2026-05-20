@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 
 const KEY = 'aws-bookmarks'
 
@@ -19,11 +19,7 @@ function save(set: Set<string>) {
 }
 
 export function useBookmarks() {
-  const [bookmarks, setBookmarks] = useState<Set<string>>(new Set())
-
-  useEffect(() => {
-    setBookmarks(load())
-  }, [])
+  const [bookmarks, setBookmarks] = useState<Set<string>>(load)
 
   const toggle = useCallback((shortName: string) => {
     setBookmarks((prev) => {
