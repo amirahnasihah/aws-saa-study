@@ -1,5 +1,4 @@
 name: Epic
-type: Epic
 labels: ["epic"]
 title: Epic for ***
 description: Group and organize related issues under a single high-level overview of a larger goal.

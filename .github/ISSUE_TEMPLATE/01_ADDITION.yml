@@ -1,5 +1,4 @@
 name: Addition
-type: Addition
 labels: ["addition"]
 title: Add ***
 description: A format for changes made to introduce new code, features, or functionality that did not exist before.
