@@ -34,26 +34,43 @@ function rowToQuestion(row: DBRow): PracticeQuestion {
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url)
+  const source = searchParams.get('source')
+  const domain = searchParams.get('domain')
+  const difficulty = searchParams.get('difficulty')
+
   try {
     const { env } = getRequestContext()
     const db = (env as CloudflareEnv).DB
-    const { results } = await db.prepare('SELECT * FROM questions ORDER BY rowid').all<DBRow>()
+
+    const conditions: string[] = []
+    const params: string[] = []
+    if (source)     { conditions.push('source = ?');     params.push(source) }
+    if (domain)     { conditions.push('domain = ?');     params.push(domain) }
+    if (difficulty) { conditions.push('difficulty = ?'); params.push(difficulty) }
+
+    const where = conditions.length ? ' WHERE ' + conditions.join(' AND ') : ''
+    const sql = `SELECT * FROM questions${where} ORDER BY rowid`
+
+    const stmt = params.length ? db.prepare(sql).bind(...params) : db.prepare(sql)
+    const { results } = await stmt.all<DBRow>()
 
     if (results.length > 0) {
       return Response.json(results.map(rowToQuestion), {
-        headers: {
-          'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400',
-        },
+        headers: { 'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400' },
       })
     }
   } catch {
     // D1 unavailable — fall through to TypeScript fallback
   }
 
-  return Response.json(practiceQuestions, {
-    headers: {
-      'Cache-Control': 'public, s-maxage=60',
-    },
+  let fallback = [...practiceQuestions]
+  if (source)     fallback = fallback.filter(q => q.source === source)
+  if (domain)     fallback = fallback.filter(q => q.domain === domain)
+  if (difficulty) fallback = fallback.filter(q => q.difficulty === difficulty)
+
+  return Response.json(fallback.length ? fallback : practiceQuestions, {
+    headers: { 'Cache-Control': 'public, s-maxage=60' },
   })
 }
