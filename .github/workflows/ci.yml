@@ -75,6 +75,10 @@ jobs:
               if: steps.check_package.outputs.exists == 'true'
               run: bun install --frozen-lockfile
 
+            - name: Run audit
+              if: steps.check_package.outputs.exists == 'true'
+              run: bun audit
+
             - name: Run Snyk security scan
               if: steps.check_package.outputs.exists == 'true'
               uses: snyk/actions/node@master
