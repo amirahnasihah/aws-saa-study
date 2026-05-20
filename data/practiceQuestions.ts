@@ -17,7 +17,7 @@ export interface PracticeQuestion {
   }
   reference?: string
   keywords: string[]
-  source?: 'whizlab' | 'custom' | 'official'
+  source?: 'whizlab' | 'others' | 'official'
 }
 
 export const practiceQuestions: PracticeQuestion[] = [

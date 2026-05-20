@@ -21,8 +21,31 @@ const difficultyColors: Record<string, string> = {
 type QuizState = 'question' | 'revealed'
 type PageMode = 'quiz' | 'review'
 
+type FilterSource = 'all' | 'whizlab' | 'others'
+type FilterDomain = 'all' | 'd1' | 'd2' | 'd3' | 'd4'
+type FilterDifficulty = 'all' | 'Easy' | 'Medium' | 'Hard'
+
+interface FilterState {
+  source: FilterSource
+  domain: FilterDomain
+  difficulty: FilterDifficulty
+  shuffle: boolean
+}
+
+const DEFAULT_FILTERS: FilterState = { source: 'all', domain: 'all', difficulty: 'all', shuffle: false }
+
+function shuffleArray<T>(arr: T[]): T[] {
+  const a = [...arr]
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[a[i], a[j]] = [a[j], a[i]]
+  }
+  return a
+}
+
 export default function PracticePage() {
   const [questions, setQuestions] = useState<PracticeQuestion[]>(practiceQuestions)
+  const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [mode, setMode] = useState<PageMode>('quiz')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
@@ -31,13 +54,35 @@ export default function PracticePage() {
   const [finished, setFinished] = useState(false)
 
   useEffect(() => {
-    fetch('/api/questions')
+    const params = new URLSearchParams()
+    if (filters.source !== 'all') params.set('source', filters.source)
+    if (filters.domain !== 'all') params.set('domain', filters.domain)
+    if (filters.difficulty !== 'all') params.set('difficulty', filters.difficulty)
+    const url = `/api/questions${params.toString() ? '?' + params.toString() : ''}`
+
+    fetch(url)
       .then((r) => r.json())
       .then((data: unknown) => {
-        if (Array.isArray(data) && data.length > 0) setQuestions(data as PracticeQuestion[])
+        if (Array.isArray(data) && data.length > 0) {
+          const qs = data as PracticeQuestion[]
+          setQuestions(filters.shuffle ? shuffleArray(qs) : qs)
+        }
       })
-      .catch(() => {})
-  }, [])
+      .catch(() => {
+        let qs = [...practiceQuestions]
+        if (filters.source !== 'all') qs = qs.filter((q) => q.source === filters.source)
+        if (filters.domain !== 'all') qs = qs.filter((q) => q.domain === filters.domain)
+        if (filters.difficulty !== 'all') qs = qs.filter((q) => q.difficulty === filters.difficulty)
+        setQuestions(filters.shuffle ? shuffleArray(qs) : (qs.length ? qs : practiceQuestions))
+      })
+      .finally(() => {
+        setCurrentIndex(0)
+        setSelected(null)
+        setQuizState('question')
+        setScore({ correct: 0, total: 0 })
+        setFinished(false)
+      })
+  }, [filters])
 
   const q = questions[currentIndex]
   const isCorrect = selected === q.correctId
@@ -118,6 +163,9 @@ export default function PracticePage() {
           </div>
         </div>
 
+        {/* filter bar */}
+        <FilterBar filters={filters} onChange={setFilters} />
+
         {mode === 'review' ? (
           <ReviewMode questions={questions} />
         ) : finished ? (
@@ -140,6 +188,74 @@ export default function PracticePage() {
         <SiteFooter tagline="AWS SAA-C03 · Practice Questions · Good luck! 💪" />
       </main>
     </>
+  )
+}
+
+function FilterBar({ filters, onChange }: { filters: FilterState; onChange: (f: FilterState) => void }) {
+  const activeCount = (filters.source !== 'all' ? 1 : 0) + (filters.domain !== 'all' ? 1 : 0) + (filters.difficulty !== 'all' ? 1 : 0) + (filters.shuffle ? 1 : 0)
+
+  const pill = (active: boolean) =>
+    `font-space-mono text-[0.62rem] font-bold px-2.5 py-1 rounded-lg border transition-all duration-150 ${
+      active ? 'bg-c1/20 border-c1/40 text-c1' : 'bg-white/3 border-aws-border/50 text-aws-muted hover:text-aws-text hover:bg-white/6'
+    }`
+
+  return (
+    <div className="mb-6 bg-aws-card border border-aws-border rounded-xl p-3.5 space-y-3">
+      <div className="flex items-center justify-between">
+        <span className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted">Filters</span>
+        <div className="flex items-center gap-2">
+          {activeCount > 0 && (
+            <span className="font-space-mono text-[0.6rem] text-c1">{activeCount} active</span>
+          )}
+          {activeCount > 0 && (
+            <button
+              type="button"
+              onClick={() => onChange(DEFAULT_FILTERS)}
+              className="font-space-mono text-[0.6rem] text-aws-muted hover:text-red-400 transition-colors"
+            >
+              reset
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Source */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="font-space-mono text-[0.58rem] text-aws-muted w-14 shrink-0">Source</span>
+        {(['all', 'whizlab', 'others'] as FilterSource[]).map((s) => (
+          <button key={s} type="button" onClick={() => onChange({ ...filters, source: s })} className={pill(filters.source === s)}>
+            {s === 'all' ? 'All' : s === 'whizlab' ? 'Whizlab' : 'Others'}
+          </button>
+        ))}
+      </div>
+
+      {/* Domain */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="font-space-mono text-[0.58rem] text-aws-muted w-14 shrink-0">Domain</span>
+        {(['all', 'd1', 'd2', 'd3', 'd4'] as FilterDomain[]).map((d) => (
+          <button key={d} type="button" onClick={() => onChange({ ...filters, domain: d })} className={pill(filters.domain === d)}>
+            {d === 'all' ? 'All' : d === 'd1' ? 'D1 Secure' : d === 'd2' ? 'D2 Resilient' : d === 'd3' ? 'D3 Perform' : 'D4 Cost'}
+          </button>
+        ))}
+      </div>
+
+      {/* Difficulty */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="font-space-mono text-[0.58rem] text-aws-muted w-14 shrink-0">Level</span>
+        {(['all', 'Easy', 'Medium', 'Hard'] as FilterDifficulty[]).map((d) => (
+          <button key={d} type="button" onClick={() => onChange({ ...filters, difficulty: d })} className={pill(filters.difficulty === d)}>
+            {d}
+          </button>
+        ))}
+        <button
+          type="button"
+          onClick={() => onChange({ ...filters, shuffle: !filters.shuffle })}
+          className={`ml-2 ${pill(filters.shuffle)}`}
+        >
+          🔀 Shuffle
+        </button>
+      </div>
+    </div>
   )
 }
 

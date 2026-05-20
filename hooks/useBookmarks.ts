@@ -29,7 +29,7 @@ export function useBookmarks() {
   const toggle = useCallback((shortName: string) => {
     setBookmarks((prev) => {
       const next = new Set(prev)
-      next.has(shortName) ? next.delete(shortName) : next.add(shortName)
+      if (next.has(shortName)) { next.delete(shortName) } else { next.add(shortName) }
       save(next)
       return next
     })
