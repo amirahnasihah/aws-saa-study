@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { domains, categoryStyles, ColorCategory } from '@/data/awsServices'
 
 interface SearchResult {
@@ -60,9 +60,12 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
 
-  const results = query.trim().length > 0
-    ? searchIndex.filter((r) => r.searchText.includes(query.toLowerCase().trim())).slice(0, 8)
-    : []
+  const results = useMemo(() =>
+    query.trim().length > 0
+      ? searchIndex.filter((r) => r.searchText.includes(query.toLowerCase().trim())).slice(0, 8)
+      : [],
+    [query]
+  )
 
   const navigate = useCallback((result: SearchResult) => {
     onClose()
