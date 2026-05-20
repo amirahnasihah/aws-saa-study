@@ -1,5 +1,11 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
 
-const nextConfig: NextConfig = {};
+if (process.env.NODE_ENV === 'development') {
+  void import('@cloudflare/next-on-pages/next-dev').then(({ setupDevPlatform }) =>
+    setupDevPlatform()
+  )
+}
 
-export default nextConfig;
+const nextConfig: NextConfig = {}
+
+export default nextConfig

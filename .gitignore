@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# cloudflare wrangler local state
+.wrangler/
+
+# generated sql seed files (source: scripts/*.ts)
+scripts/*.sql
+
+# local mcp config
+.mcp.json
