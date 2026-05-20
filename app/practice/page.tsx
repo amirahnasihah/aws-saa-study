@@ -75,12 +75,13 @@ export default function PracticePage() {
         if (filters.difficulty !== 'all') qs = qs.filter((q) => q.difficulty === filters.difficulty)
         setQuestions(filters.shuffle ? shuffleArray(qs) : (qs.length ? qs : practiceQuestions))
       })
-
-    setCurrentIndex(0)
-    setSelected(null)
-    setQuizState('question')
-    setScore({ correct: 0, total: 0 })
-    setFinished(false)
+      .finally(() => {
+        setCurrentIndex(0)
+        setSelected(null)
+        setQuizState('question')
+        setScore({ correct: 0, total: 0 })
+        setFinished(false)
+      })
   }, [filters])
 
   const q = questions[currentIndex]
