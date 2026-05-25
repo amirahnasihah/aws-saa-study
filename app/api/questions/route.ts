@@ -16,6 +16,8 @@ interface DBRow {
   reference: string | null
   keywords: string
   source: string
+  page_number: number | null
+  screenshot_url: string | null
 }
 
 function rowToQuestion(row: DBRow): PracticeQuestion {
@@ -31,6 +33,8 @@ function rowToQuestion(row: DBRow): PracticeQuestion {
     reference: row.reference ?? undefined,
     keywords: JSON.parse(row.keywords) as string[],
     source: row.source as PracticeQuestion['source'],
+    pageNumber: row.page_number ?? undefined,
+    screenshotUrl: row.screenshot_url ?? undefined,
   }
 }
 

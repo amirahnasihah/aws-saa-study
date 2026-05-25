@@ -9,8 +9,10 @@ const rows = practiceQuestions.map((q) => {
   const keywords = escape(JSON.stringify(q.keywords))
   const reference = q.reference ? `'${escape(q.reference)}'` : 'NULL'
   const source = q.source ?? 'custom'
+  const pageNumber = q.pageNumber != null ? String(q.pageNumber) : 'NULL'
+  const screenshotUrl = q.screenshotUrl ? `'${escape(q.screenshotUrl)}'` : 'NULL'
 
-  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source) VALUES ('${escape(q.id)}', '${q.domain}', '${escape(q.domainLabel)}', '${q.difficulty}', '${escape(q.scenario)}', '${options}', '${escape(q.correctId)}', '${explanation}', ${reference}, '${keywords}', '${source}');`
+  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source, page_number, screenshot_url) VALUES ('${escape(q.id)}', '${q.domain}', '${escape(q.domainLabel)}', '${q.difficulty}', '${escape(q.scenario)}', '${options}', '${escape(q.correctId)}', '${explanation}', ${reference}, '${keywords}', '${source}', ${pageNumber}, ${screenshotUrl});`
 })
 
 const sql = rows.join('\n')

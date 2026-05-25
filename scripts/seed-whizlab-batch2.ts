@@ -393,7 +393,7 @@ const batch3: Q[] = [
       correct: 'SQS + Lambda event-driven architecture provides durability through message persistence (SQS retains messages if processing fails), retry mechanisms (visibility timeout + DLQ), and decoupling. Each async step becomes an event-driven Lambda triggered by SQS — if it fails, the message reappears for retry, ensuring eventual consistency.',
       incorrects: { a: 'Converting async to sync reduces scalability and distributed transactions across microservices are complex, fragile, and anti-pattern in microservices architecture.', b: 'Retry logic at the API call level still does not guarantee durability if the process crashes mid-flow — the state is lost.', c: 'SNS notifications alert humans but do not fix the inconsistency automatically — it requires manual intervention and does not maximize durability.' },
     },
-    reference: 'https://docs.aws.amazon.com/sqs/latest/dg/welcome.html',
+    reference: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html',
     keywords: ['SQS', 'Lambda', 'event-driven', 'microservices', 'durability', 'async', 'retry', 'DLQ'],
   },
   {
@@ -790,7 +790,7 @@ const batch5: Q[] = [
       correct: 'Amazon Lex is the conversational AI service for building chatbots. It handles NLU (Natural Language Understanding), maintains context across conversation turns, and integrates natively with AWS Lambda for backend fulfillment. Lex is the same technology that powers Amazon Alexa.',
       incorrects: { a: 'Polly converts text to speech (TTS) — it produces audio output. It cannot understand or respond to natural language queries.', b: 'Comprehend analyzes text for sentiment, entities, and key phrases — it does not build conversational interfaces or maintain dialogue context.', d: 'Transcribe converts speech to text (STT) — it does not understand intent or maintain conversation context.' },
     },
-    reference: 'https://docs.aws.amazon.com/lex/latest/dg/what-is.html',
+    reference: 'https://docs.aws.amazon.com/lexv2/latest/dg/what-is.html',
     keywords: ['Amazon Lex', 'chatbot', 'NLU', 'conversational AI', 'context', 'Lambda integration', 'Alexa technology'],
   },
   {

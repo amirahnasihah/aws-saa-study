@@ -1,0 +1,24 @@
+import { writeFileSync, readFileSync } from 'fs'
+import { parseWhizlabPageNumber, screenshotPathForQuestion } from './lib/question-meta'
+
+const escape = (value: string): string => value.replace(/'/g, "''")
+
+const extractWhizlabIds = (content: string): string[] =>
+  [...content.matchAll(/id: 'wz-\d{1,3}'/g)]
+    .map((match) => match[0].replace("id: '", '').replace("'", ''))
+
+const whizlabSource = readFileSync('scripts/seed-whizlab-batch2.ts', 'utf8')
+const ids = extractWhizlabIds(whizlabSource)
+
+const updates = ids.flatMap((id) => {
+  const pageNumber = parseWhizlabPageNumber(id)
+  const screenshotUrl = screenshotPathForQuestion(id)
+  if (!pageNumber || !screenshotUrl) return []
+
+  return [
+    `UPDATE questions SET page_number = ${pageNumber}, screenshot_url = '${escape(screenshotUrl)}' WHERE id = '${escape(id)}';`,
+  ]
+})
+
+writeFileSync('scripts/screenshot-metadata.sql', updates.join('\n'))
+console.log(`Generated ${updates.length} UPDATE rows -> scripts/screenshot-metadata.sql`)

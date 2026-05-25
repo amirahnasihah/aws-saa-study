@@ -1,0 +1,13 @@
+{
+  "startPage": 1,
+  "endPage": 65,
+  "urlTemplate": "https://YOUR-PRACTICE-TEST-BASE-URL?page={page}",
+  "storageStatePath": "scripts/.playwright-storage-state.json",
+  "screenshotSelector": "body",
+  "delayMs": 2000,
+  "viewport": { "width": 1280, "height": 900 },
+  "outputDirs": {
+    "staging": "/Users/amirahnasihah/Documents/Screenshots",
+    "public": "public/questions"
+  }
+}
