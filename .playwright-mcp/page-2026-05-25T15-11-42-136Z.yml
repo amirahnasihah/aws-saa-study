@@ -1,0 +1,117 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7] [cursor=pointer]:
+          - link "Whizlabs" [ref=e8]:
+            - /url: /
+            - img "Whizlabs" [ref=e9]
+          - generic [ref=e10]:
+            - generic [ref=e11]: Download Brochure
+            - link "Case Study" [ref=e12]:
+              - /url: /case-study-page
+        - button "Request Demo" [ref=e14] [cursor=pointer]
+    - generic [ref=e17]:
+      - img "Login" [ref=e19]
+      - generic [ref=e20]:
+        - heading "Login to Whizlabs" [level=2] [ref=e21]
+        - generic [ref=e22]:
+          - generic [ref=e23]:
+            - generic [ref=e24]: User name or email address
+            - textbox "Email" [ref=e25]
+          - generic [ref=e26]:
+            - generic [ref=e27]: Your password
+            - generic [ref=e28]:
+              - textbox "Password" [ref=e29]
+              - button "Show password" [ref=e30] [cursor=pointer]:
+                - img [ref=e31]
+          - link "Forgot password" [ref=e34] [cursor=pointer]:
+            - /url: /forgot-password
+          - button "Login" [ref=e36] [cursor=pointer]
+    - generic [ref=e37]:
+      - contentinfo [ref=e38]:
+        - generic [ref=e39]:
+          - generic [ref=e40]:
+            - link "WHIZLABS Logo" [ref=e41] [cursor=pointer]:
+              - /url: /
+              - img "WHIZLABS Logo" [ref=e42]
+            - generic [ref=e43]:
+              - paragraph [ref=e44]: Need help?
+              - paragraph [ref=e45]:
+                - generic [ref=e46]: You can
+                - link "WhatsApp" [ref=e47] [cursor=pointer]:
+                  - /url: https://wa.me/919091849091
+                  - img [ref=e48]
+                - generic [ref=e53]: or
+                - link "Phone" [ref=e54] [cursor=pointer]:
+                  - /url: tel:+919091849091
+                  - img [ref=e55]
+                - generic [ref=e57]: +91 9091849091
+          - generic [ref=e58]:
+            - generic [ref=e59]:
+              - heading "Teaching" [level=3] [ref=e60]
+              - list [ref=e64]:
+                - listitem [ref=e65]:
+                  - link "Become an Affiliate" [ref=e66] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/whizlabs-affiliate-program/
+                - listitem [ref=e67]:
+                  - link "Blog" [ref=e68] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/blog/
+                - listitem [ref=e69]:
+                  - link "Reviews" [ref=e70] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/reviews/
+                - listitem [ref=e71]:
+                  - link "About Us" [ref=e72] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/about-us/
+                - listitem [ref=e73]:
+                  - link "Discussions" [ref=e74] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/forums/
+            - generic [ref=e75]:
+              - heading "Legal" [level=3] [ref=e76]
+              - list [ref=e80]:
+                - listitem [ref=e81]:
+                  - link "Privacy Policy" [ref=e82] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/privacy-policy/
+                - listitem [ref=e83]:
+                  - link "Terms of Use" [ref=e84] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/terms-of-use/
+                - listitem [ref=e85]:
+                  - link "Refund Policy" [ref=e86] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/refund-policy/
+          - generic [ref=e88]:
+            - link "Contact Us" [ref=e89] [cursor=pointer]:
+              - /url: https://www.whizlabs.com/contact-us/
+            - paragraph [ref=e90]: Ready To Get Started?
+            - paragraph [ref=e91]: A well structured curriculum covering all the required topics to understand cloud services.
+            - generic [ref=e94]:
+              - paragraph [ref=e95]: For Individual User
+              - paragraph [ref=e96]: support@whizlabs.com
+              - paragraph [ref=e97]: +91-6364678444
+            - generic [ref=e100]:
+              - paragraph [ref=e101]: For Company
+              - paragraph [ref=e102]: contact@whizlabs.com
+              - paragraph [ref=e103]: +91-9091849091
+      - generic [ref=e104]:
+        - paragraph [ref=e106]: © 2026, Whizlabs Software Pvt. Ltd. All rights reserved.
+        - generic [ref=e107]:
+          - link "Facebook" [ref=e108] [cursor=pointer]:
+            - /url: https://www.facebook.com/whizlabs.software/
+            - img [ref=e109]
+          - link "Twitter" [ref=e111] [cursor=pointer]:
+            - /url: https://twitter.com/whizlabs/
+            - img [ref=e112]
+          - link "LinkedIn" [ref=e114] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/whizlabs-software/
+            - img [ref=e115]
+          - link "YouTube" [ref=e117] [cursor=pointer]:
+            - /url: https://www.youtube.com/c/WhizlabsSoftware/videos
+            - img [ref=e118]
+  - iframe [ref=e120]:
+    - generic [ref=f7e1] [cursor=pointer]:
+      - img "Help" [ref=f7e2]
+      - generic [ref=f7e4]: Contact Us
+  - banner [ref=e121]:
+    - heading "Transform Future Leaders With The Right Skill. Wondering how? Book a Demo" [level=2] [ref=e122]:
+      - text: Transform Future Leaders With The Right Skill. Wondering how?
+      - link "Book a Demo" [ref=e123] [cursor=pointer]:
+        - /url: /request-demo-page?utm_source=banner

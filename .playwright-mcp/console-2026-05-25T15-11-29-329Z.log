@@ -1,0 +1,8 @@
+[    1905ms] [ERROR] Attestation check for Attribution Reporting on https://q.quora.com failed. @ https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/60504/exam/start:0
+[    3930ms] [ERROR] Access to XMLHttpRequest at 'https://ipapi.co/json/' from origin 'https://business.whizlabs.com' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. @ https://business.whizlabs.com/:0
+[    3930ms] [ERROR] Error fetching the country phone code: Error: Network Error
+    at t.exports (https://business.whizlabs.com/static/js/44.8a3f73f7.chunk.js:2:158026)
+    at p.onerror (https://business.whizlabs.com/static/js/44.8a3f73f7.chunk.js:2:156987) @ https://business.whizlabs.com/static/js/47.3a14b2f0.chunk.js:1
+[    3931ms] [ERROR] Failed to load resource: net::ERR_FAILED @ https://ipapi.co/json/:0
+[    4021ms] Uncaught (in promise) Error: License expired
+    at <anonymous> (https://cdn.livechatinc.com/tracking.js:0:27751)

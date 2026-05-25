@@ -1,0 +1,298 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e4]:
+    - banner [ref=e5]:
+      - generic [ref=e6]:
+        - generic [ref=e7] [cursor=pointer]:
+          - link "Whizlabs" [ref=e8]:
+            - /url: /
+            - img "Whizlabs" [ref=e9]
+          - generic [ref=e10]:
+            - generic [ref=e11]: Download Brochure
+            - link "Case Study" [ref=e12]:
+              - /url: /case-study-page
+        - generic [ref=e13]:
+          - button "Login" [ref=e14] [cursor=pointer]
+          - button "Request Demo" [ref=e15] [cursor=pointer]
+    - generic [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]:
+          - heading "Enterprise Cloud Training Platform for High-Impact Teams" [level=1] [ref=e22]
+          - heading "Empower your Talents, for the Next Era of Cloud & AI Evolution" [level=2] [ref=e23]
+          - paragraph [ref=e24]: Build workforce-ready cloud and technology teams through our hands-on Enterprise cloud training platform, providing real-world practice, and scalable skill development.
+        - link "Book Your Call" [ref=e26] [cursor=pointer]:
+          - /url: /request-demo-page?source=hero-section
+      - generic [ref=e28]:
+        - heading "We'd Love to Learn More" [level=3] [ref=e29]
+        - paragraph [ref=e30]: Share your requirements with us
+        - generic [ref=e31]:
+          - generic [ref=e32]:
+            - generic: Your Name*
+            - textbox [ref=e33]
+          - generic [ref=e34]:
+            - generic: Email ID*
+            - textbox [ref=e35]
+          - generic [ref=e36]:
+            - generic: Company Name*
+            - textbox [ref=e37]
+          - generic [ref=e38]:
+            - generic: Phone Number*
+            - textbox [ref=e39]
+          - textbox "Share your Requirement" [ref=e40]
+          - button "Submit" [ref=e41] [cursor=pointer]
+    - generic [ref=e43]:
+      - generic [ref=e44]: Services
+      - heading "Full-Spectrum Enterprise Cloud Training Platform" [level=2] [ref=e45]
+      - paragraph [ref=e46]: Get your team ready to indulge in a comprehensive, cloud-based, AI-driven certification training for teams that prepares them for real-world challenges and industry-recognized certifications.
+    - generic [ref=e47]:
+      - generic [ref=e49]:
+        - generic [ref=e50]: Certification Preparation
+        - img "certification"
+        - generic [ref=e51]:
+          - heading "Certification-Ready Training" [level=3] [ref=e52]
+          - paragraph: Preparing teams to achieve high-demand Cloud and AI certification through AWS corporate training, Azure training for enterprise, & GCP training for enterprise teams.
+      - generic [ref=e54]:
+        - generic [ref=e55]: Real World Environment
+        - img "learningScale"
+        - generic [ref=e56]:
+          - heading "Applied Learning at Scale" [level=3] [ref=e57]
+          - paragraph: Enabling learners with guided labs and live cloud sandboxes for enterprise training turns knowledge into practical, job-ready skills, building confidence.
+      - generic [ref=e59]:
+        - generic [ref=e60]: Upskill Team Knowledge
+        - img "learningPaths"
+        - generic [ref=e61]:
+          - heading "Adaptive Learning Paths" [level=3] [ref=e62]
+          - paragraph: Providing role-based insights and assessments that identify skill gaps and accelerate targeted upskilling in AWS, Azure, GCP, DevOps, AI/ML and others.
+      - generic [ref=e64]:
+        - generic [ref=e65]: Custom Solutions
+        - img "learningSolution"
+        - generic [ref=e66]:
+          - heading "Custom Learning Solutions" [level=3] [ref=e67]
+          - paragraph: Customizing solutions with flexible learning resources and sandbox environments tailored for your team’s goals, with zero setup effort.
+    - generic [ref=e69]:
+      - generic [ref=e70]:
+        - generic [ref=e71]: Solutions
+        - heading "Turn Learning Investments into Team Capabilities." [level=2] [ref=e72]
+        - navigation "Solutions" [ref=e74] [cursor=pointer]:
+          - tab "Enterprise" [selected] [ref=e75]: Enterprise
+          - tab "Universities" [ref=e76]
+          - tab "Ed-Tech Companies" [ref=e77]
+      - generic [ref=e79]:
+        - paragraph [ref=e80]: Level up your employees and teams' 'A game', with role-focused corporate IT training on Cloud and AI that support agile operations and real business outcomes.
+        - generic [ref=e81]:
+          - img "Certification Preparation" [ref=e83]
+          - generic [ref=e85]:
+            - generic [ref=e86]:
+              - heading "Training and Upskilling at Scale" [level=3] [ref=e87]
+              - paragraph [ref=e88]: Onboard new hires and upskill existing teams with structured learning paths, expert-curated content, and custom solutions aligned to your organisation's goals.
+            - generic [ref=e89]:
+              - heading "Build Your Certified Workforce" [level=3] [ref=e90]
+              - paragraph [ref=e91]: Develop certified teams through goal-based certification that impacts business progress and individual capabilities and growth.
+            - generic [ref=e92]:
+              - heading "Progress and Performance Analytics" [level=3] [ref=e93]
+              - paragraph [ref=e94]: Gain visibility into learning progress with a powerful analytics dashboard that can track engagement, identify skill gaps, and measure improvement with clear indications.
+            - generic [ref=e95]:
+              - heading "Project-based Sandboxes Environments" [level=3] [ref=e96]
+              - paragraph [ref=e97]: Enable hands-on learning with sandbox environments designed around real project scenarios. helping teams to learn and experiment without risk.
+    - generic [ref=e98]:
+      - generic [ref=e100]:
+        - heading "Future-proof your teams with Whizlabs' Enterprise Cloud Training Platform." [level=2] [ref=e101]
+        - button "Connect with Us" [ref=e102] [cursor=pointer]
+      - generic [ref=e103]:
+        - generic [ref=e104]:
+          - generic [ref=e105]: Clients
+          - paragraph [ref=e106]:
+            - text: Driving skill transformation across
+            - generic [ref=e107]: 500+ Leading Organizations and Institutions in Cloud, AI and Technology
+        - generic [ref=e110]:
+          - img "Accenture" [ref=e112]
+          - img "Bradesco" [ref=e114]
+          - img "Dallas" [ref=e116]
+          - img "Deloitte" [ref=e118]
+          - img "Digital Futures" [ref=e120]
+          - img "GA" [ref=e122]
+          - img "Telefónica Tech" [ref=e124]
+          - img "Trainocate" [ref=e126]
+          - img "Wavicle" [ref=e128]
+          - img "Accenture" [ref=e130]
+          - img "Bradesco" [ref=e132]
+          - img "Dallas" [ref=e134]
+          - img "Deloitte" [ref=e136]
+          - img "Digital Futures" [ref=e138]
+          - img "GA" [ref=e140]
+          - img "Telefónica Tech" [ref=e142]
+          - img "Trainocate" [ref=e144]
+          - img "Wavicle" [ref=e146]
+          - img "Accenture" [ref=e148]
+          - img "Bradesco" [ref=e150]
+          - img "Dallas" [ref=e152]
+          - img "Deloitte" [ref=e154]
+          - img "Digital Futures" [ref=e156]
+          - img "GA" [ref=e158]
+          - img "Telefónica Tech" [ref=e160]
+          - img "Trainocate" [ref=e162]
+          - img "Wavicle" [ref=e164]
+      - generic [ref=e166]:
+        - generic [ref=e167]: Case Study
+        - heading "Innovations that made a real impact" [level=2] [ref=e168]
+        - paragraph [ref=e169]: Dive into the impact journey of the Whizlabs Corporate cloud training solutions, which bridge skill gaps through real-world success stories and measurable outcomes.
+      - generic [ref=e174]:
+        - generic [ref=e176]:
+          - heading "Whizlabs Enterprise Cloud Training Platform" [level=2] [ref=e177]
+          - paragraph [ref=e178]: One dashboard to train, track, and manage workforce upskilling
+          - paragraph [ref=e179]: From user management to analytics and training, this exclusive corporate IT training platform delivers hands-on training experience that's scalable and customizable for teams of every size.
+          - button "Request Demo" [ref=e180] [cursor=pointer]
+        - img "Dashboard" [ref=e182]
+      - generic [ref=e184]:
+        - generic [ref=e186]: Impact Stories
+        - heading "Hear out from those who trusted us!" [level=2] [ref=e187]
+        - generic [ref=e189]:
+          - generic [ref=e190]:
+            - generic [ref=e191]:
+              - img [ref=e192]
+              - img [ref=e194]
+              - img [ref=e196]
+              - img [ref=e198]
+              - img [ref=e200]
+            - generic [ref=e202]: Whizlabs has supported Telefónica Tech by providing a useful learning ecosystem, including courses and practical labs, which have effectively enhanced our employees' technical skills. This platform has helped our teams achieve their certification quickly and almost always on their first attempt. The most valuable aspects of Whizlabs' offerings are the availability of practical, hands-on labs and practice exams.
+            - generic [ref=e204]:
+              - generic [ref=e205]: Marielba Diaz Yáñez
+              - generic [ref=e206]: Global Tech Academy Leader
+          - generic [ref=e207]:
+            - generic [ref=e208]:
+              - img [ref=e209]
+              - img [ref=e211]
+              - img [ref=e213]
+              - img [ref=e215]
+              - img [ref=e217]
+            - generic [ref=e219]: Digital Futures has been using Whizlabs Practice Tests, Hands-on Labs and Sandbox services since we launched our first Cloud Academy 4 years ago. These services help us give our early-careers students the hands-on experience that our clients demand and the practice tests have enabled us to obtain an amazing first-time exam success rate. We're delighted we made the choice to partner with Whizlabs
+            - generic [ref=e221]:
+              - generic [ref=e222]: Ryan Pothecary
+              - generic [ref=e223]: Data Engineering Training Lead
+          - generic [ref=e224]:
+            - generic [ref=e225]:
+              - img [ref=e226]
+              - img [ref=e228]
+              - img [ref=e230]
+              - img [ref=e232]
+              - img [ref=e234]
+            - generic [ref=e236]: WhizLabs has been a dependable partner in helping us deliver scalable, client-specific virtual environments. Their platform allows us to spin up cloud-based tools and custom infrastructure without needing to manage it internally, which saves time and reduces operational complexity. The WhizLabs team is consistently responsive and flexible, making it easy to adapt environments to shifting client needs. With WhizLabs, we've been able to launch hands-on learning environments faster and more reliably, even for clients with highly specific tooling requirements. This has helped us streamline technical delivery, reduce setup time, and provide a seamless learner experience across a range of enterprise engagements.
+            - generic [ref=e238]:
+              - generic [ref=e239]: Heather Luna
+              - generic [ref=e240]: Senior Technical Product Manager
+          - generic [ref=e241]:
+            - generic [ref=e242]:
+              - img [ref=e243]
+              - img [ref=e245]
+              - img [ref=e247]
+              - img [ref=e249]
+              - img [ref=e251]
+            - generic [ref=e253]: Partnering with Whizlabs has truly elevated our learning journey at Tredence. The platform’s intuitive design, high-quality content, and emphasis on certification readiness have empowered our teams to upskill with confidence and agility. What truly sets Whizlabs apart is their unwavering support and responsiveness—transforming a typical vendor relationship into a genuine collaboration.We’re proud to be part of this journey and are happy for Tredence to be featured on your website. Feel free to use our logo in line with your branding—we’re honored to be among your success stories
+            - generic [ref=e255]:
+              - generic [ref=e256]: Rajendra M
+              - generic [ref=e257]: L&D, Tredence
+        - generic [ref=e258]:
+          - button "Go to testimonial 1" [ref=e259] [cursor=pointer]
+          - button "Go to testimonial 2" [ref=e260] [cursor=pointer]
+          - button "Go to testimonial 3" [ref=e261] [cursor=pointer]
+      - generic [ref=e263]:
+        - generic [ref=e264]: Future-proof your cloud operations and transform your employees' learning with Whizlabs' Enterprise Cloud Training Platform.
+        - generic [ref=e267]:
+          - generic [ref=e268]:
+            - img [ref=e270]
+            - generic [ref=e272]: Customized Solutions
+          - generic [ref=e273]:
+            - img [ref=e275]
+            - generic [ref=e277]: Advanced Integrations
+          - generic [ref=e278]:
+            - img [ref=e280]
+            - generic [ref=e282]: Team Observation
+        - generic [ref=e284]:
+          - heading "Let's Connect!" [level=3] [ref=e285]
+          - button "Request Demo" [ref=e286] [cursor=pointer]
+    - generic [ref=e287]:
+      - contentinfo [ref=e288]:
+        - generic [ref=e289]:
+          - generic [ref=e290]:
+            - link "WHIZLABS Logo" [ref=e291] [cursor=pointer]:
+              - /url: /
+              - img "WHIZLABS Logo" [ref=e292]
+            - generic [ref=e293]:
+              - paragraph [ref=e294]: Need help?
+              - paragraph [ref=e295]:
+                - generic [ref=e296]: You can
+                - link "WhatsApp" [ref=e297] [cursor=pointer]:
+                  - /url: https://wa.me/919091849091
+                  - img [ref=e298]
+                - generic [ref=e303]: or
+                - link "Phone" [ref=e304] [cursor=pointer]:
+                  - /url: tel:+919091849091
+                  - img [ref=e305]
+                - generic [ref=e307]: +91 9091849091
+          - generic [ref=e308]:
+            - generic [ref=e309]:
+              - heading "Teaching" [level=3] [ref=e310]
+              - list [ref=e314]:
+                - listitem [ref=e315]:
+                  - link "Become an Affiliate" [ref=e316] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/whizlabs-affiliate-program/
+                - listitem [ref=e317]:
+                  - link "Blog" [ref=e318] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/blog/
+                - listitem [ref=e319]:
+                  - link "Reviews" [ref=e320] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/reviews/
+                - listitem [ref=e321]:
+                  - link "About Us" [ref=e322] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/about-us/
+                - listitem [ref=e323]:
+                  - link "Discussions" [ref=e324] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/forums/
+            - generic [ref=e325]:
+              - heading "Legal" [level=3] [ref=e326]
+              - list [ref=e330]:
+                - listitem [ref=e331]:
+                  - link "Privacy Policy" [ref=e332] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/privacy-policy/
+                - listitem [ref=e333]:
+                  - link "Terms of Use" [ref=e334] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/terms-of-use/
+                - listitem [ref=e335]:
+                  - link "Refund Policy" [ref=e336] [cursor=pointer]:
+                    - /url: https://www.whizlabs.com/refund-policy/
+          - generic [ref=e338]:
+            - link "Contact Us" [ref=e339] [cursor=pointer]:
+              - /url: https://www.whizlabs.com/contact-us/
+            - paragraph [ref=e340]: Ready To Get Started?
+            - paragraph [ref=e341]: A well structured curriculum covering all the required topics to understand cloud services.
+            - generic [ref=e344]:
+              - paragraph [ref=e345]: For Individual User
+              - paragraph [ref=e346]: support@whizlabs.com
+              - paragraph [ref=e347]: +91-6364678444
+            - generic [ref=e350]:
+              - paragraph [ref=e351]: For Company
+              - paragraph [ref=e352]: contact@whizlabs.com
+              - paragraph [ref=e353]: +91-9091849091
+      - generic [ref=e354]:
+        - paragraph [ref=e356]: © 2026, Whizlabs Software Pvt. Ltd. All rights reserved.
+        - generic [ref=e357]:
+          - link "Facebook" [ref=e358] [cursor=pointer]:
+            - /url: https://www.facebook.com/whizlabs.software/
+            - img [ref=e359]
+          - link "Twitter" [ref=e361] [cursor=pointer]:
+            - /url: https://twitter.com/whizlabs/
+            - img [ref=e362]
+          - link "LinkedIn" [ref=e364] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/whizlabs-software/
+            - img [ref=e365]
+          - link "YouTube" [ref=e367] [cursor=pointer]:
+            - /url: https://www.youtube.com/c/WhizlabsSoftware/videos
+            - img [ref=e368]
+  - iframe [ref=e370]:
+    - generic [ref=f4e1] [cursor=pointer]:
+      - img "Help" [ref=f4e2]
+      - generic [ref=f4e4]: Contact Us
+  - banner [ref=e371]:
+    - heading "Transform Future Leaders With The Right Skill. Wondering how? Book a Demo" [level=2] [ref=e372]:
+      - text: Transform Future Leaders With The Right Skill. Wondering how?
+      - link "Book a Demo" [ref=e373] [cursor=pointer]:
+        - /url: /request-demo-page?utm_source=banner
