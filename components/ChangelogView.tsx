@@ -268,48 +268,49 @@ export default function ChangelogView() {
               : 'border-aws-border bg-aws-card/40'
           }`}
         >
-          <button
-            type="button"
-            onClick={() => toggleEntry(entry.date)}
-            aria-expanded={isExpanded ? 'true' : 'false'}
-            className="w-full flex items-start gap-3 px-4 py-4 text-left hover:bg-aws-card/60 transition-colors"
-          >
-            <span
-              className={`font-space-mono text-[0.65rem] mt-1 shrink-0 transition-transform duration-200 ${
-                isExpanded ? 'rotate-90 text-c1' : 'text-aws-muted'
-              }`}
-              aria-hidden
+          <details open={isExpanded} className="group">
+            <summary
+              className="w-full flex items-start gap-3 px-4 py-4 text-left hover:bg-aws-card/60 transition-colors cursor-pointer list-none [&::-webkit-details-marker]:hidden"
+              onClick={(event) => {
+                event.preventDefault()
+                toggleEntry(entry.date)
+              }}
             >
-              ▶
-            </span>
+              <span
+                className={`font-space-mono text-[0.65rem] mt-1 shrink-0 transition-transform duration-200 ${
+                  isExpanded ? 'rotate-90 text-c1' : 'text-aws-muted'
+                }`}
+                aria-hidden
+              >
+                ▶
+              </span>
 
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <h2 className="font-space-mono text-sm text-aws-text">
-                  {formatChangelogDate(entry.date)}
-                </h2>
-                <span className="font-space-mono text-[0.58rem] text-aws-muted">
-                  {formatRelativeDate(entry.date)}
-                </span>
-                {index === 0 && (
-                  <span className="font-space-mono text-[0.58rem] uppercase tracking-wider text-c1/80 border border-c1/20 rounded-full px-2 py-0.5">
-                    Latest
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <h2 className="font-space-mono text-sm text-aws-text">
+                    {formatChangelogDate(entry.date)}
+                  </h2>
+                  <span className="font-space-mono text-[0.58rem] text-aws-muted">
+                    {formatRelativeDate(entry.date)}
                   </span>
+                  {index === 0 && (
+                    <span className="font-space-mono text-[0.58rem] uppercase tracking-wider text-c1/80 border border-c1/20 rounded-full px-2 py-0.5">
+                      Latest
+                    </span>
+                  )}
+                </div>
+                {!isExpanded && (
+                  <p className="text-sm text-aws-muted mt-1.5 truncate">
+                    {entry.changes.map((change) => change.text).join(' · ')}
+                  </p>
                 )}
               </div>
-              {!isExpanded && (
-                <p className="text-sm text-aws-muted mt-1.5 truncate">
-                  {entry.changes.map((change) => change.text).join(' · ')}
-                </p>
-              )}
-            </div>
 
-            <span className="font-space-mono text-[0.58rem] text-aws-muted shrink-0 mt-0.5">
-              {entry.changes.length}
-            </span>
-          </button>
+              <span className="font-space-mono text-[0.58rem] text-aws-muted shrink-0 mt-0.5">
+                {entry.changes.length}
+              </span>
+            </summary>
 
-          {isExpanded && (
             <ul className="px-4 pb-4 pt-0 space-y-2 border-t border-aws-border/60 mx-4 mb-4">
               {entry.changes.map((change, changeIndex) => (
                 <li key={changeIndex} className="flex items-start gap-2 text-sm pt-2 first:pt-3">
@@ -322,7 +323,7 @@ export default function ChangelogView() {
                 </li>
               ))}
             </ul>
-          )}
+          </details>
         </section>
       )
     })
