@@ -41,23 +41,18 @@ const parseArgs = (): CliArgs => {
 }
 
 // ---------------------------------------------------------------------------
-// Auth
+// Auth — navigate to quiz URL, detect login redirect
 // ---------------------------------------------------------------------------
 
 const STORAGE_STATE = resolve('scripts/.playwright-storage-state.json')
 
-const ensureAuth = async (page: Page): Promise<void> => {
-  await page.goto('https://business.whizlabs.com', { waitUntil: 'domcontentloaded', timeout: 30_000 })
-  await page.waitForTimeout(1500)
-  const isLoggedIn = await page.evaluate(() =>
-    document.cookie.includes('session') ||
-    document.querySelector('[class*="logout"]') !== null
-  )
-  if (!isLoggedIn) {
-    console.log('\n⚠  Not logged in — log in the browser window, then press Enter here.')
-    await new Promise<void>((res) => { process.stdin.once('data', () => res()) })
-  }
+const waitForLogin = async (): Promise<void> => {
+  console.log('\n⚠  Not logged in — log in the browser window, then press Enter here.')
+  await new Promise<void>((res) => { process.stdin.once('data', () => res()) })
 }
+
+const isOnLoginPage = (url: string): boolean =>
+  url.includes('/login') || url.includes('/signin') || url === 'https://business.whizlabs.com/'
 
 // ---------------------------------------------------------------------------
 // DOM helpers
@@ -67,7 +62,7 @@ const tryText = async (page: Page, selectors: string[]): Promise<string> => {
   for (const sel of selectors) {
     try {
       const el = page.locator(sel).first()
-      const visible = await el.isVisible({ timeout: 1000 }).catch(() => false)
+      const visible = await el.isVisible({ timeout: 1500 }).catch(() => false)
       if (visible) {
         const t = await el.innerText()
         if (t.trim()) return t.trim()
@@ -90,45 +85,83 @@ const tryAll = async (page: Page, selectors: string[]): Promise<string[]> => {
 }
 
 // ---------------------------------------------------------------------------
-// Whizlabs selectors (fallback lists — tuned for Whizlabs UI)
+// Whizlabs-specific selectors (discovered from DOM inspection)
 // ---------------------------------------------------------------------------
 
+// Question text
 const Q_TEXT = [
-  '.ques-text', '.question-text', '[class*="question_text"]',
-  '[class*="questionText"]', '[class*="ques-text"]',
-  '.exam-question-text', 'p.question', '.quiz-question p',
+  '.ques-text',
+  '[class*="ques-text"]',
+  '.question-text',
+  '[class*="questionText"]',
+  '.exam-question p',
+  '.quiz-question-text',
+  // MUI/generic fallbacks
+  'h4.question',
+  '[data-testid="question-text"]',
 ]
 
+// Option containers (each contains one answer choice A/B/C/D)
 const OPTION_CONTAINERS = [
-  '.option-container', '.answer-option', '[class*="option_container"]',
-  'ul.options > li', '.quiz-answers .answer', '[class*="answerOption"]',
+  'li.option',
+  '.option-container',
+  '[class*="option-container"]',
+  '[class*="optionContainer"]',
+  'ul.options > li',
+  '.answers-list > li',
+  '[class*="answer-option"]',
 ]
 
+// Text inside each option
 const OPTION_TEXT = [
-  '.option-text', '.answer-text', '[class*="option_text"]',
-  '[class*="optionText"]', '[class*="answer_text"]',
-  'label.option', '.quiz-answer label', 'ul.options li',
+  '.option-text',
+  '[class*="option-text"]',
+  '[class*="optionText"]',
+  '.answer-text',
+  'label',
 ]
 
+// Next/Previous navigation
 const NEXT_BTN = [
-  'button:has-text("Next")', 'button:has-text("NEXT")',
-  '[class*="next-btn"]', '[class*="nextBtn"]',
-  'button[aria-label="Next"]', '.navigation-btn.next',
+  'button.btn-next',
+  'button[class*="btn-next"]',
+  'button:has-text("Next")',
+  'button:has-text("NEXT")',
+  '[aria-label="Next"]',
+  '.navigation-next',
+  'button[class*="next"]',
 ]
 
+// Submit/Finish
 const SUBMIT_BTN = [
-  'button:has-text("Submit")', 'button:has-text("Finish")',
-  'button:has-text("SUBMIT")', '[class*="submit-btn"]', '[class*="submitBtn"]',
+  'button.btn-submit:not(.btn-start)',
+  'button:has-text("Submit")',
+  'button:has-text("Finish Test")',
+  'button:has-text("Finish Exam")',
+  'button:has-text("SUBMIT")',
+  '[class*="btn-submit"]:not([class*="btn-start"])',
 ]
 
+// Correct answer indicators in review mode
 const CORRECT_INDICATOR = [
-  '[class*="correct"]', '[class*="right-answer"]', '[class*="rightAnswer"]',
-  '.correct-answer', '[data-correct="true"]',
+  '.correct-answer',
+  '[class*="correct-answer"]',
+  '[class*="correctAnswer"]',
+  '.right-answer',
+  '[class*="right-answer"]',
+  '[data-correct="true"]',
+  'li.option.correct',
+  'li[class*="correct"]',
 ]
 
+// Explanation text
 const EXPLANATION = [
-  '.explanation', '[class*="explanation"]', '[class*="solution"]',
-  '.answer-explanation', '[class*="answerExplanation"]', '.rationale',
+  '.explanation',
+  '[class*="explanation"]',
+  '.solution',
+  '[class*="solution"]',
+  '.answer-explanation',
+  '.rationale',
 ]
 
 // ---------------------------------------------------------------------------
@@ -158,16 +191,28 @@ interface AnsweredQuestion extends RawQuestion {
 // Extract options for current question
 // ---------------------------------------------------------------------------
 
-const extractOptions = async (page: Page): Promise<RawOption[]> => {
-  const LABELS = ['A', 'B', 'C', 'D', 'E', 'F']
+const LABELS = ['A', 'B', 'C', 'D', 'E', 'F']
 
+const extractOptions = async (page: Page): Promise<RawOption[]> => {
+  // Try option containers
   for (const containerSel of OPTION_CONTAINERS) {
     try {
       const containers = await page.locator(containerSel).all()
       if (containers.length >= 2) {
         const opts: RawOption[] = []
         for (let i = 0; i < containers.length; i++) {
-          const text = (await containers[i].innerText().catch(() => '')).trim()
+          // Try to get just the text part, not the radio button label
+          let text = ''
+          for (const textSel of OPTION_TEXT) {
+            try {
+              const inner = containers[i].locator(textSel).first()
+              if (await inner.isVisible({ timeout: 300 }).catch(() => false)) {
+                text = (await inner.innerText()).trim()
+                if (text) break
+              }
+            } catch { /* next */ }
+          }
+          if (!text) text = (await containers[i].innerText().catch(() => '')).trim()
           if (text) opts.push({ id: LABELS[i], text })
         }
         if (opts.length >= 2) return opts
@@ -175,60 +220,52 @@ const extractOptions = async (page: Page): Promise<RawOption[]> => {
     } catch { /* next */ }
   }
 
+  // Fallback: all option texts
   const texts = await tryAll(page, OPTION_TEXT)
-  return texts.map((text, i) => ({ id: LABELS[i], text }))
+  return texts.slice(0, 6).map((text, i) => ({ id: LABELS[i], text }))
 }
 
 // ---------------------------------------------------------------------------
-// Navigation helpers
+// Navigation
 // ---------------------------------------------------------------------------
 
-const clickNext = async (page: Page): Promise<boolean> => {
-  for (const sel of NEXT_BTN) {
+const clickBtn = async (page: Page, selectors: string[], label: string): Promise<boolean> => {
+  for (const sel of selectors) {
     try {
       const btn = page.locator(sel).last()
-      if (await btn.isVisible({ timeout: 1000 })) {
+      if (await btn.isVisible({ timeout: 1500 })) {
         await btn.click()
-        await page.waitForTimeout(1200)
+        await page.waitForTimeout(1500)
         return true
       }
     } catch { /* next */ }
   }
+  console.warn(`  ⚠  Could not find ${label} button`)
   return false
 }
 
-const submitExam = async (page: Page): Promise<void> => {
-  for (const sel of SUBMIT_BTN) {
+const goToQuestion = async (page: Page, index: number): Promise<void> => {
+  // Try question number sidebar/nav
+  const selectors = [
+    `button.question-nav-btn:has-text("${index}")`,
+    `[class*="question-number"]:has-text("${index}")`,
+    `[class*="questionNumber"]:has-text("${index}")`,
+    `span:has-text("${index}")`,
+  ]
+  for (const sel of selectors) {
     try {
       const btn = page.locator(sel).first()
-      if (await btn.isVisible({ timeout: 2000 })) {
+      if (await btn.isVisible({ timeout: 400 })) {
         await btn.click()
-        await page.waitForTimeout(2000)
-        // Handle confirmation dialog
-        try {
-          const confirm = page.locator('button:has-text("Yes"), button:has-text("Confirm"), button:has-text("OK")').first()
-          if (await confirm.isVisible({ timeout: 2000 })) {
-            await confirm.click()
-            await page.waitForTimeout(2000)
-          }
-        } catch { /* no dialog */ }
-        console.log('  ✓ Submitted exam')
+        await page.waitForTimeout(800)
         return
       }
     } catch { /* next */ }
   }
-  console.warn('  ⚠  Could not click Submit — check page state')
-}
-
-const goToQuestion = async (page: Page, index: number): Promise<void> => {
-  try {
-    const btn = page.locator(`[class*="question-nav"] >> text="${index}"`).first()
-    if (await btn.isVisible({ timeout: 500 })) { await btn.click(); await page.waitForTimeout(600); return }
-  } catch { /* next */ }
 }
 
 // ---------------------------------------------------------------------------
-// Pass 1: forward walk collecting scenario + options + screenshots
+// Pass 1: walk forward through all questions
 // ---------------------------------------------------------------------------
 
 const pass1 = async (
@@ -236,27 +273,39 @@ const pass1 = async (
 ): Promise<RawQuestion[]> => {
   console.log(`\n=== Pass 1: Collecting ${total} questions ===`)
   const questions: RawQuestion[] = []
-  await page.waitForTimeout(3000)
 
   for (let i = 1; i <= total; i++) {
     console.log(`  Q${i}/${total}...`)
 
+    // Wait for question content to render
+    await page.waitForSelector(Q_TEXT.join(', '), { timeout: 8000 }).catch(() => undefined)
+    await page.waitForTimeout(600)
+
+    // Screenshot
     const screenshotPath = join(screenshotDir, `${setId}-${String(i).padStart(3, '0')}.png`)
     await page.screenshot({ path: screenshotPath, fullPage: false }).catch(() => undefined)
 
+    // Extract
     const scenario = await tryText(page, Q_TEXT)
     const options = await extractOptions(page)
-    questions.push({ index: i, scenario, options, screenshotPath })
 
     if (!scenario) {
-      console.warn(`    ⚠  No text extracted for Q${i} — saving debug HTML`)
+      console.warn(`    ⚠  No text for Q${i} — saving debug HTML`)
       const html = await page.content()
       writeFileSync(join(screenshotDir, `debug-q${i}.html`), html)
+    } else {
+      console.log(`    ✓ "${scenario.slice(0, 60)}..." (${options.length} opts)`)
     }
 
+    questions.push({ index: i, scenario, options, screenshotPath })
+
+    // Move to next question
     if (i < total) {
-      const moved = await clickNext(page)
-      if (!moved) { console.warn(`    ⚠  Could not click Next at Q${i}`); break }
+      const moved = await clickBtn(page, NEXT_BTN, 'Next')
+      if (!moved) {
+        console.warn(`    ⚠  Stopping at Q${i}`)
+        break
+      }
     }
   }
 
@@ -269,35 +318,43 @@ const pass1 = async (
 // ---------------------------------------------------------------------------
 
 const extractCorrectId = async (page: Page): Promise<string> => {
-  const LABELS = ['A', 'B', 'C', 'D', 'E']
+  // DOM evaluation: find position of the correct answer element among its siblings
+  const idx = await page.evaluate((): number => {
+    const selectors = [
+      'li.correct', 'li.right', 'li[class*="correct"]', 'li[class*="right-answer"]',
+      '[data-correct="true"]', '[data-is-correct="true"]',
+      '.correct-answer', '.correct-option', '.right-answer',
+      '[class*="correctAnswer"]', '[class*="rightAnswer"]',
+    ]
+    for (const s of selectors) {
+      const correct = document.querySelector(s)
+      if (!correct) continue
+      const parent = correct.closest('ul, ol, [class*="options"], [class*="answers"], [class*="option-list"]')
+      if (!parent) continue
+      const items = Array.from(parent.children)
+      const pos = items.findIndex((item) => item === correct || item.contains(correct))
+      if (pos >= 0) return pos
+    }
+    return -1
+  })
 
-  // Check for highlighted correct indicator
+  if (idx >= 0 && idx < LABELS.length) return LABELS[idx]
+
+  // Text-based fallback: look for "Correct Answer: B" or similar
   for (const sel of CORRECT_INDICATOR) {
     try {
       const el = page.locator(sel).first()
       if (await el.isVisible({ timeout: 500 })) {
         const text = (await el.innerText().catch(() => '')).trim()
-        // Pattern: "A. " or "Answer: B" or just "B"
-        const m = text.match(/^([A-F])[.\s)]/) ?? text.match(/Answer[:\s]+([A-F])/i) ?? text.match(/\b([A-F])\b/)
+        const m = text.match(/^([A-F])[.\s)]/) ??
+                  text.match(/Answer[:\s]+([A-F])/i) ??
+                  text.match(/^([A-F])$/)
         if (m) return m[1]
       }
     } catch { /* next */ }
   }
 
-  // DOM evaluation: find position of correct element relative to siblings
-  const idx = await page.evaluate((): number => {
-    const correct = document.querySelector(
-      '[data-correct="true"], [data-is-correct="true"], .correct-option, .right-answer'
-    )
-    if (!correct) return -1
-    const parent = correct.closest('ul, ol, .options, [class*="options"]')
-    if (!parent) return -1
-    const items = Array.from(parent.children)
-    return items.findIndex((item) => item === correct || item.contains(correct))
-  })
-  if (idx >= 0 && idx < LABELS.length) return LABELS[idx]
-
-  return 'A' // unknown — flag for manual review
+  return '?' // unknown — flag for manual review
 }
 
 const pass2 = async (
@@ -310,19 +367,22 @@ const pass2 = async (
     const q = questions[i]
     console.log(`  Review Q${q.index}/${questions.length}...`)
     await goToQuestion(page, q.index)
+    await page.waitForTimeout(600)
 
     const correctId = await extractCorrectId(page)
     const explanation = await tryText(page, EXPLANATION)
     results.push({ correctId, explanation })
 
-    if (i < questions.length - 1) await clickNext(page).catch(() => undefined)
+    if (i < questions.length - 1) {
+      await clickBtn(page, NEXT_BTN, 'Next').catch(() => undefined)
+    }
   }
 
   return results
 }
 
 // ---------------------------------------------------------------------------
-// Domain detection from keywords
+// Domain detection
 // ---------------------------------------------------------------------------
 
 type DomainRule = [string[], string, string]
@@ -330,7 +390,7 @@ type DomainRule = [string[], string, string]
 const DOMAIN_RULES: DomainRule[] = [
   [['vpc', 'subnet', 'nacl', 'security group', 'vpn', 'direct connect', 'transit gateway', 'route 53', 'cloudfront', 'alb', 'nlb', 'elb', 'load balancer', 'nat gateway', 'waf', 'shield', 'guardduty', 'iam', 'kms', 'organizations', 'scp', 'cognito'], 'd1', 'Design Secure Architectures'],
   [['s3', 'glacier', 'efs', 'fsx', 'storage gateway', 'ebs', 'rds', 'aurora', 'dynamodb', 'elasticache', 'redshift', 'lake formation', 'backup', 'multi-az', 'replication', 'cross-region'], 'd2', 'Design Resilient Architectures'],
-  [['sqs', 'sns', 'eventbridge', 'step functions', 'lambda', 'api gateway', 'kinesis', 'firehose', 'microservice', 'serverless', 'event-driven', 'fargate', 'ecs', 'eks', 'auto scaling', 'elasticache', 'cloudfront', 'global accelerator'], 'd3', 'Design High-Performing Architectures'],
+  [['sqs', 'sns', 'eventbridge', 'step functions', 'lambda', 'api gateway', 'kinesis', 'firehose', 'microservice', 'serverless', 'event-driven', 'fargate', 'ecs', 'eks', 'auto scaling', 'cloudfront', 'global accelerator'], 'd3', 'Design High-Performing Architectures'],
   [['cost', 'billing', 'savings plan', 'reserved', 'spot instance', 'right-sizing', 'trusted advisor', 'compute optimizer'], 'd4', 'Design Cost-Optimized Architectures'],
 ]
 
@@ -343,7 +403,7 @@ const detectDomain = (text: string): { domain: string; domainLabel: string } => 
 }
 
 // ---------------------------------------------------------------------------
-// AWS service keyword extraction
+// Keyword extraction
 // ---------------------------------------------------------------------------
 
 const AWS_KEYWORDS = [
@@ -376,12 +436,12 @@ const esc = (s: string): string => s.replace(/'/g, "''")
 const toSqlRow = (q: AnsweredQuestion, setId: string, idx: number): string => {
   const id = `${setId}-${String(idx).padStart(3, '0')}`
   const opts = esc(JSON.stringify(q.options))
-  const expl = esc(JSON.stringify({ en: q.explanation }))
+  const expl = esc(JSON.stringify({ en: q.explanation || 'See AWS documentation.' }))
   const kws = esc(JSON.stringify(q.keywords))
   const ref = q.reference ? `'${esc(q.reference)}'` : 'NULL'
   const screenshot = `'/questions/${setId}/${setId}-${String(idx).padStart(3, '0')}.png'`
 
-  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source, page_number, screenshot_url) VALUES ('${id}', '${q.domain}', '${esc(q.domainLabel)}', '${q.difficulty}', '${esc(q.scenario)}', '${opts}', '${esc(q.correctId)}', '${expl}', ${ref}, '${kws}', 'whizlab', ${idx}, ${screenshot});`
+  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source, page_number, screenshot_url) VALUES ('${id}', '${q.domain}', '${esc(q.domainLabel)}', '${q.difficulty}', '${esc(q.scenario || 'TODO')}', '${opts}', '${esc(q.correctId)}', '${expl}', ${ref}, '${kws}', 'whizlab', ${idx}, ${screenshot});`
 }
 
 // ---------------------------------------------------------------------------
@@ -408,44 +468,87 @@ const main = async (): Promise<void> => {
   })
   const page = await context.newPage()
 
-  if (!headless) await ensureAuth(page)
-
+  // Navigate to quiz
   console.log('\nNavigating to quiz...')
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60_000 })
-  await page.waitForTimeout(3000)
 
-  // Redirect to login?
-  if (page.url().includes('login') || page.url().includes('signin')) {
-    console.error('✗ Redirected to login page. Remove storage state and retry without --headless.')
-    await browser.close()
-    process.exit(1)
+  // Wait for React SPA to render — any button or known class appearing
+  console.log('  Waiting for React to render...')
+  await page.waitForSelector('button, [class*="btn"], [class*="quiz"], [class*="exam"]', {
+    timeout: 20_000,
+  }).catch(() => console.warn('  ⚠  Render timeout — continuing anyway'))
+  await page.waitForTimeout(1500)
+
+  // Check for login redirect
+  if (isOnLoginPage(page.url())) {
+    if (headless) {
+      console.error('✗ Not logged in. Run without --headless first to log in.')
+      await browser.close()
+      process.exit(1)
+    }
+    await waitForLogin()
+    await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60_000 })
+    await page.waitForSelector('button, [class*="btn"]', { timeout: 20_000 }).catch(() => undefined)
+    await page.waitForTimeout(1500)
   }
 
+  // Save auth state
   await context.storageState({ path: STORAGE_STATE })
+  console.log(`  Auth saved → ${STORAGE_STATE}`)
 
-  // Click Start button if present
-  try {
-    const startBtn = page.locator('button:has-text("Start"), button:has-text("Begin"), a:has-text("Start Exam")').first()
-    if (await startBtn.isVisible({ timeout: 3000 })) {
-      await startBtn.click()
-      await page.waitForTimeout(2000)
-    }
-  } catch { /* already on question */ }
+  // Detect page state and handle accordingly
+  const hasStartBtn = await page.locator('button.btn-startQuiz').isVisible({ timeout: 3000 }).catch(() => false)
+  const hasResumeBtn = await page.locator('button:has-text("Resume"), button:has-text("Continue")').first().isVisible({ timeout: 1000 }).catch(() => false)
+  const hasQuestion = await page.locator(Q_TEXT.join(', ')).first().isVisible({ timeout: 1000 }).catch(() => false)
 
-  // Pass 1
+  console.log(`  Page state: startBtn=${hasStartBtn} resumeBtn=${hasResumeBtn} question=${hasQuestion}`)
+
+  if (hasResumeBtn) {
+    console.log('  Clicking Resume...')
+    await page.locator('button:has-text("Resume"), button:has-text("Continue")').first().click()
+    await page.waitForSelector(Q_TEXT.join(', '), { timeout: 10_000 }).catch(() => undefined)
+    await page.waitForTimeout(1500)
+  } else if (hasStartBtn) {
+    console.log('  Clicking Start Quiz...')
+    await page.locator('button.btn-startQuiz').first().click()
+    await page.waitForSelector(Q_TEXT.join(', '), { timeout: 10_000 }).catch(() => undefined)
+    await page.waitForTimeout(1500)
+  } else if (!hasQuestion) {
+    // Unknown state — save full debug HTML to figure out what's on screen
+    const html = await page.content()
+    const debugPath = join(screenshotDir, 'debug-start.html')
+    writeFileSync(debugPath, html)
+    await page.screenshot({ path: join(screenshotDir, 'debug-start.png') })
+    console.warn(`  ⚠  Unknown page state. Debug saved:`)
+    console.warn(`     HTML: ${debugPath}`)
+    console.warn(`     PNG:  ${join(screenshotDir, 'debug-start.png')}`)
+    console.warn('  Continuing — questions may not extract correctly.')
+  }
+
+  // Pass 1: collect all questions
   const rawQuestions = await pass1(page, total, screenshotDir, setId)
 
-  // Submit
+  // Submit exam
   console.log('\n=== Submitting exam ===')
-  await submitExam(page)
-  await page.waitForTimeout(3000)
+  const submitted = await clickBtn(page, SUBMIT_BTN, 'Submit')
+  if (submitted) {
+    await page.waitForTimeout(3000)
+    // Handle confirmation dialog
+    try {
+      const confirm = page.locator('button:has-text("Yes"), button:has-text("Confirm"), button:has-text("OK")').first()
+      if (await confirm.isVisible({ timeout: 2000 })) {
+        await confirm.click()
+        await page.waitForTimeout(2500)
+      }
+    } catch { /* no dialog */ }
+  }
 
-  // Pass 2
+  // Pass 2: scrape review for correct answers
   const answers = await pass2(page, rawQuestions)
 
   // Merge
   const finalQuestions: AnsweredQuestion[] = rawQuestions.map((q, i) => {
-    const ans = answers[i] ?? { correctId: 'A', explanation: '' }
+    const ans = answers[i] ?? { correctId: '?', explanation: '' }
     const fullText = [q.scenario, ...q.options.map((o) => o.text), ans.explanation].join(' ')
     const { domain, domainLabel } = detectDomain(fullText)
     return {
@@ -460,12 +563,11 @@ const main = async (): Promise<void> => {
     }
   })
 
-  // Write SQL
+  // Write outputs
   const sql = finalQuestions.map((q, i) => toSqlRow(q, setId, i + 1)).join('\n')
   writeFileSync(sqlPath, sql)
   console.log(`\n✓ SQL → ${sqlPath} (${finalQuestions.length} rows)`)
 
-  // Write notes for awsServices review
   const notes = finalQuestions.map((q, i) => ({
     id: `${setId}-${String(i + 1).padStart(3, '0')}`,
     scenario: q.scenario.slice(0, 200),
@@ -476,14 +578,14 @@ const main = async (): Promise<void> => {
   writeFileSync(notesPath, JSON.stringify(notes, null, 2))
   console.log(`✓ Notes → ${notesPath}`)
 
-  const noAnswers = finalQuestions.filter((q) => !q.explanation).length
-  if (noAnswers > 0) console.warn(`\n⚠  ${noAnswers} questions missing explanation — review ${sqlPath} manually`)
+  const unknown = finalQuestions.filter((q) => q.correctId === '?').length
+  const noScenario = finalQuestions.filter((q) => !q.scenario).length
+  if (unknown > 0) console.warn(`⚠  ${unknown} questions with unknown correct answer`)
+  if (noScenario > 0) console.warn(`⚠  ${noScenario} questions with no scenario text`)
 
   console.log('\nNext steps:')
-  console.log(`  Seed remote D1:`)
-  console.log(`    while IFS= read -r line; do bunx wrangler d1 execute aws-saa-questions --remote --command="$line"; done < ${sqlPath}`)
-  console.log(`  Seed local D1:`)
-  console.log(`    while IFS= read -r line; do bunx wrangler d1 execute aws-saa-questions --local --command="$line"; done < ${sqlPath}`)
+  console.log(`  Seed remote: while IFS= read -r line; do bunx wrangler d1 execute aws-saa-questions --remote --command="$line"; done < ${sqlPath}`)
+  console.log(`  Seed local:  while IFS= read -r line; do bunx wrangler d1 execute aws-saa-questions --local  --command="$line"; done < ${sqlPath}`)
 
   await browser.close()
 }
