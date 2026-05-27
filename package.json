@@ -14,7 +14,8 @@
     "scrape:quiz": "bun run scripts/scrape-whizlabs-quiz.ts",
     "capture:questions": "bun run scripts/capture-question-screenshots.ts",
     "seed:screenshots": "bun run scripts/seed-screenshot-metadata.ts",
-    "verify:aws-refs": "bun run scripts/verify-aws-references.ts"
+    "verify:aws-refs": "bun run scripts/verify-aws-references.ts",
+    "changelog:draft": "bun run scripts/changelog-from-git.ts"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.2",

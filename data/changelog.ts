@@ -12,6 +12,15 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    date: '2026-05-27',
+    changes: [
+      { type: 'feat', text: 'Changelog page at /changelog — type filters, collapsible releases, relative dates' },
+      { type: 'feat', text: 'Timeline sidebar with scroll spy, progress rail, and jump-to-date' },
+      { type: 'feat', text: 'Desktop layout: scrollable changelog panel beside pinned timeline' },
+      { type: 'refactor', text: 'Changelog data and types moved to data/changelog.ts' },
+    ],
+  },
+  {
     date: '2026-05-26',
     changes: [
       { type: 'feat', text: 'Quiz scraping script for Whizlabs questions' },
