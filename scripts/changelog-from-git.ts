@@ -8,6 +8,12 @@ type GitCommit = {
   subject: string
 }
 
+type ChangelogIndex = {
+  latestDate: string | null
+  documentedDates: Set<string>
+  allTexts: string[]
+}
+
 const CHANGELOG_PATH = 'data/changelog.ts'
 
 const prefixTypeMap: Record<string, ChangeType> = {
@@ -25,33 +31,51 @@ const keywordTypeRules: { pattern: RegExp; type: ChangeType }[] = [
   { pattern: /\bfix(ed|es|ing)?\b/i, type: 'fix' },
   { pattern: /\brefactor(ed|ing|s)?\b/i, type: 'refactor' },
   { pattern: /\b(chore|ci|dependabot|lockfile|gitignore)\b/i, type: 'chore' },
-  { pattern: /\b(add(ed|s|ing)?|enhance(d|s|ing)?|implement(ed|s|ing)?|introduce(d|s|ing)?)\b/i, type: 'feat' },
+  {
+    pattern: /\b(add(ed|s|ing)?|enhance(d|s|ing)?|implement(ed|s|ing)?|introduce(d|s|ing)?|update(d|s|ing)?)\b/i,
+    type: 'feat',
+  },
 ]
 
-const readLatestChangelogDate = (): string | null => {
-  const source = readFileSync(CHANGELOG_PATH, 'utf8')
-  const match = source.match(/date: '(\d{4}-\d{2}-\d{2})'/)
-  return match?.[1] ?? null
+const skipSubject = (subject: string) => {
+  const lower = subject.toLowerCase()
+  return (
+    lower.startsWith('merge pull request') ||
+    lower.startsWith('merge branch') ||
+    /^initial commit for the issue/.test(lower)
+  )
 }
 
-const parseSinceArg = (): string => {
+const readChangelogIndex = (): ChangelogIndex => {
+  const source = readFileSync(CHANGELOG_PATH, 'utf8')
+  const latestDate = source.match(/date: '(\d{4}-\d{2}-\d{2})'/)?.[1] ?? null
+  const allTexts = [...source.matchAll(/text: '((?:\\'|[^'])*)'/g)].map((match) =>
+    match[1].replace(/\\'/g, "'"),
+  )
+  const documentedDates = new Set(
+    [...source.matchAll(/date: '(\d{4}-\d{2}-\d{2})'/g)].map((match) => match[1]),
+  )
+
+  return { latestDate, documentedDates, allTexts }
+}
+
+const parseSinceArg = (latestDate: string | null): string => {
   const sinceFlag = process.argv.find((arg) => arg.startsWith('--since='))
   if (sinceFlag) return sinceFlag.replace('--since=', '')
 
-  const latest = readLatestChangelogDate()
-  if (latest) return latest
+  if (latestDate) return latestDate
 
   const thirtyDaysAgo = new Date()
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
   return thirtyDaysAgo.toISOString().slice(0, 10)
 }
 
-const readGitLog = (since: string, afterLatestDate: string | null): GitCommit[] => {
-  const rangeFlag = afterLatestDate
-    ? `--after="${afterLatestDate} 23:59:59"`
-    : `--since="${since} 00:00"`
+const includeAllDates = () => process.argv.includes('--all')
 
-  const output = execSync(`git log ${rangeFlag} --format='%as|%s'`, { encoding: 'utf8' }).trim()
+const readGitLog = (since: string): GitCommit[] => {
+  const output = execSync(`git log --since="${since} 00:00" --format='%as|%s'`, {
+    encoding: 'utf8',
+  }).trim()
 
   if (!output) return []
 
@@ -61,7 +85,7 @@ const readGitLog = (since: string, afterLatestDate: string | null): GitCommit[] 
       const [date, ...subjectParts] = line.split('|')
       return { date, subject: subjectParts.join('|').trim() }
     })
-    .filter((commit) => commit.date && commit.subject)
+    .filter((commit) => commit.date && commit.subject && !skipSubject(commit.subject))
 }
 
 const inferChangeType = (subject: string): ChangeType => {
@@ -86,40 +110,78 @@ const cleanSubject = (subject: string): string => {
   return stripped.charAt(0).toUpperCase() + stripped.slice(1)
 }
 
+const tokens = (text: string) =>
+  text
+    .toLowerCase()
+    .split(/\W+/)
+    .filter((word) => word.length > 4)
+
+const overlapsDocumented = (subject: string, documented: string[]) => {
+  const cleaned = cleanSubject(subject).toLowerCase()
+  const snippet = cleaned.slice(0, 40)
+
+  const directMatch = documented.some((text) => {
+    const doc = text.toLowerCase()
+    return doc.includes(snippet) || cleaned.includes(doc.slice(0, 40))
+  })
+  if (directMatch) return true
+
+  const subjectTokens = new Set(tokens(cleaned))
+  return documented.some((text) => {
+    const shared = tokens(text).filter((word) => subjectTokens.has(word))
+    return shared.length >= 3
+  })
+}
+
 const groupByDate = (commits: GitCommit[]): Record<string, GitCommit[]> =>
   commits.reduce<Record<string, GitCommit[]>>((groups, commit) => {
     const existing = groups[commit.date] ?? []
     return { ...groups, [commit.date]: [...existing, commit] }
   }, {})
 
-const formatEntry = (date: string, commits: GitCommit[]): string => {
-  const changes = commits.map((commit) => {
-    const type = inferChangeType(commit.subject)
-    const text = cleanSubject(commit.subject)
-    return `      { type: '${type}', text: '${text.replace(/'/g, "\\'")}' },`
-  })
-
-  return [`  {`, `    date: '${date}',`, `    changes: [`, ...changes, `    ],`, `  },`].join('\n')
+const formatChangeLine = (commit: GitCommit) => {
+  const type = inferChangeType(commit.subject)
+  const text = cleanSubject(commit.subject).replace(/'/g, "\\'")
+  return `      { type: '${type}', text: '${text}' },`
 }
 
-const since = parseSinceArg()
-const latestDate = readLatestChangelogDate()
-const commits = readGitLog(since, latestDate)
-const grouped = groupByDate(commits)
-const dates = Object.keys(grouped).sort((a, b) => b.localeCompare(a))
+const formatNewEntry = (date: string, commits: GitCommit[]): string =>
+  [`  {`, `    date: '${date}',`, `    changes: [`, ...commits.map(formatChangeLine), `    ],`, `  },`].join(
+    '\n',
+  )
 
-console.log(`# Changelog draft from git (${latestDate ? `after ${latestDate}` : `since ${since}`})`)
-if (latestDate) {
-  console.log(`# Latest entry in ${CHANGELOG_PATH}: ${latestDate}`)
-  console.log('# Review, edit wording, then paste new blocks at the top of the changelog array.\n')
+const index = readChangelogIndex()
+const since = parseSinceArg(index.latestDate)
+const showAllDates = includeAllDates()
+const allCommits = readGitLog(since)
+const undocumented = allCommits.filter(
+  (commit) => !overlapsDocumented(commit.subject, index.allTexts),
+)
+const grouped = groupByDate(undocumented)
+const dates = Object.keys(grouped)
+  .filter((date) => showAllDates || !index.documentedDates.has(date) || date === index.latestDate)
+  .sort((a, b) => b.localeCompare(a))
+
+console.log(`# Changelog draft from git (since ${since})`)
+if (index.latestDate) {
+  console.log(`# Latest entry in ${CHANGELOG_PATH}: ${index.latestDate}`)
 }
+console.log('# Review, edit wording, then merge into data/changelog.ts')
+console.log('# Flags: --since=YYYY-MM-DD  --all (include dates already in changelog)\n')
 
 if (dates.length === 0) {
-  console.log('# No commits found for that range.')
+  console.log('# Nothing new to add — documented dates are up to date for this range.')
   process.exit(0)
 }
 
 dates.forEach((date) => {
-  console.log(formatEntry(date, grouped[date]))
+  if (index.latestDate && date === index.latestDate) {
+    console.log(`# Append to existing ${date} entry:`)
+    grouped[date].forEach((commit) => console.log(formatChangeLine(commit)))
+    console.log('')
+    return
+  }
+
+  console.log(formatNewEntry(date, grouped[date]))
   console.log('')
 })

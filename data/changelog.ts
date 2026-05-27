@@ -17,7 +17,10 @@ export const changelog: ChangeEntry[] = [
       { type: 'feat', text: 'Changelog page at /changelog — type filters, collapsible releases, relative dates' },
       { type: 'feat', text: 'Timeline sidebar with scroll spy, progress rail, and jump-to-date' },
       { type: 'feat', text: 'Desktop layout: scrollable changelog panel beside pinned timeline' },
+      { type: 'feat', text: 'Changelog link on About page and footer' },
+      { type: 'feat', text: 'changelog:draft script — draft new entries from git log' },
       { type: 'refactor', text: 'Changelog data and types moved to data/changelog.ts' },
+      { type: 'refactor', text: 'Changelog entries use native details/summary for accessibility' },
     ],
   },
   {
