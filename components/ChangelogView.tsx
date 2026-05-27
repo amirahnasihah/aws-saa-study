@@ -37,7 +37,30 @@ const countByType = (entries: ChangeEntry[]) =>
     { feat: 0, fix: 0, chore: 0, refactor: 0 },
   )
 
-const resolveActiveDate = (entries: ChangeEntry[], refs: Record<string, HTMLElement | null>) => {
+const isDesktopViewport = () => window.matchMedia('(min-width: 1024px)').matches
+
+const relativeTop = (node: HTMLElement, container: HTMLElement) =>
+  node.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop
+
+const resolveActiveDateInContainer = (
+  entries: ChangeEntry[],
+  refs: Record<string, HTMLElement | null>,
+  container: HTMLElement,
+) => {
+  const anchor = container.getBoundingClientRect().top + 24
+
+  const visible = entries.filter((entry) => {
+    const node = refs[entry.date]
+    return node && node.getBoundingClientRect().top <= anchor
+  })
+
+  return visible.at(-1)?.date ?? entries[0]?.date ?? ''
+}
+
+const resolveActiveDateOnPage = (
+  entries: ChangeEntry[],
+  refs: Record<string, HTMLElement | null>,
+) => {
   const visible = entries.filter((entry) => {
     const node = refs[entry.date]
     return node && node.getBoundingClientRect().top <= SCROLL_ANCHOR
@@ -46,7 +69,26 @@ const resolveActiveDate = (entries: ChangeEntry[], refs: Record<string, HTMLElem
   return visible.at(-1)?.date ?? entries[0]?.date ?? ''
 }
 
-const resolveScrollProgress = (
+const resolveScrollProgressInContainer = (
+  entries: ChangeEntry[],
+  refs: Record<string, HTMLElement | null>,
+  container: HTMLElement,
+) => {
+  const first = refs[entries[0]?.date ?? '']
+  const last = refs[entries.at(-1)?.date ?? '']
+
+  if (!first || !last || entries.length < 2) return entries.length === 1 ? 1 : 0
+
+  const start = relativeTop(first, container)
+  const end = relativeTop(last, container) + last.offsetHeight
+  const viewport = container.scrollTop + 32
+  const span = end - start
+
+  if (span <= 0) return 0
+  return Math.min(1, Math.max(0, (viewport - start) / span))
+}
+
+const resolveScrollProgressOnPage = (
   entries: ChangeEntry[],
   refs: Record<string, HTMLElement | null>,
 ) => {
@@ -74,6 +116,7 @@ export default function ChangelogView() {
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({})
   const timelineItemRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const timelineNavRef = useRef<HTMLElement | null>(null)
+  const contentScrollRef = useRef<HTMLDivElement | null>(null)
   const isJumpScrolling = useRef(false)
 
   const filteredEntries = useMemo(
@@ -105,15 +148,37 @@ export default function ChangelogView() {
     filteredEntries.length > 0 &&
     filteredEntries.every((entry) => expandedDates.has(entry.date))
 
+  const syncScrollState = useCallback(() => {
+    if (isJumpScrolling.current) return
+
+    const container = contentScrollRef.current
+    const useContainer = isDesktopViewport() && container
+
+    if (useContainer) {
+      setActiveDate(resolveActiveDateInContainer(filteredEntries, sectionRefs.current, container))
+      setScrollProgress(resolveScrollProgressInContainer(filteredEntries, sectionRefs.current, container))
+      return
+    }
+
+    setActiveDate(resolveActiveDateOnPage(filteredEntries, sectionRefs.current))
+    setScrollProgress(resolveScrollProgressOnPage(filteredEntries, sectionRefs.current))
+  }, [filteredEntries])
+
   const scrollToEntry = useCallback((date: string) => {
     const node = sectionRefs.current[date]
+    const container = contentScrollRef.current
     if (!node) return
 
     isJumpScrolling.current = true
     setActiveDate(date)
 
-    const top = node.getBoundingClientRect().top + window.scrollY - SCROLL_ANCHOR + 8
-    window.scrollTo({ top, behavior: 'smooth' })
+    if (isDesktopViewport() && container) {
+      const top = relativeTop(node, container) - 12
+      container.scrollTo({ top, behavior: 'smooth' })
+    } else {
+      const top = node.getBoundingClientRect().top + window.scrollY - SCROLL_ANCHOR + 8
+      window.scrollTo({ top, behavior: 'smooth' })
+    }
 
     window.setTimeout(() => {
       isJumpScrolling.current = false
@@ -140,22 +205,19 @@ export default function ChangelogView() {
   useEffect(() => {
     if (filteredEntries.length === 0) return
 
-    const syncScrollState = () => {
-      if (isJumpScrolling.current) return
-
-      setActiveDate(resolveActiveDate(filteredEntries, sectionRefs.current))
-      setScrollProgress(resolveScrollProgress(filteredEntries, sectionRefs.current))
-    }
-
     syncScrollState()
+
+    const container = contentScrollRef.current
+    container?.addEventListener('scroll', syncScrollState, { passive: true })
     window.addEventListener('scroll', syncScrollState, { passive: true })
     window.addEventListener('resize', syncScrollState)
 
     return () => {
+      container?.removeEventListener('scroll', syncScrollState)
       window.removeEventListener('scroll', syncScrollState)
       window.removeEventListener('resize', syncScrollState)
     }
-  }, [filteredEntries])
+  }, [filteredEntries, syncScrollState])
 
   useEffect(() => {
     const nav = timelineNavRef.current
@@ -183,6 +245,88 @@ export default function ChangelogView() {
             : scrollProgress * 100,
         ),
       )
+
+  const entryList = filteredEntries.length === 0 ? (
+    <div className="rounded-xl border border-aws-border bg-aws-card/40 px-5 py-8 text-center">
+      <p className="text-sm text-aws-muted">No changes match this filter.</p>
+    </div>
+  ) : (
+    filteredEntries.map((entry, index) => {
+      const isExpanded = expandedDates.has(entry.date)
+      const isActive = activeDate === entry.date
+
+      return (
+        <section
+          key={entry.date}
+          id={`changelog-${entry.date}`}
+          ref={(node) => {
+            sectionRefs.current[entry.date] = node
+          }}
+          className={`scroll-mt-3 rounded-xl border overflow-hidden transition-[border-color,box-shadow] duration-300 ${
+            isActive
+              ? 'border-c1/25 bg-aws-card/50 shadow-[0_0_0_1px_rgba(0,212,255,0.06),0_8px_32px_rgba(0,212,255,0.04)]'
+              : 'border-aws-border bg-aws-card/40'
+          }`}
+        >
+          <button
+            type="button"
+            onClick={() => toggleEntry(entry.date)}
+            aria-expanded={isExpanded ? 'true' : 'false'}
+            className="w-full flex items-start gap-3 px-4 py-4 text-left hover:bg-aws-card/60 transition-colors"
+          >
+            <span
+              className={`font-space-mono text-[0.65rem] mt-1 shrink-0 transition-transform duration-200 ${
+                isExpanded ? 'rotate-90 text-c1' : 'text-aws-muted'
+              }`}
+              aria-hidden
+            >
+              ▶
+            </span>
+
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                <h2 className="font-space-mono text-sm text-aws-text">
+                  {formatChangelogDate(entry.date)}
+                </h2>
+                <span className="font-space-mono text-[0.58rem] text-aws-muted">
+                  {formatRelativeDate(entry.date)}
+                </span>
+                {index === 0 && (
+                  <span className="font-space-mono text-[0.58rem] uppercase tracking-wider text-c1/80 border border-c1/20 rounded-full px-2 py-0.5">
+                    Latest
+                  </span>
+                )}
+              </div>
+              {!isExpanded && (
+                <p className="text-sm text-aws-muted mt-1.5 truncate">
+                  {entry.changes.map((change) => change.text).join(' · ')}
+                </p>
+              )}
+            </div>
+
+            <span className="font-space-mono text-[0.58rem] text-aws-muted shrink-0 mt-0.5">
+              {entry.changes.length}
+            </span>
+          </button>
+
+          {isExpanded && (
+            <ul className="px-4 pb-4 pt-0 space-y-2 border-t border-aws-border/60 mx-4 mb-4">
+              {entry.changes.map((change, changeIndex) => (
+                <li key={changeIndex} className="flex items-start gap-2 text-sm pt-2 first:pt-3">
+                  <span
+                    className={`font-space-mono text-[0.6rem] mt-[3px] shrink-0 ${typeColor[change.type]}`}
+                  >
+                    {typeLabel[change.type]}
+                  </span>
+                  <span className="text-aws-text leading-relaxed">{change.text}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </section>
+      )
+    })
+  )
 
   return (
     <main className="max-w-5xl mx-auto px-4 pt-[calc(3.5rem+2rem)] pb-16">
@@ -252,9 +396,9 @@ export default function ChangelogView() {
       </div>
 
       <div className="grid lg:grid-cols-[13.5rem_minmax(0,1fr)] gap-8 lg:gap-12 items-start">
-        <aside className="hidden lg:block self-start">
-          <div className="sticky top-[calc(3.5rem+1.25rem)] max-h-[calc(100vh-5.75rem)] rounded-xl border border-aws-border/80 bg-aws-card/35 backdrop-blur-sm overflow-hidden">
-            <div className="px-4 pt-4 pb-3 border-b border-aws-border/60">
+        <aside className="hidden lg:flex lg:flex-col self-start">
+          <div className="flex flex-col w-full max-h-[calc(100vh-14rem)] rounded-xl border border-aws-border/80 bg-aws-card/35 backdrop-blur-sm overflow-hidden">
+            <div className="px-4 pt-4 pb-3 border-b border-aws-border/60 shrink-0">
               <div className="flex items-center justify-between gap-2 mb-2">
                 <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.18em] text-aws-muted">
                   Timeline
@@ -274,7 +418,7 @@ export default function ChangelogView() {
             <nav
               ref={timelineNavRef}
               aria-label="Changelog timeline"
-              className="overflow-y-auto nav-scroll max-h-[calc(100vh-11rem)] px-3 py-3"
+              className="overflow-y-auto nav-scroll flex-1 px-3 py-3 min-h-0"
             >
               <div className="relative">
                 <div
@@ -300,9 +444,7 @@ export default function ChangelogView() {
                       type="button"
                       onClick={() => scrollToEntry(entry.date)}
                       className={`group relative w-full text-left pl-7 pr-2 py-2.5 rounded-lg transition-all duration-200 ${
-                        isActive
-                          ? 'bg-c1/[0.07]'
-                          : 'hover:bg-aws-card/50'
+                        isActive ? 'bg-c1/[0.07]' : 'hover:bg-aws-card/50'
                       }`}
                     >
                       <span
@@ -337,88 +479,11 @@ export default function ChangelogView() {
           </div>
         </aside>
 
-        <div className="space-y-3 min-w-0">
-          {filteredEntries.length === 0 ? (
-            <div className="rounded-xl border border-aws-border bg-aws-card/40 px-5 py-8 text-center">
-              <p className="text-sm text-aws-muted">No changes match this filter.</p>
-            </div>
-          ) : (
-            filteredEntries.map((entry, index) => {
-              const isExpanded = expandedDates.has(entry.date)
-              const isActive = activeDate === entry.date
-
-              return (
-                <section
-                  key={entry.date}
-                  id={`changelog-${entry.date}`}
-                  ref={(node) => {
-                    sectionRefs.current[entry.date] = node
-                  }}
-                  className={`scroll-mt-[calc(3.5rem+1rem)] rounded-xl border overflow-hidden transition-[border-color,box-shadow] duration-300 ${
-                    isActive
-                      ? 'border-c1/25 bg-aws-card/50 shadow-[0_0_0_1px_rgba(0,212,255,0.06),0_8px_32px_rgba(0,212,255,0.04)]'
-                      : 'border-aws-border bg-aws-card/40'
-                  }`}
-                >
-                  <button
-                    type="button"
-                    onClick={() => toggleEntry(entry.date)}
-                    aria-expanded={isExpanded ? 'true' : 'false'}
-                    className="w-full flex items-start gap-3 px-4 py-4 text-left hover:bg-aws-card/60 transition-colors"
-                  >
-                    <span
-                      className={`font-space-mono text-[0.65rem] mt-1 shrink-0 transition-transform duration-200 ${
-                        isExpanded ? 'rotate-90 text-c1' : 'text-aws-muted'
-                      }`}
-                      aria-hidden
-                    >
-                      ▶
-                    </span>
-
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                        <h2 className="font-space-mono text-sm text-aws-text">
-                          {formatChangelogDate(entry.date)}
-                        </h2>
-                        <span className="font-space-mono text-[0.58rem] text-aws-muted">
-                          {formatRelativeDate(entry.date)}
-                        </span>
-                        {index === 0 && (
-                          <span className="font-space-mono text-[0.58rem] uppercase tracking-wider text-c1/80 border border-c1/20 rounded-full px-2 py-0.5">
-                            Latest
-                          </span>
-                        )}
-                      </div>
-                      {!isExpanded && (
-                        <p className="text-sm text-aws-muted mt-1.5 truncate">
-                          {entry.changes.map((change) => change.text).join(' · ')}
-                        </p>
-                      )}
-                    </div>
-
-                    <span className="font-space-mono text-[0.58rem] text-aws-muted shrink-0 mt-0.5">
-                      {entry.changes.length}
-                    </span>
-                  </button>
-
-                  {isExpanded && (
-                    <ul className="px-4 pb-4 pt-0 space-y-2 border-t border-aws-border/60 mx-4 mb-4">
-                      {entry.changes.map((change, changeIndex) => (
-                        <li key={changeIndex} className="flex items-start gap-2 text-sm pt-2 first:pt-3">
-                          <span
-                            className={`font-space-mono text-[0.6rem] mt-[3px] shrink-0 ${typeColor[change.type]}`}
-                          >
-                            {typeLabel[change.type]}
-                          </span>
-                          <span className="text-aws-text leading-relaxed">{change.text}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </section>
-              )
-            })
-          )}
+        <div
+          ref={contentScrollRef}
+          className="min-w-0 nav-scroll lg:max-h-[calc(100vh-14rem)] lg:overflow-y-auto lg:rounded-xl lg:border lg:border-aws-border/70 lg:bg-aws-card/20 lg:shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]"
+        >
+          <div className="space-y-3 lg:p-3">{entryList}</div>
         </div>
       </div>
 
