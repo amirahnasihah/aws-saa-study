@@ -10,7 +10,12 @@
     "start": "next start",
     "test": "echo \"No tests configured\"",
     "lint": "eslint",
-    "deploy": "next build && bunx next-on-pages && bunx wrangler pages deploy --commit-dirty=true"
+    "deploy": "next build && bunx next-on-pages && bunx wrangler pages deploy --commit-dirty=true",
+    "scrape:quiz": "bun run scripts/scrape-whizlabs-quiz.ts",
+    "capture:questions": "bun run scripts/capture-question-screenshots.ts",
+    "seed:screenshots": "bun run scripts/seed-screenshot-metadata.ts",
+    "verify:aws-refs": "bun run scripts/verify-aws-references.ts",
+    "changelog:draft": "bun run scripts/changelog-from-git.ts"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.2",
@@ -33,6 +38,7 @@
     "eslint-config-next": "16.2.4",
     "tailwindcss": "^4",
     "typescript": "^6",
-    "wrangler": "^4.93.0"
+    "wrangler": "^4.93.0",
+    "playwright": "^1.52.0"
   }
 }

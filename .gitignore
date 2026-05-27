@@ -45,6 +45,14 @@ next-env.d.ts
 
 # generated sql seed files (source: scripts/*.ts)
 scripts/*.sql
+scripts/*-notes.json
+scripts/debug-q*.html
+public/questions/wz*/debug-*.html
+
+# question capture (local URLs + auth state)
+scripts/question-pages.local.json
+scripts/.playwright-storage-state.json
+scripts/aws-reference-report.json
 
 # local mcp config
 .mcp.json

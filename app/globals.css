@@ -31,12 +31,13 @@ body {
     radial-gradient(ellipse at 90% 80%, rgba(124, 58, 237, 0.05) 0%, transparent 50%);
 }
 
-/* hide scrollbar on sticky nav */
+/* hide scrollbar while keeping scroll */
+.nav-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 .nav-scroll::-webkit-scrollbar {
   display: none;
-}
-.nav-scroll {
-  scrollbar-width: none;
 }
 
 /* search modal animations */
