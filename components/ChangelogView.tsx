@@ -18,6 +18,7 @@ import {
 type FilterType = ChangeType | 'all'
 
 const DEFAULT_EXPANDED = 2
+const SCROLL_ANCHOR = 112
 
 const filterOptions: { id: FilterType; label: string }[] = [
   { id: 'all', label: 'All' },
@@ -36,13 +37,44 @@ const countByType = (entries: ChangeEntry[]) =>
     { feat: 0, fix: 0, chore: 0, refactor: 0 },
   )
 
+const resolveActiveDate = (entries: ChangeEntry[], refs: Record<string, HTMLElement | null>) => {
+  const visible = entries.filter((entry) => {
+    const node = refs[entry.date]
+    return node && node.getBoundingClientRect().top <= SCROLL_ANCHOR
+  })
+
+  return visible.at(-1)?.date ?? entries[0]?.date ?? ''
+}
+
+const resolveScrollProgress = (
+  entries: ChangeEntry[],
+  refs: Record<string, HTMLElement | null>,
+) => {
+  const first = refs[entries[0]?.date ?? '']
+  const last = refs[entries.at(-1)?.date ?? '']
+
+  if (!first || !last || entries.length < 2) return entries.length === 1 ? 1 : 0
+
+  const start = first.getBoundingClientRect().top + window.scrollY
+  const end = last.getBoundingClientRect().bottom + window.scrollY
+  const viewport = window.scrollY + SCROLL_ANCHOR
+  const span = end - start
+
+  if (span <= 0) return 0
+  return Math.min(1, Math.max(0, (viewport - start) / span))
+}
+
 export default function ChangelogView() {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all')
   const [expandedDates, setExpandedDates] = useState<Set<string>>(
     () => new Set(changelog.slice(0, DEFAULT_EXPANDED).map((entry) => entry.date)),
   )
   const [activeDate, setActiveDate] = useState(changelog[0]?.date ?? '')
+  const [scrollProgress, setScrollProgress] = useState(0)
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({})
+  const timelineItemRefs = useRef<Record<string, HTMLButtonElement | null>>({})
+  const timelineNavRef = useRef<HTMLElement | null>(null)
+  const isJumpScrolling = useRef(false)
 
   const filteredEntries = useMemo(
     () =>
@@ -58,6 +90,11 @@ export default function ChangelogView() {
     [activeFilter],
   )
 
+  const activeIndex = useMemo(
+    () => filteredEntries.findIndex((entry) => entry.date === activeDate),
+    [activeDate, filteredEntries],
+  )
+
   const typeCounts = useMemo(() => countByType(changelog), [])
   const totalChanges = useMemo(
     () => changelog.reduce((total, entry) => total + entry.changes.length, 0),
@@ -69,8 +106,18 @@ export default function ChangelogView() {
     filteredEntries.every((entry) => expandedDates.has(entry.date))
 
   const scrollToEntry = useCallback((date: string) => {
-    sectionRefs.current[date]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    const node = sectionRefs.current[date]
+    if (!node) return
+
+    isJumpScrolling.current = true
     setActiveDate(date)
+
+    const top = node.getBoundingClientRect().top + window.scrollY - SCROLL_ANCHOR + 8
+    window.scrollTo({ top, behavior: 'smooth' })
+
+    window.setTimeout(() => {
+      isJumpScrolling.current = false
+    }, 700)
   }, [])
 
   const toggleEntry = useCallback((date: string) => {
@@ -91,30 +138,51 @@ export default function ChangelogView() {
   }, [allExpanded, filteredEntries])
 
   useEffect(() => {
-    const visibleDates = filteredEntries.map((entry) => entry.date)
-    if (visibleDates.length === 0) return
+    if (filteredEntries.length === 0) return
 
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)
+    const syncScrollState = () => {
+      if (isJumpScrolling.current) return
 
-        const topEntry = visible[0]
-        if (topEntry?.target.id) {
-          setActiveDate(topEntry.target.id.replace('changelog-', ''))
-        }
-      },
-      { rootMargin: '-20% 0px -60% 0px', threshold: [0, 0.25, 0.5, 1] },
-    )
+      setActiveDate(resolveActiveDate(filteredEntries, sectionRefs.current))
+      setScrollProgress(resolveScrollProgress(filteredEntries, sectionRefs.current))
+    }
 
-    visibleDates.forEach((date) => {
-      const node = sectionRefs.current[date]
-      if (node) observer.observe(node)
-    })
+    syncScrollState()
+    window.addEventListener('scroll', syncScrollState, { passive: true })
+    window.addEventListener('resize', syncScrollState)
 
-    return () => observer.disconnect()
+    return () => {
+      window.removeEventListener('scroll', syncScrollState)
+      window.removeEventListener('resize', syncScrollState)
+    }
   }, [filteredEntries])
+
+  useEffect(() => {
+    const nav = timelineNavRef.current
+    const item = timelineItemRefs.current[activeDate]
+    if (!nav || !item) return
+
+    const navRect = nav.getBoundingClientRect()
+    const itemRect = item.getBoundingClientRect()
+    const above = itemRect.top < navRect.top + 12
+    const below = itemRect.bottom > navRect.bottom - 12
+
+    if (above || below) {
+      item.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+    }
+  }, [activeDate])
+
+  const railProgress = filteredEntries.length <= 1
+    ? 100
+    : Math.max(
+        0,
+        Math.min(
+          100,
+          activeIndex >= 0
+            ? (activeIndex / (filteredEntries.length - 1)) * 100
+            : scrollProgress * 100,
+        ),
+      )
 
   return (
     <main className="max-w-5xl mx-auto px-4 pt-[calc(3.5rem+2rem)] pb-16">
@@ -162,56 +230,111 @@ export default function ChangelogView() {
         </button>
       </div>
 
-      <div className="lg:hidden mb-6 -mx-4 px-4 overflow-x-auto nav-scroll">
-        <div className="flex gap-2 min-w-max pb-1">
-          {filteredEntries.map((entry) => (
-            <button
-              key={entry.date}
-              type="button"
-              onClick={() => scrollToEntry(entry.date)}
-              className={`font-space-mono text-[0.62rem] px-3 py-1.5 rounded-full border whitespace-nowrap transition-colors ${
-                activeDate === entry.date
-                  ? 'border-c1/50 bg-c1/10 text-c1'
-                  : 'border-aws-border text-aws-muted hover:text-aws-text hover:border-aws-text/30'
-              }`}
-            >
-              {formatChangelogDate(entry.date)}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="grid lg:grid-cols-[11rem_minmax(0,1fr)] gap-8 lg:gap-12">
-        <aside className="hidden lg:block">
-          <nav className="sticky top-[calc(3.5rem+1.5rem)] space-y-1">
-            <p className="font-space-mono text-[0.58rem] uppercase tracking-widest text-aws-muted mb-3">
-              Timeline
-            </p>
+      <div className="lg:hidden sticky top-14 z-40 -mx-4 px-4 py-3 mb-6 bg-aws-bg/88 backdrop-blur-md border-b border-aws-border/70">
+        <div className="overflow-x-auto nav-scroll">
+          <div className="flex gap-2 min-w-max">
             {filteredEntries.map((entry) => (
               <button
                 key={entry.date}
                 type="button"
                 onClick={() => scrollToEntry(entry.date)}
-                className={`group w-full text-left rounded-lg px-2.5 py-2 transition-colors border-l-2 ${
+                className={`font-space-mono text-[0.62rem] px-3 py-1.5 rounded-full border whitespace-nowrap transition-all duration-200 ${
                   activeDate === entry.date
-                    ? 'border-c1 bg-c1/5'
-                    : 'border-transparent hover:border-aws-border hover:bg-aws-card/40'
+                    ? 'border-c1/50 bg-c1/10 text-c1 shadow-[0_0_16px_rgba(0,212,255,0.12)]'
+                    : 'border-aws-border text-aws-muted hover:text-aws-text hover:border-aws-text/30'
                 }`}
               >
-                <p
-                  className={`font-space-mono text-[0.62rem] ${
-                    activeDate === entry.date ? 'text-c1' : 'text-aws-text'
-                  }`}
-                >
-                  {formatChangelogDate(entry.date)}
-                </p>
-                <p className="text-[0.65rem] text-aws-muted mt-0.5">
-                  {formatRelativeDate(entry.date)} · {entry.changes.length}{' '}
-                  {entry.changes.length === 1 ? 'change' : 'changes'}
-                </p>
+                {formatChangelogDate(entry.date)}
               </button>
             ))}
-          </nav>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid lg:grid-cols-[13.5rem_minmax(0,1fr)] gap-8 lg:gap-12 items-start">
+        <aside className="hidden lg:block self-start">
+          <div className="sticky top-[calc(3.5rem+1.25rem)] max-h-[calc(100vh-5.75rem)] rounded-xl border border-aws-border/80 bg-aws-card/35 backdrop-blur-sm overflow-hidden">
+            <div className="px-4 pt-4 pb-3 border-b border-aws-border/60">
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.18em] text-aws-muted">
+                  Timeline
+                </p>
+                <span className="font-space-mono text-[0.55rem] text-c1/70">
+                  {filteredEntries.length} releases
+                </span>
+              </div>
+              <div className="h-1 rounded-full bg-aws-border/80 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-c1/70 via-c1 to-c1/80 transition-[width] duration-300 ease-out"
+                  style={{ width: `${Math.round(scrollProgress * 100)}%` }}
+                />
+              </div>
+            </div>
+
+            <nav
+              ref={timelineNavRef}
+              aria-label="Changelog timeline"
+              className="overflow-y-auto nav-scroll max-h-[calc(100vh-11rem)] px-3 py-3"
+            >
+              <div className="relative">
+                <div
+                  aria-hidden
+                  className="absolute left-[9px] top-3 bottom-3 w-px bg-aws-border/90"
+                />
+                <div
+                  aria-hidden
+                  className="absolute left-[9px] top-3 w-px bg-gradient-to-b from-c1 via-c1/60 to-transparent transition-[height] duration-300 ease-out"
+                  style={{ height: `calc(${railProgress}% - 0.5rem)` }}
+                />
+
+                {filteredEntries.map((entry, index) => {
+                  const isActive = activeDate === entry.date
+                  const isPast = activeIndex >= 0 && index < activeIndex
+
+                  return (
+                    <button
+                      key={entry.date}
+                      ref={(node) => {
+                        timelineItemRefs.current[entry.date] = node
+                      }}
+                      type="button"
+                      onClick={() => scrollToEntry(entry.date)}
+                      className={`group relative w-full text-left pl-7 pr-2 py-2.5 rounded-lg transition-all duration-200 ${
+                        isActive
+                          ? 'bg-c1/[0.07]'
+                          : 'hover:bg-aws-card/50'
+                      }`}
+                    >
+                      <span
+                        aria-hidden
+                        className={`absolute left-[5px] top-[15px] size-[9px] rounded-full border transition-all duration-200 ${
+                          isActive
+                            ? 'border-c1 bg-c1 shadow-[0_0_10px_rgba(0,212,255,0.55)] scale-125'
+                            : isPast
+                              ? 'border-c1/50 bg-c1/30'
+                              : 'border-aws-border bg-aws-bg group-hover:border-aws-muted'
+                        }`}
+                      />
+
+                      <p
+                        className={`font-space-mono text-[0.62rem] leading-none transition-colors ${
+                          isActive ? 'text-c1' : 'text-aws-text group-hover:text-aws-text'
+                        }`}
+                      >
+                        {formatChangelogDate(entry.date)}
+                      </p>
+                      <p className="text-[0.64rem] text-aws-muted mt-1 leading-snug">
+                        {formatRelativeDate(entry.date)}
+                      </p>
+                      <p className="font-space-mono text-[0.55rem] text-aws-muted/80 mt-0.5">
+                        {entry.changes.length} {entry.changes.length === 1 ? 'change' : 'changes'}
+                      </p>
+                    </button>
+                  )
+                })}
+              </div>
+            </nav>
+          </div>
         </aside>
 
         <div className="space-y-3 min-w-0">
@@ -222,6 +345,7 @@ export default function ChangelogView() {
           ) : (
             filteredEntries.map((entry, index) => {
               const isExpanded = expandedDates.has(entry.date)
+              const isActive = activeDate === entry.date
 
               return (
                 <section
@@ -230,16 +354,20 @@ export default function ChangelogView() {
                   ref={(node) => {
                     sectionRefs.current[entry.date] = node
                   }}
-                  className="scroll-mt-[calc(3.5rem+1rem)] rounded-xl border border-aws-border bg-aws-card/40 overflow-hidden"
+                  className={`scroll-mt-[calc(3.5rem+1rem)] rounded-xl border overflow-hidden transition-[border-color,box-shadow] duration-300 ${
+                    isActive
+                      ? 'border-c1/25 bg-aws-card/50 shadow-[0_0_0_1px_rgba(0,212,255,0.06),0_8px_32px_rgba(0,212,255,0.04)]'
+                      : 'border-aws-border bg-aws-card/40'
+                  }`}
                 >
                   <button
                     type="button"
                     onClick={() => toggleEntry(entry.date)}
-                    aria-expanded={isExpanded}
+                    aria-expanded={isExpanded ? 'true' : 'false'}
                     className="w-full flex items-start gap-3 px-4 py-4 text-left hover:bg-aws-card/60 transition-colors"
                   >
                     <span
-                      className={`font-space-mono text-[0.65rem] mt-1 shrink-0 transition-transform ${
+                      className={`font-space-mono text-[0.65rem] mt-1 shrink-0 transition-transform duration-200 ${
                         isExpanded ? 'rotate-90 text-c1' : 'text-aws-muted'
                       }`}
                       aria-hidden
