@@ -338,6 +338,22 @@ function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
         </div>
 
         <div className="px-5 py-5">
+          {q.screenshotUrl && (
+            <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={q.screenshotUrl}
+                alt={`Question ${q.pageNumber ?? index + 1} reference screenshot`}
+                className="w-full h-auto"
+                loading="lazy"
+              />
+              {q.pageNumber && (
+                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                  Practice test page {q.pageNumber}
+                </figcaption>
+              )}
+            </figure>
+          )}
           <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
         </div>
 
@@ -472,6 +488,22 @@ function QuestionCard({
 
         {/* scenario */}
         <div className="px-5 py-5">
+          {q.screenshotUrl && (
+            <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={q.screenshotUrl}
+                alt={`Question ${q.pageNumber ?? index + 1} reference screenshot`}
+                className="w-full h-auto"
+                loading="lazy"
+              />
+              {q.pageNumber && (
+                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                  Practice test page {q.pageNumber}
+                </figcaption>
+              )}
+            </figure>
+          )}
           <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
         </div>
 
