@@ -8,7 +8,7 @@ type SiteFooterProps = {
 
 export default function SiteFooter({ tagline, extra }: SiteFooterProps) {
   return (
-    <footer className="text-center font-space-mono text-[0.65rem] text-aws-muted pt-6 border-t border-aws-border space-y-2">
+    <footer className="text-center font-space-mono text-[0.65rem] text-aws-muted mt-6 pt-6 border-t border-aws-border space-y-2">
       <p>{tagline}</p>
       {extra}
       <p>
