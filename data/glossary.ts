@@ -88,6 +88,35 @@ export const glossary: Record<string, string> = {
   'EFS': 'Elastic File System — managed NFS file system that can be shared across multiple EC2 instances simultaneously',
   'IOPS': 'Input/Output Operations Per Second — measures storage throughput. Higher IOPS = faster reads/writes (important for databases)',
 
+  // Containers / ECS networking
+  'awsvpc': 'ECS networking mode that gives each task its own ENI and private IP — enables per-task security groups and VPC Flow Logs visibility',
+  'ENI': 'Elastic Network Interface — virtual network card attached to an EC2 instance or ECS task; carries a private IP, security groups, and MAC address',
+  'bridge': 'Docker bridge networking mode for ECS — tasks share the EC2 host\'s network interface; does not support per-task security groups',
+  'host': 'ECS networking mode where tasks share the EC2 host\'s network namespace; port conflicts possible when running multiple copies of the same task',
+
+  // CloudHSM key terminology
+  'EBK': 'Ephemeral Backup Key — AES-256 key generated inside an HSM to encrypt CloudHSM cluster backup data; exists only for the duration of the backup',
+  'PBK': 'Persistent Backup Key — long-lived key stored in CloudHSM that wraps (encrypts) the EBK; encrypted backup is stored in S3 in the same region as the cluster',
+
+  // IAM / access control
+  'ABAC': 'Attribute-Based Access Control — IAM policy technique that uses resource tags (e.g. aws:ResourceTag/Environment) to grant or deny access dynamically without hard-coding ARNs',
+  'NotPrincipal': 'IAM policy element that matches all principals EXCEPT those listed; used with Deny to restrict a resource to only a specified set of users/roles',
+
+  // Web / S3
+  'CORS': 'Cross-Origin Resource Sharing — browser security mechanism; an S3 CORS config specifies AllowedOrigin, AllowedMethod, and AllowedHeader to permit browser JS from a different domain to make requests',
+
+  // Networking patterns
+  'Anycast': 'IP routing method where multiple servers share the same IP addresses; network routes to the nearest one. Used by Global Accelerator — clients always reach the closest PoP automatically',
+  'PoP': 'Point of Presence — AWS edge location where Global Accelerator or CloudFront receives traffic before routing it over the AWS backbone to the origin region',
+
+  // Storage
+  'DRA': 'Data Repository Association — FSx for Lustre feature linking an S3 bucket to the file system so objects are lazily imported and processed files can be exported back to S3',
+
+  // Auto Scaling states
+  'Standby state': 'ASG lifecycle state where an instance is removed from the active pool (stops receiving traffic) without being terminated — used for in-place maintenance; returns to InService when done',
+  'cooldown period': 'ASG setting (default 300 s) that blocks new scaling actions after a scaling event to let the fleet stabilize before evaluating whether more scaling is needed',
+  'InService': 'Normal running state for an Auto Scaling group instance — registered with the load balancer and receiving traffic',
+
   // Architecture patterns
   'stateful': 'Remembers connection state — allowed return traffic is automatically permitted without an explicit rule (like Security Groups)',
   'stateless': 'Does not track connections — every packet is evaluated independently against rules, both directions need rules (like NACLs)',
