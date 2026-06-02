@@ -14,6 +14,20 @@ export const changelog: ChangeEntry[] = [
   {
     date: '2026-06-03',
     changes: [
+      { type: 'feat', text: 'Glossary page (/glossary): new standalone page — search + 14 category filters, 2-col responsive grid' },
+      { type: 'feat', text: 'About page: Glossary card added to link grid (Portfolio / GitHub / Changelog / Glossary)' },
+      { type: 'feat', text: 'Glossary: synced TS ↔ D1 — added 51 new terms from SQL (DR strategies, IAM policies, Lambda, Fargate, load balancers, S3 features, DynamoDB DAX/TTL) + generated glossary-batch3.sql (64 rows) for D1 update' },
+      { type: 'fix', text: 'Reserved Instances definition corrected: Standard RIs up to 72% off, Convertible RIs up to 66% — verified via AWS docs MCP' },
+      { type: 'feat', text: 'glossaryCategories: added IAM & Policies, Load Balancers, S3 Features categories; expanded Compute, Networking, Architecture with new terms' },
+      { type: 'feat', text: '404 page (/not-found.tsx): gradient 404, ambient glow blobs, quick-nav cards to all sections' },
+      { type: 'feat', text: 'Custom scrollbar: slim 6px global scrollbar replacing browser default — applied via globals.css' },
+      { type: 'fix', text: 'GlossaryTerm tooltip: switched to position:fixed to escape overflow:hidden table containers; atomic TooltipState prevents position race' },
+      { type: 'fix', text: 'Visual page ArchNode: removed left-side accent bar that the user flagged' },
+    ],
+  },
+  {
+    date: '2026-06-03',
+    changes: [
       { type: 'feat', text: 'wzs4–wzs9 (API GW, Lambda, App Integration, Database, ML, Analytics): 35 questions seeded to remote D1 — all answers verified via AWS docs MCP' },
       { type: 'feat', text: 'Screenshots for wzs4 (5), wzs5 (4), wzs6 (7), wzs7 (10), wzs8 (4), wzs9 (5) added to public/questions/' },
       { type: 'feat', text: 'Practice page: new "By Set" filter — All / Practice Tests / Section Tests / Final Test' },

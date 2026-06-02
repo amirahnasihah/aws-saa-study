@@ -78,8 +78,7 @@ export default function FloatingSearch() {
             <circle cx="7.5" cy="7.5" r="5.5" />
             <path d="M16 16l-3.5-3.5" />
           </svg>
-          <span className="hidden lg:inline">Search</span>
-          <kbd className="hidden xl:inline text-[0.5rem] text-aws-muted border border-aws-border/60 rounded px-1.5 py-0.5">
+          <kbd className="hidden lg:inline text-[0.5rem] text-aws-muted border border-aws-border/60 rounded px-1.5 py-0.5">
             ⌘K
           </kbd>
         </button>
