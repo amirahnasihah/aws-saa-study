@@ -6,7 +6,7 @@ import { navDomains } from '@/data/awsServices'
 import FloatingSearch from './FloatingSearch'
 
 interface NavProps {
-  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'visual' | 'vpc'
+  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc'
 }
 
 export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
@@ -26,6 +26,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
         <PageLink href="/" label="Cheat Sheet" active={activePage === 'cheatsheet'} />
         <PageLink href="/learn" label="Deep Notes" active={activePage === 'learn'} />
         <PageLink href="/practice" label="Practice" active={activePage === 'practice'} />
+        <PageLink href="/scenarios" label="Scenarios" active={activePage === 'scenarios'} />
         <PageLink href="/visual" label="Visual" active={activePage === 'visual'} />
         <PageLink href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
 
@@ -87,6 +88,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                 { href: '/',          label: 'Cheat Sheet', icon: '📋', active: activePage === 'cheatsheet' },
                 { href: '/learn',     label: 'Deep Notes',  icon: '📖', active: activePage === 'learn' },
                 { href: '/practice',  label: 'Practice',    icon: '✏️', active: activePage === 'practice' },
+                { href: '/scenarios', label: 'Scenarios',   icon: '🏗️', active: activePage === 'scenarios' },
                 { href: '/visual',    label: 'Visual',      icon: '🗺️', active: activePage === 'visual' },
                 { href: '/vpc',       label: 'VPC Guide',   icon: '🏘️', active: activePage === 'vpc' },
               ].map((p) => (
