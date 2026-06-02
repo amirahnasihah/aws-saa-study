@@ -87,6 +87,12 @@ export const glossary: Record<string, string> = {
   'EBS': 'Elastic Block Store — persistent block storage (like a virtual hard drive) attached to one EC2 instance',
   'EFS': 'Elastic File System — managed NFS file system that can be shared across multiple EC2 instances simultaneously',
   'IOPS': 'Input/Output Operations Per Second — measures storage throughput. Higher IOPS = faster reads/writes (important for databases)',
+  'instance store': 'Ephemeral, physically attached storage on the EC2 host. Data is LOST on instance stop, terminate, or hardware failure. Can only be configured at launch time. Faster than EBS (local NVMe) but non-persistent.',
+  'EBS-backed': 'EC2 instance whose root volume is an EBS volume — data persists across stop/start, survives instance termination (if DeleteOnTermination=false)',
+  'instance store-backed': 'EC2 instance whose root volume is an instance store — data is lost on stop or termination. Rare in modern workloads.',
+  'Elastic Volumes': 'EBS feature allowing you to increase volume size, change volume type, or adjust IOPS/throughput on a live, attached volume — no downtime, no detach required. After resize, extend the OS filesystem (growpart + resize2fs on Linux).',
+  'EBS snapshot': 'Point-in-time backup of an EBS volume stored in S3. Incremental — only changed blocks are saved after the first snapshot. Used to create new volumes or copy data across regions.',
+  'AWS Backup': 'Centralized managed backup service supporting EFS, EBS, RDS, DynamoDB, S3, FSx, EC2 AMIs, and more. Provides policy-based scheduling, retention rules, cross-region/cross-account copies, restore, and compliance reporting via Backup Audit Manager.',
 
   // Containers / ECS networking
   'awsvpc': 'ECS networking mode that gives each task its own ENI and private IP — enables per-task security groups and VPC Flow Logs visibility',

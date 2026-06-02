@@ -910,7 +910,13 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Centralized backup across EC2, RDS, EFS, DynamoDB, S3',
             fungsi: 'Mengurus backup terpusat untuk pelbagai AWS services dengan backup policies, retention rules dan cross-region backup',
             scenario: 'Company kena comply dengan policy backup 90-hari untuk semua databases — AWS Backup create backup plan, auto backup RDS + DynamoDB + EFS setiap hari, retain 90 hari, auto copy ke DR region.',
-            keywords: ['centralized backup', 'backup plans', 'retention', 'cross-region', 'compliance', 'automated'],
+            tips: [
+              'AWS Backup supports: EFS, EBS, RDS, Aurora, DynamoDB, S3, FSx, EC2 AMIs, Storage Gateway volumes',
+              '"centralized backup management + monitoring + auditing reporting" → AWS Backup (every time)',
+              'Backup Audit Manager: compliance framework + reporting for audit — "prove backups meet policy" → Backup Audit Manager',
+              'S3 File Gateway ≠ EFS backup. FSx File Gateway ≠ EFS backup. For EFS backup → AWS Backup.',
+            ],
+            keywords: ['centralized backup', 'backup plans', 'retention', 'cross-region', 'compliance', 'automated', 'EFS backup', 'Backup Audit Manager', 'monitoring'],
           },
           {
             shortName: 'S3 Versioning & CRR',
@@ -1232,7 +1238,15 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Block storage, attach ke 1 EC2',
             fungsi: 'Menyediakan block-level storage yang boleh di-attach kepada EC2 instance',
             contohGuna: 'OS drive untuk EC2, database storage',
-            keywords: ['block storage', 'single EC2', 'persistent disk'],
+            tips: [
+              'Instance store vs EBS: Instance store = ephemeral (data HILANG bila stop/terminate). EBS = persistent (data kekal)',
+              'Instance store volumes BOLEH ditentukan HANYA masa launch — tak boleh tambah lepas instance running',
+              'EBS encryption: encrypts at rest AND in transit (between volume and instance). ALL current AND previous gen instance types supported.',
+              'EBS Elastic Volumes: resize, retype, adjust IOPS/throughput TANPA detach atau downtime. Lepas resize, extend filesystem: growpart + resize2fs (Linux)',
+              '"Volume running out of space, minimal config changes" → increase EBS volume size (Elastic Volumes). Bukan snapshot+new volume (extra steps).',
+              'Unencrypted snapshot → encrypted volume: BOLEH. Pilih encrypt semasa create volume dari snapshot. Tak perlu enable account-level default encryption.',
+            ],
+            keywords: ['block storage', 'single EC2', 'persistent disk', 'instance store', 'ephemeral', 'Elastic Volumes', 'resize', 'encryption', 'data in transit'],
           },
           {
             shortName: 'EBS Volume Types',
