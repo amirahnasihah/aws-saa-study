@@ -5,6 +5,13 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 
 ---
 
+## 2026-06-02
+
+- **feat** PT6 (wz6): 65 Whizlabs Practice Test 6 questions seeded to remote D1 — answers verified via AWS docs MCP
+- **feat** Screenshots for wz6 (65 images) added to public/questions/wz6/
+- **feat** Glossary: 6 new terms — delete marker, noncurrent versions, secondary VPC CIDR, SNI, OAC, OAI
+- **feat** awsServices notes: CloudFront OAC + Lambda@Edge hooks, ALB SNI multi-cert, API Gateway cache key + CORS + VPC Link, AppFlow SaaS connector, SageMaker custom ML platform
+
 ## 2026-05-28
 
 - **feat** PT4 (wz4): 65 Whizlabs Practice Test 4 questions seeded to remote D1

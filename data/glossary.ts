@@ -117,6 +117,18 @@ export const glossary: Record<string, string> = {
   'cooldown period': 'ASG setting (default 300 s) that blocks new scaling actions after a scaling event to let the fleet stabilize before evaluating whether more scaling is needed',
   'InService': 'Normal running state for an Auto Scaling group instance — registered with the load balancer and receiving traffic',
 
+  // S3 versioning
+  'delete marker': 'S3 versioning concept — a DELETE on a key without specifying a version ID creates a delete marker (not actual deletion); all previous versions remain and incur storage charges. To permanently remove a version, specify its version ID.',
+  'noncurrent versions': 'In a versioned S3 bucket, all versions of an object that are not the current (latest) version. Lifecycle rules can expire noncurrent versions to reduce storage cost.',
+
+  // Networking — VPC
+  'secondary VPC CIDR': 'An additional IPv4 CIDR block associated with an existing VPC (up to 5 total). Used to expand IP space without recreating or migrating the VPC. New subnets are created from the secondary CIDR.',
+  'SNI': 'Server Name Indication — TLS extension where the client includes the hostname in the ClientHello message. Enables a single ALB HTTPS listener to hold multiple TLS certificates and return the correct one per domain.',
+
+  // CloudFront
+  'OAC': 'Origin Access Control — CloudFront feature that restricts S3 bucket access to only the CloudFront distribution via SigV4 request signing. Supports SSE-KMS encrypted buckets (OAI does not). Bucket stays private.',
+  'OAI': 'Origin Access Identity — legacy CloudFront feature to restrict S3 access; replaced by OAC. Does NOT support SSE-KMS encrypted S3 buckets.',
+
   // Architecture patterns
   'stateful': 'Remembers connection state — allowed return traffic is automatically permitted without an explicit rule (like Security Groups)',
   'stateless': 'Does not track connections — every packet is evaluated independently against rules, both directions need rules (like NACLs)',
