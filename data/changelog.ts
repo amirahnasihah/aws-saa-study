@@ -12,6 +12,17 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    date: '2026-06-03',
+    changes: [
+      { type: 'feat', text: 'wzs4–wzs9 (API GW, Lambda, App Integration, Database, ML, Analytics): 35 questions seeded to remote D1 — all answers verified via AWS docs MCP' },
+      { type: 'feat', text: 'Screenshots for wzs4 (5), wzs5 (4), wzs6 (7), wzs7 (10), wzs8 (4), wzs9 (5) added to public/questions/' },
+      { type: 'feat', text: 'Practice page: new "By Set" filter — All / Practice Tests / Section Tests / Final Test' },
+      { type: 'feat', text: 'API route: new ?set= filter param (pt / section / final) with SQLite LIKE conditions' },
+      { type: 'feat', text: 'Glossary: 35+ new terms — VPC Link, API throttling, API caching, Lambda authorizer, Usage Plan, SQS Long Polling, Visibility Timeout, SQS FIFO, Dead Letter Queue, SNS fan-out, Step Functions, RDS Multi-AZ, Aurora Serverless, DynamoDB PITR, DynamoDB Auto Scaling, AWS DMS, CloudFormation DeletionPolicy, Secrets Manager, Aurora Replicas, Comprehend, Lex, Textract, Kendra, Rekognition, Polly, MSK, OpenSearch, Data Exchange, Kinesis Data Streams, Glue' },
+      { type: 'feat', text: 'awsServices notes: SQS Long Polling + Visibility Timeout + FIFO + SNS→SQS→Lambda tips; MSK no-SSH + ESM + Serverless tips; new Kendra, Data Exchange cards; AI/ML card updated with Comprehend/Textract/Lex differentiators' },
+    ],
+  },
+  {
     date: '2026-06-02',
     changes: [
       { type: 'feat', text: 'wzs3 (EFS Section Test): 5 questions seeded to remote D1 — answers verified via AWS docs MCP' },

@@ -149,6 +149,47 @@ export const glossary: Record<string, string> = {
   'stateful': 'Remembers connection state — allowed return traffic is automatically permitted without an explicit rule (like Security Groups)',
   'stateless': 'Does not track connections — every packet is evaluated independently against rules, both directions need rules (like NACLs)',
 
+  // API Gateway
+  'VPC Link': 'API Gateway feature that creates a private connection between API Gateway and a Network Load Balancer (NLB) inside a VPC. Enables private integration: API Gateway → VPC Link → NLB → backend (EC2, ECS, or on-premises via Direct Connect). No public internet traffic.',
+  'API Gateway throttling': 'API Gateway rate limiting: steady-state rate (requests/sec) + burst rate (spike capacity). Protects backend from overload. Configured per stage or per method. Returns HTTP 429 Too Many Requests when exceeded.',
+  'API caching': 'API Gateway can cache endpoint responses for a configurable TTL (300s default). Reduces backend calls for repeated identical requests. Cache capacity: 0.5 GB–237 GB. Supports encryption at rest.',
+  'Lambda authorizer': 'Custom API Gateway access control via a Lambda function. Two types: TOKEN (bearer token like JWT/OAuth) and REQUEST (uses request params like headers/query strings). Returns IAM policy allowing/denying access.',
+  'Usage Plan': 'API Gateway feature to control access via API keys: sets throttling limits (rate/burst) and quota (max requests/day/week/month) per API key. Used to monetize or tier API access.',
+
+  // App Integration / Messaging
+  'SQS Long Polling': 'SQS ReceiveMessage waits up to 20 seconds for a message before returning. Reduces API calls and cost vs short polling (which returns immediately even if queue empty). Set ReceiveMessageWaitTimeSeconds > 0.',
+  'SQS Short Polling': 'Default SQS behavior — ReceiveMessage returns immediately even if no messages are available. Results in many empty responses and high API call costs for frequently polled queues.',
+  'Visibility Timeout': 'Period during which SQS hides a retrieved message from other consumers (default 30s, max 12 hours). Must exceed processing time to prevent duplicate processing. Extend per-message with ChangeMessageVisibility.',
+  'SQS FIFO': 'SQS First-In-First-Out queue: guarantees strict message ordering within a MessageGroupId and exactly-once processing (5-min deduplication window). Max 3000 TPS with batching. Use for ordered, deduplicated processing.',
+  'Dead Letter Queue': 'SQS/SNS queue for messages that fail processing after max receive count. Used for debugging and isolating problematic messages. Configure via RedrivePolicy on the source queue.',
+  'SNS fan-out': 'Pattern where one SNS topic fans out to multiple SQS queues, Lambda functions, or HTTP endpoints simultaneously. Enables parallel processing of the same message by multiple subscribers.',
+  'Step Functions': 'AWS serverless workflow orchestration service. Coordinates Lambda functions, ECS tasks, and other services in multi-step workflows with built-in error handling, retries, branching, and parallel execution. Two types: Standard (exactly-once, up to 1 year) and Express (at-least-once, up to 5 min).',
+
+  // Database
+  'RDS Multi-AZ': 'High availability feature: synchronous standby replica in a different AZ. Failover is automatic — the endpoint CNAME is updated to point to the standby. Standby is NOT accessible for reads.',
+  'Aurora Serverless': 'Aurora capacity mode that automatically scales compute up/down based on demand and can pause when idle. Ideal for intermittent, unpredictable, or infrequent workloads. v2 scales in fine-grained ACU increments.',
+  'DynamoDB PITR': 'DynamoDB Point-in-Time Recovery: enables continuous incremental backups. Restore to any second in the last 35 days. No performance impact. Provides RPO near-zero. Different from on-demand backups.',
+  'DynamoDB Auto Scaling': 'Automatically adjusts DynamoDB provisioned read/write capacity units based on actual traffic using AWS Application Auto Scaling. Set target utilization % and min/max capacity bounds.',
+  'AWS DMS': 'AWS Database Migration Service: migrates databases to AWS with minimal downtime. Supports homogeneous (MySQL→MySQL) and heterogeneous (Oracle→Aurora) migrations. CDC (Change Data Capture) mode keeps source and target synchronized during cutover.',
+  'CloudFormation DeletionPolicy': 'Attribute on a CloudFormation resource that controls what happens when the resource is deleted: Delete (default), Retain (keep resource), Snapshot (create final snapshot — supported by RDS, EBS, ElastiCache, not S3).',
+  'Secrets Manager': 'AWS service for storing and automatically rotating secrets (database passwords, API keys). Built-in rotation for RDS/Aurora/Redshift/DocumentDB via managed Lambda rotation function. Charged per secret per month.',
+  'Aurora Replicas': 'Read-only replicas within an Aurora cluster. Serve read traffic with typically <10ms lag. Can be scaled automatically with Aurora Auto Scaling based on CPU/connections. Up to 15 replicas per cluster.',
+
+  // ML / AI services
+  'Amazon Comprehend': 'AWS managed NLP service: sentiment analysis, entity recognition, key phrase extraction, topic modeling, language detection. No ML expertise needed. Analyzes text from support tickets, social media, documents.',
+  'Amazon Lex': 'Conversational AI service for building chatbots and voice interfaces. Provides NLU (Natural Language Understanding) + ASR (speech recognition). Powers Amazon Alexa. Manages multi-turn conversation state.',
+  'Amazon Textract': 'Extracts text and structured data from scanned documents (PDF, images). Goes beyond OCR: extracts key-value pairs from forms and data from tables. Used for invoice/contract/report processing.',
+  'Amazon Kendra': 'Intelligent enterprise search service powered by ML. Indexes and searches across diverse data sources (S3, SharePoint, databases) including unstructured documents (PDF, Word, email). Natural language query understanding.',
+  'Amazon Rekognition': 'Image and video analysis service. Detects objects, scenes, faces, text, and explicit content. Facial recognition and comparison. NOT for document text extraction (use Textract) or NLP (use Comprehend).',
+  'Amazon Polly': 'Text-to-speech service: converts written text to lifelike audio. Supports multiple voices and languages. NOT for chatbots (use Lex) or text analysis (use Comprehend).',
+
+  // Analytics
+  'Amazon MSK': 'Managed Streaming for Apache Kafka — fully managed Kafka cluster on AWS. Handles broker provisioning, patching, storage scaling. NO SSH to brokers. Lambda integration requires Event Source Mapping. MSK Serverless auto-scales capacity.',
+  'Amazon OpenSearch Service': 'Managed Elasticsearch/OpenSearch cluster. Full-text search with relevance scoring, spell-checking, synonym support, fuzzy matching. Used for e-commerce product search, log analytics, application monitoring.',
+  'AWS Data Exchange': 'AWS marketplace for subscribing to and accessing third-party data products (market data, financial data, regulatory filings). Data delivered directly to your S3 bucket. Handles licensing and subscription management.',
+  'Amazon Kinesis Data Streams': 'Real-time data streaming service. Captures GB/s of data with sub-second latency. Retains data 1–365 days. Integrates with Lambda, Firehose, Analytics. Use for real-time dashboards, ML, and event-driven architectures.',
+  'AWS Glue': 'Serverless ETL (Extract, Transform, Load) service. Crawls data sources to build a metadata catalog, runs Spark-based transformation jobs, and orchestrates data pipelines. NOT a streaming or search service.',
+
   // Security concepts & policy
   'bastion host': 'EC2 in a public subnet used as the only SSH/RDP entry point into private subnet instances — connect to bastion first, then hop to private instances',
   'jump host': 'Another name for a bastion host — a hardened EC2 in a public subnet that you jump through to reach private subnet instances',
