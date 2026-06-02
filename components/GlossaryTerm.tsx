@@ -1,52 +1,49 @@
 'use client'
 
-import { useState, useRef, useEffect, useCallback, CSSProperties } from 'react'
+import { useState, useRef, useEffect, CSSProperties } from 'react'
 
 interface Props {
   term: string
   definition: string
 }
 
-interface TooltipPos {
-  top: number
-  left?: number
-  right?: number
+type TooltipState =
+  | { visible: false }
+  | { visible: true; top: number; left: number; anchor: 'left' | 'right' }
+
+const TOOLTIP_W = 208
+const MARGIN = 12
+
+function computeState(el: HTMLSpanElement): TooltipState {
+  const rect = el.getBoundingClientRect()
+  const fitsRight = rect.left + TOOLTIP_W + MARGIN <= window.innerWidth
+  return {
+    visible: true,
+    top: rect.top,
+    left: fitsRight
+      ? Math.max(MARGIN, rect.left)
+      : Math.max(MARGIN, window.innerWidth - rect.right - TOOLTIP_W),
+    anchor: fitsRight ? 'left' : 'right',
+  }
 }
 
 export default function GlossaryTerm({ term, definition }: Props) {
-  const [show, setShow] = useState(false)
-  const [pos, setPos] = useState<TooltipPos>({ top: 0, left: 0 })
+  const [tooltip, setTooltip] = useState<TooltipState>({ visible: false })
   const wrapperRef = useRef<HTMLSpanElement>(null)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
-  const TOOLTIP_W = 208
-  const MARGIN = 12
-
-  const calcPos = useCallback(() => {
-    if (!wrapperRef.current) return
-    const rect = wrapperRef.current.getBoundingClientRect()
-    // fixed positioning uses viewport coords — rect.top is already viewport-relative
-    const fitsRight = rect.left + TOOLTIP_W + MARGIN <= window.innerWidth
-    if (fitsRight) {
-      setPos({ top: rect.top, left: rect.left })
-    } else {
-      setPos({ top: rect.top, right: window.innerWidth - rect.right })
-    }
-  }, [])
-
   const reveal = () => {
     if (timerRef.current) clearTimeout(timerRef.current)
-    calcPos()
-    setShow(true)
+    if (wrapperRef.current) setTooltip(computeState(wrapperRef.current))
   }
   const hide = () => {
-    timerRef.current = setTimeout(() => setShow(false), 150)
+    timerRef.current = setTimeout(() => setTooltip({ visible: false }), 150)
   }
 
   useEffect(() => {
-    if (!show) return
+    if (!tooltip.visible) return
     const handler = (e: MouseEvent | TouchEvent) => {
-      if (!wrapperRef.current?.contains(e.target as Node)) setShow(false)
+      if (!wrapperRef.current?.contains(e.target as Node)) setTooltip({ visible: false })
     }
     document.addEventListener('mousedown', handler)
     document.addEventListener('touchstart', handler)
@@ -54,29 +51,36 @@ export default function GlossaryTerm({ term, definition }: Props) {
       document.removeEventListener('mousedown', handler)
       document.removeEventListener('touchstart', handler)
     }
-  }, [show])
+  }, [tooltip.visible])
 
-  const tooltipStyle: CSSProperties = {
-    position: 'fixed',
-    // sit above the term: subtract tooltip height estimate (~100px) + 6px gap
-    top: pos.top - 106,
-    ...(pos.left !== undefined ? { left: Math.max(MARGIN, pos.left) } : {}),
-    ...(pos.right !== undefined ? { right: Math.max(MARGIN, pos.right) } : {}),
-    width: TOOLTIP_W,
-    maxWidth: `calc(100vw - ${MARGIN * 2}px)`,
-    zIndex: 9999,
-  }
+  const tooltipStyle: CSSProperties = tooltip.visible
+    ? {
+        position: 'fixed',
+        top: tooltip.top - TOOLTIP_W / 2 - 10, // sit above the term
+        left: tooltip.left,
+        width: TOOLTIP_W,
+        maxWidth: `calc(100vw - ${MARGIN * 2}px)`,
+        zIndex: 9999,
+      }
+    : {}
 
   return (
     <span ref={wrapperRef} className="relative inline-block" onMouseEnter={reveal} onMouseLeave={hide}>
       <span
         className="underline decoration-dotted decoration-amber-400/50 cursor-help text-inherit"
-        onClick={(e) => { e.stopPropagation(); calcPos(); setShow(s => !s) }}
+        onClick={(e) => {
+          e.stopPropagation()
+          if (wrapperRef.current) {
+            tooltip.visible
+              ? setTooltip({ visible: false })
+              : setTooltip(computeState(wrapperRef.current))
+          }
+        }}
       >
         {term}
       </span>
 
-      {show && (
+      {tooltip.visible && (
         <span
           role="tooltip"
           style={tooltipStyle}
