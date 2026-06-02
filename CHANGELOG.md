@@ -5,12 +5,25 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 
 ---
 
+## 2026-06-03
+
+- **feat** wzs4–wzs9 (API GW, Lambda, App Integration, Database, ML, Analytics): 35 questions seeded to remote D1 — all answers verified via AWS docs MCP
+- **feat** Screenshots for wzs4 (5), wzs5 (4), wzs6 (7), wzs7 (10), wzs8 (4), wzs9 (5) added to public/questions/
+- **feat** Practice page: new "By Set" filter — All / Practice Tests / Section Tests / Final Test
+- **feat** API route: new ?set= filter param (pt / section / final) with SQLite LIKE conditions
+- **feat** Glossary: 35+ new terms — VPC Link, API throttling, API caching, Lambda authorizer, Usage Plan, SQS Long Polling, Visibility Timeout, SQS FIFO, Dead Letter Queue, SNS fan-out, Step Functions, RDS Multi-AZ, Aurora Serverless, DynamoDB PITR, DynamoDB Auto Scaling, AWS DMS, CloudFormation DeletionPolicy, Secrets Manager, Aurora Replicas, Comprehend, Lex, Textract, Kendra, Rekognition, Polly, MSK, OpenSearch, Data Exchange, Kinesis Data Streams, Glue
+- **feat** awsServices notes: SQS Long Polling + Visibility Timeout + FIFO + SNS→SQS→Lambda tips; MSK no-SSH + ESM + Serverless tips; new Kendra, Data Exchange cards; AI/ML card updated with Comprehend/Textract/Lex differentiators
+
 ## 2026-06-02
 
+- **feat** wzs3 (EFS Section Test): 5 questions seeded to remote D1 — answers verified via AWS docs MCP
+- **feat** wzs2 (Storage Section Test): 5 questions seeded to remote D1 — answers verified via AWS docs MCP
+- **feat** wzs1 (VPC Section Test): 10 questions seeded to remote D1 — answers verified via AWS docs MCP
 - **feat** PT6 (wz6): 65 Whizlabs Practice Test 6 questions seeded to remote D1 — answers verified via AWS docs MCP
-- **feat** Screenshots for wz6 (65 images) added to public/questions/wz6/
-- **feat** Glossary: 6 new terms — delete marker, noncurrent versions, secondary VPC CIDR, SNI, OAC, OAI
-- **feat** awsServices notes: CloudFront OAC + Lambda@Edge hooks, ALB SNI multi-cert, API Gateway cache key + CORS + VPC Link, AppFlow SaaS connector, SageMaker custom ML platform
+- **feat** Screenshots for wz6 (65), wzs1 (10), wzs2 (5), wzs3 (5) added to public/questions/
+- **feat** Glossary: 14 new terms — delete marker, noncurrent versions, secondary VPC CIDR, SNI, OAC, OAI, edge-to-edge routing, transitive peering, instance store, EBS-backed, Elastic Volumes, EBS snapshot, AWS Backup, EFS performance/throughput modes, EFS mount helper
+- **feat** awsServices notes: CloudFront OAC + Lambda@Edge, ALB SNI, API Gateway, AppFlow, SageMaker, VPC Peering edge-to-edge, EBS storage types, EFS performance/throughput modes + encryption in transit + cross-VPC tips, AWS Backup
+- **fix** Official AWS docs reference URLs added to all wzs1, wzs2, wzs3 questions
 
 ## 2026-05-28
 
