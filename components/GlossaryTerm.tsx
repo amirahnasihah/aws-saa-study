@@ -17,7 +17,8 @@ export default function GlossaryTerm({ term, definition }: Props) {
     if (timerRef.current) clearTimeout(timerRef.current)
     if (wrapperRef.current) {
       const { left } = wrapperRef.current.getBoundingClientRect()
-      setSide(left > window.innerWidth / 2 ? 'right' : 'left')
+      // 208px tooltip + 24px safety margin; if it overflows right, anchor right instead
+      setSide(left + 208 + 24 > window.innerWidth ? 'right' : 'left')
     }
     setShow(true)
   }
@@ -52,7 +53,7 @@ export default function GlossaryTerm({ term, definition }: Props) {
         <span
           role="tooltip"
           className={`absolute bottom-full mb-1.5 z-50 block
-            w-52 max-w-[min(208px,calc(100vw-1.5rem))] rounded-xl
+            w-52 max-w-[min(208px,calc(100vw-3rem))] rounded-xl
             border border-slate-700 bg-slate-900 px-3 py-2.5
             shadow-xl shadow-black/40 text-[0.75rem] text-slate-200 leading-relaxed
             ${side === 'left' ? 'left-0' : 'right-0'}`}
