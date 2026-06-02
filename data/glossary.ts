@@ -86,6 +86,12 @@ export const glossary: Record<string, string> = {
   // Storage
   'EBS': 'Elastic Block Store — persistent block storage (like a virtual hard drive) attached to one EC2 instance',
   'EFS': 'Elastic File System — managed NFS file system that can be shared across multiple EC2 instances simultaneously',
+  'EFS General Purpose': 'EFS performance mode with the LOWEST per-operation latency. Recommended for all workloads including web serving, CMS, and data sharing. AWS explicitly recommends General Purpose over Max I/O for all file systems.',
+  'EFS Max I/O': 'Previous-generation EFS performance mode with HIGHER per-operation latency but higher aggregate throughput. For massively parallel HPC workloads with hundreds/thousands of concurrent connections. NOT recommended when low latency is required.',
+  'EFS Bursting Throughput': 'EFS throughput mode that scales with storage size: baseline 50 KiB/s per GiB stored. A 25 GB file system gets only ~1.25 MiB/s baseline — insufficient for high-throughput workloads. Burst credits allow temporary higher throughput.',
+  'EFS Provisioned Throughput': 'EFS throughput mode where you specify the exact throughput (in MiB/s) regardless of file system size. Use when throughput requirements exceed what Bursting provides for your storage size.',
+  'EFS Elastic Throughput': 'Recommended EFS throughput mode that automatically scales throughput up and down based on workload. Pay per use. No need to provision or manage throughput limits.',
+  'EFS mount helper': 'amazon-efs-utils tool that simplifies EFS mounting. Supports -o tls flag to enable encryption in transit via TLS 1.2 + AES-256. Usage: sudo mount -t efs -o tls fs-xxxx /mnt/efs',
   'IOPS': 'Input/Output Operations Per Second — measures storage throughput. Higher IOPS = faster reads/writes (important for databases)',
   'instance store': 'Ephemeral, physically attached storage on the EC2 host. Data is LOST on instance stop, terminate, or hardware failure. Can only be configured at launch time. Faster than EBS (local NVMe) but non-persistent.',
   'EBS-backed': 'EC2 instance whose root volume is an EBS volume — data persists across stop/start, survives instance termination (if DeleteOnTermination=false)',

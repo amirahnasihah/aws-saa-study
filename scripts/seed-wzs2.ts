@@ -28,7 +28,7 @@ const questions: Q[] = [
     ],
     correctId: 'b,d',
     explanation: 'Two correct statements: (B) EBS volumes are network-attached persistent block storage — data survives instance stop/start and persists until the volume is explicitly deleted. This makes EBS ideal for the processing tier that must retain data across maintenance stops. (D) Instance store volumes are physically attached to the host and can only be specified at launch time — you cannot add them after an instance is running. Option A is wrong: instance store data is lost on stop, terminate, or hardware failure. Option C is wrong: instance store does NOT persist across stop (data is erased). Option E is wrong: many modern instance types (t2, t3, m5, etc.) are EBS-only.',
-    reference: '',
+    reference: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html',
     keywords: ['instance store', 'EBS', 'persistent storage', 'ephemeral', 'launch time only', 'EBS-backed', 'instance store-backed'],
   },
   {
@@ -56,7 +56,7 @@ const questions: Q[] = [
     ],
     correctId: 'd',
     explanation: 'Option D is FALSE. You CAN encrypt a volume when restoring from an unencrypted snapshot — simply check "Encrypt this volume" (and optionally specify a KMS key) when creating the volume from the snapshot. You do not need account-level default encryption enabled. The three TRUE statements: (A) You can explicitly create an encrypted copy of an unencrypted snapshot using "Copy Snapshot" with encryption enabled. (B) If the source is already encrypted or account default encryption is on, copies are auto-encrypted. (C) Without default encryption, a restore from an unencrypted snapshot produces an unencrypted volume by default — you must opt in.',
-    reference: '',
+    reference: 'https://docs.aws.amazon.com/ebs/latest/userguide/ebs-encryption.html',
     keywords: ['EBS encryption', 'unencrypted snapshot', 'restore encrypted volume', 'encryption by default', 'opt-in encryption', 'snapshot copy'],
   },
   {

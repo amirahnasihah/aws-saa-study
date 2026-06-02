@@ -27,7 +27,7 @@ const questions: Q[] = [
     ],
     correctId: 'b,c',
     explanation: 'Two valid causes: (B) The RDS security group inbound rule allows traffic only from 10.10.1.0/24 (public subnet) instead of 10.10.2.0/24 (EC2\'s subnet) — MySQL connections on port 3306 would be rejected. (C) NACLs are stateless and subnet-level; if the NACL on the RDS subnet (10.10.3.0/24) blocks inbound port 3306 from 10.10.2.0/24, the connection fails. Option D is wrong: security groups are stateful — return traffic is automatically allowed without an explicit outbound rule. Option A is wrong: VPC local routes (covering the entire VPC CIDR 10.10.0.0/16) cannot be removed or overridden, so intra-VPC routing always works.',
-    reference: '',
+    reference: 'https://docs.aws.amazon.com/vpc/latest/userguide/security-group-rules.html',
     keywords: ['security group', 'NACL', 'stateful', 'stateless', 'RDS MySQL 3306', 'inbound rule', 'subnet CIDR', 'private subnet'],
   },
   {
@@ -41,7 +41,7 @@ const questions: Q[] = [
     ],
     correctId: 'b',
     explanation: '"Auto-assign public IP" is enabled, so the instance automatically receives a public IPv4 address — options A and C are wrong. The route table and IGW are configured correctly. The most likely remaining cause is the Network ACL: unlike the default NACL (which allows all traffic), a custom NACL might lack an explicit allow rule for inbound TCP port 22. Since NACLs are stateless, both inbound (port 22) and outbound (ephemeral ports) rules must explicitly allow SSH traffic. Option D is irrelevant — SSH uses inbound port 22, and blocking outbound port 80 does not affect SSH.',
-    reference: '',
+    reference: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html',
     keywords: ['SSH port 22', 'NACL', 'custom NACL', 'auto-assign public IP', 'stateless', 'inbound SSH', 'network ACL'],
   },
   {
@@ -55,7 +55,7 @@ const questions: Q[] = [
     ],
     correctId: 'a,b',
     explanation: 'Two valid causes of "Access Denied" via a Gateway VPC endpoint: (A) VPC endpoint policies can restrict access to specific S3 bucket ARNs. If the existing policy only grants access to certain buckets and the new bucket is not listed, requests to it are denied. (B) IAM permissions are evaluated independently — the EC2 instance role may not have s3:GetObject or s3:ListBucket on the new bucket. Option C is incorrect: AWS does use implicit deny by default, but an explicit Allow in an IAM policy IS honored. Option D is incorrect: S3 Gateway endpoint route table entries cover all S3 in the region via a prefix list — there is no per-bucket routing.',
-    reference: '',
+    reference: 'https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html',
     keywords: ['VPC endpoint policy', 'S3 Gateway endpoint', 'Access Denied', 'IAM permissions', 'bucket policy', 'prefix list', 'explicit allow'],
   },
   {
@@ -83,7 +83,7 @@ const questions: Q[] = [
     ],
     correctId: 'c',
     explanation: 'The requirement is that access must come ONLY from the organization\'s internal network. An AWS Site-to-Site VPN extends the corporate network into AWS over an encrypted tunnel — only users on the internal corporate network can reach resources via the VPN. Placing a bastion host in the VPN-accessible subnet (reachable only via VPN) and EC2/Redshift in private subnets ensures all access originates from the internal network. Option B uses a public bastion — anyone on the internet could attempt SSH. Option A puts EC2 in a public subnet, exposing it directly. Option D puts Redshift in a public subnet, which is insecure.',
-    reference: '',
+    reference: 'https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html',
     keywords: ['Site-to-Site VPN', 'bastion host', 'private subnet', 'internal network only', 'corporate VPN', 'Redshift private', 'secure access'],
   },
   {
@@ -97,7 +97,7 @@ const questions: Q[] = [
     ],
     correctId: 'a',
     explanation: 'To enforce that production Windows servers are only reachable via the bastion host, configure the production instances\' security groups to allow inbound RDP (TCP 3389) only from the bastion host\'s security group ID. This means only the bastion can initiate RDP connections to production — direct RDP from any other source is blocked. Option B controls who can reach the bastion, but does not prevent direct RDP to production instances. Option C denies ports 22 and 443 (not 3389/RDP) — irrelevant. Option D adds NACL rules for the bastion, not for the production instances.',
-    reference: '',
+    reference: 'https://docs.aws.amazon.com/vpc/latest/userguide/security-groups.html',
     keywords: ['bastion host', 'RDP 3389', 'security group reference', 'Windows', 'remote administration', 'source security group', 'production access control'],
   },
   {
@@ -140,7 +140,7 @@ const questions: Q[] = [
     ],
     correctId: 'b',
     explanation: 'Adding a secondary CIDR block to the existing VPC is the least disruptive, most scalable solution. You can associate up to 5 IPv4 CIDR blocks with a VPC. A secondary CIDR (e.g., 10.10.1.0/24 or 10.1.0.0/16) provides additional IP space; you then create new subnets from it. All existing resources, peering connections, endpoints, and security groups are unaffected. Option A (new VPC + peering) adds operational complexity and peering overhead. Option C is impossible — you cannot resize existing subnets that contain resources. Option D is impossible — no IPs are available to launch instances.',
-    reference: '',
+    reference: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html',
     keywords: ['secondary CIDR block', 'VPC IP exhaustion', 'add CIDR', 'expand VPC', 'non-disruptive', 'subnet creation', '/27'],
   },
   {
@@ -154,7 +154,7 @@ const questions: Q[] = [
     ],
     correctId: 'c',
     explanation: 'For subnet-level granularity over a VPC peering connection, each VPC\'s route table must point to the OTHER VPC\'s specific subnet via the peering connection: VPC B\'s route table needs destination 10.10.1.0/24 → peering (so traffic from VPC B can reach VPC A\'s subnet). VPC A\'s route table needs destination 10.0.1.0/28 → peering (so traffic from VPC A can reach VPC B\'s subnet). Using the specific subnet CIDRs (not full VPC CIDRs) ensures only those subnets can communicate — traffic to other subnets in the peer VPC has no route. Option D is wrong: VPC A\'s route table would reference 10.10.1.0/24 (its own subnet — no route needed) and VPC B would reference 10.0.1.0/28 (its own subnet — also no route needed).',
-    reference: '',
+    reference: 'https://docs.aws.amazon.com/vpc/latest/peering/vpc-peering-routing.html',
     keywords: ['VPC peering', 'route table', 'subnet-level routing', 'specific CIDR', 'peering connection', 'segmentation', 'bidirectional routes'],
   },
 ]
