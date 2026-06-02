@@ -1,3 +1,20 @@
+export const glossaryCategories: Record<string, string[]> = {
+  'AWS Services':       ['SSM','Athena','STS','CRR','IAM','AMI','EC2','ALB','CloudFront','CDN','RDS','SSO','KMS','SSE-KMS','CMK','AWS Backup','AWS DMS','Secrets Manager'],
+  'Compute':            ['EC2 fleet','Fleet','Spot Instances','Reserved Instances','Savings Plans','Spot','On-Demand','instance store','EBS-backed','instance store-backed','Elastic Volumes','EBS snapshot','IMDSv2','IMDS'],
+  'Networking':         ['SSL/TLS','non-transitive','transitive','Transit Gateway','VPC Peering','VPC Endpoint','VPC','Internet Gateway','IGW','NAT Gateway','BGP','IPSec','CIDR','octet','subnet','inbound','outbound','deep packet inspection','intrusion prevention','domain filtering','Anycast','PoP','secondary VPC CIDR','SNI','VPC Link','edge-to-edge routing','transitive peering'],
+  'Security':           ['AES-256','SSL','TLS','NACL','DDoS','SQL injection','XSS','WAF','DRT','Layer 7','Layer 3','Layer 4','ABAC','NotPrincipal','CORS','bastion host','jump host','penetration testing','AUP'],
+  'Storage':            ['EBS','EFS','EFS General Purpose','EFS Max I/O','EFS Bursting Throughput','EFS Provisioned Throughput','EFS Elastic Throughput','EFS mount helper','IOPS','Elastic Volumes','EBS snapshot','WORM','DRA'],
+  'Encryption':         ['envelope encryption','Compliance mode','Governance mode','legal hold','retention period','EBK','PBK'],
+  'Database & HA':      ['Multi-AZ','Read Replica','Availability Zone','RPO','RTO','RDS Multi-AZ','Aurora Serverless','Aurora Replicas','DynamoDB PITR','DynamoDB Auto Scaling','CloudFormation DeletionPolicy'],
+  'Containers':         ['awsvpc','ENI','bridge','host'],
+  'Messaging':          ['SQS Long Polling','SQS Short Polling','Visibility Timeout','SQS FIFO','Dead Letter Queue','SNS fan-out','Step Functions','API Gateway throttling','API caching','Lambda authorizer','Usage Plan'],
+  'CloudFront':         ['OAC','OAI'],
+  'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly'],
+  'Analytics':          ['Amazon MSK','Amazon OpenSearch Service','AWS Data Exchange','Amazon Kinesis Data Streams','AWS Glue'],
+  'Architecture':       ['stateful','stateless','Elastic IP'],
+  'HPC / Batch':        ['PBS','Slurm','LSF'],
+}
+
 export const glossary: Record<string, string> = {
   // Batch schedulers
   'PBS': 'Portable Batch System — traditional on-premises HPC job scheduler software',
