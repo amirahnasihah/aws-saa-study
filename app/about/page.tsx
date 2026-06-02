@@ -3,11 +3,14 @@ import Link from 'next/link'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import { GITHUB_URL, PORTFOLIO_URL, SITE_URL } from '@/data/siteLinks'
+import { glossary } from '@/data/glossary'
 
 export const metadata: Metadata = {
   title: 'About — AWS SAA-C03 Study',
   description: 'Open-source AWS SAA-C03 study reference — source code on GitHub, built by amirahnasihah.my',
 }
+
+const termCount = Object.keys(glossary).length
 
 const links = [
   {
@@ -32,6 +35,14 @@ const links = [
     description: 'What changed, when, and why — a running log of site updates',
     host: `${SITE_URL.replace(/^https?:\/\//, '')}/changelog`,
     icon: '◷',
+    external: false,
+  },
+  {
+    href: '/glossary',
+    label: 'Glossary',
+    description: `${termCount} AWS & networking terms — searchable reference with category filters`,
+    host: `${SITE_URL.replace(/^https?:\/\//, '')}/glossary`,
+    icon: '§',
     external: false,
   },
 ] as const

@@ -23,9 +23,7 @@ export function ArchNode({ data }: NodeProps) {
       <Handle type="target" position={Position.Top} className="!bg-white/20 !border-white/30 !w-2 !h-2" />
       <Handle type="source" position={Position.Bottom} className="!bg-white/20 !border-white/30 !w-2 !h-2" />
 
-      <div className={`absolute top-0 left-0 w-[3px] h-full rounded-l-xl ${c.accent}`} />
-
-      <div className="pl-1 text-center">
+      <div className="text-center">
         {d.icon && <p className="text-lg mb-0.5 leading-none">{d.icon}</p>}
         <p className={`font-space-mono text-[0.65rem] font-bold leading-tight ${c.text}`}>{d.label}</p>
         {d.sub && <p className="font-space-mono text-[0.52rem] text-aws-muted mt-0.5 leading-tight">{d.sub}</p>}

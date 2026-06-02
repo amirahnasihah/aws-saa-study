@@ -12,12 +12,44 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    date: '2026-06-03',
+    changes: [
+      { type: 'feat', text: 'Glossary page (/glossary): new standalone page — search + 14 category filters, 2-col responsive grid' },
+      { type: 'feat', text: 'About page: Glossary card added to link grid (Portfolio / GitHub / Changelog / Glossary)' },
+      { type: 'feat', text: 'Glossary: synced TS ↔ D1 — added 51 new terms from SQL (DR strategies, IAM policies, Lambda, Fargate, load balancers, S3 features, DynamoDB DAX/TTL) + generated glossary-batch3.sql (64 rows) for D1 update' },
+      { type: 'fix', text: 'Reserved Instances definition corrected: Standard RIs up to 72% off, Convertible RIs up to 66% — verified via AWS docs MCP' },
+      { type: 'feat', text: 'glossaryCategories: added IAM & Policies, Load Balancers, S3 Features categories; expanded Compute, Networking, Architecture with new terms' },
+      { type: 'feat', text: '404 page (/not-found.tsx): gradient 404, ambient glow blobs, quick-nav cards to all sections' },
+      { type: 'feat', text: 'Custom scrollbar: slim 6px global scrollbar replacing browser default — applied via globals.css' },
+      { type: 'fix', text: 'GlossaryTerm tooltip: switched to position:fixed to escape overflow:hidden table containers; atomic TooltipState prevents position race' },
+      { type: 'fix', text: 'Visual page ArchNode: removed left-side accent bar that the user flagged' },
+    ],
+  },
+  {
+    date: '2026-06-03',
+    changes: [
+      { type: 'feat', text: 'wzs4–wzs9 (API GW, Lambda, App Integration, Database, ML, Analytics): 35 questions seeded to remote D1 — all answers verified via AWS docs MCP' },
+      { type: 'feat', text: 'Screenshots for wzs4 (5), wzs5 (4), wzs6 (7), wzs7 (10), wzs8 (4), wzs9 (5) added to public/questions/' },
+      { type: 'feat', text: 'Practice page: new "By Set" filter — All / Practice Tests / Section Tests / Final Test' },
+      { type: 'feat', text: 'API route: new ?set= filter param (pt / section / final) with SQLite LIKE conditions' },
+      { type: 'feat', text: 'Glossary: 35+ new terms — VPC Link, API throttling, API caching, Lambda authorizer, Usage Plan, SQS Long Polling, Visibility Timeout, SQS FIFO, Dead Letter Queue, SNS fan-out, Step Functions, RDS Multi-AZ, Aurora Serverless, DynamoDB PITR, DynamoDB Auto Scaling, AWS DMS, CloudFormation DeletionPolicy, Secrets Manager, Aurora Replicas, Comprehend, Lex, Textract, Kendra, Rekognition, Polly, MSK, OpenSearch, Data Exchange, Kinesis Data Streams, Glue' },
+      { type: 'feat', text: 'awsServices notes: SQS Long Polling + Visibility Timeout + FIFO + SNS→SQS→Lambda tips; MSK no-SSH + ESM + Serverless tips; new Kendra, Data Exchange cards; AI/ML card updated with Comprehend/Textract/Lex differentiators' },
+      { type: 'feat', text: 'Scenarios page (/scenarios): architecture pattern study page — flow diagram, anatomy breakdown, exam traps, tips, official docs links' },
+      { type: 'feat', text: 'First scenario: S3 + CloudFront static website hosting — OAC vs OAI, ACM us-east-1 requirement, signed URLs/cookies, geo restriction, caching, Lambda@Edge vs CF Functions — verified via AWS docs MCP' },
+      { type: 'feat', text: 'data/scenarios.ts: extensible scenario data schema (flow nodes, anatomy, nuances, tips, sources)' },
+    ],
+  },
+  {
     date: '2026-06-02',
     changes: [
+      { type: 'feat', text: 'wzs3 (EFS Section Test): 5 questions seeded to remote D1 — answers verified via AWS docs MCP' },
+      { type: 'feat', text: 'wzs2 (Storage Section Test): 5 questions seeded to remote D1 — answers verified via AWS docs MCP' },
+      { type: 'feat', text: 'wzs1 (VPC Section Test): 10 questions seeded to remote D1 — answers verified via AWS docs MCP' },
       { type: 'feat', text: 'PT6 (wz6): 65 Whizlabs Practice Test 6 questions seeded to remote D1 — answers verified via AWS docs MCP' },
-      { type: 'feat', text: 'Screenshots for wz6 (65 images) added to public/questions/wz6/' },
-      { type: 'feat', text: 'Glossary: 6 new terms — delete marker, noncurrent versions, secondary VPC CIDR, SNI, OAC, OAI' },
-      { type: 'feat', text: 'awsServices notes: CloudFront OAC + Lambda@Edge hooks, ALB SNI multi-cert, API Gateway cache key + CORS + VPC Link, AppFlow SaaS connector, SageMaker custom ML platform' },
+      { type: 'feat', text: 'Screenshots for wz6 (65), wzs1 (10), wzs2 (5), wzs3 (5) added to public/questions/' },
+      { type: 'feat', text: 'Glossary: 14 new terms — delete marker, noncurrent versions, secondary VPC CIDR, SNI, OAC, OAI, edge-to-edge routing, transitive peering, instance store, EBS-backed, Elastic Volumes, EBS snapshot, AWS Backup, EFS performance/throughput modes, EFS mount helper' },
+      { type: 'feat', text: 'awsServices notes: CloudFront OAC + Lambda@Edge, ALB SNI, API Gateway, AppFlow, SageMaker, VPC Peering edge-to-edge, EBS storage types, EFS performance/throughput modes + encryption in transit + cross-VPC tips, AWS Backup' },
+      { type: 'fix', text: 'Official AWS docs reference URLs added to all wzs1, wzs2, wzs3 questions' },
     ],
   },
   {

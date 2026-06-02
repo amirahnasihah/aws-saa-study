@@ -24,15 +24,17 @@ type PageMode = 'quiz' | 'review'
 type FilterSource = 'all' | 'whizlab' | 'others'
 type FilterDomain = 'all' | 'd1' | 'd2' | 'd3' | 'd4'
 type FilterDifficulty = 'all' | 'Easy' | 'Medium' | 'Hard'
+type FilterSet = 'all' | 'pt' | 'section' | 'final'
 
 interface FilterState {
   source: FilterSource
   domain: FilterDomain
   difficulty: FilterDifficulty
+  set: FilterSet
   shuffle: boolean
 }
 
-const DEFAULT_FILTERS: FilterState = { source: 'all', domain: 'all', difficulty: 'all', shuffle: false }
+const DEFAULT_FILTERS: FilterState = { source: 'all', domain: 'all', difficulty: 'all', set: 'all', shuffle: false }
 
 function shuffleArray<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -58,6 +60,7 @@ export default function PracticePage() {
     if (filters.source !== 'all') params.set('source', filters.source)
     if (filters.domain !== 'all') params.set('domain', filters.domain)
     if (filters.difficulty !== 'all') params.set('difficulty', filters.difficulty)
+    if (filters.set !== 'all') params.set('set', filters.set)
     const url = `/api/questions${params.toString() ? '?' + params.toString() : ''}`
 
     fetch(url)
@@ -73,6 +76,9 @@ export default function PracticePage() {
         if (filters.source !== 'all') qs = qs.filter((q) => q.source === filters.source)
         if (filters.domain !== 'all') qs = qs.filter((q) => q.domain === filters.domain)
         if (filters.difficulty !== 'all') qs = qs.filter((q) => q.difficulty === filters.difficulty)
+        if (filters.set === 'pt')      qs = qs.filter((q) => /^wz\d/.test(q.id))
+        if (filters.set === 'section') qs = qs.filter((q) => q.id.startsWith('wzs'))
+        if (filters.set === 'final')   qs = qs.filter((q) => q.id.startsWith('wzf'))
         setQuestions(filters.shuffle ? shuffleArray(qs) : (qs.length ? qs : practiceQuestions))
       })
       .finally(() => {
@@ -191,8 +197,20 @@ export default function PracticePage() {
   )
 }
 
+const SET_LABELS: Record<FilterSet, string> = {
+  all:     'All',
+  pt:      'Practice Tests',
+  section: 'Section Tests',
+  final:   'Final Test',
+}
+
 function FilterBar({ filters, onChange }: { filters: FilterState; onChange: (f: FilterState) => void }) {
-  const activeCount = (filters.source !== 'all' ? 1 : 0) + (filters.domain !== 'all' ? 1 : 0) + (filters.difficulty !== 'all' ? 1 : 0) + (filters.shuffle ? 1 : 0)
+  const activeCount =
+    (filters.source !== 'all' ? 1 : 0) +
+    (filters.domain !== 'all' ? 1 : 0) +
+    (filters.difficulty !== 'all' ? 1 : 0) +
+    (filters.set !== 'all' ? 1 : 0) +
+    (filters.shuffle ? 1 : 0)
 
   const pill = (active: boolean) =>
     `font-space-mono text-[0.62rem] font-bold px-2.5 py-1 rounded-lg border transition-all duration-150 ${
@@ -217,6 +235,16 @@ function FilterBar({ filters, onChange }: { filters: FilterState; onChange: (f: 
             </button>
           )}
         </div>
+      </div>
+
+      {/* By Set */}
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="font-space-mono text-[0.58rem] text-aws-muted w-14 shrink-0">By Set</span>
+        {(['all', 'pt', 'section', 'final'] as FilterSet[]).map((s) => (
+          <button key={s} type="button" onClick={() => onChange({ ...filters, set: s })} className={pill(filters.set === s)}>
+            {SET_LABELS[s]}
+          </button>
+        ))}
       </div>
 
       {/* Source */}
