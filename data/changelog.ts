@@ -20,6 +20,9 @@ export const changelog: ChangeEntry[] = [
       { type: 'feat', text: 'API route: new ?set= filter param (pt / section / final) with SQLite LIKE conditions' },
       { type: 'feat', text: 'Glossary: 35+ new terms — VPC Link, API throttling, API caching, Lambda authorizer, Usage Plan, SQS Long Polling, Visibility Timeout, SQS FIFO, Dead Letter Queue, SNS fan-out, Step Functions, RDS Multi-AZ, Aurora Serverless, DynamoDB PITR, DynamoDB Auto Scaling, AWS DMS, CloudFormation DeletionPolicy, Secrets Manager, Aurora Replicas, Comprehend, Lex, Textract, Kendra, Rekognition, Polly, MSK, OpenSearch, Data Exchange, Kinesis Data Streams, Glue' },
       { type: 'feat', text: 'awsServices notes: SQS Long Polling + Visibility Timeout + FIFO + SNS→SQS→Lambda tips; MSK no-SSH + ESM + Serverless tips; new Kendra, Data Exchange cards; AI/ML card updated with Comprehend/Textract/Lex differentiators' },
+      { type: 'feat', text: 'Scenarios page (/scenarios): architecture pattern study page — flow diagram, anatomy breakdown, exam traps, tips, official docs links' },
+      { type: 'feat', text: 'First scenario: S3 + CloudFront static website hosting — OAC vs OAI, ACM us-east-1 requirement, signed URLs/cookies, geo restriction, caching, Lambda@Edge vs CF Functions — verified via AWS docs MCP' },
+      { type: 'feat', text: 'data/scenarios.ts: extensible scenario data schema (flow nodes, anatomy, nuances, tips, sources)' },
     ],
   },
   {
