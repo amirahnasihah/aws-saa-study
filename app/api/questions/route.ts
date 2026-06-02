@@ -38,11 +38,26 @@ function rowToQuestion(row: DBRow): PracticeQuestion {
   }
 }
 
+// set param values and their SQL LIKE conditions (no bound params — safe, hardcoded)
+const SET_SQL: Record<string, string> = {
+  pt:      "(id LIKE 'wz%' AND id NOT LIKE 'wzs%' AND id NOT LIKE 'wzf%')",
+  section: "id LIKE 'wzs%'",
+  final:   "id LIKE 'wzf%'",
+}
+
+function matchesSet(id: string, set: string): boolean {
+  if (set === 'pt')      return /^wz\d/.test(id)
+  if (set === 'section') return id.startsWith('wzs')
+  if (set === 'final')   return id.startsWith('wzf')
+  return true
+}
+
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
-  const source = searchParams.get('source')
-  const domain = searchParams.get('domain')
+  const source     = searchParams.get('source')
+  const domain     = searchParams.get('domain')
   const difficulty = searchParams.get('difficulty')
+  const set        = searchParams.get('set')
 
   try {
     const { env } = getRequestContext()
@@ -53,6 +68,7 @@ export async function GET(request: Request) {
     if (source)     { conditions.push('source = ?');     params.push(source) }
     if (domain)     { conditions.push('domain = ?');     params.push(domain) }
     if (difficulty) { conditions.push('difficulty = ?'); params.push(difficulty) }
+    if (set && SET_SQL[set]) { conditions.push(SET_SQL[set]) }
 
     const where = conditions.length ? ' WHERE ' + conditions.join(' AND ') : ''
     const sql = `SELECT * FROM questions${where} ORDER BY rowid`
@@ -73,6 +89,7 @@ export async function GET(request: Request) {
   if (source)     fallback = fallback.filter(q => q.source === source)
   if (domain)     fallback = fallback.filter(q => q.domain === domain)
   if (difficulty) fallback = fallback.filter(q => q.difficulty === difficulty)
+  if (set)        fallback = fallback.filter(q => matchesSet(q.id, set))
 
   return Response.json(fallback.length ? fallback : practiceQuestions, {
     headers: { 'Cache-Control': 'public, s-maxage=60' },
