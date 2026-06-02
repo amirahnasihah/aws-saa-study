@@ -662,6 +662,9 @@ export const domains: DomainData[] = [
               'Non-transitive: A↔B dan B↔C, tapi A TIDAK reach C. Macam "kawan kawan bukan kawan aku"',
               'IP ranges WAJIB tak overlap — 172.16.0.0/16 dengan 172.16.0.0/24 = KONFLIK, tak boleh peer',
               '3+ VPCs semua perlu communicate = Transit Gateway (lebih simple dari peering mesh)',
+              'Edge-to-edge routing TIDAK disokong: NAT Gateway, IGW, VPN, Direct Connect, dan S3 Gateway endpoint dalam VPC A TIDAK boleh digunakan oleh resources dalam peered VPC B',
+              '"VPC A ada NAT Gateway, VPC B peered dengan A, boleh B guna NAT tu?" → TIDAK. B kena ada NAT Gateway sendiri',
+              'Route table untuk VPC peering: guna SPECIFIC subnet CIDR (bukan full VPC CIDR) untuk limit access between specific subnets only',
             ],
             docs: [
               { label: 'VPC Peering Guide', url: 'https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html' },

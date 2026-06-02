@@ -14,10 +14,11 @@ export const changelog: ChangeEntry[] = [
   {
     date: '2026-06-02',
     changes: [
+      { type: 'feat', text: 'wzs1 (VPC Section Test): 10 questions seeded to remote D1 — answers verified via AWS docs MCP' },
       { type: 'feat', text: 'PT6 (wz6): 65 Whizlabs Practice Test 6 questions seeded to remote D1 — answers verified via AWS docs MCP' },
       { type: 'feat', text: 'Screenshots for wz6 (65 images) added to public/questions/wz6/' },
-      { type: 'feat', text: 'Glossary: 6 new terms — delete marker, noncurrent versions, secondary VPC CIDR, SNI, OAC, OAI' },
-      { type: 'feat', text: 'awsServices notes: CloudFront OAC + Lambda@Edge hooks, ALB SNI multi-cert, API Gateway cache key + CORS + VPC Link, AppFlow SaaS connector, SageMaker custom ML platform' },
+      { type: 'feat', text: 'Glossary: 8 new terms — delete marker, noncurrent versions, secondary VPC CIDR, SNI, OAC, OAI, edge-to-edge routing, transitive peering' },
+      { type: 'feat', text: 'awsServices notes: CloudFront OAC + Lambda@Edge hooks, ALB SNI multi-cert, API Gateway cache key + CORS + VPC Link, AppFlow SaaS connector, SageMaker custom ML platform, VPC Peering edge-to-edge + subnet-level routing tips' },
     ],
   },
   {

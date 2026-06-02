@@ -117,6 +117,10 @@ export const glossary: Record<string, string> = {
   'cooldown period': 'ASG setting (default 300 s) that blocks new scaling actions after a scaling event to let the fleet stabilize before evaluating whether more scaling is needed',
   'InService': 'Normal running state for an Auto Scaling group instance — registered with the load balancer and receiving traffic',
 
+  // VPC peering edge-to-edge routing
+  'edge-to-edge routing': 'VPC peering limitation: gateways (IGW, NAT Gateway, VGW/VPN, Direct Connect, Gateway VPC endpoint) in one VPC cannot be used by resources in a peered VPC. Each VPC must have its own gateways.',
+  'transitive peering': 'Attempting to route traffic through a middle VPC via two peering connections — NOT supported. If A↔B and B↔C, A cannot reach C through B. Use Transit Gateway for transitive routing.',
+
   // S3 versioning
   'delete marker': 'S3 versioning concept — a DELETE on a key without specifying a version ID creates a delete marker (not actual deletion); all previous versions remain and incur storage charges. To permanently remove a version, specify its version ID.',
   'noncurrent versions': 'In a versioned S3 bucket, all versions of an object that are not the current (latest) version. Lifecycle rules can expire noncurrent versions to reduce storage cost.',
