@@ -88,6 +88,47 @@ export const glossary: Record<string, string> = {
   'EFS': 'Elastic File System — managed NFS file system that can be shared across multiple EC2 instances simultaneously',
   'IOPS': 'Input/Output Operations Per Second — measures storage throughput. Higher IOPS = faster reads/writes (important for databases)',
 
+  // Containers / ECS networking
+  'awsvpc': 'ECS networking mode that gives each task its own ENI and private IP — enables per-task security groups and VPC Flow Logs visibility',
+  'ENI': 'Elastic Network Interface — virtual network card attached to an EC2 instance or ECS task; carries a private IP, security groups, and MAC address',
+  'bridge': 'Docker bridge networking mode for ECS — tasks share the EC2 host\'s network interface; does not support per-task security groups',
+  'host': 'ECS networking mode where tasks share the EC2 host\'s network namespace; port conflicts possible when running multiple copies of the same task',
+
+  // CloudHSM key terminology
+  'EBK': 'Ephemeral Backup Key — AES-256 key generated inside an HSM to encrypt CloudHSM cluster backup data; exists only for the duration of the backup',
+  'PBK': 'Persistent Backup Key — long-lived key stored in CloudHSM that wraps (encrypts) the EBK; encrypted backup is stored in S3 in the same region as the cluster',
+
+  // IAM / access control
+  'ABAC': 'Attribute-Based Access Control — IAM policy technique that uses resource tags (e.g. aws:ResourceTag/Environment) to grant or deny access dynamically without hard-coding ARNs',
+  'NotPrincipal': 'IAM policy element that matches all principals EXCEPT those listed; used with Deny to restrict a resource to only a specified set of users/roles',
+
+  // Web / S3
+  'CORS': 'Cross-Origin Resource Sharing — browser security mechanism; an S3 CORS config specifies AllowedOrigin, AllowedMethod, and AllowedHeader to permit browser JS from a different domain to make requests',
+
+  // Networking patterns
+  'Anycast': 'IP routing method where multiple servers share the same IP addresses; network routes to the nearest one. Used by Global Accelerator — clients always reach the closest PoP automatically',
+  'PoP': 'Point of Presence — AWS edge location where Global Accelerator or CloudFront receives traffic before routing it over the AWS backbone to the origin region',
+
+  // Storage
+  'DRA': 'Data Repository Association — FSx for Lustre feature linking an S3 bucket to the file system so objects are lazily imported and processed files can be exported back to S3',
+
+  // Auto Scaling states
+  'Standby state': 'ASG lifecycle state where an instance is removed from the active pool (stops receiving traffic) without being terminated — used for in-place maintenance; returns to InService when done',
+  'cooldown period': 'ASG setting (default 300 s) that blocks new scaling actions after a scaling event to let the fleet stabilize before evaluating whether more scaling is needed',
+  'InService': 'Normal running state for an Auto Scaling group instance — registered with the load balancer and receiving traffic',
+
+  // S3 versioning
+  'delete marker': 'S3 versioning concept — a DELETE on a key without specifying a version ID creates a delete marker (not actual deletion); all previous versions remain and incur storage charges. To permanently remove a version, specify its version ID.',
+  'noncurrent versions': 'In a versioned S3 bucket, all versions of an object that are not the current (latest) version. Lifecycle rules can expire noncurrent versions to reduce storage cost.',
+
+  // Networking — VPC
+  'secondary VPC CIDR': 'An additional IPv4 CIDR block associated with an existing VPC (up to 5 total). Used to expand IP space without recreating or migrating the VPC. New subnets are created from the secondary CIDR.',
+  'SNI': 'Server Name Indication — TLS extension where the client includes the hostname in the ClientHello message. Enables a single ALB HTTPS listener to hold multiple TLS certificates and return the correct one per domain.',
+
+  // CloudFront
+  'OAC': 'Origin Access Control — CloudFront feature that restricts S3 bucket access to only the CloudFront distribution via SigV4 request signing. Supports SSE-KMS encrypted buckets (OAI does not). Bucket stays private.',
+  'OAI': 'Origin Access Identity — legacy CloudFront feature to restrict S3 access; replaced by OAC. Does NOT support SSE-KMS encrypted S3 buckets.',
+
   // Architecture patterns
   'stateful': 'Remembers connection state — allowed return traffic is automatically permitted without an explicit rule (like Security Groups)',
   'stateless': 'Does not track connections — every packet is evaluated independently against rules, both directions need rules (like NACLs)',

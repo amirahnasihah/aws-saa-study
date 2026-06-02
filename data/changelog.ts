@@ -12,6 +12,25 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    date: '2026-06-02',
+    changes: [
+      { type: 'feat', text: 'PT6 (wz6): 65 Whizlabs Practice Test 6 questions seeded to remote D1 — answers verified via AWS docs MCP' },
+      { type: 'feat', text: 'Screenshots for wz6 (65 images) added to public/questions/wz6/' },
+      { type: 'feat', text: 'Glossary: 6 new terms — delete marker, noncurrent versions, secondary VPC CIDR, SNI, OAC, OAI' },
+      { type: 'feat', text: 'awsServices notes: CloudFront OAC + Lambda@Edge hooks, ALB SNI multi-cert, API Gateway cache key + CORS + VPC Link, AppFlow SaaS connector, SageMaker custom ML platform' },
+    ],
+  },
+  {
+    date: '2026-05-28',
+    changes: [
+      { type: 'feat', text: 'PT4 (wz4): 65 Whizlabs Practice Test 4 questions seeded to remote D1' },
+      { type: 'feat', text: 'PT5 (wz5): 65 Whizlabs Practice Test 5 questions seeded to remote D1 — answers verified via AWS docs MCP' },
+      { type: 'feat', text: 'Screenshots for wz4 and wz5 (130 images) added to public/questions/' },
+      { type: 'feat', text: 'Glossary: 15 new terms — awsvpc, ENI, EBK, PBK, ABAC, NotPrincipal, CORS, Anycast, PoP, DRA, Standby state, cooldown period, InService, bridge, host' },
+      { type: 'feat', text: 'awsServices notes: CloudHSM backup (EBK/PBK), FSx Lustre DRA + S3 integration, QuickSight ML forecasting, Client VPN, Step Functions Distributed Map, X-Ray Insights, Glue Crawler, Polly StartSpeechSynthesisTask, Global Accelerator static IPs' },
+    ],
+  },
+  {
     date: '2026-05-27',
     changes: [
       { type: 'feat', text: 'Changelog page at /changelog — type filters, collapsible releases, relative dates' },
