@@ -16,6 +16,7 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 - **feat** Scenarios page (/scenarios): architecture pattern study page — flow diagram, anatomy breakdown, exam traps, tips, official docs links
 - **feat** First scenario: S3 + CloudFront static website hosting — OAC vs OAI, ACM us-east-1 requirement, signed URLs/cookies, geo restriction, caching, Lambda@Edge vs CF Functions — verified via AWS docs MCP
 - **feat** data/scenarios.ts: extensible scenario data schema (flow nodes, anatomy, nuances, tips, sources)
+- **feat** Scenarios page: added new architecture patterns — expanded beyond S3+CloudFront to cover additional AWS solution flows; refined scenario details and metadata layout for better clarity
 
 ## 2026-06-02
 

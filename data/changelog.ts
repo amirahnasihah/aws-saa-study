@@ -23,6 +23,7 @@ export const changelog: ChangeEntry[] = [
       { type: 'feat', text: 'Custom scrollbar: slim 6px global scrollbar replacing browser default — applied via globals.css' },
       { type: 'fix', text: 'GlossaryTerm tooltip: switched to position:fixed to escape overflow:hidden table containers; atomic TooltipState prevents position race' },
       { type: 'fix', text: 'Visual page ArchNode: removed left-side accent bar that the user flagged' },
+      { type: 'feat', text: 'Scenarios page: added new architecture patterns — expanded beyond S3+CloudFront to cover additional AWS solution flows; refined scenario details and metadata layout for better clarity' },
     ],
   },
   {
