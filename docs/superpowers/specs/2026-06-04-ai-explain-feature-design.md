@@ -52,9 +52,14 @@ Browser
 - Has a "Remove key" link that clears `localStorage` (also accessible from page footer/settings)
 
 ### 3. `AIExplanationPanel` component
-- Inline expandable panel below existing explanation
-- Shows: explanation text, "Read more on your notes" link (aws.amrhnshh.com), "Official AWS docs" link
-- Dismissible with [x]
+- **Right-side drawer** — slides in over the page from the right, does not push content
+- Fixed position, full viewport height, ~420px wide on desktop, full-width on mobile
+- Semi-transparent dark backdrop covers the rest of the page (click to dismiss)
+- Smooth slide-in/out with CSS transition (`translate-x-full` → `translate-x-0`)
+- Header: gradient bar with "✦ AI Explanation" badge + ✕ close button
+- Body: explanation text (readable font size, generous line-height), then two link cards (notes + AWS docs) styled as distinct tappable rows with icons
+- Footer: "Remove API key" link (calls `useAIKey.clearKey()`)
+- Design tokens: consistent with existing UI — `bg-aws-card`, `backdrop-blur`, `font-space-mono`, `c1` accent
 
 ### 4. `/api/ai/explain` edge route (`app/api/ai/explain/route.ts`)
 - `runtime = 'edge'`
