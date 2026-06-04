@@ -1,5 +1,6 @@
 import { buildDocsSearchPhrase, resolveAwsDocLink } from '@/lib/ai/aws-knowledge'
 import { completeJson, resolveAiProvider } from '@/lib/ai/complete-json'
+import { toBulletList } from '@/lib/ai/hint-bullets'
 import { parseAIJson } from '@/lib/ai/json'
 import { findNotesUrl } from '@/lib/ai/notes'
 import type { ErrorResponse, HintResponse } from '@/lib/ai/types'
@@ -7,6 +8,7 @@ import type { ErrorResponse, HintResponse } from '@/lib/ai/types'
 export const runtime = 'edge'
 
 interface HintRequest {
+  questionId?: string
   question: string
   domainLabel?: string
   keywords?: string[]
@@ -14,44 +16,44 @@ interface HintRequest {
   reviewMode?: boolean
 }
 
-const HINT_SYSTEM_PROMPT = `You are an AWS Solutions Architect study coach helping a student BEFORE they pick an MCQ answer.
+const HINT_SYSTEM_PROMPT = `You are an AWS SAA study coach. The student has NOT answered yet.
 
-Respond ONLY with valid JSON (no markdown, no code fences):
-{"conceptName":"string","focusArea":"string","studyKeywords":["string","string","string"],"whatItsAsking":"string","howToTackle":"string","docsSearchPhrase":"string"}
+Respond ONLY with valid JSON (no markdown):
+{"conceptName":"string","focusArea":"string","studyKeywords":["string"],"whatItsAsking":["string"],"howToTackle":["string"],"docsSearchPhrase":"string"}
 
-Rules:
-- conceptName: the AWS concept being tested (one short sentence)
-- focusArea: exam domain → sub-topic
-- studyKeywords: 3-5 chips to scan for in the question
-- whatItsAsking: what the question is really asking for (2-3 sentences, plain language)
-- howToTackle: how to approach eliminating wrong answers (2-4 short sentences; no letter labels like "choose C")
-- docsSearchPhrase: phrase to find the official AWS doc page
-- NEVER state which MCQ option is correct or name a winning answer letter
-- Do not mention YouTube or video tutorials`
+Be extremely concise:
+- conceptName: one short phrase (max 10 words)
+- focusArea: "Domain → sub-topic" (max 8 words)
+- studyKeywords: exactly 3-4 terms that appear or imply in the question stem
+- whatItsAsking: 2 bullets only, max 12 words each — what the question really wants
+- howToTackle: 2-3 bullets only, max 14 words each — how to eliminate wrong options (no answer letters)
+- docsSearchPhrase: AWS doc search phrase
+- NEVER reveal the correct MCQ option or letter
+- No YouTube`
 
 interface HintJson {
   conceptName?: string
   focusArea?: string
   studyKeywords?: string[]
-  whatItsAsking?: string
-  howToTackle?: string
+  whatItsAsking?: string[] | string
+  howToTackle?: string[] | string
   docsSearchPhrase?: string
 }
 
 function buildHintUserPrompt(body: HintRequest, notesUrl: string): string {
   const lines: string[] = [`Domain: ${body.domainLabel ?? 'AWS Solutions Architect'}`]
-  if (body.keywords?.length) lines.push(`Keywords from question bank: ${body.keywords.join(', ')}`)
+  if (body.keywords?.length) lines.push(`Bank keywords: ${body.keywords.join(', ')}`)
   if (body.reviewMode) {
-    lines.push('\nMode: review — student sees the solution later; still do not reveal the correct option letter.')
+    lines.push('Mode: review — do not name the correct option letter.')
   }
   lines.push(`\nQuestion:\n${body.question}`)
   if (body.options?.length) {
-    lines.push('\nAnswer choices (for context only — do not reveal which is correct):')
+    lines.push('\nChoices (context only):')
     body.options.forEach((opt) => {
       lines.push(`(${opt.id.toUpperCase()}) ${opt.text}`)
     })
   }
-  lines.push(`\nStudy notes: ${notesUrl}`)
+  lines.push(`\nNotes: ${notesUrl}`)
   return lines.join('\n')
 }
 
@@ -70,7 +72,7 @@ export async function POST(request: Request): Promise<Response> {
   const notesUrl = findNotesUrl(keywords)
   const userPrompt = buildHintUserPrompt(parsed, notesUrl)
 
-  const aiResult = await completeJson(provider, apiKey, HINT_SYSTEM_PROMPT, userPrompt, 550)
+  const aiResult = await completeJson(provider, apiKey, HINT_SYSTEM_PROMPT, userPrompt, 380)
   if ('error' in aiResult) {
     return Response.json({ error: aiResult.error } satisfies ErrorResponse, { status: aiResult.status })
   }
@@ -89,9 +91,9 @@ export async function POST(request: Request): Promise<Response> {
   const result: HintResponse = {
     conceptName: json?.conceptName ?? 'AWS concept',
     focusArea: json?.focusArea ?? '',
-    studyKeywords: json?.studyKeywords ?? [],
-    whatItsAsking: json?.whatItsAsking ?? aiResult.text,
-    howToTackle: json?.howToTackle ?? '',
+    studyKeywords: (json?.studyKeywords ?? []).slice(0, 4),
+    whatItsAsking: toBulletList(json?.whatItsAsking, 2),
+    howToTackle: toBulletList(json?.howToTackle, 3),
     notesUrl,
     awsDocsUrl: awsDoc.url,
     awsDocsTitle: awsDoc.title,

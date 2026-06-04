@@ -2,8 +2,8 @@ export interface HintResponse {
   conceptName: string
   focusArea: string
   studyKeywords: string[]
-  whatItsAsking: string
-  howToTackle: string
+  whatItsAsking: string[]
+  howToTackle: string[]
   notesUrl: string
   awsDocsUrl: string
   awsDocsTitle: string
