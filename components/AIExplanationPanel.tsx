@@ -1,13 +1,13 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useAIKey } from '@/hooks/useAIKey'
 
 interface AIExplanationPanelProps {
   explanation: string
   notesUrl: string
   awsDocsUrl: string
   onDismiss: () => void
+  onRemoveKey: () => void
 }
 
 export default function AIExplanationPanel({
@@ -15,9 +15,8 @@ export default function AIExplanationPanel({
   notesUrl,
   awsDocsUrl,
   onDismiss,
+  onRemoveKey,
 }: AIExplanationPanelProps) {
-  const { clearKey } = useAIKey()
-
   // Close on Escape key
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onDismiss() }
@@ -32,7 +31,7 @@ export default function AIExplanationPanel({
   }, [])
 
   const handleRemoveKey = () => {
-    clearKey()
+    onRemoveKey()
     onDismiss()
   }
 
