@@ -47,6 +47,16 @@ function shuffleArray<T>(arr: T[]): T[] {
   return a
 }
 
+function useQuestionHintHighlight(questionId: string) {
+  const [highlight, setHighlight] = useState<string[]>([])
+  const [prevId, setPrevId] = useState(questionId)
+  if (questionId !== prevId) {
+    setPrevId(questionId)
+    setHighlight([])
+  }
+  return [highlight, setHighlight] as const
+}
+
 export default function PracticePage() {
   const [questions, setQuestions] = useState<PracticeQuestion[]>(practiceQuestions)
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
@@ -338,13 +348,9 @@ function QuestionGrid({
 function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
   const [index, setIndex] = useState(0)
   const [showPicker, setShowPicker] = useState(false)
-  const [hintHighlight, setHintHighlight] = useState<string[]>([])
   const total = questions.length
   const q = questions[index]
-
-  useEffect(() => {
-    setHintHighlight([])
-  }, [q.id])
+  const [hintHighlight, setHintHighlight] = useQuestionHintHighlight(q.id)
 
   return (
     <div>
@@ -503,11 +509,7 @@ function QuestionCard({
   onJump: (i: number) => void
 }) {
   const [showPicker, setShowPicker] = useState(false)
-  const [hintHighlight, setHintHighlight] = useState<string[]>([])
-
-  useEffect(() => {
-    setHintHighlight([])
-  }, [q.id])
+  const [hintHighlight, setHintHighlight] = useQuestionHintHighlight(q.id)
 
   return (
     <div>
