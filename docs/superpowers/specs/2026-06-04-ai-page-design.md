@@ -9,7 +9,7 @@ The existing "Ask AI" button on the practice page covers one narrow use case: ex
 
 ## Solution
 
-A dedicated `/ai` page with two modes on the same view: free-form AWS chat and question explainer. Dual provider support: Groq (free, default) and BYOK Claude (Anthropic). Every response surfaces official AWS docs and a YouTube search link. The question explainer mode additionally gives study-oriented guidance: what concept is being tested, which domain to focus on, and key terms.
+A dedicated `/ai` page with two modes on the same view: free-form AWS chat and question explainer. Dual free-tier plus BYOK support: Groq (free, default), BYOK Claude (Anthropic), and BYOK ILMU Chat (Malaysian-hosted, Anthropic Messages API at `https://api.ilmu.ai/anthropic`). Every response surfaces official AWS docs and a YouTube search link. The question explainer mode additionally gives study-oriented guidance: what concept is being tested, which domain to focus on, and key terms.
 
 ---
 
@@ -18,13 +18,13 @@ A dedicated `/ai` page with two modes on the same view: free-form AWS chat and q
 ```
 Browser
   └─ /ai page
-       ├─ Provider toggle (localStorage: 'aws_study_ai_provider' = 'groq' | 'anthropic')
+       ├─ Provider toggle (localStorage: 'aws_study_ai_provider' = 'groq' | 'anthropic' | 'ilmu')
        ├─ Mode selector: 'chat' | 'question'
        │
        ├─ Chat mode → POST /api/ai/chat
        │     body: { message, history[] }
        │     headers: x-api-key (only for anthropic provider)
-       │     x-ai-provider: 'groq' | 'anthropic'
+       │     x-ai-provider: 'groq' | 'anthropic' | 'ilmu'
        │
        └─ Question mode → POST /api/ai/explain  (existing route, extended)
              body: { questionId?, question, userAnswer?, correctAnswer?, domain, keywords }
@@ -52,9 +52,10 @@ Edge Routes (Cloudflare Workers, runtime: 'edge')
 - URL param `?questionId=<id>` pre-fills question mode and fetches question data from D1 (or passed as query params)
 
 ### 2. `AIProviderToggle` component
-- Two-button toggle: "Groq (Free)" | "Claude (My Key)"
-- Selecting Claude checks for stored key; if absent, opens `AIKeyModal`
+- Three-way toggle: "Groq (Free)" | "Claude (My Key)" | "ILMU (My Key)"
+- Selecting Claude or ILMU checks for stored key; if absent, opens `AIKeyModal` (provider tabs: Anthropic vs ILMU)
 - Persists choice to `localStorage`
+- ILMU keys: `sk-` prefix from [console.ilmu.ai](https://console.ilmu.ai/dashboard/usage); routed to `https://api.ilmu.ai/anthropic/v1/messages` with model `nemo-super`
 
 ### 3. `AIChatView` component
 - Scrollable message history (session only, no persistence)
@@ -83,7 +84,7 @@ Reusable row of two link cards:
 ### 7. `/api/ai/chat/route.ts` (new edge route)
 - `runtime = 'edge'`
 - Reads `x-ai-provider` header to route to Groq or Anthropic
-- For Anthropic: validates `x-api-key` starts with `sk-ant-`
+- For Anthropic: validates `x-api-key` starts with `sk-ant-`; for ILMU: `sk-` (not `sk-ant-`)
 - For Groq: uses `env.GROQ_API_KEY` from Cloudflare env
 - System prompt: "You are an AWS Solutions Architect study assistant. Answer concisely. Always include: 1) a relevant official AWS documentation URL, 2) a YouTube search query (as `youtubeQuery` JSON field) the user can use to find tutorials."
 - Returns `{ reply: string, awsDocsUrl: string, youtubeQuery: string }` or `{ error: string }`
@@ -134,7 +135,8 @@ Respond with valid JSON:
 | Provider | Key location | Who controls it |
 |---|---|---|
 | Groq | `GROQ_API_KEY` env var (Cloudflare secret) | Developer |
-| Anthropic | `localStorage: aws_study_ai_key` | User (BYOK) |
+| Anthropic | `localStorage: aws_study_ai_key` + `aws_study_ai_provider=anthropic` | User (BYOK) |
+| ILMU | `localStorage: aws_study_ai_key` + `aws_study_ai_provider=ilmu` | User (BYOK) — [ILMU docs](https://docs.ilmu.ai/docs/getting-started/overview) |
 
 Groq free tier: 14,400 req/day, 500K tokens/day on `llama-3.1-8b-instant`. Sufficient for a personal study tool.
 
@@ -148,6 +150,7 @@ Groq free tier: 14,400 req/day, 500K tokens/day on `llama-3.1-8b-instant`. Suffi
 | Groq rate limited | "Daily free limit reached. Switch to Claude (BYOK) or come back tomorrow." |
 | No Anthropic key | Key setup modal |
 | Bad Anthropic key | "Invalid key. Check console.anthropic.com." |
+| Bad ILMU key | "Invalid key. Check console.ilmu.ai." |
 | JSON parse failure from AI | Graceful fallback: show raw text, no source links |
 
 ---

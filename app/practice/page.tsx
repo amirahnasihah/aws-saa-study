@@ -4,7 +4,6 @@ import { useState, useCallback, useEffect } from 'react'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import { practiceQuestions, PracticeQuestion } from '@/data/practiceQuestions'
-import AskAIButton from '@/components/AskAIButton'
 
 const domainColors: Record<string, string> = {
   d1: 'text-c3',
@@ -703,18 +702,6 @@ function ExplanationBlock({
             </span>
           ))}
         </div>
-
-        {/* AI explain button */}
-        <AskAIButton
-          questionId={q.id}
-          question={q.scenario}
-          userAnswerId={selected}
-          userAnswerText={q.options.find((o) => o.id === selected)?.text ?? ''}
-          correctAnswerId={q.correctId}
-          correctAnswerText={q.options.find((o) => o.id === q.correctId)?.text ?? ''}
-          domainLabel={q.domainLabel}
-          keywords={q.keywords}
-        />
 
         {q.reference && (
           <div className="pt-2 border-t border-aws-border/40">

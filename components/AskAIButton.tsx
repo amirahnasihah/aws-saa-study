@@ -1,9 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { useAIKey } from '@/hooks/useAIKey'
+import { useAIProvider } from '@/hooks/useAIProvider'
 import AIKeyModal from '@/components/AIKeyModal'
 import AIExplanationPanel from '@/components/AIExplanationPanel'
+import { resolveByokProvider, type ByokProvider } from '@/lib/ai/providers'
 
 interface AskAIButtonProps {
   questionId: string
@@ -22,6 +23,7 @@ interface AIResult {
   explanation: string
   notesUrl: string
   awsDocsUrl: string
+  awsDocsTitle?: string
 }
 
 export default function AskAIButton({
@@ -34,12 +36,13 @@ export default function AskAIButton({
   domainLabel,
   keywords,
 }: AskAIButtonProps) {
-  const { key, saveKey, clearKey } = useAIKey()
+  const { provider: storedProvider, setProvider, key, saveKey, clearKey } = useAIProvider()
+  const provider = resolveByokProvider(storedProvider, key)
   const [uiState, setUiState] = useState<UIState>('idle')
   const [result, setResult] = useState<AIResult | null>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
-  const fireRequest = async (apiKey: string) => {
+  const fireRequest = async (apiKey: string, aiProvider: ByokProvider) => {
     setUiState('loading')
     setErrorMsg(null)
     try {
@@ -48,6 +51,7 @@ export default function AskAIButton({
         headers: {
           'content-type': 'application/json',
           'x-api-key': apiKey,
+          'x-ai-provider': aiProvider,
         },
         body: JSON.stringify({
           questionId,
@@ -83,23 +87,28 @@ export default function AskAIButton({
     if (!key) {
       setUiState('awaiting-key')
     } else {
-      void fireRequest(key)
+      void fireRequest(key, provider)
     }
   }
 
-  const handleKeySaved = (newKey: string) => {
-    saveKey(newKey)
+  const handleKeySaved = (newKey: string, keyProvider: ByokProvider) => {
+    saveKey(newKey, keyProvider)
     setUiState('loading')
-    void fireRequest(newKey)
+    void fireRequest(newKey, keyProvider)
   }
 
   if (uiState === 'done' && result) {
     return (
       <AIExplanationPanel
+        provider={provider}
         explanation={result.explanation}
         notesUrl={result.notesUrl}
         awsDocsUrl={result.awsDocsUrl}
-        onDismiss={() => { setUiState('idle'); setResult(null) }}
+        awsDocsTitle={result.awsDocsTitle}
+        onDismiss={() => {
+          setUiState('idle')
+          setResult(null)
+        }}
         onRemoveKey={clearKey}
       />
     )
@@ -109,6 +118,8 @@ export default function AskAIButton({
     <>
       {uiState === 'awaiting-key' && (
         <AIKeyModal
+          provider={provider}
+          onProviderChange={setProvider}
           onSave={handleKeySaved}
           onDismiss={() => setUiState('idle')}
         />
