@@ -15,6 +15,16 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    id: '2026-06-05',
+    date: '2026-06-05',
+    changes: [
+      {
+        type: 'feat',
+        text: 'Hidden PWA preview page (/pwa): iOS/Android home-screen mockups, install sheet, standalone chrome, icon size grid, draft manifest.webmanifest (manifest linked on /pwa only for install testing)',
+      },
+    ],
+  },
+  {
     id: '2026-06-04',
     date: '2026-06-04',
     changes: [
