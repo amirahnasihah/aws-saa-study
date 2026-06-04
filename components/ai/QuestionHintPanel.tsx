@@ -26,7 +26,7 @@ export default function QuestionHintPanel({ hint, fromCache = false }: QuestionH
     <div className="space-y-3 p-3.5 rounded-xl bg-c1/5 border border-c1/15">
       {fromCache && (
         <p className="font-space-mono text-[0.52rem] uppercase tracking-widest text-aws-muted/50">
-          Cached hint · no new AI call
+          Cached this session · no new AI call
         </p>
       )}
 

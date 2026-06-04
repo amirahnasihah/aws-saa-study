@@ -8,14 +8,15 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 ## 2026-06-04
 
 - **feat** AI study page (/ai): Chat + Explain question modes — Groq (server), Claude & ILMU (BYOK); not linked in main nav (direct URL only)
-- **feat** Chat history: persisted in browser localStorage on /ai (up to ~48 messages) with Clear chat history
+- **feat** AI session persistence: chat + practice hints in sessionStorage (survives refresh, cleared when browser/tab session ends)
+- **feat** Native leave warnings when AI session has data: beforeunload (close/refresh), confirm on Back, confirm on in-app link navigation
 - **feat** Practice: “Understand this question” pre-answer hint — what the question asks, keywords, how to tackle; AWS docs via Knowledge MCP + study notes; no YouTube
 - **feat** API routes: /api/ai/chat (YouTube search links on chat only), /api/ai/explain, /api/ai/hint — shared provider routing (Groq / Anthropic / ILMU)
 - **feat** AWS Knowledge MCP: real docs.aws.amazon.com URLs resolved server-side from docsSearchPhrase (no hallucinated doc links)
 - **feat** ILMU BYOK: api.ilmu.ai Anthropic-compatible messages API (nemo-super) alongside Claude sk-ant- keys
 - **chore** wrangler.jsonc: GROQ_API_KEY and AI_GATEWAY_BASE_URL binding placeholders — secrets via .dev.vars locally or wrangler secret in production
 - **refactor** lib/ai: providers, complete-json, aws-knowledge, client-headers; AWSDocsLink / QuestionHintPanel / PracticeQuestionHint components
-- **feat** Practice hints: bullet-point concise copy, amber keyword highlights in question stem, localStorage cache per questionId (instant replay + Regenerate)
+- **feat** Practice hints: bullet-point concise copy, amber keyword highlights, session cache per questionId (instant replay + Regenerate)
 - **feat** Practice hints: Deep Notes link to /learn#section (matched from awsServices index — e.g. EC2 User Data → Compute section)
 
 ## 2026-06-03
