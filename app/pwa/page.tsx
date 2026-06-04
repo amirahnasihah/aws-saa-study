@@ -213,9 +213,17 @@ export default function PWAPreviewPage() {
             </div>
           </dl>
           <p className="font-space-mono text-[0.58rem] text-aws-muted/60">
-            File:{' '}
+            Live manifest (site-wide):{' '}
             <a href="/manifest.webmanifest" className="text-c1 hover:underline">
               /manifest.webmanifest
+            </a>
+            {' · '}
+            <a href="/icon-192.png" className="text-c1 hover:underline">
+              icon-192.png
+            </a>
+            {' · '}
+            <a href="/icon-512.png" className="text-c1 hover:underline">
+              icon-512.png
             </a>
           </p>
         </section>
@@ -235,7 +243,7 @@ export default function PWAPreviewPage() {
           </Link>
         </div>
 
-        <SiteFooter tagline="PWA preview · draft only" />
+        <SiteFooter tagline="PWA design lab · install MVP is site-wide" />
       </main>
     </>
   )

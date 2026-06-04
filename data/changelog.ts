@@ -20,7 +20,11 @@ export const changelog: ChangeEntry[] = [
     changes: [
       {
         type: 'feat',
-        text: 'Hidden PWA preview page (/pwa): iOS/Android home-screen mockups, install sheet, standalone chrome, icon size grid, draft manifest.webmanifest (manifest linked on /pwa only for install testing)',
+        text: 'Global PWA MVP: manifest.webmanifest + icon-192/512 PNG on whole site (installable from any page); /pwa stays hidden design lab for mockups',
+      },
+      {
+        type: 'fix',
+        text: 'AI leave warnings (beforeunload / Back / in-app links) only on /ai and /practice — not site-wide',
       },
     ],
   },

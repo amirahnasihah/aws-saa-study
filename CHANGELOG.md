@@ -7,7 +7,9 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 
 ## 2026-06-05
 
-- **feat** Hidden PWA preview page (/pwa): iOS/Android home-screen mockups, install sheet, standalone chrome, icon size grid, draft manifest.webmanifest (manifest linked on /pwa only for install testing)
+- **feat** Global PWA MVP: manifest.webmanifest + icon-192/512 PNG on whole site (installable from any page); /pwa stays hidden design lab for mockups
+- **fix** AI leave warnings (beforeunload / Back / in-app links) only on /ai and /practice — not site-wide
+- **feat** Hidden PWA preview page (/pwa): iOS/Android home-screen mockups, install sheet, standalone chrome, icon size grid
 
 ## 2026-06-04
 
