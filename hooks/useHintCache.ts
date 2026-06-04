@@ -1,32 +1,34 @@
 'use client'
 
 import { toBulletList } from '@/lib/ai/hint-bullets'
+import {
+  HINT_SESSION_KEY,
+  readSessionJson,
+  removeSessionKey,
+  writeSessionJson,
+} from '@/lib/ai/session-persist'
 import type { HintResponse } from '@/lib/ai/types'
 
-const STORAGE_KEY = 'aws_study_hint_cache_v2'
 const MAX_ENTRIES = 120
 
 type HintCacheStore = Record<string, HintResponse>
 
 function readStore(): HintCacheStore {
-  if (typeof window === 'undefined') return {}
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return {}
-    const parsed = JSON.parse(raw) as HintCacheStore
-    return parsed && typeof parsed === 'object' ? parsed : {}
-  } catch {
-    return {}
-  }
+  const parsed = readSessionJson<HintCacheStore>(HINT_SESSION_KEY, {})
+  return parsed && typeof parsed === 'object' ? parsed : {}
 }
 
 function writeStore(store: HintCacheStore) {
   const keys = Object.keys(store)
+  if (keys.length === 0) {
+    removeSessionKey(HINT_SESSION_KEY)
+    return
+  }
   const trimmed =
     keys.length <= MAX_ENTRIES
       ? store
       : Object.fromEntries(keys.slice(-MAX_ENTRIES).map((key) => [key, store[key]]))
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmed))
+  writeSessionJson(HINT_SESSION_KEY, trimmed)
 }
 
 function normalizeCachedHint(raw: HintResponse): HintResponse | null {

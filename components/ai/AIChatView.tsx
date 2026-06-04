@@ -102,7 +102,7 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
               Ask any AWS question — services, architecture, exam topics
             </p>
             <p className="font-space-mono text-[0.58rem] text-aws-muted/30 mt-2">
-              Chat is saved in this browser until you clear it
+              Chat stays for this tab session (refresh OK) · cleared when you close the browser
             </p>
           </div>
         )}

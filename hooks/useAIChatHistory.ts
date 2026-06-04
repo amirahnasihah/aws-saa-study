@@ -1,8 +1,13 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import {
+  CHAT_SESSION_KEY,
+  readSessionJson,
+  removeSessionKey,
+  writeSessionJson,
+} from '@/lib/ai/session-persist'
 
-const STORAGE_KEY = 'aws_study_ai_chat_history'
 const MAX_MESSAGES = 48
 
 export interface PersistedChatMessage {
@@ -14,26 +19,19 @@ export interface PersistedChatMessage {
 }
 
 function loadHistory(): PersistedChatMessage[] {
-  if (typeof window === 'undefined') return []
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    if (!raw) return []
-    const parsed = JSON.parse(raw) as PersistedChatMessage[]
-    return Array.isArray(parsed) ? parsed.slice(-MAX_MESSAGES) : []
-  } catch {
-    return []
-  }
-}
-
-function saveHistory(messages: PersistedChatMessage[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-MAX_MESSAGES)))
+  const parsed = readSessionJson<PersistedChatMessage[]>(CHAT_SESSION_KEY, [])
+  return Array.isArray(parsed) ? parsed.slice(-MAX_MESSAGES) : []
 }
 
 export function useAIChatHistory() {
   const [messages, setMessagesState] = useState<PersistedChatMessage[]>(loadHistory)
 
   useEffect(() => {
-    saveHistory(messages)
+    if (messages.length === 0) {
+      removeSessionKey(CHAT_SESSION_KEY)
+      return
+    }
+    writeSessionJson(CHAT_SESSION_KEY, messages.slice(-MAX_MESSAGES))
   }, [messages])
 
   const setMessages = (
@@ -46,7 +44,7 @@ export function useAIChatHistory() {
   }
 
   const clearHistory = () => {
-    localStorage.removeItem(STORAGE_KEY)
+    removeSessionKey(CHAT_SESSION_KEY)
     setMessagesState([])
   }
 
