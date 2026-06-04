@@ -1,4 +1,5 @@
 import { buildDocsSearchPhrase, resolveAwsDocLink } from '@/lib/ai/aws-knowledge'
+import { collectDeepNotesTerms, findDeepNotesMatch } from '@/lib/ai/deep-notes'
 import { completeJson, resolveAiProvider } from '@/lib/ai/complete-json'
 import { toBulletList } from '@/lib/ai/hint-bullets'
 import { parseAIJson } from '@/lib/ai/json'
@@ -88,6 +89,14 @@ export async function POST(request: Request): Promise<Response> {
   ])
   const awsDoc = await resolveAwsDocLink(docsSearchPhrase, ['general', 'reference_documentation'])
 
+  const deepTerms = collectDeepNotesTerms(
+    keywords,
+    json?.studyKeywords ?? [],
+    json?.conceptName ?? '',
+    parsed.question.slice(0, 280)
+  )
+  const deepNotes = findDeepNotesMatch(deepTerms)
+
   const result: HintResponse = {
     conceptName: json?.conceptName ?? 'AWS concept',
     focusArea: json?.focusArea ?? '',
@@ -95,6 +104,10 @@ export async function POST(request: Request): Promise<Response> {
     whatItsAsking: toBulletList(json?.whatItsAsking, 2),
     howToTackle: toBulletList(json?.howToTackle, 3),
     notesUrl,
+    deepNotesUrl: deepNotes.url,
+    deepNotesTitle: deepNotes.serviceName,
+    deepNotesSection: deepNotes.sectionTitle,
+    deepNotesIcon: deepNotes.sectionIcon,
     awsDocsUrl: awsDoc.url,
     awsDocsTitle: awsDoc.title,
   }

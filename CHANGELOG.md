@@ -16,6 +16,7 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 - **chore** wrangler.jsonc: GROQ_API_KEY and AI_GATEWAY_BASE_URL binding placeholders — secrets via .dev.vars locally or wrangler secret in production
 - **refactor** lib/ai: providers, complete-json, aws-knowledge, client-headers; AWSDocsLink / QuestionHintPanel / PracticeQuestionHint components
 - **feat** Practice hints: bullet-point concise copy, amber keyword highlights in question stem, localStorage cache per questionId (instant replay + Regenerate)
+- **feat** Practice hints: Deep Notes link to /learn#section (matched from awsServices index — e.g. EC2 User Data → Compute section)
 
 ## 2026-06-03
 
