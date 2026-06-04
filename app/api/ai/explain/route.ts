@@ -1,142 +1,112 @@
-import { getRequestContext } from '@cloudflare/next-on-pages'
+import {
+  inferProviderFromKey,
+  isByokProvider,
+  parseAIProvider,
+  validateByokKey,
+  type AIProvider,
+  type ByokProvider,
+} from '@/lib/ai/providers'
+import {
+  buildDocsSearchPhrase,
+  resolveAwsDocLink,
+} from '@/lib/ai/aws-knowledge'
+import { readGatewayBase, readGroqApiKey } from '@/lib/ai/env'
+import { callGroq } from '@/lib/ai/groq'
+import { parseAIJson } from '@/lib/ai/json'
+import { callByokMessages } from '@/lib/ai/messages'
+import { findNotesUrl } from '@/lib/ai/notes'
+import type { ErrorResponse, ExplainResponse } from '@/lib/ai/types'
 
 export const runtime = 'edge'
 
+export type { ExplainResponse } from '@/lib/ai/types'
+
 interface ExplainRequest {
-  questionId: string
+  questionId?: string
   question: string
-  userAnswerId: string
-  userAnswerText: string
-  correctAnswerId: string
-  correctAnswerText: string
-  domainLabel: string
-  keywords: string[]
+  userAnswerId?: string
+  userAnswerText?: string
+  correctAnswerId?: string
+  correctAnswerText?: string
+  domainLabel?: string
+  keywords?: string[]
 }
 
-interface ExplainResponse {
-  explanation: string
-  notesUrl: string
-  awsDocsUrl: string
-}
+const EXPLAIN_SYSTEM_PROMPT = `You are an AWS Solutions Architect study assistant. Analyze the practice question and respond ONLY with valid JSON (no markdown, no code fences, no extra text). Use exactly this schema:
+{"conceptName":"string","focusArea":"string","studyKeywords":["string","string","string"],"explanation":"string","youtubeQuery":"string","docsSearchPhrase":"string"}
 
-interface ErrorResponse {
-  error: string
-}
+Rules:
+- conceptName: the specific AWS concept being tested
+- focusArea: exam domain and sub-topic
+- studyKeywords: exactly 3-5 key AWS terms
+- explanation: why correct answer is right (2-3 sentences) + why wrong answers are wrong (1-2 sentences)
+- youtubeQuery: a specific YouTube tutorial search query
+- docsSearchPhrase: a short phrase to search official AWS documentation for this topic — do NOT invent URLs`
 
-const NOTES_BASE = 'https://aws.amrhnshh.com'
-
-const NOTES_SLUGS: Record<string, string> = {
-  storage: '/storage',
-  s3: '/storage',
-  ebs: '/storage',
-  efs: '/storage',
-  glacier: '/storage',
-  compute: '/compute',
-  ec2: '/compute',
-  lambda: '/compute',
-  'auto scaling': '/compute',
-  networking: '/networking',
-  vpc: '/networking',
-  'route 53': '/networking',
-  cloudfront: '/networking',
-  'direct connect': '/networking',
-  database: '/database',
-  rds: '/database',
-  dynamodb: '/database',
-  aurora: '/database',
-  elasticache: '/database',
-  security: '/security',
-  iam: '/security',
-  kms: '/security',
-  waf: '/security',
-  shield: '/security',
-  monitoring: '/monitoring',
-  cloudwatch: '/monitoring',
-  cloudtrail: '/monitoring',
-}
-
-const AWS_DOCS_MAP: Record<string, string> = {
-  s3: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/Welcome.html',
-  's3 transfer acceleration': 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/transfer-acceleration.html',
-  glacier: 'https://docs.aws.amazon.com/amazonglacier/latest/dev/introduction.html',
-  ebs: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AmazonEBS.html',
-  efs: 'https://docs.aws.amazon.com/efs/latest/ug/whatisefs.html',
-  ec2: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/concepts.html',
-  lambda: 'https://docs.aws.amazon.com/lambda/latest/dg/welcome.html',
-  'auto scaling': 'https://docs.aws.amazon.com/autoscaling/ec2/userguide/what-is-amazon-ec2-auto-scaling.html',
-  vpc: 'https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html',
-  'route 53': 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html',
-  cloudfront: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html',
-  'direct connect': 'https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html',
-  rds: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Welcome.html',
-  aurora: 'https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html',
-  dynamodb: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/Introduction.html',
-  elasticache: 'https://docs.aws.amazon.com/AmazonElastiCache/latest/red-ug/WhatIs.html',
-  iam: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/introduction.html',
-  kms: 'https://docs.aws.amazon.com/kms/latest/developerguide/overview.html',
-  cloudwatch: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html',
-  cloudtrail: 'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html',
-  sqs: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/welcome.html',
-  sns: 'https://docs.aws.amazon.com/sns/latest/dg/welcome.html',
-  elb: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/what-is-load-balancing.html',
-  'application load balancer': 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html',
-  'network load balancer': 'https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html',
-  waf: 'https://docs.aws.amazon.com/waf/latest/developerguide/waf-chapter.html',
-  shield: 'https://docs.aws.amazon.com/waf/latest/developerguide/shield-chapter.html',
-}
-
-function findNotesUrl(keywords: string[]): string {
-  const lower = keywords.map((k) => k.toLowerCase())
-  for (const kw of lower) {
-    for (const [key, slug] of Object.entries(NOTES_SLUGS)) {
-      if (kw.includes(key) || key.includes(kw)) return NOTES_BASE + slug
-    }
+function buildExplainUserPrompt(body: ExplainRequest, notesUrl: string): string {
+  const lines: string[] = [`Domain: ${body.domainLabel ?? 'AWS Solutions Architect'}`]
+  if (body.keywords?.length) lines.push(`Keywords: ${body.keywords.join(', ')}`)
+  lines.push(`\nQuestion: ${body.question}`)
+  if (body.correctAnswerText) {
+    lines.push(
+      `Correct answer: (${(body.correctAnswerId ?? '').toUpperCase()}) ${body.correctAnswerText}`
+    )
   }
-  return NOTES_BASE
-}
-
-function findAwsDocsUrl(keywords: string[]): string {
-  const lower = keywords.map((k) => k.toLowerCase())
-  for (const kw of lower) {
-    for (const [key, url] of Object.entries(AWS_DOCS_MAP)) {
-      if (kw.includes(key) || key.includes(kw)) return url
-    }
+  if (body.userAnswerText && body.userAnswerText !== body.correctAnswerText) {
+    lines.push(
+      `User's answer: (${(body.userAnswerId ?? '').toUpperCase()}) ${body.userAnswerText}`
+    )
   }
-  return 'https://docs.aws.amazon.com'
+  lines.push(`\nStudy notes URL: ${notesUrl}`)
+  return lines.join('\n')
 }
 
-function buildPrompt(body: ExplainRequest, notesUrl: string, awsDocsUrl: string): string {
-  return `Question domain: ${body.domainLabel}
-Keywords: ${body.keywords.join(', ')}
-
-Question: ${body.question}
-
-The user selected: (${body.userAnswerId.toUpperCase()}) ${body.userAnswerText}
-Correct answer: (${body.correctAnswerId.toUpperCase()}) ${body.correctAnswerText}
-
-Study notes URL: ${notesUrl}
-Official AWS docs URL: ${awsDocsUrl}
-
-Explain why the correct answer is right (2-3 sentences) and briefly why the user's choice was wrong if they were incorrect (1-2 sentences). Be specific to AWS. End with: "Read more at ${notesUrl}".`
+interface ExplainJson {
+  conceptName?: string
+  focusArea?: string
+  studyKeywords?: string[]
+  explanation?: string
+  youtubeQuery?: string
+  docsSearchPhrase?: string
 }
 
-const SYSTEM_PROMPT =
-  'You are an AWS Solutions Architect study assistant. Give concise, accurate explanations. Always reference the official AWS documentation URL provided to you at the end of your response.'
+async function toExplainResponse(
+  json: ExplainJson | null,
+  rawText: string,
+  notesUrl: string,
+  searchParts: string[]
+): Promise<ExplainResponse> {
+  const explanation = json?.explanation ?? rawText
+  const docsSearchPhrase = buildDocsSearchPhrase([
+    json?.docsSearchPhrase ?? '',
+    json?.conceptName ?? '',
+    ...(json?.studyKeywords ?? []),
+    ...searchParts,
+  ])
+  const awsDoc = await resolveAwsDocLink(docsSearchPhrase, ['general', 'reference_documentation'])
 
-function classifyAnthropicError(status: number): string {
-  if (status === 401) return 'Your API key was rejected. Check it is active at console.anthropic.com.'
-  if (status === 429) return 'You have hit your API rate limit. Wait a moment and try again.'
-  if (status === 408 || status === 524) return 'AI explanation timed out. Try again.'
-  return 'AI explanation failed. Try again.'
+  return {
+    explanation,
+    notesUrl,
+    awsDocsUrl: awsDoc.url,
+    awsDocsTitle: awsDoc.title,
+    youtubeQuery: json?.youtubeQuery ?? 'AWS Solutions Architect tutorial',
+    conceptName: json?.conceptName ?? '',
+    focusArea: json?.focusArea ?? '',
+    studyKeywords: json?.studyKeywords ?? [],
+  }
+}
+
+function resolveProvider(header: string | null, apiKey: string): AIProvider {
+  const fromHeader = parseAIProvider(header)
+  if (fromHeader) return fromHeader
+  if (apiKey.trim()) return inferProviderFromKey(apiKey)
+  return 'groq'
 }
 
 export async function POST(request: Request): Promise<Response> {
   const apiKey = request.headers.get('x-api-key') ?? ''
-
-  if (!apiKey.startsWith('sk-ant-')) {
-    const body: ErrorResponse = { error: "That doesn't look like a valid Anthropic key." }
-    return Response.json(body, { status: 400 })
-  }
+  const provider = resolveProvider(request.headers.get('x-ai-provider'), apiKey)
 
   let parsed: ExplainRequest
   try {
@@ -145,55 +115,50 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ error: 'Invalid request body.' } satisfies ErrorResponse, { status: 400 })
   }
 
-  const notesUrl = findNotesUrl(parsed.keywords)
-  const awsDocsUrl = findAwsDocsUrl(parsed.keywords)
-  const userPrompt = buildPrompt(parsed, notesUrl, awsDocsUrl)
+  const keywords = parsed.keywords ?? []
+  const notesUrl = findNotesUrl(keywords)
+  const userPrompt = buildExplainUserPrompt(parsed, notesUrl)
+  const searchParts = [parsed.question, parsed.domainLabel ?? '', keywords.join(' ')]
 
-  let gatewayBase = 'https://api.anthropic.com'
-  try {
-    const { env } = getRequestContext()
-    const cfEnv = env as CloudflareEnv
-    if (cfEnv.AI_GATEWAY_BASE_URL) gatewayBase = cfEnv.AI_GATEWAY_BASE_URL
-  } catch {
-    // running outside Cloudflare (local dev) — use direct Anthropic
+  if (provider === 'groq') {
+    const groqKey = readGroqApiKey()
+    if (!groqKey) {
+      return Response.json(
+        { error: 'Free AI is not configured. Use Claude or ILMU (BYOK) instead.' } satisfies ErrorResponse,
+        { status: 503 }
+      )
+    }
+    const aiResult = await callGroq(
+      EXPLAIN_SYSTEM_PROMPT,
+      [{ role: 'user', content: userPrompt }],
+      groqKey,
+      600
+    )
+    if ('error' in aiResult) {
+      return Response.json({ error: aiResult.error } satisfies ErrorResponse, { status: aiResult.status })
+    }
+    const json = parseAIJson<ExplainJson>(aiResult.text)
+    return Response.json(await toExplainResponse(json, aiResult.text, notesUrl, searchParts))
   }
 
-  const anthropicUrl = gatewayBase === 'https://api.anthropic.com'
-    ? 'https://api.anthropic.com/v1/messages'
-    : `${gatewayBase}/v1/messages`
-
-  let anthropicRes: Response
-  try {
-    anthropicRes = await fetch(anthropicUrl, {
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 400,
-        system: SYSTEM_PROMPT,
-        messages: [{ role: 'user', content: userPrompt }],
-      }),
-    })
-  } catch {
-    return Response.json({ error: 'AI explanation timed out. Try again.' } satisfies ErrorResponse, { status: 503 })
+  const byok: ByokProvider = isByokProvider(provider) ? provider : 'anthropic'
+  const keyError = validateByokKey(byok, apiKey)
+  if (keyError) {
+    return Response.json({ error: keyError } satisfies ErrorResponse, { status: 400 })
   }
 
-  if (!anthropicRes.ok) {
-    const errMsg = classifyAnthropicError(anthropicRes.status)
-    return Response.json({ error: errMsg } satisfies ErrorResponse, { status: anthropicRes.status })
+  const aiResult = await callByokMessages(
+    byok,
+    apiKey,
+    EXPLAIN_SYSTEM_PROMPT,
+    userPrompt,
+    600,
+    readGatewayBase()
+  )
+  if ('error' in aiResult) {
+    return Response.json({ error: aiResult.error } satisfies ErrorResponse, { status: aiResult.status })
   }
 
-  interface AnthropicMessage {
-    content: Array<{ type: string; text: string }>
-  }
-
-  const data = (await anthropicRes.json()) as AnthropicMessage
-  const explanation = data.content.find((c) => c.type === 'text')?.text ?? 'No explanation returned.'
-
-  const result: ExplainResponse = { explanation, notesUrl, awsDocsUrl }
-  return Response.json(result)
+  const json = parseAIJson<ExplainJson>(aiResult.text)
+  return Response.json(await toExplainResponse(json, aiResult.text, notesUrl, searchParts))
 }

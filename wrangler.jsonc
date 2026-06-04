@@ -12,6 +12,7 @@
     }
   ],
   "vars": {
-    "AI_GATEWAY_BASE_URL": ""
+    "AI_GATEWAY_BASE_URL": "",
+    "GROQ_API_KEY": ""
   }
 }

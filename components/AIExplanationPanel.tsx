@@ -1,22 +1,28 @@
 'use client'
 
 import { useEffect } from 'react'
+import { BYOK_PROVIDER_META, type ByokProvider } from '@/lib/ai/providers'
 
 interface AIExplanationPanelProps {
+  provider: ByokProvider
   explanation: string
   notesUrl: string
   awsDocsUrl: string
+  awsDocsTitle?: string
   onDismiss: () => void
   onRemoveKey: () => void
 }
 
 export default function AIExplanationPanel({
+  provider,
   explanation,
   notesUrl,
   awsDocsUrl,
+  awsDocsTitle,
   onDismiss,
   onRemoveKey,
 }: AIExplanationPanelProps) {
+  const providerMeta = BYOK_PROVIDER_META[provider]
   // Close on Escape key
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') onDismiss() }
@@ -59,7 +65,7 @@ export default function AIExplanationPanel({
             </span>
             <div>
               <p className="font-space-mono text-[0.6rem] uppercase tracking-[0.15em] text-c1/60 leading-none mb-0.5">
-                Claude AI
+                {providerMeta.panelLabel}
               </p>
               <p className="font-space-mono text-[0.75rem] font-bold text-aws-text leading-none">
                 Explanation
@@ -143,7 +149,7 @@ export default function AIExplanationPanel({
                     AWS Documentation
                   </p>
                   <p className="font-space-mono text-[0.58rem] text-aws-muted truncate">
-                    docs.aws.amazon.com
+                    {awsDocsTitle ?? 'docs.aws.amazon.com'}
                   </p>
                 </div>
                 <span className="ml-auto text-aws-muted/40 group-hover:text-aws-text group-hover:translate-x-0.5
@@ -158,7 +164,7 @@ export default function AIExplanationPanel({
         {/* footer */}
         <div className="px-5 py-3.5 border-t border-aws-border/40 flex items-center justify-between">
           <p className="font-space-mono text-[0.55rem] text-aws-muted/40">
-            Using your Anthropic key · BYOK
+            Using your {providerMeta.shortLabel} key · BYOK
           </p>
           <button
             onClick={handleRemoveKey}

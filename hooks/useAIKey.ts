@@ -1,23 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useAIProvider } from '@/hooks/useAIProvider'
 
-const STORAGE_KEY = 'aws_study_ai_key'
-
+/** @deprecated Prefer useAIProvider — re-exported for existing imports */
 export function useAIKey() {
-  const [key, setKeyState] = useState<string | null>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem(STORAGE_KEY) : null
-  )
-
-  const saveKey = (k: string) => {
-    localStorage.setItem(STORAGE_KEY, k)
-    setKeyState(k)
-  }
-
-  const clearKey = () => {
-    localStorage.removeItem(STORAGE_KEY)
-    setKeyState(null)
-  }
-
+  const { key, saveKey, clearKey } = useAIProvider()
   return { key, saveKey, clearKey }
 }
