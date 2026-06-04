@@ -77,3 +77,8 @@ body {
 .animate-overlay-in { animation: overlay-in 0.15s ease-out forwards; }
 .animate-modal-in   { animation: modal-in   0.18s ease-out forwards; }
 .animate-result-in  { animation: result-in  0.12s ease-out forwards; }
+
+@keyframes slideInRight {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(0); }
+}
