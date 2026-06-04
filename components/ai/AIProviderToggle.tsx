@@ -9,6 +9,7 @@ const OPTIONS: Array<{ id: AIProvider; icon: string; label: string }> = [
   { id: 'groq', icon: '⚡', label: 'Groq · Free' },
   { id: 'anthropic', icon: '✦', label: 'Claude · BYOK' },
   { id: 'ilmu', icon: '🇲🇾', label: 'ILMU · BYOK' },
+  { id: 'ollama', icon: '☁', label: 'Ollama · BYOK' },
 ]
 
 export default function AIProviderToggle({ provider, onSelect }: AIProviderToggleProps) {

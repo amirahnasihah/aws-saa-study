@@ -1,19 +1,6 @@
-import {
-  inferProviderFromKey,
-  isByokProvider,
-  parseAIProvider,
-  validateByokKey,
-  type AIProvider,
-  type ByokProvider,
-} from '@/lib/ai/providers'
-import {
-  buildDocsSearchPhrase,
-  resolveAwsDocLink,
-} from '@/lib/ai/aws-knowledge'
-import { readGatewayBase, readGroqApiKey } from '@/lib/ai/env'
-import { callGroq } from '@/lib/ai/groq'
+import { buildDocsSearchPhrase, resolveAwsDocLink } from '@/lib/ai/aws-knowledge'
+import { completeChatMessages, resolveAiProvider } from '@/lib/ai/complete-json'
 import { parseAIJson } from '@/lib/ai/json'
-import { callByokChatMessages } from '@/lib/ai/messages'
 import type { ChatResponse, ErrorResponse } from '@/lib/ai/types'
 
 export const runtime = 'edge'
@@ -44,16 +31,9 @@ interface ChatJson {
   docsSearchPhrase?: string
 }
 
-function resolveProvider(header: string | null, apiKey: string): AIProvider {
-  const fromHeader = parseAIProvider(header)
-  if (fromHeader) return fromHeader
-  if (apiKey.trim()) return inferProviderFromKey(apiKey)
-  return 'groq'
-}
-
 export async function POST(request: Request): Promise<Response> {
   const apiKey = request.headers.get('x-api-key') ?? ''
-  const provider = resolveProvider(request.headers.get('x-ai-provider'), apiKey)
+  const provider = resolveAiProvider(request.headers.get('x-ai-provider'), apiKey)
 
   let body: ChatRequest
   try {
@@ -65,47 +45,20 @@ export async function POST(request: Request): Promise<Response> {
   const historyMessages = body.history.slice(-6)
   const allMessages: ChatMessage[] = [...historyMessages, { role: 'user', content: body.message }]
 
-  let rawText: string
+  const aiResult = await completeChatMessages(
+    provider,
+    apiKey,
+    CHAT_SYSTEM_PROMPT,
+    allMessages,
+    500
+  )
 
-  if (provider === 'groq') {
-    const groqKey = readGroqApiKey()
-    if (!groqKey) {
-      return Response.json(
-        { error: 'Free AI is not configured. Use Claude or ILMU (BYOK) instead.' } satisfies ErrorResponse,
-        { status: 503 }
-      )
-    }
-    const groqMessages = allMessages.map((m) => ({
-      role: m.role as 'user' | 'assistant',
-      content: m.content,
-    }))
-    const aiResult = await callGroq(CHAT_SYSTEM_PROMPT, groqMessages, groqKey, 500)
-    if ('error' in aiResult) {
-      return Response.json({ error: aiResult.error } satisfies ErrorResponse, { status: aiResult.status })
-    }
-    rawText = aiResult.text
-  } else {
-    const byok: ByokProvider = isByokProvider(provider) ? provider : 'anthropic'
-    const keyError = validateByokKey(byok, apiKey)
-    if (keyError) {
-      return Response.json({ error: keyError } satisfies ErrorResponse, { status: 400 })
-    }
-    const aiResult = await callByokChatMessages(
-      byok,
-      apiKey,
-      CHAT_SYSTEM_PROMPT,
-      allMessages,
-      500,
-      readGatewayBase()
-    )
-    if ('error' in aiResult) {
-      return Response.json({ error: aiResult.error } satisfies ErrorResponse, { status: aiResult.status })
-    }
-    rawText = aiResult.text
+  if ('error' in aiResult) {
+    return Response.json({ error: aiResult.error } satisfies ErrorResponse, { status: aiResult.status })
   }
 
-  const parsed = parseAIJson<ChatJson>(rawText)
-  const reply = parsed?.reply ?? rawText
+  const parsed = parseAIJson<ChatJson>(aiResult.text)
+  const reply = parsed?.reply ?? aiResult.text
   const youtubeQuery = parsed?.youtubeQuery ?? 'AWS Solutions Architect tutorial'
   const docsSearchPhrase = buildDocsSearchPhrase([
     parsed?.docsSearchPhrase ?? '',

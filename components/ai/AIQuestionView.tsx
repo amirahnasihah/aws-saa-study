@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { type AIProvider } from '@/hooks/useAIProvider'
 import { buildAIRequestHeaders } from '@/lib/ai/client-headers'
-import { needsByokKey } from '@/lib/ai/providers'
+import { byokProviderLabel, isByokProvider, needsByokKey } from '@/lib/ai/providers'
 import type { ExplainResponse } from '@/lib/ai/types'
 import AIQuestionExplanation from '@/components/ai/AIQuestionExplanation'
 
@@ -119,7 +119,8 @@ export default function AIQuestionView({
 
       {needsKey && (
         <p className="font-space-mono text-[0.62rem] text-amber-400">
-          Add your API key above to use {provider === 'ilmu' ? 'ILMU' : 'Claude'}.
+          Add your API key above to use{' '}
+          {isByokProvider(provider) ? byokProviderLabel(provider) : 'this provider'}.
         </p>
       )}
 

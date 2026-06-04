@@ -6,7 +6,7 @@ import { getCachedHint, setCachedHint } from '@/hooks/useHintCache'
 import AIKeyModal from '@/components/AIKeyModal'
 import QuestionHintPanel from '@/components/ai/QuestionHintPanel'
 import { buildAIRequestHeaders } from '@/lib/ai/client-headers'
-import { needsByokKey, type ByokProvider } from '@/lib/ai/providers'
+import { byokProviderFromAI, needsByokKey, type ByokProvider } from '@/lib/ai/providers'
 import type { HintResponse } from '@/lib/ai/types'
 
 interface PracticeQuestionHintProps {
@@ -104,7 +104,7 @@ export default function PracticeQuestionHint({
 
   const handleClick = () => {
     if (needsByokKey(provider) && !key) {
-      setModalProvider(provider === 'ilmu' ? 'ilmu' : 'anthropic')
+      setModalProvider(byokProviderFromAI(provider))
       setUiState('awaiting-key')
       return
     }
