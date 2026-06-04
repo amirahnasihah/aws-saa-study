@@ -8,6 +8,7 @@ import {
   changeTypes,
   changelog,
   formatChangelogDate,
+  formatChangelogEntryLabel,
   formatRelativeDate,
   typeFilterActive,
   typeFilterColor,
@@ -42,7 +43,7 @@ const isDesktopViewport = () => window.matchMedia('(min-width: 1024px)').matches
 const relativeTop = (node: HTMLElement, container: HTMLElement) =>
   node.getBoundingClientRect().top - container.getBoundingClientRect().top + container.scrollTop
 
-const resolveActiveDateInContainer = (
+const resolveActiveEntryIdInContainer = (
   entries: ChangeEntry[],
   refs: Record<string, HTMLElement | null>,
   container: HTMLElement,
@@ -50,23 +51,23 @@ const resolveActiveDateInContainer = (
   const anchor = container.getBoundingClientRect().top + 24
 
   const visible = entries.filter((entry) => {
-    const node = refs[entry.date]
+    const node = refs[entry.id]
     return node && node.getBoundingClientRect().top <= anchor
   })
 
-  return visible.at(-1)?.date ?? entries[0]?.date ?? ''
+  return visible.at(-1)?.id ?? entries[0]?.id ?? ''
 }
 
-const resolveActiveDateOnPage = (
+const resolveActiveEntryIdOnPage = (
   entries: ChangeEntry[],
   refs: Record<string, HTMLElement | null>,
 ) => {
   const visible = entries.filter((entry) => {
-    const node = refs[entry.date]
+    const node = refs[entry.id]
     return node && node.getBoundingClientRect().top <= SCROLL_ANCHOR
   })
 
-  return visible.at(-1)?.date ?? entries[0]?.date ?? ''
+  return visible.at(-1)?.id ?? entries[0]?.id ?? ''
 }
 
 const resolveScrollProgressInContainer = (
@@ -74,8 +75,8 @@ const resolveScrollProgressInContainer = (
   refs: Record<string, HTMLElement | null>,
   container: HTMLElement,
 ) => {
-  const first = refs[entries[0]?.date ?? '']
-  const last = refs[entries.at(-1)?.date ?? '']
+  const first = refs[entries[0]?.id ?? '']
+  const last = refs[entries.at(-1)?.id ?? '']
 
   if (!first || !last || entries.length < 2) return entries.length === 1 ? 1 : 0
 
@@ -92,8 +93,8 @@ const resolveScrollProgressOnPage = (
   entries: ChangeEntry[],
   refs: Record<string, HTMLElement | null>,
 ) => {
-  const first = refs[entries[0]?.date ?? '']
-  const last = refs[entries.at(-1)?.date ?? '']
+  const first = refs[entries[0]?.id ?? '']
+  const last = refs[entries.at(-1)?.id ?? '']
 
   if (!first || !last || entries.length < 2) return entries.length === 1 ? 1 : 0
 
@@ -108,10 +109,10 @@ const resolveScrollProgressOnPage = (
 
 export default function ChangelogView() {
   const [activeFilter, setActiveFilter] = useState<FilterType>('all')
-  const [expandedDates, setExpandedDates] = useState<Set<string>>(
-    () => new Set(changelog.slice(0, DEFAULT_EXPANDED).map((entry) => entry.date)),
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(
+    () => new Set(changelog.slice(0, DEFAULT_EXPANDED).map((entry) => entry.id)),
   )
-  const [activeDate, setActiveDate] = useState(changelog[0]?.date ?? '')
+  const [activeEntryId, setActiveEntryId] = useState(changelog[0]?.id ?? '')
   const [scrollProgress, setScrollProgress] = useState(0)
   const sectionRefs = useRef<Record<string, HTMLElement | null>>({})
   const timelineItemRefs = useRef<Record<string, HTMLButtonElement | null>>({})
@@ -134,8 +135,8 @@ export default function ChangelogView() {
   )
 
   const activeIndex = useMemo(
-    () => filteredEntries.findIndex((entry) => entry.date === activeDate),
-    [activeDate, filteredEntries],
+    () => filteredEntries.findIndex((entry) => entry.id === activeEntryId),
+    [activeEntryId, filteredEntries],
   )
 
   const typeCounts = useMemo(() => countByType(changelog), [])
@@ -146,7 +147,7 @@ export default function ChangelogView() {
 
   const allExpanded =
     filteredEntries.length > 0 &&
-    filteredEntries.every((entry) => expandedDates.has(entry.date))
+    filteredEntries.every((entry) => expandedIds.has(entry.id))
 
   const syncScrollState = useCallback(() => {
     if (isJumpScrolling.current) return
@@ -155,22 +156,22 @@ export default function ChangelogView() {
     const useContainer = isDesktopViewport() && container
 
     if (useContainer) {
-      setActiveDate(resolveActiveDateInContainer(filteredEntries, sectionRefs.current, container))
+      setActiveEntryId(resolveActiveEntryIdInContainer(filteredEntries, sectionRefs.current, container))
       setScrollProgress(resolveScrollProgressInContainer(filteredEntries, sectionRefs.current, container))
       return
     }
 
-    setActiveDate(resolveActiveDateOnPage(filteredEntries, sectionRefs.current))
+    setActiveEntryId(resolveActiveEntryIdOnPage(filteredEntries, sectionRefs.current))
     setScrollProgress(resolveScrollProgressOnPage(filteredEntries, sectionRefs.current))
   }, [filteredEntries])
 
-  const scrollToEntry = useCallback((date: string) => {
-    const node = sectionRefs.current[date]
+  const scrollToEntry = useCallback((entryId: string) => {
+    const node = sectionRefs.current[entryId]
     const container = contentScrollRef.current
     if (!node) return
 
     isJumpScrolling.current = true
-    setActiveDate(date)
+    setActiveEntryId(entryId)
 
     if (isDesktopViewport() && container) {
       const top = relativeTop(node, container) - 12
@@ -185,20 +186,20 @@ export default function ChangelogView() {
     }, 700)
   }, [])
 
-  const toggleEntry = useCallback((date: string) => {
-    setExpandedDates((current) => {
+  const toggleEntry = useCallback((entryId: string) => {
+    setExpandedIds((current) => {
       const next = new Set(current)
-      if (next.has(date)) next.delete(date)
-      else next.add(date)
+      if (next.has(entryId)) next.delete(entryId)
+      else next.add(entryId)
       return next
     })
   }, [])
 
   const toggleAll = useCallback(() => {
-    setExpandedDates(
+    setExpandedIds(
       allExpanded
         ? new Set<string>()
-        : new Set(filteredEntries.map((entry) => entry.date)),
+        : new Set(filteredEntries.map((entry) => entry.id)),
     )
   }, [allExpanded, filteredEntries])
 
@@ -221,7 +222,7 @@ export default function ChangelogView() {
 
   useEffect(() => {
     const nav = timelineNavRef.current
-    const item = timelineItemRefs.current[activeDate]
+    const item = timelineItemRefs.current[activeEntryId]
     if (!nav || !item) return
 
     const navRect = nav.getBoundingClientRect()
@@ -232,7 +233,7 @@ export default function ChangelogView() {
     if (above || below) {
       item.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
     }
-  }, [activeDate])
+  }, [activeEntryId])
 
   const railProgress = filteredEntries.length <= 1
     ? 100
@@ -252,15 +253,15 @@ export default function ChangelogView() {
     </div>
   ) : (
     filteredEntries.map((entry, index) => {
-      const isExpanded = expandedDates.has(entry.date)
-      const isActive = activeDate === entry.date
+      const isExpanded = expandedIds.has(entry.id)
+      const isActive = activeEntryId === entry.id
 
       return (
         <section
-          key={entry.date}
-          id={`changelog-${entry.date}`}
+          key={entry.id}
+          id={`changelog-${entry.id}`}
           ref={(node) => {
-            sectionRefs.current[entry.date] = node
+            sectionRefs.current[entry.id] = node
           }}
           className={`scroll-mt-3 rounded-xl border overflow-hidden transition-[border-color,box-shadow] duration-300 ${
             isActive
@@ -273,7 +274,7 @@ export default function ChangelogView() {
               className="w-full flex items-start gap-3 px-4 py-4 text-left hover:bg-aws-card/60 transition-colors cursor-pointer list-none [&::-webkit-details-marker]:hidden"
               onClick={(event) => {
                 event.preventDefault()
-                toggleEntry(entry.date)
+                toggleEntry(entry.id)
               }}
             >
               <span
@@ -380,16 +381,16 @@ export default function ChangelogView() {
           <div className="flex gap-2 min-w-max">
             {filteredEntries.map((entry) => (
               <button
-                key={entry.date}
+                key={entry.id}
                 type="button"
-                onClick={() => scrollToEntry(entry.date)}
+                onClick={() => scrollToEntry(entry.id)}
                 className={`font-space-mono text-[0.62rem] px-3 py-1.5 rounded-full border whitespace-nowrap transition-all duration-200 ${
-                  activeDate === entry.date
+                  activeEntryId === entry.id
                     ? 'border-c1/50 bg-c1/10 text-c1 shadow-[0_0_16px_rgba(0,212,255,0.12)]'
                     : 'border-aws-border text-aws-muted hover:text-aws-text hover:border-aws-text/30'
                 }`}
               >
-                {formatChangelogDate(entry.date)}
+                {formatChangelogEntryLabel(entry)}
               </button>
             ))}
           </div>
@@ -433,17 +434,17 @@ export default function ChangelogView() {
                 />
 
                 {filteredEntries.map((entry, index) => {
-                  const isActive = activeDate === entry.date
+                  const isActive = activeEntryId === entry.id
                   const isPast = activeIndex >= 0 && index < activeIndex
 
                   return (
                     <button
-                      key={entry.date}
+                      key={entry.id}
                       ref={(node) => {
-                        timelineItemRefs.current[entry.date] = node
+                        timelineItemRefs.current[entry.id] = node
                       }}
                       type="button"
-                      onClick={() => scrollToEntry(entry.date)}
+                      onClick={() => scrollToEntry(entry.id)}
                       className={`group relative w-full text-left pl-7 pr-2 py-2.5 rounded-lg transition-all duration-200 ${
                         isActive ? 'bg-c1/[0.07]' : 'hover:bg-aws-card/50'
                       }`}
@@ -464,7 +465,7 @@ export default function ChangelogView() {
                           isActive ? 'text-c1' : 'text-aws-text group-hover:text-aws-text'
                         }`}
                       >
-                        {formatChangelogDate(entry.date)}
+                        {formatChangelogEntryLabel(entry)}
                       </p>
                       <p className="text-[0.64rem] text-aws-muted mt-1 leading-snug">
                         {formatRelativeDate(entry.date)}

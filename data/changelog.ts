@@ -6,12 +6,16 @@ export type ChangeItem = {
 }
 
 export type ChangeEntry = {
+  id: string
   date: string
+  /** Shown in timeline when multiple releases share the same date */
+  subtitle?: string
   changes: ChangeItem[]
 }
 
 export const changelog: ChangeEntry[] = [
   {
+    id: '2026-06-04',
     date: '2026-06-04',
     changes: [
       { type: 'feat', text: 'AI study page (/ai): Chat + Explain question modes — Groq (server), Claude & ILMU (BYOK); not linked in main nav (direct URL only)' },
@@ -29,7 +33,9 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-06-03-glossary',
     date: '2026-06-03',
+    subtitle: 'Glossary & UI',
     changes: [
       { type: 'feat', text: 'Glossary page (/glossary): new standalone page — search + 14 category filters, 2-col responsive grid' },
       { type: 'feat', text: 'About page: Glossary card added to link grid (Portfolio / GitHub / Changelog / Glossary)' },
@@ -44,7 +50,9 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-06-03-whizlabs',
     date: '2026-06-03',
+    subtitle: 'Whizlabs wzs4–9',
     changes: [
       { type: 'feat', text: 'wzs4–wzs9 (API GW, Lambda, App Integration, Database, ML, Analytics): 35 questions seeded to remote D1 — all answers verified via AWS docs MCP' },
       { type: 'feat', text: 'Screenshots for wzs4 (5), wzs5 (4), wzs6 (7), wzs7 (10), wzs8 (4), wzs9 (5) added to public/questions/' },
@@ -58,6 +66,7 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-06-02',
     date: '2026-06-02',
     changes: [
       { type: 'feat', text: 'wzs3 (EFS Section Test): 5 questions seeded to remote D1 — answers verified via AWS docs MCP' },
@@ -71,6 +80,7 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-05-28',
     date: '2026-05-28',
     changes: [
       { type: 'feat', text: 'PT4 (wz4): 65 Whizlabs Practice Test 4 questions seeded to remote D1' },
@@ -81,6 +91,7 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-05-27',
     date: '2026-05-27',
     changes: [
       { type: 'feat', text: 'Changelog page at /changelog — type filters, collapsible releases, relative dates' },
@@ -93,6 +104,7 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-05-26',
     date: '2026-05-26',
     changes: [
       { type: 'feat', text: 'Quiz scraping script for Whizlabs questions' },
@@ -100,6 +112,7 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-05-25',
     date: '2026-05-25',
     changes: [
       { type: 'feat', text: 'Screenshot support for practice questions' },
@@ -108,6 +121,7 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-05-21',
     date: '2026-05-21',
     changes: [
       { type: 'feat', text: 'Question filtering by source in API and practice page' },
@@ -119,6 +133,7 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-05-20',
     date: '2026-05-20',
     changes: [
       { type: 'feat', text: 'Glossary schema and initial seed data' },
@@ -129,6 +144,7 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-05-19',
     date: '2026-05-19',
     changes: [
       { type: 'feat', text: 'About page with GitHub and portfolio links' },
@@ -141,12 +157,14 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-05-18',
     date: '2026-05-18',
     changes: [
       { type: 'feat', text: 'Bookmark feature — save and persist AWS service cards' },
     ],
   },
   {
+    id: '2026-05-17',
     date: '2026-05-17',
     changes: [
       { type: 'feat', text: 'SiteFooter component added across all pages' },
@@ -154,6 +172,7 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
+    id: '2026-05-11',
     date: '2026-05-11',
     changes: [
       { type: 'feat', text: 'VPC page: RFC 1918 private ranges, prefix-bit breakdown, network/host division' },
@@ -203,6 +222,11 @@ export const formatChangelogDate = (date: string) =>
     day: 'numeric',
     year: 'numeric',
   })
+
+export const formatChangelogEntryLabel = (entry: ChangeEntry) =>
+  entry.subtitle
+    ? `${formatChangelogDate(entry.date)} · ${entry.subtitle}`
+    : formatChangelogDate(entry.date)
 
 export const formatRelativeDate = (date: string) => {
   const target = new Date(`${date}T12:00:00`)
