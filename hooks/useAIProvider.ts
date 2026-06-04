@@ -6,7 +6,6 @@ import {
   type AIProvider,
   inferProviderFromKey,
   isAIProvider,
-  isByokProvider,
   KEY_STORAGE_KEY,
   PROVIDER_STORAGE_KEY,
 } from '@/lib/ai/providers'

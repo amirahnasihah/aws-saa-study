@@ -1,27 +1,40 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 
 type InstallState = 'idle' | 'available' | 'installed' | 'unsupported'
 
+function subscribeStandalone(onStoreChange: () => void) {
+  const mq = window.matchMedia('(display-mode: standalone)')
+  mq.addEventListener('change', onStoreChange)
+  return () => mq.removeEventListener('change', onStoreChange)
+}
+
+function getStandaloneSnapshot() {
+  return window.matchMedia('(display-mode: standalone)').matches
+}
+
 export default function PWAInstallProbe() {
-  const [state, setState] = useState<InstallState>('idle')
+  const isStandalone = useSyncExternalStore(
+    subscribeStandalone,
+    getStandaloneSnapshot,
+    () => false,
+  )
+  const [promptState, setPromptState] = useState<'idle' | 'available' | 'unsupported'>('idle')
+  const [appInstalled, setAppInstalled] = useState(false)
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
 
   useEffect(() => {
-    if (window.matchMedia('(display-mode: standalone)').matches) {
-      setState('installed')
-      return
-    }
+    if (isStandalone) return
 
     const onBeforeInstall = (event: Event) => {
       event.preventDefault()
       setDeferredPrompt(event as BeforeInstallPromptEvent)
-      setState('available')
+      setPromptState('available')
     }
 
     const onInstalled = () => {
-      setState('installed')
+      setAppInstalled(true)
       setDeferredPrompt(null)
     }
 
@@ -29,7 +42,7 @@ export default function PWAInstallProbe() {
     window.addEventListener('appinstalled', onInstalled)
 
     const timer = window.setTimeout(() => {
-      setState((current) => (current === 'idle' ? 'unsupported' : current))
+      setPromptState((current) => (current === 'idle' ? 'unsupported' : current))
     }, 2000)
 
     return () => {
@@ -37,7 +50,10 @@ export default function PWAInstallProbe() {
       window.removeEventListener('beforeinstallprompt', onBeforeInstall)
       window.removeEventListener('appinstalled', onInstalled)
     }
-  }, [])
+  }, [isStandalone])
+
+  const state: InstallState =
+    isStandalone || appInstalled ? 'installed' : promptState
 
   const handleInstall = async () => {
     if (!deferredPrompt) return
@@ -70,7 +86,7 @@ export default function PWAInstallProbe() {
         </button>
       )}
       <p className="font-space-mono text-[0.58rem] text-aws-muted/70">
-        Draft manifest is linked on /pwa only — rest of site unchanged until you wire it globally.
+        Site-wide manifest is live — this block only tests the browser install API on /pwa.
       </p>
     </div>
   )
