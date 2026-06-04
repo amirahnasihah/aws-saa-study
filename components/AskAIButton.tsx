@@ -34,7 +34,7 @@ export default function AskAIButton({
   domainLabel,
   keywords,
 }: AskAIButtonProps) {
-  const { key, saveKey } = useAIKey()
+  const { key, saveKey, clearKey } = useAIKey()
   const [uiState, setUiState] = useState<UIState>('idle')
   const [result, setResult] = useState<AIResult | null>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
@@ -60,6 +60,11 @@ export default function AskAIButton({
           keywords,
         }),
       })
+      if (!res.ok && !res.headers.get('content-type')?.includes('application/json')) {
+        setErrorMsg('AI explanation failed. Try again.')
+        setUiState('error')
+        return
+      }
       const data = (await res.json()) as AIResult | { error: string }
       if ('error' in data) {
         setErrorMsg(data.error)
@@ -95,6 +100,7 @@ export default function AskAIButton({
         notesUrl={result.notesUrl}
         awsDocsUrl={result.awsDocsUrl}
         onDismiss={() => { setUiState('idle'); setResult(null) }}
+        onRemoveKey={clearKey}
       />
     )
   }
