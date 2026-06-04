@@ -12,6 +12,19 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    date: '2026-06-04',
+    changes: [
+      { type: 'feat', text: 'AI study page (/ai): Chat + Explain question modes — Groq (server), Claude & ILMU (BYOK); not linked in main nav (direct URL only)' },
+      { type: 'feat', text: 'Chat history: persisted in browser localStorage on /ai (up to ~48 messages) with Clear chat history' },
+      { type: 'feat', text: 'Practice: “Understand this question” pre-answer hint — what the question asks, keywords, how to tackle; AWS docs via Knowledge MCP + study notes; no YouTube' },
+      { type: 'feat', text: 'API routes: /api/ai/chat (YouTube search links on chat only), /api/ai/explain, /api/ai/hint — shared provider routing (Groq / Anthropic / ILMU)' },
+      { type: 'feat', text: 'AWS Knowledge MCP: real docs.aws.amazon.com URLs resolved server-side from docsSearchPhrase (no hallucinated doc links)' },
+      { type: 'feat', text: 'ILMU BYOK: api.ilmu.ai Anthropic-compatible messages API (nemo-super) alongside Claude sk-ant- keys' },
+      { type: 'chore', text: 'wrangler.jsonc: GROQ_API_KEY and AI_GATEWAY_BASE_URL binding placeholders — secrets via .dev.vars locally or wrangler secret in production' },
+      { type: 'refactor', text: 'lib/ai: providers, complete-json, aws-knowledge, client-headers; AWSDocsLink / QuestionHintPanel / PracticeQuestionHint components' },
+    ],
+  },
+  {
     date: '2026-06-03',
     changes: [
       { type: 'feat', text: 'Glossary page (/glossary): new standalone page — search + 14 category filters, 2-col responsive grid' },
