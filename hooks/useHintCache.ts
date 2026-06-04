@@ -37,7 +37,15 @@ function normalizeCachedHint(raw: HintResponse): HintResponse | null {
     ? raw.howToTackle
     : toBulletList(raw.howToTackle as unknown, 3)
   if (!whatItsAsking.length) return null
-  return { ...raw, whatItsAsking, howToTackle }
+  return {
+    ...raw,
+    whatItsAsking,
+    howToTackle,
+    deepNotesUrl: raw.deepNotesUrl ?? '/learn',
+    deepNotesTitle: raw.deepNotesTitle ?? 'Deep Notes',
+    deepNotesSection: raw.deepNotesSection ?? 'All domains',
+    deepNotesIcon: raw.deepNotesIcon ?? '📖',
+  }
 }
 
 export function getCachedHint(questionId: string): HintResponse | null {

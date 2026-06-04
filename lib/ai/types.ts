@@ -5,6 +5,10 @@ export interface HintResponse {
   whatItsAsking: string[]
   howToTackle: string[]
   notesUrl: string
+  deepNotesUrl: string
+  deepNotesTitle: string
+  deepNotesSection: string
+  deepNotesIcon: string
   awsDocsUrl: string
   awsDocsTitle: string
 }

@@ -1,4 +1,5 @@
 import AWSDocsLink from '@/components/ai/AWSDocsLink'
+import DeepNotesLink from '@/components/ai/DeepNotesLink'
 import type { HintResponse } from '@/lib/ai/types'
 
 interface QuestionHintPanelProps {
@@ -70,16 +71,15 @@ export default function QuestionHintPanel({ hint, fromCache = false }: QuestionH
         </div>
       )}
 
-      <AWSDocsLink awsDocsUrl={hint.awsDocsUrl} awsDocsTitle={hint.awsDocsTitle} />
-
-      <a
-        href={hint.notesUrl}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-1.5 font-space-mono text-[0.58rem] text-c1/80 hover:text-c1 transition-colors"
-      >
-        📖 Study notes →
-      </a>
+      <div className="space-y-2">
+        <DeepNotesLink
+          deepNotesUrl={hint.deepNotesUrl ?? '/learn'}
+          deepNotesTitle={hint.deepNotesTitle ?? 'Deep Notes'}
+          deepNotesSection={hint.deepNotesSection ?? 'All domains'}
+          sectionIcon={hint.deepNotesIcon ?? '📖'}
+        />
+        <AWSDocsLink awsDocsUrl={hint.awsDocsUrl} awsDocsTitle={hint.awsDocsTitle} />
+      </div>
     </div>
   )
 }
