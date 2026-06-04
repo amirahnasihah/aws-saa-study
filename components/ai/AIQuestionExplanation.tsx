@@ -1,4 +1,4 @@
-import AISourceLinks from '@/components/ai/AISourceLinks'
+import AWSDocsLink from '@/components/ai/AWSDocsLink'
 
 interface AIQuestionExplanationProps {
   conceptName: string
@@ -7,7 +7,6 @@ interface AIQuestionExplanationProps {
   explanation: string
   awsDocsUrl: string
   awsDocsTitle: string
-  youtubeQuery: string
 }
 
 export default function AIQuestionExplanation({
@@ -17,7 +16,6 @@ export default function AIQuestionExplanation({
   explanation,
   awsDocsUrl,
   awsDocsTitle,
-  youtubeQuery,
 }: AIQuestionExplanationProps) {
   return (
     <div className="space-y-5">
@@ -70,11 +68,7 @@ export default function AIQuestionExplanation({
         <p className="font-space-mono text-[0.55rem] uppercase tracking-widest text-aws-muted/60 mb-3">
           Learn more
         </p>
-        <AISourceLinks
-          awsDocsUrl={awsDocsUrl}
-          awsDocsTitle={awsDocsTitle}
-          youtubeQuery={youtubeQuery}
-        />
+        <AWSDocsLink awsDocsUrl={awsDocsUrl} awsDocsTitle={awsDocsTitle} />
       </div>
     </div>
   )

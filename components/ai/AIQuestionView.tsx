@@ -152,7 +152,6 @@ export default function AIQuestionView({
             explanation={result.explanation}
             awsDocsUrl={result.awsDocsUrl}
             awsDocsTitle={result.awsDocsTitle}
-            youtubeQuery={result.youtubeQuery}
           />
         </div>
       )}

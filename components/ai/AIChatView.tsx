@@ -2,17 +2,11 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { type AIProvider } from '@/hooks/useAIProvider'
+import { useAIChatHistory } from '@/hooks/useAIChatHistory'
 import { buildAIRequestHeaders } from '@/lib/ai/client-headers'
 import { needsByokKey } from '@/lib/ai/providers'
 import AISourceLinks from '@/components/ai/AISourceLinks'
-
-interface ChatMessage {
-  role: 'user' | 'assistant'
-  content: string
-  awsDocsUrl?: string
-  awsDocsTitle?: string
-  youtubeQuery?: string
-}
+import type { ChatResponse } from '@/lib/ai/types'
 
 interface AIChatViewProps {
   provider: AIProvider
@@ -22,7 +16,7 @@ interface AIChatViewProps {
 type UIState = 'idle' | 'loading' | 'error'
 
 export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
-  const [messages, setMessages] = useState<ChatMessage[]>([])
+  const { messages, setMessages, clearHistory } = useAIChatHistory()
   const [input, setInput] = useState('')
   const [uiState, setUiState] = useState<UIState>('idle')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
@@ -37,19 +31,19 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
     if (!text || uiState === 'loading') return
     if (needsByokKey(provider) && !byokKey) return
 
-    const userMsg: ChatMessage = { role: 'user', content: text }
+    const userMsg = { role: 'user' as const, content: text }
+    const historyForApi = messages.map(({ role, content }) => ({ role, content }))
+
     setMessages((prev) => [...prev, userMsg])
     setInput('')
     setUiState('loading')
     setErrorMsg(null)
 
-    const history = messages.map(({ role, content }) => ({ role, content }))
-
     try {
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: buildAIRequestHeaders(provider, byokKey),
-        body: JSON.stringify({ message: text, history }),
+        body: JSON.stringify({ message: text, history: historyForApi }),
       })
 
       if (!res.ok && !res.headers.get('content-type')?.includes('application/json')) {
@@ -58,9 +52,7 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
         return
       }
 
-      const data = (await res.json()) as
-        | { reply: string; awsDocsUrl: string; awsDocsTitle: string; youtubeQuery: string }
-        | { error: string }
+      const data = (await res.json()) as ChatResponse | { error: string }
 
       if ('error' in data) {
         setErrorMsg(data.error)
@@ -88,6 +80,18 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
 
   return (
     <div className="flex flex-col h-full min-h-[500px]">
+      {messages.length > 0 && (
+        <div className="flex justify-end mb-2">
+          <button
+            type="button"
+            onClick={clearHistory}
+            className="font-space-mono text-[0.55rem] text-aws-muted/60 hover:text-aws-muted transition-colors"
+          >
+            Clear chat history
+          </button>
+        </div>
+      )}
+
       <div className="flex-1 overflow-y-auto space-y-6 pb-4">
         {messages.length === 0 && (
           <div className="text-center py-16">
@@ -96,6 +100,9 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
             </p>
             <p className="font-space-mono text-[0.62rem] text-aws-muted/40">
               Ask any AWS question — services, architecture, exam topics
+            </p>
+            <p className="font-space-mono text-[0.58rem] text-aws-muted/30 mt-2">
+              Chat is saved in this browser until you clear it
             </p>
           </div>
         )}

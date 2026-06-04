@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from 'react'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
+import PracticeQuestionHint from '@/components/practice/PracticeQuestionHint'
 import { practiceQuestions, PracticeQuestion } from '@/data/practiceQuestions'
 
 const domainColors: Record<string, string> = {
@@ -385,6 +386,14 @@ function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
           <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
         </div>
 
+        <PracticeQuestionHint
+          question={q.scenario}
+          domainLabel={q.domainLabel}
+          keywords={q.keywords}
+          options={q.options}
+          reviewMode
+        />
+
         <div className="px-5 pb-5 space-y-2.5">
           {q.options.map((opt) => {
             const correct = opt.id === q.correctId
@@ -534,6 +543,15 @@ function QuestionCard({
           )}
           <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
         </div>
+
+        {quizState === 'question' && (
+          <PracticeQuestionHint
+            question={q.scenario}
+            domainLabel={q.domainLabel}
+            keywords={q.keywords}
+            options={q.options}
+          />
+        )}
 
         {/* options */}
         <div className="px-5 pb-5 space-y-2.5">
