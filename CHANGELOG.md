@@ -14,6 +14,7 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 - **feat** API routes: /api/ai/chat (YouTube search links on chat only), /api/ai/explain, /api/ai/hint — shared provider routing (Groq / Anthropic / ILMU)
 - **feat** AWS Knowledge MCP: real docs.aws.amazon.com URLs resolved server-side from docsSearchPhrase (no hallucinated doc links)
 - **feat** ILMU BYOK: api.ilmu.ai Anthropic-compatible messages API (nemo-super) alongside Claude sk-ant- keys
+- **feat** Ollama Cloud BYOK: ollama.com/api/chat with Bearer API key (default model gpt-oss:120b) on /ai, practice hints, and explain routes
 - **chore** wrangler.jsonc: GROQ_API_KEY and AI_GATEWAY_BASE_URL binding placeholders — secrets via .dev.vars locally or wrangler secret in production
 - **refactor** lib/ai: providers, complete-json, aws-knowledge, client-headers; AWSDocsLink / QuestionHintPanel / PracticeQuestionHint components
 - **feat** Practice hints: bullet-point concise copy, amber keyword highlights, session cache per questionId (instant replay + Regenerate)

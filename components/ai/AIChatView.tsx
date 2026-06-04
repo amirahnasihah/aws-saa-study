@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 import { type AIProvider } from '@/hooks/useAIProvider'
 import { useAIChatHistory } from '@/hooks/useAIChatHistory'
 import { buildAIRequestHeaders } from '@/lib/ai/client-headers'
-import { needsByokKey } from '@/lib/ai/providers'
+import { byokProviderLabel, isByokProvider, needsByokKey } from '@/lib/ai/providers'
 import AISourceLinks from '@/components/ai/AISourceLinks'
 import type { ChatResponse } from '@/lib/ai/types'
 
@@ -148,7 +148,8 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
 
       {needsKey && (
         <p className="font-space-mono text-[0.62rem] text-amber-400 mb-2">
-          Add your API key above to chat with {provider === 'ilmu' ? 'ILMU' : 'Claude'}.
+          Add your API key above to chat with{' '}
+          {isByokProvider(provider) ? byokProviderLabel(provider) : 'this provider'}.
         </p>
       )}
 

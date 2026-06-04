@@ -14,7 +14,7 @@ interface AIKeyModalProps {
   onDismiss: () => void
 }
 
-const PROVIDER_ORDER: ByokProvider[] = ['anthropic', 'ilmu']
+const PROVIDER_ORDER: ByokProvider[] = ['anthropic', 'ilmu', 'ollama']
 
 export default function AIKeyModal({
   provider,
@@ -74,7 +74,9 @@ export default function AIKeyModal({
         <p className="font-space-mono text-[0.65rem] text-aws-muted mb-3">
           {provider === 'ilmu'
             ? 'ILMU uses Malaysian-hosted models (e.g. nemo-super). Get a key at'
-            : 'Anthropic Claude keys start with sk-ant-. Get one at'}{' '}
+            : provider === 'ollama'
+              ? 'Ollama Cloud keys run models on ollama.com. Create one at'
+              : 'Anthropic Claude keys start with sk-ant-. Get one at'}{' '}
           <a
             href={meta.consoleUrl}
             target="_blank"

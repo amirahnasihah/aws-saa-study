@@ -21,6 +21,7 @@ export const changelog: ChangeEntry[] = [
       { type: 'feat', text: 'API routes: /api/ai/chat (YouTube search links on chat only), /api/ai/explain, /api/ai/hint — shared provider routing (Groq / Anthropic / ILMU)' },
       { type: 'feat', text: 'AWS Knowledge MCP: real docs.aws.amazon.com URLs resolved server-side from docsSearchPhrase (no hallucinated doc links)' },
       { type: 'feat', text: 'ILMU BYOK: api.ilmu.ai Anthropic-compatible messages API (nemo-super) alongside Claude sk-ant- keys' },
+      { type: 'feat', text: 'Ollama Cloud BYOK: ollama.com/api/chat with Bearer API key (default model gpt-oss:120b) on /ai, practice hints, and explain routes' },
       { type: 'chore', text: 'wrangler.jsonc: GROQ_API_KEY and AI_GATEWAY_BASE_URL binding placeholders — secrets via .dev.vars locally or wrangler secret in production' },
       { type: 'refactor', text: 'lib/ai: providers, complete-json, aws-knowledge, client-headers; AWSDocsLink / QuestionHintPanel / PracticeQuestionHint components' },
       { type: 'feat', text: 'Practice hints: bullet-point concise copy, amber keyword highlights, session cache per questionId (instant replay + Regenerate)' },

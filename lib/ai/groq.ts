@@ -4,8 +4,8 @@ const GROQ_MODEL = 'llama-3.1-8b-instant'
 export function classifyGroqError(status: number): string {
   const errorByStatus: Record<number, string> = {
     401: 'Free AI service authentication failed. Try again later.',
-    429: 'Daily free limit reached. Switch to Claude or ILMU (BYOK) or come back tomorrow.',
-    503: 'Free AI is temporarily unavailable. Switch to Claude or ILMU (BYOK) or try again.',
+    429: 'Daily free limit reached. Switch to BYOK (Claude, ILMU, Ollama) or come back tomorrow.',
+    503: 'Free AI is temporarily unavailable. Switch to BYOK or try again.',
   }
   return errorByStatus[status] ?? 'Free AI request failed. Try again.'
 }
