@@ -111,3 +111,4 @@ The `DB` binding is in `wrangler.jsonc` — no manual env var needed.
 | 503 on preview URL only | Add secrets under **Preview** |
 | 503 after adding secrets | Retry deployment |
 | `wrangler: command not found` | Use `bunx wrangler` not `wrangler` |
+| CF build fails on `account_id` | Pages `wrangler.jsonc` must **not** include `account_id` — use `CLOUDFLARE_ACCOUNT_ID` env locally if needed |

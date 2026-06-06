@@ -1,7 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "aws-saa-study",
-  "account_id": "1a172b38ed8312117940a3c976c51637",
   "compatibility_date": "2026-05-19",
   "compatibility_flags": ["nodejs_compat"],
   "pages_build_output_dir": ".vercel/output/static",
