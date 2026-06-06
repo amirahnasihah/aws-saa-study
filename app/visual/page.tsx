@@ -132,9 +132,9 @@ function ExplainPanelContent({ state, text, error }: { state: ExplainState; text
   }
   if (state === 'done') {
     return (
-      <div className="space-y-3">
+      <div className="space-y-2.5">
         {text.trim().split(/\n\n+/).map((para, i) => (
-          <p key={i} className="text-aws-text text-sm leading-relaxed">
+          <p key={i} className="text-aws-text text-[0.72rem] leading-relaxed">
             {para.trim()}
           </p>
         ))}
@@ -151,74 +151,57 @@ function DiagramPanel({ arch }: { arch: Architecture }) {
   const [nodes, , onNodesChange] = useNodesState(arch.nodes)
   const [edges, , onEdgesChange] = useEdgesState(arch.edges)
 
-  // whole-diagram explain (inline below legend)
-  const [diagState, setDiagState] = useState<ExplainState>('idle')
-  const [diagText, setDiagText] = useState('')
-  const [diagError, setDiagError] = useState('')
-
-  // per-node sidebar
-  const [selectedNode, setSelectedNode] = useState<NodeData | null>(null)
-  const [nodeState, setNodeState] = useState<ExplainState>('idle')
-  const [nodeText, setNodeText] = useState('')
-  const [nodeError, setNodeError] = useState('')
+  // unified sidebar state — one panel for both node and diagram explain
+  const [sidebarMode, setSidebarMode] = useState<'none' | 'node' | 'diagram'>('none')
+  const [sidebarNode, setSidebarNode] = useState<NodeData | null>(null)
+  const [sidebarState, setSidebarState] = useState<ExplainState>('idle')
+  const [sidebarText, setSidebarText] = useState('')
+  const [sidebarError, setSidebarError] = useState('')
 
   const domainLabel = domainLabels[arch.domain] ?? arch.domain
 
-  async function handleDiagramExplain() {
-    if (diagState === 'done') {
-      setDiagState('idle'); setDiagText(''); setDiagError(''); return
-    }
-    // close node sidebar
-    setSelectedNode(null); setNodeState('idle'); setNodeText(''); setNodeError('')
-    setDiagError(''); setDiagState('loading')
-    try {
-      const data = await fetchArchExplanation(arch, domainLabel)
-      if (data.error) { setDiagState('error'); setDiagError(data.error) }
-      else { setDiagState('done'); setDiagText(data.text ?? '') }
-    } catch {
-      setDiagState('error'); setDiagError('Network error. Try again.')
-    }
+  function openSidebar(mode: 'node' | 'diagram', node: NodeData | null, focusNode?: string) {
+    setSidebarMode(mode)
+    setSidebarNode(node)
+    setSidebarState('loading')
+    setSidebarText('')
+    setSidebarError('')
+    fetchArchExplanation(arch, domainLabel, focusNode)
+      .then((result) => {
+        if (result.error) { setSidebarState('error'); setSidebarError(result.error) }
+        else { setSidebarState('done'); setSidebarText(result.text ?? '') }
+      })
+      .catch(() => { setSidebarState('error'); setSidebarError('Network error. Try again.') })
+  }
+
+  function closeSidebar() {
+    setSidebarMode('none'); setSidebarNode(null)
+    setSidebarState('idle'); setSidebarText(''); setSidebarError('')
+  }
+
+  function handleDiagramExplain() {
+    if (sidebarMode === 'diagram') { closeSidebar(); return }
+    openSidebar('diagram', null)
   }
 
   function handleNodeClick(_: React.MouseEvent, node: RFNode) {
     if (node.type === 'groupNode') return
     const data = node.data as NodeData
-    // close diagram panel
-    setDiagState('idle'); setDiagText(''); setDiagError('')
-    setSelectedNode(data)
-    setNodeState('loading'); setNodeText(''); setNodeError('')
-    fetchArchExplanation(arch, domainLabel, data.label).then((result) => {
-      if (result.error) { setNodeState('error'); setNodeError(result.error) }
-      else { setNodeState('done'); setNodeText(result.text ?? '') }
-    }).catch(() => {
-      setNodeState('error'); setNodeError('Network error. Try again.')
-    })
+    openSidebar('node', data, data.label)
   }
 
-  function closeNodeSidebar() {
-    setSelectedNode(null); setNodeState('idle'); setNodeText(''); setNodeError('')
-  }
+  const sidebarOpen = sidebarMode !== 'none'
 
-  const diagBtnLabel =
-    diagState === 'loading' ? 'Explaining...' :
-    diagState === 'done' ? 'Close overview' :
-    diagState === 'error' ? 'Retry' : 'Explain diagram'
-
-  const diagBtnClass =
-    diagState === 'done'
-      ? 'text-c1 border-c1/25 bg-c1/6 hover:bg-c1/10'
-      : diagState === 'error'
-        ? 'text-red-400 border-red-400/20 bg-red-400/6'
-        : diagState === 'loading'
-          ? 'text-aws-muted border-aws-border/60 opacity-60 cursor-not-allowed'
-          : 'text-aws-muted border-aws-border/60 hover:text-aws-text hover:border-aws-border hover:bg-white/3'
+  const diagBtnClass = sidebarMode === 'diagram'
+    ? 'text-c1 border-c1/25 bg-c1/6 hover:bg-c1/10'
+    : 'text-aws-muted border-aws-border/60 hover:text-aws-text hover:border-aws-border hover:bg-white/3'
 
   return (
     <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden">
       {/* card header */}
       <div className="px-5 py-4 border-b border-aws-border/60">
-        <div className="flex items-start justify-between gap-4 flex-wrap">
-          <div>
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
             <div className="flex items-center gap-2 mb-1 flex-wrap">
               {arch.extra ? (
                 <span className="font-space-mono text-[0.6rem] px-2 py-0.5 rounded border text-c5 border-c5/30 bg-c5/8">
@@ -242,7 +225,6 @@ function DiagramPanel({ arch }: { arch: Architecture }) {
             <button
               type="button"
               onClick={handleDiagramExplain}
-              disabled={diagState === 'loading'}
               className={`flex items-center gap-1 font-space-mono text-[0.6rem] px-2.5 py-1 rounded-lg border transition-all duration-150 ${diagBtnClass}`}
             >
               <span className="relative inline-flex items-center justify-center shrink-0 w-3 h-3">
@@ -251,14 +233,14 @@ function DiagramPanel({ arch }: { arch: Architecture }) {
                 <span className="absolute bottom-0 left-0 animate-sparkle-b text-[0.2rem] leading-none text-c1">✧</span>
                 <span className="absolute bottom-0 right-0 animate-sparkle-c text-[0.2rem] leading-none text-c1">✦</span>
               </span>
-              {diagBtnLabel}
+              {sidebarMode === 'diagram' ? 'Close' : 'Explain diagram'}
             </button>
             <p className="font-space-mono text-[0.52rem] text-aws-muted/50">Click node to explore · Scroll to zoom</p>
           </div>
         </div>
       </div>
 
-      {/* canvas + node sidebar */}
+      {/* canvas + unified sidebar */}
       <div className="flex" style={{ height: 460 }}>
         <div className="flex-1 min-w-0">
           <ReactFlow
@@ -298,40 +280,41 @@ function DiagramPanel({ arch }: { arch: Architecture }) {
           </ReactFlow>
         </div>
 
-        {/* node explanation sidebar */}
-        {selectedNode && (
+        {/* unified explanation sidebar */}
+        {sidebarOpen && (
           <div className="w-72 shrink-0 border-l border-aws-border/60 overflow-y-auto">
             <div className="p-4">
-              {/* sidebar header */}
+              {/* header */}
               <div className="flex items-start justify-between gap-2 mb-4">
                 <div className="flex items-center gap-2 min-w-0">
                   <span className="text-c1 text-[0.75rem] leading-none shrink-0">✧</span>
                   <div className="min-w-0">
-                    <p className="font-space-mono text-[0.68rem] font-bold text-aws-text leading-tight truncate">
-                      {selectedNode.label}
+                    <p className="font-space-mono text-[0.65rem] font-bold text-aws-text leading-tight truncate">
+                      {sidebarMode === 'node' && sidebarNode ? sidebarNode.label : 'Architecture Overview'}
                     </p>
-                    {selectedNode.sub && (
-                      <p className="font-space-mono text-[0.5rem] text-aws-muted mt-0.5">{selectedNode.sub}</p>
-                    )}
+                    <p className="font-space-mono text-[0.5rem] text-aws-muted/70 mt-0.5 truncate">
+                      {sidebarMode === 'node' ? (sidebarNode?.sub ?? arch.title) : arch.title}
+                    </p>
                   </div>
                 </div>
                 <button
                   type="button"
-                  onClick={closeNodeSidebar}
+                  onClick={closeSidebar}
                   className="text-aws-muted/60 hover:text-aws-text transition-colors shrink-0 mt-0.5"
                   aria-label="Close"
                 >
-                  <svg viewBox="0 0 16 16" fill="currentColor" className="w-3 h-3">
-                    <path d="M3.5 3.5 L12.5 12.5 M12.5 3.5 L3.5 12.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+                  <svg viewBox="0 0 16 16" className="w-3 h-3" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" fill="none">
+                    <line x1="3" y1="3" x2="13" y2="13" />
+                    <line x1="13" y1="3" x2="3" y2="13" />
                   </svg>
                 </button>
               </div>
 
-              <div className="font-space-mono text-[0.48rem] uppercase tracking-widest text-aws-muted/40 mb-3">
+              <p className="font-space-mono text-[0.48rem] uppercase tracking-widest text-aws-muted/40 mb-3">
                 Auto · ILMU / NVIDIA / Gemini
-              </div>
+              </p>
 
-              <ExplainPanelContent state={nodeState} text={nodeText} error={nodeError} />
+              <ExplainPanelContent state={sidebarState} text={sidebarText} error={sidebarError} />
             </div>
           </div>
         )}
@@ -339,21 +322,6 @@ function DiagramPanel({ arch }: { arch: Architecture }) {
 
       {/* legend */}
       <Legend arch={arch} />
-
-      {/* whole-diagram explanation panel */}
-      {diagState !== 'idle' && (
-        <div className="border-t border-aws-border/60 px-5 py-4">
-          <div className="flex items-center justify-between mb-3">
-            <span className="font-space-mono text-[0.52rem] uppercase tracking-widest text-aws-muted/50">
-              Architecture Overview
-            </span>
-            <span className="font-space-mono text-[0.48rem] text-aws-muted/35">
-              Auto · ILMU / NVIDIA / Gemini
-            </span>
-          </div>
-          <ExplainPanelContent state={diagState} text={diagText} error={diagError} />
-        </div>
-      )}
     </div>
   )
 }
