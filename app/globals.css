@@ -116,3 +116,28 @@ body {
   .animate-sparkle-b,
   .animate-sparkle-c { animation: none; opacity: 1; }
 }
+
+/* ReactFlow controls — dark theme override */
+.react-flow__controls {
+  background: transparent !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  overflow: hidden;
+}
+.react-flow__controls-button {
+  background: rgba(255,255,255,0.04) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  color: rgba(255,255,255,0.45) !important;
+  width: 26px !important;
+  height: 26px !important;
+}
+.react-flow__controls-button:hover {
+  background: rgba(255,255,255,0.09) !important;
+  color: rgba(255,255,255,0.75) !important;
+}
+.react-flow__controls-button svg {
+  fill: currentColor !important;
+  max-width: 12px !important;
+  max-height: 12px !important;
+}

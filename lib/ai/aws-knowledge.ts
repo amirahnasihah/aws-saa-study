@@ -31,6 +31,14 @@ function pickBestHit(hits: McpSearchHit[]): AwsDocLink | null {
   return { url: chosen.url, title: chosen.title || 'AWS Documentation' }
 }
 
+function pickTopHits(hits: McpSearchHit[], limit: number): AwsDocLink[] {
+  return [...hits]
+    .sort((a, b) => a.rank_order - b.rank_order)
+    .filter((h) => h.url?.startsWith('https://docs.aws.amazon.com/'))
+    .slice(0, limit)
+    .map((h) => ({ url: h.url, title: h.title || 'AWS Documentation' }))
+}
+
 export async function searchAwsDocumentation(
   searchPhrase: string,
   topics: string[] = ['general'],
@@ -100,6 +108,55 @@ export function buildDocsSearchPhrase(parts: string[]): string {
 export const AWS_DOCS_FALLBACK: AwsDocLink = {
   url: DOCS_HOME,
   title: 'AWS Documentation',
+}
+
+export async function searchAwsMultipleLinks(
+  searchPhrase: string,
+  topics: string[] = ['general'],
+  limit = 3
+): Promise<AwsDocLink[]> {
+  const phrase = searchPhrase.trim()
+  if (!phrase) return []
+
+  let res: Response
+  try {
+    res = await fetch(AWS_KNOWLEDGE_MCP_URL, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        accept: 'application/json, text/event-stream',
+      },
+      body: JSON.stringify({
+        jsonrpc: '2.0',
+        id: 1,
+        method: 'tools/call',
+        params: {
+          name: SEARCH_TOOL,
+          arguments: { search_phrase: phrase, topics: topics.slice(0, 3), limit: limit + 2 },
+        },
+      }),
+    })
+  } catch {
+    return []
+  }
+
+  if (!res.ok) return []
+
+  interface McpRpc {
+    result?: { isError?: boolean; content?: Array<{ type: string; text: string }> }
+  }
+  let rpc: McpRpc
+  try {
+    rpc = (await res.json()) as McpRpc
+  } catch {
+    return []
+  }
+
+  if (rpc.result?.isError) return []
+  const textBlock = rpc.result?.content?.find((c) => c.type === 'text')?.text
+  if (!textBlock) return []
+
+  return pickTopHits(parseSearchHits(textBlock), limit)
 }
 
 export async function resolveAwsDocLink(

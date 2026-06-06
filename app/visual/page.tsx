@@ -98,7 +98,7 @@ interface ExplainSections {
   trafficFlow: string[]
   examRelevance: string
   examTraps: string[]
-  awsDoc?: { url: string; title: string }
+  awsDocs?: Array<{ url: string; title: string }>
 }
 
 type ExplainResult =
@@ -106,20 +106,6 @@ type ExplainResult =
   | { fallbackText: string }
   | { error: string }
 
-const SOURCES = [
-  {
-    title: 'AWS Certified Solutions Architect Associate (SAA-C03)',
-    url: 'https://rnsgxjgocgguyybyggem.supabase.co/storage/v1/object/public/saa-c03/AWS%20Certified%20Solutions%20Architect%20Associate%20SAA-C03.pdf',
-  },
-  {
-    title: 'AWS SAA-03 Solution Notes',
-    url: 'https://rnsgxjgocgguyybyggem.supabase.co/storage/v1/object/public/saa-c03/AWS%20SAA-03%20Solution.txt',
-  },
-  {
-    title: 'AWS Official Exam Guide',
-    url: 'https://rnsgxjgocgguyybyggem.supabase.co/storage/v1/object/public/saa-c03/AWS-Certified-Solutions-Architect-Associate_Exam-Guide.pdf',
-  },
-]
 
 async function fetchArchExplanation(
   arch: Architecture,
@@ -298,30 +284,15 @@ function NodeSidebar({
                     <span className="font-space-mono text-[0.5rem] font-bold uppercase tracking-widest text-aws-text/70">Sources</span>
                   </div>
                   <span className="font-space-mono text-[0.48rem] bg-white/6 border border-aws-border/40 rounded px-1.5 py-0.5 text-aws-muted/60">
-                    {'sections' in sidebarResult && sidebarResult.sections.awsDoc ? SOURCES.length + 1 : SOURCES.length}
+                    {'sections' in sidebarResult ? (sidebarResult.sections.awsDocs?.length ?? 0) : 0}
                   </span>
                 </button>
                 {sourcesOpen && (
                   <div className="mt-2 space-y-1">
-                    {/* dynamic AWS official doc first */}
-                    {'sections' in sidebarResult && sidebarResult.sections.awsDoc && (
-                      <a
-                        href={sidebarResult.sections.awsDoc.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-1.5 text-c1/70 hover:text-c1 transition-colors rounded-lg px-2 py-1.5 hover:bg-c1/5"
-                      >
-                        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.3" className="w-2.5 h-2.5 shrink-0">
-                          <path strokeLinecap="round" d="M2 10 10 2m0 0H5m5 0v5" />
-                        </svg>
-                        <span className="font-space-mono text-[0.6rem] truncate">{sidebarResult.sections.awsDoc.title}</span>
-                      </a>
-                    )}
-                    {/* static study PDFs */}
-                    {SOURCES.map((src, i) => (
+                    {'sections' in sidebarResult && sidebarResult.sections.awsDocs?.map((doc, i) => (
                       <a
                         key={i}
-                        href={src.url}
+                        href={doc.url}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-1.5 text-c1/70 hover:text-c1 transition-colors rounded-lg px-2 py-1.5 hover:bg-c1/5"
@@ -329,9 +300,12 @@ function NodeSidebar({
                         <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.3" className="w-2.5 h-2.5 shrink-0">
                           <path strokeLinecap="round" d="M2 10 10 2m0 0H5m5 0v5" />
                         </svg>
-                        <span className="font-space-mono text-[0.6rem] truncate">{src.title}</span>
+                        <span className="font-space-mono text-[0.6rem] truncate">{doc.title}</span>
                       </a>
                     ))}
+                    {'sections' in sidebarResult && !sidebarResult.sections.awsDocs?.length && (
+                      <p className="font-space-mono text-[0.55rem] text-aws-muted/30 px-2 py-1">No docs found</p>
+                    )}
                   </div>
                 )}
               </div>

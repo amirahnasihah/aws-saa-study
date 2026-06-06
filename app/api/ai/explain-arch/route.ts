@@ -1,6 +1,6 @@
 import { completeJson } from '@/lib/ai/complete-json'
 import { parseAIJson } from '@/lib/ai/json'
-import { resolveAwsDocLink, buildDocsSearchPhrase } from '@/lib/ai/aws-knowledge'
+import { searchAwsMultipleLinks, buildDocsSearchPhrase } from '@/lib/ai/aws-knowledge'
 
 export const runtime = 'edge'
 
@@ -29,7 +29,7 @@ export interface ExplainSections {
   trafficFlow: string[]
   examRelevance: string
   examTraps: string[]
-  awsDoc?: { url: string; title: string }
+  awsDocs?: Array<{ url: string; title: string }>
 }
 
 interface ExplainArchRequest {
@@ -73,9 +73,9 @@ export async function POST(request: Request): Promise<Response> {
     'SAA-C03',
   ])
 
-  const [result, awsDoc] = await Promise.all([
+  const [result, awsDocs] = await Promise.all([
     completeJson('free', '', system, userPrompt, 500),
-    resolveAwsDocLink(searchTerm, ['general', 'reference_documentation']),
+    searchAwsMultipleLinks(searchTerm, ['general', 'reference_documentation'], 3),
   ])
 
   if ('error' in result) {
@@ -84,8 +84,8 @@ export async function POST(request: Request): Promise<Response> {
 
   const parsed = parseAIJson<ExplainSections>(result.text)
   if (parsed?.whatItDoes) {
-    return Response.json({ ...parsed, awsDoc })
+    return Response.json({ ...parsed, awsDocs })
   }
 
-  return Response.json({ fallbackText: result.text, awsDoc })
+  return Response.json({ fallbackText: result.text, awsDocs })
 }
