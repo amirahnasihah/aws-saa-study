@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { Space_Mono, Inter } from 'next/font/google'
+import AIUnloadGuard from '@/components/AIUnloadGuard'
 import { BookmarksProvider } from '@/components/BookmarksContext'
 import { SITE_URL } from '@/data/siteLinks'
 import './globals.css'
@@ -69,7 +70,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${spaceMono.variable}`}>
       <body>
-        <BookmarksProvider>{children}</BookmarksProvider>
+        <BookmarksProvider>
+          <AIUnloadGuard />
+          {children}
+        </BookmarksProvider>
       </body>
     </html>
   )
