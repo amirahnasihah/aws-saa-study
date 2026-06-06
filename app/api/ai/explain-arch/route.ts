@@ -1,5 +1,6 @@
 import { completeJson } from '@/lib/ai/complete-json'
 import { parseAIJson } from '@/lib/ai/json'
+import { resolveAwsDocLink, buildDocsSearchPhrase } from '@/lib/ai/aws-knowledge'
 
 export const runtime = 'edge'
 
@@ -28,6 +29,7 @@ export interface ExplainSections {
   trafficFlow: string[]
   examRelevance: string
   examTraps: string[]
+  awsDoc?: { url: string; title: string }
 }
 
 interface ExplainArchRequest {
@@ -64,7 +66,17 @@ export async function POST(request: Request): Promise<Response> {
     .filter(Boolean)
     .join('\n')
 
-  const result = await completeJson('free', '', system, userPrompt, 500)
+  // run AI explanation + AWS docs search in parallel
+  const searchTerm = buildDocsSearchPhrase([
+    body.focusNode ?? body.title,
+    body.domain,
+    'SAA-C03',
+  ])
+
+  const [result, awsDoc] = await Promise.all([
+    completeJson('free', '', system, userPrompt, 500),
+    resolveAwsDocLink(searchTerm, ['general', 'reference_documentation']),
+  ])
 
   if ('error' in result) {
     return Response.json({ error: result.error }, { status: result.status })
@@ -72,9 +84,8 @@ export async function POST(request: Request): Promise<Response> {
 
   const parsed = parseAIJson<ExplainSections>(result.text)
   if (parsed?.whatItDoes) {
-    return Response.json(parsed)
+    return Response.json({ ...parsed, awsDoc })
   }
 
-  // fallback: return raw text if JSON parse fails
-  return Response.json({ fallbackText: result.text })
+  return Response.json({ fallbackText: result.text, awsDoc })
 }

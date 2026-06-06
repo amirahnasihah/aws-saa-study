@@ -25,8 +25,8 @@ function parseSearchHits(text: string): McpSearchHit[] {
 
 function pickBestHit(hits: McpSearchHit[]): AwsDocLink | null {
   const sorted = [...hits].sort((a, b) => a.rank_order - b.rank_order)
-  const fromDocs = sorted.find((h) => h.url.startsWith('https://docs.aws.amazon.com/'))
-  const chosen = fromDocs ?? sorted.find((h) => h.url.startsWith('https://'))
+  const fromDocs = sorted.find((h) => h.url?.startsWith('https://docs.aws.amazon.com/'))
+  const chosen = fromDocs ?? sorted.find((h) => h.url?.startsWith('https://'))
   if (!chosen?.url) return null
   return { url: chosen.url, title: chosen.title || 'AWS Documentation' }
 }
