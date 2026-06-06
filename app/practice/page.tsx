@@ -3,6 +3,8 @@
 import { useState, useCallback, useEffect } from 'react'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
+import KeywordHighlightedText from '@/components/practice/KeywordHighlightedText'
+import PracticeQuestionHint from '@/components/practice/PracticeQuestionHint'
 import { practiceQuestions, PracticeQuestion } from '@/data/practiceQuestions'
 
 const domainColors: Record<string, string> = {
@@ -43,6 +45,16 @@ function shuffleArray<T>(arr: T[]): T[] {
     ;[a[i], a[j]] = [a[j], a[i]]
   }
   return a
+}
+
+function useQuestionHintHighlight(questionId: string) {
+  const [highlight, setHighlight] = useState<string[]>([])
+  const [prevId, setPrevId] = useState(questionId)
+  if (questionId !== prevId) {
+    setPrevId(questionId)
+    setHighlight([])
+  }
+  return [highlight, setHighlight] as const
 }
 
 export default function PracticePage() {
@@ -338,6 +350,7 @@ function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
   const [showPicker, setShowPicker] = useState(false)
   const total = questions.length
   const q = questions[index]
+  const [hintHighlight, setHintHighlight] = useQuestionHintHighlight(q.id)
 
   return (
     <div>
@@ -382,8 +395,27 @@ function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
               )}
             </figure>
           )}
-          <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
+          {hintHighlight.length > 0 ? (
+            <KeywordHighlightedText
+              text={q.scenario}
+              studyKeywords={hintHighlight}
+              bankKeywords={q.keywords}
+              className="text-[0.92rem] text-aws-text leading-relaxed"
+            />
+          ) : (
+            <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
+          )}
         </div>
+
+        <PracticeQuestionHint
+          questionId={q.id}
+          question={q.scenario}
+          domainLabel={q.domainLabel}
+          keywords={q.keywords}
+          options={q.options}
+          reviewMode
+          onHintActive={(_active, terms) => setHintHighlight(terms)}
+        />
 
         <div className="px-5 pb-5 space-y-2.5">
           {q.options.map((opt) => {
@@ -477,6 +509,7 @@ function QuestionCard({
   onJump: (i: number) => void
 }) {
   const [showPicker, setShowPicker] = useState(false)
+  const [hintHighlight, setHintHighlight] = useQuestionHintHighlight(q.id)
 
   return (
     <div>
@@ -532,8 +565,28 @@ function QuestionCard({
               )}
             </figure>
           )}
-          <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
+          {hintHighlight.length > 0 ? (
+            <KeywordHighlightedText
+              text={q.scenario}
+              studyKeywords={hintHighlight}
+              bankKeywords={q.keywords}
+              className="text-[0.92rem] text-aws-text leading-relaxed"
+            />
+          ) : (
+            <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
+          )}
         </div>
+
+        {quizState === 'question' && (
+          <PracticeQuestionHint
+            questionId={q.id}
+            question={q.scenario}
+            domainLabel={q.domainLabel}
+            keywords={q.keywords}
+            options={q.options}
+            onHintActive={(_active, terms) => setHintHighlight(terms)}
+          />
+        )}
 
         {/* options */}
         <div className="px-5 pb-5 space-y-2.5">

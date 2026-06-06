@@ -56,3 +56,21 @@ scripts/aws-reference-report.json
 
 # local mcp config
 .mcp.json
+.cursor/mcp.json
+
+# impeccable runtime & live mode (commit skills/, PRODUCT.md, DESIGN.md)
+.impeccable/hook.cache.json
+.impeccable/live/server.json
+.impeccable/live/sessions/
+.impeccable/live/previews/
+.impeccable/live/annotations/
+.impeccable/live/cache/
+.impeccable/live/manual-edit-*
+.impeccable/live/pending-manual-edits.json
+.impeccable/live/deferred-svelte-component-accepts.json
+.impeccable/critique/
+.impeccable-live/
+.impeccable-live.json
+node_modules/.impeccable-live/
+src/lib/impeccable/ImpeccableLiveRoot.svelte
+src/lib/impeccable/__runtime.js

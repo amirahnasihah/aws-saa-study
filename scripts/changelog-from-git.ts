@@ -146,7 +146,7 @@ const formatChangeLine = (commit: GitCommit) => {
 }
 
 const formatNewEntry = (date: string, commits: GitCommit[]): string =>
-  [`  {`, `    date: '${date}',`, `    changes: [`, ...commits.map(formatChangeLine), `    ],`, `  },`].join(
+  [`  {`, `    id: '${date}',`, `    date: '${date}',`, `    changes: [`, ...commits.map(formatChangeLine), `    ],`, `  },`].join(
     '\n',
   )
 
