@@ -10,5 +10,9 @@
       "database_name": "aws-saa-questions",
       "database_id": "fcd5855c-4ff3-4c38-a1c0-3e5e94d1a5ba"
     }
-  ]
+  ],
+  "vars": {
+    "AI_GATEWAY_BASE_URL": "",
+    "GROQ_API_KEY": ""
+  }
 }
