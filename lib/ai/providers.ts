@@ -1,6 +1,6 @@
 export type ByokProvider = 'anthropic' | 'ollama' | 'openrouter'
 
-export type AIProvider = 'groq' | 'gemini' | 'ilmu' | 'nvidia' | ByokProvider
+export type AIProvider = 'free' | 'groq' | 'gemini' | 'ilmu' | 'nvidia' | ByokProvider
 
 export const PROVIDER_STORAGE_KEY = 'aws_study_ai_provider'
 export const KEY_STORAGE_KEY = 'aws_study_ai_key'
@@ -64,6 +64,7 @@ export function isByokProvider(value: string): value is ByokProvider {
 
 export function isAIProvider(value: string): value is AIProvider {
   return (
+    value === 'free' ||
     value === 'groq' ||
     value === 'gemini' ||
     value === 'ilmu' ||
