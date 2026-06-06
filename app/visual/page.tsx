@@ -93,11 +93,23 @@ export default function VisualPage() {
 type NodeData = { label: string; sub?: string; icon?: string; color: ArchColor }
 type ExplainState = 'idle' | 'loading' | 'done' | 'error'
 
+interface ExplainSections {
+  whatItDoes: string
+  trafficFlow: string[]
+  examRelevance: string
+  examTraps: string[]
+}
+
+type ExplainResult =
+  | { sections: ExplainSections }
+  | { fallbackText: string }
+  | { error: string }
+
 async function fetchArchExplanation(
   arch: Architecture,
   domain: string,
   focusNode?: string
-): Promise<{ text?: string; error?: string }> {
+): Promise<ExplainResult> {
   const nodeLabels = [...new Set(arch.nodes.map((n) => (n.data as NodeData).label))]
   const res = await fetch('/api/ai/explain-arch', {
     method: 'POST',
@@ -111,40 +123,110 @@ async function fetchArchExplanation(
       ...(focusNode ? { focusNode } : {}),
     }),
   })
-  return (await res.json()) as { text?: string; error?: string }
+  const data = (await res.json()) as Record<string, unknown>
+  if (data.error) return { error: data.error as string }
+  if (data.whatItDoes) return { sections: data as unknown as ExplainSections }
+  return { fallbackText: (data.fallbackText as string) ?? '' }
 }
 
-function ExplainPanelContent({ state, text, error }: { state: ExplainState; text: string; error: string }) {
+function SectionLabel({ icon, label }: { icon: string; label: string }) {
+  return (
+    <div className="flex items-center gap-1.5 mb-2">
+      <span className="text-aws-muted/50 text-[0.62rem]">{icon}</span>
+      <span className="font-space-mono text-[0.48rem] uppercase tracking-widest text-aws-muted/50">{label}</span>
+    </div>
+  )
+}
+
+function ExplainPanelContent({ state, result }: { state: ExplainState; result: ExplainResult | null }) {
   if (state === 'loading') {
     return (
-      <div className="space-y-2 animate-pulse">
-        <div className="h-3 bg-white/6 rounded-md w-full" />
-        <div className="h-3 bg-white/6 rounded-md w-11/12" />
-        <div className="h-3 bg-white/6 rounded-md w-4/5" />
-        <div className="h-3 bg-white/6 rounded-md w-full mt-3" />
-        <div className="h-3 bg-white/6 rounded-md w-10/12" />
-        <div className="h-3 bg-white/6 rounded-md w-5/6" />
-        <div className="h-3 bg-white/6 rounded-md w-3/4 mt-3" />
-        <div className="h-3 bg-white/6 rounded-md w-full" />
-        <div className="h-3 bg-white/6 rounded-md w-9/12" />
+      <div className="space-y-4">
+        <div className="space-y-1.5 animate-pulse">
+          <div className="h-2 bg-white/6 rounded w-2/5 mb-3" />
+          <div className="h-2.5 bg-white/6 rounded w-full" />
+          <div className="h-2.5 bg-white/6 rounded w-11/12" />
+          <div className="h-2.5 bg-white/6 rounded w-4/5" />
+        </div>
+        <div className="space-y-1.5 animate-pulse">
+          <div className="h-2 bg-white/6 rounded w-1/3 mb-3" />
+          <div className="h-2.5 bg-white/6 rounded w-full" />
+          <div className="h-2.5 bg-white/6 rounded w-10/12" />
+          <div className="h-2.5 bg-white/6 rounded w-3/4" />
+        </div>
+        <div className="space-y-1.5 animate-pulse">
+          <div className="h-2 bg-white/6 rounded w-2/5 mb-3" />
+          <div className="h-8 bg-white/4 rounded-lg w-full" />
+        </div>
       </div>
     )
   }
-  if (state === 'done') {
+
+  if (state === 'error' || !result) {
+    const msg = result && 'error' in result ? result.error : 'Something went wrong.'
+    return <p className="font-space-mono text-[0.62rem] text-red-400/80">{msg}</p>
+  }
+
+  if ('fallbackText' in result) {
     return (
-      <div className="space-y-2.5">
-        {text.trim().split(/\n\n+/).map((para, i) => (
-          <p key={i} className="text-aws-text text-[0.72rem] leading-relaxed">
-            {para.trim()}
-          </p>
+      <div className="space-y-2">
+        {result.fallbackText.trim().split(/\n\n+/).map((p, i) => (
+          <p key={i} className="text-aws-text text-[0.7rem] leading-relaxed">{p.trim()}</p>
         ))}
       </div>
     )
   }
-  if (state === 'error') {
-    return <p className="font-space-mono text-[0.65rem] text-red-400/80">{error}</p>
-  }
-  return null
+
+  if (!('sections' in result)) return null
+  const { whatItDoes, trafficFlow, examRelevance, examTraps } = result.sections
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <SectionLabel icon="?" label="What problem does this solve?" />
+        <p className="text-aws-muted text-[0.7rem] leading-relaxed">{whatItDoes}</p>
+      </div>
+
+      {trafficFlow?.length > 0 && (
+        <div>
+          <SectionLabel icon="→" label="How traffic flows" />
+          <div className="space-y-1.5">
+            {trafficFlow.map((step: string, i: number) => (
+              <div key={i} className="flex items-start gap-2">
+                <span className="font-space-mono text-[0.5rem] font-bold text-amber-400 bg-amber-400/10 rounded px-1 py-0.5 shrink-0 mt-0.5 min-w-[1.2rem] text-center">
+                  {i + 1}
+                </span>
+                <span className="text-aws-muted text-[0.68rem] leading-snug">{step}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {examRelevance && (
+        <div>
+          <SectionLabel icon="◈" label="SAA-C03 Exam Relevance" />
+          <div className="bg-white/3 border border-aws-border/40 rounded-lg px-3 py-2.5">
+            <p className="text-aws-text text-[0.7rem] leading-relaxed">{examRelevance}</p>
+          </div>
+        </div>
+      )}
+
+      {examTraps?.length > 0 && (
+        <div>
+          <SectionLabel icon="⚠" label="Common exam traps" />
+          <div className="space-y-1.5">
+            {examTraps.map((trap: string, i: number) => (
+              <div key={i} className="flex items-start gap-2 bg-amber-400/5 border border-amber-400/12 rounded-lg px-2.5 py-2">
+                <span className="text-amber-400/80 text-[0.58rem] shrink-0 mt-0.5">⚠</span>
+                <span className="text-aws-muted text-[0.68rem] leading-snug">{trap}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  )
 }
 
 function DiagramPanel({ arch }: { arch: Architecture }) {
@@ -155,8 +237,7 @@ function DiagramPanel({ arch }: { arch: Architecture }) {
   const [sidebarMode, setSidebarMode] = useState<'none' | 'node' | 'diagram'>('none')
   const [sidebarNode, setSidebarNode] = useState<NodeData | null>(null)
   const [sidebarState, setSidebarState] = useState<ExplainState>('idle')
-  const [sidebarText, setSidebarText] = useState('')
-  const [sidebarError, setSidebarError] = useState('')
+  const [sidebarResult, setSidebarResult] = useState<ExplainResult | null>(null)
 
   const domainLabel = domainLabels[arch.domain] ?? arch.domain
 
@@ -164,19 +245,22 @@ function DiagramPanel({ arch }: { arch: Architecture }) {
     setSidebarMode(mode)
     setSidebarNode(node)
     setSidebarState('loading')
-    setSidebarText('')
-    setSidebarError('')
+    setSidebarResult(null)
     fetchArchExplanation(arch, domainLabel, focusNode)
       .then((result) => {
-        if (result.error) { setSidebarState('error'); setSidebarError(result.error) }
-        else { setSidebarState('done'); setSidebarText(result.text ?? '') }
+        if ('error' in result) { setSidebarState('error') }
+        else { setSidebarState('done') }
+        setSidebarResult(result)
       })
-      .catch(() => { setSidebarState('error'); setSidebarError('Network error. Try again.') })
+      .catch(() => {
+        setSidebarState('error')
+        setSidebarResult({ error: 'Network error. Try again.' })
+      })
   }
 
   function closeSidebar() {
     setSidebarMode('none'); setSidebarNode(null)
-    setSidebarState('idle'); setSidebarText(''); setSidebarError('')
+    setSidebarState('idle'); setSidebarResult(null)
   }
 
   function handleDiagramExplain() {
@@ -314,7 +398,7 @@ function DiagramPanel({ arch }: { arch: Architecture }) {
                 Auto · ILMU / NVIDIA / Gemini
               </p>
 
-              <ExplainPanelContent state={sidebarState} text={sidebarText} error={sidebarError} />
+              <ExplainPanelContent state={sidebarState} result={sidebarResult} />
             </div>
           </div>
         )}

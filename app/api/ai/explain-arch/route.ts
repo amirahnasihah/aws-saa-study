@@ -1,26 +1,34 @@
 import { completeJson } from '@/lib/ai/complete-json'
+import { parseAIJson } from '@/lib/ai/json'
 
 export const runtime = 'edge'
 
-const SYSTEM_DIAGRAM = `You are an AWS Solutions Architect exam tutor. Explain this AWS architecture diagram to a student preparing for the SAA-C03 certification.
+const SYSTEM_NODE = `You are an AWS Solutions Architect exam tutor. Analyze a specific AWS service as it appears in an architecture diagram.
 
-Write exactly three paragraphs, each separated by a blank line:
+Respond ONLY with valid JSON — no markdown, no code fences, no explanation outside the JSON:
+{
+  "whatItDoes": "2-3 sentences: what this service is and why it is used specifically in this architecture",
+  "trafficFlow": ["short step 1", "short step 2", "short step 3", "short step 4"],
+  "examRelevance": "1-2 sentences on why this service matters for SAA-C03 and which domain it falls under",
+  "examTraps": ["short exam trap or common mistake 1", "short exam trap or common mistake 2", "short exam trap 3"]
+}`
 
-Paragraph 1: What this architecture does and what problem it solves. 2-3 sentences.
-Paragraph 2: How the key components work together. Walk through the data or traffic flow, naming the specific AWS services involved.
-Paragraph 3: When to use this pattern, its main trade-offs, and which SAA-C03 domain (security, resilience, performance, or cost-optimization) it demonstrates.
+const SYSTEM_DIAGRAM = `You are an AWS Solutions Architect exam tutor. Analyze an AWS architecture pattern.
 
-Write in direct, clear prose. No markdown. No bullet points. No headers. Keep each paragraph to 3-4 sentences.`
+Respond ONLY with valid JSON — no markdown, no code fences, no explanation outside the JSON:
+{
+  "whatItDoes": "2-3 sentences: what this architecture does and what problem it solves",
+  "trafficFlow": ["short step 1 of the data flow", "short step 2", "short step 3", "short step 4"],
+  "examRelevance": "1-2 sentences on what SAA-C03 domain this demonstrates and why it appears on the exam",
+  "examTraps": ["short exam trap or common mistake 1", "short exam trap 2", "short exam trap 3"]
+}`
 
-const SYSTEM_NODE = `You are an AWS Solutions Architect exam tutor. Explain a specific AWS service as it appears in an architecture diagram, to a student preparing for the SAA-C03 certification.
-
-Write exactly three paragraphs, each separated by a blank line:
-
-Paragraph 1: What this service is and why it is used in this specific architecture. What problem does it solve here.
-Paragraph 2: How it connects to other services in this pattern. What sends data to it, what it sends downstream, and how traffic or requests flow through it.
-Paragraph 3: SAA-C03 exam relevance: typical exam scenarios that test this service, common exam traps, and which domain (security, resilience, performance, or cost-optimization) it usually appears under.
-
-Write in direct, clear prose. No markdown. No bullet points. No headers. Keep each paragraph to 3-4 sentences.`
+export interface ExplainSections {
+  whatItDoes: string
+  trafficFlow: string[]
+  examRelevance: string
+  examTraps: string[]
+}
 
 interface ExplainArchRequest {
   title: string
@@ -51,16 +59,22 @@ export async function POST(request: Request): Promise<Response> {
     body.tags.length ? `Tags: ${body.tags.join(', ')}` : '',
     `Description: ${body.description}`,
     body.nodeLabels.length ? `All components: ${body.nodeLabels.join(', ')}` : '',
-    body.focusNode ? `Focus on: ${body.focusNode}` : '',
+    body.focusNode ? `Focus service: ${body.focusNode}` : '',
   ]
     .filter(Boolean)
     .join('\n')
 
-  const result = await completeJson('free', '', system, userPrompt, 520)
+  const result = await completeJson('free', '', system, userPrompt, 500)
 
   if ('error' in result) {
     return Response.json({ error: result.error }, { status: result.status })
   }
 
-  return Response.json({ text: result.text })
+  const parsed = parseAIJson<ExplainSections>(result.text)
+  if (parsed?.whatItDoes) {
+    return Response.json(parsed)
+  }
+
+  // fallback: return raw text if JSON parse fails
+  return Response.json({ fallbackText: result.text })
 }
