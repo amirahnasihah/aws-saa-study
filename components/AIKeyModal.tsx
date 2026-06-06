@@ -14,7 +14,7 @@ interface AIKeyModalProps {
   onDismiss: () => void
 }
 
-const PROVIDER_ORDER: ByokProvider[] = ['anthropic', 'ilmu', 'ollama']
+const PROVIDER_ORDER: ByokProvider[] = ['openrouter', 'ollama']
 
 export default function AIKeyModal({
   provider,
@@ -47,7 +47,7 @@ export default function AIKeyModal({
           Stored only in your browser. Sent only with your AI requests.
         </p>
 
-        <div className="flex gap-1.5 p-1 rounded-xl bg-white/5 border border-aws-border/60 mb-4">
+        <div className="grid grid-cols-2 gap-1.5 p-1 rounded-xl bg-white/5 border border-aws-border/60 mb-4">
           {PROVIDER_ORDER.map((id) => {
             const item = BYOK_PROVIDER_META[id]
             const active = provider === id
@@ -59,7 +59,7 @@ export default function AIKeyModal({
                   onProviderChange(id)
                   setError(null)
                 }}
-                className={`flex-1 py-2 rounded-lg font-space-mono text-[0.62rem] font-bold transition-all duration-150 ${
+                className={`py-2 rounded-lg font-space-mono text-[0.62rem] font-bold transition-all duration-150 ${
                   active
                     ? 'bg-c1/15 border border-c1/40 text-c1'
                     : 'text-aws-muted hover:text-aws-text border border-transparent'
@@ -72,11 +72,7 @@ export default function AIKeyModal({
         </div>
 
         <p className="font-space-mono text-[0.65rem] text-aws-muted mb-3">
-          {provider === 'ilmu'
-            ? 'ILMU uses Malaysian-hosted models (e.g. nemo-super). Get a key at'
-            : provider === 'ollama'
-              ? 'Ollama Cloud keys run models on ollama.com. Create one at'
-              : 'Anthropic Claude keys start with sk-ant-. Get one at'}{' '}
+          {meta.hint}{' '}
           <a
             href={meta.consoleUrl}
             target="_blank"
@@ -118,7 +114,7 @@ export default function AIKeyModal({
             disabled={!input.trim()}
             className="flex-1 py-2 rounded-xl font-space-mono text-xs font-bold bg-c1/15 border border-c1/40 text-c1 hover:bg-c1/25 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed"
           >
-            Save & Continue
+            Save & use
           </button>
         </div>
       </div>

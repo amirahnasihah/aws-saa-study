@@ -15,6 +15,13 @@ interface AIChatViewProps {
 
 type UIState = 'idle' | 'loading' | 'error'
 
+const EXAMPLE_PROMPTS = [
+  'Difference between SQS and SNS?',
+  'Aurora vs RDS — when to use which?',
+  'How does S3 cross-region replication work?',
+  'Explain EC2 placement groups',
+]
+
 export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
   const { messages, setMessages, clearHistory } = useAIChatHistory()
   const [input, setInput] = useState('')
@@ -26,13 +33,13 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, uiState])
 
-  const sendMessage = async () => {
-    const text = input.trim()
-    if (!text || uiState === 'loading') return
+  const sendMessage = async (text?: string) => {
+    const content = (text ?? input).trim()
+    if (!content || uiState === 'loading') return
     if (needsByokKey(provider) && !byokKey) return
 
-    const userMsg = { role: 'user' as const, content: text }
-    const historyForApi = messages.map(({ role, content }) => ({ role, content }))
+    const userMsg = { role: 'user' as const, content }
+    const historyForApi = messages.map(({ role, content: c }) => ({ role, content: c }))
 
     setMessages((prev) => [...prev, userMsg])
     setInput('')
@@ -43,7 +50,7 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: buildAIRequestHeaders(provider, byokKey),
-        body: JSON.stringify({ message: text, history: historyForApi }),
+        body: JSON.stringify({ message: content, history: historyForApi }),
       })
 
       if (!res.ok && !res.headers.get('content-type')?.includes('application/json')) {
@@ -79,43 +86,53 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
   const needsKey = needsByokKey(provider) && !byokKey
 
   return (
-    <div className="flex flex-col h-full min-h-[500px]">
-      {messages.length > 0 && (
-        <div className="flex justify-end mb-2">
-          <button
-            type="button"
-            onClick={clearHistory}
-            className="font-space-mono text-[0.55rem] text-aws-muted/60 hover:text-aws-muted transition-colors"
-          >
-            Clear chat history
-          </button>
-        </div>
-      )}
-
-      <div className="flex-1 overflow-y-auto space-y-6 pb-4">
+    <div className="flex flex-col h-full">
+      {/* Message list */}
+      <div className="flex-1 overflow-y-auto space-y-4 pb-3">
         {messages.length === 0 && (
-          <div className="text-center py-16">
-            <p className="font-space-mono text-[0.7rem] text-aws-muted/60 uppercase tracking-widest mb-2">
-              AWS Study Assistant
-            </p>
-            <p className="font-space-mono text-[0.62rem] text-aws-muted/40">
-              Ask any AWS question — services, architecture, exam topics
-            </p>
-            <p className="font-space-mono text-[0.58rem] text-aws-muted/30 mt-2">
-              Chat stays for this tab session (refresh OK) · cleared when you close the browser
-            </p>
+          <div className="flex flex-col items-center justify-center h-full gap-5">
+            <div className="text-center space-y-1">
+              <p className="font-space-mono text-[0.7rem] font-bold text-aws-text/60">
+                Ask AI
+              </p>
+              <p className="font-space-mono text-[0.58rem] text-aws-muted/50">
+                AWS services, architecture patterns, exam topics
+              </p>
+            </div>
+
+            {!needsKey && (
+              <div className="flex flex-wrap gap-1.5 justify-center max-w-sm">
+                {EXAMPLE_PROMPTS.map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => void sendMessage(p)}
+                    className="font-space-mono text-[0.56rem] text-aws-muted border border-aws-border/60 rounded-full px-3 py-1.5 hover:border-c1/40 hover:text-aws-text hover:bg-c1/5 transition-all duration-150"
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {needsKey && (
+              <p className="font-space-mono text-[0.58rem] text-amber-400/70 text-center max-w-xs">
+                Add your API key to start chatting with{' '}
+                {isByokProvider(provider) ? byokProviderLabel(provider) : 'this provider'}.
+              </p>
+            )}
           </div>
         )}
 
         {messages.map((msg, i) => (
           <div key={i} className={msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
             {msg.role === 'user' ? (
-              <div className="max-w-[80%] px-4 py-3 rounded-2xl bg-c1/10 border border-c1/20 font-space-mono text-[0.8rem] text-aws-text">
+              <div className="max-w-[78%] px-3.5 py-2.5 rounded-2xl rounded-tr-sm bg-c1/10 border border-c1/15 font-space-mono text-[0.78rem] text-aws-text leading-relaxed">
                 {msg.content}
               </div>
             ) : (
-              <div className="max-w-[92%] space-y-3">
-                <div className="px-4 py-3 rounded-2xl bg-aws-card border border-aws-border text-[0.85rem] text-aws-text leading-[1.75]">
+              <div className="max-w-[92%] space-y-2">
+                <div className="px-3.5 py-2.5 rounded-2xl rounded-tl-sm bg-aws-card border border-aws-border/60 text-[0.82rem] text-aws-text leading-[1.8]">
                   {msg.content}
                 </div>
                 {msg.awsDocsUrl && msg.youtubeQuery && (
@@ -132,28 +149,30 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
 
         {uiState === 'loading' && (
           <div className="flex justify-start">
-            <div className="flex items-center gap-2 px-4 py-3 rounded-2xl bg-aws-card border border-aws-border">
-              <span className="inline-block w-2.5 h-2.5 border border-c1 border-t-transparent rounded-full animate-spin" />
-              <span className="font-space-mono text-[0.62rem] text-aws-muted">Thinking…</span>
+            <div className="flex items-center gap-2 px-3.5 py-2.5 rounded-2xl rounded-tl-sm bg-aws-card border border-aws-border/60">
+              <span className="inline-block w-2.5 h-2.5 border border-c1/60 border-t-transparent rounded-full animate-spin" />
+              <span className="font-space-mono text-[0.6rem] text-aws-muted/60">Thinking…</span>
             </div>
           </div>
         )}
 
         {uiState === 'error' && errorMsg && (
-          <p className="font-space-mono text-[0.62rem] text-red-400 pl-1">{errorMsg}</p>
+          <p className="font-space-mono text-[0.6rem] text-red-400/80 pl-1">{errorMsg}</p>
         )}
 
         <div ref={bottomRef} />
       </div>
 
-      {needsKey && (
-        <p className="font-space-mono text-[0.62rem] text-amber-400 mb-2">
-          Add your API key above to chat with{' '}
+      {/* BYOK key warning — above input when messages exist */}
+      {needsKey && messages.length > 0 && (
+        <p className="font-space-mono text-[0.58rem] text-amber-400/70 mb-2 shrink-0">
+          Add your API key to continue chatting with{' '}
           {isByokProvider(provider) ? byokProviderLabel(provider) : 'this provider'}.
         </p>
       )}
 
-      <div className="flex gap-2 pt-4 border-t border-aws-border/40">
+      {/* Input row */}
+      <div className="flex gap-1.5 pt-3 border-t border-aws-border/30 shrink-0">
         <input
           type="text"
           value={input}
@@ -166,16 +185,34 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
           }}
           placeholder="Ask an AWS question…"
           disabled={uiState === 'loading' || needsKey}
-          className="flex-1 px-4 py-2.5 rounded-xl bg-aws-card border border-aws-border text-aws-text text-[0.82rem] font-space-mono placeholder:text-aws-muted/40 focus:outline-none focus:border-c1/50 transition-colors disabled:opacity-60"
+          className="flex-1 px-4 py-2.5 rounded-xl bg-aws-card border border-aws-border/60 text-aws-text text-base sm:text-[0.8rem] font-space-mono placeholder:text-aws-muted/35 focus:outline-none focus:border-c1/40 transition-colors disabled:opacity-50"
         />
+
+        {/* Clear history — trash icon, only when there are messages */}
+        {messages.length > 0 && (
+          <button
+            type="button"
+            onClick={clearHistory}
+            title="Clear chat history"
+            aria-label="Clear chat history"
+            className="w-10 h-10 flex items-center justify-center rounded-xl border border-aws-border/40 text-aws-muted/35 hover:text-aws-muted hover:border-aws-border/70 transition-all duration-150 shrink-0"
+          >
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M2 3.5h9M5 3.5V2.5a.5.5 0 01.5-.5h2a.5.5 0 01.5.5v1M10 3.5l-.6 7.5H3.6L3 3.5" />
+              <path d="M5.5 6v3M7.5 6v3" />
+            </svg>
+          </button>
+        )}
+
+        {/* Send */}
         <button
           type="button"
           onClick={() => void sendMessage()}
           disabled={uiState === 'loading' || !input.trim() || needsKey}
-          className="inline-flex items-center justify-center w-10 h-10 rounded-xl border border-c1/30 text-c1 bg-c1/8 hover:bg-c1/15 transition-all duration-150 disabled:opacity-50 disabled:cursor-not-allowed shrink-0"
           aria-label="Send"
+          className="w-10 h-10 flex items-center justify-center rounded-xl border border-c1/25 text-c1 bg-c1/8 hover:bg-c1/15 hover:border-c1/40 transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed shrink-0"
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M13 1L1 7l5 2M13 1l-4 12-3-5" />
           </svg>
         </button>

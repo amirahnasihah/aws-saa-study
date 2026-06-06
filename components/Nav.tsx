@@ -6,7 +6,7 @@ import { navDomains } from '@/data/awsServices'
 import FloatingSearch from './FloatingSearch'
 
 interface NavProps {
-  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc'
+  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc' | 'ai'
 }
 
 export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
@@ -29,6 +29,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
         <PageLink href="/scenarios" label="Scenarios" active={activePage === 'scenarios'} />
         <PageLink href="/visual" label="Visual" active={activePage === 'visual'} />
         <PageLink href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
+        <AskAINavLink active={activePage === 'ai'} variant="icon" />
 
         <span className="text-aws-border text-sm shrink-0">·</span>
 
@@ -53,7 +54,8 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
         <Link href="/about" className="font-space-mono text-[0.7rem] font-bold text-c1 hover:text-aws-text transition-colors">
           AWS SAA-C03
         </Link>
-        <div>
+        <div className="flex items-center gap-1">
+          <AskAINavLink active={activePage === 'ai'} variant="pill" />
           <button onClick={() => setMenuOpen(true)} className="text-aws-muted hover:text-aws-text transition-colors p-2" aria-label="Open menu">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
               <rect y="3" width="20" height="2" rx="1" />
@@ -91,6 +93,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                 { href: '/scenarios', label: 'Scenarios',   icon: '🏗️', active: activePage === 'scenarios' },
                 { href: '/visual',    label: 'Visual',      icon: '🗺️', active: activePage === 'visual' },
                 { href: '/vpc',       label: 'VPC Guide',   icon: '🏘️', active: activePage === 'vpc' },
+                { href: '/ai',        label: 'Ask AI',      icon: '✦',  active: activePage === 'ai' },
               ].map((p) => (
                 <Link
                   key={p.href}
@@ -102,7 +105,11 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                       : 'text-aws-muted hover:bg-white/4 hover:text-aws-text'
                   }`}
                 >
-                  <span className="text-base leading-none">{p.icon}</span>
+                  {p.href === '/ai' ? (
+                    <AskAISparkleIcon size="drawer" />
+                  ) : (
+                    <span className="text-base leading-none">{p.icon}</span>
+                  )}
                   <span className="font-space-mono text-[0.68rem] uppercase tracking-widest">{p.label}</span>
                   {p.active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-c1" />}
                 </Link>
@@ -131,6 +138,61 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
 
       <FloatingSearch />
     </>
+  )
+}
+
+function AskAISparkleIcon({ size }: { size: 'icon' | 'pill' | 'drawer' }) {
+  const box =
+    size === 'icon' ? 'w-4 h-4' : size === 'pill' ? 'w-3.5 h-3.5' : 'w-4 h-4'
+  const main =
+    size === 'icon' ? 'text-[1rem]' : size === 'pill' ? 'text-[0.85rem]' : 'text-[0.9rem]'
+
+  return (
+    <span className={`relative inline-flex items-center justify-center shrink-0 ${box}`}>
+      <span className={`animate-sparkle-main ${main} leading-none`}>✦</span>
+      <span className="absolute top-0 right-0 animate-sparkle-a text-[0.32rem] leading-none text-c1">✦</span>
+      <span className="absolute bottom-0 left-0 animate-sparkle-b text-[0.28rem] leading-none text-c1">✧</span>
+      <span className="absolute bottom-0 right-0 animate-sparkle-c text-[0.28rem] leading-none text-c1">✦</span>
+    </span>
+  )
+}
+
+function AskAINavLink({
+  active,
+  variant,
+}: {
+  active: boolean
+  variant: 'icon' | 'pill'
+}) {
+  const shared = active
+    ? 'text-c1 border-c1/30 bg-c1/8'
+    : 'text-aws-muted border-aws-border/60 hover:text-c1 hover:bg-c1/5'
+
+  if (variant === 'icon') {
+    return (
+      <Link
+        href="/ai"
+        className={`relative inline-flex items-center justify-center w-8 h-8 rounded-md border transition-all shrink-0 ${shared}`}
+        title="Ask AI"
+        aria-label="Ask AI"
+      >
+        <AskAISparkleIcon size="icon" />
+      </Link>
+    )
+  }
+
+  return (
+    <Link
+      href="/ai"
+      className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all ${shared}`}
+      aria-label="Ask AI"
+    >
+      <AskAISparkleIcon size="pill" />
+      <span className="font-space-mono text-[0.58rem] uppercase tracking-widest whitespace-nowrap">
+        Ask AI
+      </span>
+      {!active && <span className="w-1.5 h-1.5 rounded-full bg-c1 shrink-0" />}
+    </Link>
   )
 }
 

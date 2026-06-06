@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Space_Mono, Inter } from 'next/font/google'
 import AIUnloadGuard from '@/components/AIUnloadGuard'
 import { BookmarksProvider } from '@/components/BookmarksContext'
@@ -17,6 +17,10 @@ const spaceMono = Space_Mono({
   variable: '--font-space-mono',
 })
 
+export const viewport: Viewport = {
+  themeColor: '#0a0e1a',
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: 'AWS SAA-C03 Study',
@@ -28,8 +32,19 @@ export const metadata: Metadata = {
   ],
   authors: [{ name: 'AWS SAA Study' }],
   robots: { index: true, follow: true },
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    title: 'SAA Study',
+    statusBarStyle: 'black-translucent',
+  },
   icons: {
-    icon: [{ url: '/favicon.ico' }, { url: '/icon.svg', type: 'image/svg+xml' }],
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [{ url: '/icon-192.png', sizes: '192x192', type: 'image/png' }],
   },
   openGraph: {
     type: 'website',
@@ -48,7 +63,6 @@ export const metadata: Metadata = {
   },
   other: {
     'color-scheme': 'dark',
-    'theme-color': '#0a0e1a',
   },
 }
 

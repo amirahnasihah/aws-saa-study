@@ -52,6 +52,18 @@ Push to `main` — Cloudflare Pages builds and deploys automatically using `wran
 | Build command | `bun run pages:build` |
 | Build output directory | `.vercel/output/static` |
 
+### AI secrets (required for `/ai`)
+
+Free AI needs server-side keys as **Cloudflare Secrets** (not Plaintext vars — `wrangler.jsonc` manages vars). Add on **Preview + Production**:
+
+| Secret | Minimum |
+| --- | --- |
+| `ILMU_API_KEY` | At least one of ILMU / NVIDIA / GEMINI |
+| `GEMINI_API_KEY` | Recommended (fallback) |
+| `NVIDIA_API_KEY` | Optional fallback |
+
+Dashboard → **Add → Secret**. Copy values from `.dev.vars`. Full checklist: [docs/deploy-cloudflare.md](docs/deploy-cloudflare.md).
+
 Manual deploy from your machine:
 
 ```bash
