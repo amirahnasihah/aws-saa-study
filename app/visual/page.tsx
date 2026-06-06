@@ -166,7 +166,7 @@ function NodeSidebar({
   sidebarResult: ExplainResult | null
   onClose: () => void
 }) {
-  const [sourcesOpen, setSources] = useState(false)
+  const [sourcesOpen, setSources] = useState(true)
 
   if (sidebarMode === 'none') {
     return (
