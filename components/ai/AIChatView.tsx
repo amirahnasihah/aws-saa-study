@@ -15,6 +15,13 @@ interface AIChatViewProps {
 
 type UIState = 'idle' | 'loading' | 'error'
 
+const EXAMPLE_PROMPTS = [
+  'What is the difference between SQS and SNS?',
+  'When should I use Aurora instead of RDS?',
+  'How does S3 cross-region replication work?',
+  'Explain EC2 placement groups',
+]
+
 export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
   const { messages, setMessages, clearHistory } = useAIChatHistory()
   const [input, setInput] = useState('')
@@ -26,13 +33,13 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, uiState])
 
-  const sendMessage = async () => {
-    const text = input.trim()
-    if (!text || uiState === 'loading') return
+  const sendMessage = async (text?: string) => {
+    const content = (text ?? input).trim()
+    if (!content || uiState === 'loading') return
     if (needsByokKey(provider) && !byokKey) return
 
-    const userMsg = { role: 'user' as const, content: text }
-    const historyForApi = messages.map(({ role, content }) => ({ role, content }))
+    const userMsg = { role: 'user' as const, content }
+    const historyForApi = messages.map(({ role, content: c }) => ({ role, content: c }))
 
     setMessages((prev) => [...prev, userMsg])
     setInput('')
@@ -43,7 +50,7 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
       const res = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: buildAIRequestHeaders(provider, byokKey),
-        body: JSON.stringify({ message: text, history: historyForApi }),
+        body: JSON.stringify({ message: content, history: historyForApi }),
       })
 
       if (!res.ok && !res.headers.get('content-type')?.includes('application/json')) {
@@ -79,31 +86,47 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
   const needsKey = needsByokKey(provider) && !byokKey
 
   return (
-    <div className="flex flex-col h-full min-h-[500px]">
+    <div className="flex flex-col h-full">
+      {/* Clear history */}
       {messages.length > 0 && (
-        <div className="flex justify-end mb-2">
+        <div className="flex justify-end mb-2 shrink-0">
           <button
             type="button"
             onClick={clearHistory}
-            className="font-space-mono text-[0.55rem] text-aws-muted/60 hover:text-aws-muted transition-colors"
+            className="font-space-mono text-[0.53rem] text-aws-muted/50 hover:text-aws-muted transition-colors"
           >
-            Clear chat history
+            Clear history
           </button>
         </div>
       )}
 
-      <div className="flex-1 overflow-y-auto space-y-6 pb-4">
+      {/* Message list */}
+      <div className="flex-1 overflow-y-auto space-y-5 pb-3">
         {messages.length === 0 && (
-          <div className="text-center py-16">
-            <p className="font-space-mono text-[0.7rem] text-aws-muted/60 uppercase tracking-widest mb-2">
-              AWS Study Assistant
-            </p>
-            <p className="font-space-mono text-[0.62rem] text-aws-muted/40">
-              Ask any AWS question — services, architecture, exam topics
-            </p>
-            <p className="font-space-mono text-[0.58rem] text-aws-muted/30 mt-2">
-              Chat stays for this tab session (refresh OK) · cleared when you close the browser
-            </p>
+          <div className="flex flex-col items-center justify-center h-full gap-6 py-8">
+            <div className="text-center">
+              <p className="font-space-mono text-[0.65rem] text-aws-muted/70 mb-1">
+                AWS Study Assistant
+              </p>
+              <p className="font-space-mono text-[0.58rem] text-aws-muted/40">
+                Ask about services, architecture, or exam topics
+              </p>
+            </div>
+
+            {!needsKey && (
+              <div className="flex flex-wrap gap-2 justify-center max-w-md">
+                {EXAMPLE_PROMPTS.map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => void sendMessage(p)}
+                    className="font-space-mono text-[0.58rem] text-aws-muted border border-aws-border rounded-full px-3 py-1.5 hover:border-c1/40 hover:text-aws-text transition-all duration-150"
+                  >
+                    {p}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -146,14 +169,16 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
         <div ref={bottomRef} />
       </div>
 
+      {/* Key warning */}
       {needsKey && (
-        <p className="font-space-mono text-[0.62rem] text-amber-400 mb-2">
+        <p className="font-space-mono text-[0.62rem] text-amber-400 mb-2 shrink-0">
           Add your API key above to chat with{' '}
           {isByokProvider(provider) ? byokProviderLabel(provider) : 'this provider'}.
         </p>
       )}
 
-      <div className="flex gap-2 pt-4 border-t border-aws-border/40">
+      {/* Input */}
+      <div className="flex gap-2 pt-3 border-t border-aws-border/40 shrink-0">
         <input
           type="text"
           value={input}

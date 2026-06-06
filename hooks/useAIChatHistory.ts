@@ -24,15 +24,23 @@ function loadHistory(): PersistedChatMessage[] {
 }
 
 export function useAIChatHistory() {
-  const [messages, setMessagesState] = useState<PersistedChatMessage[]>(loadHistory)
+  // SSR-safe empty initial state; sessionStorage is restored after mount.
+  const [messages, setMessagesState] = useState<PersistedChatMessage[]>([])
+  const [ready, setReady] = useState(false)
 
   useEffect(() => {
+    setMessagesState(loadHistory())
+    setReady(true)
+  }, [])
+
+  useEffect(() => {
+    if (!ready) return
     if (messages.length === 0) {
       removeSessionKey(CHAT_SESSION_KEY)
       return
     }
     writeSessionJson(CHAT_SESSION_KEY, messages.slice(-MAX_MESSAGES))
-  }, [messages])
+  }, [messages, ready])
 
   const setMessages = (
     updater: PersistedChatMessage[] | ((prev: PersistedChatMessage[]) => PersistedChatMessage[])

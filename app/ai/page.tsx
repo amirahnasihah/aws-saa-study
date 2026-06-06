@@ -20,7 +20,7 @@ function AIPageContent() {
     searchParams.get('mode') === 'question' ? 'question' : 'chat'
   )
   const [showKeyModal, setShowKeyModal] = useState(false)
-  const [modalProvider, setModalProvider] = useState<ByokProvider>('anthropic')
+  const [modalProvider, setModalProvider] = useState<ByokProvider>('openrouter')
 
   const initialQuestion = searchParams.get('question') ?? ''
   const initialDomain = searchParams.get('domain') ?? ''
@@ -53,71 +53,79 @@ function AIPageContent() {
         />
       )}
 
-      <div className="max-w-2xl mx-auto px-4 py-8 pt-24">
-        <div className="mb-8">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="font-space-mono text-[0.6rem] uppercase tracking-widest text-c1/60">
-              ✦ AI Study Assistant
-            </span>
+      <div className="flex flex-col h-full">
+        {/* Page header */}
+        <div className="shrink-0 px-4 pt-6 pb-4 border-b border-aws-border/30">
+          <div className="max-w-2xl mx-auto">
+            <h1 className="text-lg font-bold text-aws-text mb-0.5">Ask AI</h1>
+            <p className="font-space-mono text-[0.65rem] text-aws-muted">
+              AWS study chat and question explainer — with official docs and tutorials.
+            </p>
           </div>
-          <h1 className="font-space-mono text-xl font-bold text-aws-text mb-1">Ask AI</h1>
-          <p className="font-space-mono text-[0.7rem] text-aws-muted">
-            Free-form AWS chat or question explainer — with official docs and tutorials.
-          </p>
         </div>
 
-        <div className="flex items-center justify-between mb-6 gap-4 flex-wrap">
-          <div className="flex items-center gap-1 p-1 rounded-lg bg-aws-card border border-aws-border">
-            <button
-              type="button"
-              onClick={() => setMode('chat')}
-              className={`px-3 py-1.5 rounded-md font-space-mono text-[0.6rem] uppercase tracking-widest transition-all duration-150 ${
-                mode === 'chat'
-                  ? 'bg-aws-bg border border-aws-border text-aws-text'
-                  : 'text-aws-muted hover:text-aws-text border border-transparent'
-              }`}
-            >
-              💬 Chat
-            </button>
-            <button
-              type="button"
-              onClick={() => setMode('question')}
-              className={`px-3 py-1.5 rounded-md font-space-mono text-[0.6rem] uppercase tracking-widest transition-all duration-150 ${
-                mode === 'question'
-                  ? 'bg-aws-bg border border-aws-border text-aws-text'
-                  : 'text-aws-muted hover:text-aws-text border border-transparent'
-              }`}
-            >
-              ✦ Explain question
-            </button>
-          </div>
-
-          <div className="flex items-center gap-3 flex-wrap">
-            <AIProviderToggle provider={provider} onSelect={handleProviderSelect} />
-            {needsByokKey(provider) && key && (
+        {/* Controls bar */}
+        <div className="shrink-0 px-4 py-3 border-b border-aws-border/20">
+          <div className="max-w-2xl mx-auto flex items-center justify-between gap-4 flex-wrap">
+            {/* Mode toggle */}
+            <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-aws-card border border-aws-border">
               <button
                 type="button"
-                onClick={clearKey}
-                className="font-space-mono text-[0.55rem] text-aws-muted/50 hover:text-red-400 transition-colors"
+                onClick={() => setMode('chat')}
+                className={`px-3 py-1.5 rounded-md font-space-mono text-[0.6rem] transition-all duration-150 ${
+                  mode === 'chat'
+                    ? 'bg-aws-bg border border-aws-border text-aws-text'
+                    : 'text-aws-muted hover:text-aws-text border border-transparent'
+                }`}
               >
-                Remove key
+                Chat
               </button>
+              <button
+                type="button"
+                onClick={() => setMode('question')}
+                className={`px-3 py-1.5 rounded-md font-space-mono text-[0.6rem] transition-all duration-150 ${
+                  mode === 'question'
+                    ? 'bg-aws-bg border border-aws-border text-aws-text'
+                    : 'text-aws-muted hover:text-aws-text border border-transparent'
+                }`}
+              >
+                Explain question
+              </button>
+            </div>
+
+            {/* Provider toggle + remove key */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <AIProviderToggle provider={provider} onSelect={handleProviderSelect} />
+              {needsByokKey(provider) && key && (
+                <button
+                  type="button"
+                  onClick={clearKey}
+                  className="font-space-mono text-[0.53rem] text-aws-muted/50 hover:text-red-400 transition-colors"
+                >
+                  Remove key
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Chat / question area — fills remaining height */}
+        <div className="flex-1 overflow-hidden px-4 py-4">
+          <div className="max-w-2xl mx-auto h-full">
+            {mode === 'chat' ? (
+              <AIChatView provider={provider} byokKey={key} />
+            ) : (
+              <AIQuestionView
+                provider={provider}
+                byokKey={key}
+                initialQuestion={initialQuestion}
+                initialDomain={initialDomain}
+                initialKeywords={initialKeywords}
+                initialCorrectAnswer={initialCorrectAnswer}
+              />
             )}
           </div>
         </div>
-
-        {mode === 'chat' ? (
-          <AIChatView provider={provider} byokKey={key} />
-        ) : (
-          <AIQuestionView
-            provider={provider}
-            byokKey={key}
-            initialQuestion={initialQuestion}
-            initialDomain={initialDomain}
-            initialKeywords={initialKeywords}
-            initialCorrectAnswer={initialCorrectAnswer}
-          />
-        )}
       </div>
     </>
   )
@@ -125,20 +133,23 @@ function AIPageContent() {
 
 export default function AIPage() {
   return (
-    <>
-      <Nav activePage="practice" />
-      <main className="min-h-screen bg-aws-bg text-aws-text">
+    <div className="h-screen flex flex-col bg-aws-bg text-aws-text">
+      <Nav activePage="ai" />
+
+      {/* Content fills remaining height below nav */}
+      <div className="flex-1 flex flex-col overflow-hidden mt-14">
         <Suspense
           fallback={
-            <div className="pt-24 text-center font-space-mono text-[0.7rem] text-aws-muted">
-              Loading…
+            <div className="flex-1 flex items-center justify-center">
+              <span className="font-space-mono text-[0.65rem] text-aws-muted">Loading…</span>
             </div>
           }
         >
           <AIPageContent />
         </Suspense>
-      </main>
-      <SiteFooter tagline="AWS SAA-C03 · AI Study Assistant · Docs + tutorials on every answer" />
-    </>
+      </div>
+
+      <SiteFooter tagline="AWS SAA-C03 · AI Study Assistant" />
+    </div>
   )
 }

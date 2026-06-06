@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   type ByokProvider,
   type AIProvider,
@@ -13,18 +13,21 @@ import {
 export type { AIProvider, ByokProvider } from '@/lib/ai/providers'
 
 export function useAIProvider() {
-  const [provider, setProviderState] = useState<AIProvider>(() => {
-    if (typeof window === 'undefined') return 'groq'
-    const stored = localStorage.getItem(PROVIDER_STORAGE_KEY)
-    if (stored && isAIProvider(stored)) return stored
-    const key = localStorage.getItem(KEY_STORAGE_KEY)
-    if (key) return inferProviderFromKey(key)
-    return 'groq'
-  })
+  // Start from SSR-safe defaults so server and client initial renders match.
+  // localStorage is applied after mount via useEffect.
+  const [provider, setProviderState] = useState<AIProvider>('ilmu')
+  const [key, setKeyState] = useState<string | null>(null)
 
-  const [key, setKeyState] = useState<string | null>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem(KEY_STORAGE_KEY) : null
-  )
+  useEffect(() => {
+    const storedKey = localStorage.getItem(KEY_STORAGE_KEY)
+    const storedProvider = localStorage.getItem(PROVIDER_STORAGE_KEY)
+    if (storedKey) setKeyState(storedKey)
+    if (storedProvider && isAIProvider(storedProvider)) {
+      setProviderState(storedProvider)
+    } else if (storedKey) {
+      setProviderState(inferProviderFromKey(storedKey))
+    }
+  }, [])
 
   const setProvider = (next: AIProvider) => {
     localStorage.setItem(PROVIDER_STORAGE_KEY, next)
