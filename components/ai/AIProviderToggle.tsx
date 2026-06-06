@@ -6,58 +6,64 @@ interface AIProviderToggleProps {
 }
 
 const FREE: Array<{ id: AIProvider; icon: string; label: string }> = [
-  { id: 'gemini', icon: '✦', label: 'Gemini' },
-  { id: 'nvidia', icon: '⬡', label: 'NVIDIA' },
   { id: 'ilmu', icon: '🇲🇾', label: 'ILMU' },
+  { id: 'gemini', icon: '✦', label: 'Gemini' },
 ]
 
 const BYOK: Array<{ id: AIProvider; icon: string; label: string }> = [
+  { id: 'nvidia', icon: '⬡', label: 'NVIDIA' },
   { id: 'openrouter', icon: '⇄', label: 'OpenRouter' },
   { id: 'ollama', icon: '☁', label: 'Ollama' },
 ]
 
-function ProviderBtn({
-  opt,
-  active,
-  onSelect,
-  badge,
-}: {
-  opt: { id: AIProvider; icon: string; label: string }
-  active: boolean
-  onSelect: (p: AIProvider) => void
-  badge?: string
-}) {
-  return (
-    <button
-      type="button"
-      onClick={() => onSelect(opt.id)}
-      className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md font-space-mono text-[0.58rem] transition-all duration-150 whitespace-nowrap ${
-        active
-          ? 'bg-c1/15 border border-c1/25 text-c1'
-          : 'text-aws-muted hover:text-aws-text border border-transparent'
-      }`}
-    >
-      <span className="text-[0.65rem]">{opt.icon}</span>
-      {opt.label}
-      {badge && (
-        <span className={`text-[0.48rem] uppercase tracking-wide font-bold ml-0.5 ${active ? 'text-c1/70' : 'text-aws-muted/60'}`}>
-          {badge}
-        </span>
-      )}
-    </button>
-  )
-}
-
 export default function AIProviderToggle({ provider, onSelect }: AIProviderToggleProps) {
   return (
-    <div className="flex items-center gap-1 p-1 rounded-lg bg-aws-card border border-aws-border flex-wrap">
-      {FREE.map((opt) => (
-        <ProviderBtn key={opt.id} opt={opt} active={provider === opt.id} onSelect={onSelect} badge="free" />
-      ))}
-      <span className="w-px h-4 bg-aws-border/60 mx-0.5" />
-      {BYOK.map((opt) => (
-        <ProviderBtn key={opt.id} opt={opt} active={provider === opt.id} onSelect={onSelect} badge="byok" />
-      ))}
+    <div className="flex items-center gap-0.5 shrink-0">
+      {FREE.map((opt) => {
+        const active = provider === opt.id
+        return (
+          <button
+            key={opt.id}
+            type="button"
+            onClick={() => onSelect(opt.id)}
+            className={`flex items-center gap-1 px-2 py-1 rounded-md font-space-mono text-[0.58rem] transition-all duration-150 whitespace-nowrap ${
+              active
+                ? 'text-c4 bg-c4/10 border border-c4/20'
+                : 'text-aws-muted hover:text-aws-text border border-transparent hover:bg-white/4'
+            }`}
+          >
+            <span className="text-[0.65rem] leading-none">{opt.icon}</span>
+            {opt.label}
+            <span className={`text-[0.44rem] font-bold tracking-wide uppercase ${active ? 'text-c4/60' : 'text-aws-muted/30'}`}>
+              free
+            </span>
+          </button>
+        )
+      })}
+
+      <span className="w-px h-3.5 bg-aws-border/50 mx-1 shrink-0" />
+
+      {BYOK.map((opt) => {
+        const active = provider === opt.id
+        return (
+          <button
+            key={opt.id}
+            type="button"
+            onClick={() => onSelect(opt.id)}
+            className={`flex items-center gap-1 px-2 py-1 rounded-md font-space-mono text-[0.58rem] transition-all duration-150 whitespace-nowrap ${
+              active
+                ? 'text-amber-400 bg-amber-400/10 border border-amber-400/20'
+                : 'text-aws-muted hover:text-aws-text border border-transparent hover:bg-white/4'
+            }`}
+          >
+            <span className="text-[0.65rem] leading-none">{opt.icon}</span>
+            {opt.label}
+            <span className={`text-[0.44rem] font-bold tracking-wide uppercase ${active ? 'text-amber-400/50' : 'text-aws-muted/30'}`}>
+              key
+            </span>
+          </button>
+        )
+      })}
     </div>
   )
 }

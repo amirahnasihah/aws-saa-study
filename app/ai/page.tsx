@@ -54,62 +54,48 @@ function AIPageContent() {
       )}
 
       <div className="flex flex-col h-full">
-        {/* Page header */}
-        <div className="shrink-0 px-4 pt-6 pb-4 border-b border-aws-border/30">
-          <div className="max-w-2xl mx-auto">
-            <h1 className="text-lg font-bold text-aws-text mb-0.5">Ask AI</h1>
-            <p className="font-space-mono text-[0.65rem] text-aws-muted">
-              AWS study chat and question explainer — with official docs and tutorials.
-            </p>
-          </div>
-        </div>
-
-        {/* Controls bar */}
-        <div className="shrink-0 px-4 py-3 border-b border-aws-border/20">
-          <div className="max-w-2xl mx-auto flex items-center justify-between gap-4 flex-wrap">
-            {/* Mode toggle */}
-            <div className="flex items-center gap-0.5 p-0.5 rounded-lg bg-aws-card border border-aws-border">
-              <button
-                type="button"
-                onClick={() => setMode('chat')}
-                className={`px-3 py-1.5 rounded-md font-space-mono text-[0.6rem] transition-all duration-150 ${
-                  mode === 'chat'
-                    ? 'bg-aws-bg border border-aws-border text-aws-text'
-                    : 'text-aws-muted hover:text-aws-text border border-transparent'
-                }`}
-              >
-                Chat
-              </button>
-              <button
-                type="button"
-                onClick={() => setMode('question')}
-                className={`px-3 py-1.5 rounded-md font-space-mono text-[0.6rem] transition-all duration-150 ${
-                  mode === 'question'
-                    ? 'bg-aws-bg border border-aws-border text-aws-text'
-                    : 'text-aws-muted hover:text-aws-text border border-transparent'
-                }`}
-              >
-                Explain question
-              </button>
-            </div>
-
-            {/* Provider toggle + remove key */}
-            <div className="flex items-center gap-2 flex-wrap">
-              <AIProviderToggle provider={provider} onSelect={handleProviderSelect} />
-              {needsByokKey(provider) && key && (
+        {/* Single compact toolbar — mode + provider in one row */}
+        <div className="shrink-0 border-b border-aws-border/20">
+          <div className="max-w-2xl mx-auto px-4 h-11 flex items-center gap-2 overflow-x-auto nav-scroll">
+            {/* Mode tabs — underline indicator */}
+            <div className="flex items-center shrink-0">
+              {(['chat', 'question'] as const).map((m) => (
                 <button
+                  key={m}
                   type="button"
-                  onClick={clearKey}
-                  className="font-space-mono text-[0.53rem] text-aws-muted/50 hover:text-red-400 transition-colors"
+                  onClick={() => setMode(m)}
+                  className={`relative px-3 h-11 font-space-mono text-[0.6rem] transition-colors whitespace-nowrap ${
+                    mode === m ? 'text-aws-text' : 'text-aws-muted hover:text-aws-text'
+                  }`}
                 >
-                  Remove key
+                  {m === 'chat' ? 'Chat' : 'Explain'}
+                  {mode === m && (
+                    <span className="absolute bottom-0 left-2 right-2 h-px bg-c1 rounded-full" />
+                  )}
                 </button>
-              )}
+              ))}
             </div>
+
+            <span className="w-px h-4 bg-aws-border/50 mx-1 shrink-0" />
+
+            {/* Provider toggle */}
+            <AIProviderToggle provider={provider} onSelect={handleProviderSelect} />
+
+            {/* Remove key — only when BYOK active with saved key */}
+            {needsByokKey(provider) && key && (
+              <button
+                type="button"
+                onClick={clearKey}
+                title="Remove saved API key"
+                className="ml-1 shrink-0 font-space-mono text-[0.52rem] text-aws-muted/40 hover:text-red-400/80 transition-colors"
+              >
+                ✕ key
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Chat / question area — fills remaining height */}
+        {/* Chat / question area */}
         <div className="flex-1 overflow-hidden px-4 py-4">
           <div className="max-w-2xl mx-auto h-full">
             {mode === 'chat' ? (
@@ -136,7 +122,6 @@ export default function AIPage() {
     <div className="h-screen flex flex-col bg-aws-bg text-aws-text">
       <Nav activePage="ai" />
 
-      {/* Content fills remaining height below nav */}
       <div className="flex-1 flex flex-col overflow-hidden mt-14">
         <Suspense
           fallback={
