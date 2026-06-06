@@ -86,7 +86,7 @@ export default function AIQuestionView({
           onChange={(e) => setQuestion(e.target.value)}
           placeholder="Paste an AWS practice question here…"
           rows={4}
-          className="w-full px-4 py-3 rounded-xl bg-aws-card border border-aws-border text-aws-text text-[0.85rem] leading-relaxed font-space-mono placeholder:text-aws-muted/40 focus:outline-none focus:border-c1/50 resize-none transition-colors"
+          className="w-full px-4 py-3 rounded-xl bg-aws-card border border-aws-border text-aws-text text-base sm:text-[0.85rem] leading-relaxed font-space-mono placeholder:text-aws-muted/40 focus:outline-none focus:border-c1/50 resize-none transition-colors"
         />
       </div>
 

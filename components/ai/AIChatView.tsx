@@ -185,7 +185,7 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
           }}
           placeholder="Ask an AWS question…"
           disabled={uiState === 'loading' || needsKey}
-          className="flex-1 px-4 py-2.5 rounded-xl bg-aws-card border border-aws-border/60 text-aws-text text-[0.8rem] font-space-mono placeholder:text-aws-muted/35 focus:outline-none focus:border-c1/40 transition-colors disabled:opacity-50"
+          className="flex-1 px-4 py-2.5 rounded-xl bg-aws-card border border-aws-border/60 text-aws-text text-base sm:text-[0.8rem] font-space-mono placeholder:text-aws-muted/35 focus:outline-none focus:border-c1/40 transition-colors disabled:opacity-50"
         />
 
         {/* Clear history — trash icon, only when there are messages */}
