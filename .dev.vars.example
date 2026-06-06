@@ -1,0 +1,8 @@
+# Copy to .dev.vars for local dev (gitignored).
+# Set the same names as encrypted vars in Cloudflare Pages (Preview + Production).
+
+GROQ_API_KEY=
+GEMINI_API_KEY=
+ILMU_API_KEY=
+NVIDIA_API_KEY=
+AI_GATEWAY_BASE_URL=

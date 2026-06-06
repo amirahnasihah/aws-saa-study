@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "bun@1.3.11",
   "scripts": {
-    "dev": "next dev --turbopack --port 3001",
+    "dev": "next dev --turbopack",
     "build": "next build",
     "pages:build": "next build && bunx next-on-pages",
     "start": "next start",
@@ -15,7 +15,8 @@
     "capture:questions": "bun run scripts/capture-question-screenshots.ts",
     "seed:screenshots": "bun run scripts/seed-screenshot-metadata.ts",
     "verify:aws-refs": "bun run scripts/verify-aws-references.ts",
-    "changelog:draft": "bun run scripts/changelog-from-git.ts"
+    "changelog:draft": "bun run scripts/changelog-from-git.ts",
+    "pwa:icons": "node scripts/generate-pwa-icons.mjs"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.2",
@@ -36,9 +37,10 @@
     "@types/react-dom": "^19",
     "eslint": "^10",
     "eslint-config-next": "16.2.4",
+    "playwright": "^1.52.0",
+    "sharp": "^0.34.5",
     "tailwindcss": "^4",
     "typescript": "^6",
-    "wrangler": "^4.93.0",
-    "playwright": "^1.52.0"
+    "wrangler": "^4.93.0"
   }
 }

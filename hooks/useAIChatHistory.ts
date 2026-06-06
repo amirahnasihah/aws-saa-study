@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 import {
+  AI_SESSION_CHANGED,
   CHAT_SESSION_KEY,
   readSessionJson,
   removeSessionKey,
@@ -23,30 +24,37 @@ function loadHistory(): PersistedChatMessage[] {
   return Array.isArray(parsed) ? parsed.slice(-MAX_MESSAGES) : []
 }
 
+function subscribe(onStoreChange: () => void) {
+  if (typeof window === 'undefined') return () => undefined
+  window.addEventListener(AI_SESSION_CHANGED, onStoreChange)
+  return () => window.removeEventListener(AI_SESSION_CHANGED, onStoreChange)
+}
+
+function getServerSnapshot(): PersistedChatMessage[] {
+  return []
+}
+
 export function useAIChatHistory() {
-  const [messages, setMessagesState] = useState<PersistedChatMessage[]>(loadHistory)
+  const messages = useSyncExternalStore(subscribe, loadHistory, getServerSnapshot)
 
-  useEffect(() => {
-    if (messages.length === 0) {
-      removeSessionKey(CHAT_SESSION_KEY)
-      return
-    }
-    writeSessionJson(CHAT_SESSION_KEY, messages.slice(-MAX_MESSAGES))
-  }, [messages])
+  const setMessages = useCallback(
+    (
+      updater: PersistedChatMessage[] | ((prev: PersistedChatMessage[]) => PersistedChatMessage[])
+    ) => {
+      const prev = loadHistory()
+      const next = (typeof updater === 'function' ? updater(prev) : updater).slice(-MAX_MESSAGES)
+      if (next.length === 0) {
+        removeSessionKey(CHAT_SESSION_KEY)
+        return
+      }
+      writeSessionJson(CHAT_SESSION_KEY, next)
+    },
+    []
+  )
 
-  const setMessages = (
-    updater: PersistedChatMessage[] | ((prev: PersistedChatMessage[]) => PersistedChatMessage[])
-  ) => {
-    setMessagesState((prev) => {
-      const next = typeof updater === 'function' ? updater(prev) : updater
-      return next.slice(-MAX_MESSAGES)
-    })
-  }
-
-  const clearHistory = () => {
+  const clearHistory = useCallback(() => {
     removeSessionKey(CHAT_SESSION_KEY)
-    setMessagesState([])
-  }
+  }, [])
 
   return { messages, setMessages, clearHistory }
 }

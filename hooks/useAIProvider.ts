@@ -1,49 +1,73 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useSyncExternalStore } from 'react'
 import {
   type ByokProvider,
   type AIProvider,
   inferProviderFromKey,
   isAIProvider,
-  isByokProvider,
   KEY_STORAGE_KEY,
   PROVIDER_STORAGE_KEY,
 } from '@/lib/ai/providers'
 
 export type { AIProvider, ByokProvider } from '@/lib/ai/providers'
 
-export function useAIProvider() {
-  const [provider, setProviderState] = useState<AIProvider>(() => {
-    if (typeof window === 'undefined') return 'groq'
-    const stored = localStorage.getItem(PROVIDER_STORAGE_KEY)
-    if (stored && isAIProvider(stored)) return stored
-    const key = localStorage.getItem(KEY_STORAGE_KEY)
-    if (key) return inferProviderFromKey(key)
-    return 'groq'
-  })
+const PROVIDER_CHANGED = 'ai-provider-changed'
 
-  const [key, setKeyState] = useState<string | null>(() =>
-    typeof window !== 'undefined' ? localStorage.getItem(KEY_STORAGE_KEY) : null
-  )
+interface ProviderSnapshot {
+  provider: AIProvider
+  key: string | null
+}
 
-  const setProvider = (next: AIProvider) => {
-    localStorage.setItem(PROVIDER_STORAGE_KEY, next)
-    setProviderState(next)
+function readSnapshot(): ProviderSnapshot {
+  if (typeof window === 'undefined') {
+    return { provider: 'free', key: null }
   }
+  const storedKey = localStorage.getItem(KEY_STORAGE_KEY)
+  const storedProvider = localStorage.getItem(PROVIDER_STORAGE_KEY)
+  const provider =
+    storedProvider && isAIProvider(storedProvider)
+      ? storedProvider
+      : storedKey
+        ? inferProviderFromKey(storedKey)
+        : 'free'
+  return { provider, key: storedKey }
+}
 
-  const saveKey = (k: string, keyProvider?: ByokProvider) => {
+function getServerSnapshot(): ProviderSnapshot {
+  return { provider: 'free', key: null }
+}
+
+function subscribe(onStoreChange: () => void) {
+  if (typeof window === 'undefined') return () => undefined
+  window.addEventListener(PROVIDER_CHANGED, onStoreChange)
+  return () => window.removeEventListener(PROVIDER_CHANGED, onStoreChange)
+}
+
+function notifyProviderChanged() {
+  if (typeof window === 'undefined') return
+  window.dispatchEvent(new Event(PROVIDER_CHANGED))
+}
+
+export function useAIProvider() {
+  const { provider, key } = useSyncExternalStore(subscribe, readSnapshot, getServerSnapshot)
+
+  const setProvider = useCallback((next: AIProvider) => {
+    localStorage.setItem(PROVIDER_STORAGE_KEY, next)
+    notifyProviderChanged()
+  }, [])
+
+  const saveKey = useCallback((k: string, keyProvider?: ByokProvider) => {
     const resolved = keyProvider ?? inferProviderFromKey(k)
     localStorage.setItem(KEY_STORAGE_KEY, k)
     localStorage.setItem(PROVIDER_STORAGE_KEY, resolved)
-    setKeyState(k)
-    setProviderState(resolved)
-  }
+    notifyProviderChanged()
+  }, [])
 
-  const clearKey = () => {
+  const clearKey = useCallback(() => {
     localStorage.removeItem(KEY_STORAGE_KEY)
-    setKeyState(null)
-  }
+    notifyProviderChanged()
+  }, [])
 
   return { provider, setProvider, key, saveKey, clearKey }
 }

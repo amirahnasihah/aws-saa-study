@@ -82,3 +82,62 @@ body {
   from { transform: translateX(100%); }
   to   { transform: translateX(0); }
 }
+
+/* AI nav sparkle */
+@keyframes sparkle-main {
+  0%, 100% { transform: scale(0.88) rotate(-10deg); opacity: 0.65; filter: drop-shadow(0 0 0px #00d4ff); }
+  40%       { transform: scale(1.22) rotate(12deg);  opacity: 1;    filter: drop-shadow(0 0 6px #00d4ff88); }
+  70%       { transform: scale(0.94) rotate(-4deg);  opacity: 0.8;  filter: drop-shadow(0 0 2px #00d4ff44); }
+}
+@keyframes sparkle-a {
+  0%, 100% { opacity: 0; transform: scale(0) translate(1px, -1px); }
+  20%, 45% { opacity: 1; transform: scale(1) translate(1px, -1px); }
+  60%      { opacity: 0; transform: scale(0) translate(1px, -1px); }
+}
+@keyframes sparkle-b {
+  0%, 55%  { opacity: 0; transform: scale(0) translate(-2px, 1px); }
+  70%, 88% { opacity: 1; transform: scale(1) translate(-2px, 1px); }
+  100%     { opacity: 0; transform: scale(0) translate(-2px, 1px); }
+}
+@keyframes sparkle-c {
+  0%, 30%  { opacity: 0; transform: scale(0) translate(2px, 2px); }
+  50%, 65% { opacity: 1; transform: scale(1) translate(2px, 2px); }
+  80%      { opacity: 0; transform: scale(0) translate(2px, 2px); }
+}
+
+.animate-sparkle-main { animation: sparkle-main 2.4s ease-in-out infinite; }
+.animate-sparkle-a    { animation: sparkle-a 2.4s ease-in-out infinite; }
+.animate-sparkle-b    { animation: sparkle-b 2.4s ease-in-out infinite; }
+.animate-sparkle-c    { animation: sparkle-c 2.4s ease-in-out infinite; }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-sparkle-main,
+  .animate-sparkle-a,
+  .animate-sparkle-b,
+  .animate-sparkle-c { animation: none; opacity: 1; }
+}
+
+/* ReactFlow controls — dark theme override */
+.react-flow__controls {
+  background: transparent !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+  overflow: hidden;
+}
+.react-flow__controls-button {
+  background: rgba(255,255,255,0.04) !important;
+  border-bottom: 1px solid rgba(255,255,255,0.08) !important;
+  color: rgba(255,255,255,0.45) !important;
+  width: 26px !important;
+  height: 26px !important;
+}
+.react-flow__controls-button:hover {
+  background: rgba(255,255,255,0.09) !important;
+  color: rgba(255,255,255,0.75) !important;
+}
+.react-flow__controls-button svg {
+  fill: currentColor !important;
+  max-width: 12px !important;
+  max-height: 12px !important;
+}
