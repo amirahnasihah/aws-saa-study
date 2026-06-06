@@ -18,12 +18,15 @@ export const changelog: ChangeEntry[] = [
     id: '2026-06-06',
     date: '2026-06-06',
     changes: [
+      { type: 'feat', text: 'Visual page: inline AI explanation panel — "✦ Explain" button in diagram header calls free AI to explain architecture in three prose paragraphs (what / how / why); loading skeleton, retry on error, dismiss to close' },
       { type: 'feat', text: 'AI page (/ai) now linked in nav — animated sparkle ✦ icon on desktop, "Ask AI" in mobile drawer' },
-      { type: 'feat', text: 'ILMU and Gemini 2.5 Flash added as free server-side providers (no user key needed); OpenRouter + Ollama remain BYOK' },
+      { type: 'feat', text: 'Free AI: ILMU (primary) → NVIDIA NIM → Gemini 2.5 Flash automatic fallback chain — if one hits rate limits, next kicks in transparently' },
+      { type: 'feat', text: 'NVIDIA NIM added as free server-side provider (nvapi- key, 40 RPM, 100+ models including Llama 3.3 70B)' },
       { type: 'feat', text: 'OpenRouter BYOK: access 27+ free models (Llama, DeepSeek, Qwen) via single sk-or- key' },
-      { type: 'feat', text: 'AI chat: viewport-height layout, example prompt chips, Chat / Explain question mode toggle' },
+      { type: 'feat', text: 'AI provider toggle redesigned: Auto (free fallback) + OpenRouter/Ollama as BYOK — no manual free provider selection needed' },
+      { type: 'feat', text: 'AI chat: viewport-height layout, example prompt chips, Chat / Explain question mode toggle, trash icon to clear history' },
       { type: 'fix', text: 'SSR hydration mismatch on AI provider — localStorage now read in useEffect, not useState initializer' },
-      { type: 'refactor', text: 'ILMU moved to server-side key (ILMU_API_KEY); Claude/Anthropic BYOK hidden from UI (backend still functional)' },
+      { type: 'refactor', text: 'ILMU, Gemini, NVIDIA use server-side keys (no user config); Claude/Anthropic BYOK hidden from UI (backend still functional)' },
     ],
   },
   {
