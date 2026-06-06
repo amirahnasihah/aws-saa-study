@@ -1,5 +1,5 @@
 const ILMU_URL = 'https://api.ilmu.ai/anthropic/v1/messages'
-const ILMU_MODEL = 'nemo-super'
+const ILMU_MODEL = 'ilmu-nemo-nano'
 
 export function classifyIlmuError(status: number): string {
   const errorByStatus: Record<number, string> = {

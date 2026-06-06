@@ -15,6 +15,18 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    id: '2026-06-06',
+    date: '2026-06-06',
+    changes: [
+      { type: 'feat', text: 'AI page (/ai) now linked in nav — animated sparkle ✦ icon on desktop, "Ask AI" in mobile drawer' },
+      { type: 'feat', text: 'ILMU and Gemini 2.5 Flash added as free server-side providers (no user key needed); OpenRouter + Ollama remain BYOK' },
+      { type: 'feat', text: 'OpenRouter BYOK: access 27+ free models (Llama, DeepSeek, Qwen) via single sk-or- key' },
+      { type: 'feat', text: 'AI chat: viewport-height layout, example prompt chips, Chat / Explain question mode toggle' },
+      { type: 'fix', text: 'SSR hydration mismatch on AI provider — localStorage now read in useEffect, not useState initializer' },
+      { type: 'refactor', text: 'ILMU moved to server-side key (ILMU_API_KEY); Claude/Anthropic BYOK hidden from UI (backend still functional)' },
+    ],
+  },
+  {
     id: '2026-06-05',
     date: '2026-06-05',
     changes: [

@@ -6,8 +6,9 @@ interface AIProviderToggleProps {
 }
 
 const FREE: Array<{ id: AIProvider; icon: string; label: string }> = [
-  { id: 'ilmu', icon: '🇲🇾', label: 'ILMU' },
   { id: 'gemini', icon: '✦', label: 'Gemini' },
+  { id: 'nvidia', icon: '⬡', label: 'NVIDIA' },
+  { id: 'ilmu', icon: '🇲🇾', label: 'ILMU' },
 ]
 
 const BYOK: Array<{ id: AIProvider; icon: string; label: string }> = [

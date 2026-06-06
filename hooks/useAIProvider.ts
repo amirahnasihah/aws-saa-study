@@ -15,7 +15,7 @@ export type { AIProvider, ByokProvider } from '@/lib/ai/providers'
 export function useAIProvider() {
   // Start from SSR-safe defaults so server and client initial renders match.
   // localStorage is applied after mount via useEffect.
-  const [provider, setProviderState] = useState<AIProvider>('ilmu')
+  const [provider, setProviderState] = useState<AIProvider>('gemini')
   const [key, setKeyState] = useState<string | null>(null)
 
   useEffect(() => {

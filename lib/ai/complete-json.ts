@@ -6,11 +6,18 @@ import {
   type AIProvider,
   type ByokProvider,
 } from '@/lib/ai/providers'
-import { readGatewayBase, readGeminiApiKey, readGroqApiKey, readIlmuApiKey } from '@/lib/ai/env'
+import {
+  readGatewayBase,
+  readGeminiApiKey,
+  readGroqApiKey,
+  readIlmuApiKey,
+  readNvidiaApiKey,
+} from '@/lib/ai/env'
 import { callGroq } from '@/lib/ai/groq'
 import { callGemini } from '@/lib/ai/gemini'
 import { callIlmu } from '@/lib/ai/ilmu'
 import { callByokMessages, callByokChatMessages } from '@/lib/ai/messages'
+import { callNvidia } from '@/lib/ai/nvidia'
 import { callOllamaChat } from '@/lib/ai/ollama'
 import { callOpenRouter } from '@/lib/ai/openrouter'
 
@@ -59,6 +66,17 @@ export async function completeJson(
       }
     }
     return callIlmu(systemPrompt, [{ role: 'user', content: userPrompt }], ilmuKey, maxTokens)
+  }
+
+  if (provider === 'nvidia') {
+    const nvidiaKey = readNvidiaApiKey()
+    if (!nvidiaKey) {
+      return {
+        error: 'Free AI is not configured. Use BYOK (OpenRouter, Ollama) or set NVIDIA_API_KEY.',
+        status: 503,
+      }
+    }
+    return callNvidia(nvidiaKey, systemPrompt, [{ role: 'user', content: userPrompt }], maxTokens)
   }
 
   const byok: ByokProvider = isByokProvider(provider) ? provider : 'anthropic'
@@ -127,6 +145,17 @@ export async function completeChatMessages(
       }
     }
     return callIlmu(systemPrompt, messages, ilmuKey, maxTokens)
+  }
+
+  if (provider === 'nvidia') {
+    const nvidiaKey = readNvidiaApiKey()
+    if (!nvidiaKey) {
+      return {
+        error: 'Free AI is not configured. Use BYOK (OpenRouter, Ollama) or set NVIDIA_API_KEY.',
+        status: 503,
+      }
+    }
+    return callNvidia(nvidiaKey, systemPrompt, messages, maxTokens)
   }
 
   const byok: ByokProvider = isByokProvider(provider) ? provider : 'anthropic'

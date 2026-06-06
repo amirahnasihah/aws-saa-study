@@ -1,6 +1,11 @@
 import { getRequestContext } from '@cloudflare/next-on-pages'
 
-type ServerSecretKey = 'GROQ_API_KEY' | 'GEMINI_API_KEY' | 'ILMU_API_KEY' | 'AI_GATEWAY_BASE_URL'
+type ServerSecretKey =
+  | 'GROQ_API_KEY'
+  | 'GEMINI_API_KEY'
+  | 'ILMU_API_KEY'
+  | 'NVIDIA_API_KEY'
+  | 'AI_GATEWAY_BASE_URL'
 
 function readEnvString(name: ServerSecretKey): string {
   try {
@@ -23,6 +28,10 @@ export function readIlmuApiKey(): string {
 
 export function readGeminiApiKey(): string {
   return readEnvString('GEMINI_API_KEY')
+}
+
+export function readNvidiaApiKey(): string {
+  return readEnvString('NVIDIA_API_KEY')
 }
 
 export function readGatewayBase(): string | undefined {

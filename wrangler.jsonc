@@ -15,6 +15,7 @@
     "AI_GATEWAY_BASE_URL": "",
     "GROQ_API_KEY": "",
     "GEMINI_API_KEY": "",
-    "ILMU_API_KEY": ""
+    "ILMU_API_KEY": "",
+    "NVIDIA_API_KEY": ""
   }
 }

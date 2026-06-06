@@ -4,4 +4,5 @@ interface CloudflareEnv {
   GROQ_API_KEY: string
   GEMINI_API_KEY: string
   ILMU_API_KEY: string
+  NVIDIA_API_KEY: string
 }

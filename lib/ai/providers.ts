@@ -1,6 +1,6 @@
 export type ByokProvider = 'anthropic' | 'ollama' | 'openrouter'
 
-export type AIProvider = 'groq' | 'gemini' | 'ilmu' | ByokProvider
+export type AIProvider = 'groq' | 'gemini' | 'ilmu' | 'nvidia' | ByokProvider
 
 export const PROVIDER_STORAGE_KEY = 'aws_study_ai_provider'
 export const KEY_STORAGE_KEY = 'aws_study_ai_key'
@@ -63,7 +63,13 @@ export function isByokProvider(value: string): value is ByokProvider {
 }
 
 export function isAIProvider(value: string): value is AIProvider {
-  return value === 'groq' || value === 'gemini' || value === 'ilmu' || isByokProvider(value)
+  return (
+    value === 'groq' ||
+    value === 'gemini' ||
+    value === 'ilmu' ||
+    value === 'nvidia' ||
+    isByokProvider(value)
+  )
 }
 
 export function parseAIProvider(header: string | null): AIProvider | null {
@@ -80,7 +86,11 @@ export function resolveByokProvider(
   key: string | null
 ): ByokProvider {
   if (isByokProvider(provider)) return provider
-  return key ? inferProviderFromKey(key) : 'anthropic'
+  if (key) {
+    const inferred = inferProviderFromKey(key)
+    if (isByokProvider(inferred)) return inferred
+  }
+  return 'anthropic'
 }
 
 export function parseByokProvider(header: string | null): ByokProvider | null {
@@ -106,10 +116,11 @@ export function validateByokKey(provider: ByokProvider, key: string): string | n
   return null
 }
 
-export function inferProviderFromKey(key: string): ByokProvider {
+export function inferProviderFromKey(key: string): AIProvider {
   const trimmed = key.trim()
   if (trimmed.startsWith('sk-ant-')) return 'anthropic'
   if (trimmed.startsWith('sk-or-')) return 'openrouter'
+  if (trimmed.startsWith('nvapi-')) return 'nvidia'
   return 'openrouter'
 }
 
