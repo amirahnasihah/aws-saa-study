@@ -18,7 +18,10 @@ export const changelog: ChangeEntry[] = [
     id: '2026-06-06',
     date: '2026-06-06',
     changes: [
-      { type: 'feat', text: 'Visual page: inline AI explanation panel — "✦ Explain" button in diagram header calls free AI to explain architecture in three prose paragraphs (what / how / why); loading skeleton, retry on error, dismiss to close' },
+      { type: 'feat', text: 'Visual page: always-visible AI sidebar — click any node for per-service explanation or "✦ Explain diagram" for full architecture overview; structured sections: What problem, How traffic flows, SAA-C03 Exam Relevance, Common Exam Traps, Sources' },
+      { type: 'feat', text: 'Visual page: Sources section now powered by AWS Knowledge MCP — up to 3 live docs.aws.amazon.com links fetched in parallel with AI explanation (replaced static study PDFs)' },
+      { type: 'fix', text: 'aws-knowledge.ts pickBestHit: optional chaining on h.url prevents TypeError when MCP returns hits with missing url field (was causing 500s)' },
+      { type: 'feat', text: 'ReactFlow Controls panel: dark theme override via globals.css — transparent bg, visible icons, consistent with site dark palette' },
       { type: 'feat', text: 'AI page (/ai) now linked in nav — animated sparkle ✦ icon on desktop, "Ask AI" in mobile drawer' },
       { type: 'feat', text: 'Free AI: ILMU (primary) → NVIDIA NIM → Gemini 2.5 Flash automatic fallback chain — if one hits rate limits, next kicks in transparently' },
       { type: 'feat', text: 'NVIDIA NIM added as free server-side provider (nvapi- key, 40 RPM, 100+ models including Llama 3.3 70B)' },
