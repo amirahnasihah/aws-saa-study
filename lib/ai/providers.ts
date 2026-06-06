@@ -110,7 +110,7 @@ export function inferProviderFromKey(key: string): ByokProvider {
   const trimmed = key.trim()
   if (trimmed.startsWith('sk-ant-')) return 'anthropic'
   if (trimmed.startsWith('sk-or-')) return 'openrouter'
-  return 'ilmu'
+  return 'openrouter'
 }
 
 export function byokProviderLabel(provider: ByokProvider): string {
@@ -140,11 +140,9 @@ export function classifyProviderError(provider: ByokProvider, status: number): s
   const consoleHint =
     provider === 'ollama'
       ? 'ollama.com/settings/keys'
-      : provider === 'ilmu'
-        ? 'console.ilmu.ai'
-        : provider === 'openrouter'
-          ? 'openrouter.ai/keys'
-          : 'console.anthropic.com'
+      : provider === 'openrouter'
+        ? 'openrouter.ai/keys'
+        : 'console.anthropic.com'
   const errorByStatus: Record<number, string> = {
     401: `Your API key was rejected. Check it is active at ${consoleHint}.`,
     429: 'You have hit your API rate limit. Wait a moment and try again.',
