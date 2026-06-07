@@ -100,7 +100,7 @@ export default function AIQuestionView({
             value={domain}
             onChange={(e) => setDomain(e.target.value)}
             placeholder="e.g. Resilient Architectures"
-            className="w-full px-3 py-2 rounded-lg bg-aws-card border border-aws-border text-aws-text text-[0.75rem] font-space-mono placeholder:text-aws-muted/40 focus:outline-none focus:border-c1/50 transition-colors"
+            className="w-full px-3 py-2 rounded-lg bg-aws-card border border-aws-border text-aws-text text-base sm:text-[0.75rem] font-space-mono placeholder:text-aws-muted/40 focus:outline-none focus:border-c1/50 transition-colors"
           />
         </div>
         <div>
@@ -112,7 +112,7 @@ export default function AIQuestionView({
             value={correctAnswer}
             onChange={(e) => setCorrectAnswer(e.target.value)}
             placeholder="e.g. Use S3 with versioning…"
-            className="w-full px-3 py-2 rounded-lg bg-aws-card border border-aws-border text-aws-text text-[0.75rem] font-space-mono placeholder:text-aws-muted/40 focus:outline-none focus:border-c1/50 transition-colors"
+            className="w-full px-3 py-2 rounded-lg bg-aws-card border border-aws-border text-aws-text text-base sm:text-[0.75rem] font-space-mono placeholder:text-aws-muted/40 focus:outline-none focus:border-c1/50 transition-colors"
           />
         </div>
       </div>

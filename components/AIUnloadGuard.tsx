@@ -1,11 +1,18 @@
 'use client'
 
+import { usePathname } from 'next/navigation'
 import { useEffect } from 'react'
 import {
   AI_SESSION_CHANGED,
   hasAISessionData,
   LEAVE_CONFIRM_MESSAGE,
 } from '@/lib/ai/session-persist'
+
+const GUARDED_PATHS = new Set(['/ai', '/practice'])
+
+function isGuardedPath(pathname: string | null): boolean {
+  return pathname !== null && GUARDED_PATHS.has(pathname)
+}
 
 function pushHistoryTrap() {
   if (!hasAISessionData()) return
@@ -30,13 +37,20 @@ function isInternalNavigationLink(anchor: HTMLAnchorElement): boolean {
 }
 
 /**
- * Native leave warnings when AI chat or hints exist in sessionStorage:
- * - beforeunload: tab/window close, refresh, external URL
+ * Native leave warnings on /ai and /practice when sessionStorage has chat or hints:
+ * - beforeunload: tab close, refresh, external URL
  * - popstate + confirm: browser Back
  * - click capture + confirm: in-app links (Next.js <Link> etc.)
+ *
+ * Mount once in the root layout; pathname gates listeners so other routes are unaffected.
  */
 export default function AIUnloadGuard() {
+  const pathname = usePathname()
+  const guarded = isGuardedPath(pathname)
+
   useEffect(() => {
+    if (!guarded) return
+
     const onBeforeUnload = (event: BeforeUnloadEvent) => {
       if (!hasAISessionData()) return
       event.preventDefault()
@@ -87,7 +101,7 @@ export default function AIUnloadGuard() {
       window.removeEventListener(AI_SESSION_CHANGED, onSessionChanged)
       document.removeEventListener('click', onLinkClick, true)
     }
-  }, [])
+  }, [guarded])
 
   return null
 }

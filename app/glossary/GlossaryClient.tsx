@@ -36,7 +36,7 @@ export default function GlossaryClient() {
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search terms or definitions…"
           className="w-full bg-aws-card border border-aws-border rounded-xl pl-8 pr-9 py-2.5
-            text-[0.82rem] text-aws-text placeholder:text-aws-muted/50
+            text-base sm:text-[0.82rem] text-aws-text placeholder:text-aws-muted/50
             focus:outline-none focus:border-c4/50 transition-colors"
         />
         {query && (

@@ -4,7 +4,7 @@ export const AI_SESSION_CHANGED = 'ai-session-changed'
 
 /** Shown in native confirm() for back / in-app links (browsers block custom beforeunload text). */
 export const LEAVE_CONFIRM_MESSAGE =
-  'You have AI chat or hints in this browser session. Leave this page?'
+  'You have an active study session. Leave this page?'
 
 const LEGACY_CHAT_LOCAL_KEY = 'aws_study_ai_chat_history'
 const LEGACY_HINT_LOCAL_KEY = 'aws_study_hint_cache_v2'
