@@ -11,6 +11,7 @@ This produces lower grounding accuracy than necessary: the AI falls back on its 
 Improve grounding accuracy for the **question explainer** by retrieving semantically similar glossary entries — not just keyword matches — and injecting their verified definitions into the explanation prompt as grounding context.
 
 Scope is intentionally narrow:
+
 - **Surface**: question explainer only (not free-form chat, not the visual-page sidebar)
 - **Content**: the 197 glossary terms in `data/glossary.ts` only (not deep-notes / `awsServices.ts`, not practice questions)
 - **Usage**: retrieved matches are injected into the LLM prompt as grounding context (not surfaced as a separate UI panel)
@@ -24,6 +25,7 @@ Scope is intentionally narrow:
 - Matches above a similarity threshold are appended to the prompt as a "verified glossary context" block, alongside the existing deep-notes/docs grounding.
 
 This was chosen over two alternatives:
+
 - *Precomputed static embeddings with in-Worker cosine similarity* — avoids Cloudflare infra, but ships ~600KB of vectors per request and is slower/lower-quality than a real vector index, for no real reduction in the operational overhead the user already accepted.
 - *Hybrid keyword-then-vector re-ranking* — keeps the existing keyword candidate set as a ceiling, so it doesn't actually fix the core problem (semantically related but differently-worded content being missed).
 
@@ -33,6 +35,7 @@ Vectorize + Workers AI directly targets the stated goal (better grounding accura
 
 - **Vectorize binding**: add `GLOSSARY_INDEX` to `wrangler.jsonc`'s `vectorize` bindings, pointing at a `glossary-terms` index (768-dim, cosine).
 - **Retrieval module**: new `lib/ai/glossary-rag.ts`, structured like the existing `lib/ai/deep-notes.ts`:
+
   ```ts
   export async function findGlossaryMatches(
     query: string,
@@ -40,24 +43,28 @@ Vectorize + Workers AI directly targets the stated goal (better grounding accura
     topK = 4
   ): Promise<{ term: string; definition: string; score: number }[]>
   ```
+
 - **Sync script**: `scripts/sync-glossary-embeddings.ts` — offline, one-time backfill plus a documented re-sync step whenever `data/glossary.ts` changes.
 
 ## Data flow
 
 **Retrieval (`findGlossaryMatches`)**
+
 1. Embed the user's question via `env.AI.run('@cf/baai/bge-base-en-v1.5', { text: [query] })`.
 2. Query `env.GLOSSARY_INDEX.query(vector, { topK, returnMetadata: true })`.
 3. Map matches to `{ term, definition, score }` directly from stored vector metadata — no secondary lookup into `glossary.ts` needed at runtime.
 4. Filter out matches below a similarity threshold (e.g. `score < 0.6`) to avoid polluting the prompt with weak matches.
 
 **Integration**: in `app/api/ai/explain/route.ts`, call `findGlossaryMatches(question, env)` alongside the existing `findDeepNotesMatch` / `searchAwsDocumentation` calls. Append results to the prompt assembly in `lib/ai/messages.ts` as a distinct grounding block:
-```
+
+```text
 Ground your answer in these AWS-verified definitions where relevant:
 - SSM: AWS Systems Manager — manage EC2 instances remotely without SSH...
 - ...
 ```
 
 **Sync script flow** (run manually after glossary edits, via `wrangler`)
+
 1. Read `glossary` from `data/glossary.ts`.
 2. For each `[term, definition]` pair, embed `"${term}: ${definition}"`.
 3. Upsert `{ id: term, values: vector, metadata: { term, definition } }` into the Vectorize index — upserts are idempotent by `id`, so re-runs are safe.
