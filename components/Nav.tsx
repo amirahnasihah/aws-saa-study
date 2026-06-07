@@ -1,21 +1,29 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, type CSSProperties } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { navDomains } from '@/data/awsServices'
+import { navTransitionTypes } from '@/lib/nav-transition'
 import FloatingSearch from './FloatingSearch'
 
 interface NavProps {
   activePage?: 'cheatsheet' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc' | 'ai'
 }
 
+const siteHeaderTransition: CSSProperties = { viewTransitionName: 'site-header' }
+
 export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   return (
     <>
       {/* ── Desktop nav ── */}
-      <nav className="nav-scroll hidden md:flex fixed top-0 left-0 right-0 h-14 z-50 items-center gap-2 px-4 overflow-x-auto bg-aws-bg/92 backdrop-blur-md border-b border-aws-border">
+      <nav
+        style={siteHeaderTransition}
+        className="nav-scroll hidden md:flex fixed top-0 left-0 right-0 h-14 z-50 items-center gap-2 px-4 overflow-x-auto bg-aws-bg/92 backdrop-blur-md border-b border-aws-border"
+      >
         <Link
           href="/about"
           className="font-space-mono text-[0.7rem] font-bold text-c1 whitespace-nowrap mr-2 pr-2 border-r border-aws-border shrink-0 hover:text-aws-text transition-colors"
@@ -23,13 +31,13 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
           AWS SAA-C03
         </Link>
 
-        <PageLink href="/" label="Cheat Sheet" active={activePage === 'cheatsheet'} />
-        <PageLink href="/learn" label="Deep Notes" active={activePage === 'learn'} />
-        <PageLink href="/practice" label="Practice" active={activePage === 'practice'} />
-        <PageLink href="/scenarios" label="Scenarios" active={activePage === 'scenarios'} />
-        <PageLink href="/visual" label="Visual" active={activePage === 'visual'} />
-        <PageLink href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
-        <AskAINavLink active={activePage === 'ai'} variant="icon" />
+        <PageLink pathname={pathname} href="/" label="Cheat Sheet" active={activePage === 'cheatsheet'} />
+        <PageLink pathname={pathname} href="/learn" label="Deep Notes" active={activePage === 'learn'} />
+        <PageLink pathname={pathname} href="/practice" label="Practice" active={activePage === 'practice'} />
+        <PageLink pathname={pathname} href="/scenarios" label="Scenarios" active={activePage === 'scenarios'} />
+        <PageLink pathname={pathname} href="/visual" label="Visual" active={activePage === 'visual'} />
+        <PageLink pathname={pathname} href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
+        <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="icon" />
 
         <span className="text-aws-border text-sm shrink-0">·</span>
 
@@ -50,12 +58,15 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
       </nav>
 
       {/* ── Mobile nav ── */}
-      <nav className="md:hidden fixed top-0 left-0 right-0 h-14 z-50 flex items-center justify-between px-4 bg-aws-bg/95 backdrop-blur-md border-b border-aws-border">
+      <nav
+        style={siteHeaderTransition}
+        className="md:hidden fixed top-0 left-0 right-0 h-14 z-50 flex items-center justify-between px-4 bg-aws-bg/95 backdrop-blur-md border-b border-aws-border"
+      >
         <Link href="/about" className="font-space-mono text-[0.7rem] font-bold text-c1 hover:text-aws-text transition-colors">
           AWS SAA-C03
         </Link>
         <div className="flex items-center gap-1">
-          <AskAINavLink active={activePage === 'ai'} variant="pill" />
+          <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="pill" />
           <button onClick={() => setMenuOpen(true)} className="text-aws-muted hover:text-aws-text transition-colors p-2" aria-label="Open menu">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
               <rect y="3" width="20" height="2" rx="1" />
@@ -98,6 +109,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                 <Link
                   key={p.href}
                   href={p.href}
+                  transitionTypes={navTransitionTypes(pathname, p.href)}
                   onClick={() => setMenuOpen(false)}
                   className={`flex items-center gap-3 w-full px-3 py-2 rounded-lg transition-all ${
                     p.active
@@ -158,9 +170,11 @@ function AskAISparkleIcon({ size }: { size: 'icon' | 'pill' | 'drawer' }) {
 }
 
 function AskAINavLink({
+  pathname,
   active,
   variant,
 }: {
+  pathname: string
   active: boolean
   variant: 'icon' | 'pill'
 }) {
@@ -172,6 +186,7 @@ function AskAINavLink({
     return (
       <Link
         href="/ai"
+        transitionTypes={navTransitionTypes(pathname, '/ai')}
         className={`relative inline-flex items-center justify-center w-8 h-8 rounded-md border transition-all shrink-0 ${shared}`}
         title="Ask AI"
         aria-label="Ask AI"
@@ -184,6 +199,7 @@ function AskAINavLink({
   return (
     <Link
       href="/ai"
+      transitionTypes={navTransitionTypes(pathname, '/ai')}
       className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border transition-all ${shared}`}
       aria-label="Ask AI"
     >
@@ -196,10 +212,21 @@ function AskAINavLink({
   )
 }
 
-function PageLink({ href, label, active }: { href: string; label: string; active: boolean }) {
+function PageLink({
+  pathname,
+  href,
+  label,
+  active,
+}: {
+  pathname: string
+  href: string
+  label: string
+  active: boolean
+}) {
   return (
     <Link
       href={href}
+      transitionTypes={navTransitionTypes(pathname, href)}
       className={`font-space-mono text-[0.6rem] uppercase tracking-widest px-2 py-1 rounded-md border transition-all whitespace-nowrap ${
         active
           ? 'text-aws-text border-aws-border bg-white/8'

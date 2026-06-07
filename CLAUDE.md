@@ -17,3 +17,7 @@ When working in this repository, follow these standards:
 - Follow existing code patterns in the codebase
 - Keep changes minimal and focused
 - Ensure no sensitive information, typos, or debugging code in commits
+
+## Mobile inputs
+
+- Any `<input>`/`<textarea>` must render at ≥16px on mobile — iOS Safari auto-zooms the viewport on focus when the computed font-size is below that. Use the `text-base sm:text-[<desktop-size>]` pattern (e.g. `text-base sm:text-[0.8rem]`) so the field is 16px on small screens and keeps the smaller mono aesthetic from `sm:`/`md:` up.
