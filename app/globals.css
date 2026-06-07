@@ -137,6 +137,13 @@ body {
   }
 }
 
+::view-transition-old(.page-fade) {
+  animation: var(--vt-duration-exit) ease-in both vt-fade reverse;
+}
+::view-transition-new(.page-fade) {
+  animation: var(--vt-duration-enter) ease-out var(--vt-duration-exit) both vt-fade;
+}
+
 ::view-transition-old(.nav-forward) {
   --slide-offset: -48px;
   animation:
