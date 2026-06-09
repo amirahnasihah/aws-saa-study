@@ -1,3 +1,5 @@
+import { sanitizeLab } from '@/lib/sanitize-lab'
+
 export type LabLevel = 'Fundamental' | 'Intermediate' | 'Advanced'
 
 export type LabStepContent = {
@@ -65,7 +67,7 @@ const normalizeTask = (task: unknown): LabTask => {
   }
 }
 
-export const rowToLab = (row: LabDBRow): Lab => ({
+const rowToLabRaw = (row: LabDBRow): Lab => ({
   slug: row.slug,
   title: row.title,
   level: (row.level as LabLevel) || 'Fundamental',
@@ -75,9 +77,11 @@ export const rowToLab = (row: LabDBRow): Lab => ({
   completedOn: row.completed_on ?? undefined,
   tasks: parseJson<unknown[]>(row.tasks, []).map(normalizeTask),
   takeaways: parseJson<string[]>(row.takeaways, []),
-  source: row.source,
-  sourceUrl: row.source_url ?? undefined,
+  source: row.source === 'whizlabs' ? 'course' : row.source,
+  sourceUrl: undefined,
 })
+
+export const rowToLab = (row: LabDBRow): Lab => sanitizeLab(rowToLabRaw(row))
 
 export const labToInsertSql = (lab: Lab, extra?: { sourceUrl?: string; scrapedAt?: string }): string => {
   const esc = (s: string): string => s.replace(/'/g, "''")
@@ -92,8 +96,11 @@ export const labToInsertSql = (lab: Lab, extra?: { sourceUrl?: string; scrapedAt
   return `INSERT OR REPLACE INTO labs (slug, title, level, services, summary, duration, completed_on, tasks, takeaways, source, source_url, scraped_at) VALUES ('${esc(lab.slug)}', '${esc(lab.title)}', '${esc(lab.level)}', '${esc(services)}', '${esc(lab.summary)}', '${esc(lab.duration)}', ${completed}, '${esc(tasks)}', '${esc(takeaways)}', '${esc(lab.source ?? 'manual')}', ${sourceUrlSql}, ${scrapedAt});`
 }
 
-export const slugFromWhizlabsUrl = (url: string): string => {
+export const slugFromLabUrl = (url: string): string => {
   const path = new URL(url).pathname.replace(/\/$/, '')
   const segment = path.split('/').pop() ?? 'lab'
   return segment
 }
+
+/** @deprecated use slugFromLabUrl */
+export const slugFromWhizlabsUrl = slugFromLabUrl

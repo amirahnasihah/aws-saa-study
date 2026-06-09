@@ -45,16 +45,25 @@ next-env.d.ts
 # cloudflare wrangler local state
 .wrangler/
 
-# generated sql seed files (source: scripts/*.ts)
+# ---------------------------------------------------------------------------
+# scripts/ — generated outputs (regenerate from *.ts or labs/*.json)
+# Commit: *.ts tooling, labs/*.json, labs/course-index.json, labs-schema.sql
+# Ignore: *.sql seeds, auth state, debug HTML
+# ---------------------------------------------------------------------------
 scripts/*.sql
 scripts/*-notes.json
 scripts/debug-q*.html
-public/questions/wz*/debug-*.html
+
+# lab scrape (bun run labs:sanitize regenerates SQL from JSON)
+scripts/labs/*.sql
+scripts/labs/batch-seed.sql
+scripts/labs/debug-*.html
 
 # question capture (local URLs + auth state)
 scripts/question-pages.local.json
 scripts/.playwright-storage-state.json
 scripts/aws-reference-report.json
+public/questions/wz*/debug-*.html
 
 # local mcp config
 .mcp.json
