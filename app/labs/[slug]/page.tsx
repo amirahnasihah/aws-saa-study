@@ -1,19 +1,20 @@
 import type { Metadata } from 'next'
 import Nav from '@/components/Nav'
 import LabDetailClient from '@/components/labs/LabDetailClient'
-import { labs } from '@/data/labs'
+import { labsCourseOrder } from '@/data/labsCourseOrder'
+import { findLabFallback } from '@/lib/labs-fallback'
 
 type PageProps = {
   params: Promise<{ slug: string }>
 }
 
 export function generateStaticParams() {
-  return labs.map((lab) => ({ slug: lab.slug }))
+  return labsCourseOrder.map((lab) => ({ slug: lab.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params
-  const lab = labs.find((l) => l.slug === slug)
+  const lab = findLabFallback(slug)
   if (!lab) return {}
   return {
     title: `${lab.title} — Lab Notes`,
