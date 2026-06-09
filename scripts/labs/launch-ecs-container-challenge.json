@@ -1,0 +1,124 @@
+{
+  "slug": "launch-ecs-container-challenge",
+  "title": "Launch ECS Container Challenge",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "In this challenge, your Amazon Elastic Container Service (ECS) skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of Elastic Container Service (ECS), Task definitions and docker used for this challenge. This Challenge will help you understand the real-time scenarios."
+        },
+        {
+          "text": "A company XYZ wants to automatically scale its application on an Elastic Container Service (ECS) using task definitions and attach to the task running on instance. The below are the tasks that need to be performed by you in order to create the stack."
+        },
+        {
+          "text": "Create Key Pair"
+        },
+        {
+          "text": "Launch ECS Cluster:"
+        },
+        {
+          "text": "Use Amazon EC2 and create New Autoscaling group"
+        },
+        {
+          "text": "EC2 Instance Type: t2.micro"
+        },
+        {
+          "text": "Capacity: 1-2"
+        },
+        {
+          "text": "Build Task Definition:"
+        },
+        {
+          "text": "Container details: Enter httpd"
+        },
+        {
+          "text": "URL: Enter httpd:2.4"
+        },
+        {
+          "text": "Port Map:"
+        },
+        {
+          "text": "Port: 80"
+        },
+        {
+          "text": "Protocol: TCP"
+        },
+        {
+          "text": "Infrastructure Requirements:"
+        },
+        {
+          "text": "Infrastructure Requirements:"
+        },
+        {
+          "text": "Task size: .25 vCPU and .5 GB"
+        },
+        {
+          "text": "Deploy service and run HTTPD container:"
+        },
+        {
+          "text": "Deploy service and run HTTPD container:"
+        },
+        {
+          "text": "Configurations: REPLICA as service type"
+        },
+        {
+          "text": "Desired task: 1"
+        },
+        {
+          "text": "Run container in ECS cluster:"
+        },
+        {
+          "text": "Run container in ECS cluster:"
+        },
+        {
+          "text": "Edit inbound rules in Security group, SSH as Type and IPv4 as Source."
+        },
+        {
+          "text": "Access the main EC2 instance using SSH and perform Docker commands."
+        },
+        {
+          "text": "Access the main EC2 instance using SSH and perform Docker commands."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "End Challenge"
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

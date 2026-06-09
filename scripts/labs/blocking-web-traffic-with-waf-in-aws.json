@@ -1,0 +1,568 @@
+{
+  "slug": "blocking-web-traffic-with-waf-in-aws",
+  "title": "Blocking web traffic with WAF in AWS",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to the AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the open console button, and you will get redirected to the AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Select Maybe later in the New AWS Console Home page pop-up"
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Creating a Security group for the Load balancer",
+      "steps": [
+        {
+          "text": "Navigate to the EC2 Dashboard and scroll down to Security Groups. In the left menu, click on Create security group."
+        },
+        {
+          "text": "Configure the security group as follows:"
+        },
+        {
+          "text": "Security group name: Enter LoadBalancer-SG"
+        },
+        {
+          "text": "Description: Enter Security group for the Load balancer"
+        },
+        {
+          "text": "VPC: Leave as default"
+        },
+        {
+          "text": "In Inbound rules, Click on Add Rule and add the port as follows."
+        },
+        {
+          "text": "Type: Select HTTP"
+        },
+        {
+          "text": "Protocol: TCP"
+        },
+        {
+          "text": "Port range: 80"
+        },
+        {
+          "text": "Source: Select Anywhere-IPv4, and enter 0.0.0.0/0"
+        },
+        {
+          "text": "Once you provide the above details, click on Create and the security group for the load balancer will be created."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Steps to create the Web-servers",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) Region."
+        },
+        {
+          "text": "Navigate to Instances on the left panel and click on Launch instance."
+        },
+        {
+          "text": "Name: Enter webserver-A"
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 kernel-6.1 AMI in the search box and click on the select button."
+        },
+        {
+          "text": "Instance Type: Select t2.micro"
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: WhizKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Select the Create key pair Button."
+        },
+        {
+          "text": "In Network Settings Click on the Edit button:"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Choose Create security group"
+        },
+        {
+          "text": "Name: Enter webserver-SG"
+        },
+        {
+          "text": "Description: Enter security group for the webserver"
+        },
+        {
+          "text": "To add HTTP Click on Add security group rule"
+        },
+        {
+          "text": "Choose Type: Select HTTP"
+        },
+        {
+          "text": "Source Type: Custom"
+        },
+        {
+          "text": "Source: Choose LoadBalancer-SG"
+        },
+        {
+          "text": "To add SSH"
+        },
+        {
+          "text": "Choose Type: Select SSH"
+        },
+        {
+          "text": "Source: Choose Anywhere"
+        },
+        {
+          "text": "Click on Advanced Details."
+        },
+        {
+          "text": "Under the User data section, enter the following script to create an HTML page served by an Apache HTTPD web server."
+        },
+        {
+          "text": "#!/bin/bash"
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "dnf update -y"
+        },
+        {
+          "text": "dnf install -y httpd"
+        },
+        {
+          "text": "systemctl start httpd"
+        },
+        {
+          "text": "systemctl enable httpd"
+        },
+        {
+          "text": "echo \"Response coming from server A\" > /var/www/html/index.html"
+        },
+        {
+          "text": "Click on Launch Instances."
+        },
+        {
+          "text": "After a few minutes, you will see a new instance named webserver-A running."
+        },
+        {
+          "text": "Repeat the above steps to create Webserver-B by selecting the existing security group webserver-SG providing the following details."
+        },
+        {
+          "text": "Kindly select the same key-pair (as in you have created for previous instance (Webserver-A) to Webserver-B instance."
+        },
+        {
+          "text": "#!/bin/bash"
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "dnf update -y"
+        },
+        {
+          "text": "dnf install -y httpd"
+        },
+        {
+          "text": "systemctl start httpd"
+        },
+        {
+          "text": "systemctl enable httpd"
+        },
+        {
+          "text": "echo \"Response coming from server B\" > /var/www/html/index.html"
+        },
+        {
+          "text": "Navigate to the EC2 Dashboard to find the two instances (webserver-A and webserver-B) running."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Creating a Load balancer",
+      "steps": [
+        {
+          "text": "In the EC2 Console, Navigate to Target Groups, present in the left panel under Load Balancing."
+        },
+        {
+          "text": "Click on the Create target group."
+        },
+        {
+          "text": "For Step 1, Specify group details"
+        },
+        {
+          "text": "Under Basic configurations,"
+        },
+        {
+          "text": "Choose a target group: Choose Instances"
+        },
+        {
+          "text": "Target group name: Enter web-server-TG"
+        },
+        {
+          "text": "Keep all the settings as default."
+        },
+        {
+          "text": "Health check protocol: HTTP"
+        },
+        {
+          "text": "Health check path: Enter /index.html"
+        },
+        {
+          "text": "Scroll to the end of the page and click on the Next button."
+        },
+        {
+          "text": "For Step 2, Register targets"
+        },
+        {
+          "text": "Select both instances and click on the Include as pending below button."
+        },
+        {
+          "text": "Instances will be present in the Review targets part, having health status as Pending."
+        },
+        {
+          "text": "Click on the Create target group button."
+        },
+        {
+          "text": "The Target group is now created."
+        },
+        {
+          "text": "In the EC2 console, navigate to Load balancers in the left-side panel."
+        },
+        {
+          "text": "Click on create load balancer at the top-left to create a new load balancer for our web servers."
+        },
+        {
+          "text": "Select Load Balancer Type: Under the Application load balancer, click on the Create button."
+        },
+        {
+          "text": "To create an Application load balancer, configure the load balancer as below"
+        },
+        {
+          "text": "For the Basic configuration section,"
+        },
+        {
+          "text": "Name: Enter Web-server-LB"
+        },
+        {
+          "text": "Scheme: Select Internet-facing"
+        },
+        {
+          "text": "IP address type: Choose IPv4"
+        },
+        {
+          "text": "For the Network mapping section:"
+        },
+        {
+          "text": "VPC: Select Default"
+        },
+        {
+          "text": "Mappings: Select all the Availability zones present"
+        },
+        {
+          "text": "For the Security groups section,"
+        },
+        {
+          "text": "Select the LoadBalancer-SG Security group from the dropdown and remove the default security group."
+        },
+        {
+          "text": "For the Listeners and routing section,"
+        },
+        {
+          "text": "The listener is already present with Protocol HTTP and Port 80."
+        },
+        {
+          "text": "Select the target group web-server-TG for the Default action forwards to option."
+        },
+        {
+          "text": "Keep the tags as default and click on the Create load balancer button."
+        },
+        {
+          "text": "You have successfully created the Application Load balancer. Click on the View load balancers button."
+        },
+        {
+          "text": "Wait for 2 to 3 minutes for the load balancer to become Active."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Testing the Load Balancer",
+      "steps": [
+        {
+          "text": "Navigate to Load Balancers and select the load balancer that you created. Under details scroll down you will be able to see the DNS name, copy the DNS name and paste it into the browser"
+        },
+        {
+          "text": "Refresh the browser a few times and you will see the request is serving from both servers. You will see the output as RESPONSE COMING FROM SERVER A & RESPONSE COMING FROM SERVER B. This shows that load is shared between the two web servers via the Application Load Balancer."
+        },
+        {
+          "text": "Note: Remove 's' from the https in the dns name if you couldn't able to see the webpage."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Creating an IP set",
+      "steps": [
+        {
+          "text": "Click on services and select WAF & Shield under the Security, Identity, & Compliance section."
+        },
+        {
+          "text": "On the left side, you will be able to see the IP sets menu. Click on IP sets and click on Create IP sets."
+        },
+        {
+          "text": "On the next screen, fill out the following details under Create IP set."
+        },
+        {
+          "text": "IP set details:"
+        },
+        {
+          "text": "IP set name: Enter MyIPset"
+        },
+        {
+          "text": "Description: Enter IP set to block my public IP"
+        },
+        {
+          "text": "Region: Select US EAST (N.Virginia )"
+        },
+        {
+          "text": "IP Version: Select IPv4"
+        },
+        {
+          "text": "IP address: Enter the IP of your local network/32 from https://www.whatismyip.com/."
+        },
+        {
+          "text": "Note: You have to give /32 after the IP is pasted or else you won't be able to create an IP set."
+        },
+        {
+          "text": "Once you have provided the above details, click on Create IP set"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Creating a Web ACL",
+      "steps": [
+        {
+          "text": "Web ACL details"
+        },
+        {
+          "text": "Navigate to the AWS WAF dashboard and scroll down and select Switch to the Old WAF Console."
+        },
+        {
+          "text": "Click on Create web ACL to create a new web ACL."
+        },
+        {
+          "text": "Configure the ACL as below:"
+        },
+        {
+          "text": "Web ACL details"
+        },
+        {
+          "text": "Resource type: Select Regional resources (Application Load Balancer and API Gateway)"
+        },
+        {
+          "text": "Region: Select US EAST (N.Virginia)"
+        },
+        {
+          "text": "Name: Enter MywebACL"
+        },
+        {
+          "text": "Description: Enter ACL to block my public IP"
+        },
+        {
+          "text": "To associate an AWS resource, click on Add AWS resources"
+        },
+        {
+          "text": "In Add AWS resources select Application Load Balancer and select the name of ALB. Click on Add"
+        },
+        {
+          "text": "Lastly, click on the Next button"
+        },
+        {
+          "text": "Add rules and rule groups"
+        },
+        {
+          "text": "Under Rules click on Add rule and select Add my own rules and rule groups in the drop-down menu."
+        },
+        {
+          "text": "In Rule type select IP set as shown below and fill in the details as given below:"
+        },
+        {
+          "text": "Rule type: Select IP set"
+        },
+        {
+          "text": "Name: Enter MywebACL-rule"
+        },
+        {
+          "text": "IP set: select the IP set created Above ( MyIPset )"
+        },
+        {
+          "text": "IP address to use as the originating address: Source IP address"
+        },
+        {
+          "text": "Action: Select Block"
+        },
+        {
+          "text": "Once you provide the above details, click on the Add rule."
+        },
+        {
+          "text": "Lastly, click on the Next button"
+        },
+        {
+          "text": "Set rule priority"
+        },
+        {
+          "text": "Leave as default and click on Next."
+        },
+        {
+          "text": "Configure metrics"
+        },
+        {
+          "text": "Leave as default and click on Next."
+        },
+        {
+          "text": "Review and create web ACL"
+        },
+        {
+          "text": "Review all your inputs and click on Create web ACL"
+        },
+        {
+          "text": "Wait for 1 to 2 minutes until you will see that your web ACL is successfully created."
+        },
+        {
+          "text": "You have successfully created a web ACL for ALB with the help of an IP set created with your public IP."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Testing the working of the WAF",
+      "steps": [
+        {
+          "text": "To test the WAF, navigate to Load Balancers from the EC2 left menu under the sub-heading Load balancing"
+        },
+        {
+          "text": "Under the Load balancer section, select the Application load balancer Web-server-LB."
+        },
+        {
+          "text": "Copy the DNS name Under details scroll down you will be able to see the DNS name copy it and paste it in your desired browser."
+        },
+        {
+          "text": "Example: web-server-lb-1903855210.us-east-1.elb.amazonaws.com"
+        },
+        {
+          "text": "You will get a 403 forbidden error showing that WAF blocked your connection to ALB."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Unblocking the IP",
+      "steps": [
+        {
+          "text": "Click on services and select WAF & Shield under the Security, Identity, & Compliance section."
+        },
+        {
+          "text": "On the left side, Click IP sets menu."
+        },
+        {
+          "text": "To unblock the IP, navigate to IP sets and click on MyIPset. Select your public IP and then click on Delete"
+        },
+        {
+          "text": "Type delete in the confirmation box and click on Delete."
+        },
+        {
+          "text": "You have successfully removed the IP from WAF."
+        },
+        {
+          "text": "Wait for a few minutes."
+        },
+        {
+          "text": "Navigate to Load Balancers from the EC2 left menu under the sub-heading Load balancing"
+        },
+        {
+          "text": "Under the Load balancer section, select the Application load balancer Web-server-LB."
+        },
+        {
+          "text": "Copy the DNS name under Description and paste it into your desired browser."
+        },
+        {
+          "text": "Example: web-server-lb-1903855210.us-east-1.elb.amazonaws.com"
+        },
+        {
+          "text": "You will get the response from the web servers either stating RESPONSE COMING FROM SERVER A or RESPONSE COMING FROM SERVER B as shown below:"
+        },
+        {
+          "text": "Do you know?"
+        },
+        {
+          "text": "Web Application Firewall (WAF): A Web Application Firewall is a security service that sits between a web application and its users, inspecting and filtering incoming web traffic. In the context of AWS, the AWS WAF service provides this functionality. It helps protect web applications by examining HTTP/HTTPS requests and applying a set of predefined rules or custom rule configurations to block, allow, or filter traffic based on specified criteria."
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click the validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and display whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created an IP set using your public IP."
+        },
+        {
+          "text": "You have successfully created a web ACL rule using an IP set and application load balancer (ALB)."
+        },
+        {
+          "text": "You have successfully tested the working of the ALB after implementing a WAF, blocking the web request to the ALB from your local network."
+        },
+        {
+          "text": "You deleted the IP set and tested the working of the ALB."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out from the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps click on end Lab from the lab console"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

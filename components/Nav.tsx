@@ -8,7 +8,7 @@ import { navTransitionTypes } from '@/lib/nav-transition'
 import FloatingSearch from './FloatingSearch'
 
 interface NavProps {
-  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc' | 'ai'
+  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc' | 'labs' | 'ai'
 }
 
 const siteHeaderTransition: CSSProperties = { viewTransitionName: 'site-header' }
@@ -37,6 +37,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
         <PageLink pathname={pathname} href="/scenarios" label="Scenarios" active={activePage === 'scenarios'} />
         <PageLink pathname={pathname} href="/visual" label="Visual" active={activePage === 'visual'} />
         <PageLink pathname={pathname} href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
+        <PageLink pathname={pathname} href="/labs" label="Labs" active={activePage === 'labs'} />
         <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="icon" />
 
         <span className="text-aws-border text-sm shrink-0">·</span>
@@ -104,6 +105,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                 { href: '/scenarios', label: 'Scenarios',   icon: '🏗️', active: activePage === 'scenarios' },
                 { href: '/visual',    label: 'Visual',      icon: '🗺️', active: activePage === 'visual' },
                 { href: '/vpc',       label: 'VPC Guide',   icon: '🏘️', active: activePage === 'vpc' },
+                { href: '/labs',      label: 'Labs',        icon: '🧪', active: activePage === 'labs' },
                 { href: '/ai',        label: 'Ask AI',      icon: '✦',  active: activePage === 'ai' },
               ].map((p) => (
                 <Link

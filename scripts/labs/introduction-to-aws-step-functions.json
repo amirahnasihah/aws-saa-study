@@ -1,0 +1,276 @@
+{
+  "slug": "introduction-to-aws-step-functions",
+  "title": "Introduction to AWS Step Functions",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a Lambda Function",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a Lambda function by providing the required parameters like name, runtime, execution rule etc."
+        },
+        {
+          "text": "Navigate to the Services menu at the top, then click on Lambda under the Compute section."
+        },
+        {
+          "text": "Click on Create a function button."
+        },
+        {
+          "text": "Select Author from Scratch"
+        },
+        {
+          "text": "Function Name: Enter MyStepFunction_lambda"
+        },
+        {
+          "text": "Runtime: Select Python 3.10"
+        },
+        {
+          "text": "Under Additional settings, enable Custom execution role"
+        },
+        {
+          "text": "Choose the Execution role"
+        },
+        {
+          "text": "Select Lambda_role_<RANDOM_NUMBER> and click Save"
+        },
+        {
+          "text": "Leave other options as the default."
+        },
+        {
+          "text": "Click on the Create function button."
+        },
+        {
+          "text": "Once the Lambda Function is created successfully, it will look like the screenshot below:"
+        },
+        {
+          "text": "Under Function code:"
+        },
+        {
+          "text": "Replace the existing code with the below python code."
+        },
+        {
+          "text": "import json"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "# TODO: Implement your Lambda function logic here"
+        },
+        {
+          "text": "return {"
+        },
+        {
+          "text": "'statusCode': 200,"
+        },
+        {
+          "text": "'body': json.dumps('You have successfully invoked the lambda function from Step Function.')"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "Now save the code using by clicking on the Deploy button."
+        },
+        {
+          "text": "Now copy your lambda function ARN from the top right corner and place it in a text editor. This arn will be used later."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a State Machine in Step Function",
+      "steps": [
+        {
+          "text": "Navigate to the Services menu at the top, then click on Step Functions in the Application Integration section."
+        },
+        {
+          "text": "Click on the State machines from the left navigation panel."
+        },
+        {
+          "text": "Click on Create state machine button."
+        },
+        {
+          "text": "Select Create from blank. Give the name of your choice and Click on Continue."
+        },
+        {
+          "text": "Click on {}Code."
+        },
+        {
+          "text": "Definition : Replace the existing state machine JSON code with the below one."
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"Comment\": \"Sample State machine code to invoke a lambda function\","
+        },
+        {
+          "text": "\"StartAt\": \"invokeLambda\","
+        },
+        {
+          "text": "\"States\": {"
+        },
+        {
+          "text": "\"invokeLambda\": {"
+        },
+        {
+          "text": "\"Type\": \"Task\","
+        },
+        {
+          "text": "\"Resource\": \"<YOUR_FUNCTION_ARN>\","
+        },
+        {
+          "text": "\"End\": true"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "Now replace the entire value of Resource key with the lambda ARN that you have copied and placed in the text edit."
+        },
+        {
+          "text": "Now on the right side the flow diagram will be as follows :"
+        },
+        {
+          "text": "Note : If this image is not displayed, please click the refresh button, to reload the diagram."
+        },
+        {
+          "text": "Now click on the Config button."
+        },
+        {
+          "text": "Specify details:"
+        },
+        {
+          "text": "Name : Default MyStateMachine (This name cannot be changed here) and Select Standard as Type."
+        },
+        {
+          "text": "Permissions :"
+        },
+        {
+          "text": "Execution role : select Choose an existing role"
+        },
+        {
+          "text": "Existing roles : select StepFunction_lambda_role-RANDOM_NUMBER"
+        },
+        {
+          "text": "Leave everything as default."
+        },
+        {
+          "text": "Click on the Create button."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Test the Step function",
+      "steps": [
+        {
+          "text": "Click on the created state machine and select Execute button."
+        },
+        {
+          "text": "New execution :"
+        },
+        {
+          "text": "Enter an execution name : Enter SampleTest1"
+        },
+        {
+          "text": "Input : leave as default."
+        },
+        {
+          "text": "Click on the Start execution button."
+        },
+        {
+          "text": "In the Graph inspector diagram, the colour of invokeLambda will become green (success) as shown in the image below."
+        },
+        {
+          "text": "Click on the invokeLambda step."
+        },
+        {
+          "text": "You will be able to see the details below on the right side column."
+        },
+        {
+          "text": "Now, click on the Input/Output tab. You will see the output from our lambda function."
+        }
+      ]
+    },
+    {
+      "title": "Task 5 : Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "Step Functions include built-in support for wait states, where you can pause the workflow execution for a specific duration, until a specified time, or until a specific event occurs."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created a Lambda function."
+        },
+        {
+          "text": "You have successfully created a state machine in a step function."
+        },
+        {
+          "text": "You have successfully tested the step function."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

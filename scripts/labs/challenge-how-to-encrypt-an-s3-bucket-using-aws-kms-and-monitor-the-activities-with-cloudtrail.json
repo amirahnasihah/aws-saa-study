@@ -1,0 +1,112 @@
+{
+  "slug": "challenge-how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail",
+  "title": "Challenge - How to Encrypt an S3 bucket using AWS KMS and monitor the activities with CloudTrail",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click On The Open Console Button, And You Will Get Redirected To AWS Console In A New Browser Tab."
+        },
+        {
+          "text": "On The AWS Sign-In Page, Leave The Account ID As Default. Never Edit/Remove The 12 Digit Account ID Present In The AWS Console. Otherwise, You Cannot Proceed With The Challenge."
+        },
+        {
+          "text": "Now Copy Your User Name and Password In The Lab Console To The IAM Username and Password In AWS Console And Click On The Sign In Button."
+        },
+        {
+          "text": "Once Signed In To The AWS Management Console, Make The Default AWS Region As US East (N. Virginia) Us-East-1."
+        },
+        {
+          "text": "In This Challenge, Your AWS Compute Skills Are Put To The Test. You'll Be Given A Requirement And You Have To Reach It Using Your Knowledge Of S3, KMS and CloudTrail. Which Will Be Used In This Challenge. This Challenge Will Help You Understand The Real-Time Scenarios."
+        },
+        {
+          "text": "A XYZ company, a leading cloud-based services provider, is committed to ensuring the security and integrity of its data stored on the AWS cloud platform. As part of their ongoing efforts to enhance data security, XYZ Corporation has decided to implement robust encryption mechanisms for their sensitive data stored in Amazon S3 buckets. Additionally, they aim to monitor and track any encryption-related activities for compliance and auditing purposes. Your task is to architect and implement a secure data encryption solution using AWS Key Management Service (KMS) and monitor Key Management Service (KMS) activity using AWS CloudTrail logs."
+        },
+        {
+          "text": "Create a customer-managed KMS key with the following settings:"
+        },
+        {
+          "text": "Key type: Symmetric"
+        },
+        {
+          "text": "Key usage: Encrypt and Decrypt"
+        },
+        {
+          "text": "Key type: Symmetric"
+        },
+        {
+          "text": "Key usage: Encrypt and Decrypt"
+        },
+        {
+          "text": "Create an S3 bucket with the following settings:"
+        },
+        {
+          "text": "Object ownership: ACLs enabled, Object writer as the Object owner"
+        },
+        {
+          "text": "Object ownership: ACLs enabled, Object writer as the Object owner"
+        },
+        {
+          "text": "Create a CloudTrail trail with the following settings:"
+        },
+        {
+          "text": "Trail name: whiz-kms-trails"
+        },
+        {
+          "text": "Storage location: Select existing S3 bucket"
+        },
+        {
+          "text": "Log file SSE-KMS encryption: Unchecked"
+        },
+        {
+          "text": "Event type: Management events (Read and Write), Data events (Read and Write for specific S3 bucket)"
+        },
+        {
+          "text": "Trail name: whiz-kms-trails"
+        },
+        {
+          "text": "Storage location: Select existing S3 bucket"
+        },
+        {
+          "text": "Log file SSE-KMS encryption: Unchecked"
+        },
+        {
+          "text": "Event type: Management events (Read and Write), Data events (Read and Write for specific S3 bucket)"
+        },
+        {
+          "text": "Upload an object to the S3 bucket."
+        },
+        {
+          "text": "Encrypt the object using the KMS key (whiz-kms-key) created earlier."
+        },
+        {
+          "text": "Attempt to access the encrypted object and troubleshoot access issues."
+        },
+        {
+          "text": "Analyze CloudTrail logs in the S3 bucket related to KMS encryption operations."
+        },
+        {
+          "text": "Click On The Validate To Complete The Challenge."
+        },
+        {
+          "text": "Sign Out Of The AWS Account."
+        },
+        {
+          "text": "You Have Successfully Completed The Challenge."
+        },
+        {
+          "text": "Click On End Challenge Button from the lab console And Wait Till The Process Gets Completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

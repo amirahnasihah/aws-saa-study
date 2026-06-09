@@ -1,0 +1,814 @@
+{
+  "slug": "scaling-ec2-with-sqs",
+  "title": "Scaling EC2 with SQS",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab. On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign-in button.",
+      "steps": [
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        },
+        {
+          "text": "Task 2: Create an S3 bucket"
+        },
+        {
+          "text": "Navigate to S3 in the Services menu under the Storage section."
+        },
+        {
+          "text": "In the left menu, choose Buckets, click Create Bucket, and fill in the bucket details."
+        },
+        {
+          "text": "AWS Region: Select US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Bucket Name: Enter lab<RANDOM_NUMBER>"
+        },
+        {
+          "text": "(Note: The Bucket Name must be unique across all existing bucket names in Amazon S3)"
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Click on Create bucket button."
+        },
+        {
+          "text": "Your S3 Bucket is now created. Once it is created Click on your bucket name."
+        },
+        {
+          "text": "In the Objects, You can see the following message"
+        },
+        {
+          "text": "You don't have any objects in this bucket."
+        },
+        {
+          "text": "Click on the Add files."
+        },
+        {
+          "text": "Download the Zip file from here."
+        },
+        {
+          "text": "Unzip the file and upload sendmessages and receivemessages files into the bucket"
+        },
+        {
+          "text": "Click on Upload button. Once your file has been uploaded, it will be displayed in the bucket."
+        },
+        {
+          "text": "Task 3: Create an SQS Queue"
+        },
+        {
+          "text": "In this task, we are going to create an sqs queue that will send and receive messages"
+        },
+        {
+          "text": "Make sure you are in the N. Virginia region."
+        },
+        {
+          "text": "Navigate to the Services menu on the top, search for SQS and select it."
+        },
+        {
+          "text": "Now, We’ll create a Queue, with all the default options. Click on Create queue button."
+        },
+        {
+          "text": "Details :"
+        },
+        {
+          "text": "Type : Select Standard"
+        },
+        {
+          "text": "Name : Enter MyMessages {IMPORTANT : use same name}"
+        },
+        {
+          "text": "Once you click on Create Queue you will get a success message."
+        },
+        {
+          "text": "Task 4: SSH into EC2 instance"
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region before proceeding with the Lab.?"
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "You will see a running instance named lab-instance."
+        },
+        {
+          "text": "Click on the instance and then click on the Connect button."
+        },
+        {
+          "text": "Click on the Connect button again."
+        },
+        {
+          "text": "Run the below commands."
+        },
+        {
+          "text": "Lets create sendmessage file in the nano editor."
+        },
+        {
+          "text": "nano sendMessages.sh"
+        },
+        {
+          "text": "Paste the given code in the editor, and press CTRL+X to save the file and then enter Y and click Enter button."
+        },
+        {
+          "text": "#!/bin/bash"
+        },
+        {
+          "text": "# queueurl is required to send or receive messages from SQS"
+        },
+        {
+          "text": "# Note: AWS CLI and boto3 need to use legacy endpoint"
+        },
+        {
+          "text": "# If we use the AWS CLI or SDK for Python, we need to use the legacy endpoints from https://docs.aws.amazon.com/general/latest/gr/sqs-service.html."
+        },
+        {
+          "text": "# Otherwise, you will get the following error"
+        },
+        {
+          "text": "# botocore.exceptions.ClientError: An error occurred (InvalidAddress) when calling the ReceiveMessage operation: The address https://eu-central-1.queue.amazonaws.com/ is not valid for this endpoint."
+        },
+        {
+          "text": "queueurl=$(aws sqs get-queue-url --queue-name \"MyMessages\"|jq \".QueueUrl\"|sed \"s/sqs.us-east-1.amazonaws.com/queue.amazonaws.com/g\"|sed 's/\"//g')"
+        },
+        {
+          "text": "echo \"queueurl:\" $queueurl"
+        },
+        {
+          "text": "echo \"aws sqs send-message --queue-url $queueurl --message-body Message --region us-east-1\""
+        },
+        {
+          "text": "for i in {1..2000} ;"
+        },
+        {
+          "text": "do"
+        },
+        {
+          "text": "aws sqs send-message --queue-url $queueurl --message-body \"Message-$i\" --region us-east-1 ;"
+        },
+        {
+          "text": "done;"
+        },
+        {
+          "text": "Run the below command to download the dependencies"
+        },
+        {
+          "text": "sudo yum install jq -y"
+        },
+        {
+          "text": "Execute below command to provide the execute permissions."
+        },
+        {
+          "text": "chmod +x sendMessages.sh"
+        },
+        {
+          "text": "./sendMessages.sh"
+        },
+        {
+          "text": "It will run the script to send 2000 messages to MyMessages queue."
+        },
+        {
+          "text": "Task 5: Create CloudWatch Alarms"
+        },
+        {
+          "text": "In this task we are going to create 2 alarms for scalein and scaleout ec2 instances."
+        },
+        {
+          "text": "Navigate to CloudWatch by clicking on the Services menu available under the Management & Governance section."
+        },
+        {
+          "text": "Click on All alarms under Alarms in the left panel of the CloudWatch dashboard."
+        },
+        {
+          "text": "Click on Create alarm button available on the top right corner."
+        },
+        {
+          "text": "In the Specify metric and conditions page:"
+        },
+        {
+          "text": "Click on Select metric. It will open the Select Metrics page."
+        },
+        {
+          "text": "search for SQS and select SQS > Queue Metrics."
+        },
+        {
+          "text": "Now, Select MyMessages > ApproximateNumberOfMessagesVisible and Click Select Metric. {Wait for few minutes and refresh if matric not visible}"
+        },
+        {
+          "text": "Click on Select metric button."
+        },
+        {
+          "text": "Now, configure the alarm with the following details:"
+        },
+        {
+          "text": "Under Metrics"
+        },
+        {
+          "text": "Statistic : Select Sum"
+        },
+        {
+          "text": "Period: Select 1 Minute"
+        },
+        {
+          "text": "Under Conditions"
+        },
+        {
+          "text": "Threshold type: Choose Static"
+        },
+        {
+          "text": "Whenever CPU Utilization is…: Choose Greater"
+        },
+        {
+          "text": "than: Enter 500"
+        },
+        {
+          "text": "Leave other values as default and click on Next button."
+        },
+        {
+          "text": "In Configure actions page:"
+        },
+        {
+          "text": "Under Notification : Click on Remove button and click on Next button. Click on Proceed without actions in pop-up appeared"
+        },
+        {
+          "text": "In the Add a description page, (under Name and Description):"
+        },
+        {
+          "text": "Name: Enter the Name ScaleOut"
+        },
+        {
+          "text": "Click on Next button."
+        },
+        {
+          "text": "A preview of the Alarm will be shown. Scroll down and click on Create alarm button."
+        },
+        {
+          "text": "A new CloudWatch Alarm is now created."
+        },
+        {
+          "text": "Now, Similar to ScaleOut, we also need to create a ScaleIn Alarm to launch new instances when the ApproximateNumberOfMessagesVisible is lower than 300."
+        },
+        {
+          "text": "Click on ScaleOut alarm and in Actions dropdown click on Copy"
+        },
+        {
+          "text": "In conditions change the following :"
+        },
+        {
+          "text": "Threshold type: Choose Static"
+        },
+        {
+          "text": "Whenever CPU Utilization is…: Choose Lower"
+        },
+        {
+          "text": "than: Enter 300"
+        },
+        {
+          "text": "Leave everything as default and click on Next buttons"
+        },
+        {
+          "text": "No changes needed, click on Next button."
+        },
+        {
+          "text": "Name: Enter the Name ScaleIn"
+        },
+        {
+          "text": "Click on Next button."
+        },
+        {
+          "text": "A preview of the Alarm will be shown. Scroll down and click on Create alarm button."
+        },
+        {
+          "text": "Task 6: Create a Launch Template"
+        },
+        {
+          "text": "In this task, we are going to create a Launch Template."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region before proceeding with the Lab."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "In the left navigation menu, scroll down to Launch Templates and click on Create launch template button."
+        },
+        {
+          "text": "Launch template name: Enter labLT"
+        },
+        {
+          "text": "Template version description: Enter Launch template version 1"
+        },
+        {
+          "text": "Launch template contents:"
+        },
+        {
+          "text": "Amazon machine image (AMI): Select Amazon Linux 2023"
+        },
+        {
+          "text": "Instance type: Select t2.micro"
+        },
+        {
+          "text": "Key pair (login):"
+        },
+        {
+          "text": "Key pair name: Don't include in launch template"
+        },
+        {
+          "text": "Network settings:"
+        },
+        {
+          "text": "Security groups: Select the Default security group of Default VPC"
+        },
+        {
+          "text": "Expand Advance details section;"
+        },
+        {
+          "text": "For IAM Instance profile : Select task174_<random number> Role which is pre-created for use."
+        },
+        {
+          "text": "Scroll down to user-data section and copy paste the script."
+        },
+        {
+          "text": "Note : Update the bucket name in 14th line with your bucket name"
+        },
+        {
+          "text": "#!/bin/bash"
+        },
+        {
+          "text": "# install jq"
+        },
+        {
+          "text": "sudo yum install jq -y"
+        },
+        {
+          "text": "# Update aws cli version"
+        },
+        {
+          "text": "cd /home/ec2-user"
+        },
+        {
+          "text": "curl \"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip\" -o \"awscliv2.zip\""
+        },
+        {
+          "text": "unzip awscliv2.zip"
+        },
+        {
+          "text": "sudo ./aws/install"
+        },
+        {
+          "text": "sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update"
+        },
+        {
+          "text": "which aws"
+        },
+        {
+          "text": "ls -l /usr/local/bin/aws"
+        },
+        {
+          "text": "aws --version"
+        },
+        {
+          "text": "# copy sendMessages.sh and receiveMessages.sh from S3"
+        },
+        {
+          "text": "aws s3 cp s3://lab324356/ . --recursive --exclude \"*\" --include \"*.sh\""
+        },
+        {
+          "text": "sudo chmod +x /home/ec2-user/*.sh"
+        },
+        {
+          "text": "nohup ./receiveMessages.sh"
+        },
+        {
+          "text": "Now, click on Create launch template button"
+        },
+        {
+          "text": "Launch template is now created."
+        },
+        {
+          "text": "Click on the View launch template button."
+        },
+        {
+          "text": "Launch template is now listed."
+        },
+        {
+          "text": "Task 7: Create an Auto Scaling Group"
+        },
+        {
+          "text": "In this task, we are going to create an Auto Scaling group."
+        },
+        {
+          "text": "Go to the left menu under EC2 and choose Auto Scaling Group under Auto Scaling"
+        },
+        {
+          "text": "Click on the Create Auto Scaling group button."
+        },
+        {
+          "text": "Step 1: Choose launch template or configuration"
+        },
+        {
+          "text": "Auto Scaling group name: Enter whiz-ASG"
+        },
+        {
+          "text": "Launch template: Select labLT"
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Step 2: Configure settings"
+        },
+        {
+          "text": "VPC: Select the Default VPC from the list."
+        },
+        {
+          "text": "Subnet: Select subnet available in us-east-1a region."
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Step 3: Configure advanced options"
+        },
+        {
+          "text": "No changes are needed on this page, click on the Next button."
+        },
+        {
+          "text": "Step 4: Configure group size and scaling policies"
+        },
+        {
+          "text": "Under Group size – optional"
+        },
+        {
+          "text": "Desired capacity: Enter 1"
+        },
+        {
+          "text": "Minimum capacity: Enter 1"
+        },
+        {
+          "text": "Maximum capacity: Enter 4"
+        },
+        {
+          "text": "No changes are needed, click on the Next button"
+        },
+        {
+          "text": "Step 5: Add notifications"
+        },
+        {
+          "text": "No changes are needed on this page, click on the Next button."
+        },
+        {
+          "text": "Step 6: Add tags"
+        },
+        {
+          "text": "No changes are needed on this page, click on the Next button."
+        },
+        {
+          "text": "Click on the Next button"
+        },
+        {
+          "text": "Now scroll down and click on the Create Auto Scaling group button."
+        },
+        {
+          "text": "Whiz-ASG Auto scaling is created successfully."
+        },
+        {
+          "text": "Now, to add scaling policies in auto scaling group"
+        },
+        {
+          "text": "Click on autoscaling group and navigate to Automatic scaling tab and click on Create dynamic scaling policy button."
+        },
+        {
+          "text": "Update the following details :"
+        },
+        {
+          "text": "Policy type : Select Simple scaling"
+        },
+        {
+          "text": "Scaling policy name: Enter ScaleOut"
+        },
+        {
+          "text": "CloudWatch alarm: Select ScaleOut"
+        },
+        {
+          "text": "Take the action: Add with 1 capacity units"
+        },
+        {
+          "text": "And then wait 60 seconds before allowing another scaling activity"
+        },
+        {
+          "text": "Click on Create button."
+        },
+        {
+          "text": "Similarly, create another scaling policy to for ScaleIn with following details:"
+        },
+        {
+          "text": "Policy type : Select Simple scaling"
+        },
+        {
+          "text": "Scaling policy name: Enter ScaleIn"
+        },
+        {
+          "text": "CloudWatch alarm: Select ScaleIn"
+        },
+        {
+          "text": "Take the action: Remove with 1 capacity units"
+        },
+        {
+          "text": "And then wait 120 seconds before allowing another scaling activity"
+        },
+        {
+          "text": "Click on Create button."
+        },
+        {
+          "text": "Now, you can see two policies added."
+        },
+        {
+          "text": "Task 8: Verifications and Monitoring"
+        },
+        {
+          "text": "We have populated the sqs queue with 2000 messages and have an auto scaling group launch with a maximum of 4 instances. We will now be verifying messages using Cloud Watch Alarms and Auto Scaling group's Activity."
+        },
+        {
+          "text": "Navigate to CloudWatch > Alarms , and check the state of Alarm status."
+        },
+        {
+          "text": "If ScaleIn alarm is in InAlarm state -> New instance will get created."
+        },
+        {
+          "text": "If ScaleOut alarm is in InAlarm state -> Launched instances will be terminated"
+        },
+        {
+          "text": "Do you know?"
+        },
+        {
+          "text": "SQS acts as a buffer between the message producers and the EC2 instances. As messages are sent to the SQS queue, EC2 instances can retrieve messages from the queue at their own pace, allowing for smooth and balanced workload distribution."
+        },
+        {
+          "text": "Task 9: Validation of the Lab"
+        },
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created and uploaded object to an s3 bucket"
+        },
+        {
+          "text": "You have successfully created an SQS Queue"
+        },
+        {
+          "text": "You have successfully created CloudWatch alarms"
+        },
+        {
+          "text": "You have successfully created Autoscaling Groups"
+        },
+        {
+          "text": "You have successfully Verified and Monitored EC2 Instances"
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    },
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign-in button."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an S3 bucket",
+      "steps": [
+        {
+          "text": "Navigate to S3 in the Services menu under the Storage section."
+        },
+        {
+          "text": "In the left menu, choose Buckets, click Create Bucket, and fill in the bucket details."
+        },
+        {
+          "text": "AWS Region: Select US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Bucket Name: Enter lab<RANDOM_NUMBER>"
+        },
+        {
+          "text": "(Note: The Bucket Name must be unique across all existing bucket names in Amazon S3)"
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Click on Create bucket button."
+        },
+        {
+          "text": "Your S3 Bucket is now created. Once it is created Click on your bucket name."
+        },
+        {
+          "text": "In the Objects, You can see the following message"
+        },
+        {
+          "text": "You don't have any objects in this bucket."
+        },
+        {
+          "text": "Click on the Add files."
+        },
+        {
+          "text": "Download the Zip file from here."
+        },
+        {
+          "text": "Unzip the file and upload sendmessages and receivemessages files into the bucket"
+        },
+        {
+          "text": "Click on Upload button. Once your file has been uploaded, it will be displayed in the bucket."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create an SQS Queue",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an sqs queue that will send and receive messages"
+        }
+      ]
+    },
+    {
+      "title": "Task 4: SSH into EC2 instance",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region before proceeding with the Lab.?"
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "You will see a running instance named lab-instance."
+        },
+        {
+          "text": "Click on the instance and then click on the Connect button."
+        },
+        {
+          "text": "Click on the Connect button again."
+        },
+        {
+          "text": "Run the below commands."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create CloudWatch Alarms",
+      "steps": [
+        {
+          "text": "In this task we are going to create 2 alarms for scalein and scaleout ec2 instances."
+        },
+        {
+          "text": "Navigate to CloudWatch by clicking on the Services menu available under the Management & Governance section."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Create a Launch Template",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a Launch Template."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region before proceeding with the Lab."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "In the left navigation menu, scroll down to Launch Templates and click on Create launch template button."
+        },
+        {
+          "text": "Launch template name: Enter labLT"
+        },
+        {
+          "text": "Template version description: Enter Launch template version 1"
+        },
+        {
+          "text": "Launch template contents:"
+        },
+        {
+          "text": "Amazon machine image (AMI): Select Amazon Linux 2023"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Create an Auto Scaling Group",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an Auto Scaling group."
+        },
+        {
+          "text": "Go to the left menu under EC2 and choose Auto Scaling Group under Auto Scaling"
+        },
+        {
+          "text": "Click on the Create Auto Scaling group button."
+        },
+        {
+          "text": "Step 1: Choose launch template or configuration"
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Verifications and Monitoring",
+      "steps": [
+        {
+          "text": "We have populated the sqs queue with 2000 messages and have an auto scaling group launch with a maximum of 4 instances. We will now be verifying messages using Cloud Watch Alarms and Auto Scaling group's Activity."
+        },
+        {
+          "text": "Navigate to CloudWatch > Alarms , and check the state of Alarm status."
+        },
+        {
+          "text": "If ScaleIn alarm is in InAlarm state -> New instance will get created."
+        },
+        {
+          "text": "If ScaleOut alarm is in InAlarm state -> Launched instances will be terminated"
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created and uploaded object to an s3 bucket"
+        },
+        {
+          "text": "You have successfully created an SQS Queue"
+        },
+        {
+          "text": "You have successfully created CloudWatch alarms"
+        },
+        {
+          "text": "You have successfully created Autoscaling Groups"
+        },
+        {
+          "text": "You have successfully Verified and Monitored EC2 Instances"
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

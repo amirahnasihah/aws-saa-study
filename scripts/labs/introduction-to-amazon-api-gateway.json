@@ -1,0 +1,98 @@
+{
+  "slug": "introduction-to-amazon-api-gateway",
+  "title": "Introduction to Amazon API Gateway",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:15:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an API",
+      "steps": [
+        {
+          "text": "Navigate to Services menu in the top, then click on API Gateway in the Network and Content Delivery section."
+        },
+        {
+          "text": "Click on Create an API, then scroll down and click on Build in REST API."
+        },
+        {
+          "text": "Ignore the pop up Create your first API."
+        },
+        {
+          "text": "Then choose New API under settings. Enter API name as Lab API and click on Create API"
+        },
+        {
+          "text": "Click on API’s in the left panel to see the API you have created Lab API"
+        },
+        {
+          "text": "Note: If any error pops up just ignore it."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "One of the key features that sets Amazon API Gateway apart is its versatility in supporting different types of APIs, such as RESTful APIs, WebSocket APIs, and HTTP APIs. This adaptability caters to a wide range of use cases, from building mobile and web applications to creating real-time communication solutions."
+        },
+        {
+          "text": "Another compelling aspect of Amazon API Gateway is its integration with other AWS services. It seamlessly works with services like AWS Lambda, allowing developers to create serverless APIs by directly connecting to Lambda functions without needing to manage servers. Additionally, it can integrate with AWS Identity and Access Management (IAM), enabling robust authentication and authorization mechanisms to secure APIs effectively."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created the API."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

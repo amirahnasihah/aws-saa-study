@@ -1,0 +1,345 @@
+{
+  "slug": "build-api-gateway-with-path-parameter-and-query-string-parameter",
+  "title": "Build API Gateway with path parameter and Query string parameter",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to the AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a Lambda Function",
+      "steps": [
+        {
+          "text": "In this task, we will create a Lambda function by providing the required configurations like name, runtime, roles, etc."
+        },
+        {
+          "text": "Navigate to the Services menu at the top, then click on Lambda under the Compute section."
+        },
+        {
+          "text": "Click on the Create function button."
+        },
+        {
+          "text": "Select Author from Scratch"
+        },
+        {
+          "text": "Function Name: Enter labAPI"
+        },
+        {
+          "text": "Runtime: Select Python 3.9"
+        },
+        {
+          "text": "Under Change default execution role"
+        },
+        {
+          "text": "Choose Use an existing role."
+        },
+        {
+          "text": "Role Name: Enter WhizRole"
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on the Create function button."
+        },
+        {
+          "text": "Once the Lambda Function is created successfully, it will look like the screenshot below:"
+        },
+        {
+          "text": "Under Function code:"
+        },
+        {
+          "text": "Replace the existing code with the below Python code."
+        },
+        {
+          "text": "import json"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "#Path parameter passed to Lambda function"
+        },
+        {
+          "text": "servername = event[\"params\"][\"path\"][\"servername\"]"
+        },
+        {
+          "text": "#Query string parameter passed to Lambda function"
+        },
+        {
+          "text": "Email_id = event['params']['querystring']['emailid']"
+        },
+        {
+          "text": "return {"
+        },
+        {
+          "text": "\"Path Parameter\" : servername,"
+        },
+        {
+          "text": "\"Query string Parameter\" : Email_id"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "Click the Deploy button."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create an API Gateway",
+      "steps": [
+        {
+          "text": "Navigate to the Services menu at the top, then click on API Gateway in the Network and Content Delivery section."
+        },
+        {
+          "text": "Click on the Build button in REST API."
+        },
+        {
+          "text": "Select Protocol as REST"
+        },
+        {
+          "text": "Create a new API: Choose a New API."
+        },
+        {
+          "text": "Under settings:"
+        },
+        {
+          "text": "API name : Enter labAPI"
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on the Create API button."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Creating a Resource with a path parameter",
+      "steps": [
+        {
+          "text": "Once the API is created, click on Create Resource"
+        },
+        {
+          "text": "Resource Name: Enter {servername}"
+        },
+        {
+          "text": "Note: The resource name should be placed inside flower brackets { }"
+        },
+        {
+          "text": "Leave everything as default."
+        },
+        {
+          "text": "Now click on the Create Resource button."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Creating a Method",
+      "steps": [
+        {
+          "text": "Once you create a resource, click on Create Method button."
+        },
+        {
+          "text": "From the drop-down, select GET."
+        },
+        {
+          "text": "Setup:"
+        },
+        {
+          "text": "Integration Type: Select Lambda Function"
+        },
+        {
+          "text": "Lambda Region: select us-east-1"
+        },
+        {
+          "text": "Lambda function: Enter labAPI and select the function name you created from the list."
+        },
+        {
+          "text": "Leave everything else as default."
+        },
+        {
+          "text": "Click on the Create Method button."
+        },
+        {
+          "text": "Note: If any pop-ups appear, click on the OK button."
+        },
+        {
+          "text": "Once the method has been created, your screen will look similar to the screenshot below:"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Add a query string parameter",
+      "steps": [
+        {
+          "text": "Click on the Method Request link in the GET method page."
+        },
+        {
+          "text": "Under Method request Settings :"
+        },
+        {
+          "text": "Click on the Edit button."
+        },
+        {
+          "text": "Request Validator: Select Validate body, query string parameters, and headers"
+        },
+        {
+          "text": "Under URL Query String Parameters:"
+        },
+        {
+          "text": "Click on the Add query string button."
+        },
+        {
+          "text": "Name: Enter emailid"
+        },
+        {
+          "text": "Check the checkbox below Required."
+        },
+        {
+          "text": "Click on Save."
+        },
+        {
+          "text": "Click on the Integration Request link in the GET method page."
+        },
+        {
+          "text": "Click on Edit and Scroll down to the bottom and select Mapping Templates."
+        },
+        {
+          "text": "Request Body passthrough: Select When there are no templates defined(recommended)"
+        },
+        {
+          "text": "Click on Add mapping template."
+        },
+        {
+          "text": "Content type: Enter application/json"
+        },
+        {
+          "text": "Again, scroll down to the page to the bottom."
+        },
+        {
+          "text": "Generate template: Select Method Request passthrough from the list."
+        },
+        {
+          "text": "Click on the Save button."
+        },
+        {
+          "text": "Note: Clicking on the save button won't redirect you to any page, but make sure you click the save button."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Deploy the API Gateway",
+      "steps": [
+        {
+          "text": "Once the resource and the method have been created successfully, you can deploy the API."
+        },
+        {
+          "text": "Now again, select the GET from the hierarchy."
+        },
+        {
+          "text": "Click on the Deploy API."
+        },
+        {
+          "text": "Select the Deployment Stage in the drop-down as New Stage."
+        },
+        {
+          "text": "Enter Stage Name: TestingAPI and Stage description as Testing environment for my labAPI."
+        },
+        {
+          "text": "Click on the Deploy button."
+        },
+        {
+          "text": "Once the API has been deployed, navigate to Stages and click on the stage name. You will be able to see the following:"
+        },
+        {
+          "text": "Now click on the GET method."
+        },
+        {
+          "text": "Copy and Paste the Invoke URL in a new tab of your browser."
+        },
+        {
+          "text": "Now add Production and then add ?emailid=lab.user1@gmail.com"
+        },
+        {
+          "text": "You will receive the GET request's response from the API. Here's an example:"
+        },
+        {
+          "text": "Do you know ?"
+        },
+        {
+          "text": "Path parameters can expose sensitive information if not handled properly. For example, if you include confidential information directly in the URL path, it might end up in server logs or browser history. It's important to handle such data carefully and consider alternatives like request bodies or headers for sensitive information."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click the Validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and show you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created a Lambda function."
+        },
+        {
+          "text": "You have successfully created the API."
+        },
+        {
+          "text": "You have successfully created the API Resource and Method."
+        },
+        {
+          "text": "You have successfully created path and query string parameters."
+        },
+        {
+          "text": "You have successfully tested the API."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

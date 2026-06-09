@@ -1,0 +1,292 @@
+{
+  "slug": "find-vulnerabilities-on-inspector2-using-lambda-scanning",
+  "title": "Find vulnerabilities on Inspector2 using Lambda scanning",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click On The Open Console Button, And You Will Get Redirected To AWS Console In A New Browser Tab."
+        },
+        {
+          "text": "On The AWS Sign-In Page, Leave The Account ID As Default. Never Edit/Remove The 12 Digit Account ID Present In The AWS Console. Otherwise, You Cannot Proceed With The Lab."
+        },
+        {
+          "text": "Now Copy Your User Name And Password In The Lab Console To The IAM Username And Password In AWS Console And Click On The Sign In Button."
+        },
+        {
+          "text": "Once Signed In To The AWS Management Console, Make The Default AWS Region As US East (N. Virginia) Us-East-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Enable Amazon Inspector for your AWS Account",
+      "steps": [
+        {
+          "text": "In the AWS console, search for Amazon Inspector and click on it."
+        },
+        {
+          "text": "Click on Get started."
+        },
+        {
+          "text": "And you will be able to see Activate Inspector."
+        },
+        {
+          "text": "Click on the Activate Inspector"
+        },
+        {
+          "text": "In the left-side dashboard, scroll down and click on General Settings, then click on Account Coverage."
+        },
+        {
+          "text": "Click on the Activate button."
+        },
+        {
+          "text": "Check AWS Lambda Standard scanning."
+        },
+        {
+          "text": "Lambda standard scanning — With this option enabled, Amazon Inspector only scans for package dependencies in your Lambda functions and associated layers."
+        },
+        {
+          "text": "Click on Submit."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a Lambda Function",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) region."
+        },
+        {
+          "text": "Go to the Services menu and click on Lambda under Compute section."
+        },
+        {
+          "text": "Click on the Create a function button."
+        },
+        {
+          "text": "Choose Author from scratch"
+        },
+        {
+          "text": "Function name : testing_lambda"
+        },
+        {
+          "text": "Runtime : Select Python 3.11"
+        },
+        {
+          "text": "Expand Additional Settings, Click on custom execution role select execution role and select Lambda_role from the drop-down."
+        },
+        {
+          "text": "Click on the Create function button."
+        },
+        {
+          "text": "If you scroll down a little bit, you can see the Code source section. Here we are going to replace the python function code."
+        },
+        {
+          "text": "Remove the existing code in AWS lambda_function.py. Copy the below code and paste it into your lambda_function.py file."
+        },
+        {
+          "text": "import json"
+        },
+        {
+          "text": "import os"
+        },
+        {
+          "text": "import paramiko"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "print(\"Hello world\")"
+        },
+        {
+          "text": "os.system(\"ssh -h\")"
+        },
+        {
+          "text": "click on Deploy button."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Creating Layers for Lambda function",
+      "steps": [
+        {
+          "text": "In the Lambda console, click on the Layers section in the left-hand navigation pane"
+        },
+        {
+          "text": "Click on the Create Layer button."
+        },
+        {
+          "text": "Layer name: paramiko_layer"
+        },
+        {
+          "text": "Description: Creating a paramiko layer for the lambda function"
+        },
+        {
+          "text": "Click on the below link to download the zip file to upload in the layers."
+        },
+        {
+          "text": "Paramiko_layer"
+        },
+        {
+          "text": "Compatible architectures: x86_64"
+        },
+        {
+          "text": "Runtime: python 3.11"
+        },
+        {
+          "text": "Click on the Create button."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Adding the layers to the lambda function",
+      "steps": [
+        {
+          "text": "In the Lambda console, click on the function you created earlier."
+        },
+        {
+          "text": "In the Code section, scroll down to the Layers section."
+        },
+        {
+          "text": "Click on the Add Layer button."
+        },
+        {
+          "text": "Go to the Custom Layers section."
+        },
+        {
+          "text": "Under the custom layers dropdown, choose the Paramiko layer you created earlier."
+        },
+        {
+          "text": "Click on the version dropdown and select the appropriate version."
+        },
+        {
+          "text": "Click the Add button."
+        },
+        {
+          "text": "After creating the layer scroll it will look like these."
+        },
+        {
+          "text": "Now, go back to your Lambda function and click the Test button and click Create new test event."
+        },
+        {
+          "text": "Enter the name as lambda_test and click Save."
+        },
+        {
+          "text": "Now click Invoke button. It will trigger the Inspector Lambda scanning."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Finding the vulnerability for the Lambda function",
+      "steps": [
+        {
+          "text": "Go back to the Inspector console."
+        },
+        {
+          "text": "Scroll down and click on Resources coverage from the left panel."
+        },
+        {
+          "text": "Click on the Lambda functions to see the status of the scanning."
+        },
+        {
+          "text": "Now click Findings from the left panel and click By Lambda function."
+        },
+        {
+          "text": "Click on the testing_lambda and scroll down, you will be able to see the different CVE names."
+        },
+        {
+          "text": "Click on any CVE title to see the findings details."
+        },
+        {
+          "text": "Scroll down CVE tab to see more details."
+        },
+        {
+          "text": "In Vulnerability details click on the Vulnerability ID to see the National vulnerability database."
+        },
+        {
+          "text": "National vulnerability database:"
+        },
+        {
+          "text": "Government Repository: Managed by the U.S. National Institute of Standards and Technology (NIST)."
+        },
+        {
+          "text": "Vulnerability Information: Contains detailed data on known software vulnerabilities."
+        },
+        {
+          "text": "CVE Identifiers: Uses Common Vulnerabilities and Exposures (CVE) identifiers for each vulnerability."
+        },
+        {
+          "text": "Severity Ratings: Provides severity scores using the Common Vulnerability Scoring System (CVSS)."
+        },
+        {
+          "text": "Impact Analysis: Describes potential impacts on confidentiality, integrity, and availability."
+        },
+        {
+          "text": "Remediation Guidance: Offers recommendations for fixing or mitigating vulnerabilities."
+        },
+        {
+          "text": "Search Tools: Includes tools for searching and analyzing vulnerabilities."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Do you know?"
+        },
+        {
+          "text": "Amazon Inspector for Lambda functions provides advanced security features, including dependency vulnerability scanning, Lambda layer analysis, and environment variable inspection. It enforces least privilege, checks runtime policies for compliance, and evaluates network accessibility to prevent public exposure. Inspector also maps findings to compliance frameworks like PCI-DSS, HIPAA, and GDPR, ensuring regulatory adherence for serverless applications."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You Have Successfully logged into AWS console."
+        },
+        {
+          "text": "You Have Successfully created inspector2."
+        },
+        {
+          "text": "You Have Successfully created lambda."
+        },
+        {
+          "text": "You Have Successfully triggered the lambda scanning."
+        },
+        {
+          "text": "You Have Successfully found the vulnerability using lambda scanning."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign Out Of AWS Account."
+        },
+        {
+          "text": "You Have Successfully Completed The Lab."
+        },
+        {
+          "text": "Once You Have Completed The Steps, Click On End Lab From Your lab Lab Console And Wait Till The Process Gets Completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -1,0 +1,217 @@
+{
+  "slug": "enabling-cloudwatch-logs-in-api-gateway",
+  "title": "Enabling CloudWatch Logs in API Gateway",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the open console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an API",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to services menu at the top, then click on API Gateway in the Network and Content Delivery section."
+        },
+        {
+          "text": "Click on build in REST API.(Close the pop up message for Create your first API,if it is present and ignore the error warning)"
+        },
+        {
+          "text": "Choose create new API. Under settings, enter the API name as Lab API and click on create API."
+        },
+        {
+          "text": "Note: If any pop-ups appear, ignore them."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Copy the ARN of the IAM role",
+      "steps": [
+        {
+          "text": "Navigate to Services at the top and choose IAM under Security, Identity, & Compliance. Select Roles in left side panel."
+        },
+        {
+          "text": "There is a role already created for you. Search using task112 and you will find a role with the name task112_role_<RANDOM_NUMBER>"
+        },
+        {
+          "text": "Click on the Role and copy its ARN. This will be used in POST setup of the API gateway method."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Creating a Resource",
+      "steps": [
+        {
+          "text": "Navigate to Services and click on API Gateway under Networking & Content Delivery."
+        },
+        {
+          "text": "Once the API is created, select the Lab API."
+        },
+        {
+          "text": "Select create resource in actions."
+        },
+        {
+          "text": "Resource Name: TestResource"
+        },
+        {
+          "text": "Once you enter the resource name, click on create resource."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Creating Method",
+      "steps": [
+        {
+          "text": "Once you create the resource, click on Create method. Select Post in the drop-down list of Method Type."
+        },
+        {
+          "text": "Ignore this error if it appears:"
+        },
+        {
+          "text": "Select the Integration Type as AWS service."
+        },
+        {
+          "text": "Enter the following details:"
+        },
+        {
+          "text": "Select AWS Region: us-east-1"
+        },
+        {
+          "text": "Select AWS Service: CloudWatch Logs"
+        },
+        {
+          "text": "Http Method: POST"
+        },
+        {
+          "text": "Action: Enter GetLogsEvent"
+        },
+        {
+          "text": "On the execution role, copy and paste the ARN of your role which we noted down earlier."
+        },
+        {
+          "text": "Leave other options as default and click on the Create method."
+        },
+        {
+          "text": "Once it has been created, you will see this page."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Deploy API",
+      "steps": [
+        {
+          "text": "Once the resource and the method have been created successfully, you can deploy the API."
+        },
+        {
+          "text": "Click on deploy API."
+        },
+        {
+          "text": "Set the Deployment Stage in the drop-down as New Stage."
+        },
+        {
+          "text": "Enter Stage Name : TestingAPI"
+        },
+        {
+          "text": "Click on deploy."
+        },
+        {
+          "text": "Navigate to Stages and click on Testing API."
+        },
+        {
+          "text": "After deploying the API, scroll down and click the Edit button in the logs and tracing section."
+        },
+        {
+          "text": "Under CloudWatch logs click on the dropdown list and select Errors and info logs and then click on Save button."
+        },
+        {
+          "text": "Note: If any error occurs, we have to replace our IAM role ARN."
+        },
+        {
+          "text": "To do that copy the ARN of our IAM Role and paste it in the CloudWatch Log role ARN (under Settings in left sidebar) and click on save."
+        },
+        {
+          "text": "Navigate to Log Management under Logs to see the logs. (Wait for 3-5 minutes to see log group)"
+        },
+        {
+          "text": "You have successfully created CloudWatch logs for API Gateway. Whenever traffic passes through API Gateway, streams will be generated."
+        },
+        {
+          "text": "Do you know?"
+        },
+        {
+          "text": "Enabling CloudWatch Logs in API Gateway allows you to capture and store log files for your API Gateway APIs in Amazon CloudWatch Logs. CloudWatch Logs is a fully managed service provided by AWS that enables you to collect, monitor, and analyze log data from various AWS resources and applications."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the labs steps are completed, please click on Validation button on right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample Output:"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created an API."
+        },
+        {
+          "text": "You have successfully created an API Gateway Resource and API Method."
+        },
+        {
+          "text": "You have successfully deployed the API."
+        },
+        {
+          "text": "You have successfully created CloudWatch Logs for API Gateway."
+        },
+        {
+          "text": "You have successfully validated the lab."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

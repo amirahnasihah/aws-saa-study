@@ -1,5 +1,6 @@
 import { buildDocsSearchPhrase, resolveAwsDocLink } from '@/lib/ai/aws-knowledge'
 import { collectDeepNotesTerms, findDeepNotesMatch } from '@/lib/ai/deep-notes'
+import { findInternalLinks } from '@/lib/ai/internal-links'
 import { completeJson, resolveAiProvider } from '@/lib/ai/complete-json'
 import { toBulletList } from '@/lib/ai/hint-bullets'
 import { parseAIJson } from '@/lib/ai/json'
@@ -97,6 +98,8 @@ export async function POST(request: Request): Promise<Response> {
   )
   const deepNotes = findDeepNotesMatch(deepTerms)
 
+  const internalLinks = findInternalLinks(deepTerms)
+
   const result: HintResponse = {
     conceptName: json?.conceptName ?? 'AWS concept',
     focusArea: json?.focusArea ?? '',
@@ -110,6 +113,7 @@ export async function POST(request: Request): Promise<Response> {
     deepNotesIcon: deepNotes.sectionIcon,
     awsDocsUrl: awsDoc.url,
     awsDocsTitle: awsDoc.title,
+    internalLinks,
   }
 
   return Response.json(result)
