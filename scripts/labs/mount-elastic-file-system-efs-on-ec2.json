@@ -1,0 +1,406 @@
+{
+  "slug": "mount-elastic-file-system-efs-on-ec2",
+  "title": "Mount Elastic File System (EFS) on EC2",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Launching two EC2 Instances",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Click on Instances from the left side bar and then click on Launch instances."
+        },
+        {
+          "text": "Number of Instances : Enter 2 on the right side under summary"
+        },
+        {
+          "text": "Name : Enter MyEC2"
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 kernel-6.1 AMI in the search box and click on the Select button."
+        },
+        {
+          "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: MyEC2Key"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Select Create key pair Button."
+        },
+        {
+          "text": "In Network Settings Click on Edit:"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select Create new Security group"
+        },
+        {
+          "text": "Security Group Name: Enter EFS Security Group"
+        },
+        {
+          "text": "To add SSH:"
+        },
+        {
+          "text": "Choose Type: SSH"
+        },
+        {
+          "text": "Source: Anywhere"
+        },
+        {
+          "text": "For NFS:"
+        },
+        {
+          "text": "Click on Add security group rule"
+        },
+        {
+          "text": "Choose Type: NFS"
+        },
+        {
+          "text": "Source: Anywhere"
+        },
+        {
+          "text": "Keep Rest thing Default and Click on Launch Instance Button."
+        },
+        {
+          "text": "Select View all Instances to View Instance you Created"
+        },
+        {
+          "text": "Launch Status: Your instance is now launching. Click on the instance ID and wait until the initialization status changes to Running."
+        },
+        {
+          "text": "Click on each instance and enter a names as MyEC2-1 and MyEC2-2."
+        },
+        {
+          "text": "Take note of the IPv4 Public IP Addresses of the EC2 instances and save them for later."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Creating an Elastic File System",
+      "steps": [
+        {
+          "text": "Navigate to EFS by clicking on the Services menu at the top. Click on EFS in the Storage section."
+        },
+        {
+          "text": "Click on Create file system"
+        },
+        {
+          "text": "Click on Customize button."
+        },
+        {
+          "text": "Enter the details below, Type the Name as EFS-Demo and make sure default VPC and default Regional options are selected."
+        },
+        {
+          "text": "Uncheck the option of Enable automated backups"
+        },
+        {
+          "text": "Leave everything by default and click on the Next button present below."
+        },
+        {
+          "text": "Network Access:"
+        },
+        {
+          "text": "VPC"
+        },
+        {
+          "text": "An Amazon EFS file system is accessed by EC2 instances running inside one of your VPCs."
+        },
+        {
+          "text": "Choose the same VPC you selected while launching the EC2 instance (leave as default)."
+        },
+        {
+          "text": "Mount Targets"
+        },
+        {
+          "text": "Instances connect to a file system by using a network interface called a mount target. Each mount target has an IP address, which we assign automatically or you can specify."
+        },
+        {
+          "text": "We will select all the Availability Zones (AZ’s) so that the EC2 instances across your VPC can access the file system."
+        },
+        {
+          "text": "Select all the Availability Zones, and in the Security Groups, select EFS Security Group instead of the default value."
+        },
+        {
+          "text": "Scroll down to 'Mount Targets', then click on 'Add Mount Target'. Select the availability zone and change the security group to EFS Security Group."
+        },
+        {
+          "text": "Make sure you remove the default security group and select the EFS Security Group, otherwise you will get an error in further steps."
+        },
+        {
+          "text": "Click on Next button"
+        },
+        {
+          "text": "File system policy - optional let it be optional only. Click on Next button"
+        },
+        {
+          "text": "Review and Create: Review the configuration below before proceeding to create your file system. Click on Create button."
+        },
+        {
+          "text": "Congratulations on creating the EFS File system, It's time to mount your EC2 Instance with the EFS File system."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Mount the File System to MyEC2-1 Instance",
+      "steps": [
+        {
+          "text": "Select the MyEC2-1 Instance and copy the IPv4 Public IP."
+        },
+        {
+          "text": "SSH into the EC2 Instance"
+        },
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance."
+        },
+        {
+          "text": "Switch to root user"
+        },
+        {
+          "text": "sudo -s"
+        },
+        {
+          "text": "Run the updates using the following command:"
+        },
+        {
+          "text": "yum -y update"
+        },
+        {
+          "text": "Install the NFS client as amazon-efs-utils."
+        },
+        {
+          "text": "yum install -y amazon-efs-utils"
+        },
+        {
+          "text": "Create a directory by the name efs"
+        },
+        {
+          "text": "mkdir efs"
+        },
+        {
+          "text": "We have to mount the file system in this directory."
+        },
+        {
+          "text": "To do so, navigate to the AWS console and click on the created file system. On the top-right corner, click on Attach"
+        },
+        {
+          "text": "Copy the command of Using the EFS mount helper."
+        },
+        {
+          "text": "sudo mount -t efs -o tls <DNS Name>:/ efs"
+        },
+        {
+          "text": "Note: Replace <dns name of EFS> with the DNS of the Elastic File System you've created."
+        },
+        {
+          "text": "To display information for all currently-mounted file systems, we'll use the command bellow:"
+        },
+        {
+          "text": "df -h"
+        },
+        {
+          "text": "Create a directory in our current location:"
+        },
+        {
+          "text": "mkdir aws"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Mount the File System to MyEC2-2 Instance",
+      "steps": [
+        {
+          "text": "Select the MyEC2-2 Instance and copy the IPv4 Public IP."
+        },
+        {
+          "text": "SSH into the EC2 Instance"
+        },
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance."
+        },
+        {
+          "text": "Switch to root user"
+        },
+        {
+          "text": "sudo -s"
+        },
+        {
+          "text": "Run the updates using the following command:"
+        },
+        {
+          "text": "yum -y update"
+        },
+        {
+          "text": "Install the NFS client as amazon-efs-utils."
+        },
+        {
+          "text": "yum -y install amazon-efs-utils"
+        },
+        {
+          "text": "Create a directory with the name efs"
+        },
+        {
+          "text": "mkdir efs"
+        },
+        {
+          "text": "We have to mount the file system in this directory."
+        },
+        {
+          "text": "To do so, navigate to the AWS console and click on the created file system. On the top-right corner, click on Attach"
+        },
+        {
+          "text": "Copy the command of Using the EFS mount helper."
+        },
+        {
+          "text": "sudo mount -t efs -o tls <DNS Name>:/ efs"
+        },
+        {
+          "text": "Note: Replace <dns name of EFS> with the DNS of the Elastic File System you've created."
+        },
+        {
+          "text": "To display information for all currently mounted file systems, we'll use the command"
+        },
+        {
+          "text": "df -h"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Testing the File System",
+      "steps": [
+        {
+          "text": "SSH into both instances in a side-by-side view on your machine, if possible."
+        },
+        {
+          "text": "Switch to root user"
+        },
+        {
+          "text": "sudo -s"
+        },
+        {
+          "text": "Navigate to the efs directory in both the servers using the command"
+        },
+        {
+          "text": "cd efs"
+        },
+        {
+          "text": "Create a file in any one server."
+        },
+        {
+          "text": "touch hello.txt"
+        },
+        {
+          "text": "Check the file using the command"
+        },
+        {
+          "text": "ls -ltr"
+        },
+        {
+          "text": "Now go to the other server and give the command"
+        },
+        {
+          "text": "ls -ltr"
+        },
+        {
+          "text": "You can see the file created on this server as well. This proves that our EFS is working."
+        },
+        {
+          "text": "You can try creating files (touch command) or directories (mkdir command) on other servers to continue to grow the EFS implementation."
+        },
+        {
+          "text": "Do you Know ?"
+        },
+        {
+          "text": "EFS uses the Network File System (NFS) protocol, which enables EC2 instances to mount EFS as a network file system, providing a common data source for applications running on multiple instances."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created an Elastic File System."
+        },
+        {
+          "text": "You have successfully created 2 Amazon Linux instances."
+        },
+        {
+          "text": "You have successfully installed the NFS Client and mounted EFS to the instances."
+        },
+        {
+          "text": "You have successfully tested the file-share between both Instances."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

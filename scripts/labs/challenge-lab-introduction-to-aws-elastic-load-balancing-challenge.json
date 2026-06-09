@@ -1,0 +1,163 @@
+{
+  "slug": "challenge-lab-introduction-to-aws-elastic-load-balancing-challenge",
+  "title": "Challenge - Introduction to AWS Elastic Load Balancing",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Challenge section 1",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "In this challenge, your AWS compute skills are put to the test. You'll be given a requirement, and you have to reach it using your knowledge."
+        },
+        {
+          "text": "A company, XYZ wants to build their Website in AWS Console with EC2 Instance Contents using, Apache HTTP Server Scripts. The website should be highly available in case of any server failures. Below are the tasks you have to perform to create the Load balancer and EC2 instances."
+        },
+        {
+          "text": "Launch 2 EC2 Instances Instance 1 and Instance 2, type as t2.micro with SSH, HTTP, HTTPS."
+        },
+        {
+          "text": "Advanced details and under the User data: section, Enter the script to create an HTML page served by an Apache httpd web server, create a custom html page as below:"
+        },
+        {
+          "text": "Instance 1 webpage should display: Welcome to Lab Server 1"
+        },
+        {
+          "text": "Instance 2 webpage should display: Welcome to Lab Server 2"
+        },
+        {
+          "text": "Instance 1 webpage should display: Welcome to Lab Server 1"
+        },
+        {
+          "text": "Instance 2 webpage should display: Welcome to Lab Server 2"
+        },
+        {
+          "text": "Create Target group with both EC2 instance including."
+        },
+        {
+          "text": "Create Application Load balancer, map all the Availability zones, map the created target group."
+        },
+        {
+          "text": "Test the Elastic Load Balancer DNS."
+        },
+        {
+          "text": "To check the traffic on the ec2 load balancer, Stop the Instance 1, now the traffic should shift to Instance 2."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "After Validation Terminate all the resources."
+        },
+        {
+          "text": "In the EC2 console, navigate to Load Balancers in the left-side panel."
+        },
+        {
+          "text": "Your Load Balancer will be listed there."
+        },
+        {
+          "text": "To delete the load balancer, you need to perform the following actions:"
+        },
+        {
+          "text": "Select the load balancer,"
+        },
+        {
+          "text": "Click on the Actions button,"
+        },
+        {
+          "text": "Select the Delete option."
+        },
+        {
+          "text": "Select the load balancer,"
+        },
+        {
+          "text": "Click on the Actions button,"
+        },
+        {
+          "text": "Select the Delete option."
+        },
+        {
+          "text": "Confirm by typing confirm when a pop-up is shown. Click on Delete button."
+        },
+        {
+          "text": "Web-server-LG will be deleted immediately."
+        },
+        {
+          "text": "In the EC2 console, navigate to Target groups in the left-side panel."
+        },
+        {
+          "text": "To delete the target group, you need to perform the following actions:"
+        },
+        {
+          "text": "Click on the Actions button,"
+        },
+        {
+          "text": "Select the Delete option."
+        },
+        {
+          "text": "Click on the Actions button,"
+        },
+        {
+          "text": "Select the Delete option."
+        },
+        {
+          "text": "Confirm by clicking on the Yes, delete button when a pop-up is shown."
+        },
+        {
+          "text": "In the EC2 console, navigate to Instances in the left-side panel."
+        },
+        {
+          "text": "To terminate the EC2 Instances, need to perform the following actions:"
+        },
+        {
+          "text": "Select the EC2 instance"
+        },
+        {
+          "text": "Click on the Instance state button,"
+        },
+        {
+          "text": "Select the Terminate instance option"
+        },
+        {
+          "text": "Select the EC2 instance"
+        },
+        {
+          "text": "Click on the Instance state button,"
+        },
+        {
+          "text": "Select the Terminate instance option"
+        },
+        {
+          "text": "Confirm by clicking on the Terminate button when a pop-up is shown."
+        },
+        {
+          "text": "EC2 Instances will be terminated immediately."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have Successfully completed the challenge."
+        },
+        {
+          "text": "Click on the End Challenge button from the lab console and wait till the process gets complete"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

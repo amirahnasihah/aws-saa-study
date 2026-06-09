@@ -1,0 +1,586 @@
+{
+  "slug": "how-to-query-into-rds-mysql-using-aws-lambda",
+  "title": "How to Query into RDS MySQL Using AWS Lambda",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:15:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a Security Group for RDS instance",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia us-east-1 Region."
+        },
+        {
+          "text": "Click on Services and select EC2 under the Compute section."
+        },
+        {
+          "text": "On the left panel menu, select the Security Groups under the Network & Security section."
+        },
+        {
+          "text": "Click on the Create Security Group."
+        },
+        {
+          "text": "We are going to create a Security group for RDS with a 3306 port number enabled."
+        },
+        {
+          "text": "Security group name : Enter RDS_lab_sg"
+        },
+        {
+          "text": "Description: Enter Security group for RDS instance"
+        },
+        {
+          "text": "VPC: Select Default VPC"
+        },
+        {
+          "text": "Click on the Add rule button under Inbound rules."
+        },
+        {
+          "text": "Type: Select MYSQL/Aurora"
+        },
+        {
+          "text": "Source: Select Anywhere-IPv4"
+        },
+        {
+          "text": "In the textbox add 0.0.0.0/0"
+        },
+        {
+          "text": "Leave everything as default and click on the Create Security Group."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create RDS Database Instance",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to Aurora and RDS by clicking on the Services menu available under the Database section."
+        },
+        {
+          "text": "Click on Databases on the left panel and then click on Create Database."
+        },
+        {
+          "text": "Database creation method : Standard create"
+        },
+        {
+          "text": "Engine options : Select MySQL"
+        },
+        {
+          "text": "Version : Default"
+        },
+        {
+          "text": "Templates : Select Sandbox"
+        },
+        {
+          "text": "Note: Selecting the Sandbox as a template is compulsory, else database won't be created."
+        },
+        {
+          "text": "DB instance identifier : mydatabaseinstance"
+        },
+        {
+          "text": "Master username:"
+        },
+        {
+          "text": "mydatabaseuser"
+        },
+        {
+          "text": "Credentials management: Select Self managed"
+        },
+        {
+          "text": "Master password and Confirm password: mydatabasepassword"
+        },
+        {
+          "text": "DB instance class : db.t3.micro — 2 vCPU, 1 GiB RAM"
+        },
+        {
+          "text": "Storage type : General Purpose (SSD)"
+        },
+        {
+          "text": "Allocated storage : 20 (default)"
+        },
+        {
+          "text": "Click on Additional storage configuration to expand."
+        },
+        {
+          "text": "Enable storage autoscaling : Uncheck"
+        },
+        {
+          "text": "Public access : Select Yes"
+        },
+        {
+          "text": "VPC security groups : Select Choose existing"
+        },
+        {
+          "text": "Note: Remove the default one and select RDS_lab_sg instead"
+        },
+        {
+          "text": "Click on Additional Configuration in the bottom of the page to expand it:"
+        },
+        {
+          "text": "Initial database name: mydatabase"
+        },
+        {
+          "text": "DB parameter group: default"
+        },
+        {
+          "text": "Option group: default"
+        },
+        {
+          "text": "Enable automated backups: uncheck"
+        },
+        {
+          "text": "Note: Leave all the other setting as default"
+        },
+        {
+          "text": "Click on Create database"
+        },
+        {
+          "text": "Navigate to Databases."
+        },
+        {
+          "text": "On the RDS console, the details for the new DB instance appear. The DB instance has a status of creating until the DB instance is ready to use. When the state changes to Available, you can connect to the DB instance. It can take up to 20 minutes before the new instance status becomes Available."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Connecting to RDS Database on a DB Instance using the MySQL Workbench",
+      "steps": [
+        {
+          "text": "One GUI-based application you can use to connect is MySQL workbench, which you have already downloaded and installed based on instructions in the prerequisite section."
+        },
+        {
+          "text": "To connect to a database on a DB instance using MySQL monitor, find the endpoint (DNS name) and port number for your DB Instance."
+        },
+        {
+          "text": "Navigate to Databases and click on mydatabaseinstance."
+        },
+        {
+          "text": "Under Connectivity & security section, copy and note the endpoint and port."
+        },
+        {
+          "text": "Example:"
+        },
+        {
+          "text": "Endpoint : mydatabaseinstance.c81x4bxxayay.us-east-1.rds.amazonaws.com"
+        },
+        {
+          "text": "Port : 3306"
+        },
+        {
+          "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon IN your left side."
+        },
+        {
+          "text": "Connection Name: Enter a sample name MyDatabseConnection"
+        },
+        {
+          "text": "Connection Method: Select Standard (TCP/IP)"
+        },
+        {
+          "text": "Host Name: Enter your RDS endpoint : mydatabaseinstance.c81x4bxxayay.us-east-1.rds.amazonaws.com"
+        },
+        {
+          "text": "Port: 3306"
+        },
+        {
+          "text": "Username: mydatabaseuser"
+        },
+        {
+          "text": "Password: Click on Store in Vault and enter password mydatabasepassword Click on the OK button."
+        },
+        {
+          "text": "Now click on the test connection button. It shows success connection message."
+        },
+        {
+          "text": "Now click on OK button and then click on the OK button in the main screen."
+        },
+        {
+          "text": "A database connection will be created in MySQL Workbench."
+        },
+        {
+          "text": "Wait for a few seconds to connect to your RDS Machine."
+        },
+        {
+          "text": "If you see a similar screen as shown below then you have successfully connected to the RDS."
+        },
+        {
+          "text": "Now copy the below MySQL command and paste it in the Query tab."
+        },
+        {
+          "text": "CREATE DATABASE StudentDB;"
+        },
+        {
+          "text": "Use StudentDB;"
+        },
+        {
+          "text": "CREATE TABLE students ("
+        },
+        {
+          "text": "studentId INT AUTO_INCREMENT,"
+        },
+        {
+          "text": "studentName VARCHAR(50) NOT NULL,"
+        },
+        {
+          "text": "Course VARCHAR(55),Semester VARCHAR(50) NOT NULL,PRIMARY KEY (studentId));"
+        },
+        {
+          "text": "INSERT INTO students(studentName, Course, Semester) VALUES ('Paul', 'MBA', 'Second');"
+        },
+        {
+          "text": "INSERT INTO students(studentName, Course, Semester) VALUES ('John', 'IT', 'Third');"
+        },
+        {
+          "text": "INSERT INTO students(studentName, Course, Semester) VALUES ('Sebastian', 'Medicine', 'fifth');"
+        },
+        {
+          "text": "SELECT * FROM students;"
+        },
+        {
+          "text": "MySQL Query Explanation:"
+        },
+        {
+          "text": "Create a Database StudentDB."
+        },
+        {
+          "text": "CREATE DATABASE StudentDB;"
+        },
+        {
+          "text": "Select the database"
+        },
+        {
+          "text": "Use StudentDB;"
+        },
+        {
+          "text": "Create a table student with fields - student id, studnentName, Course and Semester."
+        },
+        {
+          "text": "CREATE TABLE students (studentId INT AUTO_INCREMENT, studentName VARCHAR(50) NOT NULL, Course VARCHAR(55),Semester VARCHAR(50) NOT NULL,PRIMARY KEY (studentId));"
+        },
+        {
+          "text": "Insert three values to the table."
+        },
+        {
+          "text": "INSERT INTO students(studentName, Course, Semester) VALUES ('Paul', 'MBA', 'Second');"
+        },
+        {
+          "text": "View the table data."
+        },
+        {
+          "text": "SELECT * FROM students;"
+        },
+        {
+          "text": "Now Click on the Execute icon to start the execution and wait for a few minutes."
+        },
+        {
+          "text": "Now You will be able to see the students table with these following values."
+        },
+        {
+          "text": "Don't close the MySQL workbench window, keep it as minimized."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create a Lambda function",
+      "steps": [
+        {
+          "text": "Navigate to the Services menu at the top, then click on Lambda under the Compute section."
+        },
+        {
+          "text": "Click on Create function"
+        },
+        {
+          "text": "Select Author from Scratch"
+        },
+        {
+          "text": "Function Name : Enter MyRDSLambda"
+        },
+        {
+          "text": "Runtime : Select the latest version of Python"
+        },
+        {
+          "text": "Click on Advanced Settings, then Enable Custom execution role option."
+        },
+        {
+          "text": "Choose the Role name as Lambda_role. Then click on Save."
+        },
+        {
+          "text": "Click on Create Function Button."
+        },
+        {
+          "text": "Once the Lambda Function is created successfully, it will look like the screenshot below:"
+        },
+        {
+          "text": "Click on this link to download the Lambda zip code"
+        },
+        {
+          "text": "Click on the Upload from button and select the .zip file option"
+        },
+        {
+          "text": "Click the Upload button and upload the zip file that we just downloaded and the click on the Save button."
+        },
+        {
+          "text": "Now in the code section, go to zip file and select lambda_function.py"
+        },
+        {
+          "text": "In the code, go to line 5 and replace the endpoint, username and password in the python code with your values and click on the Deploy button. Wait till the deployment gets success."
+        },
+        {
+          "text": "Lambda code explanation :"
+        },
+        {
+          "text": "The zip file contains pre installed python module used for performing MySQL queries in Python."
+        },
+        {
+          "text": "First we provide the RDS endpoint, username, password and database values."
+        },
+        {
+          "text": "Create a connection to the RDS instance."
+        },
+        {
+          "text": "Perform MySQL query “SELECT * FROM students” to fetch the table data."
+        },
+        {
+          "text": "Create a json value and print the table data in the lambda function."
+        },
+        {
+          "text": "Now click on the Test button and select Create new test event,"
+        },
+        {
+          "text": "Event name : Enter TestRDS"
+        },
+        {
+          "text": "Leave everything as default"
+        },
+        {
+          "text": "Click the Save button."
+        },
+        {
+          "text": "Now click on the Invoke button and you will be able to see the students table values in the Lambda output (JSON)."
+        },
+        {
+          "text": "Scroll down the Execution result : (String)"
+        },
+        {
+          "text": "Go to Function code, inside the lambda_function.py replace the existing code with the below:"
+        },
+        {
+          "text": "import json"
+        },
+        {
+          "text": "import pymysql"
+        },
+        {
+          "text": "RDS_endpoint = \"myrdsinstance.cdegnvsebaim.us-east-1.rds.amazonaws.com\""
+        },
+        {
+          "text": "UserName = \"mydatabaseuser\""
+        },
+        {
+          "text": "Password = \"mydatabasepassword\""
+        },
+        {
+          "text": "DatabaseName = \"StudentDB\""
+        },
+        {
+          "text": "connectionString = pymysql.connect(RDS_endpoint, user=UserName, passwd=Password, db=DatabaseName)"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "header = []"
+        },
+        {
+          "text": "row_json = []"
+        },
+        {
+          "text": "table_json = {}"
+        },
+        {
+          "text": "pointer = connectionString.cursor()"
+        },
+        {
+          "text": "pointer.execute(\"INSERT INTO students(studentName, Course, Semester) VALUES ('Elizabeth', 'Art', 'first')\")"
+        },
+        {
+          "text": "connectionString.commit()"
+        },
+        {
+          "text": "connectionString.close()"
+        },
+        {
+          "text": "return (\"Insertion Success\")"
+        },
+        {
+          "text": "On line number 5, replace the endpoint, username and password in the python code with your values and click on the Deploy button."
+        },
+        {
+          "text": "Lambda code explanation :"
+        },
+        {
+          "text": "This code is used to insert a value into the students table."
+        },
+        {
+          "text": "First we provide the RDS endpoint, username, password and database values."
+        },
+        {
+          "text": "Create a connection to the RDS instance."
+        },
+        {
+          "text": "Perform MySQL query “INSERT INTO students(studentName, Course, Semester) VALUES ('Elizabeth', 'Art', 'first')” to insert value into the table."
+        },
+        {
+          "text": "Click on the Test button and select TestRDS and click the Invoke button, you will get an insertion success message in lambda response."
+        },
+        {
+          "text": "Now navigate to the MySQL Workbench application and replace the existing query with the below."
+        },
+        {
+          "text": "Use StudentDB;"
+        },
+        {
+          "text": "SELECT * FROM students;"
+        },
+        {
+          "text": "Now Click on the Execute icon to start the execution and wait for a few minutes."
+        },
+        {
+          "text": "Note : Since the MySQL workbench was not active for a long time, it will take a few minutes to complete the execution. if you find difficulty then please close the connection and reconnect to RDS again from MySQL Workbench."
+        },
+        {
+          "text": "You will be able to see the new row that we just added to the table through the Lambda function."
+        },
+        {
+          "text": "DO you know?"
+        },
+        {
+          "text": "MySQL is a popular open-source relational database management system (RDBMS) that is widely used for managing structured data. MySQL in RDS refers to the MySQL database engine offered as a fully managed service within the AWS ecosystem. It allows you to run MySQL databases in the cloud without having to worry about the underlying infrastructure management tasks, such as hardware provisioning, database setup, patching, backups, and automatic software updates."
+        }
+      ]
+    },
+    {
+      "title": "Task 6 : Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "Delete Lambda Function"
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to Lambda by clicking on the Services menu at the top, then click on Lambda in the Compute section."
+        },
+        {
+          "text": "Select the lambda function MyRDSLambda and click Actions and click Delete button."
+        },
+        {
+          "text": "Enter the confirm in the required field and click the Delete button to confirm deletion."
+        },
+        {
+          "text": "Delete RDS Instance"
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to RDS by clicking on the Services menu available under the Database section."
+        },
+        {
+          "text": "Select Databases from the left side menu."
+        },
+        {
+          "text": "Select the RDS instance mydatabaseinstance and click on Actions and select Delete."
+        },
+        {
+          "text": "Confirmation Prompt :"
+        },
+        {
+          "text": "Uncheck the option : Create the final snapshot"
+        },
+        {
+          "text": "Check the I Acknowledge option"
+        },
+        {
+          "text": "In textbox : Enter delete me"
+        },
+        {
+          "text": "Now click on the Delete button."
+        },
+        {
+          "text": "Now click on the refresh button and you will be able to see that the status of the RDS instance is deleting. It will take 10 to 20 Minutes to delete the instance."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully logged into AWS management console."
+        },
+        {
+          "text": "You have successfully created a security group for RDS instance."
+        },
+        {
+          "text": "You have successfully created a RDS Instance."
+        },
+        {
+          "text": "You have successfully connected to RDS using MySQL workbench."
+        },
+        {
+          "text": "You have successfully created a Lambda function."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

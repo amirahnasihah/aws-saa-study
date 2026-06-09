@@ -1,0 +1,109 @@
+{
+  "slug": "creating-events-in-cloudwatch-challenge",
+  "title": "Creating Events in CloudWatch Challenge",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "In this challenge, your Amazon CloudWatch, Amazon EC2, and Amazon SNS skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of Amazon CloudWatch, Amazon SNS and other services used for this challenge. This Challenge will help you understand the real-time scenarios."
+        },
+        {
+          "text": "A company XYZ is building their new infrastructure. As a part of the infrastructure, they need to monitor their EC2 instances. As a cloud solution architect, provide a solution that they could be notified when their instance changes their state."
+        },
+        {
+          "text": "Launch an EC2 Instance having Amazon Linux 2023 kernel-6.1 as AMI, t2.micro as Instance type, and create a Key pair of type RSA required for SSH."
+        },
+        {
+          "text": "Launch an EC2 Instance having Amazon Linux 2023 kernel-6.1 as AMI, t2.micro as Instance type, and create a Key pair of type RSA required for SSH."
+        },
+        {
+          "text": "Create a SNS topic and create subscription for that topic as well."
+        },
+        {
+          "text": "Create a SNS topic and create subscription for that topic as well."
+        },
+        {
+          "text": "Configure and create a rule for EC2 Instance State."
+        },
+        {
+          "text": "Configure and create a rule for EC2 Instance State."
+        },
+        {
+          "text": "Add the target as an SNS topic."
+        },
+        {
+          "text": "Add the target as an SNS topic."
+        },
+        {
+          "text": "Test the CloudWatch Event by stopping the EC2 Instance"
+        },
+        {
+          "text": "Test the CloudWatch Event by stopping the EC2 Instance"
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -1,0 +1,191 @@
+{
+  "slug": "comparing-data-transfer-speeds-with-s3-transfer-acceleration",
+  "title": "Comparing Data Transfer Speeds with S3 Transfer Acceleration",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Creating S3 Bucket",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an S3 bucket by providing details about the name, region and object ACLs."
+        },
+        {
+          "text": "Make sure you are in the US East (N.Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
+        },
+        {
+          "text": "In the S3 dashboard, click on the Create bucket button and fill in the bucket details."
+        },
+        {
+          "text": "In the General Configuration,"
+        },
+        {
+          "text": "Bucket Type select : General purpose"
+        },
+        {
+          "text": "Bucket name: Enter lab123"
+        },
+        {
+          "text": "Note: S3 Bucket names are globally unique, choose a name that is available. Maybe you can enter your name and create one."
+        },
+        {
+          "text": "Object ownership: Select ACLs disabled (recommended) option"
+        },
+        {
+          "text": "Leave all other settings as default and click on Create bucket."
+        },
+        {
+          "text": "Kindly ignore the permission error if it appears during the process"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Comparing your data transfer speed with and without Transfer Acceleration",
+      "steps": [
+        {
+          "text": "Let's see a live example of the upload speed by uploading a 55MB image file with and without Transfer Acceleration, starting with our old method."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Direct Upload of 55MB file without Transfer Acceleration",
+      "steps": [
+        {
+          "text": "Download a 55MB Video file from this link (vpc_demo). In the bucket, under Objects click on Upload."
+        },
+        {
+          "text": "Once redirected to download link follow below step to download file."
+        },
+        {
+          "text": "Once the file is downloaded to your local system, please upload it to the S3 bucket using the steps provided below."
+        },
+        {
+          "text": "Now click on Add files to upload the 55MB file that you downloaded. Note the time of upload to see the difference."
+        },
+        {
+          "text": "You'll notice it takes approximately 4-5 minutes to upload the file (Time depends on the speed of the internet)."
+        },
+        {
+          "text": "Once the upload is done, click on Close in the top right corner"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Uploading 55MB file with Transfer Acceleration",
+      "steps": [
+        {
+          "text": "In this task, we will be enabling Transfer acceleration to our bucket and re-upload the object."
+        },
+        {
+          "text": "Click on your bucket and select Properties."
+        },
+        {
+          "text": "Scroll down to see Transfer acceleration and click on it."
+        },
+        {
+          "text": "Click on the Edit button."
+        },
+        {
+          "text": "Choose Enable, and then click on Save changes."
+        },
+        {
+          "text": "Endpoint displays the endpoint domain name that you use to access accelerated data transfers to and from the bucket. If you suspend transfer acceleration, the accelerated endpoint no longer works."
+        },
+        {
+          "text": "You will see the Transfer acceleration is now enabled."
+        },
+        {
+          "text": "Rename the downloaded filename as vpc_demo(1).mp4 in your local disk."
+        },
+        {
+          "text": "Now go back to the bucket and upload vpc_demo(1).mp4. Note the time of file upload to see the difference."
+        },
+        {
+          "text": "It should take less time compared to the direct upload."
+        },
+        {
+          "text": "Do you know?"
+        },
+        {
+          "text": "It's important to note that S3 Transfer Acceleration works best for large files or when transferring data over long distances. For small files or when the source and destination are in close proximity, the performance improvement may not be significant."
+        },
+        {
+          "text": "S3 Transfer Acceleration provides an efficient and faster way to transfer data to and from Amazon S3 buckets, making it beneficial for scenarios where speed and performance are crucial."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully used the AWS management console to create an Amazon S3 Bucket."
+        },
+        {
+          "text": "You have uploaded a 55MB file with Direct Upload and noted how long it took to upload."
+        },
+        {
+          "text": "You have enabled Transfer Acceleration, uploaded a 55MB file and noted how long it took to upload."
+        },
+        {
+          "text": "You have experienced the data transfer speeds with and without Transfer Acceleration by Live Demo."
+        },
+        {
+          "text": "You have successfully validated the lab."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out from AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

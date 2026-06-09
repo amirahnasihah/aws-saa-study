@@ -1,0 +1,406 @@
+{
+  "slug": "wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard",
+  "title": "Wokwi IoT Device Simulation with AWS IoT Core Real-Time Dashboard",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "02:00:00",
+  "tasks": [
+    {
+      "title": "Lab Steps",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to IoT Core by clicking on the Services menu in the top, then click on IoT Core."
+        },
+        {
+          "text": "From the left menu on Bedrock page click on Policies Under Security"
+        },
+        {
+          "text": "On the Policy page click on Create policy button."
+        },
+        {
+          "text": "For policy name: Enter whiz-policy"
+        },
+        {
+          "text": "For Policy Document Select JSON remove the existing and copy paste the below policy"
+        },
+        {
+          "text": "Click on Create button"
+        },
+        {
+          "text": "On the left side menu Click on Thing under All devices."
+        },
+        {
+          "text": "Click on Create things button."
+        },
+        {
+          "text": "For Number of things to create: Select Create single thing and click on Next button."
+        },
+        {
+          "text": "For Thing name: Enter whiz-thing"
+        },
+        {
+          "text": "Leave rest as default and click on Next button."
+        },
+        {
+          "text": "For Device Certifications leave it as default and click on Next button."
+        },
+        {
+          "text": "For Attach Policies select whiz-policy created above and click on Create thing button."
+        },
+        {
+          "text": "Download all the 5 certificates and keys in your local and click on Done."
+        },
+        {
+          "text": "Once certificates get downloaded navigate to downloads folder to view downloaded files."
+        },
+        {
+          "text": "Now first we will rename the files we will be using them later to configure authentication for the device"
+        },
+        {
+          "text": "Rename the certificate.pem.crt file to : device.pem.crt"
+        },
+        {
+          "text": "Rename the private.pem.key file to : private.pem.key"
+        },
+        {
+          "text": "Download the \"AWS_IoT_Core\" file and extract it."
+        },
+        {
+          "text": "Navigate and Open the \"aws_iot_core\" folder."
+        },
+        {
+          "text": "Open the \"diagram.json\" file click \"Get your license key\" then click \"Open\"."
+        },
+        {
+          "text": "Click \"Get your license\" log in with your email or Gmail ID then click \"Get your license\" again."
+        },
+        {
+          "text": "Click Get your license."
+        },
+        {
+          "text": "Once the popup appears in your browser, click \"Open Visual Studio Code\" allow the Wokwi Simulator extension check the checkbox and click \"Open\"."
+        },
+        {
+          "text": "?7. If you get the following notification, click Do not ask me again, and Select Open."
+        },
+        {
+          "text": "?"
+        },
+        {
+          "text": "Navigate to AWS iot core service, then Click “Connect one device”"
+        },
+        {
+          "text": "Scroll down to find and copy the endpoint command, e.g.: arti9nb0f3kjog-ats.iot.us-east-1.amazonaws.com"
+        },
+        {
+          "text": "Open VS Code aws_iot_core src secrets.h"
+        },
+        {
+          "text": "Replace the existing endpoint \"aws_end_point\" in the secrets.h file"
+        },
+        {
+          "text": "Copy and paste the certificates in “secrets.h” : Amazon Root CA1, Device Certificate, and Private Key in the respective place."
+        },
+        {
+          "text": "Now, Copy paste the “device_certificate” and “private.key”"
+        },
+        {
+          "text": "Open main.cpp, Click the tick button on the top right to compile"
+        },
+        {
+          "text": "In this task, we are going to create a new S3 bucket in the US East (N. Virginia) region with a unique name disabling ACLs, and allowing public access for hosting the static website."
+        },
+        {
+          "text": "Navigate to S3 by clicking on the Services menu at the top, then click on S3 in the Storage section."
+        },
+        {
+          "text": "In the S3 dashboard, click on the Create Bucket button."
+        },
+        {
+          "text": "In the General Configuration,"
+        },
+        {
+          "text": "Select Bucket Type : General purpose"
+        },
+        {
+          "text": "Bucket name: Enter “lab-iot-dashboard”"
+        },
+        {
+          "text": "AWS Region: Select US East (N. Virginia) us-east-1"
+        },
+        {
+          "text": "Object ownership: Select ACLs disabled (recommended) option"
+        },
+        {
+          "text": "In the option of Block Public Access settings for this bucket, Uncheck the option of Block all public access."
+        },
+        {
+          "text": "Check the I acknowledge that the current settings might result in this bucket and the objects within becoming public checkbox."
+        },
+        {
+          "text": "Keep everything default and click on Create Bucket button."
+        },
+        {
+          "text": "In this task, we will enable static website hosting for our S3 bucket, configure it to use index.html and error.html, copy the provided endpoint, upload two files, and configure the bucket policy by copying its ARN and pasting the provided policy code."
+        },
+        {
+          "text": "To proceed, go to the S3 bucket name that you created and click on it. After that, navigate to the Properties tab which can be found at the top of the screen."
+        },
+        {
+          "text": "Scroll down to the Static website hosting section and click on Edit button."
+        },
+        {
+          "text": "In the Static website hosting dialog box"
+        },
+        {
+          "text": "Static website hosting: Select Enable"
+        },
+        {
+          "text": "Hosting type: Choose Host a static website"
+        },
+        {
+          "text": "Index document: Type index.html"
+        },
+        {
+          "text": "Error document: Type error.html"
+        },
+        {
+          "text": "Click on Save Changes."
+        },
+        {
+          "text": "Go to the Properties tab of your S3 bucket, and find the Static website hosting section. Copy the Endpoint provided in this section to your clipboard and save it for future reference."
+        },
+        {
+          "text": "The next step is to download the zip file by clicking on the replace the le html_file, extract it, and upload two files named index.html and error.html to the S3 bucket you created earlier."
+        },
+        {
+          "text": "In the Permissions tab, Click on the Edit button beside the Bucket Policy."
+        },
+        {
+          "text": "You will be able to see a Blank policy editor."
+        },
+        {
+          "text": "Before creating the policy, you will need to copy the ARN (Amazon Resource Name) of your bucket."
+        },
+        {
+          "text": "Copy the ARN of your bucket to the clipboard. It is displayed at the top of the policy editor. it will look like ARN:“arn:aws:s3:::your-bucket-name\"."
+        },
+        {
+          "text": "In the policy below, Update the bucket ARN on the Resource key value and paste the below policy code in the editor."
+        },
+        {
+          "text": "Click on Save changes button."
+        },
+        {
+          "text": "In this task, we are going to create a Lambda function which is used to process the device messages."
+        },
+        {
+          "text": "Navigate to the services menu at the top, then click on Lambda under the Compute section."
+        },
+        {
+          "text": "Click on the Create a function button."
+        },
+        {
+          "text": "Choose: Author from scratch."
+        },
+        {
+          "text": "Function name: Enter “WhizFunction”"
+        },
+        {
+          "text": "Runtime: Select Python 3.13"
+        },
+        {
+          "text": "Architecture : x86_64"
+        },
+        {
+          "text": "Click “Change default execution role” -> choose “Use an existing role”"
+        },
+        {
+          "text": "Select “Lambda_role_ xxx”"
+        },
+        {
+          "text": "Leave other fields as default and click on Create function button"
+        },
+        {
+          "text": "If you scroll down a little bit, you can see the Code source section."
+        },
+        {
+          "text": "Remove the existing code in AWS lambda lambda_function.py Copy the below code and paste it into your lambda lambda_function.py file."
+        },
+        {
+          "text": "Replace the bucket name."
+        },
+        {
+          "text": "Save the function by clicking on Deploy button."
+        },
+        {
+          "text": "In this task, we will create an AWS IoT rule which will call Lambda function to process the messages from the device to AWS IoT core."
+        },
+        {
+          "text": "Open the IoT Core console on the left side menu click on Rules under Message routing."
+        },
+        {
+          "text": "Click on Create rule button."
+        },
+        {
+          "text": "For Rule name: Enter whiz_rule and click on Next button."
+        },
+        {
+          "text": "For the SQL Query Statement copy paste the below sql statement and click on Next button."
+        },
+        {
+          "text": "Now to Attach rule actions search for Lambda and select Lambda action."
+        },
+        {
+          "text": "For Lambda function: Select WhizFunction"
+        },
+        {
+          "text": "Lambda function version: Select $Latest"
+        },
+        {
+          "text": "Review all the details and click on Create button."
+        },
+        {
+          "text": "In this task, we will test message sending and receiving using the MQTT client in the AWS IoT Core dashboard."
+        },
+        {
+          "text": "On the AWS IoT Core console, click on MQTT test client and Click on the Subscribe to a topic tab."
+        },
+        {
+          "text": "For topic filter : Enter iot/lab and click on Subscribe button."
+        },
+        {
+          "text": "Scroll down to view the subscription."
+        },
+        {
+          "text": "Now, click on Publish to a topic tab."
+        },
+        {
+          "text": "For Topic name: Select iot/lab"
+        },
+        {
+          "text": "For the the Message payload copy paste the below message and click on Publish button."
+        },
+        {
+          "text": "To verify the message, go to the “Subscribe to a topic” tab in the MQTT client dashboard."
+        },
+        {
+          "text": "You will see the incoming messages displayed in real time as they are published."
+        },
+        {
+          "text": "Open the aws_iot_core folder, then navigate to the src directory and open the main.cpp file. Wait 2–3 minutes"
+        },
+        {
+          "text": "To compile the code, click the checkmark button in the top right corner."
+        },
+        {
+          "text": "Once the code compiles successfully, open the diagram.json file."
+        },
+        {
+          "text": "Click the “Run” button. Please wait 2–3 minutes, as it may take some time to connect to AWS IoT Core."
+        },
+        {
+          "text": "Once successfully connected, the device will start sending data in JSON format."
+        },
+        {
+          "text": "To verify the data is being sent, go to the AWS IoT Core MQTT test client."
+        },
+        {
+          "text": "In the “Subscribe to a topic” tab, enter the topic used in your code (e.g., iot/lab) and click Subscribe."
+        },
+        {
+          "text": "You will see the JSON-formatted messages appear in real time — this confirms successful data transmission from your device to AWS IoT Core."
+        },
+        {
+          "text": "Go to the S3 bucket where your files are stored. Click on the index.html file to open its details."
+        },
+        {
+          "text": "Copy and click the “Object URL” from the file overview section — this is the public link to access the web page (if permissions allow)."
+        },
+        {
+          "text": "The index.html file will open as a webpage. You should now see your hosted web content rendered in the browser."
+        },
+        {
+          "text": "Click to change the value from the sensor . (vscode)"
+        },
+        {
+          "text": "The updated data will be sent through AWS IoT Core and you will see the values update live on the webpage."
+        },
+        {
+          "text": "If the data does not update on the webpage, try rerunning the Wokwi simulator. After restarting, wait for it to reconnect to AWS IoT Core, and the live data should begin updating again."
+        },
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "https://labresources.lab.com/d4af9350a40053467c4d40549623c9a7/chrome-capture-2025-8-5_37_26.gif"
+        },
+        {
+          "text": "You have successfully created an IoT Policy"
+        },
+        {
+          "text": "You have successfully created an IoT Thing"
+        },
+        {
+          "text": "You have successfully created a Wokwi simulation dashboard using VS Code."
+        },
+        {
+          "text": "You have successfully created a Lambda Function."
+        },
+        {
+          "text": "You have successfully created an IoT Rule."
+        },
+        {
+          "text": "You have successfully created and launched an Amazon S3 bucket."
+        },
+        {
+          "text": "You have successfully configured the bucket to host a static website."
+        },
+        {
+          "text": "You have tested your static website to make sure it works correctly."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

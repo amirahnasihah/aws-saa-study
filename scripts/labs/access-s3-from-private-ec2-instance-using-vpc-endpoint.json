@@ -1,0 +1,734 @@
+{
+  "slug": "access-s3-from-private-ec2-instance-using-vpc-endpoint",
+  "title": "Access S3 from Private EC2 instance using VPC Endpoint",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a VPC",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Network and Content Delivery section."
+        },
+        {
+          "text": "To create a VPC click on Your VPCs the present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+        },
+        {
+          "text": "Create a new VPC by clicking on the Create VPC button."
+        },
+        {
+          "text": "Select VPC only."
+        },
+        {
+          "text": "Name tag - optional:Enter MyVPC"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter 192.168.0.0/26"
+        },
+        {
+          "text": "IPv6 CIDR block: No IPv6 CIDR block"
+        },
+        {
+          "text": "Tenancy: Default"
+        },
+        {
+          "text": "Click on the Create VPC button to create the MyVPC."
+        },
+        {
+          "text": "VPC is now created."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create and attach an Internet Gateway with custom VPC",
+      "steps": [
+        {
+          "text": "By default, instances that are launched in a VPC cannot communicate with the Internet. To enable Internet access, an Internet gateway needed to be attached to the VPC."
+        },
+        {
+          "text": "Click on Internet Gateways from the left menu and click on Create internet gateway."
+        },
+        {
+          "text": "Name Tag : Enter MyInternetGateway"
+        },
+        {
+          "text": "Click on Create internet gateway."
+        },
+        {
+          "text": "Select the Internet gateway you created from the list."
+        },
+        {
+          "text": "Click on Actions."
+        },
+        {
+          "text": "Select the Attach to VPC."
+        },
+        {
+          "text": "Available VPCs: Select the MyVPC"
+        },
+        {
+          "text": "And click on the Attach internet gateway button."
+        },
+        {
+          "text": "The Internet gateway is now attached with MyVPC."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create a Public and Private Subnet",
+      "steps": [
+        {
+          "text": "To create a subnet click on Subnets the present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+        },
+        {
+          "text": "Click on the Create Subnet button."
+        },
+        {
+          "text": "In the VPC ID, select MyVPC."
+        },
+        {
+          "text": "Create the first subnet, you will use this subnet to launch public instances, this subnet will be associated with the main route table of the VPC:"
+        },
+        {
+          "text": "Select the MyVPC from the drop-down."
+        },
+        {
+          "text": "Subnet name: Enter Public subnet"
+        },
+        {
+          "text": "Availability Zone: Select US East (N. Virginia) / us-east-1a"
+        },
+        {
+          "text": "IPV4 CIDR block: Enter 192.168.0.1/27"
+        },
+        {
+          "text": "Click on the Create subnet button to create the subnet."
+        },
+        {
+          "text": "Create another subnet, click on the Create subnet button."
+        },
+        {
+          "text": "The second will be called Private subnet, you will use this subnet to launch private instances, this subnet will be associated with a custom route table of the same VPC:"
+        },
+        {
+          "text": "Select the MyVPC from the drop-down."
+        },
+        {
+          "text": "Subnet name: Enter Private subnet"
+        },
+        {
+          "text": "Availability Zone: Select US East (N. Virginia) / us-east-1b"
+        },
+        {
+          "text": "IPV4 CIDR block: Enter 192.168.0.32/27"
+        },
+        {
+          "text": "Finally, click on the Create Subnet button."
+        },
+        {
+          "text": "Both the subnets are now created."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Configure the Public subnet to enable auto-assign public IPv4 address",
+      "steps": [
+        {
+          "text": "To modify the auto-assign IP settings for the Public subnet, do the following:"
+        },
+        {
+          "text": "Select the Public subnet"
+        },
+        {
+          "text": "Click on the Actions button"
+        },
+        {
+          "text": "Choose Edit subnet settings from the options."
+        },
+        {
+          "text": "Check the option Enable auto-assign public IPv4 address under Auto-assign IP settings."
+        },
+        {
+          "text": "Click on Save button and modification is done now."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Create a Route Table for the Public subnet",
+      "steps": [
+        {
+          "text": "In this task, we are going to create public route tables and associate it with the subnet."
+        },
+        {
+          "text": "Go to Route Tables from the left menu and click on Create route table button."
+        },
+        {
+          "text": "Name: Enter PublicRouteTable"
+        },
+        {
+          "text": "VPC: Select MyVPC from the list."
+        },
+        {
+          "text": "Click on Create route table button."
+        },
+        {
+          "text": "Repeat the same steps to create a route table for the Private subnet."
+        },
+        {
+          "text": "Name: Enter PrivateRouteTable"
+        },
+        {
+          "text": "VPC: Select MyVPC from the list."
+        },
+        {
+          "text": "Click on Create route table button."
+        },
+        {
+          "text": "Now we will associate the subnets to the route tables."
+        },
+        {
+          "text": "Select the PublicRouteTable and go to the Subnet Associations tab."
+        },
+        {
+          "text": "Click on Edit subnet associations."
+        },
+        {
+          "text": "Select MyPublicSubnet from the list."
+        },
+        {
+          "text": "Click on Save associations button."
+        },
+        {
+          "text": "Select the PrivateRouteTable and go to the Subnet Associations tab."
+        },
+        {
+          "text": "Click on Edit subnet associations."
+        },
+        {
+          "text": "Select MyPrivateSubnet from the list."
+        },
+        {
+          "text": "Click on Save associations button."
+        },
+        {
+          "text": "Make sure not to associate any subnets with the Main Route Table."
+        },
+        {
+          "text": "PublicRouteTable: Add a route to allow Internet traffic to the VPC."
+        },
+        {
+          "text": "Select PublicRouteTable."
+        },
+        {
+          "text": "Go to Routes tab, click on Edit routes and on the next page, click on Add route button."
+        },
+        {
+          "text": "Specify the following values:"
+        },
+        {
+          "text": "Destination: Enter 0.0.0.0/0"
+        },
+        {
+          "text": "Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway."
+        },
+        {
+          "text": "Click on Save changes button."
+        }
+      ]
+    },
+    {
+      "title": "Task 6:",
+      "steps": [
+        {
+          "text": "Create a Route Table for the Public subnet"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Create Security groups",
+      "steps": [
+        {
+          "text": "In this lab, we will create two security groups, the first one will be used for Bastion host and the second one for private instance having access to VPC Endpoint for S3."
+        },
+        {
+          "text": "To get started with creating security groups, click on the Security groups , present in the SECURITY section in the left sidebar."
+        },
+        {
+          "text": "Click on the Create Security group button"
+        },
+        {
+          "text": "Fill in the below details under Basic details:"
+        },
+        {
+          "text": "Enter Security group name as Bastion-SG"
+        },
+        {
+          "text": "Enter Description as Security group for the bastion host"
+        },
+        {
+          "text": "Select the MyVPC under the VPC field."
+        },
+        {
+          "text": "By default, no inbound rule will be allowed, and when you check in the outbound rules, there is only one rule present that has a Type with All traffic because Security groups are Stateful in nature, when inbound is allowed outbound is also allowed."
+        },
+        {
+          "text": "To add the Inbound rules for the same, click on the Add rule button."
+        },
+        {
+          "text": "We will add 3 rules for the Bastion host security group i.e. SSH, HTTP, and HTTPS."
+        },
+        {
+          "text": "For the first rule, Select the Type as SSH, Source as Anywhere-IPv4 and enter 0.0.0.0/0"
+        },
+        {
+          "text": "For the second rule, click on the Add rule button. Select the Type as HTTP, Source as Anywhere-IPv4 and enter 0.0.0.0/0"
+        },
+        {
+          "text": "For the third rule, click on the Add rule button. Select the Type as HTTPS, Source as Anywhere-IPv4 and enter 0.0.0.0/0"
+        },
+        {
+          "text": "Finally, click on the Create Security group button."
+        },
+        {
+          "text": "The security group for the Bastion host is now created."
+        },
+        {
+          "text": "Click on the Security groups button, present in the SECURITY section in the left sidebar."
+        },
+        {
+          "text": "To create the second security group, click on the Create Security Group button."
+        },
+        {
+          "text": "Fill in the below details under Basic details:"
+        },
+        {
+          "text": "Enter Security group name as Endpoint-SG"
+        },
+        {
+          "text": "Enter Description as Security group for S3 endpoint"
+        },
+        {
+          "text": "Select the MyVPC under the VPC field."
+        },
+        {
+          "text": "To add the Inbound rules for the same, click on the Add rule button."
+        },
+        {
+          "text": "We will add 1 rule for the S3 endpoint security group i.e. SSH only. But here our source will be Bastion host security group,"
+        },
+        {
+          "text": "you will select the ID of Bastion-SG security group."
+        },
+        {
+          "text": "For the rule, select the Type as SSH, Source as Custom, and type Bastion, Bastion hosts security group will be shown, select that Security group."
+        },
+        {
+          "text": "Finally, click on the Create Security group button."
+        },
+        {
+          "text": "The security group for the Bastion host is now created. And, it will be listed there."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Create a Bastion host (Publicly accessible EC2 Instance)",
+      "steps": [
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Navigate to Instances on the left panel and click on Launch instances."
+        },
+        {
+          "text": "Name : Enter Bastion-host."
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the Select button"
+        },
+        {
+          "text": "Note: if there are two AMI's present for Amazon Linux 2023 AMI, choose kernel-6.1 AMI."
+        },
+        {
+          "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: WhizKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Select Create key pair Button."
+        },
+        {
+          "text": "In Network Settings Click on Edit Button:"
+        },
+        {
+          "text": "VPC: Choose MyVPC"
+        },
+        {
+          "text": "Subnet : Choose Public Subnet"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select existing security group"
+        },
+        {
+          "text": "Security group name : Choose Bastion-SG"
+        },
+        {
+          "text": "Keep rest thing default and Click on Launch Instance button."
+        },
+        {
+          "text": "Select View all Instances to view Instance you created"
+        },
+        {
+          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Create an Endpoint instance (Privately accessible EC2 instance)",
+      "steps": [
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Navigate to Instances on the left panel and click on Launch instances."
+        },
+        {
+          "text": "Name : Enter Endpoint-instance."
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the Select button."
+        },
+        {
+          "text": "Note: if there are two AMI's present for Amazon Linux 2023 AMI, choose kernel-6.1 AMI."
+        },
+        {
+          "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "For Key pair: Select the key pair made during the previous task."
+        },
+        {
+          "text": "In Network Settings Click on Edit Button:"
+        },
+        {
+          "text": "VPC: Choose MyVPC"
+        },
+        {
+          "text": "Subnet : Private Subnet"
+        },
+        {
+          "text": "Select existing security group"
+        },
+        {
+          "text": "Security group name : Choose Endpoint-SG"
+        },
+        {
+          "text": "Keep rest thing Default and Click on Launch Instance button."
+        },
+        {
+          "text": "Select View all Instances to view Instance you created"
+        },
+        {
+          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running."
+        },
+        {
+          "text": "Navigate to Instances and wait for 1-2 minutes (until the Endpoint-instance's status changes from pending to running state)"
+        }
+      ]
+    },
+    {
+      "title": "Task 10: SSH into Endpoint instance (Privately accessible) through Bastion host",
+      "steps": [
+        {
+          "text": "SSH into the Bastion instance using the Bastion PEM key: WhizKey.pem"
+        },
+        {
+          "text": "To SSH into Endpoint instance via the Bastion instance, we need the WhizKey.pem to be present on the Bastion instance."
+        },
+        {
+          "text": "Open the WhizKey.pem file on your local system and then copy the text content."
+        },
+        {
+          "text": "Navigate to the Bastion Instance and create a file named WhizKey.pem using the below command:"
+        },
+        {
+          "text": "vi WhizKey.pem"
+        },
+        {
+          "text": "Press i and paste the content of WhizKey.pem. Save it by pressing Esc key and type :wq and hit Enter."
+        },
+        {
+          "text": "Make sure you have changed the permission of the key file to 400. You can change the permission using the below command:"
+        },
+        {
+          "text": "chmod 400 WhizKey.pem"
+        },
+        {
+          "text": "Now you can log into the web servers using the private key copied to the bastion server with the help of the below commands."
+        },
+        {
+          "text": "Note: You don't have public IP's for the Endpoint instance since we created them in a private subnet."
+        },
+        {
+          "text": "Syntax : ssh -i WhizKey.pem ec2-user@<Endpoint instance's Private IP>"
+        },
+        {
+          "text": "Example: ssh -i WhizKey.pem ec2-user@192.168.0.55."
+        },
+        {
+          "text": "When asked for confirmation type: yes"
+        },
+        {
+          "text": "Enter the following command aws configure"
+        },
+        {
+          "text": "Access Key: Paste the access key provided to you"
+        },
+        {
+          "text": "Secret Key: Paste the secret key provided to you"
+        },
+        {
+          "text": "Default region name: us-east-1"
+        },
+        {
+          "text": "Default output-format: Enter [ENTER]"
+        },
+        {
+          "text": "Note: Though the assigned IAM role is having access for S3 Read, listing the bucket through AWS CLI command got failed, saying, connection timeout on S3's endpoint."
+        },
+        {
+          "text": "As, this instance's security group is only allowed to do SSH, running any other command, will fail."
+        },
+        {
+          "text": "Let's add the permission to access the S3 endpoints using the VPC Endpoint for S3."
+        }
+      ]
+    },
+    {
+      "title": "Task 11: Create a VPC Endpoint for S3, attach it to the Private subnet's Route table",
+      "steps": [
+        {
+          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking and Content Delivery section."
+        },
+        {
+          "text": "Click on Endpoints present under PrivateLink and Lattice."
+        },
+        {
+          "text": "Click on the Create endpoints button."
+        },
+        {
+          "text": "Make sure the Service category is selected for AWS services. In the Service name search bar, type s3, and press enter"
+        },
+        {
+          "text": "The endpoint of Type, Gateway with Service name as com.amazonaws.us-east-1.s3 will be listed."
+        },
+        {
+          "text": "Change the VPC, and select MyVPC."
+        },
+        {
+          "text": "Check the option for Route Table having name as PrivateRouteTable."
+        },
+        {
+          "text": "Finally, click on the Create endpoint button."
+        },
+        {
+          "text": "An endpoint will be created."
+        },
+        {
+          "text": "Click on the Close button, and within a few moments, you will see the endpoint will be listed."
+        },
+        {
+          "text": "(Optional) To check whether the endpoint is associated with the custom route table (RT for Private subnet) or not."
+        },
+        {
+          "text": "12. Go to the Route tables, Select the custom route table and click on the Routes options below, you will see an entry of S3."
+        }
+      ]
+    },
+    {
+      "title": "Task 12: List all the S3 bucket and it's objects",
+      "steps": [
+        {
+          "text": "Now SSH into the Endpoint instance from your bastion instance as mentioned in task 10."
+        },
+        {
+          "text": "Enter aws configure."
+        },
+        {
+          "text": "Access Key: Paste the access key provided to you."
+        },
+        {
+          "text": "Secret Key: Paste the secret key provided to you."
+        },
+        {
+          "text": "Default region name: us-east-1"
+        },
+        {
+          "text": "Default output-format: Enter [ENTER]"
+        },
+        {
+          "text": "List all the bucket's using the following AWS CLI command:"
+        },
+        {
+          "text": "aws s3 ls"
+        },
+        {
+          "text": "List the objects of the S3 bucket starting with name lab-bucket.."
+        },
+        {
+          "text": "Replace the S3 bucket name for the below command"
+        },
+        {
+          "text": "aws s3 ls s3://lab-bucket"
+        },
+        {
+          "text": "Do you know?"
+        },
+        {
+          "text": "VPC Endpoint Service enables private connectivity, you can avoid data transfer charges associated with public internet traffic. By utilizing VPC endpoints, you can significantly reduce data transfer costs, especially if you have large volumes of data flowing between your VPC and AWS services."
+        }
+      ]
+    },
+    {
+      "title": "Task 13: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        }
+      ]
+    },
+    {
+      "title": "Task 14: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "Delete VPC Endpoint"
+        },
+        {
+          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking and Content Delivery section."
+        },
+        {
+          "text": "Click on Endpoints present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+        },
+        {
+          "text": "To delete the VPC endpoint, perform the following tasks:"
+        },
+        {
+          "text": "Select the Endpoint,"
+        },
+        {
+          "text": "Click on the Actions button,"
+        },
+        {
+          "text": "Choose the option of Delete VPC endpoints"
+        },
+        {
+          "text": "Confirm the deletion by typing delete."
+        },
+        {
+          "text": "5. The endpoint will be deleted immediately."
+        },
+        {
+          "text": "EC2 Instance termination"
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Click on Instances on the left panel."
+        },
+        {
+          "text": "EC2 Instances will be listed here."
+        },
+        {
+          "text": "To terminate both the present instances, perform the following tasks:"
+        },
+        {
+          "text": "Select both the EC2 instances"
+        },
+        {
+          "text": "Click on the Instance state"
+        },
+        {
+          "text": "Choose to Terminate instance"
+        },
+        {
+          "text": "To confirm the termination of both the selected EC2 instance, click on the Terminate button."
+        },
+        {
+          "text": "The instance will be terminated in a minute or so."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "We have launched two EC2 instances i.e. Bastion instance and Endpoint instance. We were able to SSH into the Endpoint instance via Bastion Instance successfully."
+        },
+        {
+          "text": "We have created a VPC endpoint for S3 to securely access S3 Buckets and their objects without going to the internet i.e. within Amazon's network through the Endpoint instance."
+        },
+        {
+          "text": "We tested the VPC endpoint for S3 from the private instance."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

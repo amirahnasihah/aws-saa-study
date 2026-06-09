@@ -1,0 +1,745 @@
+{
+  "slug": "configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent",
+  "title": "Configure NAT Instance and Stream Web Logs to CloudWatch Using CloudWatch Agent",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1 : Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click On the Open Console Button, And You Will Get Redirected To AWS Console In A New Browser Tab."
+        },
+        {
+          "text": "On The AWS Sign-In Page,"
+        },
+        {
+          "text": "Leave The Account ID As Default. Never Edit/Remove The 12 Digit Account ID Present In the AWS Console. Otherwise, You Cannot Proceed with the Lab."
+        },
+        {
+          "text": "Now Copy Your User Name And Password In the Lab Console to the IAM Username and Password In AWS Console and Click On the Sign in Button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the Default AWS Region As US East (N. Virginia) Us-East-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2 : VPC and Subnet Setup",
+      "steps": [
+        {
+          "text": "In the AWS Management Console, you can find the VPC service by clicking on the “Services” dropdown at the top and type VPC in the search bar. Then, select the VPC service from the search results."
+        },
+        {
+          "text": "Once you're in the VPC service, you'll see the option to create a new VPC on the side menu or by clicking on the create VPC button and VPC only."
+        },
+        {
+          "text": "Create a new VPC: Name: Nat_vpc"
+        },
+        {
+          "text": "Specify an IPv4 CIDR block for your VPC (10.0.0.0/16) in the IPv4 CIDR block field."
+        },
+        {
+          "text": "Click on the Create VPC button."
+        },
+        {
+          "text": "Note : Kindly Ignore the error message if anything popped up!"
+        },
+        {
+          "text": "Within your newly created VPC, you'll need to create two subnets: one public and one private."
+        },
+        {
+          "text": "To create a subnet, go to the subnets section in the VPC service and click on the Create Subnet button."
+        },
+        {
+          "text": "Click the VPC which we created before i.e., Nat_vpc"
+        },
+        {
+          "text": "Specify the VPC you just created, the CIDR block for the subnet"
+        },
+        {
+          "text": "Subnet Name: PublicSubnet"
+        },
+        {
+          "text": "Choose Availability zone “us-east-1a”"
+        },
+        {
+          "text": "IPv4 subnet CIDR block: 10.0.1.0/24"
+        },
+        {
+          "text": "scroll down click add “Add new Subnet”"
+        },
+        {
+          "text": "Now we are going to create the same steps,"
+        },
+        {
+          "text": "Subnet name: PrivateSubnet"
+        },
+        {
+          "text": "Choose Availability zone “us-east-1a”"
+        },
+        {
+          "text": "subnet CIDR block: 10.0.2.0/24"
+        },
+        {
+          "text": "Click Create Subnet ."
+        },
+        {
+          "text": "Configure the route tables and internet gateway for the public subnet"
+        },
+        {
+          "text": "For the public subnet to have internet access, you'll need to configure the route table and attach an internet gateway."
+        },
+        {
+          "text": "Go to the Route Tables section in the VPC service and create a new route table for the public subnet."
+        },
+        {
+          "text": "Route Table Name: “Nat_public_rt”"
+        },
+        {
+          "text": "Select vpc : “Nat_vpc”"
+        },
+        {
+          "text": "Click Subnet associations then “Edit subnet associations”"
+        },
+        {
+          "text": "Select PublicSubnet then click Save associations ."
+        },
+        {
+          "text": "Next, go to the Internet Gateways section and create a new internet gateway."
+        },
+        {
+          "text": "Internet Gateway Name: My-Internet-Gateway"
+        },
+        {
+          "text": "Once Internet gateway is created attach it the VPC that you have created."
+        },
+        {
+          "text": "In the ”Nat_public_rt“ route table, click on Edit routes, then add your internet gateway. The destination should be (0.0.0.0/0), and the target should be the internet gateway."
+        },
+        {
+          "text": "Again create a route table for “PrivateSubnet”"
+        },
+        {
+          "text": "Route Table Name: “private_rt”"
+        },
+        {
+          "text": "Select vpc : “Nat_vpc”"
+        },
+        {
+          "text": "Click Subnet associations then “Edit subnet associations”"
+        },
+        {
+          "text": "Select PrivateSubnet then click Save associations."
+        }
+      ]
+    },
+    {
+      "title": "Task 3 : Launch EC2 instance within this VPC",
+      "steps": [
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "In the EC2 service, you'll see a left-hand side menu. Click on the Instances option, and then click on the Launch Instances button to start the process of creating a new EC2 instance."
+        },
+        {
+          "text": "Name: Enter NAT_instance"
+        },
+        {
+          "text": "Choose “Amazon Linux 2023 AMI”"
+        },
+        {
+          "text": "For Instance Type: Select t2.micro"
+        },
+        {
+          "text": "You'll need to create a key pair to securely connect to your EC2 instances. Select the Create a new key pair option."
+        },
+        {
+          "text": "For Key pair(login): Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: WhizKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Make sure to select the Nat_vpc and public subnet we created earlier."
+        },
+        {
+          "text": "In Network Settings Click on Edit Button:"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select Create security group"
+        },
+        {
+          "text": "Security group name: “NaT_ins_sg”"
+        },
+        {
+          "text": "Description: “Security Group to allow traffic to EC2 “"
+        },
+        {
+          "text": "We will now add the security group rules. SSH will already be present there."
+        },
+        {
+          "text": "Click to add rules:"
+        },
+        {
+          "text": "For HTTP: Set the Source type to 0.0.0.0 (Anywhere)"
+        },
+        {
+          "text": "For HTTPS: Set the Source to 10.0.0.0/16"
+        },
+        {
+          "text": "For All ICMP-IPv4: Set the Source to 10.0.0.0/16"
+        },
+        {
+          "text": "Click Launch Instance."
+        },
+        {
+          "text": "Repeat the steps to launch another instance, ensuring it's in the same VPC but in the private subnet."
+        },
+        {
+          "text": "To create the second EC2 instance, repeat the same steps 2-7 and make sure to select the key pair which we created before."
+        },
+        {
+          "text": "Name: Enter “Private_ins”"
+        },
+        {
+          "text": "Select the Same VPC and choose private subnet."
+        },
+        {
+          "text": "Auto assign Public IP - Disable"
+        },
+        {
+          "text": "Create a new security group for this instance as private_ins_sg, allowing inbound traffic from the first instance's security group."
+        },
+        {
+          "text": "In the Inbound Security Group Rules, leave the default settings as they are and add new rule For HTTP: Set the Source to 10.0.0.0/16"
+        },
+        {
+          "text": "Click Launch Instance."
+        }
+      ]
+    },
+    {
+      "title": "Task 4 : Enable NAT Configuration for EC2 Instance",
+      "steps": [
+        {
+          "text": "In this task, we will convert a normal EC2 instance into a NAT instance."
+        },
+        {
+          "text": "Select the NAT instance, go to the Actions menu, then choose Networking and click on Change Source/Destionation Check. Enable the Save option and Click on Save Opti."
+        },
+        {
+          "text": "Open your Local terminal and navigate to the location where your .pem file is stored."
+        },
+        {
+          "text": "chmod 400 \"WhizKey.pem\""
+        },
+        {
+          "text": "Then, Upload your .pem key from your local machine to the EC2 NAT instance using the following"
+        },
+        {
+          "text": "Command:"
+        },
+        {
+          "text": "scp -i WhizKey.pem WhizKey.pem ec2-user@<ec2-Nat-instance-public-ip>:/home/ec2-user/"
+        },
+        {
+          "text": "Replace the <ec2-Nat-instance-public-ip> and the Key pair name accordingly."
+        },
+        {
+          "text": "Navigate to VPC and Go to Route table Section. Select private_rt."
+        },
+        {
+          "text": "Select Routes Option and click Edit Routes Option."
+        },
+        {
+          "text": "Click Add route"
+        },
+        {
+          "text": "Destination : 0.0.0.0/0"
+        },
+        {
+          "text": "Target : Instance - Choose Nat instance"
+        },
+        {
+          "text": "Click “Save changes “"
+        },
+        {
+          "text": "Now, Navigate to EC2, Connect the Nat_instance"
+        },
+        {
+          "text": "Copy paste the command on NAT instance :"
+        },
+        {
+          "text": "Enable IP forwarding :"
+        },
+        {
+          "text": "sudo dnf update -y"
+        },
+        {
+          "text": "echo 'net.ipv4.ip_forward=1' | sudo tee /etc/sysctl.d/custom-ip-forwarding.conf"
+        },
+        {
+          "text": "sudo sysctl -p /etc/sysctl.d/custom-ip-forwarding.conf"
+        },
+        {
+          "text": "Setting up ip-tables for NAT (correct interface!)"
+        },
+        {
+          "text": "Check correct interface by the below command:"
+        },
+        {
+          "text": "ip a"
+        },
+        {
+          "text": "Note : Replace enX0 with your actual network interface (e.g., enX0, ens5,..). Run ip a to confirm your interface name before applying the below code."
+        },
+        {
+          "text": "sudo yum install iptables-services -y"
+        },
+        {
+          "text": "sudo systemctl enable iptables"
+        },
+        {
+          "text": "sudo systemctl start iptables"
+        },
+        {
+          "text": "sudo iptables -t nat -A POSTROUTING -o enX0 -j MASQUERADE # Replace enX0 with your actual interface if different"
+        },
+        {
+          "text": "sudo service iptables save"
+        },
+        {
+          "text": "Ensure iptables FORWARD chain is ACCEPT :"
+        },
+        {
+          "text": "sudo iptables -P FORWARD ACCEPT"
+        },
+        {
+          "text": "sudo iptables -L FORWARD"
+        },
+        {
+          "text": "# There should NOT be a REJECT rule—remove it if present!"
+        },
+        {
+          "text": "sudo iptables -D FORWARD -j REJECT --reject-with icmp-host-prohibited"
+        },
+        {
+          "text": "Paste and run each command one at a time to see where it might hang or fail."
+        },
+        {
+          "text": "Again go to Instance Page and Select Nat_Instance. Click on Connect and Open new tab."
+        },
+        {
+          "text": "Now we doing, Private instance via ssh command which is running inside NAT instance"
+        },
+        {
+          "text": "Command : ssh -i \"WhizKey.pem\" ec2-user@<Private_ins-Private-IP-Address>"
+        },
+        {
+          "text": "Check the internet connectivity in the private_instance"
+        },
+        {
+          "text": "ping google.com or ping 8.8.8.8"
+        }
+      ]
+    },
+    {
+      "title": "Task 5 : Install Nginx (Webpage) in the Private Instance",
+      "steps": [
+        {
+          "text": "On Private EC2 Instance,"
+        },
+        {
+          "text": "Install Nginx ,Copy paste the command"
+        },
+        {
+          "text": "sudo dnf update -y"
+        },
+        {
+          "text": "sudo dnf install nginx -y"
+        },
+        {
+          "text": "Set up a Simple Web Page"
+        },
+        {
+          "text": "echo \"<h1>Hello from lab</h1>\" | sudo tee /usr/share/nginx/html/index.html"
+        },
+        {
+          "text": "This replaces the default NGINX homepage with a custom message"
+        },
+        {
+          "text": "Enable and Start NGINX"
+        },
+        {
+          "text": "sudo systemctl enable nginx"
+        },
+        {
+          "text": "sudo systemctl start nginx"
+        },
+        {
+          "text": "sudo systemctl status nginx"
+        },
+        {
+          "text": "You should see output like active (running)"
+        },
+        {
+          "text": "Now, Again Login NAT_instance, Click Connect, Use EC2 Instance Connect (Browser-based SSH), You're now inside the NAT instance terminal."
+        },
+        {
+          "text": "We will now create a configuration file that tells NGINX to forward requests it receives to the private EC2 instance where the actual web page is hosted."
+        },
+        {
+          "text": "The NAT instance will use NGINX to act as a reverse proxy, forwarding requests to the private instance."
+        },
+        {
+          "text": "Install NGINX :"
+        },
+        {
+          "text": "sudo dnf install nginx -y"
+        },
+        {
+          "text": "sudo systemctl enable nginx"
+        },
+        {
+          "text": "sudo systemctl start nginx"
+        },
+        {
+          "text": "sudo systemctl status nginx"
+        },
+        {
+          "text": "Configure NGINX as a Reverse Proxy"
+        },
+        {
+          "text": "Open a new NGINX configuration file"
+        },
+        {
+          "text": "sudo nano /etc/nginx/conf.d/reverse-proxy.conf"
+        },
+        {
+          "text": "Paste the following configuration"
+        },
+        {
+          "text": "Replace 10.0.1.10 with the private IP address of your private_ins."
+        },
+        {
+          "text": "server {"
+        },
+        {
+          "text": "listen 80;"
+        },
+        {
+          "text": "location / {"
+        },
+        {
+          "text": "proxy_pass http://10.0.1.10;"
+        },
+        {
+          "text": "proxy_set_header Host $host;"
+        },
+        {
+          "text": "proxy_set_header X-Real-IP $remote_addr;"
+        },
+        {
+          "text": "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "Save and exit the file ."
+        },
+        {
+          "text": "Press “CTRL + X” to save. Press “Y”"
+        },
+        {
+          "text": "Press Enter to confirm the file name."
+        },
+        {
+          "text": "Test the new configuration for syntax errors"
+        },
+        {
+          "text": "sudo nginx -t"
+        },
+        {
+          "text": "You should see:"
+        },
+        {
+          "text": "Reload NGINX to apply the changes"
+        },
+        {
+          "text": "sudo systemctl restart nginx"
+        },
+        {
+          "text": "Disable Firewalld and Flush IPTables Rules"
+        },
+        {
+          "text": "Run these commands on the NAT instance to stop firewalld and flush iptables"
+        },
+        {
+          "text": "sudo systemctl stop firewalld"
+        },
+        {
+          "text": "sudo iptables -F"
+        },
+        {
+          "text": "sudo iptables -t nat -F"
+        },
+        {
+          "text": "sudo iptables -P INPUT ACCEPT"
+        },
+        {
+          "text": "sudo iptables -P FORWARD ACCEPT"
+        },
+        {
+          "text": "sudo iptables -P OUTPUT ACCEPT"
+        },
+        {
+          "text": "This will allow traffic on port 80, which is necessary for NGINX reverse proxy to work."
+        },
+        {
+          "text": "Any requests made to the NAT instance's public IP on port 80 will be forwarded to the private instance's web server."
+        },
+        {
+          "text": "Copy the NAT instance's public IP and open it in your web browser."
+        },
+        {
+          "text": "You should see the page served from the private EC2 instance, like:"
+        },
+        {
+          "text": "Again run this commands, which Setup iptables NAT:"
+        },
+        {
+          "text": "Note : Replace enX0 with your actual network interface (e.g., enX0, ens5,..), Run ip a to confirm your interface name before applying the below code."
+        },
+        {
+          "text": "sudo yum install iptables-services -y"
+        },
+        {
+          "text": "sudo systemctl enable iptables"
+        },
+        {
+          "text": "sudo systemctl start iptables"
+        },
+        {
+          "text": "sudo iptables -t nat -A POSTROUTING -o enX0 -j MASQUERADE # Replace ens5 with your actual interface if different"
+        },
+        {
+          "text": "sudo service iptables save"
+        }
+      ]
+    },
+    {
+      "title": "Task 6 : Install and Configure CloudWatch Agent",
+      "steps": [
+        {
+          "text": "Go to the EC2 section in the AWS Management Console, open the Instances page, and select your private_ins instance."
+        },
+        {
+          "text": "Then open the Actions menu, navigate to the Security settings, choose Modify IAM Role, select the EC2_CloudWatch_Agent_policy from the list of available roles, and confirm the update to attach the role to your instance."
+        },
+        {
+          "text": "Now we going to Connect to your private EC2 instance again,"
+        },
+        {
+          "text": "Go to EC2 Instance page, Select Nat_instance, and click on Connect."
+        },
+        {
+          "text": "Now we doing, Private instance via ssh command which is running inside NAT instance"
+        },
+        {
+          "text": "Command : ssh -i \"WhizKey.pem\" ec2-user@<Private_ins-Private-IP-Address>"
+        },
+        {
+          "text": "Install CloudWatch Agent"
+        },
+        {
+          "text": "sudo dnf install -y amazon-cloudwatch-agent"
+        },
+        {
+          "text": "Create agent config file"
+        },
+        {
+          "text": "sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc/"
+        },
+        {
+          "text": "sudo nano /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json"
+        },
+        {
+          "text": "Paste this config (for monitoring NGINX logs)"
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"logs\": {"
+        },
+        {
+          "text": "\"logs_collected\": {"
+        },
+        {
+          "text": "\"files\": {"
+        },
+        {
+          "text": "\"collect_list\": ["
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"file_path\": \"/var/log/nginx/access.log\","
+        },
+        {
+          "text": "\"log_group_name\": \"/nginx/access\","
+        },
+        {
+          "text": "\"log_stream_name\": \"{instance_id}-access\","
+        },
+        {
+          "text": "\"timezone\": \"UTC\""
+        },
+        {
+          "text": "},"
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"file_path\": \"/var/log/nginx/error.log\","
+        },
+        {
+          "text": "\"log_group_name\": \"/nginx/error\","
+        },
+        {
+          "text": "\"log_stream_name\": \"{instance_id}-error\","
+        },
+        {
+          "text": "\"timezone\": \"UTC\""
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "]"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "Save the file"
+        },
+        {
+          "text": "Press “CTRL + X” to save. Press “Y”"
+        },
+        {
+          "text": "Press Enter to confirm the file name."
+        },
+        {
+          "text": "Start the agent with your config"
+        },
+        {
+          "text": "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \\"
+        },
+        {
+          "text": "-a fetch-config \\"
+        },
+        {
+          "text": "-m ec2 \\"
+        },
+        {
+          "text": "-c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \\"
+        },
+        {
+          "text": "-s"
+        },
+        {
+          "text": "Confirm Logs in CloudWatch :"
+        },
+        {
+          "text": "Go to AWS Console, Search for CloudWatch, Select Log Groups in the left panel."
+        },
+        {
+          "text": "Open the log groups in the CloudWatch console and view the log streams associated with your EC2 instance ID."
+        },
+        {
+          "text": "Check whether logs from your EC2 instance are being successfully delivered and displayed in the selected log streams."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "While NAT Instances are great for cost-effective small-scale use cases, NAT Gateways are more scalable and highly available. With NAT Gateways, you don't need to manage instances, and AWS automatically scales them. However, NAT Instances are often cheaper in smaller environments and offer full control."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created an VPC"
+        },
+        {
+          "text": "You have converted an EC2 instance into a NAT Instance"
+        },
+        {
+          "text": "You have successfully pinged Google from the private instance via the NAT instance."
+        },
+        {
+          "text": "You have installed Nignx , Cloud Watch Agent on the private instance"
+        },
+        {
+          "text": "You have connected Cloud Watch Agent to AWS CloudWatch,"
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

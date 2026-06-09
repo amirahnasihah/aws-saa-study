@@ -1,0 +1,148 @@
+{
+  "slug": "challenge-discover-sensitive-data-present-in-s3-bucket-using-amazon-macie",
+  "title": "Challenge - Discover sensitive data present in S3 bucket using Amazon Macie",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the account id as default. Never edit/remove the 12-digit account id present in the AWS console. Otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "Now copy your Username and Password in the lab console to the IAM username and password in AWS console and click on the sign in button."
+        },
+        {
+          "text": "Once signed in to the AWS management console, make the default AWS region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "In this challenge lab, your AWS management and governance skills are put to the test as you embark on creating and configuring an Amazon Macie job to uncover sensitive data."
+        },
+        {
+          "text": "As an AWS Cloud Architect at XYZ Company, you've been entrusted with enhancing data security measures to tackle growing concerns surrounding data privacy and regulatory compliance within the financial sector. To address these challenges, you recommended implementing Amazon Macie. This sophisticated AI-powered service is purpose-built to discover, classify, and safeguard sensitive data stored in Amazon S3."
+        },
+        {
+          "text": "Enable AWS Macie for the account."
+        },
+        {
+          "text": "Create a Macie job according to the provided instructions:"
+        },
+        {
+          "text": "Start by selecting the S3 bucket whose name starts with \"lab\"."
+        },
+        {
+          "text": "Refine the scope for sensitive data discovery:"
+        },
+        {
+          "text": "Sensitive data discovery: One-time job"
+        },
+        {
+          "text": "Object criteria: File name extensions."
+        },
+        {
+          "text": "Include: File name extensions: csv"
+        },
+        {
+          "text": "Select managed data identifiers: Recommended"
+        },
+        {
+          "text": "For Custom data identifiers, create a Managed custom identifier:"
+        },
+        {
+          "text": "Name: Whiz"
+        },
+        {
+          "text": "Regular expression: [a-z]{2}-[0-9]{2}"
+        },
+        {
+          "text": "Select allow lists."
+        },
+        {
+          "text": "For general settings, provide:"
+        },
+        {
+          "text": "Job name: WhizJob"
+        },
+        {
+          "text": "Start by selecting the S3 bucket whose name starts with \"lab\"."
+        },
+        {
+          "text": "Refine the scope for sensitive data discovery:"
+        },
+        {
+          "text": "Sensitive data discovery: One-time job"
+        },
+        {
+          "text": "Object criteria: File name extensions."
+        },
+        {
+          "text": "Include: File name extensions: csv"
+        },
+        {
+          "text": "Sensitive data discovery: One-time job"
+        },
+        {
+          "text": "Object criteria: File name extensions."
+        },
+        {
+          "text": "Include: File name extensions: csv"
+        },
+        {
+          "text": "Select managed data identifiers: Recommended"
+        },
+        {
+          "text": "For Custom data identifiers, create a Managed custom identifier:"
+        },
+        {
+          "text": "Name: Whiz"
+        },
+        {
+          "text": "Regular expression: [a-z]{2}-[0-9]{2}"
+        },
+        {
+          "text": "Name: Whiz"
+        },
+        {
+          "text": "Regular expression: [a-z]{2}-[0-9]{2}"
+        },
+        {
+          "text": "Select allow lists."
+        },
+        {
+          "text": "For general settings, provide:"
+        },
+        {
+          "text": "Job name: WhizJob"
+        },
+        {
+          "text": "Job name: WhizJob"
+        },
+        {
+          "text": "Wait for Macie job completion, then view findings, and export them as a JSON report."
+        },
+        {
+          "text": "Click on the validate to complete the challenge."
+        },
+        {
+          "text": "Sign Out of the AWS account."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

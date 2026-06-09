@@ -1,0 +1,290 @@
+{
+  "slug": "configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access",
+  "title": "Configuring Amazon FSx for Lustre with EC2 Instances for Shared High-Performance Storage Access",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a FSx File System",
+      "steps": [
+        {
+          "text": "Navigate to the EC2 portal, click Security Groups in the left-hand panel under Network & Security"
+        },
+        {
+          "text": "Then click \"Create Security Group\"."
+        },
+        {
+          "text": "Enter the name as \"FSx_Sg\""
+        },
+        {
+          "text": "Enter Description as \"Allow Ports to create FSx Security Group\""
+        },
+        {
+          "text": "Select the default VPC ."
+        },
+        {
+          "text": "Under Inbound rules, add a rule for"
+        },
+        {
+          "text": "SSH Rule:"
+        },
+        {
+          "text": "Type : SSH, Protocol : TCP, Port Range: 22, Source: Anywhere (0.0.0.0/0)"
+        },
+        {
+          "text": "Custom TCP Rule:"
+        },
+        {
+          "text": "Type : Custom TCP, Protocol : TCP, Port Range: 988, Source: Anywhere (0.0.0.0/0)"
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Note : Port 988 is opened to allow EC2 instances to connect with the Lustre file system."
+        },
+        {
+          "text": "Click Create Security Group."
+        },
+        {
+          "text": "Navigate to FSx. Ensure, you are in the US East (N. Virginia) us-east-1 region to begin launching an EC2 instance in the Amazon cloud."
+        },
+        {
+          "text": "Click Create file System."
+        },
+        {
+          "text": "Step 1: Select File system type"
+        },
+        {
+          "text": "Select Amazon FSx for Lustre as your file system option type."
+        },
+        {
+          "text": "Click \"Next\"."
+        },
+        {
+          "text": "Step 2 : Specify File system details"
+        },
+        {
+          "text": "In the File system name field - Enter Whiz-fxs-File-system"
+        },
+        {
+          "text": "Choose a Deployment and Storage class as Scratch, SSD"
+        },
+        {
+          "text": "Select Throughput as 200MB/s/TiB"
+        },
+        {
+          "text": "Enter Storage capacity : 1.2 TB"
+        },
+        {
+          "text": "In the Network & Security section, choose the default VPC, and Remove the default Security Group and select the Fsx_sg , Select subnet of us-east-1a Availability Zone."
+        },
+        {
+          "text": "Uncheck the Logging Optional (Log errors ,Log warnings) and Click Next."
+        },
+        {
+          "text": "Step 3 : Review and Create"
+        },
+        {
+          "text": "Click to Create file system"
+        },
+        {
+          "text": "Note: The FSx for Lustre file system takes 10 to 15 minutes from creation to becoming available."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Launch an EC2 Instances",
+      "steps": [
+        {
+          "text": "Ensure you are in the US East (N. Virginia) us-east-1 Region to begin launching an EC2 instance in the Amazon cloud."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Click on the Instances option on the left panel, and then click on the Launch Instances button."
+        },
+        {
+          "text": "Name: Enter EC2Server"
+        },
+        {
+          "text": "Select Amazon Linux 2023 AMI from the dropdown."
+        },
+        {
+          "text": "Note: if there are two AMI's present for Amazon Linux 2o23 kernel-6.1 AMI."
+        },
+        {
+          "text": "An instance type in AWS refers to a virtual server configuration that determines the computing resources, such as CPU, memory, and storage, available to an instance. It is the basic building block for creating an EC2 instance in the AWS cloud."
+        },
+        {
+          "text": "For Instance Type: Select t3.micro"
+        },
+        {
+          "text": "Note: t3.micro is an instance type in AWS that comes with 2 vCPU, and 1GB memory and is suitable for low-traffic web servers, small development environments, and other lightweight applications."
+        },
+        {
+          "text": "AWS key pair is a secure pair of keys used for login and access to EC2 instances. It includes a public key placed on the instance and a private key kept on the user's local computer, used for authentication to prevent unauthorized access."
+        },
+        {
+          "text": "For Key pair (login): Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: WhizKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Click the Edit button in the network settings."
+        },
+        {
+          "text": "Select the default VPC and a subnet in the us-east-1 region."
+        },
+        {
+          "text": "Enable 'Auto-assign Public IP', Select Existing Security Group, Select FSx_sg, and leave all other settings as default."
+        },
+        {
+          "text": "At the top right, set the Number of instances to 2, then click Launch instance."
+        },
+        {
+          "text": "After creating the EC2 instances, rename the first instance from EC2server to ‘EC2server-1' and the second instance from 'EC2server' to 'EC2server-2'."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Mount FSx for Lustre on EC2",
+      "steps": [
+        {
+          "text": "Use EC2 Instance Connect to access and establish a connection between EC2Server-1 and EC2Server-2 via the browser."
+        },
+        {
+          "text": "Note : Make sure to connect both EC2Server-1 and EC2Server-2 in separate browser, as below we have shown screenshot for EC2Server-1 alone. Ignore the Error message which pops up!"
+        },
+        {
+          "text": "On Both EC2 instances, Run this commands."
+        },
+        {
+          "text": "sudo dnf install -y lustre-client"
+        },
+        {
+          "text": "Go to the FSx file systems page, select the file system we recently created, then click Attach to copy the mount commands."
+        },
+        {
+          "text": "Run the mount commands on both EC2 instances."
+        },
+        {
+          "text": "Create a text file on EC2-Server-1"
+        },
+        {
+          "text": "sudo nano /fsx/test.txt"
+        },
+        {
+          "text": "Type “Hello from instance A”"
+        },
+        {
+          "text": "Save and exit the file ."
+        },
+        {
+          "text": "Press “CTRL + X” to save. Press “Y”"
+        },
+        {
+          "text": "Press Enter to confirm the file name."
+        },
+        {
+          "text": "Open EC2-Server-2, run the command, and you should see the message: 'Hello from Instance A'."
+        },
+        {
+          "text": "sudo cat /fsx/test.txt"
+        },
+        {
+          "text": "Do You Know ?"
+        },
+        {
+          "text": "Amazon FSx for Lustre can deliver sub-millisecond latencies and throughput of hundreds of gigabytes per second. It’s widely used in fields like genomics, financial modeling, and media rendering where fast data access is critical. FSx Lustre can also transparently link to Amazon S3, allowing seamless data transfer between cloud storage and high-performance compute workloads."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the labs steps are completed, please click on Validation button on right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample Output:"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Delete Fxs file System",
+      "steps": [
+        {
+          "text": "Go to the Amazon FSx console, select the 'Whiz-fxs-File-system', then click 'Actions' and choose 'Delete file system'."
+        },
+        {
+          "text": "Choose 'No' for creating a final backup, check the acknowledgment box, paste the file system ID into the field, and click 'Delete file system'."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You successfully created an Amazon FSx for Lustre file system with 1.2 TB capacity."
+        },
+        {
+          "text": "You successfully launched and configured EC2 instances."
+        },
+        {
+          "text": "You successfully mounted the FSx Lustre file system on the EC2 instances."
+        },
+        {
+          "text": "You successfully created and read files on the EC2 instances using the shared FSx Lustre storage."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

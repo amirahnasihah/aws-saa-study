@@ -1,0 +1,67 @@
+{
+  "slug": "create-vpc-environment-challenge",
+  "title": "Create VPC Environment challenge",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US EAST (N. Virginia) us-east-1."
+        },
+        {
+          "text": "In this challenge, your Amazon Virtual Private Cloud (VPC) skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of subnets, route tables, and internet gateway used for this challenge. This challenge will help you understand the real-time scenarios."
+        },
+        {
+          "text": "A company XYZ wants to develop a Secure Network Infrastructure utilizing VPC. Create dedicated public and private subnets, setup an Internet Gateway, and develop route tables. The below are the tasks that need to be performed by you in order to create the stack."
+        },
+        {
+          "text": "Create a VPC. Make sure the following things are added."
+        },
+        {
+          "text": "IPv4 CIDR block: 10.0.0.0/16"
+        },
+        {
+          "text": "IPv4 CIDR block: 10.0.0.0/16"
+        },
+        {
+          "text": "Create Public and Private Subnets for VPC."
+        },
+        {
+          "text": "Create and Internet Gateway and attach it to VPC."
+        },
+        {
+          "text": "Create Public and Private Route Tables."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign Out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

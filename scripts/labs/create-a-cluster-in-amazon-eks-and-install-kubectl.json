@@ -1,0 +1,229 @@
+{
+  "slug": "create-a-cluster-in-amazon-eks-and-install-kubectl",
+  "title": "Create a cluster in Amazon EKS and install kubectl",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an EKS Cluster",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to Elastic Kubernetes Service by clicking on the Services menu available under the Containers section."
+        },
+        {
+          "text": "Click on Create cluster button."
+        },
+        {
+          "text": "Enter the cluster name as a whiz"
+        },
+        {
+          "text": "Keep the Kubernetes version as default"
+        },
+        {
+          "text": "Cluster IAM role: Choose the existing IAM role"
+        },
+        {
+          "text": "Note : Ignore below notification messages, and follow further steps."
+        },
+        {
+          "text": "Node IAM role: Choose the existing IAM role"
+        },
+        {
+          "text": "VPC: Select the Default VPC."
+        },
+        {
+          "text": "Subnets: Select the subnets for us-east-1a, us-east-1b, us-east-1c and us-east-1 and remove the subnets us-east-1e and us-east-1f."
+        },
+        {
+          "text": "Click on the Create button."
+        },
+        {
+          "text": "Note: Cluster creation will take about 10-15 minutes."
+        },
+        {
+          "text": "Cluster is created now."
+        }
+      ]
+    },
+    {
+      "title": "Task 3 : Create an Environment in CloudShell",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Click on Arrow icon (Cloud Shell) on the top AWS menu bar."
+        },
+        {
+          "text": "Once the environment is created, you are ready to use the terminal."
+        }
+      ]
+    },
+    {
+      "title": "Task 4 : Install kubectl on AWS CloudShell",
+      "steps": [
+        {
+          "text": "Once the environment is ready run all these commands the terminal, Download the Amazon EKS vended kubectl binary for your cluster's Kubernetes version from Amazon S3. To do so, un the following command:"
+        },
+        {
+          "text": "curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl"
+        },
+        {
+          "text": "Apply execute permissions to the binary."
+        },
+        {
+          "text": "chmod +x ./kubectl"
+        },
+        {
+          "text": "Copy the binary to a folder in your PATH. If you have already installed a version of kubectl, then we recommend creating a $HOME/bin/kubectl and ensuring that $HOME/bin comes first in your $PATH."
+        },
+        {
+          "text": "mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin"
+        },
+        {
+          "text": "After you install kubectl, you can verify its version with the following command:"
+        },
+        {
+          "text": "kubectl version --short --client"
+        }
+      ]
+    },
+    {
+      "title": "Task 4 :",
+      "steps": [
+        {
+          "text": "Install kubectl on AWS CloudShell"
+        }
+      ]
+    },
+    {
+      "title": "Task 5 : Configure your AWS CloudShell to communicate with your cluster",
+      "steps": [
+        {
+          "text": "Once the environment is ready on CloudShell, you create a kubeconfig file for your cluster. The settings in this file enable the kubectl CLI to communicate with your cluster."
+        },
+        {
+          "text": "To create a kubeconfig file, run the following command:"
+        },
+        {
+          "text": "aws eks update-kubeconfig --region us-east-1 --name whiz"
+        },
+        {
+          "text": "Note: If your cluster name is not whiz, Update your cluster name in the above command."
+        },
+        {
+          "text": "Test your configuration, with the following command:"
+        },
+        {
+          "text": "kubectl get svc"
+        },
+        {
+          "text": "Do You Know ?"
+        },
+        {
+          "text": "You can create an Amazon EKS cluster without specifying a VPC. This is because Amazon EKS can automatically create a VPC for your cluster. However, if you do specify a VPC, you will have more control over the networking configuration of your cluster."
+        },
+        {
+          "text": "Task 6: Validation Test"
+        },
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "Deleting EKS cluster"
+        },
+        {
+          "text": "Navigate to Elastic Kubernetes Service by clicking on the Services menu available under the Containers section.."
+        },
+        {
+          "text": "On the left sidebar, click on the Clusters option in the left panel."
+        },
+        {
+          "text": "whiz EKS cluster will be listed here."
+        },
+        {
+          "text": "To delete the cluster, perform the following task:"
+        },
+        {
+          "text": "Select the present cluster,"
+        },
+        {
+          "text": "Click on the Delete button."
+        },
+        {
+          "text": "Confirm the deletion by typing the cluster name whiz in the required field, and click on the Delete button."
+        },
+        {
+          "text": "The cluster will be deleted within 10-15 minutes."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created and launched Amazon EKS Cluster."
+        },
+        {
+          "text": "You have successfully installed Kubectl in AWS Cloudshell."
+        },
+        {
+          "text": "You have successfully configured AWS Cloudshell to communicate with AWS EKS Cluster."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

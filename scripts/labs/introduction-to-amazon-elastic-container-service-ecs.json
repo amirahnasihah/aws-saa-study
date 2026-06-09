@@ -1,0 +1,326 @@
+{
+  "slug": "introduction-to-amazon-elastic-container-service-ecs",
+  "title": "Introduction to Amazon Elastic Container Service (ECS)",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button"
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a Key Pair for the EC2 instances, inside the ECS Cluster",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region. Navigate to EC2 Service by clicking on the Services menu in the top, then click on EC2 Service in the Compute section."
+        },
+        {
+          "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key pairs"
+        },
+        {
+          "text": "To create a new key pair, click on the Create key pair button."
+        },
+        {
+          "text": "Fill in the details below:"
+        },
+        {
+          "text": "Name: Enter WhizKeyPair"
+        },
+        {
+          "text": "Key pair type : RSA"
+        },
+        {
+          "text": "File format: pem (Linux & Mac Users) or ppk (Windows users)"
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on the Create key pair button."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Launching an ECS Cluster",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region. Navigate to Elastic Container Service by clicking on the Services menu in the top, then click on Elastic Container Service in the Containers section."
+        },
+        {
+          "text": "On the left sidebar, click on the Clusters option present under the Amazon ECS section, then Click on the Create cluster button."
+        },
+        {
+          "text": "In Cluster configuration :"
+        },
+        {
+          "text": "Cluster name: enter whizcluster"
+        },
+        {
+          "text": "In Infrastructure Section :"
+        },
+        {
+          "text": "Select Fargate and Self-managed instances."
+        },
+        {
+          "text": "Auto Scaling group (ASG): Select Create new Auto Scaling Group"
+        },
+        {
+          "text": "Provisioning model: select On-demand"
+        },
+        {
+          "text": "Container instance AMI : Select Amazon Linux 2023"
+        },
+        {
+          "text": "EC2 instance type : Select t2.micro"
+        },
+        {
+          "text": "EC2 instance role: Choose the existing IAM role ECS_Role."
+        },
+        {
+          "text": "Desired capacity :"
+        },
+        {
+          "text": "Minimum : Enter 1"
+        },
+        {
+          "text": "Maximum : Enter 2"
+        },
+        {
+          "text": "SSH Key pair: Select WhizKeyPair"
+        },
+        {
+          "text": "In Networking Section :"
+        },
+        {
+          "text": "VPC: Select Default VPC"
+        },
+        {
+          "text": "Subnets: Leave it as default."
+        },
+        {
+          "text": "Security group :"
+        },
+        {
+          "text": "Select create new security group"
+        },
+        {
+          "text": "Security group name : Enter MySG"
+        },
+        {
+          "text": "Security group description : Enter MySG"
+        },
+        {
+          "text": "Inbound rules for security groups:"
+        },
+        {
+          "text": "Type : Select SSH"
+        },
+        {
+          "text": "Source : Select Anywhere"
+        },
+        {
+          "text": "Keep rest things as default and click on Create button"
+        },
+        {
+          "text": "ECS Cluster will be created"
+        },
+        {
+          "text": "It will take few minutes to provision the ECS Instance."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create Task Definitions",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a task definition for the cluster. A task definition provides a blueprint for creating tasks, which are the basic unit of work in ECS. Each task definition can define one or more containers that are run together on the same underlying EC2 instances or Fargate tasks."
+        },
+        {
+          "text": "On the left sidebar, click on the Task Definitions option present under the Amazon ECS section."
+        },
+        {
+          "text": "Click on the Create new task definition button."
+        },
+        {
+          "text": "In Task definition configuration:"
+        },
+        {
+          "text": "Task definition family: Enter ecs-demo"
+        },
+        {
+          "text": "For Infrastructure requirements :"
+        },
+        {
+          "text": "Launch Type : select Amazon EC2 Instances"
+        },
+        {
+          "text": "Task size :"
+        },
+        {
+          "text": "CPU : Enter .25 vCPU"
+        },
+        {
+          "text": "Memory : Enter .5 GB"
+        },
+        {
+          "text": "In Task Role: Choose none"
+        },
+        {
+          "text": "In task execution role: Choose none"
+        },
+        {
+          "text": "Under Container - 1:"
+        },
+        {
+          "text": "Name: Enter httpd"
+        },
+        {
+          "text": "Image URL: Enter httpd:2.4"
+        },
+        {
+          "text": "Under Port mappings :"
+        },
+        {
+          "text": "Container port : Enter 80"
+        },
+        {
+          "text": "Protocol : Select TCP"
+        },
+        {
+          "text": "App protocol : Select HTTP"
+        },
+        {
+          "text": "Keep rest things as default and click on the Create button"
+        },
+        {
+          "text": "Task Definition ecs-demo is now created."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create a service and start HTTPD container in ECS",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a service and start the HTTPD container. In AWS ECS (Elastic Container Service), a service is a long-running task that ensures that a specified number of instances of a task definition are running and maintained in an ECS cluster. Services allow you to define the desired state of your tasks and automatically handle task placement, scaling, and recovery."
+        },
+        {
+          "text": "On the left sidebar, click on the Task definitions option present under the Amazon ECS section."
+        },
+        {
+          "text": "Select ecs-demo and click on Deploy and click Create service button."
+        },
+        {
+          "text": "In Service details: Choose Task definition revision: select the latest revision."
+        },
+        {
+          "text": "Service name: Enter httpd"
+        },
+        {
+          "text": "Cluster will get selected by default."
+        },
+        {
+          "text": "In Compute configuration:"
+        },
+        {
+          "text": "Choose Compute option as Launch type and select the Launch type as EC2"
+        },
+        {
+          "text": "In Deployment configuration, Scheduling strategy: Select REPLICA."
+        },
+        {
+          "text": "Desired tasks : Enter 1"
+        },
+        {
+          "text": "In Networking section:"
+        },
+        {
+          "text": "VPC: select the default vpc"
+        },
+        {
+          "text": "Subnets: leave it as default"
+        },
+        {
+          "text": "Security Group: click on Use an existing security group and select MySG."
+        },
+        {
+          "text": "Keep other options as default, and click on the Create button."
+        },
+        {
+          "text": "The service will be created, wait till the Deployments and tasks changes to 1/1 tasks running"
+        },
+        {
+          "text": "Now navigate to Infrastructure tab, and scroll down to the Container Instances"
+        },
+        {
+          "text": "Click on the EC2 Instance ID, and you will be redirected to the running EC2 instance."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: SSH into the underlying EC2 instance and run Docker commands",
+      "steps": [
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance"
+        },
+        {
+          "text": "Please note that the Ec2 instance connect will not work for the ECS instance, so please try other SSH methods."
+        },
+        {
+          "text": "Get the root access using the following command:"
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "Now run the updates using the following command:"
+        },
+        {
+          "text": "sudo dnf update -y"
+        },
+        {
+          "text": "Check the Docker version by running the following command:"
+        },
+        {
+          "text": "docker version"
+        },
+        {
+          "text": "Check all the docker processes running in the ECS Cluster"
+        },
+        {
+          "text": "docker ps"
+        },
+        {
+          "text": "Default ECS agent and httpd container is running in the underlying EC2 instance"
+        },
+        {
+          "text": "Do you know ?"
+        },
+        {
+          "text": "One unique fact about AWS ECS is its support for the FireLens container logging system. FireLens allows you to route logs from containers running on ECS to various AWS services, such as Amazon CloudWatch Logs, Amazon Kinesis Data Firehose, or even third-party log aggregators."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

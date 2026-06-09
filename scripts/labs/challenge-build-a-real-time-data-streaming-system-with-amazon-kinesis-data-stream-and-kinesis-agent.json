@@ -1,0 +1,145 @@
+{
+  "slug": "challenge-build-a-real-time-data-streaming-system-with-amazon-kinesis-data-stream-and-kinesis-agent",
+  "title": "Challenge - Build a real time data streaming system with Amazon Kinesis Data Stream and Kinesis Agent",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the account id as default. Never edit/remove the 12-digit account id presents in the AWS console. Otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "Now copy your Username and Password in the lab console to the IAM username and password in AWS console and click on the sign in button."
+        },
+        {
+          "text": "Once signed in to the AWS management console, make the default AWS region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "In this challenge lab, your AWS Kinesis skills are put to the test. You'll deploy a sample website on an EC2 Linux instance, configure Apache web server to capture real-time logs, and stream them to AWS S3 using Kinesis Data Streams, Kinesis Agent, and Kinesis Firehose. This hands-on exercise will hone your skills in setting up efficient data pipelines for streaming, processing, and storing logs on AWS."
+        },
+        {
+          "text": "As an AWS Cloud Architect at XYZ Company, you proposed implementing an optimized log processing pipeline to efficiently manage the vast amounts of log data generated daily by our e-commerce platform hosted on Amazon Elastic Compute Cloud (EC2) instances. Leveraging Amazon Kinesis Data Streams, Amazon Kinesis Firehose, and Amazon Simple Storage Service (S3), the pipeline aims to streamline log ingestion, processing, and storage."
+        },
+        {
+          "text": "Launch an EC2 Instance with name as \"Demo_Instance\":"
+        },
+        {
+          "text": "AMI type: Amazon Linux 2023 AMI."
+        },
+        {
+          "text": "Instance type: t2. micro"
+        },
+        {
+          "text": "Create Key Pair"
+        },
+        {
+          "text": "Create Security group with 2 ports like SSH, HTTP."
+        },
+        {
+          "text": "Select an IAM Instance profile named as EC2_Role_<RANDOM_NUMBER>"
+        },
+        {
+          "text": "SSH into the EC2 instance."
+        },
+        {
+          "text": "Host a sample website."
+        },
+        {
+          "text": "Install the LAMP server."
+        },
+        {
+          "text": "Install and start the HTTPD Server"
+        },
+        {
+          "text": "Download a sample website template using the following URL and save it in the HTML folder path /var/www/html."
+        },
+        {
+          "text": "Verify the website is hosted successfully."
+        },
+        {
+          "text": "Check the access logs of the website."
+        },
+        {
+          "text": "Set permission of the httpd folder, so that the file will be in readable, writable, and executable mode by ec2-user."
+        },
+        {
+          "text": "Add the httpd group to your EC2 instance."
+        },
+        {
+          "text": "Add ec2-user to the httpd group."
+        },
+        {
+          "text": "Log out completely and SSH again in EC2 Instance to verify that the httpd group exists with the groups."
+        },
+        {
+          "text": "Change group ownership of /var/log/httpd directory and its contents to the httpd group."
+        },
+        {
+          "text": "Change the directory permissions of /var/log/httpd and its subdirectories to add group write permissions and set the group ID on subdirectories created in the future"
+        },
+        {
+          "text": "Create Kinesis Data Stream named as \"whiz-data-stream\" and enable server-side encryption using AWS managed CMK."
+        },
+        {
+          "text": "Create a S3 Bucket and enable default encryption."
+        },
+        {
+          "text": "Create Kinesis Data Firehose with source as Amazon Kinesis Data Streams and destination as Amazon S3."
+        },
+        {
+          "text": "Create a Firehose stream."
+        },
+        {
+          "text": "Create and configure Kinesis Agent and check if the service is started properly."
+        },
+        {
+          "text": "SSH into EC2 Instance"
+        },
+        {
+          "text": "Install latest version of Kinesis agent from URL"
+        },
+        {
+          "text": "Update the JSON file available at the path /etc/aws-kinesis/agent.json with the given content, replacing necessary fields with appropriate values:"
+        },
+        {
+          "text": "Stop and restart the kinesis agent to apply configuration"
+        },
+        {
+          "text": "Check if the service is started properly by going through the log."
+        },
+        {
+          "text": "Test the real-time streaming of data by hosting the sample website on multiple browsers or generating click activity."
+        },
+        {
+          "text": "Wait for logs to appear in the S3 bucket."
+        },
+        {
+          "text": "Check the CloudWatch metrics of Kinesis Data Stream and Firehose."
+        },
+        {
+          "text": "Click On the Validate to Complete the Challenge. In the second checkbox in the validation part, you should mention the folder name alone i.e., marvel-master."
+        },
+        {
+          "text": "Sign Out of the AWS account."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

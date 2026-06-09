@@ -1,0 +1,277 @@
+{
+  "slug": "creating-serverless-contact-forms-with-aws",
+  "title": "Creating Serverless Contact Forms with AWS",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Project Steps",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to the Services menu at the top. Click on Amazon Simple Email Service in the Business Application section."
+        },
+        {
+          "text": "On the left side menu, Select Identities"
+        },
+        {
+          "text": "Click on Create Identity button."
+        },
+        {
+          "text": "Enter following details:"
+        },
+        {
+          "text": "Identity type: Select Email Address"
+        },
+        {
+          "text": "Email address: Enter your valid Sender Email ID."
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on Create Identity button."
+        },
+        {
+          "text": "Similarly create another identity for receiver email"
+        },
+        {
+          "text": "Create on Create Identity button."
+        },
+        {
+          "text": "Enter following details:"
+        },
+        {
+          "text": "Identity type: Select Email Address"
+        },
+        {
+          "text": "Email address: Enter your valid Reveiver Email ID."
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on Create Identity button."
+        },
+        {
+          "text": "Now you will be able to see that the Identity Status on the Email will be Verification Pending."
+        },
+        {
+          "text": "AWS will send a confirmation email to the email that you provided in the above step."
+        },
+        {
+          "text": "Log in to your Sender mailbox and you will be able to see a mail from Amazon Web Services."
+        },
+        {
+          "text": "Once you click on the link, you will be routed to the success page."
+        },
+        {
+          "text": "Similarly Verify the Receiver’s mail also."
+        },
+        {
+          "text": "Now go to the SES Email Address page and refresh the page. You will be able to see the Verification status as Active."
+        },
+        {
+          "text": "Navigate to the services menu at the top, then click on Lambda under the Compute section."
+        },
+        {
+          "text": "Click on the Create a function button."
+        },
+        {
+          "text": "Choose: Author from scratch."
+        },
+        {
+          "text": "Function name: Enter WhizFunction"
+        },
+        {
+          "text": "Runtime: Select Node.js 22.x"
+        },
+        {
+          "text": "Role: In the permissions section, click on Change default execution role and then select Use an existing role."
+        },
+        {
+          "text": "Existing role: Select lambda_role from the list."
+        },
+        {
+          "text": "Click on Create function button."
+        },
+        {
+          "text": "Download the Zip file using this Link and extract the zip file locally. You will see one node.js file and one html file for contact form."
+        },
+        {
+          "text": "If you scroll down a little bit, you can see the Code source section. Here we need to copy paste the NodeJs code that uses the AWS SDK to send an email via Amazon SES (Simple Email Service)."
+        },
+        {
+          "text": "It parses the incoming event's body to extract information such as the sender's name, email, and message, then constructs and sends an email containing this information. The function handles success and error cases, returning appropriate HTTP status codes and messages."
+        },
+        {
+          "text": "Remove the existing code in AWS lambda index.js. Copy Paste the node.js code into your lambda index.js file."
+        },
+        {
+          "text": "You need to change the sender and receiver email address in the index.js file line number 4 & 5."
+        },
+        {
+          "text": "Save the function by clicking on Deploy button."
+        },
+        {
+          "text": "Navigate to the services menu at the top, then click on API Gateway in the Network and Content Delivery section."
+        },
+        {
+          "text": "Click on Build in REST API."
+        },
+        {
+          "text": "Choose to create a new API as New API. Under settings, choose the API name labAPI. Leave other options as default and click on Create API"
+        },
+        {
+          "text": "Once the API is created, select the API."
+        },
+        {
+          "text": "Select Create Resource in actions."
+        },
+        {
+          "text": "Resource Name: Enter lab"
+        },
+        {
+          "text": "Check CORS (Cross Origin Resource Sharing)"
+        },
+        {
+          "text": "Enter the resource name and click on Create Resource button"
+        },
+        {
+          "text": "Once you create a resource, click on Create Method."
+        },
+        {
+          "text": "Select POST in the drop-down list of Method Type."
+        },
+        {
+          "text": "Select the Integration Type as Lambda function."
+        },
+        {
+          "text": "Check Lambda proxy integration"
+        },
+        {
+          "text": "Enter the Lambda Function as WhizFunction. Click on Create Method"
+        },
+        {
+          "text": "Once the resource and the method have been created successfully, you can deploy the API."
+        },
+        {
+          "text": "Click on Deploy API button."
+        },
+        {
+          "text": "Select the Deployment Stage in the drop-down as New Stage."
+        },
+        {
+          "text": "Enter Stage Name: TestingAPI and Stage description as Testing environment for my labAPI."
+        },
+        {
+          "text": "Click on Deploy."
+        },
+        {
+          "text": "Once the API has been deployed, navigate to Stages. You will be able to see the following"
+        },
+        {
+          "text": "Copy the Invoke URL as mentiond in GIF and save it to any text editor to be used in contact form page which will look similar to : https://kvzhh540yd.execute-api.us-east-1.amazonaws.com/TestingAPI/lab"
+        },
+        {
+          "text": "Now, to Enable the cors click on Resources in the left menu and click on lab resource, Now click on Enable CORS button"
+        },
+        {
+          "text": "Select POST method in Access-Control-Allow-Methods checkbox and click on Save button."
+        },
+        {
+          "text": "Open the contactform.html file in any text editor in your local."
+        },
+        {
+          "text": "This page includes a form for users to input their name, email, and message. When the form is submitted, the submitToAPI JavaScript function sends the input data as a JSON object to a specified API endpoint using an AJAX POST request. Upon successful submission, the user is alerted, the form is reset, and the page reloads. If there's an error, an alert displays the error details."
+        },
+        {
+          "text": "Now update the invoke url in line number 92 with the invoke url you copied"
+        },
+        {
+          "text": "Save the file and open the html document in browser. This will display the created contact form."
+        },
+        {
+          "text": "Enter the details :"
+        },
+        {
+          "text": "Name: Enter"
+        },
+        {
+          "text": "Email : Enter Receiver Email"
+        },
+        {
+          "text": "Message : Enter your message"
+        },
+        {
+          "text": "Click on Send Message button."
+        },
+        {
+          "text": "It will return the success message."
+        },
+        {
+          "text": "You can verify the mail in your receiver mail ID."
+        },
+        {
+          "text": "Once the project steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this project successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "You have successfully created and verified Email Identity."
+        },
+        {
+          "text": "You have successfully created a lambda function."
+        },
+        {
+          "text": "You have successfully created and deployed your api gateway."
+        },
+        {
+          "text": "You have successfully Tested your serverless contact form website."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the project."
+        },
+        {
+          "text": "Once you completed the steps, click on End Project from your lab project console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

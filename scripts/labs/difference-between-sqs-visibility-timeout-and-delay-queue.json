@@ -1,0 +1,371 @@
+{
+  "slug": "difference-between-sqs-visibility-timeout-and-delay-queue",
+  "title": "Difference between SQS Visibility Timeout and Delay Queue",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a SQS Queue",
+      "steps": [
+        {
+          "text": "Navigate to the Services menu on the top, select Simple Queue Service under Application Integration."
+        },
+        {
+          "text": "Make sure you are in the N. Virginia region."
+        },
+        {
+          "text": "Click on the Create queue button."
+        },
+        {
+          "text": "Details :"
+        },
+        {
+          "text": "Type : Select Standard"
+        },
+        {
+          "text": "Name : Enter lab-sqs"
+        },
+        {
+          "text": "Configuration :"
+        },
+        {
+          "text": "Visibility timeout : Enter 1 Minute"
+        },
+        {
+          "text": "Leave everything as default."
+        },
+        {
+          "text": "Click on the Create queue button."
+        },
+        {
+          "text": "Now copy the Queue URL under Details and place it in the text editor, we will be using this while creating the lambda function."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a lambda function",
+      "steps": [
+        {
+          "text": "Click on the link https://console.aws.amazon.com/lambda/home?region=us-east-1#/functions to open the Lambda console in a new tab in the browser. It is important to have both SQS and Lambda functions opened in two tabs."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) region."
+        },
+        {
+          "text": "Click on the Create Function"
+        },
+        {
+          "text": "Choose Author From Scratch."
+        },
+        {
+          "text": "Function name: Enter my_sqs_Lambda"
+        },
+        {
+          "text": "Runtime: Select Python 3.8"
+        },
+        {
+          "text": "Permissions: Click on the Change default execution role and choose Use an existing role"
+        },
+        {
+          "text": "Existing role: Select task165_role_<RANDOM_NUMBER> from the dropdown list."
+        },
+        {
+          "text": "Click on Create function button."
+        },
+        {
+          "text": "Code section, Replace the existing code with the below"
+        },
+        {
+          "text": "import json"
+        },
+        {
+          "text": "import boto3"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "try:"
+        },
+        {
+          "text": "sqsClient = boto3.client(\"sqs\", region_name=\"us-east-1\")"
+        },
+        {
+          "text": "try:"
+        },
+        {
+          "text": "response = sqsClient.receive_message("
+        },
+        {
+          "text": "QueueUrl=\"<your Queue URL>\","
+        },
+        {
+          "text": "AttributeNames=['All'],"
+        },
+        {
+          "text": ")"
+        },
+        {
+          "text": "print(response)"
+        },
+        {
+          "text": "return response"
+        },
+        {
+          "text": "except Exception as e:"
+        },
+        {
+          "text": "print(\"Get queue message failed because \", e)"
+        },
+        {
+          "text": "except Exception as e:"
+        },
+        {
+          "text": "print(\"Client connection to SQS failed because \", e)"
+        },
+        {
+          "text": "Note: Please paste the SQS Queue URL which you copied and placed in the text editor."
+        },
+        {
+          "text": "Save the function by clicking on Deploy in the top right corner."
+        },
+        {
+          "text": "Now click on the Test button, Event name: Enter LambdaTest and click on the Save button."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Send a message with Visibility Timeout",
+      "steps": [
+        {
+          "text": "Go to the SQS Queue browser tab."
+        },
+        {
+          "text": "Click on the Send and receive messages button on the top right side."
+        },
+        {
+          "text": "Under Send message:"
+        },
+        {
+          "text": "Message body: Enter Test Visibility timeout"
+        },
+        {
+          "text": "Now click on the Send message button."
+        },
+        {
+          "text": "You will be able to see a similar message."
+        },
+        {
+          "text": "Now go to the Lambda function Browser tab."
+        },
+        {
+          "text": "Click on the Test button of your function and check the lambda function execution output."
+        },
+        {
+          "text": "You will be able to see the message that you have sent in the Queue, as shown below."
+        },
+        {
+          "text": "Now again click on the Test button and check the lambda output."
+        },
+        {
+          "text": "You won't be able to see the message, this is because once the message is received by the lambda function (Consumer), the visibility timeout starts, which you have set to 1 Minute."
+        },
+        {
+          "text": "For 1 Minute the message will not be available in the queue to be received by the consumer. This is what visibility timeout is set."
+        },
+        {
+          "text": "Try to Test the lambda function after 1 Minute and you will be able to receive the message again."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Purge the Queue",
+      "steps": [
+        {
+          "text": "Navigate to the SQS browser tab."
+        },
+        {
+          "text": "Click on the queue name on the top left of the page."
+        },
+        {
+          "text": "Now click on the Purge button."
+        },
+        {
+          "text": "Enter purge in the confirm box and click on the Purge button."
+        },
+        {
+          "text": "Purge will delete all the messages present in the queue."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Send a message with Delivery Delay",
+      "steps": [
+        {
+          "text": "Click on the Send and receive messages button on the top right side."
+        },
+        {
+          "text": "Under Send message:"
+        },
+        {
+          "text": "Message body: Enter Test delivery delay"
+        },
+        {
+          "text": "Delivery Delay: Enter 30 Seconds"
+        },
+        {
+          "text": "Now click on the Send message button."
+        },
+        {
+          "text": "You will be able to see a similar message."
+        },
+        {
+          "text": "Now go to the Lambda function Browser tab."
+        },
+        {
+          "text": "Click on the Test button of your function and check the lambda function execution output."
+        },
+        {
+          "text": "The message is not available, because we have added a delay to deliver the message to the consumer (Lambda function)"
+        },
+        {
+          "text": "Now wait for 30 seconds and then again click on the Test button of your function and check the lambda function execution output."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Purge the Queue",
+      "steps": [
+        {
+          "text": "Navigate to the SQS browser tab."
+        },
+        {
+          "text": "Click on the queue name on the top left of the page."
+        },
+        {
+          "text": "Now click on the Purge button."
+        },
+        {
+          "text": "Enter purge in the confirm box and click on the Purge button."
+        },
+        {
+          "text": "Do You Know ?"
+        },
+        {
+          "text": "The Visibility Timeout controls the visibility of messages to consumers after they are fetched from the queue, while the Delay Queue introduces a fixed delay before delivering messages to consumers."
+        }
+      ]
+    },
+    {
+      "title": "Task 8 : Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "Delete SQS Queue"
+        },
+        {
+          "text": "Navigate to the Services menu on the top and select Simple Queue Service under Application Integration."
+        },
+        {
+          "text": "Make sure you are in the N. Virginia region."
+        },
+        {
+          "text": "In the left top side click on the Menu icon and then click on Queues."
+        },
+        {
+          "text": "Select your SQS Queue lab-sqs and click on the Delete button."
+        },
+        {
+          "text": "Enter delete in the confirm box and click on the Delete button."
+        },
+        {
+          "text": "Delete Lambda Function"
+        },
+        {
+          "text": "Navigate to Lambda by clicking on the Services menu at the top, then click on Lambda in the Compute section."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) region."
+        },
+        {
+          "text": "Select the lambda function my_sqs_Lambda and click Actions and click the Delete button."
+        },
+        {
+          "text": "Click the Delete button to confirm the deletion."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created a SQS queue."
+        },
+        {
+          "text": "You have successfully created a Lambda function."
+        },
+        {
+          "text": "You have successfully sent a message with Visibility Timeout."
+        },
+        {
+          "text": "You have successfully purged the Queue."
+        },
+        {
+          "text": "You have successfully sent a message with Delivery Delay."
+        },
+        {
+          "text": "You have successfully purged the Queue."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab’s dashboard."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

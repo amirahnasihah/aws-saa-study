@@ -1,0 +1,506 @@
+{
+  "slug": "allocating-elastic-ip-and-associating-it-to-ec2-instance",
+  "title": "Allocating Elastic IP and Associating it to EC2 Instance",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Select Maybe later in New AWS Console Home page pop-up"
+        },
+        {
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Provision Default VPC",
+      "steps": [
+        {
+          "text": "Navigate to VPC by clicking on the Services menu in the top, then click on VPC or Open the Amazon VPC console via https://console.aws.amazon.com/vpc/."
+        },
+        {
+          "text": "Delete the default VPC by following the below steps:"
+        },
+        {
+          "text": "In the navigation pane, choose Your VPCs."
+        },
+        {
+          "text": "Select the VPC with value as yes in default VPC column."
+        },
+        {
+          "text": "Go to actions button and click on delete VPC button"
+        },
+        {
+          "text": "Check I acknowledge that I want to delete my default VPC option."
+        },
+        {
+          "text": "Type delete default VPC and click on Delete button"
+        },
+        {
+          "text": "Now to provision Default VPC again"
+        },
+        {
+          "text": "Refresh your console go to actions and click Create default VPC"
+        },
+        {
+          "text": "Click Create default VPC button and your default VPC will get created"
+        },
+        {
+          "text": "Note: If you are unable to delete the default VPC, please visit our Lab FAQ page for step-by-step instructions."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Launching an EC2 Instance",
+      "steps": [
+        {
+          "text": "In this task, we will launch an EC2 Instance by adding the name, instance type, key pair, security groups, and other details."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Navigate to Instances on the left panel and click on Launch instances button"
+        },
+        {
+          "text": "Name : Enter MyEC2Server"
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 kernel-6.1 AMI in the search box and click on the select button."
+        },
+        {
+          "text": "For Instance Type: Select t2.micro"
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair link."
+        },
+        {
+          "text": "Key pair name: MyEC2Key"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: Select .ppk"
+        },
+        {
+          "text": "Note: If you are a Linux or MAC user, select the Private key file format as .pem"
+        },
+        {
+          "text": "Select Create key pair Button."
+        },
+        {
+          "text": "In Network Settings, Click on Edit:"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select Create new Security group"
+        },
+        {
+          "text": "Security group name: Enter lab_sg"
+        },
+        {
+          "text": "Description: Enter a description of Security group for the lab_sg"
+        },
+        {
+          "text": "To add SSH,"
+        },
+        {
+          "text": "Choose Type: SSH"
+        },
+        {
+          "text": "Source: Anywhere"
+        },
+        {
+          "text": "For HTTP,"
+        },
+        {
+          "text": "Click on Add security group rule"
+        },
+        {
+          "text": "Choose Type: HTTP"
+        },
+        {
+          "text": "Source: Anywhere"
+        },
+        {
+          "text": "Keep rest thing Default and Click on Launch Instance Button."
+        },
+        {
+          "text": "Select View all Instances to View the Instance you Created"
+        },
+        {
+          "text": "Launch Status: Your instance is now launching. Click on View Instances. In the dashboard, find your instance and wait for complete initialization of the instance until the instance state changes to running."
+        },
+        {
+          "text": "Select the instance which you have created and then, below in details, note the IPv4 Public IP Address of the EC2 instance. A sample is shown in the screenshot below."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: SSH into EC2 Instance",
+      "steps": [
+        {
+          "text": "Once the instance is launched, Select EC2 Instance Connect option and click on Connect button."
+        },
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance for more options to SSH."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Install an Apache Server",
+      "steps": [
+        {
+          "text": "In this task, we will run some updates and install the Apache server using the commands mentioned below."
+        },
+        {
+          "text": "Switch to root user."
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "Now run the updates using the following command:"
+        },
+        {
+          "text": "yum -y update"
+        },
+        {
+          "text": "Once completed, let's install and run an apache server"
+        },
+        {
+          "text": "Install the Apache web server:"
+        },
+        {
+          "text": "yum install httpd"
+        },
+        {
+          "text": "When prompted, press \"Y\" to confirm."
+        },
+        {
+          "text": "Start the web server"
+        },
+        {
+          "text": "systemctl start httpd"
+        },
+        {
+          "text": "Now enable httpd:"
+        },
+        {
+          "text": "systemctl enable httpd"
+        },
+        {
+          "text": "Check the web server status:"
+        },
+        {
+          "text": "systemctl status httpd"
+        },
+        {
+          "text": "You can see the active status is running."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Create and publish page",
+      "steps": [
+        {
+          "text": "After installing Apache server, navigate to the HTML folder where we will put our HTML page to be published. Use command:"
+        },
+        {
+          "text": "cd /var/www/html/"
+        },
+        {
+          "text": "Create a sample index.html file using nano editor:"
+        },
+        {
+          "text": "nano index.html"
+        },
+        {
+          "text": "Enter sample HTML content provided below in the file and save the file with Ctrl+X. Click Y to confirm the save, then press Enter to confirm filename."
+        },
+        {
+          "text": "<HTML>Hi Lab, I am a public page</HTML>"
+        },
+        {
+          "text": "Restart the web server by using the following command:"
+        },
+        {
+          "text": "systemctl restart httpd"
+        },
+        {
+          "text": "Now enter the file name, i.e., /index.html after the public IPv4 Address which you got when you created the ec2 instance in the browser, and you can see your HTML content."
+        },
+        {
+          "text": "Make sure URL Protocol is http not https."
+        },
+        {
+          "text": "Syntax: http://<Your_Public_IPv4_Address>/index.html"
+        },
+        {
+          "text": "Sample URL: 52.90.56.138/index.html"
+        },
+        {
+          "text": "Now navigate to EC2 instances dashboard, select MyEC2Server and click on stop instance in instance state section.(Make a note of the IP address)"
+        },
+        {
+          "text": "Now confirm it by clicking Stop button."
+        },
+        {
+          "text": "Wait till the instance is stopped and now click on start instance button in the instance state section."
+        },
+        {
+          "text": "Once the instance is started, compare the new IP address allocated with the old one ,you can observe the public IP address of the EC2 instance is changed."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Allocating Elastic IP Address",
+      "steps": [
+        {
+          "text": "To avoid the modification of the IP address, we will allocate an Elastic IP Address in this task. Once it will be allocated , we will associate it with the EC2 Instance created earlier."
+        },
+        {
+          "text": "To use an Elastic IP address, you need to allocate one to your account and then associate it with your instance or a network interface."
+        },
+        {
+          "text": "Navigate to EC2 Under EC2 Dashboard, click on Elastic IPs under Network & security section."
+        },
+        {
+          "text": "Click on Allocate Elastic IP address"
+        },
+        {
+          "text": "Keep everything as default and click on Allocate button."
+        },
+        {
+          "text": "You can see that the Elastic IP has been allocated successfully, as shown below."
+        },
+        {
+          "text": "Task 8: Associating an Elastic IP Address with a Running Instance"
+        },
+        {
+          "text": "In this task, we will associate the allocated IP address with the EC2 Instance created earlier in the Task 2."
+        },
+        {
+          "text": "Select the Elastic IP address created and click on Actions. Click on Associate Elastic IP address."
+        },
+        {
+          "text": "Associate Elastic IP address"
+        },
+        {
+          "text": "Resource Type: Click on Instance"
+        },
+        {
+          "text": "Choose your instance in the drop-down below as shown below."
+        },
+        {
+          "text": "Leave default values for the remaining fields and click on Associate button."
+        },
+        {
+          "text": "Now you can see that the instance is associated with the Elastic IP address."
+        },
+        {
+          "text": "Go to the EC2 Instance and check the IPv4 Public IP, and it should be the same as Elastic IP."
+        },
+        {
+          "text": "Next, we will check the web page by entering the Elastic IP address instead of the previous Public IP."
+        },
+        {
+          "text": "Sample URL: 3.208.115.72/index.html"
+        },
+        {
+          "text": "Now navigate to EC2 instances dashboard, select MyEC2Server and click on stop instance in instance state section(Make a note of the IP address)"
+        },
+        {
+          "text": "Now confirm it by clicking the Stop button."
+        },
+        {
+          "text": "Wait till the instance is stopped and now click on the start instance button in the instance state section."
+        },
+        {
+          "text": "Wait till the instance starts. You can now observe that after attaching the elastic IP, even after restarting you can see the same public IP address. This prevents us from mapping another address even in case of failures in instances."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "AWS has announced the introduction of Amazon Elastic IP prefixes, which allows customers to advertise and announce their own IP address ranges on the internet. This feature enables AWS customers to bring their own IP addresses (BYOIP) to AWS and use them on their resources, such as EC2 instances, NAT gateways, and VPN connections, while still leveraging AWS's global network infrastructure. This can be particularly useful for customers who need to maintain their own public IP address space, such as for regulatory or compliance reasons, and want to use AWS's cloud infrastructure to host their applications"
+        },
+        {
+          "text": "Task 9: Validation Test"
+        },
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Enter the instance ID and Elastic IP address in their respective empty cells and click the Validate My Lab button."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created and launched an EC2 Instance."
+        },
+        {
+          "text": "You have logged into the EC2 instance by SSH, installed the Apache server, and published a page."
+        },
+        {
+          "text": "You have allocated an Elastic IP address and associated it with the running instance."
+        },
+        {
+          "text": "You have checked the web page with Elastic IP address to make sure it works correctly."
+        },
+        {
+          "text": "You have successfully validated the lab."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps click on End Lab from the lab console."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Associating an Elastic IP Address with a Running Instance",
+      "steps": [
+        {
+          "text": "In this task, we will associate the allocated IP address with the EC2 Instance created earlier in the Task 2."
+        },
+        {
+          "text": "Select the Elastic IP address created and click on Actions. Click on Associate Elastic IP address."
+        },
+        {
+          "text": "Associate Elastic IP address"
+        },
+        {
+          "text": "Resource Type: Click on Instance"
+        },
+        {
+          "text": "Choose your instance in the drop-down below as shown below."
+        },
+        {
+          "text": "Leave default values for the remaining fields and click on Associate button."
+        },
+        {
+          "text": "Now you can see that the instance is associated with the Elastic IP address."
+        },
+        {
+          "text": "Go to the EC2 Instance and check the IPv4 Public IP, and it should be the same as Elastic IP."
+        },
+        {
+          "text": "Next, we will check the web page by entering the Elastic IP address instead of the previous Public IP."
+        },
+        {
+          "text": "Sample URL: 3.208.115.72/index.html"
+        },
+        {
+          "text": "Now navigate to EC2 instances dashboard, select MyEC2Server and click on stop instance in instance state section(Make a note of the IP address)"
+        },
+        {
+          "text": "Now confirm it by clicking the Stop button."
+        },
+        {
+          "text": "Wait till the instance is stopped and now click on the start instance button in the instance state section."
+        },
+        {
+          "text": "Wait till the instance starts. You can now observe that after attaching the elastic IP, even after restarting you can see the same public IP address. This prevents us from mapping another address even in case of failures in instances."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "AWS has announced the introduction of Amazon Elastic IP prefixes, which allows customers to advertise and announce their own IP address ranges on the internet. This feature enables AWS customers to bring their own IP addresses (BYOIP) to AWS and use them on their resources, such as EC2 instances, NAT gateways, and VPN connections, while still leveraging AWS's global network infrastructure. This can be particularly useful for customers who need to maintain their own public IP address space, such as for regulatory or compliance reasons, and want to use AWS's cloud infrastructure to host their applications"
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Enter the instance ID and Elastic IP address in their respective empty cells and click the Validate My Lab button."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created and launched an EC2 Instance."
+        },
+        {
+          "text": "You have logged into the EC2 instance by SSH, installed the Apache server, and published a page."
+        },
+        {
+          "text": "You have allocated an Elastic IP address and associated it with the running instance."
+        },
+        {
+          "text": "You have checked the web page with Elastic IP address to make sure it works correctly."
+        },
+        {
+          "text": "You have successfully validated the lab."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

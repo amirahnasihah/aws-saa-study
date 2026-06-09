@@ -1,0 +1,402 @@
+{
+  "slug": "introduction-to-simple-queuing-service-sqs",
+  "title": "Introduction to Simple Queuing Service (SQS)",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        }
+      ]
+    },
+    {
+      "title": "Task 2 : Create FIFO and Standard Queue using the Console",
+      "steps": [
+        {
+          "text": "In this task, we are going to create two types of queues: FIFO (First-In-First-Out) and Standard. By creating these queues, the user can understand and experience the differences between them."
+        },
+        {
+          "text": "Make sure you are in the N. Virginia region."
+        },
+        {
+          "text": "Navigate to the Services menu on the top, search for SQS and select it."
+        },
+        {
+          "text": "Click on the Create queue button."
+        },
+        {
+          "text": "Details :"
+        },
+        {
+          "text": "Type : Select FIFO"
+        },
+        {
+          "text": "Name : Enter MyWhizQueue.fifo"
+        },
+        {
+          "text": "Note: The name of a FIFO queue must end with the .fifo suffix."
+        },
+        {
+          "text": "Leave everything as default and click on Create queue button"
+        },
+        {
+          "text": "Once you click on Create Queue you will get a success message. Go back to the queues dashboard, a FIFO queue gets created as given in the image below."
+        },
+        {
+          "text": "Now, we’ll create a Standard Queue with all the default options. The only difference is that we don't provide the suffix .fifo while creating the queue."
+        },
+        {
+          "text": "Click on the Create queue button."
+        },
+        {
+          "text": "Details :"
+        },
+        {
+          "text": "Type: Select Standard"
+        },
+        {
+          "text": "Name: Enter MyWhizQueue"
+        },
+        {
+          "text": "Click the Create queue button."
+        },
+        {
+          "text": "The Type column helps you distinguish the Standard queue from the FIFO queue at a glance. For a FIFO queue, the Content-Based deduplication column displays whether each of your messages has a unique body enabled or not."
+        },
+        {
+          "text": "Click on the MyWhizQueue.fifo to get detailed information about all the important parameters including ARN, Name and URL of the queue."
+        },
+        {
+          "text": "We’ll be now sending a message from our FIFO queue."
+        },
+        {
+          "text": "Click on Send and receive messages."
+        },
+        {
+          "text": "Send message"
+        },
+        {
+          "text": "Message body : Enter My first queue message"
+        },
+        {
+          "text": "Message group ID : Enter group123"
+        },
+        {
+          "text": "Message deduplication ID : Enter id23"
+        },
+        {
+          "text": "Now click on Send message button"
+        },
+        {
+          "text": "Once you have sent a message, you get an acknowledgment."
+        },
+        {
+          "text": "After sending the message, we can see that Message available changes to 1."
+        },
+        {
+          "text": "Similarly, send few more messages with different Message body, Message group ID and Message deduplication."
+        },
+        {
+          "text": "Click on Clear content button and type new message."
+        },
+        {
+          "text": "After sending the messages, Message available changes to the number of messages sent."
+        },
+        {
+          "text": "Now, to get all the messages we have sent, click on Poll for messages in the Receive messages section."
+        },
+        {
+          "text": "We can now see the message column has been filled with the messages."
+        },
+        {
+          "text": "Then click on the message to see its body."
+        },
+        {
+          "text": "Hence, we have successfully sent and received messages in the console."
+        },
+        {
+          "text": "Similarly, we’ll try with the Standard queue for sending the message."
+        },
+        {
+          "text": "Click on Send and receive messages."
+        },
+        {
+          "text": "Send message:"
+        },
+        {
+          "text": "Message body : Enter My first standard message queue"
+        },
+        {
+          "text": "Now click on Send message button."
+        },
+        {
+          "text": "Once the message is delivered, you’ll receive an acknowledgment for successful delivery."
+        },
+        {
+          "text": "After sending the message, we can see that Message available changes to 1."
+        },
+        {
+          "text": "Similarly, send few more messages with different Message body."
+        },
+        {
+          "text": "After sending the messages, Message available changes to the number of messages sent."
+        },
+        {
+          "text": "Now, to get all the messages we have sent, click on Poll for messages in the Receive messages section."
+        },
+        {
+          "text": "Then click on the messages to see its body."
+        },
+        {
+          "text": "Hence, we have successfully sent and received messages in the console."
+        },
+        {
+          "text": "Let's try to understand the other parameters like Long Polling and how it works in SQS. Before moving to the lab, try to focus on what exactly the Long polling is and when it should be used."
+        }
+      ]
+    },
+    {
+      "title": "Task 3 : What is Long Polling & Configuring Long Polling",
+      "steps": [
+        {
+          "text": "In this task, we are going to introduce the concept of long polling and its benefits in Amazon SQS. Long polling is an alternative to short polling, where the client waits for a response from the server only when there are messages available in the queue. By configuring long polling, the user can reduce the number of empty responses and save computational resources, resulting in cost savings."
+        },
+        {
+          "text": "Long Polling: Let's try to understand how long polling works and why we should use it."
+        },
+        {
+          "text": "For example, if our application requires SQS messages, it will call the RecieveMessage function in the background. ReceiveMessage will check the presence of any messages in the queue and return immediately, with or without messages."
+        },
+        {
+          "text": "Calling a ReceiveMessage function in our application is fine as per the requirement, but what if the SQS client repeatedly checks for the message in the queue for any new messages. This is a problem, as continuous calls for the ReceiveMessage function will require lots of CPU cycles and tie up a thread. In this situation, we'll be using long polling. The only modification that we have to make is to update our WaitTimeSeconds argument to 1-20 seconds."
+        },
+        {
+          "text": "Now, if the queue is empty, the call will wait up to WaitTimeSeconds for a message to come in the queue before returning. If messages come in before the timeout, the call will return the message right away."
+        },
+        {
+          "text": "Remember, if the wait time for the ReceiveMessage API action is greater than 0, long polling is in effect. Long polling is cost-effective because you're not constantly polling an empty queue."
+        },
+        {
+          "text": "By default, Amazon SQS uses short polling, querying only a subset of its servers (based on a weighted random distribution) to determine whether any messages are available for a response."
+        },
+        {
+          "text": "Let’s try to make this work in our existing queue by configuring Long Polling. Select any queue (standard or FIFO) from the list and click on Edit to make changes in our queue. We’ll be selecting the Standard queue as an example."
+        },
+        {
+          "text": "Once you have selected the Edit Queue, update the Receive Message Wait Time parameter. It can be any value between 0 to 20 seconds. In our example, we have changed it to 10 seconds. This will make our long polling come into effect. If we keep the value as 0 or default, it is considered short polling. Once you have made the change, click on Save button."
+        }
+      ]
+    },
+    {
+      "title": "Task 4 : What is Visibility Timeout & Configuring Visibility TimeOut",
+      "steps": [
+        {
+          "text": "In this task, we are going to explain the concept of visibility timeout in Amazon SQS. Visibility timeout is the duration during which a message remains invisible to other components after being retrieved by a consumer. By configuring the visibility timeout, the user can control how long a message remains hidden from other consumers, allowing sufficient time for processing without the risk of duplicate processing."
+        },
+        {
+          "text": "Visibility timeout is a time duration in which AWS SQS avoids the other components from receiving and processing the messages."
+        },
+        {
+          "text": "Case Study:"
+        },
+        {
+          "text": "Let's try to understand the definition by an example. So if you keep your visibility timeout to 1 minute for a big data job, what's going to happen is the message is going to come back into the queue because it's not going to complete in 1 minute."
+        },
+        {
+          "text": "Let's say it takes five minutes to actually process a large amount of data. The message is going to become visible in the queue and then another EC2 instance will pick it up. Because of this, you could be delivering your messages multiple times because your visibility timeout is too low."
+        },
+        {
+          "text": "Default Visibility timeout is 30 seconds."
+        },
+        {
+          "text": "Increase it if your task takes > 30 seconds."
+        },
+        {
+          "text": "The Maximum it can go up to is 12 hours."
+        },
+        {
+          "text": "Let’s try to make this work in our existing queue by configuring the visibility timeout. Select any queue (standard or FIFO) from the list and click on Edit to make changes in our queue. We’ll be selecting the Standard queue as an example."
+        },
+        {
+          "text": "Once you have selected the Edit, update the Default Visibility Timeout parameter. It can be any value between 0 seconds to 12 hours. In our example, we have changed it to 5 mins."
+        },
+        {
+          "text": "Once you have made the change click on Save at the bottom to bring changes in effect."
+        }
+      ]
+    },
+    {
+      "title": "Task 5 : What is Delay Queue & Configuring Delay Queue",
+      "steps": [
+        {
+          "text": "In this task, we are going to introduce the concept of a delay queue in Amazon SQS. A delay queue allows the user to postpone the delivery of messages for a specified duration. By configuring the delay queue, the user can simulate scenarios where messages need to be held back before being processed, ensuring proper sequencing and synchronization between different components."
+        },
+        {
+          "text": "Delay queue allows us to delay/postpone the delivery of a new message for a given period of time. We can easily turn any queue into a delay queue by configuring SetQueueAttributes to set the queue’s DelaySeconds attribute."
+        },
+        {
+          "text": "If we create a delay queue, any message that has been sent to this queue will remain invisible to the consumer for the configured delay time."
+        },
+        {
+          "text": "To create a delay queue set DelaySeconds attribute to a value between 0 to 900 seconds."
+        },
+        {
+          "text": "Case Study:"
+        },
+        {
+          "text": "Let's try to understand the definition by an example. Consider a case where an application is trying to insert millions of data into a database. The application will send a message about the availability of this new data that has been recently inserted to other subsystems, which in turn process this message and subsequently make updates to the same row. Now there is a dependency that until the first batch completes its job and commits after the updates the next batch should not get triggered. If the message gets triggered before the updates are complete, it would fail the next batch. In this case, delayed delivery helps."
+        },
+        {
+          "text": "Let’s try to make this work in our existing queue by configuring the Delivery Delay. Select any queue (standard or FIFO) from the list and click on Edit to make changes in our queue. We’ll be selecting the Standard queue as an example."
+        },
+        {
+          "text": "Once you have selected the Edit, update the Delivery Delay parameter. It can be any value between 0 seconds to 15 Mins. In our example, we have changed it to 60 secs."
+        },
+        {
+          "text": "Once you have changed click on Save at the bottom to bring changes into effect."
+        }
+      ]
+    },
+    {
+      "title": "Task 6 : Purge Queue and Verify the same",
+      "steps": [
+        {
+          "text": "In this task, we are going to demonstrate the ability to purge a queue in Amazon SQS. Purging a queue means deleting all the messages in the queue. This task allows the user to understand the consequences of purging a queue and verify the successful deletion of messages. It also serves as a precautionary measure to ensure the queue is clean before performing further operations."
+        },
+        {
+          "text": "In this topic, we’ll try to purge the queue. Before we jump into purging, let's understand first what happens if we purge a queue."
+        },
+        {
+          "text": "Purge Queue option allows us to delete the messages in the queue."
+        },
+        {
+          "text": "The message deletion process can take up to 60 sec, depending upon the size of the queue."
+        },
+        {
+          "text": "Note: Once you call the Purge Queues action, messages cannot be retrieved from the queue."
+        },
+        {
+          "text": "Let's try to make this change to our existing queue. Click on Queue Option and under Actions select Purge."
+        },
+        {
+          "text": "Once you select the purge option it will ask for a confirmation. Enter the phrase purge and click on purge."
+        },
+        {
+          "text": "To verify if purge has occurred on the standard queue, click on send and receive messages and then click on Poll for messages."
+        },
+        {
+          "text": "It will show no messages which verify that the purge is successful."
+        },
+        {
+          "text": "Similarly, repeat the purge on the standard queue and verify the same."
+        }
+      ]
+    },
+    {
+      "title": "Task 7 : SQS points to remember",
+      "steps": [
+        {
+          "text": "In this task, we are going to highlight and summarize important points about Amazon SQS that the user should remember. These points include details about inflight messages, maximum number of messages in a queue, message size limits, retention period, and the pull-based nature of SQS."
+        },
+        {
+          "text": "The basic difference between Delay Queue and Visibility Timeout is Delay Queue hides the message when it is first added in the queue whereas visibility timeout hides a message only after the message is retrieved from the queue."
+        },
+        {
+          "text": "Inflight messages are messages in SQS that have been received by a consumer but not yet deleted."
+        },
+        {
+          "text": "Max 120,000 messages can stay in the queue."
+        },
+        {
+          "text": "Message size is 1024 KiB."
+        },
+        {
+          "text": "It has a Default Retention period."
+        },
+        {
+          "text": "SQS is pull-based not push-based."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "Amazon SQS (Simple Queue Service) is designed to be highly scalable and can handle an unlimited number of messages per second. SQS is built on a distributed infrastructure that can automatically scale based on the volume of messages being sent and received."
+        }
+      ]
+    },
+    {
+      "title": "Task 8 : Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully logged into the AWS Management Console."
+        },
+        {
+          "text": "You have successfully created FIFO and standard queue using the console."
+        },
+        {
+          "text": "You have successfully understood Long Polling and configure it."
+        },
+        {
+          "text": "You have successfully understood Visibility Timeout and configure it."
+        },
+        {
+          "text": "You have successfully understood Delay Queue and configure it."
+        },
+        {
+          "text": "You have successfully purged the queue and verify the same."
+        },
+        {
+          "text": "You have successfully understood SQS."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab’s dashboard."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

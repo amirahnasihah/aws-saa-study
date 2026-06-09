@@ -1,0 +1,70 @@
+{
+  "slug": "challenge-lab-enable-sticky-sessions-in-application-load-balancer",
+  "title": "Challenge Lab – Enable Sticky sessions in Application Load balancer",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Challenge section 1",
+      "steps": [
+        {
+          "text": "Click On The Open Console Button, And You Will Get Redirected To AWS Console In A New Browser Tab."
+        },
+        {
+          "text": "On The AWS Sign-In Page, Leave The Account ID As Default. Never Edit/Remove The 12 Digit Account ID Present In The AWS Console. Otherwise, You Cannot Proceed With The Challenge."
+        },
+        {
+          "text": "Now Copy Your User Name and Password In The Lab Console To The IAM Username and Password In AWS Console And Click On The Sign In Button."
+        },
+        {
+          "text": "Once Signed In To The AWS Management Console, Make The Default AWS Region As US East (N. Virginia) Us-East-1."
+        },
+        {
+          "text": "In This Challenge, Your AWS Compute Skills Are Put To The Test. You'll Be Given A Requirement And You Have To Reach It Using Your Knowledge Of Elastic Compute (EC2) And Elastic Load Balancer (ELB) Which Will Be Used In This Challenge. This Challenge Will Help You Understand The Real-Time Scenarios."
+        },
+        {
+          "text": "A Company XYZ Wants to deploy their website on AWS for high availability and scalability. They have chosen to use EC2 instances with Apache HTTP Server as the web server. To ensure seamless user experience and session persistence, they require stickiness in their load balancer configuration.. Below are the tasks you have to perform to create the Load balancer and EC2 instances."
+        },
+        {
+          "text": "Launch 2 Amazon Linux 2023 kernel-6.1EC2 Instances with instance type as t2.micro and HTTP port"
+        },
+        {
+          "text": "Under the User data: section, Enter the script to create an HTML page served by an Apache httpd web server, create a custom html page as below:"
+        },
+        {
+          "text": "Create Target group including both EC2 instances."
+        },
+        {
+          "text": "Create Application Load balancer, map all the Availability zones, attach the security group created during EC2 creation and target group created."
+        },
+        {
+          "text": "Enable the Load balancer stickiness for 2 minutes in target group created."
+        },
+        {
+          "text": "Test the Elastic Load Balancer Stickiness."
+        },
+        {
+          "text": "The load balancer will stick to an instance for the duration of 2 minutes, keep refreshing and the instance will not change."
+        },
+        {
+          "text": "Click On The Validate To Complete The Challenge."
+        },
+        {
+          "text": "Sign Out Of The AWS Account."
+        },
+        {
+          "text": "You Have Successfully Completed The Challenge."
+        },
+        {
+          "text": "Click On End Challenge Button from the lab console And Wait Till The Process Gets Completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

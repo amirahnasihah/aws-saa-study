@@ -1,0 +1,616 @@
+{
+  "slug": "troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer",
+  "title": "Troubleshooting Connectivity Issues Between VPC, EC2, and Load Balancer",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click On The Open Console Button, And You Will Get Redirected To AWS Console In A New Browser Tab."
+        },
+        {
+          "text": "On The AWS Sign-In Page, Leave The Account ID As Default. Never Edit/Remove The 12 Digit Account ID Present In The AWS Console. Otherwise, You Cannot Proceed With The Lab."
+        },
+        {
+          "text": "Now Copy Your User Name And Password In The Lab Console To The IAM Username And Password In AWS Console And Click On The Sign In Button."
+        },
+        {
+          "text": "Once Signed In To The AWS Management Console, Make The Default AWS Region As US East (N. Virginia) Us-East-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a VPC",
+      "steps": [
+        {
+          "text": "Creating New VPC"
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to VPC by clicking on Services on the top of AWS Console."
+        },
+        {
+          "text": "Click on VPC (under Networking & Content Delivery section) or you can also search for VPC."
+        },
+        {
+          "text": "Click on Your VPCs from the left menu."
+        },
+        {
+          "text": "Here you can see the list of all VPC, No need to do anything with the existing and default VPCs, we will create a new VPC for this lab."
+        },
+        {
+          "text": "Select VPC Only"
+        },
+        {
+          "text": "Name tag: Enter a VPC name for identification to your VPC. Ex: MyVPC"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter 10.0.0.0/16"
+        },
+        {
+          "text": "IPv6 CIDR block: No need to change this, make sure No IPv6 CIDR Block is checked."
+        },
+        {
+          "text": "Tenancy: No need to change this, make sure Default is selected."
+        },
+        {
+          "text": "Now click on the Create VPC button."
+        },
+        {
+          "text": "Once VPC is created, it will appear with details as shown below:"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Creating Subnets",
+      "steps": [
+        {
+          "text": "In this lab, we will create two public subnets in us-east-1a and us-east-1b Availability Zones respectively as follows:"
+        },
+        {
+          "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet button."
+        },
+        {
+          "text": "VPC ID: Select MyVPC from the list you created earlier."
+        },
+        {
+          "text": "Subnet Name: Enter Name MyPublicSubnet1"
+        },
+        {
+          "text": "Availability Zone: Select us-east-1a"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter the range 10.0.1.0/24"
+        },
+        {
+          "text": "Click on Create subnet button."
+        },
+        {
+          "text": "Repeat the same steps to create another subnet, but the availability Zone: Select us-east-1b."
+        },
+        {
+          "text": "Subnet Name: Enter Name MyPublicSubnet2"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter the range 10.0.2.0/24"
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create and configure Internet Gateway",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an internet gateway and configure it with the VPC."
+        },
+        {
+          "text": "Click on Internet Gateways from the left menu and click on Create internet gateway button."
+        },
+        {
+          "text": "Name Tag: Enter MyInternetGateway"
+        },
+        {
+          "text": "Click on Create internet gateway button."
+        },
+        {
+          "text": "Select the Internet gateway you created from the list"
+        },
+        {
+          "text": "Click on Actions."
+        },
+        {
+          "text": "Click on Attach to VPC."
+        },
+        {
+          "text": "Select MyVPC which you created from the list and click on Attach internet gateway button."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create Route Tables",
+      "steps": [
+        {
+          "text": "In this task, we are going to create route table and associate them with their respective subnets."
+        },
+        {
+          "text": "Go to Route Tables from the left menu and click on Create route table button."
+        },
+        {
+          "text": "Name: Enter PublicRouteTable"
+        },
+        {
+          "text": "VPC: Select MyVPC from the list."
+        },
+        {
+          "text": "Click on Create route table button."
+        },
+        {
+          "text": "Now we will associate the subnets to the route tables."
+        },
+        {
+          "text": "PublicRouteTable: Add a route to allow Internet traffic to the VPC."
+        },
+        {
+          "text": "Select PublicRouteTable."
+        },
+        {
+          "text": "Go to Routes tab, click on Edit routes and on the next page, click on Add route button."
+        },
+        {
+          "text": "Specify the following values:"
+        },
+        {
+          "text": "Destination: Enter 0.0.0.0/0"
+        },
+        {
+          "text": "Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway."
+        },
+        {
+          "text": "Click on Save changes button."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Launching an EC2 Instance",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an EC2 instance, which will serve as one of the targets for the Application Load Balancer"
+        },
+        {
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Click on Instances from the left sidebar and then click on Launch instances button."
+        },
+        {
+          "text": "Name : Enter EC2server"
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): In the Quick Start menu, select Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "For Key pair: Proceed without a key pair (Not recommended)"
+        },
+        {
+          "text": "In Network Settings, Click on Edit:"
+        },
+        {
+          "text": "VPC: Select MyVPC"
+        },
+        {
+          "text": "Subet: Publicsubnet1"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Create new Security group"
+        },
+        {
+          "text": "Security group name : Enter EC2server-SG"
+        },
+        {
+          "text": "Description : Enter Security Group to allow traffic to EC2"
+        },
+        {
+          "text": "Expand Advanced Details."
+        },
+        {
+          "text": "Under the User data section, copy and paste the below code. This code installs Apache Server and also creates a web page."
+        },
+        {
+          "text": "#!/bin/bash"
+        },
+        {
+          "text": "sudo dnf update -y"
+        },
+        {
+          "text": "sudo dnf install -y httpd"
+        },
+        {
+          "text": "sudo systemctl start httpd"
+        },
+        {
+          "text": "sudo systemctl enable httpd"
+        },
+        {
+          "text": "echo \"<html><h1>Response coming from server</h1></html>\" | sudo tee /var/www/html/index.html"
+        },
+        {
+          "text": "sudo systemctl restart httpd"
+        },
+        {
+          "text": "Note: After pasting the user data, make sure to remove extra spacing."
+        },
+        {
+          "text": "Keep rest thing Default and Click on Launch Instance Button."
+        },
+        {
+          "text": "Select View all Instances to View the Instance you Created"
+        },
+        {
+          "text": "Launch Status: Your instances are now launching, Navigate to Instances page from left menu and wait the status of the EC2 Instance changes to running"
+        },
+        {
+          "text": "Now in the EC2 dashboard, you can see the instance is running as shown below:"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Creating Application Load Balancer",
+      "steps": [
+        {
+          "text": "In the left side menu, scroll down to the bottom and select Load Balancer under Load Balancing."
+        },
+        {
+          "text": "Click on the Create load balancer button."
+        },
+        {
+          "text": "Select Load Balancer Type: Under the Application Load Balancer, click on Create button."
+        },
+        {
+          "text": "Configure Load Balancer:"
+        },
+        {
+          "text": "Name : Enter Myapplication-LB"
+        },
+        {
+          "text": "Scheme : Select internet-facing"
+        },
+        {
+          "text": "Ip Address: IPv4"
+        },
+        {
+          "text": "Network Mappings: MyVPC and select both subnets"
+        },
+        {
+          "text": "Note: If you are getting any error while adding the subnet, ignore it and follow the rest of the steps."
+        },
+        {
+          "text": "Security groups:"
+        },
+        {
+          "text": "Select EC2server-SG security group which we created while launching EC2"
+        },
+        {
+          "text": "Listeners and routing:"
+        },
+        {
+          "text": "Load Balancer Protocol : Select HTTP"
+        },
+        {
+          "text": "Load Balancer Port : Choose 80"
+        },
+        {
+          "text": "Default action : Create target group"
+        },
+        {
+          "text": "Choose a security group: default"
+        },
+        {
+          "text": "Choose a target type: Instances"
+        },
+        {
+          "text": "Target group name: Apache-TG"
+        },
+        {
+          "text": "Everything leaves it as default."
+        },
+        {
+          "text": "Click Next."
+        },
+        {
+          "text": "Select Ec2Server and select Include as pending below button."
+        },
+        {
+          "text": "Click Create target group button."
+        },
+        {
+          "text": "Ignore the warning message and click Continue."
+        },
+        {
+          "text": "Now we can see Apache-TG target group created."
+        },
+        {
+          "text": "Now go back to the Load Balancers tab, and select Apache-TG in Default Action in Listeners and routing."
+        },
+        {
+          "text": "Click on Refresh button if target-group is not visible"
+        },
+        {
+          "text": "Click on Create load balancer button"
+        },
+        {
+          "text": "Click on View Load Balancers."
+        },
+        {
+          "text": "After 1–2 minutes, the state will change to active and is ready."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Testing Application Load Balancer",
+      "steps": [
+        {
+          "text": "Copy the DNS name. Enter the address in the browser."
+        },
+        {
+          "text": "Example DNS name: Myapplication-LB-LB-0a4ff4cc035bae63.elb.us-east-1.amazonaws.com"
+        },
+        {
+          "text": "You will see the default apache page. By default, the application load balancer will route the traffic to port 80"
+        },
+        {
+          "text": "If the DNS name is not showing in the web page, there is some issue with your configuration."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Troubleshooting and Fixing Issues",
+      "steps": [
+        {
+          "text": "Step 1: Verify Internet Gateway Attachment"
+        },
+        {
+          "text": "Check Internet Gateway Attachment"
+        },
+        {
+          "text": "Go to the VPC dashboard."
+        },
+        {
+          "text": "In the Internet Gateways section, verify that the Internet Gateway is attached to your VPC."
+        },
+        {
+          "text": "If not, attach it."
+        },
+        {
+          "text": "Step 2: Check Route Table Association"
+        },
+        {
+          "text": "Verify Route Table Association for Public Subnet"
+        },
+        {
+          "text": "Go to the \"Route Tables\" section."
+        },
+        {
+          "text": "Select your route table (e.g., PublicRouteTable)."
+        },
+        {
+          "text": "Go to the \"Subnet associations\" tab."
+        },
+        {
+          "text": "If Subnet is not associated, click edit subnet associations, select your both public subnet, and save."
+        },
+        {
+          "text": "Step 3: Verify Security Group Rules"
+        },
+        {
+          "text": "Check Security Group Rules"
+        },
+        {
+          "text": "Go to the EC2 dashboard."
+        },
+        {
+          "text": "Select your instance and view its security groups."
+        },
+        {
+          "text": "Verify that the security group allows inbound SSH (port 22) from your IP and HTTP."
+        },
+        {
+          "text": "If not, add a rule to allow SSH and HTTP access."
+        },
+        {
+          "text": "Click on edit inbound rules"
+        },
+        {
+          "text": "Click on add rule select HTTP and click on save rules."
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Rebooting the Ec2 instance",
+      "steps": [
+        {
+          "text": "Go to the EC2 dashboard, you can see the instance is running as shown below:"
+        },
+        {
+          "text": "Click on your Ec2 instance and click on instance state and reboot your Ec2 Instance."
+        },
+        {
+          "text": "Task 11: Testing Application Load Balancer and Ec2"
+        },
+        {
+          "text": "Now we are going to test the Application Load balancer DNS name again in web page."
+        },
+        {
+          "text": "Enter the address in the browser."
+        },
+        {
+          "text": "Myapplication-LB-0a4ff4cc035bae63.elb.us-east-1.amazonaws.com"
+        },
+        {
+          "text": "Now we are going to test the Ec2 instance also."
+        },
+        {
+          "text": "Go to the EC2 dashboard, you can see the instance is running as shown below:"
+        },
+        {
+          "text": "copy the public IP address, and paste it into your browser"
+        },
+        {
+          "text": "If you are getting this error, please try repeating the troubleshooting steps."
+        }
+      ]
+    },
+    {
+      "title": "Task 12: SSH into your EC2 instance",
+      "steps": [
+        {
+          "text": "Select your EC2 instance(MyEC2Server) and click on the Connect button."
+        },
+        {
+          "text": "Select EC2 Instance Connect option and click on Connect button.(Keep everything else as default)"
+        },
+        {
+          "text": "A new tab will open in the browser where you can execute the Linux Commands."
+        }
+      ]
+    },
+    {
+      "title": "Task 13: Re-Installing the Apache Server on the EC2 instance",
+      "steps": [
+        {
+          "text": "Note: The re-installation process helps validate that the Apache server installation and configuration steps have been executed correctly. If there were any issues during the initial setup, this step provides an opportunity to identify and resolve them."
+        },
+        {
+          "text": "Now again, we are going to troubleshoot the Amazon EC2 instance to run an Apache Web Server and verify its functionality by accessing the web server via a web browser using the instance's public IPv4 address."
+        },
+        {
+          "text": "Switch to root user"
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "Now run the updates using the following command:"
+        },
+        {
+          "text": "yum -y update"
+        },
+        {
+          "text": "Once completed, lets install and run an apache server"
+        },
+        {
+          "text": "Install the Apache web server:"
+        },
+        {
+          "text": "yum install httpd -y"
+        },
+        {
+          "text": "Start the web server:"
+        },
+        {
+          "text": "systemctl start httpd"
+        },
+        {
+          "text": "Now Enable httpd:"
+        },
+        {
+          "text": "systemctl enable httpd"
+        },
+        {
+          "text": "Check the webserver status"
+        },
+        {
+          "text": "systemctl status httpd"
+        },
+        {
+          "text": "You can see Active status is running."
+        },
+        {
+          "text": "To add the contents into index.html file using echo, copy and paste the below command to shell."
+        },
+        {
+          "text": "echo \"<html><h1>Response coming from server</h1></html>\" > /var/www/html/index.html"
+        },
+        {
+          "text": "Restart the webserver by using the following command:"
+        },
+        {
+          "text": "systemctl restart httpd"
+        },
+        {
+          "text": "Load balancer DNS name:"
+        },
+        {
+          "text": "EC2 instance public Ip:"
+        }
+      ]
+    },
+    {
+      "title": "Task 14: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Do you know?"
+        },
+        {
+          "text": "Troubleshooting connectivity issues between VPC, EC2, and Load Balancer involves addressing overlooked aspects like misconfigured security groups, subtle route table errors, and conflicting Network ACL rules. These misconfigurations can silently block traffic or cause unexpected issues. Additionally, ensuring proper health check settings on the load balancer is crucial to avoid false negatives."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You Have Successfully logged into AWS console."
+        },
+        {
+          "text": "You Have Successfully created VPC and other configuration."
+        },
+        {
+          "text": "You Have Successfully launched the Ec2 instance."
+        },
+        {
+          "text": "You Have Successfully created an Application load balancer."
+        },
+        {
+          "text": "You Have Successfully done the troubleshooting steps"
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign Out Of AWS Account."
+        },
+        {
+          "text": "You Have Successfully Completed The Lab."
+        },
+        {
+          "text": "Once You Have Completed The Steps, Click On End Lab From Your lab Lab Console And Wait Till The Process Gets Completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}
