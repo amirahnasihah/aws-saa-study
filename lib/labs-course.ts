@@ -46,24 +46,6 @@ export const buildLabSections = (
     buckets.get(entry.category)?.push(item)
   })
 
-  const inCourse = new Set(courseOrder.map((e) => e.slug))
-  const extras = labs
-    .filter((lab) => !inCourse.has(lab.slug))
-    .map((lab, i) => ({
-      index: courseOrder.length + i + 1,
-      title: lab.title,
-      slug: lab.slug,
-      category: 'Personal notes',
-      duration: lab.duration,
-      lab,
-    }))
-    .filter((item) => matchesQuery(item, query))
-
-  if (extras.length > 0) {
-    sectionOrder.push('Personal notes')
-    buckets.set('Personal notes', extras)
-  }
-
   return sectionOrder
     .map((category) => ({
       category,

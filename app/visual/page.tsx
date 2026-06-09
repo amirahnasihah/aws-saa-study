@@ -288,7 +288,7 @@ function NodeSidebar({
                     <span className="font-space-mono text-[0.5rem] font-bold uppercase tracking-widest text-aws-text/70">Sources</span>
                   </div>
                   <span className="font-space-mono text-[0.48rem] bg-white/6 border border-aws-border/40 rounded px-1.5 py-0.5 text-aws-muted/60">
-                    {'sections' in sidebarResult ? (sidebarResult.sections.awsDocs?.length ?? 0) : 0}
+                    {'sections' in sidebarResult ? (sidebarResult.sections.awsDocs?.length ?? 0) + (sidebarResult.sections.internalLinks?.length ?? 0) : 0}
                   </span>
                 </button>
                 {sourcesOpen && (
