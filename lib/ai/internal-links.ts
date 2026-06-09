@@ -1,4 +1,4 @@
-import { labs } from '@/data/labs'
+import { labs, type Lab } from '@/data/labs'
 
 export type InternalLink = {
   url: string
@@ -41,32 +41,43 @@ function matchVpcSection(terms: string[]): InternalLink | null {
 
 // ── Labs index ────────────────────────────────────────────────────────────────
 
+// Services that appear on almost every lab — matching these alone is not
+// enough to consider a lab relevant for a given context.
+const GENERIC_SERVICES = new Set(['vpc', 'iam', 'cloudwatch', 'cloudtrail'])
+
 type IndexedLab = {
   slug: string
   title: string
-  blob: string
+  services: string[]       // original case preserved for display
+  titleWords: string[]     // lower-cased words from the lab title
 }
 
-const labsIndex: IndexedLab[] = labs.map((lab) => ({
+const labsIndex: IndexedLab[] = labs.map((lab: Lab) => ({
   slug: lab.slug,
   title: lab.title,
-  blob: [lab.slug, lab.title, ...lab.services, lab.summary].join(' ').toLowerCase(),
+  services: lab.services,
+  titleWords: lab.title.toLowerCase().split(/\W+/).filter((w) => w.length > 2),
 }))
 
-function scoreTerms(blob: string, terms: string[]): number {
-  return terms.reduce((score, term) => {
-    const t = term.toLowerCase().trim()
-    return t.length > 1 && blob.includes(t) ? score + Math.min(t.length, 24) : score
-  }, 0)
-}
-
 function matchLab(terms: string[]): InternalLink | null {
-  const cleaned = terms.map((t) => t.trim()).filter((t) => t.length > 1)
+  const termBlob = terms.map((t) => t.toLowerCase()).join(' ')
   let best: { lab: IndexedLab; score: number } | null = null
 
   for (const lab of labsIndex) {
-    const score = scoreTerms(lab.blob, cleaned)
-    if (score > 0 && (!best || score > best.score)) best = { lab, score }
+    let score = 0
+
+    // Title-word hit — highest signal (e.g. "EC2" in title matches "EC2" in terms)
+    for (const word of lab.titleWords) {
+      if (termBlob.includes(word)) score += word.length * 3
+    }
+
+    // Specific service hit — only count non-generic services
+    for (const svc of lab.services) {
+      const s = svc.toLowerCase()
+      if (!GENERIC_SERVICES.has(s) && termBlob.includes(s)) score += s.length * 2
+    }
+
+    if (score >= 10 && (!best || score > best.score)) best = { lab, score }
   }
 
   if (!best) return null
