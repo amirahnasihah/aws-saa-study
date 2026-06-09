@@ -15,6 +15,18 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    id: '2026-06-09',
+    date: '2026-06-09',
+    changes: [
+      { type: 'feat', text: 'Labs section (/labs): new index + detail pages for personal hands-on lab notes — typed data model (slug, level, services, tasks, takeaways), anchor navigation between tasks, "What I Learned" section' },
+      { type: 'feat', text: 'Labs: seeded with IAM intro lab (users, groups, least-privilege policies) and EC2 fundamentals lab (VPC, instance launch, Apache, custom page)' },
+      { type: 'feat', text: 'Nav: Labs added to desktop nav bar and mobile drawer (🧪 icon)' },
+      { type: 'feat', text: 'SiteFooter: Labs link added site-wide ("Labs · hands-on practice notes")' },
+      { type: 'feat', text: 'AI sources: internal site pages (Labs, VPC Guide) now surface as clickable source links alongside AWS Docs and YouTube — powered by keyword-scored findInternalLinks() matcher' },
+      { type: 'feat', text: 'Internal sources wired into all AI flows: chat, explain (practice), hint (practice), and Visual page explain-arch sidebar' },
+    ],
+  },
+  {
     id: '2026-06-06',
     date: '2026-06-06',
     changes: [
