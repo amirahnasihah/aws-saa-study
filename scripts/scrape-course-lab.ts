@@ -193,8 +193,9 @@ type BoxItemMeta = { title: string; duration: string; category: string }
 
 const readBoxItemMeta = async (item: Locator): Promise<BoxItemMeta> =>
   item.evaluate((el) => {
+    const textOf = (node: Element) => (node as HTMLElement).innerText ?? node.textContent ?? ''
     const head = el.querySelector('.box-head') as HTMLElement | null
-    const headText = head?.innerText ?? el.innerText
+    const headText = head ? textOf(head) : textOf(el)
     const lines = headText.split('\n').map((l) => l.trim()).filter(Boolean)
     const title = lines.find((l) => l.length > 5 && !/^Attempts$/i.test(l) && !/^Start$/i.test(l) && !/^\d/.test(l)) ?? 'Lab'
     const duration = lines.find((l) => /\d+\s*m|\d+h|:\d+:\d+/i.test(l)) ?? ''
@@ -620,8 +621,6 @@ const main = async (): Promise<void> => {
   const { context, close } = await launchBrowser(args.headless, args.cdpEndpoint)
   const page = await context.newPage()
 
-  const defaultCourse = process.env.LAB_COURSE_URL
-
   if (args.course) {
     await ensureAuth(page, args.course, args.headless)
     await context.storageState({ path: STORAGE_STATE })
@@ -637,7 +636,7 @@ const main = async (): Promise<void> => {
     }
   }
 
-  const entries: CourseLabEntry[] = args.batch || args.course
+  const entries: CourseIndex['labs'] = args.batch || args.course
     ? loadCourseIndex().labs
     : []
 
