@@ -1,19 +1,16 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { useEffect, useMemo, useState } from 'react'
 import SiteFooter from '@/components/SiteFooter'
+import LabListRow from '@/components/labs/LabListRow'
+import { labsCourseOrder, labsCourseTotal } from '@/data/labsCourseOrder'
 import { allLabsFallback } from '@/lib/labs-fallback'
+import { buildLabSections, countVisibleLabs } from '@/lib/labs-course'
 import type { Lab } from '@/lib/labs'
-
-const levelColor: Record<string, string> = {
-  Fundamental: 'text-c2 border-c2/25',
-  Intermediate: 'text-c4 border-c4/25',
-  Advanced: 'text-c6 border-c6/25',
-}
 
 export default function LabsPageClient() {
   const [labs, setLabs] = useState<Lab[]>(allLabsFallback())
+  const [query, setQuery] = useState('')
 
   useEffect(() => {
     fetch('/api/labs')
@@ -26,48 +23,90 @@ export default function LabsPageClient() {
       .catch(() => setLabs(allLabsFallback()))
   }, [])
 
+  const sections = useMemo(
+    () => buildLabSections(labsCourseOrder, labs, query),
+    [labs, query],
+  )
+
+  const visibleCount = countVisibleLabs(sections)
+  const trimmedQuery = query.trim()
+
   return (
-    <main id="top" className="max-w-[860px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
-      <div className="text-center mb-10">
-        <span className="font-space-mono text-[0.65rem] uppercase tracking-[0.15em] text-aws-muted">Hands-on Labs</span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold mt-2 mb-2 text-aws-text">
-          Labs
-        </h1>
-        <p className="font-space-mono text-[0.78rem] text-aws-muted max-w-lg mx-auto leading-relaxed">
-          Guided labs I&rsquo;ve completed while studying for SAA-C03 — the steps I took, the gotchas I hit, and what I&rsquo;d do differently next time.
+    <main id="top" className="max-w-[920px] mx-auto px-4 pt-20 pb-20 md:pb-16">
+      <header className="mb-8">
+        <p className="font-space-mono text-[0.62rem] uppercase tracking-[0.14em] text-c2 mb-2">
+          AWS Solutions Architect Associate (SAA-C03)
         </p>
-      </div>
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-extrabold text-aws-text">Hands-on Labs</h1>
+            <p className="font-space-mono text-[0.72rem] text-aws-muted mt-1.5">
+              {labsCourseTotal} labs · same order as Whizlabs course
+            </p>
+          </div>
+          <span className="self-start font-space-mono text-[0.62rem] text-aws-muted bg-aws-card border border-aws-border px-2.5 py-1 rounded-full">
+            {visibleCount} shown
+          </span>
+        </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {labs.map((lab) => (
-          <Link
-            key={lab.slug}
-            href={`/labs/${lab.slug}`}
-            className="block bg-aws-card border border-aws-border rounded-xl p-5 hover:border-aws-text/30 transition-colors"
-          >
-            <div className="flex items-center gap-2 mb-2">
-              <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded border ${levelColor[lab.level] ?? 'text-aws-muted border-aws-border'}`}>
-                {lab.level}
-              </span>
-              <span className="font-space-mono text-[0.6rem] text-aws-muted">{lab.duration}</span>
-              {lab.completedOn ? (
-                <span className="font-space-mono text-[0.6rem] text-aws-muted ml-auto">Completed {lab.completedOn}</span>
-              ) : null}
-            </div>
-            <h2 className="text-aws-text font-bold text-lg leading-snug mb-1">{lab.title}</h2>
-            <p className="text-aws-muted text-[0.8rem] mb-3">{lab.summary}</p>
-            <div className="flex flex-wrap gap-1.5">
-              {lab.services.map((service) => (
-                <span key={service} className="font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border border-c1/20 text-c1">
-                  {service}
+        <div className="relative">
+          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-aws-muted text-[0.85rem] pointer-events-none" aria-hidden>
+            ⌕
+          </span>
+          <input
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Search labs by title, service, or level…"
+            aria-label="Search labs"
+            className="w-full bg-aws-card border border-aws-border rounded-xl pl-9 pr-10 py-3
+              text-base sm:text-[0.85rem] text-aws-text placeholder:text-aws-muted/50
+              focus:outline-none focus:border-c1/40 transition-colors"
+          />
+          {trimmedQuery ? (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-aws-muted hover:text-aws-text text-xs px-1"
+              aria-label="Clear search"
+            >
+              ✕
+            </button>
+          ) : null}
+        </div>
+      </header>
+
+      {sections.length === 0 ? (
+        <div className="rounded-xl border border-aws-border bg-aws-card/40 px-5 py-10 text-center">
+          <p className="text-aws-text font-medium mb-1">No labs match &ldquo;{trimmedQuery}&rdquo;</p>
+          <p className="font-space-mono text-[0.72rem] text-aws-muted">Try a service name like VPC, S3, or Lambda.</p>
+        </div>
+      ) : (
+        <div className="space-y-8">
+          {sections.map((section, sectionIndex) => (
+            <section key={section.category} aria-labelledby={`lab-section-${sectionIndex}`}>
+              <div className="flex items-center gap-3 mb-1 px-1">
+                <h2
+                  id={`lab-section-${sectionIndex}`}
+                  className="text-[0.95rem] sm:text-base font-bold text-aws-text"
+                >
+                  {section.category}
+                </h2>
+                <span className="font-space-mono text-[0.58rem] text-aws-muted">
+                  {section.items.length}
                 </span>
-              ))}
-            </div>
-          </Link>
-        ))}
-      </div>
+              </div>
+              <ul className="rounded-xl border border-aws-border bg-aws-card/30 overflow-hidden">
+                {section.items.map((item) => (
+                  <LabListRow key={item.slug} item={item} />
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+      )}
 
-      <SiteFooter tagline="AWS SAA-C03 · Hands-on Labs · Personal notes from guided practice" />
+      <SiteFooter tagline="AWS SAA-C03 · Hands-on Labs · Course order from Whizlabs" />
     </main>
   )
 }
