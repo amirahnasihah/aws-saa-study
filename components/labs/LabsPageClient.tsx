@@ -32,7 +32,7 @@ export default function LabsPageClient() {
   const trimmedQuery = query.trim()
 
   return (
-    <main id="top" className="max-w-[920px] mx-auto px-4 pt-20 pb-20 md:pb-16">
+    <main id="top" className="max-w-[920px] mx-auto px-5 sm:px-6 md:px-8 pt-20 pb-20 md:pb-16">
       <header className="mb-8">
         <p className="font-space-mono text-[0.62rem] uppercase tracking-[0.14em] text-c2 mb-2">
           AWS Solutions Architect Associate (SAA-C03)
@@ -85,7 +85,7 @@ export default function LabsPageClient() {
         <div className="space-y-8">
           {sections.map((section, sectionIndex) => (
             <section key={section.category} aria-labelledby={`lab-section-${sectionIndex}`}>
-              <div className="flex items-center gap-3 mb-1 px-1">
+              <div className="flex items-center gap-3 mb-2 px-4 sm:px-5 md:px-6">
                 <h2
                   id={`lab-section-${sectionIndex}`}
                   className="text-[0.95rem] sm:text-base font-bold text-aws-text"
