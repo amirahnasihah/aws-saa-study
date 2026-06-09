@@ -1,5 +1,6 @@
 import { buildDocsSearchPhrase, resolveAwsDocLink } from '@/lib/ai/aws-knowledge'
 import { completeChatMessages, resolveAiProvider } from '@/lib/ai/complete-json'
+import { findInternalLinks } from '@/lib/ai/internal-links'
 import { parseAIJson } from '@/lib/ai/json'
 import type { ChatResponse, ErrorResponse } from '@/lib/ai/types'
 
@@ -66,12 +67,16 @@ export async function POST(request: Request): Promise<Response> {
     reply.slice(0, 120),
   ])
 
-  const awsDoc = await resolveAwsDocLink(docsSearchPhrase, ['general'])
+  const [awsDoc, internalLinks] = await Promise.all([
+    resolveAwsDocLink(docsSearchPhrase, ['general']),
+    Promise.resolve(findInternalLinks([body.message, reply.slice(0, 200)])),
+  ])
 
   return Response.json({
     reply,
     awsDocsUrl: awsDoc.url,
     awsDocsTitle: awsDoc.title,
     youtubeQuery,
+    internalLinks,
   } satisfies ChatResponse)
 }

@@ -1,4 +1,5 @@
 import { completeJson } from '@/lib/ai/complete-json'
+import { findInternalLinks } from '@/lib/ai/internal-links'
 import { parseAIJson } from '@/lib/ai/json'
 import { searchAwsMultipleLinks, buildDocsSearchPhrase } from '@/lib/ai/aws-knowledge'
 
@@ -30,6 +31,7 @@ export interface ExplainSections {
   examRelevance: string
   examTraps: string[]
   awsDocs?: Array<{ url: string; title: string }>
+  internalLinks?: import('@/lib/ai/internal-links').InternalLink[]
 }
 
 interface ExplainArchRequest {
@@ -73,6 +75,9 @@ export async function POST(request: Request): Promise<Response> {
     'SAA-C03',
   ])
 
+  const searchTerms = [body.focusNode ?? body.title, body.domain, ...body.tags, ...body.nodeLabels]
+  const internalLinks = findInternalLinks(searchTerms)
+
   const [result, awsDocs] = await Promise.all([
     completeJson('free', '', system, userPrompt, 500),
     searchAwsMultipleLinks(searchTerm, ['general', 'reference_documentation'], 3),
@@ -84,8 +89,8 @@ export async function POST(request: Request): Promise<Response> {
 
   const parsed = parseAIJson<ExplainSections>(result.text)
   if (parsed?.whatItDoes) {
-    return Response.json({ ...parsed, awsDocs })
+    return Response.json({ ...parsed, awsDocs, internalLinks })
   }
 
-  return Response.json({ fallbackText: result.text, awsDocs })
+  return Response.json({ fallbackText: result.text, awsDocs, internalLinks })
 }
