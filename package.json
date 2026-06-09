@@ -14,6 +14,7 @@
     "scrape:quiz": "bun run scripts/scrape-whizlabs-quiz.ts",
     "scrape:lab": "bun run scripts/scrape-whizlabs-lab.ts",
     "seed:labs": "bun run scripts/seed-labs.ts",
+    "labs:compile": "bun run scripts/compile-labs-from-json.ts",
     "capture:questions": "bun run scripts/capture-question-screenshots.ts",
     "seed:screenshots": "bun run scripts/seed-screenshot-metadata.ts",
     "verify:aws-refs": "bun run scripts/verify-aws-references.ts",

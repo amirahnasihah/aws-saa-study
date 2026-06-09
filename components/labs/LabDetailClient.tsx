@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import SiteFooter from '@/components/SiteFooter'
 import LabStepList from '@/components/labs/LabStepList'
-import { labs as fallbackLabs } from '@/data/labs'
+import { allLabsFallback, findLabFallback } from '@/lib/labs-fallback'
 import type { Lab } from '@/lib/labs'
 
 const levelColor: Record<string, string> = {
@@ -20,7 +20,7 @@ type LabDetailClientProps = {
 const taskAnchor = (index: number): string => `task-${index + 1}`
 
 export default function LabDetailClient({ slug }: LabDetailClientProps) {
-  const [lab, setLab] = useState<Lab | undefined>(() => fallbackLabs.find((l) => l.slug === slug))
+  const [lab, setLab] = useState<Lab | undefined>(() => findLabFallback(slug))
   const [notFound, setNotFound] = useState(false)
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export default function LabDetailClient({ slug }: LabDetailClientProps) {
         }
       })
       .catch(() => {
-        const fb = fallbackLabs.find((l) => l.slug === slug)
+        const fb = findLabFallback(slug)
         setLab(fb)
         setNotFound(!fb)
       })

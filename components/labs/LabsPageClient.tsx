@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import SiteFooter from '@/components/SiteFooter'
-import { labs as fallbackLabs } from '@/data/labs'
+import { allLabsFallback } from '@/lib/labs-fallback'
 import type { Lab } from '@/lib/labs'
 
 const levelColor: Record<string, string> = {
@@ -13,7 +13,7 @@ const levelColor: Record<string, string> = {
 }
 
 export default function LabsPageClient() {
-  const [labs, setLabs] = useState<Lab[]>(fallbackLabs)
+  const [labs, setLabs] = useState<Lab[]>(allLabsFallback())
 
   useEffect(() => {
     fetch('/api/labs')
@@ -23,7 +23,7 @@ export default function LabsPageClient() {
           setLabs(data as Lab[])
         }
       })
-      .catch(() => setLabs(fallbackLabs))
+      .catch(() => setLabs(allLabsFallback()))
   }, [])
 
   return (
