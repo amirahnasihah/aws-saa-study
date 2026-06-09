@@ -20,10 +20,10 @@ export default function LabListRow({ item }: LabListRowProps) {
     <li className="group border-b border-aws-border/80 last:border-b-0">
       <Link
         href={`/labs/${item.slug}`}
-        className="flex items-center gap-3 sm:gap-4 py-3.5 sm:py-4 px-1 sm:px-2 -mx-1 sm:-mx-2 rounded-lg
+        className="flex items-center gap-3 sm:gap-4 py-3.5 sm:py-4 px-4 sm:px-5 md:px-6
           hover:bg-aws-card/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-c1/40 transition-colors"
       >
-        <span className="hidden sm:flex shrink-0 w-7 h-7 items-center justify-center rounded-md bg-aws-card border border-aws-border font-space-mono text-[0.62rem] text-aws-muted">
+        <span className="flex shrink-0 w-7 h-7 items-center justify-center rounded-md bg-aws-card border border-aws-border font-space-mono text-[0.62rem] text-aws-muted">
           {item.index}
         </span>
 
@@ -35,12 +35,12 @@ export default function LabListRow({ item }: LabListRowProps) {
           {duration}
         </span>
 
-        <span className={`font-space-mono text-[0.62rem] uppercase tracking-wider shrink-0 ${levelClass}`}>
+        <span className={`font-space-mono text-[0.58rem] sm:text-[0.62rem] uppercase tracking-wider shrink-0 ml-1 ${levelClass}`}>
           {item.lab.level}
         </span>
 
         <span
-          className="shrink-0 w-8 h-8 rounded-full bg-c3/15 border border-c3/30 flex items-center justify-center
+          className="shrink-0 w-8 h-8 ml-1 sm:ml-2 rounded-full bg-c3/15 border border-c3/30 flex items-center justify-center
             text-c3 group-hover:bg-c3 group-hover:text-aws-bg transition-colors"
           aria-hidden
         >
