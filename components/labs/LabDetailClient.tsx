@@ -100,7 +100,7 @@ export default function LabDetailClient({ slug }: LabDetailClientProps) {
       </div>
 
       {lab.tasks.map((task, index) => (
-        <section key={task.title} className="mb-10">
+        <section key={taskAnchor(index)} className="mb-10">
           <div id={taskAnchor(index)} className="flex items-center gap-2 mb-4 pb-3 border-b border-aws-border scroll-mt-20">
             <span className="font-space-mono text-[0.6rem] px-2 py-0.5 rounded border border-c4/25 text-c4 shrink-0">
               Task {index + 1}

@@ -14,7 +14,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 1,
     "title": "Introduction to AWS Identity Access Management (IAM)",
     "slug": "introduction-to-aws-identity-access-management-iam",
-    "url": "https://business.whizlabs.com/labs/introduction-to-aws-identity-access-management-iam",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "30m"
   },
@@ -22,7 +21,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 2,
     "title": "Creating NAT Gateways in AWS",
     "slug": "creating-nat-gateways-in-aws",
-    "url": "https://business.whizlabs.com/labs/creating-nat-gateways-in-aws",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 30m"
   },
@@ -30,7 +28,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 3,
     "title": "Introduction to Amazon Elastic Compute Cloud (EC2)",
     "slug": "introduction-to-amazon-elastic-compute-cloud-ec2",
-    "url": "https://business.whizlabs.com/labs/introduction-to-amazon-elastic-compute-cloud-ec2",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "30m"
   },
@@ -38,7 +35,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 4,
     "title": "Build Amazon VPC with Public and Private Subnets from Scratch",
     "slug": "build-amazon-vpc-with-public-and-private-subnets-from-scratch",
-    "url": "https://business.whizlabs.com/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "30m"
   },
@@ -46,7 +42,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 5,
     "title": "Understanding and Configuring Layered Security in an AWS VPC",
     "slug": "understanding-and-configuring-layered-security-in-an-aws-vpc",
-    "url": "https://business.whizlabs.com/labs/understanding-and-configuring-layered-security-in-an-aws-vpc",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 0m"
   },
@@ -54,7 +49,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 6,
     "title": "Introduction to Amazon CloudFormation",
     "slug": "introduction-to-amazon-cloudformation",
-    "url": "https://business.whizlabs.com/labs/introduction-to-amazon-cloudformation",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "30m"
   },
@@ -62,7 +56,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 7,
     "title": "How to Create Virtual Private Cloud (VPC) with AWS CloudFormation",
     "slug": "how-to-create-virtual-private-cloud-vpc-with-aws-cloudformation",
-    "url": "https://business.whizlabs.com/labs/how-to-create-virtual-private-cloud-vpc-with-aws-cloudformation",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "55m"
   },
@@ -70,7 +63,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 8,
     "title": "Introduction to Creating AWS VPC Flow Logs",
     "slug": "introduction-to-creating-aws-vpc-flow-logs",
-    "url": "https://business.whizlabs.com/labs/introduction-to-creating-aws-vpc-flow-logs",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "45m"
   },
@@ -78,7 +70,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 9,
     "title": "Access S3 from Private EC2 instance using VPC Endpoint",
     "slug": "access-s3-from-private-ec2-instance-using-vpc-endpoint",
-    "url": "https://business.whizlabs.com/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 30m"
   },
@@ -86,7 +77,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 10,
     "title": "AWS VPC NACL Lab - Case study",
     "slug": "aws-vpc-nacl-lab-case-study",
-    "url": "https://business.whizlabs.com/labs/aws-vpc-nacl-lab-case-study",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 0m"
   },
@@ -94,7 +84,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 11,
     "title": "Peer VPC with Transit Gateway and its components",
     "slug": "peer-vpc-with-transit-gateway-and-its-components",
-    "url": "https://business.whizlabs.com/labs/peer-vpc-with-transit-gateway-and-its-components",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 15m"
   },
@@ -102,7 +91,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 12,
     "title": "Introduction to Amazon GuardDuty",
     "slug": "introduction-to-amazon-guardduty",
-    "url": "https://business.whizlabs.com/labs/introduction-to-amazon-guardduty",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "30m"
   },
@@ -110,7 +98,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 13,
     "title": "Discover sensitive data present in S3 bucket using Amazon Macie",
     "slug": "discover-sensitive-data-present-in-s3-bucket-using-amazon-macie",
-    "url": "https://business.whizlabs.com/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 0m"
   },
@@ -118,7 +105,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 14,
     "title": "Blocking web traffic with WAF in AWS",
     "slug": "blocking-web-traffic-with-waf-in-aws",
-    "url": "https://business.whizlabs.com/labs/blocking-web-traffic-with-waf-in-aws",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 0m"
   },
@@ -126,7 +112,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 15,
     "title": "Implementing AWS WAF with ALB to block SQL Injection, Geo Location and Query string",
     "slug": "implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string",
-    "url": "https://business.whizlabs.com/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "2h 0m"
   },
@@ -134,7 +119,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 16,
     "title": "Encryption and Decryption Using KMS",
     "slug": "encryption-and-decryption-using-kms",
-    "url": "https://business.whizlabs.com/labs/encryption-and-decryption-using-kms",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 0m"
   },
@@ -142,7 +126,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 17,
     "title": "Encrypt S3 bucket, EBS Volume and AMI using AWS KMS",
     "slug": "encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms",
-    "url": "https://business.whizlabs.com/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 30m"
   },
@@ -150,7 +133,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 18,
     "title": "How to Encrypt an S3 bucket using AWS KMS and monitor the activities with CloudTrail",
     "slug": "how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail",
-    "url": "https://business.whizlabs.com/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "50m"
   },
@@ -158,7 +140,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 19,
     "title": "How to Encrypt an Unencrypted RDS DB Instance",
     "slug": "how-to-encrypt-an-unencrypted-rds-db-instance",
-    "url": "https://business.whizlabs.com/labs/how-to-encrypt-an-unencrypted-rds-db-instance",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 20m"
   },
@@ -166,7 +147,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 20,
     "title": "How to setup a free VPN server in AWS",
     "slug": "how-to-setup-a-free-vpn-server-in-aws",
-    "url": "https://business.whizlabs.com/labs/how-to-setup-a-free-vpn-server-in-aws",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 0m"
   },
@@ -174,7 +154,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 21,
     "title": "Configure NAT Instance and Stream Web Logs to CloudWatch Using CloudWatch Agent",
     "slug": "configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent",
-    "url": "https://business.whizlabs.com/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent",
     "category": "1. Domain 1: Design Secure Architectures",
     "duration": "1h 0m"
   },
@@ -182,7 +161,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 22,
     "title": "Introduction to Amazon API Gateway",
     "slug": "introduction-to-amazon-api-gateway",
-    "url": "https://business.whizlabs.com/labs/introduction-to-amazon-api-gateway",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "15m"
   },
@@ -190,7 +168,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 23,
     "title": "API Gateway - Creating Resources and Methods",
     "slug": "api-gateway-creating-resources-and-methods",
-    "url": "https://business.whizlabs.com/labs/api-gateway-creating-resources-and-methods",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "20m"
   },
@@ -198,7 +175,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 24,
     "title": "Build API gateway with Lambda Integration",
     "slug": "build-api-gateway-with-lambda-integration",
-    "url": "https://business.whizlabs.com/labs/build-api-gateway-with-lambda-integration",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "45m"
   },
@@ -206,7 +182,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 25,
     "title": "Build API Gateway with different stages using stage variables",
     "slug": "build-api-gateway-with-different-stages-using-stage-variables",
-    "url": "https://business.whizlabs.com/labs/build-api-gateway-with-different-stages-using-stage-variables",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 15m"
   },
@@ -214,7 +189,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 26,
     "title": "Build API Gateway with path parameter and Query string parameter",
     "slug": "build-api-gateway-with-path-parameter-and-query-string-parameter",
-    "url": "https://business.whizlabs.com/labs/build-api-gateway-with-path-parameter-and-query-string-parameter",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "45m"
   },
@@ -222,7 +196,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 27,
     "title": "Enabling CloudWatch Logs in API Gateway",
     "slug": "enabling-cloudwatch-logs-in-api-gateway",
-    "url": "https://business.whizlabs.com/labs/enabling-cloudwatch-logs-in-api-gateway",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "30m"
   },
@@ -230,7 +203,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 28,
     "title": "Introduction to Simple Queuing Service (SQS)",
     "slug": "introduction-to-simple-queuing-service-sqs",
-    "url": "https://business.whizlabs.com/labs/introduction-to-simple-queuing-service-sqs",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "45m"
   },
@@ -238,7 +210,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 29,
     "title": "Difference between SQS Visibility Timeout and Delay Queue",
     "slug": "difference-between-sqs-visibility-timeout-and-delay-queue",
-    "url": "https://business.whizlabs.com/labs/difference-between-sqs-visibility-timeout-and-delay-queue",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "30m"
   },
@@ -246,7 +217,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 30,
     "title": "Introduction SQS DeadLetter Queue",
     "slug": "introduction-sqs-deadletter-queue",
-    "url": "https://business.whizlabs.com/labs/introduction-sqs-deadletter-queue",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "30m"
   },
@@ -254,7 +224,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 31,
     "title": "Access Amazon SQS using Amazon VPC Interface Endpoint",
     "slug": "access-amazon-sqs-using-amazon-vpc-interface-endpoint",
-    "url": "https://business.whizlabs.com/labs/access-amazon-sqs-using-amazon-vpc-interface-endpoint",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 0m"
   },
@@ -262,7 +231,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 32,
     "title": "Creating and Subscribing to SNS Topics, Adding SNS event for S3 bucket",
     "slug": "creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket",
-    "url": "https://business.whizlabs.com/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "30m"
   },
@@ -270,7 +238,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 33,
     "title": "Introduction to Amazon Simple Email Service SES",
     "slug": "introduction-to-amazon-simple-email-service-ses",
-    "url": "https://business.whizlabs.com/labs/introduction-to-amazon-simple-email-service-ses",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "15m"
   },
@@ -278,7 +245,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 34,
     "title": "Introduction to Amazon CloudFront",
     "slug": "introduction-to-amazon-cloudfront",
-    "url": "https://business.whizlabs.com/labs/introduction-to-amazon-cloudfront",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 30m"
   },
@@ -286,7 +252,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 35,
     "title": "Understanding CloudFront Origin Groups",
     "slug": "understanding-cloudfront-origin-groups",
-    "url": "https://business.whizlabs.com/labs/understanding-cloudfront-origin-groups",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 30m"
   },
@@ -294,7 +259,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 36,
     "title": "Introduction to AWS Elastic Load Balancing",
     "slug": "introduction-to-aws-elastic-load-balancing",
-    "url": "https://business.whizlabs.com/labs/introduction-to-aws-elastic-load-balancing",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 0m"
   },
@@ -302,7 +266,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 37,
     "title": "Enable sticky sessions in Application Load balancer",
     "slug": "enable-sticky-sessions-in-application-load-balancer",
-    "url": "https://business.whizlabs.com/labs/enable-sticky-sessions-in-application-load-balancer",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 30m"
   },
@@ -310,7 +273,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 38,
     "title": "Introduction to Amazon Lambda",
     "slug": "introduction-to-amazon-lambda",
-    "url": "https://business.whizlabs.com/labs/introduction-to-amazon-lambda",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "30m"
   },
@@ -318,7 +280,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 39,
     "title": "Getting Started with Amazon Elastic Container Service using Fargate",
     "slug": "getting-started-with-amazon-elastic-container-service-using-fargate",
-    "url": "https://business.whizlabs.com/labs/getting-started-with-amazon-elastic-container-service-using-fargate",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "30m"
   },
@@ -326,7 +287,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 40,
     "title": "Introduction to Amazon Elastic Container Service (ECS)",
     "slug": "introduction-to-amazon-elastic-container-service-ecs",
-    "url": "https://business.whizlabs.com/labs/introduction-to-amazon-elastic-container-service-ecs",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 0m"
   },
@@ -334,7 +294,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 41,
     "title": "Use AWS Secrets Manager secret with Amazon ECS",
     "slug": "use-aws-secrets-manager-secret-with-amazon-ecs",
-    "url": "https://business.whizlabs.com/labs/use-aws-secrets-manager-secret-with-amazon-ecs",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "45m"
   },
@@ -342,7 +301,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 42,
     "title": "Create a cluster in Amazon EKS and install kubectl",
     "slug": "create-a-cluster-in-amazon-eks-and-install-kubectl",
-    "url": "https://business.whizlabs.com/labs/create-a-cluster-in-amazon-eks-and-install-kubectl",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 0m"
   },
@@ -350,7 +308,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 43,
     "title": "Introduction to AWS Step Functions",
     "slug": "introduction-to-aws-step-functions",
-    "url": "https://business.whizlabs.com/labs/introduction-to-aws-step-functions",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "30m"
   },
@@ -358,7 +315,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 44,
     "title": "Troubleshooting Connectivity Issues Between VPC, EC2, and Load Balancer",
     "slug": "troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer",
-    "url": "https://business.whizlabs.com/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 0m"
   },
@@ -366,7 +322,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 45,
     "title": "Creating a workflow using different States with AWS Step Functions",
     "slug": "creating-a-workflow-using-different-states-with-aws-step-functions",
-    "url": "https://business.whizlabs.com/labs/creating-a-workflow-using-different-states-with-aws-step-functions",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "30m"
   },
@@ -374,7 +329,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 46,
     "title": "Balance load across containers through Application Load Balancer in ECS",
     "slug": "balance-load-across-containers-through-application-load-balancer-in-ecs",
-    "url": "https://business.whizlabs.com/labs/balance-load-across-containers-through-application-load-balancer-in-ecs",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 30m"
   },
@@ -382,7 +336,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 47,
     "title": "Scaling EC2 with SQS",
     "slug": "scaling-ec2-with-sqs",
-    "url": "https://business.whizlabs.com/labs/scaling-ec2-with-sqs",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 0m"
   },
@@ -390,7 +343,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 48,
     "title": "Create a sample Web Application and monitor it in AWS X-Ray",
     "slug": "create-a-sample-web-application-and-monitor-it-in-aws-x-ray",
-    "url": "https://business.whizlabs.com/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "40m"
   },
@@ -398,7 +350,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 49,
     "title": "Configuring EBS Volume to ECS task",
     "slug": "configuring-ebs-volume-to-ecs-task",
-    "url": "https://business.whizlabs.com/labs/configuring-ebs-volume-to-ecs-task",
     "category": "2. Domain 2: Design Resilient Architectures",
     "duration": "1h 0m"
   },
@@ -406,7 +357,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 50,
     "title": "Introduction to Amazon Simple Storage Service (S3)",
     "slug": "introduction-to-amazon-simple-storage-service-s3",
-    "url": "https://business.whizlabs.com/labs/introduction-to-amazon-simple-storage-service-s3",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 0m"
   },
@@ -414,7 +364,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 51,
     "title": "How to enable versioning Amazon S3",
     "slug": "how-to-enable-versioning-amazon-s3",
-    "url": "https://business.whizlabs.com/labs/how-to-enable-versioning-amazon-s3",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "30m"
   },
@@ -422,7 +371,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 52,
     "title": "Setup Cross Region Replication and Versioning in S3",
     "slug": "setup-cross-region-replication-and-versioning-in-s3",
-    "url": "https://business.whizlabs.com/labs/setup-cross-region-replication-and-versioning-in-s3",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "45m"
   },
@@ -430,7 +378,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 53,
     "title": "Comparing Data Transfer Speeds with S3 Transfer Acceleration",
     "slug": "comparing-data-transfer-speeds-with-s3-transfer-acceleration",
-    "url": "https://business.whizlabs.com/labs/comparing-data-transfer-speeds-with-s3-transfer-acceleration",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "45m"
   },
@@ -438,7 +385,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 54,
     "title": "How to Create a static website using Amazon S3",
     "slug": "how-to-create-a-static-website-using-amazon-s3",
-    "url": "https://business.whizlabs.com/labs/how-to-create-a-static-website-using-amazon-s3",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "30m"
   },
@@ -446,7 +392,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 55,
     "title": "Mount Elastic File system(EFS) on EC2",
     "slug": "mount-elastic-file-system-efs-on-ec2",
-    "url": "https://business.whizlabs.com/labs/mount-elastic-file-system-efs-on-ec2",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 0m"
   },
@@ -454,7 +399,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 56,
     "title": "Resizing Amazon EBS Volume",
     "slug": "resizing-amazon-ebs-volume",
-    "url": "https://business.whizlabs.com/labs/resizing-amazon-ebs-volume",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "45m"
   },
@@ -462,7 +406,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 57,
     "title": "Introduction to AWS Elastic Beanstalk",
     "slug": "introduction-to-aws-elastic-beanstalk",
-    "url": "https://business.whizlabs.com/labs/introduction-to-aws-elastic-beanstalk",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "45m"
   },
@@ -470,7 +413,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 58,
     "title": "Introduction to Amazon Auto Scaling",
     "slug": "introduction-to-amazon-auto-scaling",
-    "url": "https://business.whizlabs.com/labs/introduction-to-amazon-auto-scaling",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "55m"
   },
@@ -478,7 +420,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 59,
     "title": "Create and Configure Amazon EC2 Auto Scaling with Launch Templates",
     "slug": "create-and-configure-amazon-ec2-auto-scaling-with-launch-templates",
-    "url": "https://business.whizlabs.com/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "55m"
   },
@@ -486,7 +427,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 60,
     "title": "Find vulnerabilities on Inspector2 using Lambda scanning",
     "slug": "find-vulnerabilities-on-inspector2-using-lambda-scanning",
-    "url": "https://business.whizlabs.com/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 0m"
   },
@@ -494,7 +434,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 61,
     "title": "Allocating Elastic IP and Associating it to EC2 Instance",
     "slug": "allocating-elastic-ip-and-associating-it-to-ec2-instance",
-    "url": "https://business.whizlabs.com/labs/allocating-elastic-ip-and-associating-it-to-ec2-instance",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "45m"
   },
@@ -502,7 +441,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 62,
     "title": "How to Query into RDS MySQL Using AWS Lambda",
     "slug": "how-to-query-into-rds-mysql-using-aws-lambda",
-    "url": "https://business.whizlabs.com/labs/how-to-query-into-rds-mysql-using-aws-lambda",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 0m"
   },
@@ -510,7 +448,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 63,
     "title": "Setting up the VPC environment, launching EC2 instances, and testing reachability using the AWS Reachability Analyzer",
     "slug": "setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer",
-    "url": "https://business.whizlabs.com/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 0m"
   },
@@ -518,7 +455,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 64,
     "title": "Introduction to AWS Relational Database Service",
     "slug": "introduction-to-aws-relational-database-service",
-    "url": "https://business.whizlabs.com/labs/introduction-to-aws-relational-database-service",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "50m"
   },
@@ -526,7 +462,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 65,
     "title": "Connecting RDS from EC2 Instance",
     "slug": "launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance",
-    "url": "https://business.whizlabs.com/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "55m"
   },
@@ -534,7 +469,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 66,
     "title": "Deploying Amazon RDS Multi-AZ and Read Replica, Simulate Failover",
     "slug": "deploying-amazon-rds-multi-az-and-read-replica-simulate-failover",
-    "url": "https://business.whizlabs.com/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 30m"
   },
@@ -542,7 +476,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 67,
     "title": "Export Amazon RDS DB Snapshot to S3",
     "slug": "export-amazon-rds-db-snapshot-to-s3",
-    "url": "https://business.whizlabs.com/labs/export-amazon-rds-db-snapshot-to-s3",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "2h 0m"
   },
@@ -550,7 +483,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 68,
     "title": "Introduction to AWS DynamoDB",
     "slug": "introduction-to-aws-dynamodb",
-    "url": "https://business.whizlabs.com/labs/introduction-to-aws-dynamodb",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "30m"
   },
@@ -558,7 +490,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 69,
     "title": "DynamoDB & Global Secondary Index",
     "slug": "dynamodb-global-secondary-index",
-    "url": "https://business.whizlabs.com/labs/dynamodb-global-secondary-index",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "45m"
   },
@@ -566,7 +497,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 70,
     "title": "Create a DynamoDB table and perform various table operations using NoSQL Workbench",
     "slug": "create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench",
-    "url": "https://business.whizlabs.com/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 0m"
   },
@@ -574,7 +504,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 71,
     "title": "Query items in DynamoDB with PartiQL Statements",
     "slug": "query-items-in-dynamodb-with-partiql-statements",
-    "url": "https://business.whizlabs.com/labs/query-items-in-dynamodb-with-partiql-statements",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 0m"
   },
@@ -582,7 +511,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 72,
     "title": "Querying Data in S3 with Amazon Athena",
     "slug": "querying-data-in-s3-with-amazon-athena",
-    "url": "https://business.whizlabs.com/labs/querying-data-in-s3-with-amazon-athena",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 0m"
   },
@@ -590,7 +518,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 73,
     "title": "Deploying a Highly Available Web Application and Bastion Host in AWS",
     "slug": "deploying-a-highly-available-web-application-and-bastion-host-in-aws",
-    "url": "https://business.whizlabs.com/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 30m"
   },
@@ -598,7 +525,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 74,
     "title": "Build a real time data streaming system with Amazon Kinesis Data Stream and Kinesis Agent",
     "slug": "build-a-real-time-data-streaming-system-with-amazon-kinesis-data-stream-and-kinesis-agent",
-    "url": "https://business.whizlabs.com/labs/build-a-real-time-data-streaming-system-with-amazon-kinesis-data-stream-and-kinesis-agent",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 30m"
   },
@@ -606,7 +532,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 75,
     "title": "Transfer data to S3 using Amazon Kinesis Firehose",
     "slug": "transfer-data-to-s3-using-amazon-kinesis-firehose",
-    "url": "https://business.whizlabs.com/labs/transfer-data-to-s3-using-amazon-kinesis-firehose",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "1h 30m"
   },
@@ -614,7 +539,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 76,
     "title": "EBS Multi- Attach",
     "slug": "ebs-multi-attach",
-    "url": "https://business.whizlabs.com/labs/ebs-multi-attach",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "45m"
   },
@@ -622,7 +546,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 77,
     "title": "S3 Batch Operation",
     "slug": "s3-batch-operation",
-    "url": "https://business.whizlabs.com/labs/s3-batch-operation",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "45m"
   },
@@ -630,7 +553,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 78,
     "title": "Configuring Amazon FSx for Lustre with EC2 Instances for Shared High-Performance Storage Access",
     "slug": "configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access",
-    "url": "https://business.whizlabs.com/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access",
     "category": "3. Domain 3: Design High-Performing Architectures",
     "duration": "45m"
   },
@@ -638,7 +560,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 79,
     "title": "Migrating EBS volumes from gp2 to gp3",
     "slug": "migrating-ebs-volumes-from-gp2-to-gp3",
-    "url": "https://business.whizlabs.com/labs/migrating-ebs-volumes-from-gp2-to-gp3",
     "category": "4. Domain 4: Design Cost-Optimized Architectures",
     "duration": "1h 0m"
   },
@@ -646,7 +567,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 80,
     "title": "Launch a Spot Instance with Amazon EC2",
     "slug": "launch-a-spot-instance-with-amazon-ec2",
-    "url": "https://business.whizlabs.com/labs/launch-a-spot-instance-with-amazon-ec2",
     "category": "4. Domain 4: Design Cost-Optimized Architectures",
     "duration": "1h 0m"
   },
@@ -654,7 +574,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 81,
     "title": "Hibernating an EC2 Instance",
     "slug": "hibernating-an-ec2-instance",
-    "url": "https://business.whizlabs.com/labs/hibernating-an-ec2-instance",
     "category": "4. Domain 4: Design Cost-Optimized Architectures",
     "duration": "30m"
   },
@@ -662,7 +581,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 82,
     "title": "Creating New EC2 Instance using Snapshot",
     "slug": "creating-new-ec2-instance-using-snapshot",
-    "url": "https://business.whizlabs.com/labs/creating-new-ec2-instance-using-snapshot",
     "category": "4. Domain 4: Design Cost-Optimized Architectures",
     "duration": "30m"
   },
@@ -670,7 +588,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 83,
     "title": "Peer VPC with Transit Gateway and its components using Terraform",
     "slug": "peer-vpc-with-transit-gateway-and-its-components-using-terraform",
-    "url": "https://business.whizlabs.com/labs/peer-vpc-with-transit-gateway-and-its-components-using-terraform",
     "category": "4. Domain 4: Design Cost-Optimized Architectures",
     "duration": "1h 15m"
   },
@@ -678,7 +595,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 84,
     "title": "Implementing VPC peering on AWS",
     "slug": "implementing-vpc-peering-on-aws",
-    "url": "https://business.whizlabs.com/labs/implementing-vpc-peering-on-aws",
     "category": "4. Domain 4: Design Cost-Optimized Architectures",
     "duration": "1h 0m"
   },
@@ -686,7 +602,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 85,
     "title": "Create Elastic Network Interface - Multiple IPs on an EC2",
     "slug": "create-elastic-network-interface-multiple-ips-on-an-ec2",
-    "url": "https://business.whizlabs.com/labs/create-elastic-network-interface-multiple-ips-on-an-ec2",
     "category": "4. Domain 4: Design Cost-Optimized Architectures",
     "duration": "1h 0m"
   },
@@ -694,7 +609,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 86,
     "title": "Cross Region Image Viewer using VPC Peering",
     "slug": "cross-region-image-viewer-using-vpc-peering",
-    "url": "https://business.whizlabs.com/labs/cross-region-image-viewer-using-vpc-peering",
     "category": "4. Domain 4: Design Cost-Optimized Architectures",
     "duration": "1h 30m"
   },
@@ -702,7 +616,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 87,
     "title": "Creating Events in CloudWatch Challenge",
     "slug": "creating-events-in-cloudwatch-challenge",
-    "url": "https://business.whizlabs.com/labs/creating-events-in-cloudwatch-challenge",
     "category": "5. Challenges",
     "duration": "45m"
   },
@@ -710,7 +623,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 88,
     "title": "Configure Email Notification on S3 Bucket Event - Amazon SNS Challenge",
     "slug": "configure-email-notification-on-s3-bucket-event-amazon-sns-challenge",
-    "url": "https://business.whizlabs.com/labs/configure-email-notification-on-s3-bucket-event-amazon-sns-challenge",
     "category": "5. Challenges",
     "duration": "40m"
   },
@@ -718,7 +630,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 89,
     "title": "NAT gateway - AWS VPC Challenge",
     "slug": "nat-gateway-aws-vpc-challenge",
-    "url": "https://business.whizlabs.com/labs/nat-gateway-aws-vpc-challenge",
     "category": "5. Challenges",
     "duration": "1h 30m"
   },
@@ -726,7 +637,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 90,
     "title": "Amazon VPC Endpoint challenge",
     "slug": "amazon-vpc-endpoint-challenge",
-    "url": "https://business.whizlabs.com/labs/amazon-vpc-endpoint-challenge",
     "category": "5. Challenges",
     "duration": "1h 30m"
   },
@@ -734,7 +644,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 91,
     "title": "Challenge - Build a real time data streaming system with Amazon Kinesis Data Stream and Kinesis Agent",
     "slug": "challenge-build-a-real-time-data-streaming-system-with-amazon-kinesis-data-stream-and-kinesis-agent",
-    "url": "https://business.whizlabs.com/labs/challenge-build-a-real-time-data-streaming-system-with-amazon-kinesis-data-stream-and-kinesis-agent",
     "category": "5. Challenges",
     "duration": "1h 30m"
   },
@@ -742,7 +651,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 92,
     "title": "Create VPC Environment Challenge",
     "slug": "create-vpc-environment-challenge",
-    "url": "https://business.whizlabs.com/labs/create-vpc-environment-challenge",
     "category": "5. Challenges",
     "duration": "30m"
   },
@@ -750,7 +658,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 93,
     "title": "Launch ECS Container Challenge",
     "slug": "launch-ecs-container-challenge",
-    "url": "https://business.whizlabs.com/labs/launch-ecs-container-challenge",
     "category": "5. Challenges",
     "duration": "1h 0m"
   },
@@ -758,7 +665,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 94,
     "title": "Configure WordPress Website Using AWS Console Challenge",
     "slug": "configure-wordpress-website-using-aws-console-challenge",
-    "url": "https://business.whizlabs.com/labs/configure-wordpress-website-using-aws-console-challenge",
     "category": "5. Challenges",
     "duration": "1h 30m"
   },
@@ -766,7 +672,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 95,
     "title": "Amazon CloudFormation S3 URL Stack Challenge",
     "slug": "amazon-cloudformation-s3-url-stack-challenge",
-    "url": "https://business.whizlabs.com/labs/amazon-cloudformation-s3-url-stack-challenge",
     "category": "5. Challenges",
     "duration": "30m"
   },
@@ -774,7 +679,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 96,
     "title": "Enable VPC Peering through Transit Gateway Challenge",
     "slug": "enable-vpc-peering-through-transit-gateway-challenge",
-    "url": "https://business.whizlabs.com/labs/enable-vpc-peering-through-transit-gateway-challenge",
     "category": "5. Challenges",
     "duration": "45m"
   },
@@ -782,7 +686,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 97,
     "title": "Challenge Connecting an EC2 instance and a DB instance Automatically",
     "slug": "challenge-connecting-an-ec2-instance-and-a-db-instance-automatically",
-    "url": "https://business.whizlabs.com/labs/challenge-connecting-an-ec2-instance-and-a-db-instance-automatically",
     "category": "5. Challenges",
     "duration": "1h 0m"
   },
@@ -790,7 +693,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 98,
     "title": "Creating a CloudWatch Dashboard and a Widget Challenge",
     "slug": "creating-a-cloudwatch-dashboard-for-ec2-instance-challenge",
-    "url": "https://business.whizlabs.com/labs/creating-a-cloudwatch-dashboard-for-ec2-instance-challenge",
     "category": "5. Challenges",
     "duration": "45m"
   },
@@ -798,7 +700,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 99,
     "title": "Working with CloudFront distributions and Restricted Region Challenge",
     "slug": "working-with-cloudfront-distributions-and-restricted-region-challenge",
-    "url": "https://business.whizlabs.com/labs/working-with-cloudfront-distributions-and-restricted-region-challenge",
     "category": "5. Challenges",
     "duration": "1h 0m"
   },
@@ -806,7 +707,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 100,
     "title": "Challenge lab - Introduction to AWS Elastic Load Balancing",
     "slug": "challenge-lab-introduction-to-aws-elastic-load-balancing-challenge",
-    "url": "https://business.whizlabs.com/labs/challenge-lab-introduction-to-aws-elastic-load-balancing-challenge",
     "category": "5. Challenges",
     "duration": "1h 0m"
   },
@@ -814,7 +714,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 101,
     "title": "Integrating API Gateway with Lambda Function Challenge",
     "slug": "integrating-api-gateway-with-lambda-function-challenge",
-    "url": "https://business.whizlabs.com/labs/integrating-api-gateway-with-lambda-function-challenge",
     "category": "5. Challenges",
     "duration": "45m"
   },
@@ -822,7 +721,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 102,
     "title": "Challenge Lab- Allocating Elastic IP and Associating it to EC2 Instance",
     "slug": "challenge-lab-allocating-elastic-ip-and-associating-it-to-ec2-instance",
-    "url": "https://business.whizlabs.com/labs/challenge-lab-allocating-elastic-ip-and-associating-it-to-ec2-instance",
     "category": "5. Challenges",
     "duration": "45m"
   },
@@ -830,7 +728,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 103,
     "title": "Challenge - Deploying Amazon RDS Multi-AZ and Read Replica, Simulate Failover",
     "slug": "challenge-deploying-amazon-rds-multi-az-and-read-replica-simulate-failover",
-    "url": "https://business.whizlabs.com/labs/challenge-deploying-amazon-rds-multi-az-and-read-replica-simulate-failover",
     "category": "5. Challenges",
     "duration": "2h 0m"
   },
@@ -838,7 +735,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 104,
     "title": "Challenge Lab – Enable Sticky sessions in Application Load balancer",
     "slug": "challenge-lab-enable-sticky-sessions-in-application-load-balancer",
-    "url": "https://business.whizlabs.com/labs/challenge-lab-enable-sticky-sessions-in-application-load-balancer",
     "category": "5. Challenges",
     "duration": "1h 30m"
   },
@@ -846,7 +742,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 105,
     "title": "Challenge - Discover sensitive data present in S3 bucket using Amazon Macie",
     "slug": "challenge-discover-sensitive-data-present-in-s3-bucket-using-amazon-macie",
-    "url": "https://business.whizlabs.com/labs/challenge-discover-sensitive-data-present-in-s3-bucket-using-amazon-macie",
     "category": "5. Challenges",
     "duration": "1h 0m"
   },
@@ -854,7 +749,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 106,
     "title": "Challenge - How to Encrypt an S3 bucket using AWS KMS and monitor the activities with CloudTrail",
     "slug": "challenge-how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail",
-    "url": "https://business.whizlabs.com/labs/challenge-how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail",
     "category": "5. Challenges",
     "duration": "1h 30m"
   },
@@ -862,7 +756,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 107,
     "title": "Block and Unblock access to CloudFront distribution using AWS WAF",
     "slug": "block-and-unblock-access-to-cloudfront-distribution-using-aws-waf",
-    "url": "https://business.whizlabs.com/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf",
     "category": "6. Projects",
     "duration": "1h 30m"
   },
@@ -870,7 +763,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 108,
     "title": "Query VPC Flow log using Amazon Athena",
     "slug": "query-vpc-flow-log-using-amazon-athena",
-    "url": "https://business.whizlabs.com/labs/query-vpc-flow-log-using-amazon-athena",
     "category": "6. Projects",
     "duration": "1h 0m"
   },
@@ -878,7 +770,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 109,
     "title": "Creating Serverless Contact Forms with AWS",
     "slug": "creating-serverless-contact-forms-with-aws",
-    "url": "https://business.whizlabs.com/labs/creating-serverless-contact-forms-with-aws",
     "category": "6. Projects",
     "duration": "1h 0m"
   },
@@ -886,7 +777,6 @@ export const labsCourseOrder: CourseLabEntry[] = [
     "index": 110,
     "title": "Wokwi IoT Device Simulation with AWS IoT Core Real-Time Dashboard",
     "slug": "wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard",
-    "url": "https://business.whizlabs.com/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard",
     "category": "6. Projects",
     "duration": "2h 0m"
   }

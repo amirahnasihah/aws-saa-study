@@ -41,7 +41,7 @@ export default function LabsPageClient() {
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-aws-text">Hands-on Labs</h1>
             <p className="font-space-mono text-[0.72rem] text-aws-muted mt-1.5">
-              {labsCourseTotal} labs · same order as Whizlabs course
+              {labsCourseTotal} labs · SAA-C03 exam domain order
             </p>
           </div>
           <span className="self-start font-space-mono text-[0.62rem] text-aws-muted bg-aws-card border border-aws-border px-2.5 py-1 rounded-full">
@@ -106,7 +106,7 @@ export default function LabsPageClient() {
         </div>
       )}
 
-      <SiteFooter tagline="AWS SAA-C03 · Hands-on Labs · Course order from Whizlabs" />
+      <SiteFooter tagline="AWS SAA-C03 · Hands-on Labs · Exam domain order" />
     </main>
   )
 }
