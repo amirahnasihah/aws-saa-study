@@ -1,0 +1,316 @@
+{
+  "slug": "nat-gateway-aws-vpc-challenge",
+  "title": "NAT gateway - AWS VPC Challenge",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "In this lab challenge, your Amazon VPC and Amazon EC2 skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of Amazon VPC and other AWS services. The Lab Challenge helps you understand the real-time scenarios."
+        },
+        {
+          "text": "A company ABC launches two EC2 Instances, one to deploy a web application in Public subnet and the other to host another application in Private subnet. As a part of the infrastructure, they need internet access to Private Instance but secured. Now your are a Security Engineer and your challenge is to build the entire Infrastructure from scratch so, that the dev team can host their application in both EC2 Instances."
+        },
+        {
+          "text": "Follow the below instructions to complete this challenge."
+        },
+        {
+          "text": "Create an Amazon VPC named MyVPC with IPv4 CIDR: 10.0.0.0/16 and No IPv6 CIDR."
+        },
+        {
+          "text": "Create an Amazon VPC named MyVPC with IPv4 CIDR: 10.0.0.0/16 and No IPv6 CIDR."
+        },
+        {
+          "text": "Create Public and Private Subnets in MyVPC with IPv4 CIDR 10.0.0.0/24 and 10.0.1.0/24 Respectively."
+        },
+        {
+          "text": "Create Public and Private Subnets in MyVPC with IPv4 CIDR 10.0.0.0/24 and 10.0.1.0/24 Respectively."
+        },
+        {
+          "text": "Enable auto-assign public IPv4 address to Public subnet."
+        },
+        {
+          "text": "Enable auto-assign public IPv4 address to Public subnet."
+        },
+        {
+          "text": "Create an Internet gateway named MyIGW and attach it to MyVPC"
+        },
+        {
+          "text": "Create an Internet gateway named MyIGW and attach it to MyVPC"
+        },
+        {
+          "text": "Create a Public Route table in MyVPC and add Internet Gateway public route in it."
+        },
+        {
+          "text": "Create a Public Route table in MyVPC and add Internet Gateway public route in it."
+        },
+        {
+          "text": "Associate the Public Subnet to the Public route Table."
+        },
+        {
+          "text": "Associate the Public Subnet to the Public route Table."
+        },
+        {
+          "text": "Launch an MyPublicEC2Server Instance in Public Subnet with the following configuration:"
+        },
+        {
+          "text": "Select Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "Select t2.micro instance type"
+        },
+        {
+          "text": "Create 8GB gp2 EBS Volume."
+        },
+        {
+          "text": "Select MyVPC and MYPublicSubnet and Enable Auto-assign Public IP"
+        },
+        {
+          "text": "Create a new security group MyEC2Server_SG and add SSH port with source Anywhere."
+        },
+        {
+          "text": "Create a new Key Pair for the Public EC2 Instance."
+        },
+        {
+          "text": "Launch an MyPublicEC2Server Instance in Public Subnet with the following configuration:"
+        },
+        {
+          "text": "Select Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "Select Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "Select t2.micro instance type"
+        },
+        {
+          "text": "Select t2.micro instance type"
+        },
+        {
+          "text": "Create 8GB gp2 EBS Volume."
+        },
+        {
+          "text": "Create 8GB gp2 EBS Volume."
+        },
+        {
+          "text": "Select MyVPC and MYPublicSubnet and Enable Auto-assign Public IP"
+        },
+        {
+          "text": "Select MyVPC and MYPublicSubnet and Enable Auto-assign Public IP"
+        },
+        {
+          "text": "Create a new security group MyEC2Server_SG and add SSH port with source Anywhere."
+        },
+        {
+          "text": "Create a new security group MyEC2Server_SG and add SSH port with source Anywhere."
+        },
+        {
+          "text": "Create a new Key Pair for the Public EC2 Instance."
+        },
+        {
+          "text": "Create a new Key Pair for the Public EC2 Instance."
+        },
+        {
+          "text": "Launch an MyPrivateEC2Server Instance in Private Subnet with the following configuration:"
+        },
+        {
+          "text": "Select Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "Select t2.micro instance type"
+        },
+        {
+          "text": "Create 8GB gp2 EBS Volume."
+        },
+        {
+          "text": "Select MyVPC and MYPrivateSubnet and Disable Auto-assign Public IP"
+        },
+        {
+          "text": "Select the Security Group created for first instance."
+        },
+        {
+          "text": "Create a new Key Pair for the Private EC2 Instance."
+        },
+        {
+          "text": "Launch an MyPrivateEC2Server Instance in Private Subnet with the following configuration:"
+        },
+        {
+          "text": "Select Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "Select Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "Select t2.micro instance type"
+        },
+        {
+          "text": "Select t2.micro instance type"
+        },
+        {
+          "text": "Create 8GB gp2 EBS Volume."
+        },
+        {
+          "text": "Create 8GB gp2 EBS Volume."
+        },
+        {
+          "text": "Select MyVPC and MYPrivateSubnet and Disable Auto-assign Public IP"
+        },
+        {
+          "text": "Select MyVPC and MYPrivateSubnet and Disable Auto-assign Public IP"
+        },
+        {
+          "text": "Select the Security Group created for first instance."
+        },
+        {
+          "text": "Select the Security Group created for first instance."
+        },
+        {
+          "text": "Create a new Key Pair for the Private EC2 Instance."
+        },
+        {
+          "text": "Create a new Key Pair for the Private EC2 Instance."
+        },
+        {
+          "text": "SSH into Public EC2 Instance and test Internet Connectivity."
+        },
+        {
+          "text": "SSH into Public EC2 Instance and test Internet Connectivity."
+        },
+        {
+          "text": "To Perform SSH operation"
+        },
+        {
+          "text": "Windows Users use Putty Software."
+        },
+        {
+          "text": "Linux/Mac Users use Terminal."
+        },
+        {
+          "text": "To Perform SSH operation"
+        },
+        {
+          "text": "Windows Users use Putty Software."
+        },
+        {
+          "text": "Windows Users use Putty Software."
+        },
+        {
+          "text": "Linux/Mac Users use Terminal."
+        },
+        {
+          "text": "Linux/Mac Users use Terminal."
+        },
+        {
+          "text": "First SSH into Public EC2 Instance."
+        },
+        {
+          "text": "First SSH into Public EC2 Instance."
+        },
+        {
+          "text": "Next SSH into Private EC2 Instance from Public EC2 Instance and run the following Linux commands in Private EC2 Instance. (Since no internet access is provided for Private EC2 instances, you will not be able to run the bellow)"
+        },
+        {
+          "text": "yum -y update"
+        },
+        {
+          "text": "yum install httpd -y"
+        },
+        {
+          "text": "Next SSH into Private EC2 Instance from Public EC2 Instance and run the following Linux commands in Private EC2 Instance. (Since no internet access is provided for Private EC2 instances, you will not be able to run the bellow)"
+        },
+        {
+          "text": "Create a MyNATGateway in Public Subnet of VPC MyVPC to provide Internet access to the private instance."
+        },
+        {
+          "text": "Create a MyNATGateway in Public Subnet of VPC MyVPC to provide Internet access to the private instance."
+        },
+        {
+          "text": "Update the Main Route table (which is different from one created by you) and Add NAT Gateway public Route."
+        },
+        {
+          "text": "Update the Main Route table (which is different from one created by you) and Add NAT Gateway public Route."
+        },
+        {
+          "text": "Now again SSH into Public EC2 Instance and then SSH into Private EC2 instance from Public EC2 instance."
+        },
+        {
+          "text": "Now again SSH into Public EC2 Instance and then SSH into Private EC2 instance from Public EC2 instance."
+        },
+        {
+          "text": "Run the below Linux commands in the Private EC2 Instance."
+        },
+        {
+          "text": "yum -y update"
+        },
+        {
+          "text": "yum install httpd -y"
+        },
+        {
+          "text": "Run the below Linux commands in the Private EC2 Instance."
+        },
+        {
+          "text": "If You are able to install httpd in Private Instance, You have completed this Challenge."
+        },
+        {
+          "text": "If You are able to install httpd in Private Instance, You have completed this Challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from lab Challenge console and wait till the process gets completed."
+        },
+        {
+          "text": "Click on End Challenge button from lab Challenge console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

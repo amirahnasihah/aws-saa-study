@@ -1,0 +1,279 @@
+{
+  "slug": "introduction-to-aws-relational-database-service",
+  "title": "Introduction to AWS Relational Database Service",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:50:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2 : Create a Security Group for RDS instance",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
+        },
+        {
+          "text": "On the left panel menu, select the security group under the Network & Security section."
+        },
+        {
+          "text": "Click on the Create Security Group."
+        },
+        {
+          "text": "We are going to create a Security group for RDS with a 3306 port number enabled."
+        },
+        {
+          "text": "Security group name : Enter RDS_lab_sg"
+        },
+        {
+          "text": "Description: Enter Security group for RDS"
+        },
+        {
+          "text": "VPC: Select Default VPC"
+        },
+        {
+          "text": "Click on the Add Rule button under Inbound rules."
+        },
+        {
+          "text": "Type: Select MYSQL/Aurora"
+        },
+        {
+          "text": "Source: Select Anywhere Ipv4"
+        },
+        {
+          "text": "Leave everything as default and click on the Create Security Group button."
+        }
+      ]
+    },
+    {
+      "title": "Task 3 : Create RDS Database Instance",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to Aurora and RDS by clicking on the Services menu available under the Database section."
+        },
+        {
+          "text": "Click on Create Database."
+        },
+        {
+          "text": "Database creation method : Full configuration"
+        },
+        {
+          "text": "Engine options : Select MySQL"
+        },
+        {
+          "text": "Version : Default"
+        },
+        {
+          "text": "Templates : Select Dev/Test, choose Single-AZ DB Instance deployment (1 Instance) as Availability and durability"
+        },
+        {
+          "text": "DB instance identifier : mydatabaseinstance"
+        },
+        {
+          "text": "Credentials management: Select Self managed"
+        },
+        {
+          "text": "Master username : mydatabaseuser"
+        },
+        {
+          "text": "Master password and Confirm password: mydatabasepassword"
+        },
+        {
+          "text": "Note: This is the username/password combo used to log onto your database. Please make note of them somewhere safe."
+        },
+        {
+          "text": "DB instance class : db.t3.micro — 2 vCPU, 1 GiB RAM"
+        },
+        {
+          "text": "Storage type : General Purpose SSD (gp3)."
+        },
+        {
+          "text": "Note: By default, it will be gp2, kindly change to gp3."
+        },
+        {
+          "text": "Allocated storage : 20 (default)"
+        },
+        {
+          "text": "Click on Additional storage configuration to expand."
+        },
+        {
+          "text": "Enable storage autoscaling : Uncheck"
+        },
+        {
+          "text": "Public access : Select Yes"
+        },
+        {
+          "text": "VPC security groups : Select Choose existing"
+        },
+        {
+          "text": "Note: Remove the default one and select RDS_lab_sg instead"
+        },
+        {
+          "text": "Click on Additional Configuration in the bottom of the page to expand it:"
+        },
+        {
+          "text": "Initial database name: mydatabase"
+        },
+        {
+          "text": "DB parameter group: default"
+        },
+        {
+          "text": "Option group: default"
+        },
+        {
+          "text": "Enable automated backups: uncheck"
+        },
+        {
+          "text": "Note: Leave all the other setting as default"
+        },
+        {
+          "text": "Click on Create database"
+        },
+        {
+          "text": "Note: You can ignore the Enable Monitoring Error."
+        },
+        {
+          "text": "Navigate to Databases."
+        },
+        {
+          "text": "On the RDS console, the details for the new DB instance appear. The DB instance has a status of creating until the DB instance is ready to use. When the state changes to Available, you can connect to the DB instance. It can take up to 20 minutes before the new instance status becomes Available."
+        }
+      ]
+    },
+    {
+      "title": "Task 4 : Connecting to RDS Database on a DB Instance using the MySQL Workbench",
+      "steps": [
+        {
+          "text": "In this task, we will connect to a database on a MySQL DB instance using MySQL monitor commands. One GUI-based application you can use to connect is MySQL workbench, which you have already downloaded and installed based on instructions in the prerequisite section."
+        },
+        {
+          "text": "To connect to a database on a DB instance using MySQL monitor, find the endpoint (DNS name) and port number for your DB Instance."
+        },
+        {
+          "text": "Navigate to Databases and click on mydatabaseinstance."
+        },
+        {
+          "text": "Under Connectivity & security section, copy and note the endpoint and port."
+        },
+        {
+          "text": "Endpoint: Copy the endpoint"
+        },
+        {
+          "text": "Port: 3306"
+        },
+        {
+          "text": "You need both the endpoint and the port number to connect to the DB instance."
+        },
+        {
+          "text": "Open MySQL Workbench. Click on the plus icon aside on MySQL Connections"
+        },
+        {
+          "text": "Connection Name: Enter a sample name MyDatabseConnection"
+        },
+        {
+          "text": "Host Name: Past the Endpoint that you copied"
+        },
+        {
+          "text": "Port : 3306"
+        },
+        {
+          "text": "Username : mydatabaseuser"
+        },
+        {
+          "text": "Password : Click on Store in keychain and enter password mydatabasepassword Click on ok."
+        },
+        {
+          "text": "Click on Test Connection to make sure that you are able to connect to the database properly."
+        },
+        {
+          "text": "Click on ok and ok again to save the connection."
+        },
+        {
+          "text": "A database connection will be created in MySQL Workbench"
+        },
+        {
+          "text": "Click on it to open the database. Enter the database password if prompted."
+        },
+        {
+          "text": "After successfully connecting and opening the database, you can create tables and perform various queries over the connected database."
+        },
+        {
+          "text": "Navigate to the Schemas tab to see databases available to start doing database operations. More details on database operations are available here."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "AWS RDS supports the integration of geospatial data, allowing you to store, query, and analyze location-based information efficiently."
+        }
+      ]
+    },
+    {
+      "title": "Task 5 : Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully used AWS management console to create RDS MySQL database instance."
+        },
+        {
+          "text": "You have configured the details while creating the Amazon RDS instance."
+        },
+        {
+          "text": "You have used the GUI tool MySQL Workbench to connect to the Amazon RDS instance created."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

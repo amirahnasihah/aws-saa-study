@@ -1,0 +1,173 @@
+{
+  "slug": "introduction-to-aws-elastic-beanstalk",
+  "title": "Introduction to AWS Elastic Beanstalk",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create your first Elastic Beanstalk Application",
+      "steps": [
+        {
+          "text": "In this task, you will learn how to navigate to Elastic Beanstalk and create a new environment with specific configurations."
+        },
+        {
+          "text": "Navigate to Elastic Beanstalk by clicking on the Services menu in the top, then click on Elastic Beanstalk in the Compute section."
+        },
+        {
+          "text": "Once Elastic Beanstalk is opened, you’ll be presented with a getting started screen. Click on the Create application"
+        },
+        {
+          "text": "In Configure environment page :"
+        },
+        {
+          "text": "Environment tier : Select Web server environment"
+        },
+        {
+          "text": "Application Name: Enter Sample_Application"
+        },
+        {
+          "text": "Note: This is usually the name of the product/project that you are building."
+        },
+        {
+          "text": "Under Platform: Choose Java and leave other options as default."
+        },
+        {
+          "text": "Scroll down and click on the Next button."
+        },
+        {
+          "text": "In Configure service access :"
+        },
+        {
+          "text": "Select the role Named elastic-beanstalk-role- from the drop-down."
+        },
+        {
+          "text": "EC2 Instance profile : Select EC2_Role"
+        },
+        {
+          "text": "Keep rest things as default and click on Next button."
+        },
+        {
+          "text": "To Set up networking, database, and tags :"
+        },
+        {
+          "text": "VPC : Select Default VPC"
+        },
+        {
+          "text": "Check Enabled checkbox under Public IP address"
+        },
+        {
+          "text": "Check the us-east-1a and us-east-1b subnets checkbox under Instance subnets."
+        },
+        {
+          "text": "Keep rest things as default and Click on Next button."
+        },
+        {
+          "text": "To Configure instance traffic and scaling :"
+        },
+        {
+          "text": "Scroll Down to capacity section and Under Instance Types, remove the existing instance types and select t2.micro from the drop-down."
+        },
+        {
+          "text": "Click on Next button"
+        },
+        {
+          "text": "In Configuring updates, monitoring, and logging :"
+        },
+        {
+          "text": "Scroll down to Managed platform updates section."
+        },
+        {
+          "text": "Uncheck the Managed updated checkbox."
+        },
+        {
+          "text": "Keep rest things as default and click on Next button."
+        },
+        {
+          "text": "Review the details and click on Create button"
+        },
+        {
+          "text": "Once the above is completed, you will be able to see SampleApplication in the dashboard. This is the main Elastic Beanstalk screen for your application. A sample screenshot is given below:"
+        },
+        {
+          "text": "On the dashboard, you can see your application URL."
+        },
+        {
+          "text": "SampleApplication-env.eba-qdj5qpgx.us-east-1.elasticbeanstalk.com"
+        },
+        {
+          "text": "To test your application, copy the app URL and paste it into your browser. You will see your application is running successfully. A sample screenshot is given below:"
+        },
+        {
+          "text": "You can click on the options given on the page (Learn More), where they would be redirected to the elastic Beanstalk documentation of AWS."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "Elastic Beanstalk provides a simple way to deploy and manage applications on AWS, by abstracting away the complexities of infrastructure management. It allows developers to focus on writing code and building features rather than worrying about infrastructure provisioning, scaling, and monitoring."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully deployed a sample Java Application in AWS Elastic Beanstalk."
+        },
+        {
+          "text": "You have tested the deployed application with the URL generated after the deployment."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

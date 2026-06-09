@@ -1,0 +1,733 @@
+{
+  "slug": "build-a-real-time-data-streaming-system-with-amazon-kinesis-data-stream-and-kinesis-agent",
+  "title": "Build a real time data streaming system with Amazon Kinesis Data Stream and Kinesis Agent",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Launching an EC2 Instance",
+      "steps": [
+        {
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Navigate to Instances on the left panel and click on Launch Instance button."
+        },
+        {
+          "text": "Enter Name as Demo_Instance"
+        },
+        {
+          "text": "Select Amazon Linux from the Quick Start."
+        },
+        {
+          "text": "Choose an Amazon Machine Image (AMI): Choose Amazon Linux 2023 AMI from the drop-down."
+        },
+        {
+          "text": "Choose an Instance Type: Select t2.micro"
+        },
+        {
+          "text": "For Key pair : Choose Create a new key pair"
+        },
+        {
+          "text": "Key Pair name : Enter WhizKey"
+        },
+        {
+          "text": "Key pair type : Choose RSA"
+        },
+        {
+          "text": "Private key file format: Choose .pem"
+        },
+        {
+          "text": "Click on Create key pair button."
+        },
+        {
+          "text": "In Network Settings Click on Edit Button:"
+        },
+        {
+          "text": "Auto-assign public IP: Select Enable"
+        },
+        {
+          "text": "Select Create new Security group"
+        },
+        {
+          "text": "Security group name : Enter kinesis_demo_SG"
+        },
+        {
+          "text": "Description : Enter Security Group to allow traffic to EC2"
+        },
+        {
+          "text": "SSH rule will already be present for you. To add HTTP:"
+        },
+        {
+          "text": "Select Add Security rule Button"
+        },
+        {
+          "text": "Choose Type: HTTP, SSH"
+        },
+        {
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "Under Advanced Details,"
+        },
+        {
+          "text": "IAM Instance profile : Select EC2_Role_<RANDOM_NUMBER>"
+        },
+        {
+          "text": "Keep Rest thing Default and Click on Launch Instance Button."
+        },
+        {
+          "text": "Select View all Instances to View Instance you Created"
+        },
+        {
+          "text": "Launch Status: Your instances are now launching, Navigate to Instances page from left menu and wait the status of the EC2 Instance changes to running and health check status changes to 2/2 checks passed"
+        },
+        {
+          "text": "Select the Instance and copy the Public IPv4 address from the Details section. Note down the Public IPv4 Address of your EC2 instance. A sample is shown in the screenshot below."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: SSH into EC2 Instance",
+      "steps": [
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Host a sample website",
+      "steps": [
+        {
+          "text": "In this task, we will host a sample website by navigating to the HTML folder present in the var directory and then we will fetch the sample site using the wget command."
+        },
+        {
+          "text": "Switch to the root user :"
+        },
+        {
+          "text": "sudo -s"
+        },
+        {
+          "text": "Run all the updates using the yum command:"
+        },
+        {
+          "text": "dnf update -y"
+        },
+        {
+          "text": "Install the LAMP and HTTPD server:"
+        },
+        {
+          "text": "sudo dnf install -y httpd mariadb105 php php-mysqlnd"
+        },
+        {
+          "text": "Start the HTTPD server:"
+        },
+        {
+          "text": "sudo systemctl start httpd"
+        },
+        {
+          "text": "Enable the HTTPD server:"
+        },
+        {
+          "text": "sudo systemctl enable httpd"
+        },
+        {
+          "text": "Navigate to the HTML folder path."
+        },
+        {
+          "text": "cd /var/www/html"
+        },
+        {
+          "text": "Let us download a sample website template. Here I am downloading a zip file from the site using wget."
+        },
+        {
+          "text": "curl -O -L -A \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36\" \"https://labresources.lab.com/094ba567ebb44c80c99f06f70ba6b44a/marvel-master.zip\""
+        },
+        {
+          "text": "You can check if it is downloaded in the HTML path using ls command."
+        },
+        {
+          "text": "Unzip the downloaded html template. Use the zip file name to unzip."
+        },
+        {
+          "text": "sudo unzip marvel-master.zip"
+        },
+        {
+          "text": "Use the command ls to list all the files and folders present in the present working directory."
+        },
+        {
+          "text": "You will be able to see a zip file and a folder. When we unzipped the marvel.zip, we got the folder, marvel-master."
+        },
+        {
+          "text": "Copy the folder name to a text editor."
+        },
+        {
+          "text": "To verify if the sample website is hosted, paste http://IP_Address/folder_name in the browser and press [Enter]"
+        },
+        {
+          "text": "For example - http://34.233.120.188/marvel-master/"
+        },
+        {
+          "text": "You can see that the website is hosted successfully."
+        },
+        {
+          "text": "The website logs will be in the path “/var/log/httpd/access_log”. For each click and use of the website, the related logs will be collected and stored here."
+        },
+        {
+          "text": "You can check the logs using the following commands"
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "cd /var/log/httpd/"
+        },
+        {
+          "text": "tail -10 access_log"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Set file permissions to httpd",
+      "steps": [
+        {
+          "text": "Now let's see how to store these continuous logs. Before proceeding, change the permission of the httpd folder, so that the file will be in readable, writable, and executable mode by ec2-user."
+        },
+        {
+          "text": "Add the httpd group to your EC2 instance with the command"
+        },
+        {
+          "text": "groupadd httpd"
+        },
+        {
+          "text": "Add ec2-user user to the httpd group with the command"
+        },
+        {
+          "text": "usermod -a -G httpd ec2-user"
+        },
+        {
+          "text": "To refresh your permissions and include the new httpd group, log out completely with the command"
+        },
+        {
+          "text": "exit"
+        },
+        {
+          "text": "exit (if you are in the sudo, you have to exit twice)"
+        },
+        {
+          "text": "Follow the steps to SSH into EC2 Instance. If possible do in the new terminal."
+        },
+        {
+          "text": "Verify that the httpd group exists with the groups with the command"
+        },
+        {
+          "text": "groups"
+        },
+        {
+          "text": "Change the group ownership of the /var/log/httpd directory and its contents to the httpd group,"
+        },
+        {
+          "text": "sudo chown -R root:httpd /var/log/httpd"
+        },
+        {
+          "text": "Change the directory permissions of /var/log/httpd and its subdirectories to add group write permissions and set the group ID on subdirectories created in the future,"
+        },
+        {
+          "text": "sudo chmod 2775 /var/log/httpd"
+        },
+        {
+          "text": "find /var/log/httpd -type d -exec sudo chmod 2775 {} +"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Creating Kinesis Data Stream",
+      "steps": [
+        {
+          "text": "Let us create a Kinesis data stream. The logs created in the EC2 sample website will be pushed to Kinesis data stream."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to Kinesis by clicking on the Services menu, under the Analytics section."
+        },
+        {
+          "text": "Under Get Started, select Kinesis Data Streams and click on Create data stream."
+        },
+        {
+          "text": "Under Data stream name, enter the Data stream name as whiz-data-stream."
+        },
+        {
+          "text": "Leave everything as default. Click on Create data stream button."
+        },
+        {
+          "text": "Once the status is active, Click on the Configuration tab."
+        },
+        {
+          "text": "Scroll down to Encryption and click on Edit button."
+        },
+        {
+          "text": "Check Enable server-side encryption and use the default encryption key type, i.e Use AWS managed CMK."
+        },
+        {
+          "text": "Click on Save changes button."
+        },
+        {
+          "text": "You have used AWS KMS to encrypt your data."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Creating a S3 Bucket",
+      "steps": [
+        {
+          "text": "In this task, we will create an S3 bucket where we will store the data from the firehose."
+        },
+        {
+          "text": "Navigate to S3 by clicking on the Services menu, under the Storage section."
+        },
+        {
+          "text": "Click on Create bucket button."
+        },
+        {
+          "text": "In the General Configuration,"
+        },
+        {
+          "text": "Bucket name: Enter whiz-demo-logs"
+        },
+        {
+          "text": "Note: S3 Bucket names are globally unique, choose a name that is available."
+        },
+        {
+          "text": "Region: Select US East (N. Virginia) us-east-1 (i.e same region as the Kinesis data stream)."
+        },
+        {
+          "text": "In the Default encryption,"
+        },
+        {
+          "text": "Encryption key type: Leave the key type as Amazon S3 key (SSE-S3)."
+        },
+        {
+          "text": "Bucket key: Select Enable"
+        },
+        {
+          "text": "Click on Create bucket button."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Creating Amazon Data Firehose - Kinesis Data Firehose",
+      "steps": [
+        {
+          "text": "Once the streaming service gets the data from the logs, then we need to push the data somewhere. It is not possible to post the data from the Kinesis Data Streams. So we will use Kinesis Data Firehose."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to Kinesis by clicking on the Services menu, under the Analytics section."
+        },
+        {
+          "text": "Under Get Started, select Amazon Data Firehose and click on Create Firehose stream."
+        },
+        {
+          "text": "Under Choose Source and Destination,"
+        },
+        {
+          "text": "Source: Choose Amazon Kinesis Data Streams."
+        },
+        {
+          "text": "Destination: Choose Amazon S3"
+        },
+        {
+          "text": "Under Firehose stream name, Enter stream name as whiz-data-stream."
+        },
+        {
+          "text": "Under the Source settings,"
+        },
+        {
+          "text": "Click on Browse button."
+        },
+        {
+          "text": "From the pop-up, select the Data Stream we have created earlier."
+        },
+        {
+          "text": "Click on Choose button."
+        },
+        {
+          "text": "Leave the Transform and convert records as default."
+        },
+        {
+          "text": "Under the Destination settings,"
+        },
+        {
+          "text": "Click on Browse button."
+        },
+        {
+          "text": "From the pop-up, select the S3 Bucket we have created earlier, in my case, whiz-demo-logs"
+        },
+        {
+          "text": "Click on Choose button."
+        },
+        {
+          "text": "Expand the Buffer hints, compression and encryption section. Under the Buffer interval, make it to 60 seconds."
+        },
+        {
+          "text": "Expand the Advanced settings,"
+        },
+        {
+          "text": "Under Service access, Choose existing IAM role and select it from the dropdown menu."
+        },
+        {
+          "text": "Click on Create Firehose stream button."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Creating and configuring Kinesis Agent",
+      "steps": [
+        {
+          "text": "Let us configure a Kinesis agent which will collect data and send it to Kinesis Data Streams."
+        },
+        {
+          "text": "Follow the steps again to SSH into the EC2 instance."
+        },
+        {
+          "text": "Let us install the latest version of Kinesis agent on the instance."
+        },
+        {
+          "text": "sudo dnf install -y https://s3.amazonaws.com/streaming-data-agent/aws-kinesis-agent-latest.amzn2.noarch.rpm"
+        },
+        {
+          "text": "Type “y” if asked in the installation process."
+        },
+        {
+          "text": "After installing the Kinesis agent, let us update the json file available in the path /etc/aws-kinesis/agent.json."
+        },
+        {
+          "text": "Edit the agent.json,"
+        },
+        {
+          "text": "sudo nano /etc/aws-kinesis/agent.json"
+        },
+        {
+          "text": "Remove all the content and paste the below JSON content."
+        },
+        {
+          "text": "Note 1: Make sure you copy the “awsAccessKeyId” , \"awsSecretAccessKey\" from the lab page and paste it the JSON code wherever required."
+        },
+        {
+          "text": "Note 2: Make sure the “filePattern” consists of the log file path which is default in this case and “kinesisStream” consists of the created Kinesis Data Stream name."
+        },
+        {
+          "text": "Press “ctrl + x” to save. Press “y” to save the modified changes and press Enter (Follow the commands to save the file carefully)."
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"cloudwatch.emitMetrics\": true,"
+        },
+        {
+          "text": "\"kinesis.endpoint\": \"\","
+        },
+        {
+          "text": "\"firehose.endpoint\": \"\","
+        },
+        {
+          "text": "\"awsAccessKeyId\": \"A*****************\","
+        },
+        {
+          "text": "\"awsSecretAccessKey\": \"B******************\","
+        },
+        {
+          "text": "\"flows\": ["
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"filePattern\": \"/var/log/httpd/access_log\","
+        },
+        {
+          "text": "\"kinesisStream\": \"whiz-data-stream\","
+        },
+        {
+          "text": "\"partitionKeyOption\": \"RANDOM\""
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "]"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "Make sure you specify the “awsAccessKeyId” \"awsSecretAccessKey\" from the lab page."
+        },
+        {
+          "text": "The name of the kinesis stream ( “kinesisStream” ) to which the agent sends data. Change the kinesisStream name according to the name you created."
+        },
+        {
+          "text": "Whenever you change the configuration file (agent.json), you must stop and start the agent, using the commands."
+        },
+        {
+          "text": "sudo service aws-kinesis-agent stop"
+        },
+        {
+          "text": "sudo service aws-kinesis-agent start"
+        },
+        {
+          "text": "Once the agent is started for the first time, a log file will be created. Check the log file using the commands,"
+        },
+        {
+          "text": "cd /var/log/aws-kinesis-agent/"
+        },
+        {
+          "text": "ls -ltr"
+        },
+        {
+          "text": "You can check if the service is started properly by going through the log."
+        },
+        {
+          "text": "tail aws-kinesis-agent.log | grep \"completed\""
+        },
+        {
+          "text": "We can see that the agent is successfully started."
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Testing the real-time streaming of data",
+      "steps": [
+        {
+          "text": "Let us test by hosting the above sample website on multiple browsers or do some click activity on the website. The related logs will be collected on the listed S3 bucket."
+        },
+        {
+          "text": "To test the data streaming, paste your IP_Address/folder_name in the multiple browsers and press enter."
+        },
+        {
+          "text": "For example - http://34.233.120.188/marvel-master/"
+        },
+        {
+          "text": "Note: The folder_name is the unzipped folder of the sample website which we have noted earlier in the Task 5."
+        },
+        {
+          "text": "Once you have followed the above step, click on the website links present to create more logs."
+        },
+        {
+          "text": "Note: We are clicking the links in the sample website website to generate logs which will be streamed to the created S3 Bucket."
+        },
+        {
+          "text": "Navigate to S3 by clicking on the Services menu, under the Storage section."
+        },
+        {
+          "text": "Note: Wait for 3-5 minutes, if you are not able to see the logs."
+        },
+        {
+          "text": "You will see a hierarchy of folders with year > month > date > hour."
+        },
+        {
+          "text": "Click on the date or hour to see the logs created."
+        },
+        {
+          "text": "Click on the log and select Open and save the file."
+        },
+        {
+          "text": "Open the log file in any text editor in the local and check the logs."
+        },
+        {
+          "text": "Note: The more the clicks in the page, the more the logs are generated. In this demo webpage, we have only 1 page. So try to open the webpage in many browsers and click on the links to generate the logs."
+        }
+      ]
+    },
+    {
+      "title": "Task 11: Checking the CloudWatch metrics of Kinesis Data Stream and Firehose",
+      "steps": [
+        {
+          "text": "Let us the check the CloudWatch metrics of Kinesis Data Stream which records the data and Kinesis Delivery stream which reads the data from Data Stream."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to Kinesis by clicking on the Services menu, under the Analytics section."
+        },
+        {
+          "text": "Click on the created data stream in Data Streams section and navigate to the Monitoring tab. You will be able to see the graph according to the logs generated."
+        },
+        {
+          "text": "On the left navigation panel, click on the Amazon Data Firehose."
+        },
+        {
+          "text": "Click on the created delivery stream and navigate to the Monitoring tab. You will be able to see the graph."
+        },
+        {
+          "text": "Do you know ?"
+        },
+        {
+          "text": "Amazon Kinesis Data Streams supports the concept of shards, which are the fundamental units of data capacity within a stream. Each shard in a Kinesis Data Stream can handle up to 1 MB/sec of data input and 2 MB/sec of data output. However, with the use of Kinesis Data Firehose, you can easily ingest data into Kinesis Data Streams at a much higher rate, exceeding the individual shard limits."
+        }
+      ]
+    },
+    {
+      "title": "Task 12: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "In the second checkbox in the validation part, you should mention the folder name alone i.e., marvel-master."
+        },
+        {
+          "text": "Sample output :"
+        }
+      ]
+    },
+    {
+      "title": "Task 13: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "Terminating EC2 Instance :"
+        },
+        {
+          "text": "Make sure you are in the US East (N.Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to the Services menu at the top left corner and click on EC2 present under the Compute section."
+        },
+        {
+          "text": "Click on Instances from the left navigation menu."
+        },
+        {
+          "text": "Select the created instance and click on Instance state."
+        },
+        {
+          "text": "From the drop-down menu select Terminate instance."
+        },
+        {
+          "text": "Confirm the terminate by clicking on Terminate button."
+        },
+        {
+          "text": "Deleting Kinesis Data Streams :"
+        },
+        {
+          "text": "Make sure you are in the US East (N.Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to Kinesis by clicking on the Services menu, under the Analytics section."
+        },
+        {
+          "text": "On the left panel, click on the Data streams."
+        },
+        {
+          "text": "Select the created data stream and click on the Actions button."
+        },
+        {
+          "text": "Select Delete from the drop-down."
+        },
+        {
+          "text": "Confirm by typing Delete and click on Delete button."
+        },
+        {
+          "text": "Deleting Kinesis Delivery Streams :"
+        },
+        {
+          "text": "Make sure you are in the US East (N.Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to Kinesis by clicking on the Services menu, under the Analytics section."
+        },
+        {
+          "text": "On the left panel, click on the Data Firehose."
+        },
+        {
+          "text": "Select the created delivery stream."
+        },
+        {
+          "text": "Select Delete."
+        },
+        {
+          "text": "Confirm by typing the delivery stream name in the field and click on Delete button."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully launched an EC2 Instance."
+        },
+        {
+          "text": "You have successfully hosted a sample website."
+        },
+        {
+          "text": "You have successfully set file permissions to httpd."
+        },
+        {
+          "text": "You have successfully created Kinesis data stream."
+        },
+        {
+          "text": "You have successfully created a S3 Bucket."
+        },
+        {
+          "text": "You have successfully created Kinesis Data Firehose."
+        },
+        {
+          "text": "You have successfully created and configured Kinesis Agent."
+        },
+        {
+          "text": "You have successfully tested the real-time streaming of data."
+        },
+        {
+          "text": "You have successfully checked the CloudWatch metrics of Kinesis Data Streams and Data Firehose."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

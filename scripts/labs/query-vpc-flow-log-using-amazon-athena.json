@@ -1,0 +1,1150 @@
+{
+  "slug": "query-vpc-flow-log-using-amazon-athena",
+  "title": "Query VPC Flow log using Amazon Athena",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Project Steps",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to S3 by clicking on the Services menu in the top, then click on S3 in the Storage section."
+        },
+        {
+          "text": "Navigate to S3 by clicking on the Services menu in the top, then click on S3 in the Storage section."
+        },
+        {
+          "text": "On the S3 Page, click on Create Bucket and fill in the bucket details."
+        },
+        {
+          "text": "Bucket name: Enter athena-lab"
+        },
+        {
+          "text": "Note: S3 bucket name is globally unique, choose a name that is available."
+        },
+        {
+          "text": "Region: Select US East (N. Virginia) us-east-1"
+        },
+        {
+          "text": "Uncheck the option, Block all public access, and check the acknowledge option."
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Click on Create Bucket."
+        },
+        {
+          "text": "On the S3 Page, click on Create Bucket and fill in the bucket details."
+        },
+        {
+          "text": "Bucket name: Enter athena-lab"
+        },
+        {
+          "text": "Note: S3 bucket name is globally unique, choose a name that is available."
+        },
+        {
+          "text": "Bucket name: Enter athena-lab"
+        },
+        {
+          "text": "Note: S3 bucket name is globally unique, choose a name that is available."
+        },
+        {
+          "text": "Note: S3 bucket name is globally unique, choose a name that is available."
+        },
+        {
+          "text": "Region: Select US East (N. Virginia) us-east-1"
+        },
+        {
+          "text": "Region: Select US East (N. Virginia) us-east-1"
+        },
+        {
+          "text": "Uncheck the option, Block all public access, and check the acknowledge option."
+        },
+        {
+          "text": "Uncheck the option, Block all public access, and check the acknowledge option."
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Click on Create Bucket."
+        },
+        {
+          "text": "Click on Create Bucket."
+        },
+        {
+          "text": "The S3 bucket is created."
+        },
+        {
+          "text": "The S3 bucket is created."
+        },
+        {
+          "text": "Select the Bucket and click on the Copy ARN Button, save it to notepad. You will need this for future steps."
+        },
+        {
+          "text": "Select the Bucket and click on the Copy ARN Button, save it to notepad. You will need this for future steps."
+        },
+        {
+          "text": "Modify the S3 Bucket policy to allow incoming logs from VPC flow logs."
+        },
+        {
+          "text": "Modify the S3 Bucket policy to allow incoming logs from VPC flow logs."
+        },
+        {
+          "text": "Click on the Bucket name and switch to the Permissions tab."
+        },
+        {
+          "text": "Click on the Bucket name and switch to the Permissions tab."
+        },
+        {
+          "text": "Scroll to the Bucket policy section and click on the Edit button."
+        },
+        {
+          "text": "Scroll to the Bucket policy section and click on the Edit button."
+        },
+        {
+          "text": "Paste the below policy. and replace the bucket ARN in the Resource section below and click on Save changes button."
+        },
+        {
+          "text": "Paste the below policy. and replace the bucket ARN in the Resource section below and click on Save changes button."
+        },
+        {
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking & Content Delivery section."
+        },
+        {
+          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking & Content Delivery section."
+        },
+        {
+          "text": "To create a VPC click on Your VPCs the present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+        },
+        {
+          "text": "To create a VPC click on Your VPCs the present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+        },
+        {
+          "text": "Create a new VPC by clicking on the Create VPC."
+        },
+        {
+          "text": "Select VPC only"
+        },
+        {
+          "text": "Name tag - optional: Enter MyVPC"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter 192.168.0.0/26"
+        },
+        {
+          "text": "IPv6 CIDR block: Select No IPv6 CIDR block"
+        },
+        {
+          "text": "Tenancy: Default"
+        },
+        {
+          "text": "Click on the Create VPC button to create the MyVPC."
+        },
+        {
+          "text": "Create a new VPC by clicking on the Create VPC."
+        },
+        {
+          "text": "Select VPC only"
+        },
+        {
+          "text": "Select VPC only"
+        },
+        {
+          "text": "Name tag - optional: Enter MyVPC"
+        },
+        {
+          "text": "Name tag - optional: Enter MyVPC"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter 192.168.0.0/26"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter 192.168.0.0/26"
+        },
+        {
+          "text": "IPv6 CIDR block: Select No IPv6 CIDR block"
+        },
+        {
+          "text": "IPv6 CIDR block: Select No IPv6 CIDR block"
+        },
+        {
+          "text": "Tenancy: Default"
+        },
+        {
+          "text": "Tenancy: Default"
+        },
+        {
+          "text": "Click on the Create VPC button to create the MyVPC."
+        },
+        {
+          "text": "Click on the Create VPC button to create the MyVPC."
+        },
+        {
+          "text": "VPC is now created."
+        },
+        {
+          "text": "VPC is now created."
+        },
+        {
+          "text": "By default, instances that are launched in a VPC cannot communicate with the Internet. To enable Internet access, an Internet gateway needed to be attached to the VPC."
+        },
+        {
+          "text": "By default, instances that are launched in a VPC cannot communicate with the Internet. To enable Internet access, an Internet gateway needed to be attached to the VPC."
+        },
+        {
+          "text": "Click on Internet Gateways from the left menu and click Create Internet Gateway."
+        },
+        {
+          "text": "Name Tag : Enter MyInternetGateway"
+        },
+        {
+          "text": "Click on Create Internet Gateway."
+        },
+        {
+          "text": "Click on Internet Gateways from the left menu and click Create Internet Gateway."
+        },
+        {
+          "text": "Name Tag : Enter MyInternetGateway"
+        },
+        {
+          "text": "Name Tag : Enter MyInternetGateway"
+        },
+        {
+          "text": "Click on Create Internet Gateway."
+        },
+        {
+          "text": "Click on Create Internet Gateway."
+        },
+        {
+          "text": "Select the Internet gateway you created from the list."
+        },
+        {
+          "text": "Click on Actions."
+        },
+        {
+          "text": "Select Attach to VPC."
+        },
+        {
+          "text": "Select the Internet gateway you created from the list."
+        },
+        {
+          "text": "Click on Actions."
+        },
+        {
+          "text": "Click on Actions."
+        },
+        {
+          "text": "Select Attach to VPC."
+        },
+        {
+          "text": "Select Attach to VPC."
+        },
+        {
+          "text": "Available VPCs: Select MyVPC"
+        },
+        {
+          "text": "Available VPCs: Select MyVPC"
+        },
+        {
+          "text": "And click on the Attach internet gateway button."
+        },
+        {
+          "text": "And click on the Attach internet gateway button."
+        },
+        {
+          "text": "The Internet gateway is now attached with MyVPC."
+        },
+        {
+          "text": "The Internet gateway is now attached with MyVPC."
+        },
+        {
+          "text": "To create a subnet click on Subnets the present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+        },
+        {
+          "text": "To create a subnet click on Subnets the present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+        },
+        {
+          "text": "Click on the Create Subnet."
+        },
+        {
+          "text": "Click on the Create Subnet."
+        },
+        {
+          "text": "In the VPC ID, select the MyVPC."
+        },
+        {
+          "text": "In the VPC ID, select the MyVPC."
+        },
+        {
+          "text": "Create the first subnet, you will use this subnet to launch public instances, this subnet will be associated with the main route table of the VPC:"
+        },
+        {
+          "text": "Subnet name: Enter Public subnet"
+        },
+        {
+          "text": "Availability Zone: Select US East (N. Virginia) / us-east-1a"
+        },
+        {
+          "text": "IPV4 CIDR block: Enter 192.168.0.1/27"
+        },
+        {
+          "text": "Create the first subnet, you will use this subnet to launch public instances, this subnet will be associated with the main route table of the VPC:"
+        },
+        {
+          "text": "Subnet name: Enter Public subnet"
+        },
+        {
+          "text": "Subnet name: Enter Public subnet"
+        },
+        {
+          "text": "Availability Zone: Select US East (N. Virginia) / us-east-1a"
+        },
+        {
+          "text": "Availability Zone: Select US East (N. Virginia) / us-east-1a"
+        },
+        {
+          "text": "IPV4 CIDR block: Enter 192.168.0.1/27"
+        },
+        {
+          "text": "IPV4 CIDR block: Enter 192.168.0.1/27"
+        },
+        {
+          "text": "Finally, click on the Create Subnet to create a subnet."
+        },
+        {
+          "text": "Finally, click on the Create Subnet to create a subnet."
+        },
+        {
+          "text": "A subnet is now created."
+        },
+        {
+          "text": "A subnet is now created."
+        },
+        {
+          "text": "To modify the auto-assign IP settings for the Public subnet, do the following:"
+        },
+        {
+          "text": "Select the Public subnet"
+        },
+        {
+          "text": "Click on the Actions button"
+        },
+        {
+          "text": "Choose Edit subnet settings from the options."
+        },
+        {
+          "text": "To modify the auto-assign IP settings for the Public subnet, do the following:"
+        },
+        {
+          "text": "Select the Public subnet"
+        },
+        {
+          "text": "Select the Public subnet"
+        },
+        {
+          "text": "Click on the Actions button"
+        },
+        {
+          "text": "Click on the Actions button"
+        },
+        {
+          "text": "Choose Edit subnet settings from the options."
+        },
+        {
+          "text": "Choose Edit subnet settings from the options."
+        },
+        {
+          "text": "Check the option Enable auto-assign public IPv4 address under Auto-assign IP settings and click on Save button."
+        },
+        {
+          "text": "Check the option Enable auto-assign public IPv4 address under Auto-assign IP settings and click on Save button."
+        },
+        {
+          "text": "Modification is done now."
+        },
+        {
+          "text": "Modification is done now."
+        },
+        {
+          "text": "Go to Route Tables from the left menu and click on Create route table button."
+        },
+        {
+          "text": "Name: Enter PublicRouteTable"
+        },
+        {
+          "text": "VPC: Select MyVPC from the list."
+        },
+        {
+          "text": "Click on Create route table button."
+        },
+        {
+          "text": "Go to Route Tables from the left menu and click on Create route table button."
+        },
+        {
+          "text": "Name: Enter PublicRouteTable"
+        },
+        {
+          "text": "Name: Enter PublicRouteTable"
+        },
+        {
+          "text": "VPC: Select MyVPC from the list."
+        },
+        {
+          "text": "VPC: Select MyVPC from the list."
+        },
+        {
+          "text": "Click on Create route table button."
+        },
+        {
+          "text": "Click on Create route table button."
+        },
+        {
+          "text": "Select the PublicRouteTable and go to the Subnet Associations tab."
+        },
+        {
+          "text": "Click on Edit subnet associations."
+        },
+        {
+          "text": "Select Public Subnet from the list."
+        },
+        {
+          "text": "Click on Save associations button."
+        },
+        {
+          "text": "Select the PublicRouteTable and go to the Subnet Associations tab."
+        },
+        {
+          "text": "Click on Edit subnet associations."
+        },
+        {
+          "text": "Click on Edit subnet associations."
+        },
+        {
+          "text": "Select Public Subnet from the list."
+        },
+        {
+          "text": "Select Public Subnet from the list."
+        },
+        {
+          "text": "Click on Save associations button."
+        },
+        {
+          "text": "Click on Save associations button."
+        },
+        {
+          "text": "Select the PublicRouteTable from the left panel."
+        },
+        {
+          "text": "Select the PublicRouteTable from the left panel."
+        },
+        {
+          "text": "On the Edit routes page, Click on the Add route button."
+        },
+        {
+          "text": "On the Edit routes page, Click on the Add route button."
+        },
+        {
+          "text": "Add the Destinations as 0.0.0.0/0 and Select the Internet gateway present."
+        },
+        {
+          "text": "Add the Destinations as 0.0.0.0/0 and Select the Internet gateway present."
+        },
+        {
+          "text": "Click on the Save changes button."
+        },
+        {
+          "text": "Click on the Save changes button."
+        },
+        {
+          "text": "Navigate to the VPC you just created, click on Actions then select Create Flow Log."
+        },
+        {
+          "text": "Navigate to the VPC you just created, click on Actions then select Create Flow Log."
+        },
+        {
+          "text": "Enter the name as MyVPCFlowLog,"
+        },
+        {
+          "text": "Enter the name as MyVPCFlowLog,"
+        },
+        {
+          "text": "Select All in filter options and then set the Maximum Aggregation Interval to 1 minute."
+        },
+        {
+          "text": "Select All in filter options and then set the Maximum Aggregation Interval to 1 minute."
+        },
+        {
+          "text": "Select as Send to Amazon S3 Bucket as the Destination."
+        },
+        {
+          "text": "Select as Send to Amazon S3 Bucket as the Destination."
+        },
+        {
+          "text": "Paste the copied S3 Bucket's ARN in the S3 Bucket ARN field."
+        },
+        {
+          "text": "Paste the copied S3 Bucket's ARN in the S3 Bucket ARN field."
+        },
+        {
+          "text": "Log record format: Select AWS default format"
+        },
+        {
+          "text": "Log record format: Select AWS default format"
+        },
+        {
+          "text": "Tags: Keep it as default."
+        },
+        {
+          "text": "Tags: Keep it as default."
+        },
+        {
+          "text": "Click on the Create flow log button."
+        },
+        {
+          "text": "Click on the Create flow log button."
+        },
+        {
+          "text": "Once the flow logs are created, head back to the AWS VPC service, select it, and click on Flow Logs."
+        },
+        {
+          "text": "Once the flow logs are created, head back to the AWS VPC service, select it, and click on Flow Logs."
+        },
+        {
+          "text": "Make sure you are in the N. Virginia(us-east-1) Region."
+        },
+        {
+          "text": "Make sure you are in the N. Virginia(us-east-1) Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top left, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top left, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Navigate to Instances from the left side menu and click on Launch Instances button."
+        },
+        {
+          "text": "Navigate to Instances from the left side menu and click on Launch Instances button."
+        },
+        {
+          "text": "Under the Name and tags section :"
+        },
+        {
+          "text": "Name : MyEC2Instance"
+        },
+        {
+          "text": "Under the Name and tags section :"
+        },
+        {
+          "text": "Name : MyEC2Instance"
+        },
+        {
+          "text": "Name : MyEC2Instance"
+        },
+        {
+          "text": "Under the Application and OS Images (Amazon Machine Image) section :"
+        },
+        {
+          "text": "Select Quick Start tab and Amazon Linux under it"
+        },
+        {
+          "text": "Amazon Machine Image (AMI) : select Amazon Linux 2023 AMI"
+        },
+        {
+          "text": "Under the Application and OS Images (Amazon Machine Image) section :"
+        },
+        {
+          "text": "Select Quick Start tab and Amazon Linux under it"
+        },
+        {
+          "text": "Select Quick Start tab and Amazon Linux under it"
+        },
+        {
+          "text": "Amazon Machine Image (AMI) : select Amazon Linux 2023 AMI"
+        },
+        {
+          "text": "Amazon Machine Image (AMI) : select Amazon Linux 2023 AMI"
+        },
+        {
+          "text": "Under the Instance Type section :"
+        },
+        {
+          "text": "Instance Type : Select t2.micro"
+        },
+        {
+          "text": "Under the Instance Type section :"
+        },
+        {
+          "text": "Instance Type : Select t2.micro"
+        },
+        {
+          "text": "Instance Type : Select t2.micro"
+        },
+        {
+          "text": "Under the Key Pair (login) section :"
+        },
+        {
+          "text": "Click on Create new key pair hyperlink"
+        },
+        {
+          "text": "Key pair name: MyEC2FLowLogsKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem or .ppk"
+        },
+        {
+          "text": "Click on Create key pair and select the created key pair"
+        },
+        {
+          "text": "Under the Key Pair (login) section :"
+        },
+        {
+          "text": "Click on Create new key pair hyperlink"
+        },
+        {
+          "text": "Click on Create new key pair hyperlink"
+        },
+        {
+          "text": "Key pair name: MyEC2FLowLogsKey"
+        },
+        {
+          "text": "Key pair name: MyEC2FLowLogsKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem or .ppk"
+        },
+        {
+          "text": "Private key file format: .pem or .ppk"
+        },
+        {
+          "text": "Click on Create key pair and select the created key pair"
+        },
+        {
+          "text": "Click on Create key pair and select the created key pair"
+        },
+        {
+          "text": "Under the Network Settings section :"
+        },
+        {
+          "text": "Click on Edit button"
+        },
+        {
+          "text": "VPC : select MyVPC"
+        },
+        {
+          "text": "Subnet : select Public Subnet"
+        },
+        {
+          "text": "Auto-assign public IP: select Enable"
+        },
+        {
+          "text": "Firewall (security groups) : Select Create a new security group"
+        },
+        {
+          "text": "Security group name : Enter FlowLog-SG"
+        },
+        {
+          "text": "Description : Enter Security group for VPC Flow Logs"
+        },
+        {
+          "text": "To add SSH:"
+        },
+        {
+          "text": "Choose Type: SSH"
+        },
+        {
+          "text": "Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
+          "text": "For HTTP, click on Add security group rule,"
+        },
+        {
+          "text": "Choose Type: HTTP"
+        },
+        {
+          "text": "Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
+          "text": "Under the Network Settings section :"
+        },
+        {
+          "text": "Click on Edit button"
+        },
+        {
+          "text": "Click on Edit button"
+        },
+        {
+          "text": "VPC : select MyVPC"
+        },
+        {
+          "text": "VPC : select MyVPC"
+        },
+        {
+          "text": "Subnet : select Public Subnet"
+        },
+        {
+          "text": "Subnet : select Public Subnet"
+        },
+        {
+          "text": "Auto-assign public IP: select Enable"
+        },
+        {
+          "text": "Auto-assign public IP: select Enable"
+        },
+        {
+          "text": "Firewall (security groups) : Select Create a new security group"
+        },
+        {
+          "text": "Firewall (security groups) : Select Create a new security group"
+        },
+        {
+          "text": "Security group name : Enter FlowLog-SG"
+        },
+        {
+          "text": "Security group name : Enter FlowLog-SG"
+        },
+        {
+          "text": "Description : Enter Security group for VPC Flow Logs"
+        },
+        {
+          "text": "Description : Enter Security group for VPC Flow Logs"
+        },
+        {
+          "text": "To add SSH:"
+        },
+        {
+          "text": "Choose Type: SSH"
+        },
+        {
+          "text": "Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
+          "text": "To add SSH:"
+        },
+        {
+          "text": "Choose Type: SSH"
+        },
+        {
+          "text": "Choose Type: SSH"
+        },
+        {
+          "text": "Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
+          "text": "Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
+          "text": "For HTTP, click on Add security group rule,"
+        },
+        {
+          "text": "Choose Type: HTTP"
+        },
+        {
+          "text": "Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
+          "text": "For HTTP, click on Add security group rule,"
+        },
+        {
+          "text": "Choose Type: HTTP"
+        },
+        {
+          "text": "Choose Type: HTTP"
+        },
+        {
+          "text": "Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
+          "text": "Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
+          "text": "Keep everything else as default and click on the Launch instance button."
+        },
+        {
+          "text": "Keep everything else as default and click on the Launch instance button."
+        },
+        {
+          "text": "Launch Status: Your instance is now launching, Navigate to Instances page from the left menu and wait until the status of the EC2 Instance changes to running."
+        },
+        {
+          "text": "Launch Status: Your instance is now launching, Navigate to Instances page from the left menu and wait until the status of the EC2 Instance changes to running."
+        },
+        {
+          "text": "Note down the IPv4 Public IP Address of the EC2 instance. A sample is shown in the screenshot below."
+        },
+        {
+          "text": "Note down the IPv4 Public IP Address of the EC2 instance. A sample is shown in the screenshot below."
+        },
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance."
+        },
+        {
+          "text": "Once you SSH into the instance, install an Apache Server. To install it, follow the below steps. Run these commands one-by-one."
+        },
+        {
+          "text": "Once you SSH into the instance, install an Apache Server. To install it, follow the below steps. Run these commands one-by-one."
+        },
+        {
+          "text": "Copy your instance's Public IP, paste it into your browser, and hit enter."
+        },
+        {
+          "text": "Copy your instance's Public IP, paste it into your browser, and hit enter."
+        },
+        {
+          "text": "By Running these commands manually and pasting the Public IP in the Browser, we have generated some traffic."
+        },
+        {
+          "text": "By Running these commands manually and pasting the Public IP in the Browser, we have generated some traffic."
+        },
+        {
+          "text": "Logs will be stored in S3 Bucket at an Interval of 5 minutes."
+        },
+        {
+          "text": "Logs will be stored in S3 Bucket at an Interval of 5 minutes."
+        },
+        {
+          "text": "Refresh the S3 Bucket and go to the folder AWSLogs/<12 Digit Account number>/vpcflowlogs/us-east-1/<Year>/<Month>/<Date>/."
+        },
+        {
+          "text": "Note: Wait for at least 5 minutes, if you don't see the folder or the logs inside the folders."
+        },
+        {
+          "text": "Refresh the S3 Bucket and go to the folder AWSLogs/<12 Digit Account number>/vpcflowlogs/us-east-1/<Year>/<Month>/<Date>/."
+        },
+        {
+          "text": "Note: Wait for at least 5 minutes, if you don't see the folder or the logs inside the folders."
+        },
+        {
+          "text": "Logs will be present. Click on the Copy S3 URI button."
+        },
+        {
+          "text": "Logs will be present. Click on the Copy S3 URI button."
+        },
+        {
+          "text": "To Copy the current location of the log file, click on the Copy S3 URI button."
+        },
+        {
+          "text": "To Copy the current location of the log file, click on the Copy S3 URI button."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to Services menu in the top, then search for AWS Glue and click on it."
+        },
+        {
+          "text": "Navigate to Services menu in the top, then search for AWS Glue and click on it."
+        },
+        {
+          "text": "From the left side panel under Data Catalog click on Databases."
+        },
+        {
+          "text": "From the left side panel under Data Catalog click on Databases."
+        },
+        {
+          "text": "Click on Add Database button."
+        },
+        {
+          "text": "Click on Add Database button."
+        },
+        {
+          "text": "Under database details enter database name as : whizdb"
+        },
+        {
+          "text": "Under database details enter database name as : whizdb"
+        },
+        {
+          "text": "Now, click on Create database button."
+        },
+        {
+          "text": "Now, click on Create database button."
+        },
+        {
+          "text": "Now expand the left panel and click on Tables, you will be redirected to set tablet properties."
+        },
+        {
+          "text": "Now expand the left panel and click on Tables, you will be redirected to set tablet properties."
+        },
+        {
+          "text": "Under table details add :"
+        },
+        {
+          "text": "Under table details add :"
+        },
+        {
+          "text": "Name : whiztable"
+        },
+        {
+          "text": "Name : whiztable"
+        },
+        {
+          "text": "Database : whizdb"
+        },
+        {
+          "text": "Database : whizdb"
+        },
+        {
+          "text": "Inside Data store Include path of your created s3 bucket and leave other thing as default."
+        },
+        {
+          "text": "Inside Data store Include path of your created s3 bucket and leave other thing as default."
+        },
+        {
+          "text": "Under Data format select csv, and click on the Next button."
+        },
+        {
+          "text": "Under Data format select csv, and click on the Next button."
+        },
+        {
+          "text": "Under choose of click on Edit schema as JSON button."
+        },
+        {
+          "text": "Under choose of click on Edit schema as JSON button."
+        },
+        {
+          "text": "Paste the given json code to the editor, and click on Save button."
+        },
+        {
+          "text": "Paste the given json code to the editor, and click on Save button."
+        },
+        {
+          "text": "Now, Click on the Next button."
+        },
+        {
+          "text": "Now, Click on the Next button."
+        },
+        {
+          "text": "Leave everything as default and click on the Create button."
+        },
+        {
+          "text": "Leave everything as default and click on the Create button."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to Services menu in the top, then search for Athena and click on it."
+        },
+        {
+          "text": "Navigate to Services menu in the top, then search for Athena and click on it."
+        },
+        {
+          "text": "Go to the Query Editor."
+        },
+        {
+          "text": "Go to the Query Editor."
+        },
+        {
+          "text": "Click on the Query Settings button and then click on Manage button."
+        },
+        {
+          "text": "Click on the Query Settings button and then click on Manage button."
+        },
+        {
+          "text": "Now, click on Browse S3 button, select the S3 Bucket created and click on choose button. In this bucket, you have stored the logs and you will run the SQL query."
+        },
+        {
+          "text": "Now, click on Browse S3 button, select the S3 Bucket created and click on choose button. In this bucket, you have stored the logs and you will run the SQL query."
+        },
+        {
+          "text": "Location of query result: Enter s3://athena-lab/AWS logs/"
+        },
+        {
+          "text": "Note: This will same as the S3 Bucket name that we created."
+        },
+        {
+          "text": "Note: If there is any other bucket selected, remove the entry and select the newly created bucket."
+        },
+        {
+          "text": "Location of query result: Enter s3://athena-lab/AWS logs/"
+        },
+        {
+          "text": "Note: This will same as the S3 Bucket name that we created."
+        },
+        {
+          "text": "Note: If there is any other bucket selected, remove the entry and select the newly created bucket."
+        },
+        {
+          "text": "Expected bucket owner: Enter your account ID [Similar to 9287085xxxxx]"
+        },
+        {
+          "text": "Expected bucket owner: Enter your account ID [Similar to 9287085xxxxx]"
+        },
+        {
+          "text": "Now, Click on Save button."
+        },
+        {
+          "text": "Now, Click on Save button."
+        },
+        {
+          "text": "Come Back to Query Tab and Click on the + option to get a new and fresh query editor."
+        },
+        {
+          "text": "Come Back to Query Tab and Click on the + option to get a new and fresh query editor."
+        },
+        {
+          "text": "Paste the below query, to the editor:"
+        },
+        {
+          "text": "Paste the below query, to the editor:"
+        },
+        {
+          "text": "Note: Replace the database and table name if you have defined your own while creating the"
+        },
+        {
+          "text": "Click on the Run button and the output will show the total number of records present in the WhizTable."
+        },
+        {
+          "text": "Click on the + option to get a new and fresh query editor."
+        },
+        {
+          "text": "Find the total number of columns present in the table."
+        },
+        {
+          "text": "There is a total of 14 columns present in the table."
+        },
+        {
+          "text": "There is a total of 14 columns present in the table."
+        },
+        {
+          "text": "Once the project steps are completed, please click on the Validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this project successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "You have successfully created S3 Bucket."
+        },
+        {
+          "text": "You have successfully created S3 Bucket."
+        },
+        {
+          "text": "You have successfully created the VPC and its components."
+        },
+        {
+          "text": "You have successfully created the VPC and its components."
+        },
+        {
+          "text": "You have successfully created the VPC Flow Logs."
+        },
+        {
+          "text": "You have successfully created the VPC Flow Logs."
+        },
+        {
+          "text": "You have successfully created an EC2 Instance."
+        },
+        {
+          "text": "You have successfully created an EC2 Instance."
+        },
+        {
+          "text": "You have successfully created Subnets that should be separate then generated some site traffic."
+        },
+        {
+          "text": "You have successfully created Subnets that should be separate then generated some site traffic."
+        },
+        {
+          "text": "You have successfully analyzed the S3 Bucket's data using Amazon Athena."
+        },
+        {
+          "text": "You have successfully analyzed the S3 Bucket's data using Amazon Athena."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the project."
+        },
+        {
+          "text": "You have successfully completed the project."
+        },
+        {
+          "text": "Once you have completed the steps click on End Project from the lab console."
+        },
+        {
+          "text": "Once you have completed the steps click on End Project from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

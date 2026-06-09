@@ -1,0 +1,481 @@
+{
+  "slug": "introduction-to-amazon-cloudfront",
+  "title": "Introduction to Amazon CloudFront",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create S3 Bucket",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a new S3 bucket in the US East (N. Virginia) region with a unique name enabling ACLs, and allowing public access."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
+        },
+        {
+          "text": "In the S3 dashboard, click on the Create bucket and fill in the bucket details."
+        },
+        {
+          "text": "Bucket name: Enter lab1234567"
+        },
+        {
+          "text": "Note: S3 Bucket names are globally unique, choose a name that is available."
+        },
+        {
+          "text": "Object Ownership: Select ACLs enabled option and choose Object writer as Object owner"
+        },
+        {
+          "text": "Scroll down to Block Public Access settings for this bucket and Uncheck the Block all Public Access and acknowledge the change."
+        },
+        {
+          "text": "No need to change anything further, just click on the Create bucket button."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Upload a file to an S3 bucket",
+      "steps": [
+        {
+          "text": "Click on the bucket name you just created and you can see that there are no objects created in the bucket."
+        },
+        {
+          "text": "You can upload any image from your local machine or you can download our test image from Download me"
+        },
+        {
+          "text": "To upload a file to our S3 bucket,"
+        },
+        {
+          "text": "Click on the Upload button."
+        },
+        {
+          "text": "Click on Add files."
+        },
+        {
+          "text": "Browse for image we provided and select it. {NOTE : use the same image provided to ignore the validation failure}"
+        },
+        {
+          "text": "Click on the Upload button."
+        },
+        {
+          "text": "You can watch the progress of the upload from within the transfer panel at the bottom of the screen."
+        },
+        {
+          "text": "Once your file has been uploaded, click on Close and you can see an object in the bucket."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Creating Custom Error Pages",
+      "steps": [
+        {
+          "text": "In this task, we will learn how to create customized error pages for CloudFront. These pages will be displayed in the event that an origin returns an HTTP 4xx or 5xx error. To do this, we must ensure that the error pages are stored in a location that CloudFront can access. In this case, we will use the same S3 bucket that we created previously."
+        },
+        {
+          "text": "To set up a custom error page, access the S3 bucket by clicking on it."
+        },
+        {
+          "text": "Click on Create Folder button to create a folder."
+        },
+        {
+          "text": "Enter the folder name as CustomErrors. For Server-side encryption Select Specify an encryption key keep rest things as default."
+        },
+        {
+          "text": "Click on the Create folder button."
+        },
+        {
+          "text": "Click on the new CustomErrors folder."
+        },
+        {
+          "text": "We will create an error.html file:"
+        },
+        {
+          "text": "Create an error.html file in your local system using Notepad."
+        },
+        {
+          "text": "This custom HTML page will be used for showing errors in CloudFront."
+        },
+        {
+          "text": "Sample error.html content:"
+        },
+        {
+          "text": "<html><h1>This is Error Page</h1></html>"
+        },
+        {
+          "text": "Use the Upload button to upload the error.html file in the folder."
+        },
+        {
+          "text": "We will create a block.html file:"
+        },
+        {
+          "text": "Create a block.html file in your local using Notepad."
+        },
+        {
+          "text": "This custom HTML page will be used for showing geo-restrictions of your content in CloudFront."
+        },
+        {
+          "text": "Sample block.html content:"
+        },
+        {
+          "text": "<html><h1>This content is blocked in your location!!!</h1></html>"
+        },
+        {
+          "text": "Use the Upload button to upload the block.html file in the folder."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Making the objects public",
+      "steps": [
+        {
+          "text": "Navigate back to the bucket and click on the image name. You can see the image details like Owner, size, link, etc."
+        },
+        {
+          "text": "Copy the Object URL and paste it into a new tab."
+        },
+        {
+          "text": "Example: https://lab1234567.s3.amazonaws.com/lab_logo_58_32.png"
+        },
+        {
+          "text": "You will see the AccessDenied message, meaning the object is not publicly accessible.lab_logo_58_32.png"
+        },
+        {
+          "text": "Go back to the Bucket and click the Permissions tab."
+        },
+        {
+          "text": "Scroll down to the Bucket Policy and click on Edit button."
+        },
+        {
+          "text": "Copy and paste the below policy and save the policy."
+        },
+        {
+          "text": "Note: Change the name of the bucket ARN with your bucket ARN in both the Resource option in the code."
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"Version\": \"2012-10-17\","
+        },
+        {
+          "text": "\"Statement\": ["
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"Effect\": \"Allow\","
+        },
+        {
+          "text": "\"Action\": [\"s3:ListBucket\"],"
+        },
+        {
+          "text": "\"Principal\": {\"AWS\": \"*\"},"
+        },
+        {
+          "text": "\"Resource\": \"<YOUR_BUCKET_ARN>\""
+        },
+        {
+          "text": "},"
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"Effect\": \"Allow\","
+        },
+        {
+          "text": "\"Action\": [\"s3:GetObject\", \"s3:PutObject\"],"
+        },
+        {
+          "text": "\"Principal\": {\"AWS\": \"*\"},"
+        },
+        {
+          "text": "\"Resource\": \"<YOUR_BUCKET_ARN>/*\""
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "]"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "Open the Image Object URL again or refresh the one already open."
+        },
+        {
+          "text": "If you can see your uploaded image in the browser, it means your image is publicly accessible. If not, check your bucket policy again."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Creating a CloudFront Distribution",
+      "steps": [
+        {
+          "text": "Navigate to CloudFront by clicking on the Services menu at the top, then click on CloudFront in the Network and Content Delivery section."
+        },
+        {
+          "text": "Click on Create a CloudFront distribution button."
+        },
+        {
+          "text": "Choose a plan: Scroll down and select Pay as you go plan and click Next."
+        },
+        {
+          "text": "Distribution name: Enter the distribution name of your choice. Keep rest as default and click on Next."
+        },
+        {
+          "text": "Now Configure distribution as follows: Specify Origin: Select Amazon S3 as Origin type, then click on Browse S3 and select the bucket you have created. Leave everything as default and click Next."
+        },
+        {
+          "text": "In Enable security, choose Do not enable security protections under Web Application Firewall(WAF) and click Next."
+        },
+        {
+          "text": "In Review and Create, leave everything as default and click on the Create distribution button."
+        },
+        {
+          "text": "You can see that the CloudFront distribution is enabled successfully. Note: This process will take around 5-10 minutes."
+        },
+        {
+          "text": "The domain name that Amazon CloudFront assigns to your distribution appears in the list of distributions."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Accessing Image through CloudFront",
+      "steps": [
+        {
+          "text": "Amazon CloudFront is now pointed to Amazon S3 bucket origin and you know that the domain name is associated with the distribution. You can create a link to the image in the Amazon S3 bucket with that domain name."
+        },
+        {
+          "text": "For testing your distribution, copy your domain name and append your image name after the domain name."
+        },
+        {
+          "text": "Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png"
+        },
+        {
+          "text": "Open the CloudFront URL in a new tab. You can see your uploaded image."
+        },
+        {
+          "text": "You can see how much faster the CloudFront URL image loads as compared to the S3 URL. When end users request an object using a CloudFront domain name, they are automatically routed to the nearest edge location for high-performance delivery of your content."
+        }
+      ]
+    },
+    {
+      "title": "Task 8 : Configuring Custom Error Page",
+      "steps": [
+        {
+          "text": "Navigate back to CloudFront Dashboard and select the distribution created."
+        },
+        {
+          "text": "Select the Error pages tab."
+        },
+        {
+          "text": "Click on the Create custom error response button."
+        },
+        {
+          "text": "Now we need to set up our custom error page:"
+        },
+        {
+          "text": "HTTP Error Code: Select 404: Not Found"
+        },
+        {
+          "text": "Error Caching Minimum TTL: Enter 10"
+        },
+        {
+          "text": "Customize Error Response: Select Yes"
+        },
+        {
+          "text": "Response Page Path: Enter /CustomErrors/error.html"
+        },
+        {
+          "text": "HTTP Response Code: Select 404: Not Found"
+        },
+        {
+          "text": "Click on Create custom error response button."
+        },
+        {
+          "text": "Navigate back to Distributions and wait for your distribution to complete state to change Deploy."
+        },
+        {
+          "text": "Note: This process will take around 5-10 minutes."
+        },
+        {
+          "text": "Once the state has changed to Deploy, you can verify the deployment by checking the Last modified column, it should display the most recent timestamp, indicating the distribution has been updated. After this, proceed to test the error page."
+        },
+        {
+          "text": "For testing your distribution, copy your domain name and append the name of an image that does not exist in your S3 bucket"
+        },
+        {
+          "text": "Open the CloudFront URL in a new tab."
+        },
+        {
+          "text": "If you can see your HTML error page in the browser, it means you successfully set up your custom error page."
+        }
+      ]
+    },
+    {
+      "title": "Task 9 : Restricting the Geographic Distribution of Your Content",
+      "steps": [
+        {
+          "text": "If you need to prevent users in selected countries from accessing your content, you can specify either a whitelist (countries where they can access your content) or a blacklist (countries where they cannot) by using restrictions."
+        },
+        {
+          "text": "On the distribution settings page, select Security tab and expand CloudFront geographic restrictions click on Edit link near Countries."
+        },
+        {
+          "text": "Restriction Type: Select Block list"
+        },
+        {
+          "text": "Select the country where you are currently and click on it to check this option."
+        },
+        {
+          "text": "Click on Save changes button."
+        },
+        {
+          "text": "Go to the distribution list and wait for your distribution to complete the state changed to deployed."
+        },
+        {
+          "text": "Once the state has been changed to deployed, we will test the restriction through CloudFront in the browser."
+        },
+        {
+          "text": "Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png"
+        },
+        {
+          "text": "You can see the following error message:"
+        },
+        {
+          "text": "403: Error The Amazon CloudFront distribution is configured to block access from your country."
+        },
+        {
+          "text": "Let us configure a custom error page:"
+        },
+        {
+          "text": "Navigate back to CloudFront Dashboard and select the distribution you have created."
+        },
+        {
+          "text": "On the settings page, select Error pages tab."
+        },
+        {
+          "text": "Click on the Create custom error response button."
+        },
+        {
+          "text": "On the settings page, select Error pages tab"
+        },
+        {
+          "text": "Now we need to set up our custom error page:"
+        },
+        {
+          "text": "Http Error Code: Select 403: Forbidden"
+        },
+        {
+          "text": "Error Caching Minimum TTL: Enter 10"
+        },
+        {
+          "text": "Customize Error Response: Select Yes"
+        },
+        {
+          "text": "Response Page Path: Enter /CustomErrors/block.html"
+        },
+        {
+          "text": "HTTP Response Code: Select 403: Forbidden"
+        },
+        {
+          "text": "Click on Create custom error response button."
+        },
+        {
+          "text": "Navigate back to Distributions and wait for your distribution to complete state to change Deploy."
+        },
+        {
+          "text": "Note: This process will take around 5-10 minutes."
+        },
+        {
+          "text": "Once the state has been changed to Deploy, we will test the restriction through CloudFront in the browser."
+        },
+        {
+          "text": "Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png"
+        },
+        {
+          "text": "If you see the error, this means you successfully configured a custom error page and restricted image access from your country."
+        },
+        {
+          "text": "Do you know ?"
+        },
+        {
+          "text": "Amazon CloudFront allows you to use custom SSL/TLS certificates, including certificates issued by third-party certificate authorities (CAs), to secure your content delivery. However, what makes this even more interesting is that CloudFront also provides an integrated solution called AWS Certificate Manager (ACM) to simplify the process of managing SSL/TLS certificates."
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created an Amazon CloudFront distribution and published an image through CloudFront."
+        },
+        {
+          "text": "You learned how to configure Custom Error Pages for CloudFront Distribution."
+        },
+        {
+          "text": "You learned how to configure restrictions based on Geo-location."
+        },
+        {
+          "text": "You have successfully validated the lab."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

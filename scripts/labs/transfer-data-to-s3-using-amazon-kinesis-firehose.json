@@ -1,0 +1,435 @@
+{
+  "slug": "transfer-data-to-s3-using-amazon-kinesis-firehose",
+  "title": "Transfer data to S3 using Amazon Kinesis Firehose",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to the AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button"
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Note: If you face any issues, please go through FAQs and Troubleshooting for Labs.?"
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an S3 Bucket",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to S3 by clicking on the Services menu at the top, then click on S3 in the Storage section."
+        },
+        {
+          "text": "On the S3 Page, click on Create Bucket and fill in the bucket details."
+        },
+        {
+          "text": "Bucket type : General purpose"
+        },
+        {
+          "text": "Bucket name: Enter kinesisfirehose-lab"
+        },
+        {
+          "text": "Note: You can enter any unique name of your choice."
+        },
+        {
+          "text": "Object ownership: Select the ACLs disabled (recommended) option"
+        },
+        {
+          "text": "Uncheck the option, Block all public access, and check the acknowledge option."
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Click on Create Bucket."
+        },
+        {
+          "text": "Select the Created S3 bucket and click on Copy ARN button to copy the s3 bucket arn and note it down in notepad for later use"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create an Amazon Kinesis Data Firehose delivery stream",
+      "steps": [
+        {
+          "text": "Navigate to Kinesis by clicking on the Services menu at the top, then click on Kinesis in the Analytics section."
+        },
+        {
+          "text": "On the Get started page, Select amazon Data Firehose and click on the Create Firehose stream button."
+        },
+        {
+          "text": "Under Choose source and destination section:"
+        },
+        {
+          "text": "Source: Select Direct PUT"
+        },
+        {
+          "text": "Destination: Select Amazon S3"
+        },
+        {
+          "text": "Under the Firehose stream name section:"
+        },
+        {
+          "text": "Firehose stream name: Enter whiz-demo"
+        },
+        {
+          "text": "Under Transformand convert records - optional:"
+        },
+        {
+          "text": "Do nothing keep everything as disabled"
+        },
+        {
+          "text": "Under Destination settings:"
+        },
+        {
+          "text": "S3 bucket: Click on browse and Choose the bucket we have created earlier."
+        },
+        {
+          "text": "Leave the rest as default."
+        },
+        {
+          "text": "Click on Buffer hints, compression and encryption to expand, Under S3 buffer hints:"
+        },
+        {
+          "text": "Buffer size: 1 MiB"
+        },
+        {
+          "text": "Buffer interval: 60 seconds"
+        },
+        {
+          "text": "Note: If you enter buffer size as more than 1 MiB and Buffer interval as more than 60 seconds, then it will take more time to load the sample data in S3."
+        },
+        {
+          "text": "Under Advanced settings:"
+        },
+        {
+          "text": "Server-side encryption: Uncheck Enable server-side encryption for source records in the delivery stream."
+        },
+        {
+          "text": "Amazon CloudWatch error logging: Not enabled"
+        },
+        {
+          "text": "Service access: Choose existing IAM role"
+        },
+        {
+          "text": "From the drop down select role name starts with : KinesisFirehosePolicy-Random-Number"
+        },
+        {
+          "text": "Under Tags:"
+        },
+        {
+          "text": "Key: Name"
+        },
+        {
+          "text": "Value: whiz-stream"
+        },
+        {
+          "text": "Click on Create Firehose stream"
+        },
+        {
+          "text": "Creation of the delivery stream will take a few minutes."
+        },
+        {
+          "text": "Once created, the Status will be shown as Active."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create a VPC",
+      "steps": [
+        {
+          "text": "Navigate to the Services menu at the top and choose VPC under Networking and Content Delivery."
+        },
+        {
+          "text": "Click on Your VPC’s in the left side panel then click on Create VPC"
+        },
+        {
+          "text": "Select VPC Only."
+        },
+        {
+          "text": "Enter the Name tag: MyVPC and enter IPv4 CIDR block: 10.1.0.0/16."
+        },
+        {
+          "text": "Then leave the other fields as default and click on Create VPC."
+        },
+        {
+          "text": "Once created it will be shown like this."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Creating an Internet Gateway",
+      "steps": [
+        {
+          "text": "Select Internet Gateways in the left side panel and click on the Create Internet Gateway"
+        },
+        {
+          "text": "Enter the name MyInternetGateway and Click on Create Internet Gateway."
+        },
+        {
+          "text": "Once created, attach it to MyVPC by clicking on Actions at the top and selecting Attach to VPC, and then selecting MyVPC."
+        },
+        {
+          "text": "Select Route Tables on the left side and click on MyVPC route table. Click on Routes and select Edit routes."
+        },
+        {
+          "text": "Select Add Routes then enter 0.0.0.0/0. Set the Target as “Internet Gateway” and choose Your Internet Gateway from the drop-down list. Click on Save changes."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Create a Subnet",
+      "steps": [
+        {
+          "text": "Click on Subnets in the left side panel and click on Create Subnet. Select “MyVPC” in VPCID."
+        },
+        {
+          "text": "Give whizsub as the name of your subnet and us-east-1a for the availability zone. Enter the IPv4 CIDR Block as 10.1.1.0/24 and click on the Create subnet button."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Create VPC Flow Logs",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to VPC by clicking on Services at the top of the AWS Console."
+        },
+        {
+          "text": "Click on VPC (under the Networking & Content Delivery section) or you can also search for VPC."
+        },
+        {
+          "text": "Click on Your VPCs from the left menu."
+        },
+        {
+          "text": "Navigate to the VPC you just created, click on Actions then select Create Flow Log."
+        },
+        {
+          "text": "Enter the name as MyVPCFlowLog"
+        },
+        {
+          "text": "Select Accept in Filter options and then set the “Maximum Aggregation Interval” to 1 minute."
+        },
+        {
+          "text": "Select Send to Amazon S3 bucket as the Destination."
+        },
+        {
+          "text": "Enter the ARN of your S3 Bucket, which you've copied earlier, then click on the Create Flow Log button."
+        },
+        {
+          "text": "Once the flow logs are created, head back to the AWS VPC service, select it, and click on the Flow Logs tab."
+        },
+        {
+          "text": "Now you have successfully learned how to create the VPC Flow Logs."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Creating an EC2 Instance",
+      "steps": [
+        {
+          "text": "Make sure you are in the US-East (N.Virginia) us-east-1 region."
+        },
+        {
+          "text": "Navigate to Services at the top and click on EC2 under Compute."
+        },
+        {
+          "text": "Select Instances in the left side panel and click on Launch Instances"
+        },
+        {
+          "text": "Enter Name as labec2instance"
+        },
+        {
+          "text": "Select Amazon Linux 2023 kernel 6.1 AMI from the dropdown."
+        },
+        {
+          "text": "Choose an Instance Type: Choose t2.micro."
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair"
+        },
+        {
+          "text": "Key pair name: MySSHKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "In Network Settings Click on Edit Button:"
+        },
+        {
+          "text": "VPC: Choose MyVPC"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select Create new Security group"
+        },
+        {
+          "text": "Security group name: Enter MyEC2Server_SG"
+        },
+        {
+          "text": "Description: Enter Security Group to allow traffic to EC2"
+        },
+        {
+          "text": "To add SSH,"
+        },
+        {
+          "text": "Choose Type: SSH"
+        },
+        {
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "For HTTP, Select the Add Security rule Button"
+        },
+        {
+          "text": "Choose Type: HTTP"
+        },
+        {
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "For HTTPs, Select the Add Security rule Button"
+        },
+        {
+          "text": "Choose Type: HTTPS"
+        },
+        {
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "Leave others as default, and click on the Launch Instance button."
+        },
+        {
+          "text": "After 1-5 minutes, the Instance State will change to running, as shown below. Then click on Connect."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Generating Traffic",
+      "steps": [
+        {
+          "text": "Under EC2 Instance connect, click on Connect. Here we need to SSH into the instance to generate traffic. You can follow the steps mentioned in SSH into EC2 Instance."
+        },
+        {
+          "text": "Once you SSH into the instance, install an Apache Server. To install it, follow the below steps. Run these commands one by one."
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "dnf update -y"
+        },
+        {
+          "text": "dnf install httpd -y"
+        },
+        {
+          "text": "cd /var/www/html"
+        },
+        {
+          "text": "echo \"Response coming from server\" > /var/www/html/index.html"
+        },
+        {
+          "text": "systemctl start httpd"
+        },
+        {
+          "text": "systemctl enable httpd"
+        },
+        {
+          "text": "systemctl status httpd"
+        },
+        {
+          "text": "Copy your instance Public IP, open a new tab and paste it into the address bar, and hit enter. It should be shown as below:"
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Check the logs in S3 Bucket.",
+      "steps": [
+        {
+          "text": "Now Navigate to S3, Wait for few minutes and refresh the page, and click on Created bucket. You will see the AWSLogs appear under Objects."
+        },
+        {
+          "text": "Click on AWSLogs -> Account ID -> vpcflowlogs -> us-east-1 -> Year -> Month -> Date."
+        },
+        {
+          "text": "You will be able to view all the details i.e. the traffic that is being directed to our EC2 Instance."
+        },
+        {
+          "text": "Do You Know ?"
+        },
+        {
+          "text": "Amazon Kinesis Firehose is a fully managed service that makes it easy to capture, transform, and load streaming data into various AWS data stores, including Amazon S3. It provides a reliable and scalable solution for ingesting and processing large volumes of streaming data in real-time."
+        }
+      ]
+    },
+    {
+      "title": "Task 11: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and display whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created an S3 bucket."
+        },
+        {
+          "text": "You have successfully created a Kinesis firehose delivery stream."
+        },
+        {
+          "text": "You have successfully transferred the sample data generated by the EC2 Instance, from VPC Flow Logs to Amazon S3 Bucket using Kinesis firehose delivery stream."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

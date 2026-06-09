@@ -1,0 +1,190 @@
+{
+  "slug": "challenge-connecting-an-ec2-instance-and-a-db-instance-automatically",
+  "title": "Challenge Connecting an EC2 instance and a DB instance Automatically",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Challenge Steps",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "In this challenge, your Compute and Database skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of AWS EC2 Instance and RDS services which will be needed for the challenge."
+        },
+        {
+          "text": "A company XYZ is deploying a new web application. As a part of the infrastructure, they need a database that can be accessed via an EC2 instance for their Testing Environment. Now your challenge is to build them an EC2 instance and database with the below requirements. You need to configure a Free tier Amazon RDS environment for MySQL DB instance."
+        },
+        {
+          "text": "To provision EC2 instances:"
+        },
+        {
+          "text": "Create an EC2 instance with AMI as Amazon Linux 2023 kernel-6.1 and instance type t2.micro and with SSH and HTTP ports."
+        },
+        {
+          "text": "Create an EC2 instance with AMI as Amazon Linux 2023 kernel-6.1 and instance type t2.micro and with SSH and HTTP ports."
+        },
+        {
+          "text": "To provision RDS DB:"
+        },
+        {
+          "text": "Create an RDS instance - MySQL with db.t3.micro, 1 vCPU, 1 GiB RAM, and a 20 GB GP2 volume."
+        },
+        {
+          "text": "Create an RDS instance - MySQL with db.t3.micro, 1 vCPU, 1 GiB RAM, and a 20 GB GP2 volume."
+        },
+        {
+          "text": "Create a Database, Table and insert data for testing"
+        },
+        {
+          "text": "Create a Database, Table and insert data for testing"
+        },
+        {
+          "text": "Note: The username/password combo is used to log onto your database. Please make note of them somewhere safe."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on the EC2 in the Compute section."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on the EC2 in the Compute section."
+        },
+        {
+          "text": "All the EC2 Instances will be listed here."
+        },
+        {
+          "text": "All the EC2 Instances will be listed here."
+        },
+        {
+          "text": "To terminate the EC2, perform the following task:"
+        },
+        {
+          "text": "To terminate the EC2, perform the following task:"
+        },
+        {
+          "text": "Select your EC2 instance,"
+        },
+        {
+          "text": "Select your EC2 instance,"
+        },
+        {
+          "text": "Click on Instance state (If you don't see an Instance state option, click on the Actions button and then choose Instance state)"
+        },
+        {
+          "text": "Click on Instance state (If you don't see an Instance state option, click on the Actions button and then choose Instance state)"
+        },
+        {
+          "text": "Select Terminate instance"
+        },
+        {
+          "text": "Select Terminate instance"
+        },
+        {
+          "text": "Navigate to RDS by clicking on the Services menu available under the Database section."
+        },
+        {
+          "text": "Navigate to RDS by clicking on the Services menu available under the Database section."
+        },
+        {
+          "text": "Click on DB Instances"
+        },
+        {
+          "text": "Click on DB Instances"
+        },
+        {
+          "text": "It will list all the RDS databases"
+        },
+        {
+          "text": "It will list all the RDS databases"
+        },
+        {
+          "text": "Click on Actions and select Delete"
+        },
+        {
+          "text": "Click on Actions and select Delete"
+        },
+        {
+          "text": "To delete, we have to perform several tasks:"
+        },
+        {
+          "text": "Uncheck the option of Create final snapshot,"
+        },
+        {
+          "text": "Uncheck the option of Create final snapshot,"
+        },
+        {
+          "text": "Acknowledge by selecting the second option,"
+        },
+        {
+          "text": "Acknowledge by selecting the second option,"
+        },
+        {
+          "text": "Type delete me to confirm"
+        },
+        {
+          "text": "Type delete me to confirm"
+        },
+        {
+          "text": "And finally, click on the Delete button below."
+        },
+        {
+          "text": "And finally, click on the Delete button below."
+        },
+        {
+          "text": "It will take around, 5 minutes to delete the instance, you can end the lab now."
+        },
+        {
+          "text": "It will take around, 5 minutes to delete the instance, you can end the lab now."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

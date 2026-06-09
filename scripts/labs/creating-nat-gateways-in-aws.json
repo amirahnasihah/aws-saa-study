@@ -1,0 +1,716 @@
+{
+  "slug": "creating-nat-gateways-in-aws",
+  "title": "Creating NAT Gateways in AWS",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        }
+      ]
+    },
+    {
+      "title": "Task 2 : Create a VPC",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a Virtual Private Cloud (VPC), which provides a logically isolated section of the AWS cloud where users can launch resources such as instances, subnets, and gateways."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 region."
+        },
+        {
+          "text": "Navigate to VPC under the services menu. Click on Your VPCs."
+        },
+        {
+          "text": "Click on Create VPC button."
+        },
+        {
+          "text": "Resources to create : Select VPC Only"
+        },
+        {
+          "text": "Name Tag : Enter MyVPC"
+        },
+        {
+          "text": "IPv4 CIDR block : Enter 10.0.0.0/16 (You can also put any other CIDR range)"
+        },
+        {
+          "text": "IPv6 CIDR block : Select No IPv6 CIDR Block"
+        },
+        {
+          "text": "Tenancy : Default"
+        },
+        {
+          "text": "Click on Create VPC."
+        },
+        {
+          "text": "The VPC is now created.",
+          "images": [
+            "/labs/creating-nat-gateways-in-aws/step-01.png",
+            "/labs/creating-nat-gateways-in-aws/step-02.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 3 : Create Public and Private Subnets",
+      "steps": [
+        {
+          "text": "In this task, we are going to create both public and private subnets within the VPC. Public subnets have internet connectivity, while private subnets do not have direct internet access."
+        },
+        {
+          "text": "Navigate to Subnets in the left panel of the VPC page."
+        },
+        {
+          "text": "Let's create a Public subnet. Click on Create Subnet button."
+        },
+        {
+          "text": "VPC ID : select MyVPC"
+        },
+        {
+          "text": "Subnet Name : Enter MyPublicSubnet"
+        },
+        {
+          "text": "Availability Zone : No Preference"
+        },
+        {
+          "text": "IPv4 CIDR block : Enter 10.0.0.0/24"
+        },
+        {
+          "text": "Click on Create subnet button."
+        },
+        {
+          "text": "Let's enable Auto Assign public IP to Instances created within this subnet,"
+        },
+        {
+          "text": "Select MyPublicSubnet , Click on Actions."
+        },
+        {
+          "text": "Click on Edit subnet settings."
+        },
+        {
+          "text": "Enable auto-assign public IPv4 address : Check"
+        },
+        {
+          "text": "Click on Save."
+        },
+        {
+          "text": "Now, the Instances launched inside the MyPublicSubnet will have Public IPs assigned to them by default."
+        },
+        {
+          "text": "Let’s create a private subnet. Click on Create subnet."
+        },
+        {
+          "text": "VPC ID : select MyVPC"
+        },
+        {
+          "text": "Subnet Name : Enter MyPrivateSubnet"
+        },
+        {
+          "text": "Availability Zone : No Preference"
+        },
+        {
+          "text": "IPv4 CIDR block : Enter 10.0.1.0/24"
+        },
+        {
+          "text": "Click on Create subnet button."
+        },
+        {
+          "text": "Now, two subnets are created.",
+          "images": [
+            "/labs/creating-nat-gateways-in-aws/step-03.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 4 : Create Internet Gateway",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an Internet Gateway, which acts as a bridge between the VPC and the internet, allowing instances in the VPC to communicate with the internet."
+        },
+        {
+          "text": "Navigate Internet Gateways in the left panel of the VPC page."
+        },
+        {
+          "text": "Click on Create Internet gateway button."
+        },
+        {
+          "text": "Name tag : Enter MyIGW"
+        },
+        {
+          "text": "Click on Create internet gateway button."
+        },
+        {
+          "text": "An Internet Gateway is now created."
+        },
+        {
+          "text": "To attach an Internet Gateway to a VPC,"
+        },
+        {
+          "text": "Click on Actions, Select Attach to VPC."
+        },
+        {
+          "text": "VPC : Select MyVPC"
+        },
+        {
+          "text": "Click on Attach internet gateway."
+        },
+        {
+          "text": "Now MyIGW is attached to MyVPC.",
+          "images": [
+            "/labs/creating-nat-gateways-in-aws/step-04.png",
+            "/labs/creating-nat-gateways-in-aws/step-05.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 5 : Create Public Route Table and Configure",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a public route table and configure it to associate with the public subnet. The public route table defines how traffic is routed between the VPC and the internet."
+        },
+        {
+          "text": "Navigate to Route Table in the left panel of the VPC page."
+        },
+        {
+          "text": "Click on Create route table button"
+        },
+        {
+          "text": "Name tag : Enter PublicRouteTable"
+        },
+        {
+          "text": "VPC : Select MyVPC"
+        },
+        {
+          "text": "Click on Create route table button."
+        },
+        {
+          "text": "A route table by name PublicRouteTable will be created."
+        },
+        {
+          "text": "To attach an Internet Gateway, select PublicRouteTable."
+        },
+        {
+          "text": "In the Routes tab below:"
+        },
+        {
+          "text": "Click on Edit routes."
+        },
+        {
+          "text": "On the next page, click on Add route"
+        },
+        {
+          "text": "Destination : Enter 0.0.0.0/0"
+        },
+        {
+          "text": "Target : Select Internet Gateway, and once the internet gateways have been created, select MyIGW"
+        },
+        {
+          "text": "Click on Save changes."
+        },
+        {
+          "text": "To associate the Public Subnet to the route table, Select PublicRouteTable."
+        },
+        {
+          "text": "Click on the Subnet Associations tab."
+        },
+        {
+          "text": "Click on Edit subnet associations."
+        },
+        {
+          "text": "On the next page, select MyPublicSubnet from the list displayed."
+        },
+        {
+          "text": "Click on Save associations."
+        },
+        {
+          "text": "Once all the configurations are completed, it should look like below:"
+        },
+        {
+          "text": "Now the Instances launched within MyPublicSubnet will have access to the Internet."
+        },
+        {
+          "text": "As you can see, there is another existing route table already available for MyVPC. It is a main route table created at the time the VPC was created. We will use it while creating the NAT Gateway.",
+          "images": [
+            "/labs/creating-nat-gateways-in-aws/step-06.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 6 : Launch an EC2 Instance in Public Subnet",
+      "steps": [
+        {
+          "text": "In this task, we are going to launch an EC2 instance in the public subnet. This allows users to have a publicly accessible instance that can directly communicate with the internet."
+        },
+        {
+          "text": "Make sure you are in the N.Virginia region."
+        },
+        {
+          "text": "Navigate to the Services menu in the top, click on EC2 in the Compute section."
+        },
+        {
+          "text": "Navigate to Instances on the left panel and click on Launch instances button"
+        },
+        {
+          "text": "Name : Enter MyPublicServer"
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the select button."
+        },
+        {
+          "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: MyKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Select Create key pair Button."
+        },
+        {
+          "text": "In Network Settings Click on Edit:"
+        },
+        {
+          "text": "VPC : Select MyVPC"
+        },
+        {
+          "text": "Subnet : Select MyPublicSubnet"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select Create new Security group"
+        },
+        {
+          "text": "Security group name : Enter MyEC2Server_SG"
+        },
+        {
+          "text": "Description : Enter Security Group to allow traffic to EC2"
+        },
+        {
+          "text": "To add SSH"
+        },
+        {
+          "text": "Choose Type:"
+        },
+        {
+          "text": "Select SSH"
+        },
+        {
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "Keep Rest thing Default and Click on Launch Instance Button."
+        },
+        {
+          "text": "Select View all Instances to View Instance you Created"
+        },
+        {
+          "text": "Launch Status: Your instance is now launching, Select the instance and wait for it to change status to Running.",
+          "images": [
+            "/labs/creating-nat-gateways-in-aws/step-07.png",
+            "/labs/creating-nat-gateways-in-aws/step-08.png",
+            "/labs/creating-nat-gateways-in-aws/step-09.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 7 : Launch an EC2 Instance in Private Subnet",
+      "steps": [
+        {
+          "text": "In this task, we are going to launch an EC2 instance in the private subnet. This demonstrates the concept of a private subnet, which does not have direct internet access."
+        },
+        {
+          "text": "Click on Launch instances."
+        },
+        {
+          "text": "Name : Enter MyPrivateServer"
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the select button."
+        },
+        {
+          "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "For Key pair: Select the key pair you created before"
+        },
+        {
+          "text": "In Network Settings Click on Edit:"
+        },
+        {
+          "text": "VPC : Select MyVPC"
+        },
+        {
+          "text": "Subnet : Select MyPrivateSubnet"
+        },
+        {
+          "text": "Auto-assign public IP: Disable"
+        },
+        {
+          "text": "Select Select existing security group"
+        },
+        {
+          "text": "Select MyEC2Server_SG"
+        },
+        {
+          "text": "Keep Rest thing Default and Click on Launch Instance Button."
+        },
+        {
+          "text": "Select View all Instances to View Instance you Created"
+        },
+        {
+          "text": "Launch Status: Your instance is now launching, Select the instance and wait for it to change status to Running."
+        },
+        {
+          "text": "Note the Private IP Address of MyPrivateServer : Example 10.0.1.45",
+          "images": [
+            "/labs/creating-nat-gateways-in-aws/step-10.png",
+            "/labs/creating-nat-gateways-in-aws/step-11.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 8 : SSH into Public and Private EC2 Instance and Test Internet Connectivity",
+      "steps": [
+        {
+          "text": "In this task, we are going to establish SSH connections to both the public and private EC2 instances. By testing internet connectivity from both instances, users can verify if the public instance has internet access and the private instance does not."
+        },
+        {
+          "text": "SSH into MyPublicServer Instance. Follow the below steps"
+        },
+        {
+          "text": "Once the instance is created. Select the instance MyPublicServer.Click on connect button"
+        },
+        {
+          "text": "Now select the EC2 instance connect option. You can see there are four options for connecting to EC2. You can use any of the given options to get in the console but for our lab, we are using EC2 instance connect."
+        },
+        {
+          "text": "A new tab would be opened in your browser where we can see the console."
+        },
+        {
+          "text": "Switch to root user:"
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "Run the updates using the following command:"
+        },
+        {
+          "text": "yum -y update"
+        },
+        {
+          "text": "Since the Internet Gateway MyIGW is connected to MyPublicSubnet, updates will be completed successfully."
+        },
+        {
+          "text": "Let’s SSH into MyPrivateEC2Server from MyPublicEC2Server."
+        },
+        {
+          "text": "In order to SSH into MyPrivateEC2Server, first, we need to create the PEM file in the public EC2 ie, MyPublicEC2Server, and copy the data from our MyKey.pem in the local machine."
+        },
+        {
+          "text": "We need MyKey.pem in order to SSH. We shall copy key details from the MyKey.pem from your local machine (which was downloaded earlier while launching EC2 instances)."
+        },
+        {
+          "text": "To copy the contents of the MyKey.pem, open the file in a text editor and copy the whole content."
+        },
+        {
+          "text": "To create the MyKey.pem in MyPublicEC2Server, run"
+        },
+        {
+          "text": "vi MyKey.pem"
+        },
+        {
+          "text": "Now press the following for inserting the data(You can see insert popped at the last then you can paste the key)."
+        },
+        {
+          "text": "Click i"
+        },
+        {
+          "text": "Note: In the editor, copy and paste the key that looks similar to the example below:"
+        },
+        {
+          "text": "Save the File"
+        },
+        {
+          "text": "click esc"
+        },
+        {
+          "text": ":wq"
+        },
+        {
+          "text": "Check that the file was created correctly."
+        },
+        {
+          "text": "ls"
+        },
+        {
+          "text": "Update Permissions for the MyKey.pem"
+        },
+        {
+          "text": "chmod 400 MyKey.pem"
+        },
+        {
+          "text": "Use the Private IP address of MyPrivateEC2Server to SSH."
+        },
+        {
+          "text": "ssh ec2-user@<Private IP of MyPrivateEC2Server> -i MyKey.pem"
+        },
+        {
+          "text": "Note: Incase if this message shows Are you sure you want to continue connecting (yes/no)? : Enter yes"
+        },
+        {
+          "text": "Switch to root user"
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "Run the updates using the following command:"
+        },
+        {
+          "text": "yum -y update"
+        },
+        {
+          "text": "Since no internet access is provided for EC2 instances in a private subnet, you will not be able to get updates.",
+          "images": [
+            "/labs/creating-nat-gateways-in-aws/step-12.png",
+            "/labs/creating-nat-gateways-in-aws/step-13.png",
+            "/labs/creating-nat-gateways-in-aws/step-14.png",
+            "/labs/creating-nat-gateways-in-aws/step-15.png",
+            "/labs/creating-nat-gateways-in-aws/step-16.png",
+            "/labs/creating-nat-gateways-in-aws/step-17.png",
+            "/labs/creating-nat-gateways-in-aws/step-18.png",
+            "/labs/creating-nat-gateways-in-aws/step-19.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 9 : Create a NAT Gateway",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a NAT Gateway, which provides internet access to instances in the private subnet. The NAT Gateway acts as a middleman to forward traffic between the private subnet and the internet."
+        },
+        {
+          "text": "Navigate to the VPC Page."
+        },
+        {
+          "text": "Make sure you are still in the N.Virginia Region."
+        },
+        {
+          "text": "In the Left Panel, click on NAT Gateways."
+        },
+        {
+          "text": "Click on Create NAT gateway button."
+        },
+        {
+          "text": "Name : Enter MyNATGateway"
+        },
+        {
+          "text": "VPC: Choose MyVPC"
+        },
+        {
+          "text": "Connectivity type: Public and Method of Elastic IP: Automatic."
+        },
+        {
+          "text": "Once the new Elastic IP is allocated, click on Create NAT gateway."
+        },
+        {
+          "text": "Note that NAT Gateway is always created in a public subnet."
+        },
+        {
+          "text": "NAT Gateway will be created in a few minutes. Once created, the status will change to available.",
+          "images": [
+            "/labs/creating-nat-gateways-in-aws/step-20.png",
+            "/labs/creating-nat-gateways-in-aws/step-21.png",
+            "/labs/creating-nat-gateways-in-aws/step-22.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 10 : Update Route table and configure NAT Gateway",
+      "steps": [
+        {
+          "text": "In this task, we are going to update the route table associated with the private subnet to include the NAT Gateway as the target for internet-bound traffic. This ensures that traffic from the private subnet is directed through the NAT Gateway for internet access."
+        },
+        {
+          "text": "Navigate to Route Tables in the left panel."
+        },
+        {
+          "text": "You can see two Route Tables available for MyVPC"
+        },
+        {
+          "text": "To attach Nat Gateway, select the Main Route Table (which is different from the one created by you)."
+        },
+        {
+          "text": "In the Routes tab below,"
+        },
+        {
+          "text": "Click on Edit routes."
+        },
+        {
+          "text": "In the next page, Click on Add route"
+        },
+        {
+          "text": "Destination: Enter 0.0.0.0/0"
+        },
+        {
+          "text": "Target: Select NAT Gateway, and once the internet gateways have loaded, select the NAT Gateway you created."
+        },
+        {
+          "text": "Click on Save changes."
+        },
+        {
+          "text": "Once all the configurations are completed, it should look like below."
+        },
+        {
+          "text": "Now the Instances launched within MyPrivateSubnet can access the Internet through the NAT Gateway.",
+          "images": [
+            "/labs/creating-nat-gateways-in-aws/step-23.jpg",
+            "/labs/creating-nat-gateways-in-aws/step-24.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 11 : Test Internet connection from Instance inside Private Subnet",
+      "steps": [
+        {
+          "text": "In this task, we are going to validate that the instance in the private subnet can successfully establish an internet connection by accessing the internet through the NAT Gateway."
+        },
+        {
+          "text": "SSH back into MyPublicEC2Server ."
+        },
+        {
+          "text": "Switch to root user"
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "SSH into MyPrivateEC2Server"
+        },
+        {
+          "text": "ssh ec2-user@<Private IP of MyPrivateEC2Server> -i MyKey.pem"
+        },
+        {
+          "text": "Switch to root user"
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "Run the updates using the following command:"
+        },
+        {
+          "text": "yum -y update"
+        },
+        {
+          "text": "You can see that the updates have been completed successfully in the terminal."
+        },
+        {
+          "text": "This shows that MyPrivateEC2Server has internet access."
+        },
+        {
+          "text": "Use exit command to close the private server connection."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "NAT Gateway allows for high scalability and can handle thousands to tens of thousands of concurrent connections per second. It is designed to handle significant traffic loads and provides automatic scaling based on the demand. This means that as your network traffic increases, AWS automatically scales up the NAT Gateway capacity to accommodate the higher workload. This scalability feature ensures that your instances in the private subnet can maintain reliable and efficient internet connectivity, even during periods of high demand or traffic spikes.",
+          "images": [
+            "/labs/creating-nat-gateways-in-aws/step-25.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 12 : Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created a new VPC from scratch and created both public and private subnets."
+        },
+        {
+          "text": "You have created an Internet Gateway and configured a new route table."
+        },
+        {
+          "text": "You have launched 1 EC2 instance each of the Public and Private subnets and tested Internet access from them."
+        },
+        {
+          "text": "To provide Internet access to the EC2 instance in the Private subnet, you created a NAT Gateway and configured a Route table."
+        },
+        {
+          "text": "You confirmed that the instance in the private subnet is able to connect to the internet."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console.",
+          "images": [
+            "/labs/creating-nat-gateways-in-aws/step-26.gif"
+          ]
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

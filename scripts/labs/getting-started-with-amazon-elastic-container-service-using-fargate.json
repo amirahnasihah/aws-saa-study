@@ -1,0 +1,251 @@
+{
+  "slug": "getting-started-with-amazon-elastic-container-service-using-fargate",
+  "title": "Getting Started with Amazon Elastic Container Service using Fargate",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Getting started with Amazon ECS using Fargate",
+      "steps": [
+        {
+          "text": "AWS Fargate is a serverless infrastructure for containers that allows you to run your containers without the need to manage the underlying infrastructure."
+        },
+        {
+          "text": "To get started with Amazon ECS on AWS Fargate, you can use the Fargate launch type for your tasks. When you create a task definition, you can specify the Fargate launch type in the task definition."
+        },
+        {
+          "text": "When you launch a task using this task definition, Fargate will automatically provision the required compute resources to run the task, based on the specifications in the task definition."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Creating Container and Task Definition",
+      "steps": [
+        {
+          "text": "A task definition is a blueprint or configuration file that defines how a container-based application should run in a container cluster."
+        },
+        {
+          "text": "In Amazon ECS (Elastic Container Service), a task definition is required each time you want to launch a task, which is a running instance of a task definition."
+        },
+        {
+          "text": "The task definition specifies details such as the Docker image to use, the CPU and memory requirements for each container, any data volumes to mount, and any environment variables to set."
+        },
+        {
+          "text": "Make sure you are in US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Select the Services button in the top and select Elastic Container Service under the Containers section."
+        },
+        {
+          "text": "Click on Cluster from the left panel."
+        },
+        {
+          "text": "Click on the Create Cluster button."
+        },
+        {
+          "text": "Keep the Cluster name field as it is (default value)."
+        },
+        {
+          "text": "Keep the rest of the things as default and click on the create button."
+        },
+        {
+          "text": "The cluster will be created successfully."
+        },
+        {
+          "text": "Navigate to Task Definitions in the left navigation panel."
+        },
+        {
+          "text": "Click on Create new task definition and click on Create new task definition."
+        },
+        {
+          "text": "Step 1: Configure task definitions and containers"
+        },
+        {
+          "text": "Task Definition family : Enter whizdefinition"
+        },
+        {
+          "text": "Launch type: Select AWS Fargate"
+        },
+        {
+          "text": "CPU: Select .25 vCPU and Memory: Select 1 GB"
+        },
+        {
+          "text": "Task Role and Task Execution Role: Select None"
+        },
+        {
+          "text": "Note : Make sure to change task execution role to select none. by default it is Create new role."
+        },
+        {
+          "text": "Container -1"
+        },
+        {
+          "text": "Name : Enter sample-app"
+        },
+        {
+          "text": "Image URL: Enter httpd:2.4"
+        },
+        {
+          "text": "Uncheck Use log collection"
+        },
+        {
+          "text": "Leave everything as default and click on Create button."
+        },
+        {
+          "text": "The task definition will be created successfully."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Defining the service",
+      "steps": [
+        {
+          "text": "In this section, we have to select how to configure the Amazon ECS service that is created from our task definition."
+        },
+        {
+          "text": "A service allows us to run and maintain a specified number (the “desired count”) of simultaneous instances of a task definition in an ECS cluster."
+        },
+        {
+          "text": "The Amazon ECS sample application is a web-based Hello World–style application that is meant to run indefinitely."
+        },
+        {
+          "text": "Click on Deploy button and then on Create Service."
+        },
+        {
+          "text": "You will be redirected to the service page."
+        },
+        {
+          "text": "Service Name: enter whizservice"
+        },
+        {
+          "text": "Existing Cluster: Choose the previously created cluster. In our case, the cluster name is whizcluster"
+        },
+        {
+          "text": "Compute options: Select Launch Type"
+        },
+        {
+          "text": "Launch type: select Fargate"
+        },
+        {
+          "text": "Schedling strategy: select Replica (default)"
+        },
+        {
+          "text": "Desired Tasks : Enter 2"
+        },
+        {
+          "text": "Scroll down and expand Networking section"
+        },
+        {
+          "text": "Under Security group, Select Create a new security group"
+        },
+        {
+          "text": "Security group name: Enter whizecssg"
+        },
+        {
+          "text": "Security group description: Enter Security group for ECS cluster"
+        },
+        {
+          "text": "Type : Select HTTP"
+        },
+        {
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "Click on Create button."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Viewing the service",
+      "steps": [
+        {
+          "text": "Wait till the service gets deployed and You will see the service created successfully."
+        },
+        {
+          "text": "If your service is a web-based application, such as the Amazon ECS sample application, you can view its containers with a web browser."
+        },
+        {
+          "text": "Navigate to the Tasks tab."
+        },
+        {
+          "text": "Click on a task from the list of tasks in your service."
+        },
+        {
+          "text": "Switch to the Networking tab. Copy the Public IPv4 IP address."
+        },
+        {
+          "text": "Enter http:// before your IP address and enter it in your web browser, and you should see a webpage that displays ”It works”."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "ECS allows developers to easily scale their containerized applications up or down based on demand. It can automatically manage the provisioning and distribution of containers across clusters, allowing for efficient resource utilization. This scalability enables businesses to handle varying workloads and adapt to changing traffic patterns without manual intervention."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created a Task definition, Service and Cluster using Fargate."
+        },
+        {
+          "text": "You have tested the Amazon ECS sample app."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

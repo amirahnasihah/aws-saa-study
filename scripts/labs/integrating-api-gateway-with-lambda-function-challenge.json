@@ -1,0 +1,121 @@
+{
+  "slug": "integrating-api-gateway-with-lambda-function-challenge",
+  "title": "Integrating API Gateway with Lambda Function Challenge",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click On The Open Console Button, And You Will Get Redirected To AWS Console In A New Browser Tab."
+        },
+        {
+          "text": "Click On The Open Console Button, And You Will Get Redirected To AWS Console In A New Browser Tab."
+        },
+        {
+          "text": "On The AWS Sign-In Page, Leave The Account ID As Default. Never Edit/Remove The 12 Digit Account ID Present In The AWS Console. Otherwise, You Cannot Proceed With The Challenge."
+        },
+        {
+          "text": "On The AWS Sign-In Page, Leave The Account ID As Default. Never Edit/Remove The 12 Digit Account ID Present In The AWS Console. Otherwise, You Cannot Proceed With The Challenge."
+        },
+        {
+          "text": "Now Copy Your User Name And Password In The Lab Console To The IAM Username And Password In AWS Console And Click On The Sign In Button."
+        },
+        {
+          "text": "Now Copy Your User Name And Password In The Lab Console To The IAM Username And Password In AWS Console And Click On The Sign In Button."
+        },
+        {
+          "text": "Once Signed In To The AWS Management Console, Make The Default AWS Region As US East (N. Virginia) Us-East-1."
+        },
+        {
+          "text": "Once Signed In To The AWS Management Console, Make The Default AWS Region As US East (N. Virginia) Us-East-1."
+        },
+        {
+          "text": "In This Challenge, Your Amazon API Gateway Skills Are Put To The Test. You'll Be Given A Requirement And You Have To Reach It Using Your Knowledge Of Lambda Function Which Will Be Used In This Challenge. This Challenge Will Help You Understand The Real-Time Scenarios."
+        },
+        {
+          "text": "A Company XYZ Wants To Connect AWS Lambda With API Gateway, Facilitating The Execution Of Lambda Functions In Response To HTTP Requests Routed Through The API Gateway. This Integration Empowers The Creation Of Scalable Serverless APIs, Enabling Smooth Interaction Between HTTP Endpoints And Serverless Functions To Streamline Application Development Processes. The Below Are The Tasks That Need To Be Performed By You In Order To Create The Stack."
+        },
+        {
+          "text": "Create A Function Using Python 3.12 Version Language And Give Required Permissions In AWS Policy Templates To Trigger CloudFront."
+        },
+        {
+          "text": "Note: For The IAM Execution Role: Click On Advanced Settings -> Enable The Option Custom Execution Role -> Choose The Execution Role (Lambda_Role)"
+        },
+        {
+          "text": "Create A Function Using Python 3.12 Version Language And Give Required Permissions In AWS Policy Templates To Trigger CloudFront."
+        },
+        {
+          "text": "Note: For The IAM Execution Role: Click On Advanced Settings -> Enable The Option Custom Execution Role -> Choose The Execution Role (Lambda_Role)"
+        },
+        {
+          "text": "Create An API"
+        },
+        {
+          "text": "Create An API"
+        },
+        {
+          "text": "Create A Resource."
+        },
+        {
+          "text": "Create A Resource."
+        },
+        {
+          "text": "Create A Method."
+        },
+        {
+          "text": "Create A Method."
+        },
+        {
+          "text": "Deploy The API."
+        },
+        {
+          "text": "Deploy The API."
+        },
+        {
+          "text": "Test The API."
+        },
+        {
+          "text": "Test The API."
+        },
+        {
+          "text": "Click On The Validate To Complete The Challenge."
+        },
+        {
+          "text": "Click On The Validate To Complete The Challenge."
+        },
+        {
+          "text": "Delete The Resources After Validation."
+        },
+        {
+          "text": "Delete The Resources After Validation."
+        },
+        {
+          "text": "Sign Out Of The AWS Account."
+        },
+        {
+          "text": "Sign Out Of The AWS Account."
+        },
+        {
+          "text": "You Have Successfully Completed The Challenge."
+        },
+        {
+          "text": "You Have Successfully Completed The Challenge."
+        },
+        {
+          "text": "Click On End Challenge Button from the lab console And Wait Till The Process Gets Completed."
+        },
+        {
+          "text": "Click On End Challenge Button from the lab console And Wait Till The Process Gets Completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

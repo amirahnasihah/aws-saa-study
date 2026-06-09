@@ -1,0 +1,318 @@
+{
+  "slug": "introduction-to-amazon-lambda",
+  "title": "Introduction to Amazon Lambda",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create Two Amazon S3 Buckets",
+      "steps": [
+        {
+          "text": "In this task, we will create two AWS S3 buckets i.e the source bucket and the destination bucket by providing the required configurations like name, region etc."
+        },
+        {
+          "text": "Navigate to the Services menu in the top, then click on S3 in the Storage section."
+        },
+        {
+          "text": "Click on Create Bucket button."
+        },
+        {
+          "text": "Bucket Name: Enter mysourcebucket1234567"
+        },
+        {
+          "text": "Note: Every S3 bucket name is unique globally, so you can enter any unique name of your choice."
+        },
+        {
+          "text": "Leave other settings as default and click on the Create bucket button."
+        },
+        {
+          "text": "Copy the name of the bucket and save it in a text file for later use."
+        },
+        {
+          "text": "Create Destination Bucket"
+        },
+        {
+          "text": "Click on Create bucket button."
+        },
+        {
+          "text": "Bucket Name: Enter mydestinationbucket1234567"
+        },
+        {
+          "text": "Note: Every S3 bucket name is unique globally, so you can enter any unique name of your choice."
+        },
+        {
+          "text": "Leave other settings as default and click on the Create bucket button."
+        },
+        {
+          "text": "Copy the name of the bucket and save it in a text file for later use."
+        },
+        {
+          "text": "Now we have two S3 buckets (Source and Destination). We will make use of our AWS Lambda function to copy the content from source bucket to destination bucket."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a Lambda Function",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) region."
+        },
+        {
+          "text": "Go to the Services menu and click on Lambda under Compute section."
+        },
+        {
+          "text": "Click on the Create a function button."
+        },
+        {
+          "text": "Choose Author from scratch"
+        },
+        {
+          "text": "Function name : Enter mylambdafunction"
+        },
+        {
+          "text": "Runtime : Select Python 3.13"
+        },
+        {
+          "text": "Click on Advanced Settings, then Enable Custom execution role option"
+        },
+        {
+          "text": "Choose the Role name as Lambda_role. Then click on Save."
+        },
+        {
+          "text": "a"
+        },
+        {
+          "text": "Click on the Create function button."
+        },
+        {
+          "text": "If you scroll down a little bit, you can see the Code source section. Here we need to write a Python function that copies the object from the source bucket and paste it into the destination bucket."
+        },
+        {
+          "text": "Remove the existing code in AWS lambda lambda_function.py. Copy the below code and paste it into your lambda_function.py file."
+        },
+        {
+          "text": "import boto3"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "s3 = boto3.client('s3')"
+        },
+        {
+          "text": "source_bucket = \"Source_Bucket_name\""
+        },
+        {
+          "text": "destination_bucket = \"Destination_Bucket_name\""
+        },
+        {
+          "text": "# Extract the object key from the event"
+        },
+        {
+          "text": "object_key = event['Records'][0]['s3']['object']['key']"
+        },
+        {
+          "text": "# URL encode the source object key"
+        },
+        {
+          "text": "copy_source = {'Bucket': source_bucket, 'Key': object_key}"
+        },
+        {
+          "text": "# Set up the parameters for the copy operation"
+        },
+        {
+          "text": "copy_params = {"
+        },
+        {
+          "text": "'Bucket': destination_bucket,"
+        },
+        {
+          "text": "'CopySource': copy_source,"
+        },
+        {
+          "text": "'Key': object_key"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "try:"
+        },
+        {
+          "text": "# Perform the copy operation"
+        },
+        {
+          "text": "result = s3.copy_object(**copy_params)"
+        },
+        {
+          "text": "print(\"S3 object copy successful. Response:\", result)"
+        },
+        {
+          "text": "except Exception as e:"
+        },
+        {
+          "text": "print(\"Error copying object:\", str(e))"
+        },
+        {
+          "text": "You need to change the source and destination bucket name in the index.js file line number 5 & 6 which we copied earlier."
+        },
+        {
+          "text": "Save the function by clicking on Deploy button."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Adding Triggers to Lambda Function",
+      "steps": [
+        {
+          "text": "Scroll up to go to Function overview and click on + Add trigger button."
+        },
+        {
+          "text": "Scroll down the list and select S3 from the trigger list. Once you select S3, a form will appear. Enter these details:"
+        },
+        {
+          "text": "Bucket: Select your source bucket - mysourcebucket1234567"
+        },
+        {
+          "text": "Event type: Select All object create events"
+        },
+        {
+          "text": "Leave other fields as default."
+        },
+        {
+          "text": "And check the option of Recursive invocation to avoid failures in case you upload multiple files at once by Checking the acknowledge option."
+        },
+        {
+          "text": "Click on Add button."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Test Lambda function",
+      "steps": [
+        {
+          "text": "If you have a test image on your local machine, you can use that image."
+        },
+        {
+          "text": "Click on Download Me to open the image in new tab, right click the image and save it to your local."
+        },
+        {
+          "text": "Note: Please name the image file as \"image.jpeg\" without using variations like \"image (2).jpeg\"."
+        },
+        {
+          "text": "Go to S3 Bucket list and click on source bucket - mysourcebucket1234567."
+        },
+        {
+          "text": "Upload image to source S3 bucket. To do that:"
+        },
+        {
+          "text": "Click on the Upload button."
+        },
+        {
+          "text": "Click on Add files button to add the files."
+        },
+        {
+          "text": "Select the image and click on the Upload to upload the image."
+        },
+        {
+          "text": "Now go back to the S3 list and open your destination bucket - mydestinationbucket1234567."
+        },
+        {
+          "text": "You can see a copy of your uploaded source bucket image in the destination bucket."
+        },
+        {
+          "text": "Optional: Debugging Lambda Function Using CloudWatch"
+        },
+        {
+          "text": "If you encounter errors such as the source file not being copied to the destination S3 bucket, please debug your Lambda function by following the steps mentioned below:"
+        },
+        {
+          "text": "From the AWS Management Console, navigate to the CloudWatch service."
+        },
+        {
+          "text": "In the left sidebar, under the \"Logs\" menu, select \"Log Management."
+        },
+        {
+          "text": "Select your Lambda function's log group, which should be in the format /aws/lambda/function-name."
+        },
+        {
+          "text": "Choose a log stream to view its logs."
+        },
+        {
+          "text": "In the list of Log events, select the right arrow next to the Timestamp to expand the details for that event."
+        },
+        {
+          "text": "Validation Test"
+        },
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Enter the source bucket name and destination bucket name in the user input fields and click the Validate My lab button."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Do you know ?"
+        },
+        {
+          "text": "AWS Lambda has a generous free tier that allows you to run up to 1 million requests and 400,000 GB-seconds of compute time per month for free, making it an ideal choice for small-scale projects and experiments."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You created two S3 buckets acting as source and destination."
+        },
+        {
+          "text": "You created an IAM policy and role that will be used for the Lambda function."
+        },
+        {
+          "text": "You have successfully created an AWS Lambda function and configured an S3 trigger."
+        },
+        {
+          "text": "You have successfully triggered the Lambda function to copy an image from the source S3 bucket to the destination S3 bucket."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out from the AWS Management Console."
+        },
+        {
+          "text": "Click on End Lab button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -1,0 +1,100 @@
+{
+  "slug": "creating-a-cloudwatch-dashboard-for-ec2-instance-challenge",
+  "title": "Creating a CloudWatch Dashboard and a Widget Challenge",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Challenge Steps",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "In this challenge, your analytics skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of AWS EC2 Instance and Cloudwatch Dashboard services which will be needed for the challenge."
+        },
+        {
+          "text": "A company XYZ is deploying an AWS EC2 instance. As a part of the infrastructure, they want to check how much CPU utilization their application takes and other metrics for their Testing Environment. Now your challenge is to build them an EC2 instance and CloudWatch Dashboard with the widgets and below requirements."
+        },
+        {
+          "text": "Create EC2 Instance type as t2.micro with SSH, HTTP."
+        },
+        {
+          "text": "Create EC2 Instance type as t2.micro with SSH, HTTP."
+        },
+        {
+          "text": "Create a Cloudwatch dashboard with a widget for an EC2 instance."
+        },
+        {
+          "text": "Create a Cloudwatch dashboard with a widget for an EC2 instance."
+        },
+        {
+          "text": "Save the Dashboard with your selected metric."
+        },
+        {
+          "text": "Save the Dashboard with your selected metric."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "After Validation Terminate all the resources."
+        },
+        {
+          "text": "After Validation Terminate all the resources."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}
