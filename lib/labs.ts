@@ -26,6 +26,9 @@ export type Lab = {
   sourceUrl?: string
 }
 
+export const shouldUseCompiledLabs = () =>
+  process.env.NODE_ENV === 'development' || process.env.USE_COMPILED_LABS === '1'
+
 export interface LabDBRow {
   slug: string
   title: string

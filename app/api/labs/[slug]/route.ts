@@ -1,18 +1,15 @@
 import { getRequestContext } from '@cloudflare/next-on-pages'
 import { findLabFallback } from '@/lib/labs-fallback'
-import { rowToLab, type LabDBRow } from '@/lib/labs'
+import { rowToLab, shouldUseCompiledLabs, type LabDBRow } from '@/lib/labs'
 
 export const runtime = 'edge'
 
 type RouteContext = { params: Promise<{ slug: string }> }
 
-const useCompiledLabs = () =>
-  process.env.NODE_ENV === 'development' || process.env.USE_COMPILED_LABS === '1'
-
 export async function GET(_request: Request, context: RouteContext) {
   const { slug } = await context.params
 
-  if (!useCompiledLabs()) {
+  if (!shouldUseCompiledLabs()) {
     try {
       const { env } = getRequestContext()
       const db = (env as CloudflareEnv).DB
