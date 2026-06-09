@@ -6,7 +6,7 @@ import { useAIChatHistory } from '@/hooks/useAIChatHistory'
 import { buildAIRequestHeaders } from '@/lib/ai/client-headers'
 import { byokProviderLabel, isByokProvider, needsByokKey } from '@/lib/ai/providers'
 import AISourceLinks from '@/components/ai/AISourceLinks'
-import type { ChatResponse } from '@/lib/ai/types'
+import type { ChatResponse, InternalLink } from '@/lib/ai/types'
 
 interface AIChatViewProps {
   provider: AIProvider
@@ -73,6 +73,7 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
             awsDocsUrl: data.awsDocsUrl,
             awsDocsTitle: data.awsDocsTitle,
             youtubeQuery: data.youtubeQuery,
+            internalLinks: data.internalLinks,
           },
         ])
         setUiState('idle')
@@ -140,6 +141,7 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
                     awsDocsUrl={msg.awsDocsUrl}
                     awsDocsTitle={msg.awsDocsTitle}
                     youtubeQuery={msg.youtubeQuery}
+                    internalLinks={msg.internalLinks}
                   />
                 )}
               </div>

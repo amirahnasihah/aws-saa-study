@@ -1,3 +1,5 @@
+export type { InternalLink } from '@/lib/ai/internal-links'
+
 export interface HintResponse {
   conceptName: string
   focusArea: string
@@ -11,6 +13,7 @@ export interface HintResponse {
   deepNotesIcon: string
   awsDocsUrl: string
   awsDocsTitle: string
+  internalLinks?: import('@/lib/ai/internal-links').InternalLink[]
 }
 
 export interface ExplainResponse {
@@ -21,6 +24,7 @@ export interface ExplainResponse {
   conceptName: string
   focusArea: string
   studyKeywords: string[]
+  internalLinks?: import('@/lib/ai/internal-links').InternalLink[]
 }
 
 export interface ChatResponse {
@@ -28,6 +32,7 @@ export interface ChatResponse {
   awsDocsUrl: string
   awsDocsTitle: string
   youtubeQuery: string
+  internalLinks?: import('@/lib/ai/internal-links').InternalLink[]
 }
 
 export interface ErrorResponse {

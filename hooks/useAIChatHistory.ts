@@ -12,12 +12,15 @@ import {
 
 const MAX_MESSAGES = 48
 
+import type { InternalLink } from '@/lib/ai/internal-links'
+
 export interface PersistedChatMessage {
   role: 'user' | 'assistant'
   content: string
   awsDocsUrl?: string
   awsDocsTitle?: string
   youtubeQuery?: string
+  internalLinks?: InternalLink[]
 }
 
 const EMPTY_HISTORY: PersistedChatMessage[] = []

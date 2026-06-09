@@ -1,5 +1,6 @@
 import { buildDocsSearchPhrase, resolveAwsDocLink } from '@/lib/ai/aws-knowledge'
 import { completeJson, resolveAiProvider } from '@/lib/ai/complete-json'
+import { findInternalLinks } from '@/lib/ai/internal-links'
 import { parseAIJson } from '@/lib/ai/json'
 import { findNotesUrl } from '@/lib/ai/notes'
 import type { ErrorResponse, ExplainResponse } from '@/lib/ai/types'
@@ -70,7 +71,10 @@ async function toExplainResponse(
     ...(json?.studyKeywords ?? []),
     ...searchParts,
   ])
-  const awsDoc = await resolveAwsDocLink(docsSearchPhrase, ['general', 'reference_documentation'])
+  const [awsDoc, internalLinks] = await Promise.all([
+    resolveAwsDocLink(docsSearchPhrase, ['general', 'reference_documentation']),
+    Promise.resolve(findInternalLinks([...searchParts, ...(json?.studyKeywords ?? [])])),
+  ])
 
   return {
     explanation: json?.explanation ?? rawText,
@@ -80,6 +84,7 @@ async function toExplainResponse(
     conceptName: json?.conceptName ?? '',
     focusArea: json?.focusArea ?? '',
     studyKeywords: json?.studyKeywords ?? [],
+    internalLinks,
   }
 }
 
