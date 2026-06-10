@@ -10,7 +10,16 @@
       "database_name": "aws-saa-questions",
       "database_id": "fcd5855c-4ff3-4c38-a1c0-3e5e94d1a5ba"
     }
-  ]
+  ],
+  "vectorize": [
+    {
+      "binding": "GLOSSARY_INDEX",
+      "index_name": "glossary-rag"
+    }
+  ],
+  "ai": {
+    "binding": "AI"
+  }
   // AI keys are Secrets — NOT vars here (empty vars blocked dashboard + broke /api/ai/*).
   // Set via CF Dashboard → Settings → Variables → Add → Secret (Preview + Production).
   // Or: bunx wrangler pages secret put ILMU_API_KEY --project-name aws-saa-study

@@ -15,6 +15,17 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    id: '2026-06-11',
+    date: '2026-06-11',
+    changes: [
+      { type: 'feat', text: 'RAG over glossary + labs: 197 glossary terms and 110 labs embedded into Cloudflare Vectorize (@cf/baai/bge-base-en-v1.5, 768-dim cosine index "glossary-rag") for semantic retrieval' },
+      { type: 'feat', text: 'lib/ai/rag.ts — queryRag() embeds the question and retrieves the top-K most similar entries (similarity ≥ 0.6); formatRagContext() injects them as AWS-verified grounding context' },
+      { type: 'feat', text: '/api/ai/explain (practice AI Explain drawer) now grounds answers in semantically matched glossary definitions, not just keyword matches' },
+      { type: 'feat', text: '/api/ai/explain-arch (Visual page sidebar) now grounds node + diagram explanations in retrieved glossary and lab content alongside live AWS docs search' },
+      { type: 'chore', text: 'scripts/sync-rag-index.ts (bun run rag:sync): offline embedding + upsert pipeline via Workers AI and Vectorize v2 REST APIs, idempotent by content hash' },
+    ],
+  },
+  {
     id: '2026-06-09',
     date: '2026-06-09',
     changes: [

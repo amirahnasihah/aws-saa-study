@@ -20,7 +20,8 @@
     "seed:screenshots": "bun run scripts/seed-screenshot-metadata.ts",
     "verify:aws-refs": "bun run scripts/verify-aws-references.ts",
     "changelog:draft": "bun run scripts/changelog-from-git.ts",
-    "pwa:icons": "node scripts/generate-pwa-icons.mjs"
+    "pwa:icons": "node scripts/generate-pwa-icons.mjs",
+    "rag:sync": "bun run scripts/sync-rag-index.ts"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.2",
