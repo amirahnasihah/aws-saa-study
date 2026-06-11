@@ -1,5 +1,6 @@
 export const CHAT_SESSION_KEY = 'aws_study_ai_chat_history'
 export const HINT_SESSION_KEY = 'aws_study_hint_cache_v2'
+export const PRACTICE_SESSION_KEY = 'aws_study_practice_state_v1'
 export const AI_SESSION_CHANGED = 'ai-session-changed'
 
 /** Shown in native confirm() for back / in-app links (browsers block custom beforeunload text). */
