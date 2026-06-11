@@ -1,4 +1,4 @@
-import { labs, type Lab } from '@/data/labs'
+import { allLabsFallback } from '@/lib/labs-fallback'
 
 export type InternalLink = {
   url: string
@@ -41,22 +41,28 @@ function matchVpcSection(terms: string[]): InternalLink | null {
 
 // ── Labs index ────────────────────────────────────────────────────────────────
 
-// Services that appear on almost every lab — matching these alone is not
-// enough to consider a lab relevant for a given context.
-const GENERIC_SERVICES = new Set(['vpc', 'iam', 'cloudwatch', 'cloudtrail'])
+// Words that appear in a large fraction of lab titles (e.g. "Amazon EC2 ...",
+// "... using AWS ...") — too generic to signal which lab is relevant.
+const TITLE_STOPWORDS = new Set([
+  'amazon', 'aws', 'and', 'with', 'using', 'how', 'for', 'from', 'into', 'via',
+  'the', 'your', 'introduction', 'create', 'creating', 'build', 'building',
+  'part', 'case', 'study', 'challenge', 'configure', 'configuring', 'setup',
+  'set', 'service', 'services', 'instance', 'instances',
+])
 
 type IndexedLab = {
   slug: string
   title: string
-  services: string[]       // original case preserved for display
-  titleWords: string[]     // lower-cased words from the lab title
+  titleWords: string[]     // lower-cased, non-generic words from the lab title
 }
 
-const labsIndex: IndexedLab[] = labs.map((lab: Lab) => ({
+const labsIndex: IndexedLab[] = allLabsFallback().map((lab) => ({
   slug: lab.slug,
   title: lab.title,
-  services: lab.services,
-  titleWords: lab.title.toLowerCase().split(/\W+/).filter((w) => w.length > 2),
+  titleWords: lab.title
+    .toLowerCase()
+    .split(/\W+/)
+    .filter((w) => w.length > 2 && !TITLE_STOPWORDS.has(w)),
 }))
 
 function matchLab(terms: string[]): InternalLink | null {
@@ -64,20 +70,13 @@ function matchLab(terms: string[]): InternalLink | null {
   let best: { lab: IndexedLab; score: number } | null = null
 
   for (const lab of labsIndex) {
-    let score = 0
+    // Title-word hit — highest signal (e.g. "RDS" in title matches "RDS" in terms)
+    const score = lab.titleWords.reduce(
+      (s, word) => (termBlob.includes(word) ? s + word.length * 3 : s),
+      0
+    )
 
-    // Title-word hit — highest signal (e.g. "EC2" in title matches "EC2" in terms)
-    for (const word of lab.titleWords) {
-      if (termBlob.includes(word)) score += word.length * 3
-    }
-
-    // Specific service hit — only count non-generic services
-    for (const svc of lab.services) {
-      const s = svc.toLowerCase()
-      if (!GENERIC_SERVICES.has(s) && termBlob.includes(s)) score += s.length * 2
-    }
-
-    if (score >= 10 && (!best || score > best.score)) best = { lab, score }
+    if (score >= 12 && (!best || score > best.score)) best = { lab, score }
   }
 
   if (!best) return null
