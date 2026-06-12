@@ -51,7 +51,9 @@ export async function POST(request: Request): Promise<Response> {
     apiKey,
     CHAT_SYSTEM_PROMPT,
     allMessages,
-    500
+    // Headroom for the JSON envelope + youtubeQuery/docsSearchPhrase so a
+    // concise reply isn't truncated mid-string (parser salvages either way).
+    700
   )
 
   if ('error' in aiResult) {
