@@ -1,7 +1,7 @@
 import { buildDocsSearchPhrase, resolveAwsDocLink } from '@/lib/ai/aws-knowledge'
 import { completeJson, resolveAiProvider } from '@/lib/ai/complete-json'
 import { findInternalLinks } from '@/lib/ai/internal-links'
-import { parseAIJson } from '@/lib/ai/json'
+import { parseAIJson, salvageText } from '@/lib/ai/json'
 import { findNotesUrl } from '@/lib/ai/notes'
 import { formatRagContext, queryRag } from '@/lib/ai/rag'
 import type { ErrorResponse, ExplainResponse } from '@/lib/ai/types'
@@ -79,7 +79,7 @@ async function toExplainResponse(
   ])
 
   return {
-    explanation: json?.explanation ?? rawText,
+    explanation: json?.explanation ?? salvageText(rawText, 'explanation') ?? rawText,
     notesUrl,
     awsDocsUrl: awsDoc.url,
     awsDocsTitle: awsDoc.title,

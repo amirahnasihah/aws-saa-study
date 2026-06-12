@@ -1,7 +1,7 @@
 import { buildDocsSearchPhrase, resolveAwsDocLink } from '@/lib/ai/aws-knowledge'
 import { completeChatMessages, resolveAiProvider } from '@/lib/ai/complete-json'
 import { findInternalLinks } from '@/lib/ai/internal-links'
-import { parseAIJson } from '@/lib/ai/json'
+import { parseAIJson, salvageText } from '@/lib/ai/json'
 import type { ChatResponse, ErrorResponse } from '@/lib/ai/types'
 
 export const runtime = 'edge'
@@ -59,7 +59,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const parsed = parseAIJson<ChatJson>(aiResult.text)
-  const reply = parsed?.reply ?? aiResult.text
+  const reply = parsed?.reply ?? salvageText(aiResult.text, 'reply') ?? aiResult.text
   const youtubeQuery = parsed?.youtubeQuery ?? 'AWS Solutions Architect tutorial'
   const docsSearchPhrase = buildDocsSearchPhrase([
     parsed?.docsSearchPhrase ?? '',
