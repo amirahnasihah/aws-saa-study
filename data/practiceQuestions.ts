@@ -20,6 +20,8 @@ export interface PracticeQuestion {
   source?: 'whizlab' | 'others' | 'official'
   pageNumber?: number
   screenshotUrl?: string
+  /** Source attribution for screenshotUrl when it is an AWS-docs architecture diagram. */
+  screenshotCredit?: string
 }
 
 export const practiceQuestions: PracticeQuestion[] = [
@@ -72,6 +74,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['CloudFront', 'CDN', 'static content', 'S3 origin', 'edge locations'],
+    screenshotUrl: '/diagrams/q-cloudfront-s3.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/Introduction.html',
   },
   {
     id: 'q-rds-multiaz',
@@ -97,6 +101,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['RDS Multi-AZ', 'automatic failover', 'high availability', 'standby replica'],
+    screenshotUrl: '/diagrams/q-rds-multiaz.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZSingleStandby.html',
   },
   {
     id: 'q-s3-encryption',
@@ -197,6 +203,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['Route 53 Failover', 'active-passive', 'health check', 'DR', 'primary secondary'],
+    screenshotUrl: '/diagrams/q-route53-failover.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover-complex-configs.html',
   },
   {
     id: 'q-lambda-vs-ec2',
@@ -323,6 +331,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['CodePipeline', 'CodeCommit', 'CodeBuild', 'CodeDeploy', 'CI/CD', 'DevOps pipeline'],
+    screenshotUrl: '/diagrams/q-cicd-pipeline.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/codepipeline/latest/userguide/concepts.html',
   },
   {
     id: 'q-codecommit-vs-github',
@@ -373,6 +383,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['NAT Gateway', 'private subnet', 'outbound internet', 'public subnet placement', 'no inbound'],
+    screenshotUrl: '/diagrams/q-vpc-nat-gateway.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html',
   },
   {
     id: 'q-nacl-deny',
@@ -423,6 +435,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['VPC peering', 'non-transitive', 'Transit Gateway', 'cross-VPC', 'routing'],
+    screenshotUrl: '/diagrams/q-vpc-peering-transitive.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/vpc/latest/peering/what-is-vpc-peering.html',
   },
   {
     id: 'q-cidr-calculation',
@@ -474,6 +488,8 @@ export const practiceQuestions: PracticeQuestion[] = [
     },
     reference: 'https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints.html',
     keywords: ['VPC endpoint', 'Gateway endpoint', 'S3', 'free', 'NAT cost reduction', 'private subnet'],
+    screenshotUrl: '/diagrams/q-vpc-endpoint-s3.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html',
   },
   {
     id: 'q-elb-cross-vpc',
@@ -500,6 +516,8 @@ export const practiceQuestions: PracticeQuestion[] = [
     },
     reference: 'https://aws.amazon.com/blogs/aws/new-application-load-balancing-via-ip-address-to-aws-on-premises-resources/',
     keywords: ['ALB', 'NLB', 'cross-VPC', 'IP target', 'peered VPC', 'load balancer', 'CLB limitation'],
+    screenshotUrl: '/diagrams/q-elb-cross-vpc.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/userguide/how-elastic-load-balancing-works.html',
   },
   {
     id: 'q-rds-cross-region',
@@ -526,6 +544,8 @@ export const practiceQuestions: PracticeQuestion[] = [
     },
     reference: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html',
     keywords: ['RDS', 'cross-region Read Replicas', 'multi-region', 'Multi-AZ vs Read Replicas', 'managed database', 'read scaling'],
+    screenshotUrl: '/diagrams/q-rds-cross-region.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_ReadRepl.html',
   },
   {
     id: 'q-sg-default-state',
@@ -630,6 +650,8 @@ export const practiceQuestions: PracticeQuestion[] = [
     },
     reference: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html',
     keywords: ['NAT Gateway', 'private subnet', 'outbound internet', 'IGW', 'internet gateway', 'route table', 'no inbound'],
+    screenshotUrl: '/diagrams/q-nat-gateway-private-outbound.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-example-private-subnets-nat.html',
   },
   {
     id: 'q-aws-pentest-policy',
@@ -683,6 +705,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['Cognito', 'Identity Pools', 'federated identity', 'temporary credentials', 'S3 direct access'],
+    screenshotUrl: '/diagrams/q-cognito-pools.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/cognito/latest/developerguide/authentication-flow.html',
   },
   {
     id: 'q-ram-share',
@@ -885,6 +909,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['Aurora', 'MySQL compatible', 'failover 30s', '6 copies', 'high availability'],
+    screenshotUrl: '/diagrams/q-aurora-ha.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.html',
   },
   {
     id: 'q-aurora-serverless',
@@ -935,6 +961,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['DynamoDB', 'DAX', 'microsecond latency', 'in-memory cache', 'read performance'],
+    screenshotUrl: '/diagrams/q-dynamodb-dax.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.concepts.html',
   },
   {
     id: 'q-fsx-windows',
@@ -985,6 +1013,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['DataSync', 'Storage Gateway', 'File Gateway', 'migration vs ongoing', 'NFS', 'S3'],
+    screenshotUrl: '/diagrams/q-datasync-vs-gateway.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/datasync/latest/userguide/how-datasync-transfer-works.html',
   },
   {
     id: 'q-dms-migration',
@@ -1010,6 +1040,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['DMS', 'Schema Conversion Tool', 'heterogeneous migration', 'Oracle to Aurora', 'minimal downtime'],
+    screenshotUrl: '/diagrams/q-dms-migration.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html',
   },
   {
     id: 'q-snow-family',
@@ -1191,6 +1223,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['Step Functions', 'workflow orchestration', 'retry logic', 'state machine', 'multi-step'],
+    screenshotUrl: '/diagrams/q-step-functions.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/step-functions/latest/dg/welcome.html',
   },
   {
     id: 'q-amazonmq-vs-sqs',
@@ -1241,6 +1275,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['Kinesis Data Firehose', 'delivery stream', 'S3 loading', 'no consumer code', 'vs Kinesis Streams'],
+    screenshotUrl: '/diagrams/q-firehose-vs-streams.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html',
   },
 
   // ── D3 · Infra ────────────────────────────────────────────────────────────
@@ -1268,6 +1304,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['CloudWatch', 'alarm', 'SNS', 'CPU utilization', 'EC2 monitoring'],
+    screenshotUrl: '/diagrams/q-cloudwatch-alarm.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/alarm-evaluation.html',
   },
   {
     id: 'q-xray-tracing',
@@ -1293,6 +1331,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['X-Ray', 'distributed tracing', 'service map', 'latency', 'microservices', 'bottleneck'],
+    screenshotUrl: '/diagrams/q-xray-tracing.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/xray/latest/devguide/aws-xray.html',
   },
 
   // ── D3 · Databases ────────────────────────────────────────────────────────
@@ -1422,6 +1462,8 @@ export const practiceQuestions: PracticeQuestion[] = [
       },
     },
     keywords: ['Glue', 'ETL', 'data catalog', 'Parquet', 'Redshift', 'Athena', 'crawler'],
+    screenshotUrl: '/diagrams/q-glue-etl.png',
+    screenshotCredit: 'https://docs.aws.amazon.com/glue/latest/dg/add-crawler.html',
   },
   {
     id: 'q-emr-big-data',

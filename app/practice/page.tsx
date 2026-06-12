@@ -453,15 +453,22 @@ function ReviewMode({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={q.screenshotUrl}
-                alt={`Question ${q.pageNumber ?? clampedIndex + 1} reference screenshot`}
+                alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? clampedIndex + 1} reference screenshot`}
                 className="w-full h-auto"
                 loading="lazy"
               />
-              {q.pageNumber && (
+              {q.screenshotCredit ? (
+                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                  Architecture diagram —{' '}
+                  <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
+                    AWS Documentation
+                  </a>
+                </figcaption>
+              ) : q.pageNumber ? (
                 <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
                   Practice test page {q.pageNumber}
                 </figcaption>
-              )}
+              ) : null}
             </figure>
           )}
           {hintHighlight.length > 0 ? (
@@ -624,15 +631,22 @@ function QuestionCard({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={q.screenshotUrl}
-                alt={`Question ${q.pageNumber ?? index + 1} reference screenshot`}
+                alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? index + 1} reference screenshot`}
                 className="w-full h-auto"
                 loading="lazy"
               />
-              {q.pageNumber && (
+              {q.screenshotCredit ? (
+                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                  Architecture diagram —{' '}
+                  <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
+                    AWS Documentation
+                  </a>
+                </figcaption>
+              ) : q.pageNumber ? (
                 <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
                   Practice test page {q.pageNumber}
                 </figcaption>
-              )}
+              ) : null}
             </figure>
           )}
           {hintHighlight.length > 0 ? (
