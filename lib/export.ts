@@ -36,7 +36,7 @@ export function chatToMarkdown(messages: PersistedChatMessage[]): string {
 
   const body = messages
     .map((m) => {
-      const speaker = m.role === 'user' ? '## 🙋 You' : '## 🤖 AI'
+      const speaker = m.role === 'user' ? '## You' : '## AI'
       const source = m.role === 'assistant' ? sourceLine(m.awsDocsUrl, m.awsDocsTitle) : ''
       return `${speaker}\n\n${m.content}${source}`
     })
