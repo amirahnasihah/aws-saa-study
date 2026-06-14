@@ -9,7 +9,7 @@ export const glossaryCategories: Record<string, string[]> = {
   'Containers':         ['awsvpc','ENI','bridge','host'],
   'Messaging':          ['SQS Long Polling','SQS Short Polling','Visibility Timeout','SQS FIFO','Dead Letter Queue','SNS fan-out','Step Functions','API Gateway throttling','API caching','Lambda authorizer','Usage Plan'],
   'CloudFront':         ['OAC','OAI'],
-  'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly'],
+  'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly','Amazon Translate','Amazon Transcribe'],
   'Analytics':          ['Amazon MSK','Amazon OpenSearch Service','AWS Data Exchange','Amazon Kinesis Data Streams','AWS Glue'],
   'Architecture':       ['stateful','stateless','Elastic IP','Backup and Restore','Pilot Light','Warm Standby','Active/Active','IaC','Blue/Green deployment','Canary deployment','Fan-out','Event-driven','Idempotency','Elasticity','Fault tolerance','Shared Responsibility Model','Serverless','Microservices','Containerization'],
   'IAM & Policies':     ['ARN','Principal','Identity-based policy','Resource-based policy','Permissions boundary','Managed policy','Inline policy','Trust policy','OU','Permission denied','ABAC','NotPrincipal'],
@@ -203,6 +203,8 @@ export const glossary: Record<string, string> = {
   'Amazon Kendra': 'Intelligent enterprise search service powered by ML. Indexes and searches across diverse data sources (S3, SharePoint, databases) including unstructured documents (PDF, Word, email). Natural language query understanding.',
   'Amazon Rekognition': 'Image and video analysis service. Detects objects, scenes, faces, text, and explicit content. Facial recognition and comparison. NOT for document text extraction (use Textract) or NLP (use Comprehend).',
   'Amazon Polly': 'Text-to-speech service: converts written text to lifelike audio. Supports multiple voices and languages. NOT for chatbots (use Lex) or text analysis (use Comprehend).',
+  'Amazon Translate': 'Neural machine translation service: converts text between languages (e.g. English ↔ Japanese). Real-time and batch. NOT speech (pair with Transcribe for audio→text→translate) or sentiment (use Comprehend).',
+  'Amazon Transcribe': 'Automatic speech recognition (ASR): converts audio/video speech to text. Speaker identification, custom vocabulary, call-centre analytics. NOT text-to-speech (use Polly) or translation (use Translate).',
 
   // Analytics
   'Amazon MSK': 'Managed Streaming for Apache Kafka — fully managed Kafka cluster on AWS. Handles broker provisioning, patching, storage scaling. NO SSH to brokers. Lambda integration requires Event Source Mapping. MSK Serverless auto-scales capacity.',
