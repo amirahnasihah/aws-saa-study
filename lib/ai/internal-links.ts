@@ -1,5 +1,4 @@
 import { allLabsFallback } from '@/lib/labs-fallback'
-import { NOTES_BASE, NOTES_SLUGS } from '@/lib/ai/notes'
 
 export type InternalLink = {
   url: string
@@ -89,34 +88,42 @@ function matchLab(terms: string[]): InternalLink | null {
   }
 }
 
-// ── Personal study notes (aws.amrhnshh.com) ────────────────────────────────────
+// ── Study notes (in-app /learn guide) ──────────────────────────────────────────
 
-// Slug → readable section name for the source-card sublabel.
-const NOTES_SECTION_TITLE: Record<string, string> = {
-  '/storage': 'Storage',
-  '/compute': 'Compute',
-  '/networking': 'Networking',
-  '/database': 'Database',
-  '/security': 'Security',
-  '/monitoring': 'Monitoring',
-}
+// The /learn page renders each domain section with an `id` anchor (see
+// app/learn/page.tsx), so we can deep-link straight to the relevant topic —
+// no external site needed, every link resolves within this app.
+const notesSections: Array<{ keywords: string[]; anchor: string; title: string }> = [
+  { keywords: ['ec2', 'lambda', 'fargate', 'compute', 'serverless', 'container', 'ecs', 'eks', 'instance type', 'auto scaling', 'asg'], anchor: 'd3-compute', title: 'Compute' },
+  { keywords: ['s3', 'ebs', 'efs', 'fsx', 'storage', 'glacier', 'object storage', 'block storage', 'file storage', 'volume', 'iops', 'throughput'], anchor: 'd3-storage', title: 'Storage' },
+  { keywords: ['cloudfront', 'route 53', 'route53', 'elb', 'load balancer', 'cdn', 'global accelerator', 'api gateway', 'delivery'], anchor: 'd3-network', title: 'Networking & Delivery' },
+  { keywords: ['rds', 'aurora', 'dynamodb', 'database', 'redshift', 'elasticache', 'documentdb', 'neptune', 'read replica'], anchor: 'd3-db', title: 'Databases' },
+  { keywords: ['sqs', 'sns', 'eventbridge', 'messaging', 'step functions', 'kinesis', 'amazon mq', 'decoupling'], anchor: 'd3-messaging', title: 'Messaging & Serverless' },
+  { keywords: ['iam', 'identity', 'iam role', 'iam policy', 'sts', 'permission', 'principal', 'assume role'], anchor: 'd1-iam', title: 'IAM & Identity' },
+  { keywords: ['security group', 'nacl', 'waf', 'shield', 'network security', 'firewall', 'ddos'], anchor: 'd1-netsec', title: 'Network Security' },
+  { keywords: ['kms', 'encryption', 'data protection', 'secrets manager', 'acm', 'certificate', 'at rest', 'in transit'], anchor: 'd1-data', title: 'Data Protection' },
+  { keywords: ['high availability', 'multi-az', 'multi az', 'failover', 'availability zone'], anchor: 'd2-ha', title: 'High Availability & Scaling' },
+  { keywords: ['disaster recovery', 'rpo', 'rto', 'pilot light', 'warm standby', 'backup'], anchor: 'd2-dr', title: 'Disaster Recovery' },
+  { keywords: ['pricing', 'cost', 'savings plan', 'reserved instance', 'spot instance', 'on-demand'], anchor: 'd4-pricing', title: 'EC2 Pricing Models' },
+]
 
 function matchNotes(terms: string[]): InternalLink | null {
   const blob = terms.map((t) => t.toLowerCase()).join(' ')
-  let best: { slug: string; score: number } | null = null
+  let best: { anchor: string; title: string; score: number } | null = null
 
-  for (const [keyword, slug] of Object.entries(NOTES_SLUGS)) {
+  for (const section of notesSections) {
     // Longer, more specific keywords (e.g. "dynamodb") outweigh broad ones ("database").
-    if (blob.includes(keyword) && (!best || keyword.length > best.score)) {
-      best = { slug, score: keyword.length }
+    const score = section.keywords.reduce((s, kw) => (blob.includes(kw) ? s + kw.length : s), 0)
+    if (score > 0 && (!best || score > best.score)) {
+      best = { anchor: section.anchor, title: section.title, score }
     }
   }
 
   if (!best) return null
   return {
-    url: NOTES_BASE + best.slug,
-    label: 'My Study Notes',
-    sublabel: NOTES_SECTION_TITLE[best.slug] ?? 'Study Notes',
+    url: `/learn#${best.anchor}`,
+    label: 'Study Notes',
+    sublabel: best.title,
     icon: '📓',
   }
 }
@@ -125,8 +132,8 @@ function matchNotes(terms: string[]): InternalLink | null {
 
 /**
  * Returns relevant internal site links for a given set of search terms.
- * Personal study notes come first (highest value to the learner), then Labs
- * and the VPC Guide. Capped at 3 to keep the sources panel clean.
+ * Study notes (the /learn guide) come first (highest value to the learner),
+ * then Labs and the VPC Guide. Capped at 3 to keep the sources panel clean.
  */
 export function findInternalLinks(terms: string[]): InternalLink[] {
   const links: InternalLink[] = []
