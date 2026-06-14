@@ -31,10 +31,19 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
   const [uiState, setUiState] = useState<UIState>('idle')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, uiState])
+
+  // Auto-grow the textarea with its content, capped at ~5 lines.
+  useEffect(() => {
+    const el = textareaRef.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${Math.min(el.scrollHeight, 140)}px`
+  }, [input])
 
   const sendMessage = async (text?: string) => {
     const content = (text ?? input).trim()
@@ -191,9 +200,10 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
       )}
 
       {/* Input row */}
-      <div className="flex gap-1.5 pt-3 border-t border-aws-border/30 shrink-0">
-        <input
-          type="text"
+      <div className="flex items-end gap-1.5 pt-3 border-t border-aws-border/30 shrink-0">
+        <textarea
+          ref={textareaRef}
+          rows={1}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -202,9 +212,9 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
               void sendMessage()
             }
           }}
-          placeholder="Ask an AWS question…"
+          placeholder="Ask an AWS question…  (Shift+Enter for new line)"
           disabled={uiState === 'loading' || needsKey}
-          className="flex-1 px-4 py-2.5 rounded-xl bg-aws-card border border-aws-border/60 text-aws-text text-base sm:text-[0.8rem] font-space-mono placeholder:text-[0.7rem] sm:placeholder:text-[0.8rem] placeholder:tracking-tight placeholder:text-aws-muted/35 focus:outline-none focus:border-c1/40 transition-colors disabled:opacity-50"
+          className="flex-1 resize-none max-h-[140px] overflow-y-auto px-4 py-2.5 rounded-xl bg-aws-card border border-aws-border/60 text-aws-text text-base sm:text-[0.8rem] font-space-mono leading-relaxed placeholder:text-[0.7rem] sm:placeholder:text-[0.8rem] placeholder:tracking-tight placeholder:text-aws-muted/35 focus:outline-none focus:border-c1/40 transition-colors disabled:opacity-50"
         />
 
         {/* Download chat as Markdown, only when there are messages */}
