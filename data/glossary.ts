@@ -11,6 +11,8 @@ export const glossaryCategories: Record<string, string[]> = {
   'CloudFront':         ['OAC','OAI'],
   'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly','Amazon Translate','Amazon Transcribe'],
   'Analytics':          ['Amazon MSK','Amazon OpenSearch Service','AWS Data Exchange','Amazon Kinesis Data Streams','AWS Glue'],
+  'Management & Gov':   ['AWS Organizations','SCP','Amazon CloudWatch','AWS CloudTrail','AWS Config','AWS CloudFormation','StackSets','AWS Trusted Advisor','AWS Compute Optimizer','AWS Control Tower'],
+  'Cost Management':    ['AWS Cost Explorer','AWS Budgets','Cost and Usage Report','Cost Allocation Tags'],
   'Architecture':       ['stateful','stateless','Elastic IP','Backup and Restore','Pilot Light','Warm Standby','Active/Active','IaC','Blue/Green deployment','Canary deployment','Fan-out','Event-driven','Idempotency','Elasticity','Fault tolerance','Shared Responsibility Model','Serverless','Microservices','Containerization'],
   'IAM & Policies':     ['ARN','Principal','Identity-based policy','Resource-based policy','Permissions boundary','Managed policy','Inline policy','Trust policy','OU','Permission denied','ABAC','NotPrincipal'],
   'Load Balancers':     ['ALB','NLB','CLB','Target Group'],
@@ -212,6 +214,24 @@ export const glossary: Record<string, string> = {
   'AWS Data Exchange': 'AWS marketplace for subscribing to and accessing third-party data products (market data, financial data, regulatory filings). Data delivered directly to your S3 bucket. Handles licensing and subscription management.',
   'Amazon Kinesis Data Streams': 'Real-time data streaming service. Captures GB/s of data with sub-second latency. Retains data 1–365 days. Integrates with Lambda, Firehose, Analytics. Use for real-time dashboards, ML, and event-driven architectures.',
   'AWS Glue': 'Serverless ETL (Extract, Transform, Load) service. Crawls data sources to build a metadata catalog, runs Spark-based transformation jobs, and orchestrates data pipelines. NOT a streaming or search service.',
+
+  // Management & Governance
+  'AWS Organizations': 'Centrally manage multiple AWS accounts: consolidated billing, volume discounts, and grouping accounts into Organizational Units (OUs). Apply SCPs to set permission guardrails across accounts.',
+  'SCP': 'Service Control Policy — Organizations guardrail that sets the MAXIMUM permissions for accounts/OUs. Does NOT grant access — it only limits what IAM can allow. An explicit deny in an SCP overrides any IAM allow.',
+  'Amazon CloudWatch': 'Monitoring for metrics, logs, alarms, and dashboards. Standard metrics every 5 min; detailed monitoring 1 min. EC2 memory & disk are NOT default — they need the CloudWatch agent. Answers "is it performing?".',
+  'AWS CloudTrail': 'Audit log of every API call (who did what, when, from where) across the account. Management + data events; can log to S3 / an org trail. Answers "who did this?". NOT performance (CloudWatch) or config state (Config).',
+  'AWS Config': 'Records resource configuration history and evaluates it against rules for compliance (e.g. "all EBS volumes must be encrypted"), with optional auto-remediation. Answers "is it compliant / what changed?".',
+  'AWS CloudFormation': 'Infrastructure as Code via declarative templates (YAML/JSON). Provisions resources as a Stack. Change sets preview edits; drift detection finds manual changes; StackSets deploy across accounts/regions.',
+  'StackSets': 'CloudFormation feature to deploy the same stack across MULTIPLE accounts and regions from one operation. Common with Organizations to roll out baseline guardrails fleet-wide.',
+  'AWS Trusted Advisor': 'Account-level checks across 5 pillars: cost optimization, security, fault tolerance, performance, and service limits. Full checks require Business/Enterprise Support.',
+  'AWS Compute Optimizer': 'Uses ML on CloudWatch metrics to recommend right-sizing for EC2, ASG, EBS, and Lambda — reduces over-provisioning. Recommendation engine, NOT an enforcement tool.',
+  'AWS Control Tower': 'Sets up and governs a secure multi-account AWS environment (landing zone) using Organizations + guardrails + SSO. Higher-level automation on top of Organizations.',
+
+  // Cost Management
+  'AWS Cost Explorer': 'Visualize, understand, and FORECAST AWS spend over time with filters by service/tag/account. Analysis & forecasting tool — NOT alerting (use Budgets).',
+  'AWS Budgets': 'Set custom cost/usage thresholds and get ALERTED (or trigger actions) when forecast or actual spend exceeds them. Proactive alerting — NOT historical analysis (use Cost Explorer).',
+  'Cost and Usage Report': 'CUR — the most detailed, line-item billing data AWS produces, delivered to S3 for deep analysis (e.g. via Athena/QuickSight). Granular raw data, not a dashboard.',
+  'Cost Allocation Tags': 'Tags (user-defined or AWS-generated) activated in the billing console so costs can be grouped and reported by project, team, or environment.',
 
   // Security concepts & policy
   'bastion host': 'EC2 in a public subnet used as the only SSH/RDP entry point into private subnet instances — connect to bastion first, then hop to private instances',
