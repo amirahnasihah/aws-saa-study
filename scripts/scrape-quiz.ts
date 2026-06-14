@@ -441,7 +441,7 @@ const toSqlRow = (q: AnsweredQuestion, setId: string, idx: number): string => {
   const ref = q.reference ? `'${esc(q.reference)}'` : 'NULL'
   const screenshot = `'/questions/${setId}/${setId}-${String(idx).padStart(3, '0')}.png'`
 
-  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source, page_number, screenshot_url) VALUES ('${id}', '${q.domain}', '${esc(q.domainLabel)}', '${q.difficulty}', '${esc(q.scenario || 'TODO')}', '${opts}', '${esc(q.correctId)}', '${expl}', ${ref}, '${kws}', 'whizlab', ${idx}, ${screenshot});`
+  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source, page_number, screenshot_url) VALUES ('${id}', '${q.domain}', '${esc(q.domainLabel)}', '${q.difficulty}', '${esc(q.scenario || 'TODO')}', '${opts}', '${esc(q.correctId)}', '${expl}', ${ref}, '${kws}', 'core', ${idx}, ${screenshot});`
 }
 
 // ---------------------------------------------------------------------------

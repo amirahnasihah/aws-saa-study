@@ -11,7 +11,7 @@
     "test": "echo \"No tests configured\"",
     "lint": "eslint",
     "deploy": "next build && bunx next-on-pages && bunx wrangler pages deploy --commit-dirty=true",
-    "scrape:quiz": "bun run scripts/scrape-whizlabs-quiz.ts",
+    "scrape:quiz": "bun run scripts/scrape-quiz.ts",
     "scrape:lab": "bun run scripts/scrape-course-lab.ts",
     "seed:labs": "bun run scripts/seed-labs.ts",
     "labs:compile": "bun run scripts/compile-labs-from-json.ts",
