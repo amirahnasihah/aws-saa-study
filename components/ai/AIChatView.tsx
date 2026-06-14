@@ -6,6 +6,7 @@ import { useAIChatHistory } from '@/hooks/useAIChatHistory'
 import { buildAIRequestHeaders } from '@/lib/ai/client-headers'
 import { byokProviderLabel, isByokProvider, needsByokKey } from '@/lib/ai/providers'
 import AISourceLinks from '@/components/ai/AISourceLinks'
+import CopyButton from '@/components/ai/CopyButton'
 import type { ChatResponse, InternalLink } from '@/lib/ai/types'
 
 interface AIChatViewProps {
@@ -128,8 +129,13 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
         {messages.map((msg, i) => (
           <div key={i} className={msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
             {msg.role === 'user' ? (
-              <div className="max-w-[78%] px-3.5 py-2.5 rounded-2xl rounded-tr-sm bg-c1/10 border border-c1/15 font-space-mono text-[0.78rem] text-aws-text leading-relaxed">
-                {msg.content}
+              <div className="flex flex-col items-end gap-1 max-w-[78%]">
+                <div className="px-3.5 py-2.5 rounded-2xl rounded-tr-sm bg-c1/10 border border-c1/15 font-space-mono text-[0.78rem] text-aws-text leading-relaxed">
+                  {msg.content}
+                </div>
+                <div className="pr-1">
+                  <CopyButton text={msg.content} label="Copy your message" />
+                </div>
               </div>
             ) : (
               <div className="max-w-[92%] space-y-2">
@@ -144,6 +150,9 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
                     internalLinks={msg.internalLinks}
                   />
                 )}
+                <div className="pl-1">
+                  <CopyButton text={msg.content} label="Copy AI response" />
+                </div>
               </div>
             )}
           </div>
