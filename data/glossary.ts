@@ -145,6 +145,7 @@ export const glossary: Record<string, string> = {
   'DRA': 'Data Repository Association — FSx for Lustre feature linking an S3 bucket to the file system so objects are lazily imported and processed files can be exported back to S3',
 
   // Auto Scaling states
+  'ASG Lifecycle Hook': 'Auto Scaling mechanism that pauses an instance in a wait state during a transition so custom actions can run before it proceeds. Two wait states: Pending:Wait (before InService — bootstrap, install, register) and Terminating:Wait (before termination — drain connections, flush logs, cleanup). Actions run via EventBridge+Lambda, SSM Run Command, or local scripts; you call CompleteLifecycleAction (or wait out the default 1-hour timeout) to continue. Distinct from a lifecycle state.',
   'Standby state': 'ASG lifecycle state where an instance is removed from the active pool (stops receiving traffic) without being terminated — used for in-place maintenance; returns to InService when done',
   'cooldown period': 'ASG setting (default 300 s) that blocks new scaling actions after a scaling event to let the fleet stabilize before evaluating whether more scaling is needed',
   'InService': 'Normal running state for an Auto Scaling group instance — registered with the load balancer and receiving traffic',
