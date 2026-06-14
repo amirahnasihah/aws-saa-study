@@ -1,4 +1,5 @@
 import { allLabsFallback } from '@/lib/labs-fallback'
+import { NOTES_BASE, NOTES_SLUGS } from '@/lib/ai/notes'
 
 export type InternalLink = {
   url: string
@@ -88,14 +89,50 @@ function matchLab(terms: string[]): InternalLink | null {
   }
 }
 
+// ── Personal study notes (aws.amrhnshh.com) ────────────────────────────────────
+
+// Slug → readable section name for the source-card sublabel.
+const NOTES_SECTION_TITLE: Record<string, string> = {
+  '/storage': 'Storage',
+  '/compute': 'Compute',
+  '/networking': 'Networking',
+  '/database': 'Database',
+  '/security': 'Security',
+  '/monitoring': 'Monitoring',
+}
+
+function matchNotes(terms: string[]): InternalLink | null {
+  const blob = terms.map((t) => t.toLowerCase()).join(' ')
+  let best: { slug: string; score: number } | null = null
+
+  for (const [keyword, slug] of Object.entries(NOTES_SLUGS)) {
+    // Longer, more specific keywords (e.g. "dynamodb") outweigh broad ones ("database").
+    if (blob.includes(keyword) && (!best || keyword.length > best.score)) {
+      best = { slug, score: keyword.length }
+    }
+  }
+
+  if (!best) return null
+  return {
+    url: NOTES_BASE + best.slug,
+    label: 'My Study Notes',
+    sublabel: NOTES_SECTION_TITLE[best.slug] ?? 'Study Notes',
+    icon: '📓',
+  }
+}
+
 // ── Public API ────────────────────────────────────────────────────────────────
 
 /**
  * Returns relevant internal site links for a given set of search terms.
- * Results are de-duped and capped at 2 to keep the sources panel clean.
+ * Personal study notes come first (highest value to the learner), then Labs
+ * and the VPC Guide. Capped at 3 to keep the sources panel clean.
  */
 export function findInternalLinks(terms: string[]): InternalLink[] {
   const links: InternalLink[] = []
+
+  const notes = matchNotes(terms)
+  if (notes) links.push(notes)
 
   const lab = matchLab(terms)
   if (lab) links.push(lab)
@@ -103,5 +140,5 @@ export function findInternalLinks(terms: string[]): InternalLink[] {
   const vpc = matchVpcSection(terms)
   if (vpc) links.push(vpc)
 
-  return links.slice(0, 2)
+  return links.slice(0, 3)
 }
