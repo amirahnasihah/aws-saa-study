@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Space_Mono, Inter } from 'next/font/google'
 import AIUnloadGuard from '@/components/AIUnloadGuard'
 import { BookmarksProvider } from '@/components/BookmarksContext'
+import { AnswerBookmarksProvider } from '@/components/AnswerBookmarksContext'
 import { SITE_URL } from '@/data/siteLinks'
 import './globals.css'
 
@@ -71,8 +72,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" data-scroll-behavior="smooth" className={`${inter.variable} ${spaceMono.variable}`}>
       <body>
         <BookmarksProvider>
-          <AIUnloadGuard />
-          {children}
+          <AnswerBookmarksProvider>
+            <AIUnloadGuard />
+            {children}
+          </AnswerBookmarksProvider>
         </BookmarksProvider>
       </body>
     </html>

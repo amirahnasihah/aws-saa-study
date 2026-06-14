@@ -1,0 +1,329 @@
+{
+  "slug": "how-to-encrypt-an-unencrypted-rds-db-instance",
+  "title": "How to Encrypt an Unencrypted RDS DB Instance",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:20:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an RDS DB Instance (without enabling the Encryption)",
+      "steps": [
+        {
+          "text": "Navigate to the Services menu at the top left corner and click on RDS present under the Database section."
+        },
+        {
+          "text": "Select the Database from the left panel."
+        },
+        {
+          "text": "Click on Create Database and you are navigated to the page where you will provide all the required details to create a MySQL database."
+        },
+        {
+          "text": "On the page, click on the option Standard create a method for our lab requirement."
+        },
+        {
+          "text": "In the Engine options, select MySQL engine type."
+        },
+        {
+          "text": "Edition: Leave it as default"
+        },
+        {
+          "text": "Under Templates, select the Dev/Test option. Availability option as Single-AZ DB instance deployment (1 Instance)."
+        },
+        {
+          "text": "Under Settings, provide the following details."
+        },
+        {
+          "text": "DB cluster identifier: Enter test-db"
+        },
+        {
+          "text": "Master username: Enter master"
+        },
+        {
+          "text": "Credentials management: select Self managed"
+        },
+        {
+          "text": "Master password and Confirm master password: Enter"
+        },
+        {
+          "text": "lab123"
+        },
+        {
+          "text": "Under DB instance class, select Burstable classes (includes t classes) and select db.t3.micro"
+        },
+        {
+          "text": "Storage type : General Purpose (SSD)"
+        },
+        {
+          "text": "Allocated storage : 20"
+        },
+        {
+          "text": "Uncheck Enable storage autoscaling."
+        },
+        {
+          "text": "Leave the Availability and durability as default."
+        },
+        {
+          "text": "Under Connectivity, make sure that Public access is No. Leave everything else as default."
+        },
+        {
+          "text": "Uncheck Enhanced Monitoring option."
+        },
+        {
+          "text": "Expand the Additional configuration."
+        },
+        {
+          "text": "Initial database name : Enter projectdb"
+        },
+        {
+          "text": "Leave DB parameter group and Option group as default."
+        },
+        {
+          "text": "Uncheck Enable automatic backups."
+        },
+        {
+          "text": "Uncheck Enable encryption option."
+        },
+        {
+          "text": "Uncheck Deletion protection."
+        },
+        {
+          "text": "Click on Create Database to create the database. This process does take time between 5-10 minutes."
+        },
+        {
+          "text": "Once the database is created the status changes to Available."
+        },
+        {
+          "text": "Click on the database and navigate to the Configuration tab. You can notice that the Encryption is not enabled, as we wanted it to be."
+        },
+        {
+          "text": "If we select the database and go to modify it, we will not find an option to Encrypt the database."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Take a snapshot from the existing DB Instance",
+      "steps": [
+        {
+          "text": "Select the created DB Instance and click on Actions."
+        },
+        {
+          "text": "Click Take snapshot from the options."
+        },
+        {
+          "text": "Give a name to the snapshot, test-snapshot-01 and click on the Take snapshot button."
+        },
+        {
+          "text": "The snapshot creation takes 3-5 minutes. Refresh after some time, the snapshot creation status will be available."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Make a copy of the snapshot and encrypt it",
+      "steps": [
+        {
+          "text": "It is not possible to encrypt the snapshot in this stage. We need to encrypt the snapshot while taking a copy of it."
+        },
+        {
+          "text": "Under the Manual snapshots, select the created snapshot and click on Actions."
+        },
+        {
+          "text": "Click Copy snapshot from the options."
+        },
+        {
+          "text": "Under settings, provide the following details."
+        },
+        {
+          "text": "New DB Snapshot Identifier: Enter test-snapshot-encrypted"
+        },
+        {
+          "text": "Destination Region: Select US East (N.Virginia)"
+        },
+        {
+          "text": "Under Encryption, check Enable Encryption. Leave the master key as default.(IMPORTANT)"
+        },
+        {
+          "text": "Click on the Copy snapshot button. The snapshot will be created within 3 - 5 minutes."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Restore DB Instance from the encrypted snapshot",
+      "steps": [
+        {
+          "text": "Click on the encrypted snapshot and click on Actions."
+        },
+        {
+          "text": "Click on Restore snapshot from the options."
+        },
+        {
+          "text": "Under Availability and Durability select Single DB Instance zone"
+        },
+        {
+          "text": "Settings, enter the name of DB Instance as test-db-encrypted."
+        },
+        {
+          "text": "Make the other settings exactly as the original DB Instance."
+        },
+        {
+          "text": "Under the DB instance class, select Burstable classes (including t classes) and select db.t3.micro"
+        },
+        {
+          "text": "Under Encryption, you can see the Enable Encryption is enabled and cannot make changes since the snapshot is encrypted."
+        },
+        {
+          "text": "Leave DB parameter group and Option group as default."
+        },
+        {
+          "text": "Click on Restore DB Instance button. The database creation takes around 5-10 minutes."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Change the name of the original DB Instance",
+      "steps": [
+        {
+          "text": "We have to make sure that the Endpoint of the restored DB Instance should be the same as the original DB Instance."
+        },
+        {
+          "text": "To do so, we have to change the names of the DB Instances as the names are unique."
+        },
+        {
+          "text": "Select the original DB Instance and click on Modify."
+        },
+        {
+          "text": "Change the DB Instance Identifier to test-db-unencrypted."
+        },
+        {
+          "text": "Leave everything as default and click on Continue."
+        },
+        {
+          "text": "Verify the new values of the DB Instance Identifier and the Endpoint."
+        },
+        {
+          "text": "Under Scheduling of modifications, select Apply Immediately and click on Modify DB Instance button."
+        },
+        {
+          "text": "It might take some time to reboot the DB Instance. Press ctrl+R if you are not able to see the changes."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Change the name of the Restored DB Instance to the original DB Instance name",
+      "steps": [
+        {
+          "text": "Select on the restored database and click on Modify."
+        },
+        {
+          "text": "Change the DB Instance Identifier to test-db."
+        },
+        {
+          "text": "Leave everything as default and click on Continue."
+        },
+        {
+          "text": "Verify the new values of the DB Instance Identifier and the Endpoint."
+        },
+        {
+          "text": "Under Scheduling of modifications, select Apply Immediately and click on Modify DB Instance button."
+        },
+        {
+          "text": "It might take some time to reboot the DB Instance. Press ctrl+R if you are not able to see the changes."
+        },
+        {
+          "text": "Once the database is modified, click and open test-db i.e, the encrypted DB Instance."
+        },
+        {
+          "text": "Click on the database and navigate to the Configuration tab. You can notice that the Encryption is enabled."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Delete the unencrypted RDS DB Instance and snapshot",
+      "steps": [
+        {
+          "text": "Since we have the encrypted DB Instance, we shall delete the unencrypted DB Instance and the snapshot associated."
+        },
+        {
+          "text": "Click on Databases present to the left of the screen."
+        },
+        {
+          "text": "Select the Unencrypted DB Instance (i.e test-db-unencrypted) and click on Actions."
+        },
+        {
+          "text": "Click on the Delete option."
+        },
+        {
+          "text": "Uncheck the Create final snapshot option."
+        },
+        {
+          "text": "Check the Acknowledge box."
+        },
+        {
+          "text": "Confirm the deletion by entering delete me and click on delete."
+        },
+        {
+          "text": "Click on the Snapshots on the left of your screen."
+        },
+        {
+          "text": "Under Manual snapshots, select the unencrypted snapshot (i.e. test-snapshot-01) and click on Actions."
+        },
+        {
+          "text": "Click on the Delete snapshot option."
+        },
+        {
+          "text": "Confirm by clicking on the Delete button."
+        },
+        {
+          "text": "In this way, you can encrypt an unencrypted RDS DB Instance."
+        },
+        {
+          "text": "Wait till both resources are completely deleted. This step is to avoid confusion in the validation report."
+        },
+        {
+          "text": "Do you know?"
+        },
+        {
+          "text": "Database encryption is a critical component of a comprehensive security strategy. It helps protect data from unauthorized access, complies with regulatory requirements, mitigates the impact of data breaches, enhances cloud security, builds trust with customers, and mitigates insider threats."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the right-side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

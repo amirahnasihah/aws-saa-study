@@ -1,0 +1,256 @@
+{
+  "slug": "resizing-amazon-ebs-volume",
+  "title": "Resizing Amazon EBS Volume",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        }
+      ]
+    },
+    {
+      "title": "Task 2 : Launching Amazon EC2 instance",
+      "steps": [
+        {
+          "text": "In this task, we are going to launch an EC2 Instance."
+        },
+        {
+          "text": "Make sure to choose the US East (N. Virginia) us-east-1 region."
+        },
+        {
+          "text": "Navigate to Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Click on Instances from the left sidebar and then click on Launch instances button."
+        },
+        {
+          "text": "Name : Enter EC2 instance for Volume resize lab"
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 kernel-6.1 AMI in the Quick Start menu."
+        },
+        {
+          "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: WhizKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Select Create key pair Button."
+        },
+        {
+          "text": "In Network Settings, click on Edit:"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select Create new Security group"
+        },
+        {
+          "text": "Security group name : Enter MyEC2Server_SG"
+        },
+        {
+          "text": "Check Allow SSH from and Select Anywhere from dropdown"
+        },
+        {
+          "text": "To add SSH,"
+        },
+        {
+          "text": "Choose Type: SSH"
+        },
+        {
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "Keep rest thing Default and Click on Launch Instance Button."
+        },
+        {
+          "text": "Select View all Instances to View the Instance you Created"
+        },
+        {
+          "text": "Launch Status: Your instances are now launching, Navigate to Instances page from left menu and wait the status of the EC2 Instance changes to running"
+        }
+      ]
+    },
+    {
+      "title": "Task 3 : Resizing the EBS Volumes",
+      "steps": [
+        {
+          "text": "In this task, we are going to demonstrate how to resize an Amazon EBS volume associated with an EC2 instance."
+        },
+        {
+          "text": "In the EC2 dashboard, select EC2 instance for Volume resize lab and navigate to the Storage tab and then click on Volume ID present."
+        },
+        {
+          "text": "Select the Volume and then go to the Actions menu dropdown. Click on Modify Volume."
+        },
+        {
+          "text": "Provide the new Volume Size you need to increase to, and also note that we are not able to decrease the volume size. In our case, I’m modifying from 8GiB to 20GiB and then clicking on Modify."
+        },
+        {
+          "text": "Now, after modifying the volume, we need to increase the partition and file system. To do so, we need to SSH into the server with the key we downloaded while launching the server."
+        },
+        {
+          "text": "To SSH into EC2 Instance. Follow the below steps."
+        },
+        {
+          "text": "Once the instance is created. Select the instance EC2 instance for Volume resize lab. Click on connect button."
+        },
+        {
+          "text": "Now select the EC2 instance connect option. We can see there are four options for connecting to EC2. You can use any of the given options to get in the console but for our lab, we are using EC2 instance connect."
+        },
+        {
+          "text": "A new tab would be opened in your browser where we can see the console."
+        },
+        {
+          "text": "Enter the command"
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "Run the following commands."
+        },
+        {
+          "text": "df -h"
+        },
+        {
+          "text": "The above command will list the amount of free disk space available in the server. You can also see that the drive volume which we have increased will not be added to it."
+        },
+        {
+          "text": "Now run the following command to see the list of all the block devices that are associated with the instance (which will show the increased size of the partition volume):"
+        },
+        {
+          "text": "lsblk"
+        },
+        {
+          "text": "The root volume has a partition /dev/xvda1 whereas the root volume (/dev/xvda) reflects the new size. This tells us the partition size needs to be extended."
+        },
+        {
+          "text": "Extend the size by using the following command:"
+        },
+        {
+          "text": "growpart /dev/xvda 1"
+        },
+        {
+          "text": "Find the file system of the block devices associated with the EC2 instance by entering the following command:"
+        },
+        {
+          "text": "lsblk -f"
+        },
+        {
+          "text": "The above command will provide us the file system of the block devices which will be one among the following types: ext2,ext3,ext4 or XFS"
+        },
+        {
+          "text": "Our file system type is ext4, so for this file system, use the below command (also for ext2,ext4):"
+        },
+        {
+          "text": "resize2fs /dev/xvda1"
+        },
+        {
+          "text": "Note: If the file system is XFS then run the below command"
+        },
+        {
+          "text": "xfs_growfs /dev/xvda1"
+        },
+        {
+          "text": "Now find the effective file system extended volume size,"
+        },
+        {
+          "text": "df -h"
+        },
+        {
+          "text": "You have successfully launched an EC2 instance and re-sized the root EBS volume of the instance with zero downtime."
+        },
+        {
+          "text": "Similarly, we can resize the secondary volume associated with the instance in the same way."
+        },
+        {
+          "text": "Note: Make sure that the Volume state is In-Use before validating the lab."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "When you resize an EBS volume, the underlying data remains intact, and the volume retains all its existing data and configurations. The resize operation simply extends the capacity of the volume to accommodate the increased size."
+        }
+      ]
+    },
+    {
+      "title": "Task 4 : Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully used the AWS management console to launch an EC2 instance with 8GiB of root volume"
+        },
+        {
+          "text": "You have modified the EBS Volume from 8GiB to 20GiB in the AWS Console"
+        },
+        {
+          "text": "You have successfully accessed the EC2 instance using SSH via CLI."
+        },
+        {
+          "text": "You have extended the file system as well as the partition of the EBS volume."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -1,0 +1,434 @@
+{
+  "slug": "create-elastic-network-interface-multiple-ips-on-an-ec2",
+  "title": "Create Elastic Network Interface - Multiple IPs on an EC2",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a Security Group for the EC2 Instance",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top left, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "On the left panel menu, select the security group under the Network & Security section."
+        },
+        {
+          "text": "Click on the Create Security Group button.."
+        },
+        {
+          "text": "We are going to create a security group for the EC2 instance."
+        },
+        {
+          "text": "Security group name: Enter EC2-Instance"
+        },
+        {
+          "text": "Description: Enter Security group for EC2 Instance"
+        },
+        {
+          "text": "VPC: Select Default VPC"
+        },
+        {
+          "text": "Click on the Add Rule button under Inbound rules."
+        },
+        {
+          "text": "Type : Select HTTP"
+        },
+        {
+          "text": "Source : Select Anywhere-IPv4"
+        },
+        {
+          "text": "In the textbox add 0.0.0.0/0"
+        },
+        {
+          "text": "Click on the Add rule button under Inbound rules."
+        },
+        {
+          "text": "Type : Select SSH"
+        },
+        {
+          "text": "Source : Select Anywhere-IPv4"
+        },
+        {
+          "text": "In the textbox add 0.0.0.0/0"
+        },
+        {
+          "text": "Leave everything as default and click on the Create Security Group button."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a Security Group for the Elastic Network Interface",
+      "steps": [
+        {
+          "text": "On the left panel menu, select the security group under the Network & Security section."
+        },
+        {
+          "text": "Click on the Create Security Group button."
+        },
+        {
+          "text": "We are going to create a Security Group for the Network interface."
+        },
+        {
+          "text": "Security group name: Enter Network-Interface-SG"
+        },
+        {
+          "text": "Description: Enter Security group for secondary ENI"
+        },
+        {
+          "text": "VPC: Select Default VPC"
+        },
+        {
+          "text": "Inbound rules:"
+        },
+        {
+          "text": "Click on the Add Rule button under Inbound rules."
+        },
+        {
+          "text": "Type : Select HTTP"
+        },
+        {
+          "text": "Source : Select Anywhere-IPv4"
+        },
+        {
+          "text": "In the textbox add 0.0.0.0/0"
+        },
+        {
+          "text": "Again click on the Add Rule button."
+        },
+        {
+          "text": "Type : Select SSH"
+        },
+        {
+          "text": "Source : Select Anywhere-IPv4"
+        },
+        {
+          "text": "In the textbox add 0.0.0.0/0"
+        },
+        {
+          "text": "Leave everything as default and click on the Create Security Group button."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Launch First EC2 Instance",
+      "steps": [
+        {
+          "text": "Make sure you are in the N. Virginia(us-east-1) Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top left, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Navigate to Instances from the left side menu and click on Launch Instances button."
+        },
+        {
+          "text": "Under the Name and tags section :"
+        },
+        {
+          "text": "Name : ENI"
+        },
+        {
+          "text": "Under the Application and OS Images (Amazon Machine Image) section :"
+        },
+        {
+          "text": "Select Quick Start tab and Amazon Linux under it"
+        },
+        {
+          "text": "Amazon Machine Image (AMI) : select Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "Under the Instance Type section :"
+        },
+        {
+          "text": "Instance Type : Select t2.micro"
+        },
+        {
+          "text": "Under the Key Pair (login) section :"
+        },
+        {
+          "text": "Key pair name : select Proceed without a key pair"
+        },
+        {
+          "text": "Under the Network Settings section :"
+        },
+        {
+          "text": "Click on Edit button"
+        },
+        {
+          "text": "Auto-assign public IP: select Enable"
+        },
+        {
+          "text": "Firewall (security groups) : Select Select existing security group"
+        },
+        {
+          "text": "Common security groups : Select Security group with name EC2-Instance"
+        },
+        {
+          "text": "Under the Advanced details section :"
+        },
+        {
+          "text": "Under the User data: copy and paste the following script to create an HTML page served by an Apache httpd web server."
+        },
+        {
+          "text": "#!/bin/bash"
+        },
+        {
+          "text": "dnf update -y"
+        },
+        {
+          "text": "dnf install -y httpd"
+        },
+        {
+          "text": "systemctl start httpd"
+        },
+        {
+          "text": "systemctl enable httpd"
+        },
+        {
+          "text": "echo \"<html><h1>Response coming from server</h1></html>\" > /var/www/html/index.html"
+        },
+        {
+          "text": "Keep everything else as default and click on the Launch instance button."
+        },
+        {
+          "text": "Launch Status: Your instance is now launching, Navigate to Instances page from the left menu and wait until the status of the EC2 Instance changes to running."
+        },
+        {
+          "text": "Copy the availability zone, and subnet id, we'll need them in the next steps."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create an Elastic Network Interface and attach it to the EC2 Instance",
+      "steps": [
+        {
+          "text": "Click on the Network Interfaces present in the left sidebar under Network & Security category."
+        },
+        {
+          "text": "By default, one network interface will be present."
+        },
+        {
+          "text": "Click on the Create Network Interface button to create a network interface."
+        },
+        {
+          "text": "Fill in the details as follows:"
+        },
+        {
+          "text": "Description: Enter Secondary ENI"
+        },
+        {
+          "text": "Subnet: Select the subnet that was noted in the previous step, in my case it's subnet-34ef3d05 and the availability zone is us-east-1e."
+        },
+        {
+          "text": "Private IPv4 address: Select Auto-assign"
+        },
+        {
+          "text": "Security group: Select Network-Interface-SG"
+        },
+        {
+          "text": "Tags: Click on the Add new tag button."
+        },
+        {
+          "text": "Enter Key as Name and Value as Secondary."
+        },
+        {
+          "text": "Once done, Click on the Create Network Interface button."
+        },
+        {
+          "text": "Now attach the network interface with EC2 instance, to do so perform the following task:"
+        },
+        {
+          "text": "Select the network interface created now i.e. Secondary one."
+        },
+        {
+          "text": "Click on the Actions button present on the right top corner."
+        },
+        {
+          "text": "Choose Attach option from the dropdown menu."
+        },
+        {
+          "text": "On the popup present, select the default VPC and EC2 instance, and click on the Attach button."
+        },
+        {
+          "text": "Secondary network interface is now attached with the EC2 instance."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Allocating Elastic IP Address",
+      "steps": [
+        {
+          "text": "To use an Elastic IP address, you need to allocate one to your account and then associate it with your instance or a network interface."
+        },
+        {
+          "text": "Navigate to EC2. Under EC2 Dashboard click on Elastic IP under Network & Security section."
+        },
+        {
+          "text": "Click on Allocate Elastic IP address button."
+        },
+        {
+          "text": "4. Click on Allocate directly as there are no changes to be made."
+        },
+        {
+          "text": "You can see that the Elastic IP has been allocated successfully as shown below."
+        },
+        {
+          "text": "Task 7: Associating an Elastic IP Address with the ENI"
+        },
+        {
+          "text": "Select the Elastic IP address created and click on Actions. Choose an option of Associate Elastic IP address."
+        },
+        {
+          "text": "2. Associate Elastic IP address"
+        },
+        {
+          "text": "Resource Type: Select Network interface"
+        },
+        {
+          "text": "Network interface: Choose Secondary"
+        },
+        {
+          "text": "Private IP address: Select the IP address present"
+        },
+        {
+          "text": "Click on the Associate button present."
+        },
+        {
+          "text": "3. Now you can see that the instance is associated with the Elastic IP address."
+        },
+        {
+          "text": "4. Go to the EC2 Instance, Refresh the entire browser tab and we can see that IPv4 Public IP and Elastic IP address assigned to the same EC2 Instance."
+        },
+        {
+          "text": "i.e. Multiple Public IPs for a single EC2 instance. And, there will be 2 Private IPv4 addresses assigned."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Associating an Elastic IP Address with the ENI",
+      "steps": [
+        {
+          "text": "Select the Elastic IP address created and click on Actions. Choose an option of Associate Elastic IP address."
+        },
+        {
+          "text": "Associate Elastic IP address"
+        },
+        {
+          "text": "Resource Type: Select Network interface"
+        },
+        {
+          "text": "Network interface: Choose Secondary"
+        },
+        {
+          "text": "Private IP address: Select the IP address present"
+        },
+        {
+          "text": "Click on the Associate button present."
+        },
+        {
+          "text": "Now you can see that the instance is associated with the Elastic IP address."
+        },
+        {
+          "text": "Go to the EC2 Instance, Refresh the entire browser tab and we can see that IPv4 Public IP and Elastic IP address assigned to the same EC2 Instance."
+        },
+        {
+          "text": "i.e. Multiple Public IPs for a single EC2 instance. And, there will be 2 Private IPv4 addresses assigned."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Test both the Public IP Address of the Instance",
+      "steps": [
+        {
+          "text": "Navigate to Network Interface's page and check both Public IPs."
+        },
+        {
+          "text": "Scroll towards the right to see the Public IPs."
+        },
+        {
+          "text": "Paste the Elastic IP i.e Public IPv4 Address of the Secondary network interface in the browser."
+        },
+        {
+          "text": "And put the Public IPv4 Address of the Primary network interface in the browser."
+        },
+        {
+          "text": "So with this use case, you now have two public IPs for the one EC2 Instance."
+        },
+        {
+          "text": "Do you know?"
+        },
+        {
+          "text": "ENIs allow instances to have multiple private IP addresses. This can be useful in various scenarios, such as hosting multiple websites or applications on a single instance, or when you need separate IP addresses for different purposes like public and private traffic."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created and launched Amazon EC2 Instance."
+        },
+        {
+          "text": "You have successfully created an Elastic IP and additional Network Interface."
+        },
+        {
+          "text": "You have successfully created a webpage and published it."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab button from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

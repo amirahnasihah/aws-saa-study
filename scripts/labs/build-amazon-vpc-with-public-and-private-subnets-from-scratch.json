@@ -1,0 +1,286 @@
+{
+  "slug": "build-amazon-vpc-with-public-and-private-subnets-from-scratch",
+  "title": "Build Amazon VPC with Public and Private Subnets (from Scratch)",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2 : Creating New VPC",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to VPC by clicking on Services on the top of AWS Console."
+        },
+        {
+          "text": "Click on VPC (under Networking & Content Delivery section) or you can also search for VPC."
+        },
+        {
+          "text": "Click on Your VPCs from the left menu."
+        },
+        {
+          "text": "Here you can see the list of all VPC, No need to do anything with the existing and default VPCs, we will create a new VPC for this lab."
+        },
+        {
+          "text": "Click on Create VPC button."
+        },
+        {
+          "text": "Select VPC Only"
+        },
+        {
+          "text": "Name tag: Enter a VPC name for identification to your VPC. Ex: MyVPC"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter 10.0.0.0/16"
+        },
+        {
+          "text": "IPv6 CIDR block: No need to change this, make sure No IPv6 CIDR Block is checked."
+        },
+        {
+          "text": "Tenancy: No need to change this, make sure Default is selected."
+        },
+        {
+          "text": "Now click on Create VPC button."
+        },
+        {
+          "text": "Once VPC is created, it will appear with details as shown below:"
+        }
+      ]
+    },
+    {
+      "title": "Task 3 : Creating Subnets",
+      "steps": [
+        {
+          "text": "In this lab, we will create one public subnet and a private subnet in us-east-1a and us-east-1b Availability Zones respectively as follows:"
+        },
+        {
+          "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet button."
+        },
+        {
+          "text": "VPC ID: Select MyVPC from the list you created earlier."
+        },
+        {
+          "text": "Subnet Name: Enter Name MyPublicSubnet"
+        },
+        {
+          "text": "Availability Zone: Select us-east-1a"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter the range 10.0.1.0/24"
+        },
+        {
+          "text": "Click on Create subnet button."
+        },
+        {
+          "text": "For the Private Subnet, click on Create subnet again."
+        },
+        {
+          "text": "VPC ID : Select MyVPC from the list you created earlier."
+        },
+        {
+          "text": "Subnet Name : Enter Name MyPrivateSubnet"
+        },
+        {
+          "text": "Availability Zone : Select us-east-1b"
+        },
+        {
+          "text": "IPv4 CIDR block : Enter the range 10.0.2.0/24"
+        },
+        {
+          "text": "Click on Create subnet button."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create and configure Internet Gateway",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an internet gateway and configure it with the VPC."
+        },
+        {
+          "text": "Click on Internet Gateways from the left menu and click on Create internet gateway button."
+        },
+        {
+          "text": "Name Tag: Enter MyInternetGateway"
+        },
+        {
+          "text": "Click on Create internet gateway button."
+        },
+        {
+          "text": "Select the Internet gateway you created from the list"
+        },
+        {
+          "text": "Click on Actions."
+        },
+        {
+          "text": "Click on Attach to VPC."
+        },
+        {
+          "text": "Select MyVPC which you created from the list and click on Attach internet gateway button."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create Route Tables",
+      "steps": [
+        {
+          "text": "In this task, we are going to create two route tables and associate them with their respective subnets."
+        },
+        {
+          "text": "Go to Route Tables from the left menu and click on Create route table button."
+        },
+        {
+          "text": "Name: Enter PublicRouteTable"
+        },
+        {
+          "text": "VPC: Select MyVPC from the list."
+        },
+        {
+          "text": "Click on Create route table button."
+        },
+        {
+          "text": "Repeat the same steps to create a route table for the Private subnet."
+        },
+        {
+          "text": "Name: Enter PrivateRouteTable"
+        },
+        {
+          "text": "VPC: Select MyVPC from the list."
+        },
+        {
+          "text": "Click on Create route table button."
+        },
+        {
+          "text": "Now we will associate the subnets to the route tables."
+        },
+        {
+          "text": "Select the PublicRouteTable and go to the Subnet Associations tab."
+        },
+        {
+          "text": "Click on Edit subnet associations."
+        },
+        {
+          "text": "Select MyPublicSubnet from the list."
+        },
+        {
+          "text": "Click on Save associations button."
+        },
+        {
+          "text": "Select the PrivateRouteTable and go to the Subnet Associations tab."
+        },
+        {
+          "text": "Click on Edit subnet associations."
+        },
+        {
+          "text": "Select MyPrivateSubnet from the list."
+        },
+        {
+          "text": "Click on Save associations button."
+        },
+        {
+          "text": "Make sure not to associate any subnets with the Main Route Table."
+        },
+        {
+          "text": "PublicRouteTable: Add a route to allow Internet traffic to the VPC."
+        },
+        {
+          "text": "Select PublicRouteTable."
+        },
+        {
+          "text": "Go to Routes tab, click on Edit routes."
+        },
+        {
+          "text": "Click on Add route button, Specify the following values:"
+        },
+        {
+          "text": "Destination: Enter 0.0.0.0/0"
+        },
+        {
+          "text": "Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway."
+        },
+        {
+          "text": "Click on Save changes button."
+        },
+        {
+          "text": "Do you know ?"
+        },
+        {
+          "text": "VPC Flow Logs capture information about the IP traffic flowing in and out of your VPC. It provides detailed insights into network traffic patterns, helping you analyze and troubleshoot connectivity issues, monitor security, and meet compliance requirements."
+        }
+      ]
+    },
+    {
+      "title": "Do you know ?",
+      "steps": [
+        {
+          "text": "VPC Flow Logs capture information about the IP traffic flowing in and out of your VPC. It provides detailed insights into network traffic patterns, helping you analyze and troubleshoot connectivity issues, monitor security, and meet compliance requirements."
+        }
+      ]
+    },
+    {
+      "title": "Task 6 : Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully completed and learned how to create public and private subnets."
+        },
+        {
+          "text": "You have learned how to create an Internet Gateway and associate it to VPC."
+        },
+        {
+          "text": "You now understand how public and private subnets are different (through associating Internet Gateway or not)."
+        },
+        {
+          "text": "The instances launched inside the public subnet will be able to access the internet and instances launched inside the private subnet will not have access to the internet."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out from the AWS Management Console."
+        },
+        {
+          "text": "Click on End Lab button from the lab console and wait till the process gets completed"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

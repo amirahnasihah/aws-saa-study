@@ -1,0 +1,109 @@
+{
+  "slug": "working-with-cloudfront-distributions-and-restricted-region-challenge",
+  "title": "Working with CloudFront distributions and Restricted Region Challenge",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "In this lab challenge, your Amazon S3 and AWS CloudFront skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of AWS CloudFront and other AWS services. The Lab Challenge helps you understand real-time scenarios."
+        },
+        {
+          "text": "A company XYZ is deploying a new web application. As a part of the infrastructure, they need their website highly available for edge locations for testing environments. Also, they want their website cannot be accessible in a few countries, so your company wants it to be restricted in those regions. And third condition is if the user enters a misspelled link or object link it should throw an error. Now your challenge is to set up cloudfront distribution with the above restrictions."
+        },
+        {
+          "text": "Create an S3 bucket with a Custom folder for error and block pages."
+        },
+        {
+          "text": "Create an S3 bucket with a Custom folder for error and block pages."
+        },
+        {
+          "text": "Create Cloudfront distribution"
+        },
+        {
+          "text": "Create Cloudfront distribution"
+        },
+        {
+          "text": "Accessing images through Cloudfront."
+        },
+        {
+          "text": "Accessing images through Cloudfront."
+        },
+        {
+          "text": "Configuring Custom Error Page"
+        },
+        {
+          "text": "Configuring Custom Error Page"
+        },
+        {
+          "text": "Restricting the Geographic Distribution of your content."
+        },
+        {
+          "text": "Restricting the Geographic Distribution of your content."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "After Validation Terminate all the resources."
+        },
+        {
+          "text": "After Validation Terminate all the resources."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Challenge from the lab console."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Challenge from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

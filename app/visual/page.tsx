@@ -12,6 +12,7 @@ import {
   type Node as RFNode,
 } from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
+import Link from 'next/link'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import { architectures, Architecture } from '@/data/architectures'
@@ -93,12 +94,15 @@ export default function VisualPage() {
 type NodeData = { label: string; sub?: string; icon?: string; color: ArchColor }
 type ExplainState = 'idle' | 'loading' | 'done' | 'error'
 
+import type { InternalLink } from '@/lib/ai/internal-links'
+
 interface ExplainSections {
   whatItDoes: string
   trafficFlow: string[]
   examRelevance: string
   examTraps: string[]
   awsDocs?: Array<{ url: string; title: string }>
+  internalLinks?: InternalLink[]
 }
 
 type ExplainResult =
@@ -284,7 +288,7 @@ function NodeSidebar({
                     <span className="font-space-mono text-[0.5rem] font-bold uppercase tracking-widest text-aws-text/70">Sources</span>
                   </div>
                   <span className="font-space-mono text-[0.48rem] bg-white/6 border border-aws-border/40 rounded px-1.5 py-0.5 text-aws-muted/60">
-                    {'sections' in sidebarResult ? (sidebarResult.sections.awsDocs?.length ?? 0) : 0}
+                    {'sections' in sidebarResult ? (sidebarResult.sections.awsDocs?.length ?? 0) + (sidebarResult.sections.internalLinks?.length ?? 0) : 0}
                   </span>
                 </button>
                 {sourcesOpen && (
@@ -303,7 +307,17 @@ function NodeSidebar({
                         <span className="font-space-mono text-[0.6rem] truncate">{doc.title}</span>
                       </a>
                     ))}
-                    {'sections' in sidebarResult && !sidebarResult.sections.awsDocs?.length && (
+                    {'sections' in sidebarResult && sidebarResult.sections.internalLinks?.map((link) => (
+                      <Link
+                        key={link.url}
+                        href={link.url}
+                        className="flex items-center gap-1.5 text-c1/70 hover:text-c1 transition-colors rounded-lg px-2 py-1.5 hover:bg-c1/5"
+                      >
+                        <span className="text-[0.7rem] shrink-0">{link.icon}</span>
+                        <span className="font-space-mono text-[0.6rem] truncate">{link.label} · {link.sublabel}</span>
+                      </Link>
+                    ))}
+                    {'sections' in sidebarResult && !sidebarResult.sections.awsDocs?.length && !sidebarResult.sections.internalLinks?.length && (
                       <p className="font-space-mono text-[0.55rem] text-aws-muted/30 px-2 py-1">No docs found</p>
                     )}
                   </div>

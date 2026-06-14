@@ -1,0 +1,474 @@
+{
+  "slug": "encryption-and-decryption-using-kms",
+  "title": "Encryption and Decryption Using KMS",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a User group for KMS users and attach a Policy to the Group",
+      "steps": [
+        {
+          "text": "Concept: IAM Groups Managing permissions for individual users is difficult to scale. Best practice is to create Groups based on job functions (e.g., \"KMSUsers\", \"Developers\") and attach policies to the group. This way, when a new employee joins, you simply add them to the group."
+        },
+        {
+          "text": "Make sure to choose N.Virginia region in the AWS Management console dashboard, which is present in the top right corner."
+        },
+        {
+          "text": "Navigate to the Services menu at the top, click on IAM in the Security, Idenitity, & Compliance section."
+        },
+        {
+          "text": "In the IAM section, click on User groups."
+        },
+        {
+          "text": "Click on Create group"
+        },
+        {
+          "text": "Enter the following user group name: KMSGroup"
+        },
+        {
+          "text": "Attach permissions policies: For the Policy name type KMS and select KMS_Policy"
+        },
+        {
+          "text": "Now, Click on Create Group button."
+        },
+        {
+          "text": "We have successfully created a new group for our KMS lab."
+        },
+        {
+          "text": "Pro Tip: IAM Policies In a real-world scenario, always follow the Principle of Least Privilege. Only grant the permissions necessary to perform a task. The KMS_Policy used here is a custom policy designed for this lab."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create two users for managing the KMS",
+      "steps": [
+        {
+          "text": "In this task, We are going to add two users to the group we created."
+        },
+        {
+          "text": "Concept: Separation of Duties We are creating two distinct personas:"
+        },
+        {
+          "text": "KeyManager: Has access to the Console to manage keys (Create, Delete, Rotate)."
+        },
+        {
+          "text": "KeyEncryption: Has programmatic access to use the keys for encryption/decryption but cannot manage them. This separation minimizes the impact if credentials are compromised."
+        },
+        {
+          "text": "Click on Users on the left side of the IAM dashboard."
+        },
+        {
+          "text": "Click on the Create User button."
+        },
+        {
+          "text": "Enter the following user name: KeyManager"
+        },
+        {
+          "text": "Check the Provide user access to the AWS Management Console checkbox."
+        },
+        {
+          "text": "Click on the Custom password."
+        },
+        {
+          "text": "Give the following password: lab@123"
+        },
+        {
+          "text": "Uncheck the Users must create a new password at the next sign-in. Click on Next."
+        },
+        {
+          "text": "For permission, select Add User to group."
+        },
+        {
+          "text": "Select the KMSGroup that we created, and click on the Next button."
+        },
+        {
+          "text": "In the review section, if all the settings are as per the requirement."
+        },
+        {
+          "text": "Click on Create User."
+        },
+        {
+          "text": "We have successfully created our KeyManager. Click on Return to users list button and click again on Continue button to return back to Users tab."
+        },
+        {
+          "text": "Now, similarly, we're going to create a new user, and this will be the person who does the decryption."
+        },
+        {
+          "text": "Click on Users on the left side of the IAM dashboard."
+        },
+        {
+          "text": "Click on the Create User button."
+        },
+        {
+          "text": "Enter the following user name: KeyEncryption"
+        },
+        {
+          "text": "Check the Provide user access to the AWS Management Console checkbox."
+        },
+        {
+          "text": "Click on the Custom password"
+        },
+        {
+          "text": "Give the following password: 123@lab"
+        },
+        {
+          "text": "Uncheck the Users must create a new password at the next sign-in. Click on Next."
+        },
+        {
+          "text": "For permission, select Add User to group ."
+        },
+        {
+          "text": "Select the KMSGroup that we created, and click on the Next button."
+        },
+        {
+          "text": "In the review section, if all the settings are as per the requirement"
+        },
+        {
+          "text": "Click on Create User. Click on Return to users list button and click again on Continue button to return back to Users tab."
+        },
+        {
+          "text": "Now, to get the Access Key and Secret Access Key"
+        },
+        {
+          "text": "Click on Users on the left side of the IAM dashboard."
+        },
+        {
+          "text": "Click on KeyEncryption user and go to the Security credentials tab."
+        },
+        {
+          "text": "Scroll down and click on Create access key button."
+        },
+        {
+          "text": "Select Use case as Command Line Interface (CLI), check the confirmation box and click on Next button."
+        },
+        {
+          "text": "Leave Description tag value as blank in Set description tag step."
+        },
+        {
+          "text": "Click on Create access key button."
+        },
+        {
+          "text": "Click on Download .csv file button to download the secret access key of the user as it will be required to connect with our EC2 instance for encryption."
+        }
+      ]
+    },
+    {
+      "title": "Task 4 : Creating a KMS Key",
+      "steps": [
+        {
+          "text": "Concept: Customer Managed Keys (CMK)"
+        },
+        {
+          "text": "AWS Managed Keys: Created by AWS services (like S3) for you. You cannot manage their policies."
+        },
+        {
+          "text": "Customer Managed Keys: Created by you. You have full control over Key Policies, rotation, and deletion. This lab uses a CMK."
+        },
+        {
+          "text": "Navigate to the Services menu at the top, click on AWS Key Management Service (KMS) in the Security, Identity, & Compliance section"
+        },
+        {
+          "text": "Click on the Create a key button."
+        },
+        {
+          "text": "Select Key type as Symmetric and Key usage as Encrypt and decrypt, click on next button."
+        },
+        {
+          "text": "Pro Tip: Symmetric vs. Asymmetric"
+        },
+        {
+          "text": "Symmetric (AES-256): Same key for encryption and decryption. Used for most AWS services (S3, EBS, RDS). Fast and efficient."
+        },
+        {
+          "text": "Asymmetric (RSA/ECC): Public key encrypts, Private key decrypts. Used when you need to share the encryption key publicly without compromising the decryption capability."
+        },
+        {
+          "text": "Enter Alias as : Admin"
+        },
+        {
+          "text": "Leave the other field as it is, and click on the Next button."
+        },
+        {
+          "text": "In Define key administrative permissions select KeyManager and click on Next button."
+        },
+        {
+          "text": "In Define key usage permissions select KeyEncryption and click on Next button."
+        },
+        {
+          "text": "Once you click on Next you’ll be moved to the review section. Review the key policy that we have created and if everything is fine, just click on Finish button."
+        },
+        {
+          "text": "We have successfully created the KMS key. Copy the Key ID in Notepad for future use."
+        },
+        {
+          "text": "Now that we have created the KMS and User policies, move to the service section and choose EC2 under the Compute section."
+        },
+        {
+          "text": "Note : Don't forget to save the created KMS key id into any text editor for further use."
+        }
+      ]
+    },
+    {
+      "title": "Task 5 : Launching an EC2 Instance",
+      "steps": [
+        {
+          "text": "We will use this EC2 instance as our \"workstation\" to run AWS CLI commands. It represents an application server that needs to encrypt data."
+        },
+        {
+          "text": "Make sure you are in N.Virginia Region."
+        },
+        {
+          "text": "Navigate to the Services menu at the top, click on EC2 in the Compute section."
+        },
+        {
+          "text": "Click on Launch Instance"
+        },
+        {
+          "text": "Enter Name as following: MyEC2Server"
+        },
+        {
+          "text": "For AMI Select Amazon Linux 2023 in the quickstart menu."
+        },
+        {
+          "text": "For Instance Type: Select t2.micro."
+        },
+        {
+          "text": "For Key pair(login): Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: WhizKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Keep all the settings as default and click on the Launch instance button."
+        },
+        {
+          "text": "Click on View all instances button."
+        },
+        {
+          "text": "Your instance is now launching, wait for the complete initialization of the instance till the Status check changes to 2/2 checks passed"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: SSH into the EC2 Instance",
+      "steps": [
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Perform KMS Encryption and Decryption",
+      "steps": [
+        {
+          "text": "Now you will use the AWS CLI to interact with the KMS service."
+        },
+        {
+          "text": "Once you click on connect you get a terminal which is our EC2-user login on EC2-instance. Here we will perform KMS Encryption and Decryption."
+        },
+        {
+          "text": "First we need to create a file with the name secret.txt , Execute the command."
+        },
+        {
+          "text": "echo “Welcome to lab” > secret.txt"
+        },
+        {
+          "text": "Now that we have created a file secret.txt we need to execute the following configuration command."
+        },
+        {
+          "text": "aws configure"
+        },
+        {
+          "text": "Enter the AWS Access key ID and AWS Secret Access Key from the user KeyEncryption file that you downloaded in task 3."
+        },
+        {
+          "text": "Enter default region as us-east-1"
+        },
+        {
+          "text": "Leave the default output as blank and press Enter"
+        },
+        {
+          "text": "Critical Security Warning: Credentials on EC2 Running aws configure and entering static Access Keys on an EC2 instance is good for understanding identity, but this is a bad practice in production."
+        },
+        {
+          "text": "Correct Approach: Attach an IAM Role to the EC2 instance. The AWS CLI will automatically pick up the temporary credentials from the role's metadata, removing the need to store secrets on the disk."
+        },
+        {
+          "text": "Once AWS configure is complete, we need to execute the command for encryption."
+        },
+        {
+          "text": "Run the following command to encrypt text file but first replace <replace-key-id> with the Key ID copied earlier."
+        },
+        {
+          "text": "aws kms encrypt --key-id <replace-key-id> --plaintext fileb://secret.txt --output text --query CiphertextBlob | base64 --decode > encryptedsecret.txt"
+        },
+        {
+          "text": "Note: The following command encrypts data from the \"secret.txt\" file using AWS Key Management Service (KMS). It specifies the encryption key (--key-id), reads plaintext from the file in binary mode (--plaintext), and retrieves the base64-encoded ciphertext (--output text --query CiphertextBlob). The subsequent Unix shell command decodes the ciphertext and saves the binary data in \"encryptedsecret.txt\". This process ensures secure encryption using AWS KMS."
+        },
+        {
+          "text": "Deep Dive: Envelope Encryption kms encrypt has a limit of 4KB data. For larger files, you don't encrypt the data directly with KMS. Instead, you use Envelope Encryption:"
+        },
+        {
+          "text": "Ask KMS to generate a Data Key (GenerateDataKey)."
+        },
+        {
+          "text": "Use the Data Key to encrypt your large file locally (using OpenSSL etc.)."
+        },
+        {
+          "text": "Store the Encrypted Data Key alongside your encrypted file."
+        },
+        {
+          "text": "We have successfully encrypted our text file. To view the statement, execute"
+        },
+        {
+          "text": "cat encryptedsecret.txt"
+        },
+        {
+          "text": "We are going to decrypt the encrypted file to view the data."
+        },
+        {
+          "text": "aws kms decrypt --ciphertext-blob fileb://encryptedsecret.txt --output text --query Plaintext | base64 --decode > decryptedsecret.txt"
+        },
+        {
+          "text": "Note: The following command decrypts data from the \"encryptedsecret.txt\" file using AWS Key Management Service (KMS). It takes the base64-encoded ciphertext from the file (--ciphertext-blob fileb://encryptedsecret.txt), and the --output text --query Plaintext flags specify that the output should be in plain text, querying and retrieving the plaintext. The Unix shell command then decodes the base64-encoded plaintext and saves the resulting binary data in \"decryptedsecret.txt\". This process ensures secure decryption of previously encrypted data using AWS KMS."
+        },
+        {
+          "text": "Concept: Base64 Encoding Encrypted data is binary (non-printable characters). To transmit it safely over text protocols (like JSON responses in the CLI), AWS encodes it in Base64. That's why we need base64 --decode to turn it back into readable text/binary after the CLI receives it."
+        },
+        {
+          "text": "We have successfully decrypted our text file . To view the statement execute."
+        },
+        {
+          "text": "cat decryptedsecret.txt"
+        },
+        {
+          "text": "Pro Tip: Key Rotation & Re-encryption Why re-encrypt?"
+        },
+        {
+          "text": "Key Rotation: If you manually rotate a key (create a new CMK), you might want to re-encrypt old data with the new key."
+        },
+        {
+          "text": "Region Transfer: You can't share KMS keys between regions. To move encrypted data to another region, you must re-encrypt it using a key in the destination region."
+        },
+        {
+          "text": "Run the following command to re-encrypt text file but first replace <replace-key-id> with the Key ID copied earlier."
+        },
+        {
+          "text": "aws kms encrypt --key-id <replace-key-id> --plaintext fileb://decryptedsecret.txt --output text --query CiphertextBlob > newencryptedsecret.txt"
+        },
+        {
+          "text": "You can check the created files by using command :"
+        },
+        {
+          "text": "ls -lrt"
+        },
+        {
+          "text": "We have successfully encrypted our text file . To view the statement execute"
+        },
+        {
+          "text": "cat newencryptedsecret.txt"
+        },
+        {
+          "text": "We have successfully executed the re-encrypt statement."
+        },
+        {
+          "text": "Note: The following command is an AWS CLI command used to enable key rotation for a specified AWS Key Management Service (KMS) key. The --key-id <replace-key-id> flag identifies the key to which rotation is applied. Enabling key rotation is a security best practice, ensuring that cryptographic keys used for encryption are regularly rotated to enhance overall security. This command, when executed, activates the automatic rotation of the specified KMS key, helping to mitigate potential risks associated with long-term key usage."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "KMS enforces access control policies to ensure that only authorized individuals or systems can use or manage cryptographic keys. This helps prevent unauthorized access to sensitive information."
+        }
+      ]
+    },
+    {
+      "title": "Task 8 : Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "Resources for Skill Up"
+        },
+        {
+          "text": "AWS Documentation: AWS KMS Developer Guide"
+        },
+        {
+          "text": "Best Practice: Best practices for IAM policies in AWS KMS"
+        },
+        {
+          "text": "You have successfully created a group for KMS users and attached a policy to the group."
+        },
+        {
+          "text": "You have successfully created 2 users for managing the KMS."
+        },
+        {
+          "text": "You have successfully created a KMS Key."
+        },
+        {
+          "text": "You have successfully launched an EC2 Instance and connected to SSH using the browser."
+        },
+        {
+          "text": "You have successfully configured KMS."
+        },
+        {
+          "text": "You have become familiar with Encryption, decryption, re-encryption."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

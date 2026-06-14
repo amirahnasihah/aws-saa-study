@@ -1,0 +1,148 @@
+{
+  "slug": "amazon-vpc-endpoint-challenge",
+  "title": "Amazon VPC Endpoint challenge",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Note: If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        },
+        {
+          "text": "In this lab challenge, your Amazon VPC and Amazon EC2 skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of AWS VPC and other AWS services relevant to working with VPC Endpoint and EC2 Instances. The Lab Challenge helps you understand the real-time scenarios."
+        },
+        {
+          "text": "A company XYZ is deploying a new web application. As a part of the infrastructure, they need to access S3 from EC2 Instances present in the Private subnet. Now your challenge is to configure the half build infrastructure and make sure EC2 Instances present in the Private subnet are able to access the S3 bucket and its object through the VPC endpoint."
+        },
+        {
+          "text": "Create a Custom VPC and attach an Internet Gateway with custom VPC"
+        },
+        {
+          "text": "Create a Custom VPC and attach an Internet Gateway with custom VPC"
+        },
+        {
+          "text": "Create a Public and Private Subnet and configure the Public subnet to enable auto-assign public IPv4 address"
+        },
+        {
+          "text": "Create a Public and Private Subnet and configure the Public subnet to enable auto-assign public IPv4 address"
+        },
+        {
+          "text": "Create 2 Route Table for the Public and Private subnets."
+        },
+        {
+          "text": "Create 2 Route Table for the Public and Private subnets."
+        },
+        {
+          "text": "Add an entry to the Internet (0.0.0.0/0) in the Public Route table."
+        },
+        {
+          "text": "Add an entry to the Internet (0.0.0.0/0) in the Public Route table."
+        },
+        {
+          "text": "Create Bastion host EC2 Instance in the Public subnet of Custom VPC, Allowing SSH, HTTP, and HTTPS in the security group from source 0.0.0.0/0. In the last step, make sure to create a key pair of type RSA, this is required for SSH."
+        },
+        {
+          "text": "Create Bastion host EC2 Instance in the Public subnet of Custom VPC, Allowing SSH, HTTP, and HTTPS in the security group from source 0.0.0.0/0. In the last step, make sure to create a key pair of type RSA, this is required for SSH."
+        },
+        {
+          "text": "Note: Make sure to select Amazon Linux 2023 kernel-6.1 AMI and t2.micro Instance type."
+        },
+        {
+          "text": "Note: Make sure to select Amazon Linux 2023 kernel-6.1 AMI and t2.micro Instance type."
+        },
+        {
+          "text": "Create Endpoint EC2 Instance in the Private subnet of Custom VPC, allowing only SSH in the security group from source as security group of Bastion host. Select the same key pair, created for the bastion host."
+        },
+        {
+          "text": "Create Endpoint EC2 Instance in the Private subnet of Custom VPC, allowing only SSH in the security group from source as security group of Bastion host. Select the same key pair, created for the bastion host."
+        },
+        {
+          "text": "To fix the bug of Internet access, you can check Internet gateway, Route tables, and Network ACL."
+        },
+        {
+          "text": "To fix the bug of Internet access, you can check Internet gateway, Route tables, and Network ACL."
+        },
+        {
+          "text": "SSH into the Bastion host using its key pair and manually create the key pair file and paste the same data of the key pair. Before SSH into the Endpoint Instance, make sure to change the permission of the key pair file created on the Bastion host."
+        },
+        {
+          "text": "SSH into the Bastion host using its key pair and manually create the key pair file and paste the same data of the key pair. Before SSH into the Endpoint Instance, make sure to change the permission of the key pair file created on the Bastion host."
+        },
+        {
+          "text": "Configure VPC Endpoint for S3 as Service and Gateway as type, Select custom VPC and Private subnet."
+        },
+        {
+          "text": "Configure VPC Endpoint for S3 as Service and Gateway as type, Select custom VPC and Private subnet."
+        },
+        {
+          "text": "Once done, List the S3 bucket using the list bucket AWS CLI Command."
+        },
+        {
+          "text": "Once done, List the S3 bucket using the list bucket AWS CLI Command."
+        },
+        {
+          "text": "Click on Validate to complete the challenge."
+        },
+        {
+          "text": "Click on Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of AWS Management Console."
+        },
+        {
+          "text": "Sign out of AWS Management Console."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Challenge from the lab console."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Challenge from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

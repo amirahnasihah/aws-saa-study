@@ -218,6 +218,7 @@ export default function AboutPage() {
 
               </div>
             </div>
+            <Link href="/pwa" className="tfont-space-mono text-[0.65rem] text-aws-muted">PWA preview</Link>
           </div>
 
         </div>

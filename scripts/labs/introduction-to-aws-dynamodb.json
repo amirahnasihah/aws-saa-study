@@ -1,0 +1,174 @@
+{
+  "slug": "introduction-to-aws-dynamodb",
+  "title": "Introduction to AWS DynamoDB",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create DynamoDB Table",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a DynamoDB table."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to DynamoDB page by clicking on the Services menu at the top. DynamoDB is available under the Database section."
+        },
+        {
+          "text": "Click on Create table button"
+        },
+        {
+          "text": "Table Name: Enter mydynamodbtable"
+        },
+        {
+          "text": "Partition key: Enter companyid and select Number"
+        },
+        {
+          "text": "Add sort key: Enter name in the respective field and select String."
+        },
+        {
+          "text": "The combination of a Partition Key and a Sort Key uniquely identifies each item in a DynamoDB table."
+        },
+        {
+          "text": "Leave all the other settings as default and then click on Create table."
+        },
+        {
+          "text": "Your table will be created within 2–3 minutes."
+        }
+      ]
+    },
+    {
+      "title": "Task 3 : Inserting Data into DynamoDB Table",
+      "steps": [
+        {
+          "text": "In this task, we are going to insert data into a DynamoDB table. By adding data to the table, we will understand how to populate it with relevant information."
+        },
+        {
+          "text": "Next, we are inserting data in the table we created."
+        },
+        {
+          "text": "Select mydynamodbtable and then Click on the Explore table items button."
+        },
+        {
+          "text": "Now click on Create item button."
+        },
+        {
+          "text": "Add new Partition key and sort key values."
+        },
+        {
+          "text": "companyid : Enter 1"
+        },
+        {
+          "text": "name : Enter John"
+        },
+        {
+          "text": "After entering the data, click on the Create item button, present on the right bottom corner."
+        },
+        {
+          "text": "For testing purposes, add 4–5 items as shown in the above step and click on the Create item button."
+        }
+      ]
+    },
+    {
+      "title": "Task 4 : Search for Items in the Table",
+      "steps": [
+        {
+          "text": "In this task, we are going to query capabilities of DynamoDB. By using the scan operation."
+        },
+        {
+          "text": "We will query the items in our table by using scan."
+        },
+        {
+          "text": "Select Query"
+        },
+        {
+          "text": "In the query window, enter the partition key and sort key which you want to search."
+        },
+        {
+          "text": "Partition Key = Enter 1"
+        },
+        {
+          "text": "Click on Run."
+        },
+        {
+          "text": "You will be able to see a result table with your filtered records. A sample screenshot is given below:"
+        },
+        {
+          "text": "You can search with the Partition Key and the Sort Key. Try some additional test cases yourself to become more familiar with these keys."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "DynamoDB was originally developed by Amazon to meet the demands of their e-commerce platform during the holiday shopping season. The system needed to handle the sudden spike in traffic and maintain low latency for a large number of concurrent users. DynamoDB's design principles and scalability were tested and proven in this high-stakes environment, ensuring its reliability and performance even under extreme load conditions."
+        }
+      ]
+    },
+    {
+      "title": "Task 5 : Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created an Amazon DynamoDB table."
+        },
+        {
+          "text": "You have inserted multiple items into the table using a partition key and sort key."
+        },
+        {
+          "text": "You have successfully searched for items in the table using the partition and sort keys."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out from the AWS Management Console."
+        },
+        {
+          "text": "Click on End lab button from the lab console and wait till the process gets completed"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

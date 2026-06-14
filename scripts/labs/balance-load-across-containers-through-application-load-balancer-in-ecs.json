@@ -1,0 +1,616 @@
+{
+  "slug": "balance-load-across-containers-through-application-load-balancer-in-ecs",
+  "title": "Balance load across containers through Application Load Balancer in ECS",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a Security Group for the Load balancer",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top left, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "On the left panel menu, select the security group under the Network & Security section."
+        },
+        {
+          "text": "Click on the Create Security Group."
+        },
+        {
+          "text": "We are going to create a Security group for the ECS cluster."
+        },
+        {
+          "text": "Security group name: Enter ALB-SG"
+        },
+        {
+          "text": "Description: Enter Security group for the load balancer"
+        },
+        {
+          "text": "VPC: Select Default VPC"
+        },
+        {
+          "text": "Click on the Add Rule under Inbound rules."
+        },
+        {
+          "text": "Type : Select All TCP"
+        },
+        {
+          "text": "Source : Select Anywhere-IPv4"
+        },
+        {
+          "text": "In the textbox add 0.0.0.0/0"
+        },
+        {
+          "text": "Leave everything as default and click on the Create Security group."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a Security Group for the ECS Cluster",
+      "steps": [
+        {
+          "text": "On the left panel menu, select the security group under the Network & Security section."
+        },
+        {
+          "text": "Click on the Create Security group."
+        },
+        {
+          "text": "We are going to create a Security group for the ECS cluster."
+        },
+        {
+          "text": "Security group name: Enter ECS-SG"
+        },
+        {
+          "text": "Description: Enter Security group for ECS Cluster"
+        },
+        {
+          "text": "VPC: Select Default VPC"
+        },
+        {
+          "text": "Click on the Add Rule under Inbound rules."
+        },
+        {
+          "text": "Type : Select SSH"
+        },
+        {
+          "text": "Source : Select Anywhere-IPv4"
+        },
+        {
+          "text": "Click on the Add Rule to add All TCP traffic from the load balancers security group"
+        },
+        {
+          "text": "Type : Select All TCP"
+        },
+        {
+          "text": "Source : Select Custom"
+        },
+        {
+          "text": "In the textbox add, Select ALB-SG by typing ALB-SG"
+        },
+        {
+          "text": "Leave everything as default and click on the Create Security group."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create a Key Pair for the EC2 instances inside the ECS Cluster",
+      "steps": [
+        {
+          "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key Pairs."
+        },
+        {
+          "text": "To create a new key pair, click on the Create Key pair."
+        },
+        {
+          "text": "Fill in the details below:"
+        },
+        {
+          "text": "Name: Enter WhizKeyPair"
+        },
+        {
+          "text": "Key Pair Type: Select RSA"
+        },
+        {
+          "text": "Private key file format: pem (Linux & Mac Users) or ppk (Windows users)"
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on the Create Key pair."
+        },
+        {
+          "text": "After clicking on the Create key pair, you will get a pop-up to download the key pair in your local, save that file."
+        },
+        {
+          "text": "Key pair will be created."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Creating the Load Balancer",
+      "steps": [
+        {
+          "text": "In the EC2 console, navigate to \"Load Balancers\" in the left-side panel."
+        },
+        {
+          "text": "Click on Create Load balancer at the top-left to create a new load balancer for our web servers."
+        },
+        {
+          "text": "On the next screen, choose Application Load Balancer and click on create, since we are testing the high availability of the web application."
+        },
+        {
+          "text": "In Configure the load balancer as below"
+        },
+        {
+          "text": "Name : Enter httpd-LB"
+        },
+        {
+          "text": "Scheme : Select Internet-facing"
+        },
+        {
+          "text": "IP address type : Choose ipv4"
+        },
+        {
+          "text": "Availability Zones: Select us-east-1a and us-east-1b."
+        },
+        {
+          "text": "VPC : Choose Default"
+        },
+        {
+          "text": "Note: we must specify the availability zones in which the load balancer needs to be enabled, making it route traffic only to targets launched in those availability zones. You must include subnets from a minimum of two Availability zones to make our Load balancer Highly-Available."
+        },
+        {
+          "text": "For Security Groups: Remove the existing security group attached and select the security group ALB-SG."
+        },
+        {
+          "text": "Under Listeners and Routing"
+        },
+        {
+          "text": "Protocol: HTTP"
+        },
+        {
+          "text": "Port: 80"
+        },
+        {
+          "text": "Under Default action:"
+        },
+        {
+          "text": "Routing action: select Forward to target groups"
+        },
+        {
+          "text": "Click on create target group."
+        },
+        {
+          "text": "Choose Target Type : Select Instances"
+        },
+        {
+          "text": "Name : Enter ecs-TG"
+        },
+        {
+          "text": "Leave everything as default."
+        },
+        {
+          "text": "Note: The target group is used to route requests to one or more registered targets"
+        },
+        {
+          "text": "Note: The load balancer periodically sends pings, attempts connections, or sends requests to test the EC2 instances. These tests are called health checks."
+        },
+        {
+          "text": "Click on the Next."
+        },
+        {
+          "text": "Leave this page as default and click on Create target group button and Go back to the Load balancer tab."
+        },
+        {
+          "text": "Choose the Target group you created in the Step 7."
+        },
+        {
+          "text": "Click on Create Load Balancer button. You have successfully created the Application Load balancer."
+        },
+        {
+          "text": "Wait for 2 to 3 minutes for the load balancer to become Active."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Launching an ECS Cluster",
+      "steps": [
+        {
+          "text": "Navigate to Elastic Container Service by clicking on the Services menu in the top, then click on Elastic Container Service in the Containers section."
+        },
+        {
+          "text": "Go to Cluster section from left sidebar and Click on the Create Cluster button."
+        },
+        {
+          "text": "Cluster name: Whiz."
+        },
+        {
+          "text": "Under Infrastructure:"
+        },
+        {
+          "text": "Select Fargate and Self-managed instances"
+        },
+        {
+          "text": "Auto Scaling group: select Create new Auto Scaling group"
+        },
+        {
+          "text": "Provisioning Model: Select On-Demand"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023"
+        },
+        {
+          "text": "EC2 instance type: t2.micro"
+        },
+        {
+          "text": "EC2 instance role: Choose the existing Ecs_role_random_number"
+        },
+        {
+          "text": "Set desired capacity as Minimum: 1 and Maximum :1"
+        },
+        {
+          "text": "Key pair: select WhizKeyPair"
+        },
+        {
+          "text": "Root EBS Volume Size (GiB): Enter 30 (default)"
+        },
+        {
+          "text": "For Step 3: Under Network settings"
+        },
+        {
+          "text": "VPC: Default VPC"
+        },
+        {
+          "text": "Subnets: Select us-east-1a and us-east-1b"
+        },
+        {
+          "text": "Security group: Select ECS-SG security group"
+        },
+        {
+          "text": "Auto-assign public IP: Use subnet setting"
+        },
+        {
+          "text": "Keep other options as default."
+        },
+        {
+          "text": "Click on the Create button to create the whiz ECS cluster"
+        },
+        {
+          "text": "ECS cluster will be created in 2 minutes."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Create Task Definitions",
+      "steps": [
+        {
+          "text": "On the left sidebar, click on the Task Definitions option present under the Amazon ECS section."
+        },
+        {
+          "text": "Click on the Create New task definition."
+        },
+        {
+          "text": "Enter task definition family name: ecs-whiz"
+        },
+        {
+          "text": "For Infrastructure requirements"
+        },
+        {
+          "text": "Launch type: Remove AWS Fargate and select AWS EC2 instances"
+        },
+        {
+          "text": "Network Mode: Select bridge"
+        },
+        {
+          "text": "In Task Size:"
+        },
+        {
+          "text": "CPU: .256 vCPU"
+        },
+        {
+          "text": "Memory: .25 GB"
+        },
+        {
+          "text": "Task Role: None"
+        },
+        {
+          "text": "Task Execution Role: None"
+        },
+        {
+          "text": "Under Container - 1"
+        },
+        {
+          "text": "Container name: Enter httpd"
+        },
+        {
+          "text": "Image: enter httpd:2.4 (make sure no extra space is given)"
+        },
+        {
+          "text": "Keep other options as default and click on the Create button."
+        },
+        {
+          "text": "Task Definition ecs-whiz is now created."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Create a Service and start HTTPD container in ECS",
+      "steps": [
+        {
+          "text": "On the left sidebar, click on the Clusters option present under the Amazon ECS section."
+        },
+        {
+          "text": "whiz ECS Cluster will be listed here, Click on the whiz."
+        },
+        {
+          "text": "To create a service, scroll down to service tab and click on the Create button."
+        },
+        {
+          "text": "Service details:"
+        },
+        {
+          "text": "Task definition family: Select ecs-whiz"
+        },
+        {
+          "text": "Task definition revision: Leave it as default"
+        },
+        {
+          "text": "Service name: httpd-ecs"
+        },
+        {
+          "text": "Under Environment:"
+        },
+        {
+          "text": "Compute options: select Launch type"
+        },
+        {
+          "text": "Launch type: select EC2"
+        },
+        {
+          "text": "Scheduling strategy: select Replica"
+        },
+        {
+          "text": "Desired tasks: Enter 3"
+        },
+        {
+          "text": "In Load Balancing section:"
+        },
+        {
+          "text": "Check Use load balancing"
+        },
+        {
+          "text": "VPC: select default vpc"
+        },
+        {
+          "text": "Load balancer type: select Application Load Balancer"
+        },
+        {
+          "text": "Specify Application Load Balancer: select Use an existing load balancer"
+        },
+        {
+          "text": "Load balancer name: Select httpd-LB"
+        },
+        {
+          "text": "Listener : use an existing listener"
+        },
+        {
+          "text": "Listener: Select 80:HTTP"
+        },
+        {
+          "text": "Target Group : use an existing target group"
+        },
+        {
+          "text": "Target group name: Select ecs-TG"
+        },
+        {
+          "text": "Keep other options as default. Review everything and click on the Create service."
+        },
+        {
+          "text": "Service will be is created, please wait till the Deployments and tasks changes to 3/3 Tasks running."
+        },
+        {
+          "text": "The tasks are now running, let's check by switching to Tasks tab."
+        },
+        {
+          "text": "Check the history of the event, by clicking on service name (httpd-ecs) and switching to the Events tab."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Test the HTTPD container in ECS Cluster",
+      "steps": [
+        {
+          "text": "On the left sidebar, click on the Clusters option present under the Amazon ECS section."
+        },
+        {
+          "text": "whiz ECS Cluster will be listed here, Click on the whiz cluster."
+        },
+        {
+          "text": "To view the ECS Instance,"
+        },
+        {
+          "text": "Switch to the Infrastructure tab"
+        },
+        {
+          "text": "Under Container Instances"
+        },
+        {
+          "text": "Click on the Instance ID present there."
+        },
+        {
+          "text": "You can able to see the instance summary."
+        }
+      ]
+    },
+    {
+      "title": "Task 10: SSH into the underlying EC2 instance and run Docker commands",
+      "steps": [
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance"
+        },
+        {
+          "text": "Note: Please note that the Ec2 instance connect will not work for the ECS instance, so please try other SSH methods."
+        },
+        {
+          "text": "Get the root access using the following command:"
+        },
+        {
+          "text": "sudo su"
+        },
+        {
+          "text": "Now run the updates using the following command:"
+        },
+        {
+          "text": "yum -y update"
+        },
+        {
+          "text": "Check the Docker version by running the following command:"
+        },
+        {
+          "text": "docker version"
+        },
+        {
+          "text": "Check all the docker processes running in the ECS Cluster"
+        },
+        {
+          "text": "docker ps"
+        },
+        {
+          "text": "Default ECS agent and 3 httpd containers are running in the underlying EC2 instance."
+        },
+        {
+          "text": "This is using a dynamic port, i.e. 32767, 32768, and 32769."
+        }
+      ]
+    },
+    {
+      "title": "Task 11: SSH into running docker container",
+      "steps": [
+        {
+          "text": "The reason why we are entering into docker containers is, all 3 running container will have the same output. Let's customize it according to the port it's running on."
+        },
+        {
+          "text": "To SSH into the first running container, copy the container id, listed using docker ps, run the following command:"
+        },
+        {
+          "text": "Syntax:"
+        },
+        {
+          "text": "docker exec -it {container-id} /bin/bash"
+        },
+        {
+          "text": "Eg: docker exec -it d8200f70bf57 /bin/bash"
+        },
+        {
+          "text": "To append the traffic is coming from this port in the index.html file present in the htdocs folder, run the following command:"
+        },
+        {
+          "text": "echo \"Traffic coming from 32769 port\" >> htdocs/index.html"
+        },
+        {
+          "text": "View the index.html file present in the htdocs folder, using the following command:"
+        },
+        {
+          "text": "cat htdocs/index.html"
+        },
+        {
+          "text": "To come out of this container, enter exit command and hit enter."
+        },
+        {
+          "text": "Repeat the same step from Step-2 for the other 2 containers and make sure to change the port numbers."
+        }
+      ]
+    },
+    {
+      "title": "Task 12: Test the load balancer",
+      "steps": [
+        {
+          "text": "Click on Target Groups from the left menu section."
+        },
+        {
+          "text": "Select ecs-TG and navigate to the Targets menu."
+        },
+        {
+          "text": "Note: Wait until the status column of the instances changes to healthy (this means all the containers have passed ELB health check)"
+        },
+        {
+          "text": "Next, navigate to Load Balancer and notice the state of ALB is active. Copy the DNS name of the ALB and enter the address in the browser."
+        },
+        {
+          "text": "DNS Example: httpd-LB-1244528727.us-east-1.elb.amazonaws.com"
+        },
+        {
+          "text": "You should see the index.html page content of different containers and traffic coming from 32768, 32769, and 32770 port."
+        }
+      ]
+    },
+    {
+      "title": "Task 13 : Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created and launched Amazon ECS Cluster."
+        },
+        {
+          "text": "You have successfully created an HTTPD container."
+        },
+        {
+          "text": "You have successfully created an Application load balancer and Target group."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

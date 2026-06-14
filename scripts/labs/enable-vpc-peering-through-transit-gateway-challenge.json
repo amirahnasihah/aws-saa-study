@@ -1,0 +1,208 @@
+{
+  "slug": "enable-vpc-peering-through-transit-gateway-challenge",
+  "title": "Enable VPC Peering through Transit Gateway Challenge",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "In this challenge, your Virtual Private Cloud (VPC) skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of Elastic Compute (EC2), Internet Gateway, Route Tables, Subnets and Transit gateway which will be used in this challenge. This Challenge will help you understand the real-time scenarios."
+        },
+        {
+          "text": "A company XYZ wants to connect two VPCs with public and private subnets by establishing VPC peering through Transit Gateway. The Transit gateway attachment is required in order to install VPC and add the new entry to the route table. Then from the public EC2 instance, you must use SSH to access the private EC2.The below are the tasks that need to be performed by you in order to create the stack."
+        },
+        {
+          "text": "Create VPC with 10.0.0.0/24 IPv4 block and give access to DNS."
+        },
+        {
+          "text": "Create VPC with 10.0.0.0/24 IPv4 block and give access to DNS."
+        },
+        {
+          "text": "Create Public Subnet in VPC with 10.0.0.0/25 IPv4 block."
+        },
+        {
+          "text": "Create Public Subnet in VPC with 10.0.0.0/25 IPv4 block."
+        },
+        {
+          "text": "Create Internet gateway and attach VPC."
+        },
+        {
+          "text": "Create Internet gateway and attach VPC."
+        },
+        {
+          "text": "Create Public Route Table and associate it with Subnet."
+        },
+        {
+          "text": "Create Public Route Table and associate it with Subnet."
+        },
+        {
+          "text": "Add public route in the Route Table:"
+        },
+        {
+          "text": "Add public route in the Route Table:"
+        },
+        {
+          "text": "Default Route with Internet Gateway."
+        },
+        {
+          "text": "Default Route with Internet Gateway."
+        },
+        {
+          "text": "Create EC2 Instance in the VPC:"
+        },
+        {
+          "text": "Create EC2 Instance in the VPC:"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 kernel-6.1"
+        },
+        {
+          "text": "Instance type: t2.micro"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 kernel-6.1"
+        },
+        {
+          "text": "Instance type: t2.micro"
+        },
+        {
+          "text": "Create key pair"
+        },
+        {
+          "text": "Create key pair"
+        },
+        {
+          "text": "Create Security Group with 3 ports like SSH, HTTP and HTTPS."
+        },
+        {
+          "text": "Create Security Group with 3 ports like SSH, HTTP and HTTPS."
+        },
+        {
+          "text": "Create an script HTML page served by Apache httpd web server."
+        },
+        {
+          "text": "Create an script HTML page served by Apache httpd web server."
+        },
+        {
+          "text": "Create another VPC with 20.0.0.0/24 IPv4 block with DNS access."
+        },
+        {
+          "text": "Create another VPC with 20.0.0.0/24 IPv4 block with DNS access."
+        },
+        {
+          "text": "Create Private Subnet with 20.0.0.0/25 IPv4 block."
+        },
+        {
+          "text": "Create Private Subnet with 20.0.0.0/25 IPv4 block."
+        },
+        {
+          "text": "Create same for another EC2 Instance in the VPC with SSH port."
+        },
+        {
+          "text": "Create same for another EC2 Instance in the VPC with SSH port."
+        },
+        {
+          "text": "Create 2 Transit Gateway attachments for the VPCs created."
+        },
+        {
+          "text": "Create 2 Transit Gateway attachments for the VPCs created."
+        },
+        {
+          "text": "Add the routes in the first VPC’s route table:"
+        },
+        {
+          "text": "Add the routes in the first VPC’s route table:"
+        },
+        {
+          "text": "Destination as 20.0.0.0/24"
+        },
+        {
+          "text": "Destination as 20.0.0.0/24"
+        },
+        {
+          "text": "Target: Transit Gateway"
+        },
+        {
+          "text": "Target: Transit Gateway"
+        },
+        {
+          "text": "Add the routes in the second VPC’s route table:"
+        },
+        {
+          "text": "Add the routes in the second VPC’s route table:"
+        },
+        {
+          "text": "Destination as 20.0.0.0/24"
+        },
+        {
+          "text": "Destination as 20.0.0.0/24"
+        },
+        {
+          "text": "Test the connectivity between two VPCs."
+        },
+        {
+          "text": "Test the connectivity between two VPCs."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Delete the resources after Validation."
+        },
+        {
+          "text": "Delete the resources after Validation."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -1,6 +1,8 @@
 import { completeJson } from '@/lib/ai/complete-json'
+import { findInternalLinks } from '@/lib/ai/internal-links'
 import { parseAIJson } from '@/lib/ai/json'
 import { searchAwsMultipleLinks, buildDocsSearchPhrase } from '@/lib/ai/aws-knowledge'
+import { formatRagContext, queryRag } from '@/lib/ai/rag'
 
 export const runtime = 'edge'
 
@@ -30,6 +32,7 @@ export interface ExplainSections {
   examRelevance: string
   examTraps: string[]
   awsDocs?: Array<{ url: string; title: string }>
+  internalLinks?: import('@/lib/ai/internal-links').InternalLink[]
 }
 
 interface ExplainArchRequest {
@@ -55,6 +58,22 @@ export async function POST(request: Request): Promise<Response> {
 
   const system = body.focusNode ? SYSTEM_NODE : SYSTEM_DIAGRAM
 
+  // run AI explanation + AWS docs search + RAG retrieval in parallel
+  const searchTerm = buildDocsSearchPhrase([
+    body.focusNode ?? body.title,
+    body.domain,
+    'SAA-C03',
+  ])
+
+  const searchTerms = [body.focusNode ?? body.title, body.domain, ...body.tags, ...body.nodeLabels]
+  const internalLinks = findInternalLinks(searchTerms)
+  const ragQuery = [body.focusNode ?? body.title, body.domain, ...body.tags].filter(Boolean).join(' ')
+
+  const [awsDocs, ragEntries] = await Promise.all([
+    searchAwsMultipleLinks(searchTerm, ['general', 'reference_documentation'], 3),
+    queryRag(ragQuery, 5),
+  ])
+
   const userPrompt = [
     `Architecture: ${body.title}`,
     `Domain: ${body.domain}`,
@@ -62,21 +81,12 @@ export async function POST(request: Request): Promise<Response> {
     `Description: ${body.description}`,
     body.nodeLabels.length ? `All components: ${body.nodeLabels.join(', ')}` : '',
     body.focusNode ? `Focus service: ${body.focusNode}` : '',
+    formatRagContext(ragEntries),
   ]
     .filter(Boolean)
     .join('\n')
 
-  // run AI explanation + AWS docs search in parallel
-  const searchTerm = buildDocsSearchPhrase([
-    body.focusNode ?? body.title,
-    body.domain,
-    'SAA-C03',
-  ])
-
-  const [result, awsDocs] = await Promise.all([
-    completeJson('free', '', system, userPrompt, 500),
-    searchAwsMultipleLinks(searchTerm, ['general', 'reference_documentation'], 3),
-  ])
+  const result = await completeJson('free', '', system, userPrompt, 500)
 
   if ('error' in result) {
     return Response.json({ error: result.error }, { status: result.status })
@@ -84,8 +94,8 @@ export async function POST(request: Request): Promise<Response> {
 
   const parsed = parseAIJson<ExplainSections>(result.text)
   if (parsed?.whatItDoes) {
-    return Response.json({ ...parsed, awsDocs })
+    return Response.json({ ...parsed, awsDocs, internalLinks })
   }
 
-  return Response.json({ fallbackText: result.text, awsDocs })
+  return Response.json({ fallbackText: result.text, awsDocs, internalLinks })
 }

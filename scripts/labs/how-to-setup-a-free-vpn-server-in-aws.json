@@ -1,0 +1,376 @@
+{
+  "slug": "how-to-setup-a-free-vpn-server-in-aws",
+  "title": "How to setup a free VPN server in AWS",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to the AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign-in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Launching an EC2 Instance",
+      "steps": [
+        {
+          "text": "In this task, we are going to create and launch an EC2 Instance with the required configurations."
+        },
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 under Compute section."
+        },
+        {
+          "text": "Navigate to Instances on the left panel and click on the Launch Instances button."
+        },
+        {
+          "text": "Enter Name as MyVPNServer"
+        },
+        {
+          "text": "Choose an Amazon Machine Image (AMI):"
+        },
+        {
+          "text": "Click on Browse more AMIs."
+        },
+        {
+          "text": "Search for Openvpn in the search box."
+        },
+        {
+          "text": "Click on the Select button of the OpenVPN Access Server"
+        },
+        {
+          "text": "Click on subscribe now."
+        },
+        {
+          "text": "Click on the Continue button in the popup window."
+        },
+        {
+          "text": "Choose an Instance Type: Enter t2.micro"
+        },
+        {
+          "text": "Note: Make sure only t2.micro is selected, Else it won't be allowed to launch the EC2 Instance."
+        },
+        {
+          "text": "Key Pair: Choose Create a new key Pair hyperlink."
+        },
+        {
+          "text": "Key pair name: Enter MyVPNKey"
+        },
+        {
+          "text": "Key Pair Type: Select RSA"
+        },
+        {
+          "text": "Private key file format: Select .pem"
+        },
+        {
+          "text": "Click on the Create key pair button to download the key to your local machine."
+        },
+        {
+          "text": "Under Network Settings:"
+        },
+        {
+          "text": "The following ports will be automatically enabled :"
+        },
+        {
+          "text": "Now click on the Launch Instances button."
+        },
+        {
+          "text": "Launching a VPN Server may take a few minutes, you may see a message saying that the Subscription may take an hour to complete."
+        },
+        {
+          "text": "Scroll down and click on View Instances or click to navigate to the instance page"
+        },
+        {
+          "text": "Launch Status: Your instance is now launching, wait for the complete initialization of the instance till the status changes to Running."
+        },
+        {
+          "text": "Now click on the instance ID and copy the IPv4 Public IP of this instance and place it in your text editor."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: SSH into EC2 Instance",
+      "steps": [
+        {
+          "text": "Please note, that the username is root. Change the hostname or username to openvpnas."
+        },
+        {
+          "text": "Please follow the steps to SSH into EC2 Instance."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Initialize the VPN Server",
+      "steps": [
+        {
+          "text": "Please enter 'yes' to indicate your argument [no]: Enter yes"
+        },
+        {
+          "text": "Will this be the primary Access Server node?"
+        },
+        {
+          "text": "Press ENTER for default [yes]: Click the [enter] button."
+        },
+        {
+          "text": "Please specify the network interface and IP address to be"
+        },
+        {
+          "text": "Press Enter for default [1]: Click the [enter] button."
+        },
+        {
+          "text": "What public/private type/algorithms do you want to use for the OpenVPN CA?"
+        },
+        {
+          "text": "Press ENTER for default [rsa]: Click the [enter] button."
+        },
+        {
+          "text": "What key size do you want to use for the certificates?"
+        },
+        {
+          "text": "Press ENTER for default [2048]: Click the [enter] button."
+        },
+        {
+          "text": "What public/private type/algorithms do you want to use for the self-signed web certificate?"
+        },
+        {
+          "text": "Press ENTER for default [rsa]: Click the [enter] button."
+        },
+        {
+          "text": "What key size do you want to use for the certificates?"
+        },
+        {
+          "text": "Press ENTER for default [2048]: Click the [enter] button."
+        },
+        {
+          "text": "Please specify the port number for the Admin Web UI."
+        },
+        {
+          "text": "Press ENTER for default [943]: Click the [enter] button."
+        },
+        {
+          "text": "Please specify the TCP port number for the OpenVPN Daemon"
+        },
+        {
+          "text": "Press ENTER for default [443]: Click the [enter] button."
+        },
+        {
+          "text": "Should client traffic be routed by default through the VPN?"
+        },
+        {
+          "text": "Press ENTER for default [no]: Click the [enter] button."
+        },
+        {
+          "text": "Should client DNS traffic be routed by default through the VPN?"
+        },
+        {
+          "text": "Press ENTER for default [no]: Click the [enter] button."
+        },
+        {
+          "text": "Should private subnets be accessible to clients by default?"
+        },
+        {
+          "text": "Press ENTER for default [yes]: Click the [enter] button."
+        },
+        {
+          "text": "Do you wish to log in to the Admin UI as \"openvpn\"?"
+        },
+        {
+          "text": "Press ENTER for default [yes]: Click the [enter] button."
+        },
+        {
+          "text": "Type a password for the 'openvpn' account: Enter Whizvpn123@ and press [enter] and then enter the same password to confirm the password."
+        },
+        {
+          "text": "Please specify your Activation key (or leave blank to specify later): Click the [enter] button."
+        },
+        {
+          "text": "Now login as administrator, open Google Chrome and paste the following URL"
+        },
+        {
+          "text": "Syntax : https://<IPv4 Public IP>:943/admin/"
+        },
+        {
+          "text": "Example: https://3.239.61.27:943/admin/"
+        },
+        {
+          "text": "Now you will get a Warning message Your connection isn't private, this is because we are not using any SSL certificate for this connection."
+        },
+        {
+          "text": "Click on the Advanced Button and see if you have a proceed to website option then click on the link."
+        },
+        {
+          "text": "If you see the below message instead, then type thisisunsafe on the keyboard and the page will automatically reload."
+        },
+        {
+          "text": "You will see a login page like this :"
+        },
+        {
+          "text": "Login to the VPN Admin page :"
+        },
+        {
+          "text": "Username: Enter openvpn"
+        },
+        {
+          "text": "Password: Enter Whizvpn123@"
+        },
+        {
+          "text": "Now click on the Sign in button."
+        },
+        {
+          "text": "Now On the License Agreement page click on the Agree button."
+        },
+        {
+          "text": "Click on the VPN Server option in the left-side menu."
+        },
+        {
+          "text": "To make sure all the internet traffic goes through the VPN, Under Network Settings"
+        },
+        {
+          "text": "Under Interface, make sure you have selected All Interfaces, if not select All Interfaces and click Save on the right corner."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Connect to the VPN",
+      "steps": [
+        {
+          "text": "Open a new tab in the Google Chrome browser."
+        },
+        {
+          "text": "Paste the url https://<IPv4 Public IP>/ Example : https://100.26.97.202/"
+        },
+        {
+          "text": "Login to the VPN User Page :"
+        },
+        {
+          "text": "Username: Enter openvpn"
+        },
+        {
+          "text": "Password: Enter Whizvpn123@"
+        },
+        {
+          "text": "Now click on the Sign in button."
+        },
+        {
+          "text": "Now, based on which operating system you are using, download the VPN connector and install it on your local machine."
+        },
+        {
+          "text": "Open the OpenVPNConnector application and if you see Onboarding Tour, just close it."
+        },
+        {
+          "text": "Now again, agree to the terms and conditions."
+        },
+        {
+          "text": "You will be able to see a pre-configured VPN profile, turn on this connection."
+        },
+        {
+          "text": "Now again enter the username and password."
+        },
+        {
+          "text": "Username: Enter openvpn"
+        },
+        {
+          "text": "Password: Enter Whizvpn123@"
+        },
+        {
+          "text": "Click on the OK button."
+        },
+        {
+          "text": "Now you are connected to the VPN"
+        },
+        {
+          "text": "Now you can start browsing using a VPN connection."
+        },
+        {
+          "text": "DO You Know?"
+        },
+        {
+          "text": "OpenVPN is widely used and trusted by organizations and individuals worldwide for its robust security features, including encryption, authentication, and data integrity. It provides a flexible and scalable solution for establishing secure connections, making it suitable for various use cases, such as remote access to corporate networks, securing public Wi-Fi connections, and creating secure communication channels between different cloud environments."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and display whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "1 Delete EC2 Instance"
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 under Compute section."
+        },
+        {
+          "text": "Now Select the EC2 instance that you have created, click on Instance State, and click on the Terminate instance option."
+        },
+        {
+          "text": "Click on the Terminate button and your EC2 will start terminating."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created and launched the Amazon EC2 Instance."
+        },
+        {
+          "text": "You have successfully logged into an EC2 instance by SSH."
+        },
+        {
+          "text": "You have successfully Initialized the VPN Server."
+        },
+        {
+          "text": "You have successfully connected to the VPN."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process is completed"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

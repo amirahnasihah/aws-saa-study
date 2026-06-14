@@ -1,0 +1,654 @@
+{
+  "slug": "access-amazon-sqs-using-amazon-vpc-interface-endpoint",
+  "title": "Access Amazon SQS using Amazon VPC Interface Endpoint",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Note: If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an SQS Queue and copy the Queue URL",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to the Services menu at the top, search for SQS and select it. You’ll be redirected to the SQS console page."
+        },
+        {
+          "text": "Click on the Create Queue button."
+        },
+        {
+          "text": "Now, under Details select Type as a Standard queue."
+        },
+        {
+          "text": "Name: Enter MyWhizQueue"
+        },
+        {
+          "text": "Leave other settings as default and click on Create queue button."
+        },
+        {
+          "text": "A queue will be created."
+        },
+        {
+          "text": "Click on the copy button to copy the Queue URL and save it to the notepad."
+        },
+        {
+          "text": "Don't close this tab, perform the next tasks in the new tab."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a VPC and Enable DNS Hostnames option",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on in the Networking & Content Delivery section."
+        },
+        {
+          "text": "To create a VPC click on Your VPCs present in the Virtual Private Cloud section on the left sidebar."
+        },
+        {
+          "text": "Create a new VPC by clicking on the Create VPC button."
+        },
+        {
+          "text": "Select VPC only option."
+        },
+        {
+          "text": "Name tag - optional: Enter MyVPC"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter 192.168.0.0/26"
+        },
+        {
+          "text": "IPv6 CIDR block: No IPv6 CIDR block"
+        },
+        {
+          "text": "Tenancy: Default"
+        },
+        {
+          "text": "Click on the Create VPC button to create the MyVPC."
+        },
+        {
+          "text": "VPC is now created and by default DNS hostnames option is not enabled."
+        },
+        {
+          "text": "Note : Copy VPC ID, required in the next steps."
+        },
+        {
+          "text": "To Enable the DNS hostnames option,"
+        },
+        {
+          "text": "Click on the Actions button"
+        },
+        {
+          "text": "Select the Edit VPC Settings option."
+        },
+        {
+          "text": "Check the Enable DNS hostnames option and click on the Save button."
+        },
+        {
+          "text": "DNS Hostnames option is enabled."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create and attach an Internet Gateway with custom VPC",
+      "steps": [
+        {
+          "text": "By default, instances that are launched in a VPC cannot communicate with the Internet."
+        },
+        {
+          "text": "To enable Internet access, an Internet gateway needed to be attached to the VPC."
+        },
+        {
+          "text": "Click on Internet Gateways from the left menu and Click on Create Internet Gateway button."
+        },
+        {
+          "text": "Name Tag: Enter MyInternetGateway"
+        },
+        {
+          "text": "Click on Create Internet gateway button."
+        },
+        {
+          "text": "Select the Internet gateway you created from the list."
+        },
+        {
+          "text": "Click on Actions."
+        },
+        {
+          "text": "Select the Attach to VPC."
+        },
+        {
+          "text": "Available VPCs: Select the MyVPC And click on the Attach internet gateway button."
+        },
+        {
+          "text": "The Internet gateway is now attached with MyVPC."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create a Subnet",
+      "steps": [
+        {
+          "text": "To create a subnet click on Subnet the present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+        },
+        {
+          "text": "Click on the Create Subnet button."
+        },
+        {
+          "text": "In the VPC ID, select MyVPC."
+        },
+        {
+          "text": "Create the first subnet, you will use this subnet to launch public instances, this subnet will be associated with the main route table of the VPC:"
+        },
+        {
+          "text": "Subnet name: Enter Subnet"
+        },
+        {
+          "text": "Availability Zone: Select US East (N. Virginia) / us-east-1a"
+        },
+        {
+          "text": "IPv4 subnet CIDR block: Enter 192.168.0.0/27"
+        },
+        {
+          "text": "Click on the Create Subnet button to create a subnet."
+        },
+        {
+          "text": "The subnet is now created."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Configure the Subnet to enable auto-assign public IPv4 address",
+      "steps": [
+        {
+          "text": "To modify the auto-assign IP settings for the Public subnet, do the following:"
+        },
+        {
+          "text": "Select the Subnet"
+        },
+        {
+          "text": "Click on the Actions button"
+        },
+        {
+          "text": "Choose Edit subnet settings from the options."
+        },
+        {
+          "text": "Check the option Enable auto-assign public IPv4 address under Auto-assign IP settings"
+        },
+        {
+          "text": "Scroll to the end of the page and click on the Save button."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Add an entry to the Internet (0.0.0.0/0) in the Main Route Table",
+      "steps": [
+        {
+          "text": "By default, custom VPC's main Route Table will have access to VPC's CIDR range only. For this lab, we need internet access."
+        },
+        {
+          "text": "Let's add the route of the internet gateway as destination and 0.0.0.0/0 as Target."
+        },
+        {
+          "text": "Select Route tables from the left panel."
+        },
+        {
+          "text": "Choose MyVPC (one having same VPC ID copied earlier)"
+        },
+        {
+          "text": "To add the route entry of the internet gateway in the main route table of the custom VPC, do the following:"
+        },
+        {
+          "text": "Select the route table present"
+        },
+        {
+          "text": "Click on the Routes option in the menu bar."
+        },
+        {
+          "text": "Choose the Edit routes button."
+        },
+        {
+          "text": "On the Edit routes page, Click on the Add route button."
+        },
+        {
+          "text": "Add the following:"
+        },
+        {
+          "text": "Destination : 0.0.0.0/0"
+        },
+        {
+          "text": "Target : Internet gateway"
+        },
+        {
+          "text": "Click on the Save changes button."
+        },
+        {
+          "text": "Routes are now edited."
+        },
+        {
+          "text": "Close the pane, and Check the Routes of this Main Route Table. Entry to the Internet i.e. 0.0.0.0/0 via Internet gateway is present in the Routes."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Create a Security Group for EC2 Instance",
+      "steps": [
+        {
+          "text": "To get started with creating security groups, click on the Security Groups button, present in the SECURITY section in the left sidebar."
+        },
+        {
+          "text": "Click on the Create Security Group button."
+        },
+        {
+          "text": "Fill in the below details under Basic details:"
+        },
+        {
+          "text": "Enter Security group name as EI-SG"
+        },
+        {
+          "text": "Enter Description as Security group for the EC2 instance and VPC Endpoint"
+        },
+        {
+          "text": "Remove the Default Security Group and Select the MyVPC under the VPC field."
+        },
+        {
+          "text": "By default, no inbound rule will be allowed, and when you check in the outbound rules, there is only one rule present that has a Type will All traffic because Security groups are Stateful in nature, when inbound is allowed outbound is also allowed."
+        },
+        {
+          "text": "To add the Inbound rules for the same."
+        },
+        {
+          "text": "We will add 2 rules for the Bastion host security group i.e. SSH, All Traffic - Internal."
+        },
+        {
+          "text": "For the first rule, click on the Add Rule button."
+        },
+        {
+          "text": "Type : Select SSH"
+        },
+        {
+          "text": "Source : Select Anywhere- IPv4"
+        },
+        {
+          "text": "For the second rule, click on the Add Rule button."
+        },
+        {
+          "text": "Type : Select All traffic,"
+        },
+        {
+          "text": "Source : Select Custom, and Enter 192.168.0.0/26"
+        },
+        {
+          "text": "Now, modify the outbound rule,"
+        },
+        {
+          "text": "From the destination of the first rule, remove 0.0.0.0/0 and add the CIDR of VPC i.e. 192.168.0.0/26"
+        },
+        {
+          "text": "Finally, click on the Create Security Group button to create."
+        },
+        {
+          "text": "The security group is now created."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Launch an EC2 Instance",
+      "steps": [
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on in the Compute section."
+        },
+        {
+          "text": "Navigate to Instances from the left side menu and click on Launch Instances"
+        },
+        {
+          "text": "Under the Name and tags section : Name : Endpoint-Instance."
+        },
+        {
+          "text": "Under the Application and OS Images (Amazon Machine Image) section :"
+        },
+        {
+          "text": "Select Quick Start tab and Amazon Linux under it"
+        },
+        {
+          "text": "Amazon Machine Image (AMI) : Select Amazon Linux 2023 kernel AMI"
+        },
+        {
+          "text": "Note: if there are two AMI's present for Amazon Linux 2023 AMI, choose kernel-6.1."
+        },
+        {
+          "text": "Instance Type : t2.micro"
+        },
+        {
+          "text": "Under the Key Pair (login) section :"
+        },
+        {
+          "text": "Click on Create new key pair hyperlink"
+        },
+        {
+          "text": "Key pair name: WhizKeypair"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Click on Create key pair and select the created key pair."
+        },
+        {
+          "text": "Under the Network Settings section :"
+        },
+        {
+          "text": "Click on Edit Button."
+        },
+        {
+          "text": "Remove the existing default VPC and add VPC with name MyVPC"
+        },
+        {
+          "text": "Auto-assign public IP: select Enable"
+        },
+        {
+          "text": "Firewall (security groups) : Select Select existing security group"
+        },
+        {
+          "text": "Common security groups : Select Security group with name EI_SG."
+        },
+        {
+          "text": "Click on the Advance Details tab, under this, select IAM role."
+        },
+        {
+          "text": "Click on the Launch Instance button."
+        },
+        {
+          "text": "Scroll below and click on the View All Instances button."
+        },
+        {
+          "text": "The instance state will be changed from Pending to Running and the Status check will be changed from Initializing to 2/2 checks passed."
+        }
+      ]
+    },
+    {
+      "title": "Task 10: SSH into the Endpoint instance",
+      "steps": [
+        {
+          "text": "SSH into the Endpoint instance using the PEM key: WhizKeyPair.pem"
+        },
+        {
+          "text": "Since EC2 Instance is having the IAM Role Attached, we can send a message to the SQS Queue."
+        },
+        {
+          "text": "To send a message to the SQS Queue, copy and paste the below command. Replace the queue URL with the Queue URL you have copied before."
+        },
+        {
+          "text": "aws sqs send-message --region us-east-1 --endpoint-url https://sqs.us-east-1.amazonaws.com/ --queue-url https://sqs.us-east-1.amazonaws.com/123456789012/MyWhizQueue --message-body \"Hello from Amazon SQS.\""
+        },
+        {
+          "text": "Though the assigned IAM role is having full access for SQS, sending a message to the queue got failed, saying, connection timeout on SQS's endpoint."
+        },
+        {
+          "text": "As, this instance's security group is only allowed to do SSH, running any other command, will fail."
+        },
+        {
+          "text": "Note: If you are getting the error as not authorized, please attach the IAM role to the EC2 Instance, which you missed."
+        },
+        {
+          "text": "Let's add the permission to access the SQS using the VPC Endpoint for SQS."
+        }
+      ]
+    },
+    {
+      "title": "Task 11: Create a VPC Endpoint for SQS",
+      "steps": [
+        {
+          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on in the Networking & Content Delivery section"
+        },
+        {
+          "text": "Click on Endpoints present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+        },
+        {
+          "text": "Click on the Create Endpoint button."
+        },
+        {
+          "text": "Endpoint settings"
+        },
+        {
+          "text": "Name tag - optional : Enter sqs-enpoint"
+        },
+        {
+          "text": "Service category : Select AWS Services"
+        },
+        {
+          "text": "Services"
+        },
+        {
+          "text": "In the Service name search bar, type sqs, and press enter"
+        },
+        {
+          "text": "Select com.amazonaws.us-east-1.sqs Service name of Type Interface."
+        },
+        {
+          "text": "VPC"
+        },
+        {
+          "text": "Select the Custom VPC MyVPC from the dropdown list."
+        },
+        {
+          "text": "Subnets"
+        },
+        {
+          "text": "Availability Zone : Check the checkbox of us-east-1a"
+        },
+        {
+          "text": "Subnet ID : Select the subnet that you created in the custom VPC i.e. Subnet"
+        },
+        {
+          "text": "Note : Make sure Enable DNS name option is checked for the Custom VPC that you created."
+        },
+        {
+          "text": "Security groups"
+        },
+        {
+          "text": "Select EI-SG Security group from the list."
+        },
+        {
+          "text": "Note : Remove the default security group if selected."
+        },
+        {
+          "text": "Leave all other options as default"
+        },
+        {
+          "text": "Finally, click on the Create Endpoint button."
+        },
+        {
+          "text": "An endpoint will be created."
+        },
+        {
+          "text": "Click on the Close button, and within a few moments, you will see the endpoint will be listed."
+        },
+        {
+          "text": "It may take up to 5 minutes for the endpoint to be in an Available state. Refresh the page every minute to see the updated status."
+        }
+      ]
+    },
+    {
+      "title": "Task 12: Send the message to the SQS queue",
+      "steps": [
+        {
+          "text": "To send a message to the queue, copy and paste the below command. Make sure to replace the Queue URL with the Queue URL you have copied before."
+        },
+        {
+          "text": "aws sqs send-message --region us-east-1 --endpoint-url https://sqs.us-east-1.amazonaws.com/ --queue-url https://sqs.us-east-1.amazonaws.com/123456789012/MyWhizQueue --message-body \"Hello from Amazon SQS.\""
+        },
+        {
+          "text": "The message is sent to the queue."
+        },
+        {
+          "text": "To check the message, follow the steps presented below:"
+        },
+        {
+          "text": "Switch to the SQS Console page, if not close the other tab."
+        },
+        {
+          "text": "Else, Navigate to the Services menu at the top, search for SQS and select it. You’ll be redirected to the SQS console page."
+        },
+        {
+          "text": "Click on the queue present i.e. MyWhizQueue."
+        },
+        {
+          "text": "From the menu bar, click on Send and receive messages."
+        },
+        {
+          "text": "Click on the Poll for messages option to see the message."
+        },
+        {
+          "text": "Do You Know ?"
+        },
+        {
+          "text": "Amazon VPC Interface Endpoints allow you to connect to AWS services privately from within your VPC, without the need for public internet connectivity. This helps enhance security and reduces exposure to potential threats."
+        }
+      ]
+    },
+    {
+      "title": "Task 13: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        }
+      ]
+    },
+    {
+      "title": "Task 14: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "Delete VPC Endpoint"
+        },
+        {
+          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on in the Networking & Content Delivery section."
+        },
+        {
+          "text": "Click on Endpoints present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+        },
+        {
+          "text": "VPC Endpoint will be listed here."
+        },
+        {
+          "text": "To delete the VPC endpoint, perform the following tasks:"
+        },
+        {
+          "text": "Select the Endpoint,"
+        },
+        {
+          "text": "Click on the Actions button,"
+        },
+        {
+          "text": "Choose the option of Delete endpoint"
+        },
+        {
+          "text": "Confirm the deletion by clicking on the Yes, Delete button."
+        },
+        {
+          "text": "The endpoint will be deleted immediately."
+        },
+        {
+          "text": "EC2 Instance termination"
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on in the Compute section."
+        },
+        {
+          "text": "Click on Instances on the left panel."
+        },
+        {
+          "text": "EC2 Instance will be listed here."
+        },
+        {
+          "text": "To terminate the present instance, perform the following tasks:"
+        },
+        {
+          "text": "Select the EC2 instances"
+        },
+        {
+          "text": "Click on the Instance state"
+        },
+        {
+          "text": "Choose to Terminate instance"
+        },
+        {
+          "text": "To confirm the termination of the selected EC2 instance, click on the Terminate button."
+        },
+        {
+          "text": "The instance will be terminated in a minute or so."
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created the SQS Queue."
+        },
+        {
+          "text": "You have successfully created the VPC and its components."
+        },
+        {
+          "text": "You have launched the EC2 instance, and after SSH, you tried to send the message to the queue but it got failed."
+        },
+        {
+          "text": "We have created a VPC endpoint for SQS to securely access SQS Queue and messages without going to the internet i.e. within Amazon's network through the Endpoint instance."
+        },
+        {
+          "text": "We tested the VPC endpoint for SQS from the EC2 instance."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

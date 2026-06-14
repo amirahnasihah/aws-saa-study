@@ -1004,7 +1004,7 @@ const rows = questions.map((q, i) => {
   const reference = q.reference ? `'${escape(q.reference)}'` : 'NULL'
   const pageNumber = i + 1
   const screenshotUrl = `'/questions/wz3/${escape(q.id)}.png'`
-  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source, page_number, screenshot_url) VALUES ('${escape(q.id)}', '${q.domain}', '${escape(q.domainLabel)}', '${q.difficulty}', '${escape(q.scenario)}', '${options}', '${escape(q.correctId)}', '${expl}', ${reference}, '${keywords}', 'whizlab', ${pageNumber}, ${screenshotUrl});`
+  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source, page_number, screenshot_url) VALUES ('${escape(q.id)}', '${q.domain}', '${escape(q.domainLabel)}', '${q.difficulty}', '${escape(q.scenario)}', '${options}', '${escape(q.correctId)}', '${expl}', ${reference}, '${keywords}', 'core', ${pageNumber}, ${screenshotUrl});`
 })
 
 writeFileSync('scripts/wz3.sql', rows.join('\n'))

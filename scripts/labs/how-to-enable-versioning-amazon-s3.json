@@ -1,0 +1,307 @@
+{
+  "slug": "how-to-enable-versioning-amazon-s3",
+  "title": "How to enable versioning Amazon S3",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an S3 Bucket",
+      "steps": [
+        {
+          "text": "In this task , we are going to create an S3 bucket with the required configurations like name, access and region."
+        },
+        {
+          "text": "Navigate to the Services menu at the top and click on S3 in the Storage section."
+        },
+        {
+          "text": "On the S3 dashboard, click on Create bucket button and fill in the bucket details."
+        },
+        {
+          "text": "Select Region as N.Verginia to create an S3 bucket."
+        },
+        {
+          "text": "Bucket type Select : General purpose"
+        },
+        {
+          "text": "Bucket name: Enter lab-<RANDOM_NUMBER>"
+        },
+        {
+          "text": "Note: S3 bucket names are globally unique, choose an available name."
+        },
+        {
+          "text": "Object ownership: Select ACLs disabled (recommended) option"
+        },
+        {
+          "text": "Uncheck the option, Block all public access, and check the acknowledge option."
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Click on Create bucket button."
+        },
+        {
+          "text": "Your S3 Bucket is now created."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Enable Versioning on the S3 bucket",
+      "steps": [
+        {
+          "text": "Click on your bucket name lab2346."
+        },
+        {
+          "text": "Click on Properties tab."
+        },
+        {
+          "text": "Under Bucket Versioning, click on Edit button."
+        },
+        {
+          "text": "Bucket Versioning : Select Enable radio button."
+        },
+        {
+          "text": "Now Click on the Save changes button."
+        },
+        {
+          "text": "Now Bucket versioning is enabled."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Upload an object and make the bucket public",
+      "steps": [
+        {
+          "text": "Click on the Objects tab."
+        },
+        {
+          "text": "In the Overview, you can see the following message:"
+        },
+        {
+          "text": "This bucket is empty. Upload new objects to get started."
+        },
+        {
+          "text": "Upload sample.txt file present in zip file download the zip file from our Download Me link."
+        },
+        {
+          "text": "To upload a file to our S3 bucket,"
+        },
+        {
+          "text": "Click on the Upload button."
+        },
+        {
+          "text": "Click on the Add files button."
+        },
+        {
+          "text": "Browse for the file you want to upload."
+        },
+        {
+          "text": "Click on the Upload button."
+        },
+        {
+          "text": "You can watch the progress of the upload from within the transfer panel at the bottom of the screen. If it's a small file, you might not see the transfer. Once your file has been uploaded, it will be displayed in the bucket."
+        },
+        {
+          "text": "Now click on the Close button on the top right corner of the screen."
+        },
+        {
+          "text": "To copy the ARN of your S3 bucket, click on Properties tab and copy the ARN."
+        },
+        {
+          "text": "Make the bucket public with a Bucket Policy:"
+        },
+        {
+          "text": "Click the Permissions tab to configure your bucket:"
+        },
+        {
+          "text": "Scroll down to Bucket policy , click on Edit button on the Right side."
+        },
+        {
+          "text": "The policy editor will open."
+        },
+        {
+          "text": "In the policy below, update your bucket ARN in the Resource key-value and copy the policy code."
+        },
+        {
+          "text": "Paste the bucket policy into the Bucket policy editor."
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"Id\": \"Policy1\","
+        },
+        {
+          "text": "\"Version\": \"2012-10-17\","
+        },
+        {
+          "text": "\"Statement\": ["
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"Sid\": \"Stmt1\","
+        },
+        {
+          "text": "\"Action\": ["
+        },
+        {
+          "text": "\"s3:GetObject\""
+        },
+        {
+          "text": "],"
+        },
+        {
+          "text": "\"Effect\": \"Allow\","
+        },
+        {
+          "text": "\"Resource\": \"replace-this-string-from-your-bucket-arn/*\","
+        },
+        {
+          "text": "\"Principal\": \"*\""
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "]"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "Click on Save Changes button"
+        },
+        {
+          "text": "Now again open the Objects tab, select the object name and click on Copy URL."
+        },
+        {
+          "text": "Open a new tab, paste the URL and you will get the below output."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Upload different versions of the file",
+      "steps": [
+        {
+          "text": "Now open the sample.txt file in your local text editor and update the file content as “This is version 2”."
+        },
+        {
+          "text": "Click on the Upload button."
+        },
+        {
+          "text": "Click on the Add files button."
+        },
+        {
+          "text": "Browse for the file you want to upload."
+        },
+        {
+          "text": "Click on the Upload button."
+        },
+        {
+          "text": "Now click on the Close button on the top right corner of the screen."
+        },
+        {
+          "text": "Once the file has been uploaded successfully, copy the URL and paste it into your browser."
+        },
+        {
+          "text": "You should see the latest version of the file you uploaded."
+        },
+        {
+          "text": "Similarly, again edit the sample.txt and update the content as \"This is version 3\"."
+        },
+        {
+          "text": "Then upload the file into the bucket and check the output in the browser."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Test the Versioning of the object",
+      "steps": [
+        {
+          "text": "Open your S3 bucket, click on Show versions. You will get the list of versions available for your sample.txt."
+        },
+        {
+          "text": "Now delete the first object and try to see the output in the browser."
+        },
+        {
+          "text": "You will get the output as \"This is version 2\"."
+        },
+        {
+          "text": "Hence, when you delete the object from the bucket, the bucket pointer points to the previously available version."
+        },
+        {
+          "text": "Do you know?"
+        },
+        {
+          "text": "Enabling versioning can impact storage costs since each version of an object consumes storage space. You are billed for the storage of all versions, including the current version and any previous versions. However, S3 provides options for lifecycle policies, which can automatically transition or expire older versions to help manage storage costs effectively."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created an S3 Bucket."
+        },
+        {
+          "text": "You have successfully enabled Object Versioning on the Bucket."
+        },
+        {
+          "text": "You have successfully uploaded a test file into the Bucket and tested its versioning."
+        },
+        {
+          "text": "You have successfully validated the lab."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out from the AWS Management Console."
+        },
+        {
+          "text": "Click on End Lab button from the lab console and wait till the process gets completed"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

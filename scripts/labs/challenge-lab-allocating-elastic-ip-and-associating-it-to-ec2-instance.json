@@ -1,0 +1,106 @@
+{
+  "slug": "challenge-lab-allocating-elastic-ip-and-associating-it-to-ec2-instance",
+  "title": "Challenge Lab- Allocating Elastic IP and Associating it to EC2 Instance",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Challenge section 1",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "In this challenge, your Virtual Private Cloud (VPC) skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of Elastic Compute (EC2) and Elastic IP Address which will be used in this challenge. This Challenge will help you understand the real-time scenarios."
+        },
+        {
+          "text": "A company XYZ wants to set up and configure a virtual machine in Amazon's cloud using Amazon Machine Images to launch Amazon EC2 Instances and using key pairs for SSH authentication to log in. The below are the tasks that need to be performed by you in order to create the stack."
+        },
+        {
+          "text": "Create a new default VPC."
+        },
+        {
+          "text": "Create EC2 Instance with below configurations:"
+        },
+        {
+          "text": "Amazon Machine Image: Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "Instance Type: t2.micro"
+        },
+        {
+          "text": "Create Key Pair"
+        },
+        {
+          "text": "Create a new Security Group with 2 ports i.e., SSH and HTTP"
+        },
+        {
+          "text": "Amazon Machine Image: Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "Instance Type: t2.micro"
+        },
+        {
+          "text": "Create Key Pair"
+        },
+        {
+          "text": "Create a new Security Group with 2 ports i.e., SSH and HTTP"
+        },
+        {
+          "text": "Connect EC2 instance."
+        },
+        {
+          "text": "Install Apache server and check web server status."
+        },
+        {
+          "text": "Develop and release a web page with basic HTML content and restart the server and check HTTP protocol."
+        },
+        {
+          "text": "Compare the newly allocated IP address with the old one to assess any changes in the instance state."
+        },
+        {
+          "text": "Compare the newly allocated IP address with the old one to assess any changes in the instance state."
+        },
+        {
+          "text": "Allocate an Elastic IP Address."
+        },
+        {
+          "text": "Associate an Elastic IP Address with a Running Instance and check IPv4 Public IP."
+        },
+        {
+          "text": "Alter the status of an instance."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Delete the resources after validation."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

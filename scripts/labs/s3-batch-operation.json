@@ -1,0 +1,254 @@
+{
+  "slug": "s3-batch-operation",
+  "title": "S3 Batch Operation",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "a. Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "b. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2 : Create S3 Bucket",
+      "steps": [
+        {
+          "text": "Navigate to the Services menu at the top and click on S3 in the Storage section."
+        },
+        {
+          "text": "In the left menu, choose Buckets, click Create Bucket and fill in the bucket details."
+        },
+        {
+          "text": "a. Bucket Type Select : General purpose"
+        },
+        {
+          "text": "b. Bucket Name: Enter whiz-batch-operation"
+        },
+        {
+          "text": "Note: The Bucket Name must be Unique across all existing bucket names in Amazon S3"
+        },
+        {
+          "text": "Object ownership: Select ACLs Enabled option then Choose Object writer"
+        },
+        {
+          "text": "Bucket settings for Block Public Access: Uncheck the option, Block all public access and select the check box option of Acknowledgment."
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Click on the Create Bucket button."
+        },
+        {
+          "text": "Note: if you are getting any error please ignore and follow further steps."
+        }
+      ]
+    },
+    {
+      "title": "Task 3 : Create Manifest file",
+      "steps": [
+        {
+          "text": "Click on your bucket name."
+        },
+        {
+          "text": "Click to download the ZIP file, then extract it and upload the files to the S3 bucket."
+        },
+        {
+          "text": "The uploaded files are now visible in the S3 bucket."
+        },
+        {
+          "text": "Click the photo1.jpg object to copy its Object URL, then paste the URL into a new browser tab."
+        },
+        {
+          "text": "Now we can’t see this because the object is not public."
+        },
+        {
+          "text": "Note : S3 Batch Operations are typically used with inventory configurations to create a manifest file. However, once an inventory configuration is created, AWS delivers the file within 24 hours. To avoid waiting, this time we create the manifest file manually using Python."
+        },
+        {
+          "text": "Open Cloud Shell present in the top right corner."
+        },
+        {
+          "text": "Paste the following in the cloudshell"
+        },
+        {
+          "text": "nano main.py"
+        },
+        {
+          "text": "Replace the bucket name"
+        },
+        {
+          "text": "import boto3"
+        },
+        {
+          "text": "import csv"
+        },
+        {
+          "text": "# Replace the bucket name"
+        },
+        {
+          "text": "bucket_name = 'my-batch-test-bucket'"
+        },
+        {
+          "text": "output_file = 'jpg_manifest.csv'"
+        },
+        {
+          "text": "prefix = ''"
+        },
+        {
+          "text": "s3 = boto3.client('s3')"
+        },
+        {
+          "text": "response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)"
+        },
+        {
+          "text": "with open(output_file, 'w', newline='') as csvfile:"
+        },
+        {
+          "text": "writer = csv.writer(csvfile)"
+        },
+        {
+          "text": "for obj in response.get('Contents', []):"
+        },
+        {
+          "text": "key = obj['Key']"
+        },
+        {
+          "text": "if key.endswith('.jpg'):"
+        },
+        {
+          "text": "writer.writerow([bucket_name, key])"
+        },
+        {
+          "text": "print(\" Manifest created.\")"
+        },
+        {
+          "text": "# Upload to S3"
+        },
+        {
+          "text": "s3.upload_file(output_file, bucket_name, 'manifests/jpg_manifest.csv')"
+        },
+        {
+          "text": "print(\"Uploaded manifest to S3.\")"
+        },
+        {
+          "text": "Click Ctrl+X, Y and then Click Enter"
+        },
+        {
+          "text": "python main.py"
+        },
+        {
+          "text": "Now you can see: 'Manifest created. Uploaded manifest to S3.'"
+        },
+        {
+          "text": "Go to the S3 bucket manifests/ to see the manifest file created: jpg_manifest.csv."
+        }
+      ]
+    },
+    {
+      "title": "Task 4 : Create Batch Operation",
+      "steps": [
+        {
+          "text": "Go to Batch Operation. Click to Create Job"
+        },
+        {
+          "text": "Scroll down in the Manifest field, choose CSV, and in the Manifest object, select the S3 bucket where the manifest file is located. Then, click Next."
+        },
+        {
+          "text": "In the 'Choose Operation' field, select 'Replace access control list (ACL)'."
+        },
+        {
+          "text": "Under 'Everyone (public access)', check the 'Read' checkbox."
+        },
+        {
+          "text": "Also, check the box acknowledging."
+        },
+        {
+          "text": "Click Next"
+        },
+        {
+          "text": "In the Configure Additional Options section, set the priority to 10."
+        },
+        {
+          "text": "Check the box for Generate completion report and select All tasks."
+        },
+        {
+          "text": "In the Completion Report Destination, choose your bucket and add /batch-reports/jpg-acl-job/."
+        },
+        {
+          "text": "The Permissions field, choose batch_operation_role-<RANDOM-NUMBERS>, then click Next"
+        },
+        {
+          "text": "Click Create Job."
+        }
+      ]
+    },
+    {
+      "title": "Task 6 : Validation of the Lab Once the lab steps are completed, please click on the Validation button on the Right side panel. This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not. sample output .",
+      "steps": [
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created a manifest file listing the target JPG files in S3."
+        },
+        {
+          "text": "You have configured an S3 Batch Operations job to update the ACL of those objects."
+        },
+        {
+          "text": "You have run the Batch Operations job, making the JPG files publicly accessible."
+        },
+        {
+          "text": "You have verified that the completion report confirms all objects were processed successfully."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    },
+    {
+      "title": "Task 6 : Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "sample output ."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

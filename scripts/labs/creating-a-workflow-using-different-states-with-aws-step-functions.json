@@ -1,0 +1,711 @@
+{
+  "slug": "creating-a-workflow-using-different-states-with-aws-step-functions",
+  "title": "Creating a workflow using different States with AWS Step Functions",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button"
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Workflow Explanation :"
+        },
+        {
+          "text": "The workflow takes 2 numbers, A and B as inputs and sum it."
+        },
+        {
+          "text": "If the sum is greater than 10, then we will print the Sum and end the workflow."
+        },
+        {
+          "text": "If the sum is not greater than 10, then we will increment each number with 1 and wait for 10 seconds."
+        },
+        {
+          "text": "Then we will sum the numbers again and compare the sum of the numbers."
+        },
+        {
+          "text": "The process repeats all over till the sum is greater than 10."
+        },
+        {
+          "text": "Here we are using States like Task state, Choice State, Parallel State, Wait State, and End State."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Creating Lambda Functions",
+      "steps": [
+        {
+          "text": "In this task, we are going to create five Lambda functions that will be utilized in the AWS Step Functions workflow. Each Lambda function serves a specific purpose:"
+        },
+        {
+          "text": "Adding 2 numbers: This function takes two input numbers, adds them, and returns the sum."
+        },
+        {
+          "text": "Incrementing A: This function increments the value of input 'A' by 1."
+        },
+        {
+          "text": "Incrementing B: This function increments the value of input 'B' by 1."
+        },
+        {
+          "text": "Printing the sum: This function prints the sum of 'A' and 'B'."
+        },
+        {
+          "text": "Formatting the inputs: This function formats the inputs to the required structure for the workflow."
+        },
+        {
+          "text": "Navigate to the Services menu at the top, then click on Lambda under the Compute section."
+        },
+        {
+          "text": "Lambda function 1: Adding 2 numbers"
+        },
+        {
+          "text": "Click on Create a function button"
+        },
+        {
+          "text": "Select Author from Scratch"
+        },
+        {
+          "text": "Function Name: Enter adding_A_and_B"
+        },
+        {
+          "text": "Runtime: Select Python 3.12"
+        },
+        {
+          "text": "Expand Additional settings, Enable Custom execution role option."
+        },
+        {
+          "text": "Choose Lambdarole from the dropdown. This role will be created for you already. Click on Save."
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on Create function button."
+        },
+        {
+          "text": "Copy the Function ARN in your text editor for later use."
+        },
+        {
+          "text": "Copy the below code and save the code by clicking on the Deploy button."
+        },
+        {
+          "text": "from __future__ import print_function"
+        },
+        {
+          "text": "import json"
+        },
+        {
+          "text": "print(\"Loading Function...\")"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "value1 = int(event['A'])"
+        },
+        {
+          "text": "value2 = int(event['B'])"
+        },
+        {
+          "text": "sum_value = value1 + value2"
+        },
+        {
+          "text": "returnvalue = {\"A\" : value1, \"B\" : value2, \"sumAB\" : sum_value}"
+        },
+        {
+          "text": "return(returnvalue)"
+        },
+        {
+          "text": "Lambda function 2: Incrementing A"
+        },
+        {
+          "text": "Click on Create Function button."
+        },
+        {
+          "text": "Select Author from Scratch"
+        },
+        {
+          "text": "Function Name: Enter Increment_A"
+        },
+        {
+          "text": "Runtime: Select Python 3.12"
+        },
+        {
+          "text": "Expand Additional settings, Enable Custom execution role option."
+        },
+        {
+          "text": "Choose Lambdarole which was created earlier. Click on Save"
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on Create Function button."
+        },
+        {
+          "text": "Copy the Function ARN in your text editor for later use"
+        },
+        {
+          "text": "Copy the below code and save the code by clicking on the Deploy button."
+        },
+        {
+          "text": "from __future__ import print_function"
+        },
+        {
+          "text": "import json"
+        },
+        {
+          "text": "print(\"Loading Function...\")"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "A = event['A']"
+        },
+        {
+          "text": "A = A + 1"
+        },
+        {
+          "text": "returnvalue = {\"A\": A}"
+        },
+        {
+          "text": "return(returnvalue)"
+        },
+        {
+          "text": "Lambda function 3: Incrementing B"
+        },
+        {
+          "text": "Click on Create Function button."
+        },
+        {
+          "text": "Select Author from Scratch"
+        },
+        {
+          "text": "Function Name: Enter Increment_B"
+        },
+        {
+          "text": "Runtime: Select Python 3.12"
+        },
+        {
+          "text": "Expand Additional settings, Enable Custom execution role option."
+        },
+        {
+          "text": "Choose LambdaRole which was created earlier. Click on Save"
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on Create Function button."
+        },
+        {
+          "text": "Copy the Function ARN in your text editor for later use"
+        },
+        {
+          "text": "Copy the below code and save the code by clicking on the Deploy button."
+        },
+        {
+          "text": "from __future__ import print_function"
+        },
+        {
+          "text": "import json"
+        },
+        {
+          "text": "print(\"Loading Function...\")"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "B = event['B']"
+        },
+        {
+          "text": "B = B + 1"
+        },
+        {
+          "text": "returnvalue = {\"B\": B}"
+        },
+        {
+          "text": "return(returnvalue)"
+        },
+        {
+          "text": "Lambda function 4: Printing the sum"
+        },
+        {
+          "text": "Click on Create Function button."
+        },
+        {
+          "text": "Select Author from Scratch"
+        },
+        {
+          "text": "Function Name : Enter print_sum"
+        },
+        {
+          "text": "Runtime : Select Python 3.12"
+        },
+        {
+          "text": "Expand Additional settings, Enable Custom execution role option."
+        },
+        {
+          "text": "Choose LambdaRole which was created earlier. Click on Save."
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on Create Function button."
+        },
+        {
+          "text": "Copy the Function ARN in your text editor for later use"
+        },
+        {
+          "text": "Copy the below code and save the code by clicking on the Deploy button."
+        },
+        {
+          "text": "from __future__ import print_function"
+        },
+        {
+          "text": "import json"
+        },
+        {
+          "text": "print(\"Loading Function...\")"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "print(\"sum of A and B is {}\".format(event['sumAB']))"
+        },
+        {
+          "text": "return(event)"
+        },
+        {
+          "text": "Lambda function 5: Formatting the inputs"
+        },
+        {
+          "text": "Click on Create Function"
+        },
+        {
+          "text": "Select Author from Scratch"
+        },
+        {
+          "text": "Function Name: Enter format_inputs"
+        },
+        {
+          "text": "Runtime: Select Python 3.12"
+        },
+        {
+          "text": "Expand Additional settings, Enable Custom execution role option"
+        },
+        {
+          "text": "Choose LambdaRole which was created earlier. Click on Save."
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on Create Function."
+        },
+        {
+          "text": "Copy the Function ARN in your text editor for later use"
+        },
+        {
+          "text": "Copy the below code and save the code by clicking on the Deploy button."
+        },
+        {
+          "text": "from __future__ import print_function"
+        },
+        {
+          "text": "import json"
+        },
+        {
+          "text": "print(\"Loading Function...\")"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "returnvalue = {\"A\":event[0]['A'], \"B\":event[1]['B']}"
+        },
+        {
+          "text": "return(returnvalue)"
+        },
+        {
+          "text": "We have created all 5 required lambda functions."
+        },
+        {
+          "text": "Make sure you have the right ARNs' of the lambda functions."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a State Machine in Step Function",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a state machine using AWS Step Functions. The state machine defines the flow of the workflow, specifying which Lambda functions to execute and the decisions to be made based on the output of each function."
+        },
+        {
+          "text": "Navigate to the Services menu at the top, then click on Step Functions in the Application Integration section."
+        },
+        {
+          "text": "Click on the Menu button (three parallel lines) in the top left corner and select State Machines"
+        },
+        {
+          "text": "Click on Create State machine button."
+        },
+        {
+          "text": "Choose the template: Create from Blank. Enter the name of your choice and click Continue."
+        },
+        {
+          "text": "Select Code and enter the below code."
+        },
+        {
+          "text": "Definition: Replace the existing state machine JSON code with the below one."
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"Comment\": \"An example of the Amazon States Language using different states\","
+        },
+        {
+          "text": "\"StartAt\": \"AplusB\","
+        },
+        {
+          "text": "\"States\": {"
+        },
+        {
+          "text": "\"AplusB\": {"
+        },
+        {
+          "text": "\"Type\": \"Task\","
+        },
+        {
+          "text": "\"Resource\": \"arn:aws:lambda:us-east-1:757712384777:function:adding_A_and_B\","
+        },
+        {
+          "text": "\"Next\": \"CheckAplusB\""
+        },
+        {
+          "text": "},"
+        },
+        {
+          "text": "\"CheckAplusB\": {"
+        },
+        {
+          "text": "\"Type\": \"Choice\","
+        },
+        {
+          "text": "\"Choices\": ["
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"Variable\": \"$.sumAB\","
+        },
+        {
+          "text": "\"NumericGreaterThanEquals\": 10,"
+        },
+        {
+          "text": "\"Next\": \"PrintResults\""
+        },
+        {
+          "text": "},"
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"Variable\": \"$.sumAB\","
+        },
+        {
+          "text": "\"NumericLessThan\": 10,"
+        },
+        {
+          "text": "\"Next\": \"IncrementAB\""
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "]"
+        },
+        {
+          "text": "},"
+        },
+        {
+          "text": "\"PrintResults\": {"
+        },
+        {
+          "text": "\"Type\": \"Task\","
+        },
+        {
+          "text": "\"Resource\": \"arn:aws:lambda:us-east-1:757712384777:function:print_sum\","
+        },
+        {
+          "text": "\"End\": true"
+        },
+        {
+          "text": "},"
+        },
+        {
+          "text": "\"IncrementAB\": {"
+        },
+        {
+          "text": "\"Type\": \"Parallel\","
+        },
+        {
+          "text": "\"Next\": \"FormatInputs\","
+        },
+        {
+          "text": "\"Branches\": ["
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"StartAt\": \"IncrementA\","
+        },
+        {
+          "text": "\"States\": {"
+        },
+        {
+          "text": "\"IncrementA\": {"
+        },
+        {
+          "text": "\"Type\": \"Task\","
+        },
+        {
+          "text": "\"Resource\": \"arn:aws:lambda:us-east-1:757712384777:function:Increment_A\","
+        },
+        {
+          "text": "\"End\": true"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "},"
+        },
+        {
+          "text": "{"
+        },
+        {
+          "text": "\"StartAt\": \"IncrementB\","
+        },
+        {
+          "text": "\"States\": {"
+        },
+        {
+          "text": "\"IncrementB\": {"
+        },
+        {
+          "text": "\"Type\": \"Task\","
+        },
+        {
+          "text": "\"Resource\": \"arn:aws:lambda:us-east-1:757712384777:function:Increment_B\","
+        },
+        {
+          "text": "\"End\": true"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "]"
+        },
+        {
+          "text": "},"
+        },
+        {
+          "text": "\"FormatInputs\": {"
+        },
+        {
+          "text": "\"Type\": \"Task\","
+        },
+        {
+          "text": "\"Resource\": \"arn:aws:lambda:us-east-1:757712384777:function:format_inputs\","
+        },
+        {
+          "text": "\"Next\": \"Wait_10_Seconds\""
+        },
+        {
+          "text": "},"
+        },
+        {
+          "text": "\"Wait_10_Seconds\": {"
+        },
+        {
+          "text": "\"Type\": \"Wait\","
+        },
+        {
+          "text": "\"Seconds\": 10,"
+        },
+        {
+          "text": "\"Next\": \"AplusB\""
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "}"
+        },
+        {
+          "text": "Now replace the entire value of the Resource key with the lambda ARNs that you have copied and placed in the text edit."
+        },
+        {
+          "text": "Note: Make sure you enter the correct lambda ARN of each Task."
+        },
+        {
+          "text": "Now on the right side, the flow diagram will be as follows :"
+        },
+        {
+          "text": "Note: If this image is not displayed, please click the refresh button, to reload the diagram."
+        },
+        {
+          "text": "Now click on the Config button."
+        },
+        {
+          "text": "Specify details:"
+        },
+        {
+          "text": "Type: Standard"
+        },
+        {
+          "text": "Permissions :"
+        },
+        {
+          "text": "Execution role : Select Choose an existing role"
+        },
+        {
+          "text": "Existing roles : Select whizrole"
+        },
+        {
+          "text": "Leave everything as default."
+        },
+        {
+          "text": "Click on the Create button"
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Test the Step function",
+      "steps": [
+        {
+          "text": "In this task, we are going to test the created state machine by providing input values for 'A' and 'B'. By testing the step function, we will observe how the workflow progresses based on the inputs and the logic defined in the state machine. This allows us to ensure that the step function is working correctly and producing the expected results."
+        },
+        {
+          "text": "Click on the Execute button."
+        },
+        {
+          "text": "New execution:"
+        },
+        {
+          "text": "Enter an execution name: Enter Test"
+        },
+        {
+          "text": "In the Input: We have to give inputs for A and B."
+        },
+        {
+          "text": "Enter A and B as 1 in the inputs as shown below."
+        },
+        {
+          "text": "Click on the Start execution."
+        },
+        {
+          "text": "In the Graph inspector diagram, the color of invoke Lambda will become green (success) as shown in the image below."
+        },
+        {
+          "text": "Click on each task to know more about them. You will be able to see the more details on the right side column."
+        },
+        {
+          "text": "On the Input/Output tab on the right side, and you will see the output from our lambda function."
+        },
+        {
+          "text": "Live execution of the workflow can be monitored below in the Events."
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "This visual interface not only aids in designing and developing the state machine but also facilitates troubleshooting and debugging. Developers can quickly identify any potential bottlenecks, errors, or misconfigurations in the workflow, making it a valuable tool for building and managing complex serverless applications."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created 5 Lambda functions."
+        },
+        {
+          "text": "You have successfully created a state machine in step function."
+        },
+        {
+          "text": "You have successfully used different States in the workflow like Task, Choice, Parallel, Wait, and End states."
+        },
+        {
+          "text": "You have successfully tested the step function."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

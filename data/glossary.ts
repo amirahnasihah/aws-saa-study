@@ -3,14 +3,17 @@ export const glossaryCategories: Record<string, string[]> = {
   'Compute':            ['EC2 fleet','Fleet','Spot Instances','Reserved Instances','Savings Plans','Spot','On-Demand','instance store','EBS-backed','instance store-backed','Elastic Volumes','EBS snapshot','IMDSv2','IMDS','Cold start','Provisioned Concurrency','Reserved Concurrency','Lambda Layer','Fargate','EC2 Placement Group','Spot interruption','Standby state','cooldown period','InService'],
   'Networking':         ['SSL/TLS','non-transitive','transitive','Transit Gateway','VPC Peering','VPC Endpoint','VPC','Internet Gateway','IGW','NAT Gateway','BGP','IPSec','CIDR','octet','subnet','inbound','outbound','deep packet inspection','intrusion prevention','domain filtering','Anycast','PoP','secondary VPC CIDR','SNI','VPC Link','edge-to-edge routing','transitive peering','PrivateLink','Egress','Ingress','FQDN','Latency','Throughput'],
   'Security':           ['AES-256','SSL','TLS','NACL','DDoS','SQL injection','XSS','WAF','DRT','Layer 7','Layer 3','Layer 4','ABAC','NotPrincipal','CORS','bastion host','jump host','penetration testing','AUP'],
+  'Security Services':  ['Amazon GuardDuty','Amazon Inspector','Amazon Macie','AWS Shield','Amazon Cognito','AWS Directory Service','ACM','AWS RAM','CloudHSM'],
   'Storage':            ['EBS','EFS','EFS General Purpose','EFS Max I/O','EFS Bursting Throughput','EFS Provisioned Throughput','EFS Elastic Throughput','EFS mount helper','IOPS','Elastic Volumes','EBS snapshot','WORM','DRA'],
   'Encryption':         ['envelope encryption','Compliance mode','Governance mode','legal hold','retention period','EBK','PBK'],
   'Database & HA':      ['Multi-AZ','Read Replica','Availability Zone','RPO','RTO','RDS Multi-AZ','Aurora Serverless','Aurora Replicas','DynamoDB PITR','DynamoDB Auto Scaling','CloudFormation DeletionPolicy'],
   'Containers':         ['awsvpc','ENI','bridge','host'],
   'Messaging':          ['SQS Long Polling','SQS Short Polling','Visibility Timeout','SQS FIFO','Dead Letter Queue','SNS fan-out','Step Functions','API Gateway throttling','API caching','Lambda authorizer','Usage Plan'],
   'CloudFront':         ['OAC','OAI'],
-  'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly'],
+  'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly','Amazon Translate','Amazon Transcribe'],
   'Analytics':          ['Amazon MSK','Amazon OpenSearch Service','AWS Data Exchange','Amazon Kinesis Data Streams','AWS Glue'],
+  'Management & Gov':   ['AWS Organizations','SCP','Amazon CloudWatch','AWS CloudTrail','AWS Config','AWS CloudFormation','StackSets','AWS Trusted Advisor','AWS Compute Optimizer','AWS Control Tower'],
+  'Cost Management':    ['AWS Cost Explorer','AWS Budgets','Cost and Usage Report','Cost Allocation Tags'],
   'Architecture':       ['stateful','stateless','Elastic IP','Backup and Restore','Pilot Light','Warm Standby','Active/Active','IaC','Blue/Green deployment','Canary deployment','Fan-out','Event-driven','Idempotency','Elasticity','Fault tolerance','Shared Responsibility Model','Serverless','Microservices','Containerization'],
   'IAM & Policies':     ['ARN','Principal','Identity-based policy','Resource-based policy','Permissions boundary','Managed policy','Inline policy','Trust policy','OU','Permission denied','ABAC','NotPrincipal'],
   'Load Balancers':     ['ALB','NLB','CLB','Target Group'],
@@ -85,6 +88,17 @@ export const glossary: Record<string, string> = {
   'Layer 3': 'Network layer in the OSI model — handles IP routing. Shield Standard protects here against volumetric floods',
   'Layer 4': 'Transport layer in the OSI model — handles TCP/UDP ports. Shield protects SYN floods and UDP reflection attacks',
 
+  // Security services (threat detection, identity, certs)
+  'Amazon GuardDuty': 'Intelligent THREAT DETECTION — continuously analyzes CloudTrail, VPC Flow Logs, and DNS logs with ML to flag anomalies (crypto-mining, compromised instances, recon). Log-based detection, agentless. NOT a vuln scanner (Inspector) or PII finder (Macie).',
+  'Amazon Inspector': 'Automated VULNERABILITY SCANNING for EC2, ECR container images, and Lambda — checks against CVEs and network exposure. Software/CVE focus. NOT log-based threat detection (GuardDuty).',
+  'Amazon Macie': 'Uses ML to discover and classify SENSITIVE DATA (PII, credentials) in S3 buckets. Data-privacy focus, S3-specific. NOT threat detection (GuardDuty) or vuln scanning (Inspector).',
+  'AWS Shield': 'Managed DDoS protection. Shield Standard = free, automatic, Layer 3/4 (volumetric). Shield Advanced = paid, adds Layer 7 protection, DRT access, and cost-protection for scaling during an attack.',
+  'Amazon Cognito': 'Authentication for web/mobile apps. User Pools = sign-up/sign-in directory (who you are, authN). Identity Pools = exchange that identity for temporary AWS credentials (what you can access, authZ). Supports social/SAML federation.',
+  'AWS Directory Service': 'Managed Microsoft Active Directory in AWS. Managed Microsoft AD = full AD in cloud. AD Connector = proxy to on-prem AD (data stays on-prem). Simple AD = lightweight Samba-based, standalone.',
+  'ACM': 'AWS Certificate Manager — provision, manage, and auto-renew free public SSL/TLS certificates for ELB, CloudFront, and API Gateway. For CloudFront the cert MUST be in us-east-1. Cannot export public certs.',
+  'AWS RAM': 'Resource Access Manager — securely SHARE resources across accounts without duplicating them (e.g. VPC subnets, Transit Gateway, Route 53 Resolver rules, License Manager configs). Often paired with Organizations.',
+  'CloudHSM': 'Dedicated, single-tenant hardware security module — you have FULL control of keys (FIPS 140-2 Level 3). Use when compliance forbids shared/multi-tenant KMS. KMS is easier and multi-tenant; CloudHSM is for strict custody requirements.',
+
   // Encryption / Data
   'KMS': 'AWS Key Management Service — create, store, and manage encryption keys; used for data at rest encryption',
   'SSE-KMS': 'Server-Side Encryption with KMS — objects/data are encrypted at rest automatically using keys in AWS KMS',
@@ -145,6 +159,7 @@ export const glossary: Record<string, string> = {
   'DRA': 'Data Repository Association — FSx for Lustre feature linking an S3 bucket to the file system so objects are lazily imported and processed files can be exported back to S3',
 
   // Auto Scaling states
+  'ASG Lifecycle Hook': 'Auto Scaling mechanism that pauses an instance in a wait state during a transition so custom actions can run before it proceeds. Two wait states: Pending:Wait (before InService — bootstrap, install, register) and Terminating:Wait (before termination — drain connections, flush logs, cleanup). Actions run via EventBridge+Lambda, SSM Run Command, or local scripts; you call CompleteLifecycleAction (or wait out the default 1-hour timeout) to continue. Distinct from a lifecycle state.',
   'Standby state': 'ASG lifecycle state where an instance is removed from the active pool (stops receiving traffic) without being terminated — used for in-place maintenance; returns to InService when done',
   'cooldown period': 'ASG setting (default 300 s) that blocks new scaling actions after a scaling event to let the fleet stabilize before evaluating whether more scaling is needed',
   'InService': 'Normal running state for an Auto Scaling group instance — registered with the load balancer and receiving traffic',
@@ -202,6 +217,8 @@ export const glossary: Record<string, string> = {
   'Amazon Kendra': 'Intelligent enterprise search service powered by ML. Indexes and searches across diverse data sources (S3, SharePoint, databases) including unstructured documents (PDF, Word, email). Natural language query understanding.',
   'Amazon Rekognition': 'Image and video analysis service. Detects objects, scenes, faces, text, and explicit content. Facial recognition and comparison. NOT for document text extraction (use Textract) or NLP (use Comprehend).',
   'Amazon Polly': 'Text-to-speech service: converts written text to lifelike audio. Supports multiple voices and languages. NOT for chatbots (use Lex) or text analysis (use Comprehend).',
+  'Amazon Translate': 'Neural machine translation service: converts text between languages (e.g. English ↔ Japanese). Real-time and batch. NOT speech (pair with Transcribe for audio→text→translate) or sentiment (use Comprehend).',
+  'Amazon Transcribe': 'Automatic speech recognition (ASR): converts audio/video speech to text. Speaker identification, custom vocabulary, call-centre analytics. NOT text-to-speech (use Polly) or translation (use Translate).',
 
   // Analytics
   'Amazon MSK': 'Managed Streaming for Apache Kafka — fully managed Kafka cluster on AWS. Handles broker provisioning, patching, storage scaling. NO SSH to brokers. Lambda integration requires Event Source Mapping. MSK Serverless auto-scales capacity.',
@@ -209,6 +226,24 @@ export const glossary: Record<string, string> = {
   'AWS Data Exchange': 'AWS marketplace for subscribing to and accessing third-party data products (market data, financial data, regulatory filings). Data delivered directly to your S3 bucket. Handles licensing and subscription management.',
   'Amazon Kinesis Data Streams': 'Real-time data streaming service. Captures GB/s of data with sub-second latency. Retains data 1–365 days. Integrates with Lambda, Firehose, Analytics. Use for real-time dashboards, ML, and event-driven architectures.',
   'AWS Glue': 'Serverless ETL (Extract, Transform, Load) service. Crawls data sources to build a metadata catalog, runs Spark-based transformation jobs, and orchestrates data pipelines. NOT a streaming or search service.',
+
+  // Management & Governance
+  'AWS Organizations': 'Centrally manage multiple AWS accounts: consolidated billing, volume discounts, and grouping accounts into Organizational Units (OUs). Apply SCPs to set permission guardrails across accounts.',
+  'SCP': 'Service Control Policy — Organizations guardrail that sets the MAXIMUM permissions for accounts/OUs. Does NOT grant access — it only limits what IAM can allow. An explicit deny in an SCP overrides any IAM allow.',
+  'Amazon CloudWatch': 'Monitoring for metrics, logs, alarms, and dashboards. Standard metrics every 5 min; detailed monitoring 1 min. EC2 memory & disk are NOT default — they need the CloudWatch agent. Answers "is it performing?".',
+  'AWS CloudTrail': 'Audit log of every API call (who did what, when, from where) across the account. Management + data events; can log to S3 / an org trail. Answers "who did this?". NOT performance (CloudWatch) or config state (Config).',
+  'AWS Config': 'Records resource configuration history and evaluates it against rules for compliance (e.g. "all EBS volumes must be encrypted"), with optional auto-remediation. Answers "is it compliant / what changed?".',
+  'AWS CloudFormation': 'Infrastructure as Code via declarative templates (YAML/JSON). Provisions resources as a Stack. Change sets preview edits; drift detection finds manual changes; StackSets deploy across accounts/regions.',
+  'StackSets': 'CloudFormation feature to deploy the same stack across MULTIPLE accounts and regions from one operation. Common with Organizations to roll out baseline guardrails fleet-wide.',
+  'AWS Trusted Advisor': 'Account-level checks across 5 pillars: cost optimization, security, fault tolerance, performance, and service limits. Full checks require Business/Enterprise Support.',
+  'AWS Compute Optimizer': 'Uses ML on CloudWatch metrics to recommend right-sizing for EC2, ASG, EBS, and Lambda — reduces over-provisioning. Recommendation engine, NOT an enforcement tool.',
+  'AWS Control Tower': 'Sets up and governs a secure multi-account AWS environment (landing zone) using Organizations + guardrails + SSO. Higher-level automation on top of Organizations.',
+
+  // Cost Management
+  'AWS Cost Explorer': 'Visualize, understand, and FORECAST AWS spend over time with filters by service/tag/account. Analysis & forecasting tool — NOT alerting (use Budgets).',
+  'AWS Budgets': 'Set custom cost/usage thresholds and get ALERTED (or trigger actions) when forecast or actual spend exceeds them. Proactive alerting — NOT historical analysis (use Cost Explorer).',
+  'Cost and Usage Report': 'CUR — the most detailed, line-item billing data AWS produces, delivered to S3 for deep analysis (e.g. via Athena/QuickSight). Granular raw data, not a dashboard.',
+  'Cost Allocation Tags': 'Tags (user-defined or AWS-generated) activated in the billing console so costs can be grouped and reported by project, team, or environment.',
 
   // Security concepts & policy
   'bastion host': 'EC2 in a public subnet used as the only SSH/RDP entry point into private subnet instances — connect to bastion first, then hop to private instances',

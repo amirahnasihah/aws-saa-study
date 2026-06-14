@@ -1,0 +1,262 @@
+{
+  "slug": "configuring-ebs-volume-to-ecs-task",
+  "title": "Configuring EBS Volume to ECS task",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create cluster in Amazon ECS",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N.Virginia) us-east-1 region."
+        },
+        {
+          "text": "Navigate to the Elastic Container Services by clicking on Services menu in the top, then click on Elastic Container Services in the Containers section."
+        },
+        {
+          "text": "On the left sidebar, click on the Clusters option and click on Create Cluster button."
+        },
+        {
+          "text": "Cluster name - enter DemoCluster"
+        },
+        {
+          "text": "In the Infrastructure section, let the AWS Fargate option be selected for serverless Infrastructure."
+        },
+        {
+          "text": "Keep the rest as default and click on Create."
+        },
+        {
+          "text": "Now you will be able to see the cluster being created, it may take 5 to 7 minutes to create."
+        },
+        {
+          "text": "Once created, you will be able to see your cluster appearing on the Cluster section, with no tasks running."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a Task Definition",
+      "steps": [
+        {
+          "text": "Click on Task Definitions present on the left panel."
+        },
+        {
+          "text": "Click on Create new task definition and select ‘Create new task definition’"
+        },
+        {
+          "text": "Task definition family - enter DemoTaskDefintion in the Task definition configuration tab."
+        },
+        {
+          "text": "Under Infrastructure requirements, Launch type - select AWS Fargate, and let the OS be the same."
+        },
+        {
+          "text": "Under the task size, select .5 vCPU for the CPU amount and let the memory be 3 GB."
+        },
+        {
+          "text": "Expand task role and Under Task execution role select ECSDemoIAMRole which is pre created for this lab."
+        },
+        {
+          "text": "Now go to Link and search for NGINX, click on the first option, and copy the Image URL."
+        },
+        {
+          "text": "Now under the Container section of the task definition, enter the name of the container as nginx, and paste the Image URI selected from the Amazon Public ECR Registry under the Image URI box."
+        },
+        {
+          "text": "Let the option of drop down under the Essential container be selected as ‘Yes’."
+        },
+        {
+          "text": "Under the port mappings section, let the Container port be 80, protocol be TCP, enter the demo port name- demoport and ensure it to be in all small letters, otherwise it will give an error."
+        },
+        {
+          "text": "Leave everything as default and scroll down to the Storage section."
+        },
+        {
+          "text": "Under the Amount option, enter 21 GiB. (which is the minimum amount of the volume which has to be allocated)"
+        },
+        {
+          "text": "Leave everything as default, and click on Create option."
+        },
+        {
+          "text": "You will see a message of Task Definition being created and once it is created, go back to the cluster option."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Run a Fargate task under cluster created",
+      "steps": [
+        {
+          "text": "On the left sidebar, click on the Clusters option and select DemoCluster."
+        },
+        {
+          "text": "Click on the Tasks tab present below the Cluster Overview and click on Run a new Task"
+        },
+        {
+          "text": "Under Task details, Task definition family - enter DemoTaskDefinition and task definition revision, select 1 (LATEST)."
+        },
+        {
+          "text": "Keep the desired task number to be 1."
+        },
+        {
+          "text": "Task Group name - Enter DemoTaskGroup."
+        },
+        {
+          "text": "Select Compute options as Launch Type and keep the Launch Type as FARGATE."
+        },
+        {
+          "text": "Under Networking Section, select new security group. Enter the name as demo-security-group and the description as demo-security-group."
+        },
+        {
+          "text": "Select HTTP as inbound rule type and select the source as Anywhere from the drop-down menu."
+        },
+        {
+          "text": "1"
+        },
+        {
+          "text": "Leave everything as default and click on Create. You will be able to see the Task being launched and the status and desired state as running."
+        },
+        {
+          "text": "It will take 5 to 7 minutes to reflect the Last Status as Running."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Attaching EBS Volume to the Task definition",
+      "steps": [
+        {
+          "text": "Go to the Task Definition page."
+        },
+        {
+          "text": "Click on the Task Definition name, and select Create a new revision."
+        },
+        {
+          "text": "Under the Storage section, click on Add Volume button."
+        },
+        {
+          "text": "Enter the name DemoVol in the Volume Name and select Configure at deployment option for configuration type, it configures 1 Amazon EBS volume when creating or updating or running a standalone task."
+        },
+        {
+          "text": "Under the Container mount points, click on Add mount point"
+        },
+        {
+          "text": "Container name: select nginx"
+        },
+        {
+          "text": "Source volume: select DemoVol"
+        },
+        {
+          "text": "Container path: enter /data as the container path where the mount will be added."
+        },
+        {
+          "text": "Click on Create button to save the new revision of the task definition."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Running a new task to the associated new revision of task definition with the EBS volume attached",
+      "steps": [
+        {
+          "text": "Navigate back to cluster and under the Task tab in the cluster, select the Run new task option."
+        },
+        {
+          "text": "Under Task details, Task definition family - enter DemoTaskDefinition and task definition revision, select 2(LATEST)."
+        },
+        {
+          "text": "Keep the desired task number to be 1."
+        },
+        {
+          "text": "Task Group name - Enter DemoTaskGroup."
+        },
+        {
+          "text": "Select Compute options as Launch Type and keep the Launch Type as FARGATE."
+        },
+        {
+          "text": "Open the Volume section, and choose General Purpose SSD(gp3) as the EBS Volume type, Size to be 11 GiB, IOPS to be 3000 or above(choose 3001), Throughput to be 125 or above(choose 126), Choose File System type as EXT3."
+        },
+        {
+          "text": "Choose the Infrastructure role - ECSDemoIAMRole already created for you."
+        },
+        {
+          "text": "Leave everything as default and click on Create."
+        },
+        {
+          "text": "Now you will see the Task to be in the running stage after 5 to 7 minutes."
+        },
+        {
+          "text": "Select latest task and Click on the Volume tab and find the EBS Volume to be attached to the ECS Task."
+        },
+        {
+          "text": "Do You Know:"
+        },
+        {
+          "text": "Amazon ECS supports both Docker and Windows containers, allowing developers to run a wide range of applications in a unified environment while leveraging features like service discovery and load balancing for seamless scaling and management."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created ECS Cluster."
+        },
+        {
+          "text": "You have successfully created ECS Task Definition."
+        },
+        {
+          "text": "You have successfully created an ECS Task."
+        },
+        {
+          "text": "You have successfully configured EBS Volume to the ECS Task."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

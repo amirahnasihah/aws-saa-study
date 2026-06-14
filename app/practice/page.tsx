@@ -1,11 +1,12 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import KeywordHighlightedText from '@/components/practice/KeywordHighlightedText'
 import PracticeQuestionHint from '@/components/practice/PracticeQuestionHint'
 import { practiceQuestions, PracticeQuestion } from '@/data/practiceQuestions'
+import { PRACTICE_SESSION_KEY, readSessionJson, writeSessionJson } from '@/lib/ai/session-persist'
 
 const domainColors: Record<string, string> = {
   d1: 'text-c3',
@@ -23,7 +24,7 @@ const difficultyColors: Record<string, string> = {
 type QuizState = 'question' | 'revealed'
 type PageMode = 'quiz' | 'review'
 
-type FilterSource = 'all' | 'whizlab' | 'others'
+type FilterSource = 'all' | 'core' | 'others'
 type FilterDomain = 'all' | 'd1' | 'd2' | 'd3' | 'd4'
 type FilterDifficulty = 'all' | 'Easy' | 'Medium' | 'Hard'
 type FilterSet = 'all' | 'pt' | 'section' | 'final'
@@ -37,6 +38,17 @@ interface FilterState {
 }
 
 const DEFAULT_FILTERS: FilterState = { source: 'all', domain: 'all', difficulty: 'all', set: 'all', shuffle: false }
+
+interface PracticeSessionState {
+  filters: FilterState
+  mode: PageMode
+  currentIndex: number
+  reviewIndex: number
+  selected: string | null
+  quizState: QuizState
+  score: { correct: number; total: number }
+  finished: boolean
+}
 
 function shuffleArray<T>(arr: T[]): T[] {
   const a = [...arr]
@@ -58,16 +70,54 @@ function useQuestionHintHighlight(questionId: string) {
 }
 
 export default function PracticePage() {
+  // Read any persisted session state synchronously on first render — before
+  // any effect can overwrite sessionStorage with the freshly-initialized defaults.
+  const persistedRef = useRef<Partial<PracticeSessionState> | null>(null)
+  if (persistedRef.current === null) {
+    persistedRef.current = readSessionJson<Partial<PracticeSessionState>>(PRACTICE_SESSION_KEY, {})
+  }
+  // True once the persisted state (if any) has been applied to the state setters below.
+  const hasRestoredRef = useRef(false)
+  // True while the questions fetch should restore position/answer state instead of resetting it.
+  const skipNextResetRef = useRef(false)
+
   const [questions, setQuestions] = useState<PracticeQuestion[]>(practiceQuestions)
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [mode, setMode] = useState<PageMode>('quiz')
   const [currentIndex, setCurrentIndex] = useState(0)
+  const [reviewIndex, setReviewIndex] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
   const [quizState, setQuizState] = useState<QuizState>('question')
   const [score, setScore] = useState({ correct: 0, total: 0 })
   const [finished, setFinished] = useState(false)
 
+  // Persist session state on every change.
   useEffect(() => {
+    writeSessionJson(PRACTICE_SESSION_KEY, {
+      filters, mode, currentIndex, reviewIndex, selected, quizState, score, finished,
+    } satisfies PracticeSessionState)
+  }, [filters, mode, currentIndex, reviewIndex, selected, quizState, score, finished])
+
+  useEffect(() => {
+    // Apply persisted session state once, on the very first effect run. This re-triggers
+    // the effect with the restored filters instead of fetching with the SSR-safe defaults.
+    if (!hasRestoredRef.current) {
+      hasRestoredRef.current = true
+      const p = persistedRef.current
+      if (p?.filters) {
+        setFilters(p.filters)
+        setMode(p.mode ?? 'quiz')
+        setReviewIndex(p.reviewIndex ?? 0)
+        setCurrentIndex(p.currentIndex ?? 0)
+        setSelected(p.selected ?? null)
+        setQuizState(p.quizState ?? 'question')
+        setScore(p.score ?? { correct: 0, total: 0 })
+        setFinished(p.finished ?? false)
+        skipNextResetRef.current = true
+        return
+      }
+    }
+
     const params = new URLSearchParams()
     if (filters.source !== 'all') params.set('source', filters.source)
     if (filters.domain !== 'all') params.set('domain', filters.domain)
@@ -81,7 +131,9 @@ export default function PracticePage() {
         if (Array.isArray(data) && data.length > 0) {
           const qs = data as PracticeQuestion[]
           setQuestions(filters.shuffle ? shuffleArray(qs) : qs)
+          return qs
         }
+        return null
       })
       .catch(() => {
         let qs = [...practiceQuestions]
@@ -91,18 +143,27 @@ export default function PracticePage() {
         if (filters.set === 'pt')      qs = qs.filter((q) => /^wz\d/.test(q.id))
         if (filters.set === 'section') qs = qs.filter((q) => q.id.startsWith('wzs'))
         if (filters.set === 'final')   qs = qs.filter((q) => q.id.startsWith('wzf'))
-        setQuestions(filters.shuffle ? shuffleArray(qs) : (qs.length ? qs : practiceQuestions))
+        const finalQs = qs.length ? qs : practiceQuestions
+        setQuestions(filters.shuffle ? shuffleArray(finalQs) : finalQs)
+        return finalQs
       })
-      .finally(() => {
-        setCurrentIndex(0)
-        setSelected(null)
-        setQuizState('question')
-        setScore({ correct: 0, total: 0 })
-        setFinished(false)
+      .then((qs) => {
+        if (skipNextResetRef.current) {
+          // Restoring a session: keep the persisted position/answer state, just clamp it to bounds.
+          skipNextResetRef.current = false
+          const total = qs?.length ?? practiceQuestions.length
+          setCurrentIndex((i) => Math.min(Math.max(i, 0), Math.max(total - 1, 0)))
+        } else {
+          setCurrentIndex(0)
+          setSelected(null)
+          setQuizState('question')
+          setScore({ correct: 0, total: 0 })
+          setFinished(false)
+        }
       })
   }, [filters])
 
-  const q = questions[currentIndex]
+  const q = questions[Math.min(currentIndex, questions.length - 1)]
   const isCorrect = selected === q.correctId
 
   const handleSelect = useCallback((id: string) => {
@@ -185,7 +246,7 @@ export default function PracticePage() {
         <FilterBar filters={filters} onChange={setFilters} />
 
         {mode === 'review' ? (
-          <ReviewMode questions={questions} />
+          <ReviewMode questions={questions} index={reviewIndex} onIndexChange={setReviewIndex} />
         ) : finished ? (
           <FinishedScreen score={score} onRestart={handleRestart} />
         ) : (
@@ -262,9 +323,9 @@ function FilterBar({ filters, onChange }: { filters: FilterState; onChange: (f: 
       {/* Source */}
       <div className="flex flex-wrap items-center gap-1.5">
         <span className="font-space-mono text-[0.58rem] text-aws-muted w-14 shrink-0">Source</span>
-        {(['all', 'whizlab', 'others'] as FilterSource[]).map((s) => (
+        {(['all', 'core', 'others'] as FilterSource[]).map((s) => (
           <button key={s} type="button" onClick={() => onChange({ ...filters, source: s })} className={pill(filters.source === s)}>
-            {s === 'all' ? 'All' : s === 'whizlab' ? 'Whizlab' : 'Others'}
+            {s === 'all' ? 'All' : s === 'core' ? 'Core' : 'Others'}
           </button>
         ))}
       </div>
@@ -345,11 +406,19 @@ function QuestionGrid({
   )
 }
 
-function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
-  const [index, setIndex] = useState(0)
+function ReviewMode({
+  questions,
+  index,
+  onIndexChange,
+}: {
+  questions: PracticeQuestion[]
+  index: number
+  onIndexChange: (i: number) => void
+}) {
   const [showPicker, setShowPicker] = useState(false)
   const total = questions.length
-  const q = questions[index]
+  const clampedIndex = Math.min(Math.max(index, 0), Math.max(total - 1, 0))
+  const q = questions[clampedIndex]
   const [hintHighlight, setHintHighlight] = useQuestionHintHighlight(q.id)
 
   return (
@@ -359,7 +428,7 @@ function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
         <div className="h-1.5 bg-white/6 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-c1 to-c5 rounded-full transition-all duration-500"
-            style={{ width: `${((index + 1) / total) * 100}%` }}
+            style={{ width: `${((clampedIndex + 1) / total) * 100}%` }}
           />
         </div>
       </div>
@@ -367,7 +436,7 @@ function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
       {/* question card */}
       <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-3">
         <div className="flex items-center gap-2 px-5 py-3 border-b border-aws-border/60 bg-white/2">
-          <span className="font-space-mono text-[0.58rem] text-aws-muted">Q{index + 1}</span>
+          <span className="font-space-mono text-[0.58rem] text-aws-muted">Q{clampedIndex + 1}</span>
           <span className="text-aws-border">·</span>
           <span className={`font-space-mono text-[0.6rem] font-bold uppercase tracking-widest ${domainColors[q.domain]}`}>
             {q.domainLabel}
@@ -384,15 +453,22 @@ function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={q.screenshotUrl}
-                alt={`Question ${q.pageNumber ?? index + 1} reference screenshot`}
+                alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? clampedIndex + 1} reference screenshot`}
                 className="w-full h-auto"
                 loading="lazy"
               />
-              {q.pageNumber && (
+              {q.screenshotCredit ? (
+                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                  Architecture diagram —{' '}
+                  <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
+                    AWS Documentation
+                  </a>
+                </figcaption>
+              ) : q.pageNumber ? (
                 <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
                   Practice test page {q.pageNumber}
                 </figcaption>
-              )}
+              ) : null}
             </figure>
           )}
           {hintHighlight.length > 0 ? (
@@ -408,6 +484,7 @@ function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
         </div>
 
         <PracticeQuestionHint
+          key={q.id}
           questionId={q.id}
           question={q.scenario}
           domainLabel={q.domainLabel}
@@ -450,8 +527,8 @@ function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
       <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] md:bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[720px] px-4 z-50">
         <div className="flex gap-2 bg-aws-card/80 backdrop-blur-md border border-aws-border rounded-2xl p-2 shadow-xl">
           <button
-            onClick={() => setIndex((i) => i - 1)}
-            disabled={index === 0}
+            onClick={() => onIndexChange(clampedIndex - 1)}
+            disabled={clampedIndex === 0}
             className="flex-1 py-2.5 rounded-xl font-space-mono text-sm font-bold border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-white/4 border-aws-border text-aws-muted hover:text-aws-text hover:bg-white/8"
           >
             ← Prev
@@ -461,11 +538,11 @@ function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
             className="px-4 py-2.5 rounded-xl font-space-mono text-[0.65rem] font-bold border border-aws-border/50 text-aws-muted hover:text-aws-text hover:bg-white/6 transition-all duration-150 whitespace-nowrap"
             title="Jump to question"
           >
-            {index + 1} / {total}
+            {clampedIndex + 1} / {total}
           </button>
           <button
-            onClick={() => setIndex((i) => i + 1)}
-            disabled={index + 1 >= total}
+            onClick={() => onIndexChange(clampedIndex + 1)}
+            disabled={clampedIndex + 1 >= total}
             className="flex-1 py-2.5 rounded-xl font-space-mono text-sm font-bold border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-c1/15 border-c1/40 text-c1 hover:bg-c1/25"
           >
             Next →
@@ -475,9 +552,9 @@ function ReviewMode({ questions }: { questions: PracticeQuestion[] }) {
 
       {showPicker && (
         <QuestionGrid
-          current={index}
+          current={clampedIndex}
           total={total}
-          onSelect={setIndex}
+          onSelect={onIndexChange}
           onClose={() => setShowPicker(false)}
         />
       )}
@@ -554,15 +631,22 @@ function QuestionCard({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={q.screenshotUrl}
-                alt={`Question ${q.pageNumber ?? index + 1} reference screenshot`}
+                alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? index + 1} reference screenshot`}
                 className="w-full h-auto"
                 loading="lazy"
               />
-              {q.pageNumber && (
+              {q.screenshotCredit ? (
+                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                  Architecture diagram —{' '}
+                  <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
+                    AWS Documentation
+                  </a>
+                </figcaption>
+              ) : q.pageNumber ? (
                 <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
                   Practice test page {q.pageNumber}
                 </figcaption>
-              )}
+              ) : null}
             </figure>
           )}
           {hintHighlight.length > 0 ? (

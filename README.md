@@ -79,7 +79,7 @@ D1 database: `aws-saa-questions` (region: APAC/HKG)
 
 | Table | Rows | Content |
 | --- | --- | --- |
-| `questions` | 122 | MCQ practice questions (60 custom + 62 Whizlabs SAA-C03) |
+| `questions` | 122 | MCQ practice questions (60 custom + 62 Core SAA-C03) |
 | `glossary` | 133 | AWS terms with definitions and categories |
 
 Seed scripts live in `scripts/` — run locally to repopulate D1:

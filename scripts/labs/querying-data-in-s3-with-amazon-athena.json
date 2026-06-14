@@ -1,0 +1,340 @@
+{
+  "slug": "querying-data-in-s3-with-amazon-athena",
+  "title": "Querying Data in S3 with Amazon Athena",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button"
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Setup workgroup",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a workgroup in Amazon Athena. The workgroup allows users to define specific configurations and settings for their query execution environment. By creating a workgroup, users can customize parameters such as query result location, encryption settings, and query execution options."
+        },
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to the Services menu at the top, then click on Athena in the Analytics section."
+        },
+        {
+          "text": "In the left sidebar, under Administration select Workgroup and then click on Create Workgroup button."
+        },
+        {
+          "text": "Provide details to create a workgroup:"
+        },
+        {
+          "text": "Workgroup Name: Enter WhizWorkgroup"
+        },
+        {
+          "text": "Description: Enter Workgroup for Athena lab"
+        },
+        {
+          "text": "Analytics engine:"
+        },
+        {
+          "text": "Choose the type of engine : Select Athena SQL"
+        },
+        {
+          "text": "Upgrade Query engine: Select Automatic"
+        },
+        {
+          "text": "Under Query result configuration: Select Customer Managed. Then Click on Browse S3 button to select the S3 bucket, whose name is starting with lab... ."
+        },
+        {
+          "text": "Leave other settings as default"
+        },
+        {
+          "text": "Click on the Create Workgroup button."
+        },
+        {
+          "text": "Workgroup has been created successfully."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a database in Glue",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a database in AWS Glue, a fully managed extract, transform, and load (ETL) service. The database serves as a container for organizing and storing metadata related to the data tables used in Athena. It enables efficient data cataloging and data management for the subsequent tasks."
+        },
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to the Services menu at the top, then click on AWS Glue in the Analytics section."
+        },
+        {
+          "text": "In the left sidebar, Under Data catalog, Click on Databases"
+        },
+        {
+          "text": "Click on the Add Database button"
+        },
+        {
+          "text": "In the pop-up menu, enter the database name as whizgluedatabase and click on the Create database button."
+        },
+        {
+          "text": "The database is now created."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create a table in Glue",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a table in AWS Glue, which represents the structure and schema of the data stored in the S3 bucket."
+        },
+        {
+          "text": "In the left sidebar, Under the Data catalog, Click on Tables."
+        },
+        {
+          "text": "To create a table, click on the Add table button"
+        },
+        {
+          "text": "In the Set table properties section, do the following:"
+        },
+        {
+          "text": "Enter the Table name : whiz-sample-table"
+        },
+        {
+          "text": "Database: select whizgluedatabase"
+        },
+        {
+          "text": "In the Data store section, do the following:"
+        },
+        {
+          "text": "Select the type of source: S3 (default)"
+        },
+        {
+          "text": "Data location is specified in: my account (default)"
+        },
+        {
+          "text": "Include path: Select the S3 bucket name starting with lab… . Make sure you add / in the end."
+        },
+        {
+          "text": "In the Choose a data format section, do the following:"
+        },
+        {
+          "text": "Select Classification as CSV"
+        },
+        {
+          "text": "Choose delimiter as Comma (,)"
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "In the Schema section, we will add two columns by clicking on Add button."
+        },
+        {
+          "text": "Column # : 1"
+        },
+        {
+          "text": "Column name: Enter Expense_Type"
+        },
+        {
+          "text": "Data Type: Select string"
+        },
+        {
+          "text": "Click on the Save button below."
+        },
+        {
+          "text": "Click on the Add button again."
+        },
+        {
+          "text": "Column #: 2"
+        },
+        {
+          "text": "Column name: Enter Expense_Category"
+        },
+        {
+          "text": "Data Type: Select string"
+        },
+        {
+          "text": "Click on the Save button below."
+        },
+        {
+          "text": "After adding both columns, click on the Next button."
+        },
+        {
+          "text": "Review the configuration of the table and click on the Create button. The table is now created."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Query table in Athena",
+      "steps": [
+        {
+          "text": "In this task, we are going to use the SQL query capabilities of Amazon Athena to interact with and analyze the data stored in the created table. By executing SQL statements in the Athena Query Editor."
+        },
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to the Services menu in the top, then click on Athena in the Analytics section."
+        },
+        {
+          "text": "In the left sidebar, Click on Query Editor"
+        },
+        {
+          "text": "Switch to WhizWorkgroup at the top right."
+        },
+        {
+          "text": "In the left sidebar, under data source, select the database as whizgluedatabase."
+        },
+        {
+          "text": "Then you will see our table, whiz-sample-table."
+        },
+        {
+          "text": "To preview click on three dots next to the whiz-sample-table table name and select the Preview Table."
+        },
+        {
+          "text": "The query editor will automatically generate the SQL statement for querying the first ten columns."
+        },
+        {
+          "text": "The result of the query is shown below."
+        },
+        {
+          "text": "To get the results of all expenses types under expense_category of Food, paste the following SQL statement into the same query editor or open new query editor by clicking on + symbol and click on Run button."
+        },
+        {
+          "text": "SELECT * FROM \"whizgluedatabase\".\"whiz-sample-table\" WHERE expense_category = 'Food';"
+        },
+        {
+          "text": "You can play around with different queries like the following one."
+        },
+        {
+          "text": "To run the new query you can replace the existing one, or you can add a new query by clicking on the + symbol from the query editor."
+        },
+        {
+          "text": "Getting the total number of rows present by running the following SQL statement in the query editor."
+        },
+        {
+          "text": "SELECT * FROM \"whizgluedatabase\".\"whiz-sample-table\" WHERE expense_category = 'Transportation';"
+        },
+        {
+          "text": "Do You Know?"
+        },
+        {
+          "text": "Athena's serverless nature allows users to analyze data stored in S3 without the need for any infrastructure provisioning or management. This means that users can focus solely on querying and analyzing their data without worrying about setting up and maintaining servers or clusters. The pay-per-query pricing model of Amazon Athena ensures cost efficiency, as users are only charged for the actual queries they run. This flexibility and cost-effectiveness make Amazon Athena a powerful and convenient tool for data analysis tasks in AWS."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and display whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "Deleting the database and table in Glue"
+        },
+        {
+          "text": "Navigate to the Services menu at the top, then click on AWS Glue in the Analytics section."
+        },
+        {
+          "text": "By default, you will be able to see the tables present. In the left sidebar, Under Data catalog, Click on Databases."
+        },
+        {
+          "text": "Databases will be present here, our database is whizgluedatabase."
+        },
+        {
+          "text": "To delete the database, perform the following tasks:"
+        },
+        {
+          "text": "Select the database, whizgluedatabase"
+        },
+        {
+          "text": "Choose Delete from the menu."
+        },
+        {
+          "text": "Confirm the deletion on the pop-up by clicking on the Delete button"
+        },
+        {
+          "text": "The database is successfully deleted now."
+        },
+        {
+          "text": "Deleting workgroup"
+        },
+        {
+          "text": "Navigate to Services menu in the top, then click on Athena in the Analytics section."
+        },
+        {
+          "text": "Click on the workgroup."
+        },
+        {
+          "text": "Select WhizWorkgroup and Click on Actions"
+        },
+        {
+          "text": "Click on Delete"
+        },
+        {
+          "text": "Confirm the deletion on the pop-up by entering workgroup name i.e., WhizWorkgroup and click on the Delete button"
+        },
+        {
+          "text": "Completion and Conclusion"
+        },
+        {
+          "text": "You have successfully created and configured a workgroup in Amazon Athena."
+        },
+        {
+          "text": "You have successfully created a table in Amazon Athena with S3"
+        },
+        {
+          "text": "You have successfully queried the SQL statements in the Query editor of Athena."
+        },
+        {
+          "text": "You have successfully created a webpage and published it."
+        },
+        {
+          "text": "End Lab"
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

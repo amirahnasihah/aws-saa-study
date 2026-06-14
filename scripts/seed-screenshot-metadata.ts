@@ -1,17 +1,17 @@
 import { writeFileSync, readFileSync } from 'fs'
-import { parseWhizlabPageNumber, screenshotPathForQuestion } from './lib/question-meta'
+import { parsePageNumber, screenshotPathForQuestion } from './lib/question-meta'
 
 const escape = (value: string): string => value.replace(/'/g, "''")
 
-const extractWhizlabIds = (content: string): string[] =>
+const extractQuestionIds = (content: string): string[] =>
   [...content.matchAll(/id: 'wz-\d{1,3}'/g)]
     .map((match) => match[0].replace("id: '", '').replace("'", ''))
 
-const whizlabSource = readFileSync('scripts/seed-whizlab-batch2.ts', 'utf8')
-const ids = extractWhizlabIds(whizlabSource)
+const batchSource = readFileSync('scripts/seed-batch2.ts', 'utf8')
+const ids = extractQuestionIds(batchSource)
 
 const updates = ids.flatMap((id) => {
-  const pageNumber = parseWhizlabPageNumber(id)
+  const pageNumber = parsePageNumber(id)
   const screenshotUrl = screenshotPathForQuestion(id)
   if (!pageNumber || !screenshotUrl) return []
 
