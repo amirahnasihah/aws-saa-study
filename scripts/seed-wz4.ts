@@ -103,7 +103,7 @@ const questions: Q[] = [
       { id: 'd', text: 'Configure an SQS queue as the Lambda DLQ, then create a CloudWatch alarm on the SQS ApproximateNumberOfMessagesVisible metric to notify via SNS email' },
     ],
     correctId: 'd',
-    explanation: 'When a Lambda function is configured with an SQS Dead Letter Queue, failed invocation payloads are sent to the SQS queue. A CloudWatch alarm on the ApproximateNumberOfMessagesVisible metric detects when messages arrive and triggers an SNS email notification. However, the most direct approach in the question context is using SNS as the DLQ (option B). Option D is also valid but adds an extra layer. The question asks for DLQ + SNS for timeout notifications, making D the correct answer per Whizlabs.',
+    explanation: 'When a Lambda function is configured with an SQS Dead Letter Queue, failed invocation payloads are sent to the SQS queue. A CloudWatch alarm on the ApproximateNumberOfMessagesVisible metric detects when messages arrive and triggers an SNS email notification. However, the most direct approach in the question context is using SNS as the DLQ (option B). Option D is also valid but adds an extra layer. The question asks for DLQ + SNS for timeout notifications, making D the correct answer per the answer key.',
     reference: '',
     keywords: ['Lambda', 'DLQ', 'Dead Letter Queue', 'SQS', 'SNS', 'CloudWatch alarm', 'failure notification'],
   },
@@ -343,7 +343,7 @@ const questions: Q[] = [
       { id: 'd', text: 'Amazon S3 for storage + AWS Glue crawler + Amazon Athena for serverless SQL queries' },
     ],
     correctId: 'a',
-    explanation: 'Amazon S3 + Amazon EMR is a purpose-built combination for processing large-scale log data. EMR runs distributed processing frameworks (Spark, Hive, Hadoop) on the S3-stored logs, enabling scalable batch analytics. For IIS log processing at scale, EMR provides the distributed compute power needed. While Athena (option D) is also valid for serverless SQL, EMR is the correct answer per Whizlabs for this large-scale log processing scenario.',
+    explanation: 'Amazon S3 + Amazon EMR is a purpose-built combination for processing large-scale log data. EMR runs distributed processing frameworks (Spark, Hive, Hadoop) on the S3-stored logs, enabling scalable batch analytics. For IIS log processing at scale, EMR provides the distributed compute power needed. While Athena (option D) is also valid for serverless SQL, EMR is the correct answer per the answer key for this large-scale log processing scenario.',
     reference: '',
     keywords: ['S3', 'EMR', 'log processing', 'IIS logs', 'big data', 'distributed analytics'],
   },
@@ -704,7 +704,7 @@ const questions: Q[] = [
       { id: 'd', text: 'Have the child account apply an ACL granting the parent account FULL_CONTROL when uploading objects' },
     ],
     correctId: 'a,b',
-    explanation: 'The cross-account object access issue occurs because by default, the uploading account (child) owns objects it uploads, even to another account\'s bucket. Two solutions: (1) A bucket policy on the parent account\'s bucket that explicitly grants the parent account (or public) access to the objects. (2) Disable Block Public Access if serving via static website (required for public access). Alternatively, enabling Object Ownership with Bucket Owner Enforced (option C) would prevent ACLs entirely and give ownership to the bucket owner — but per Whizlabs the answer is A and B.',
+    explanation: 'The cross-account object access issue occurs because by default, the uploading account (child) owns objects it uploads, even to another account\'s bucket. Two solutions: (1) A bucket policy on the parent account\'s bucket that explicitly grants the parent account (or public) access to the objects. (2) Disable Block Public Access if serving via static website (required for public access). Alternatively, enabling Object Ownership with Bucket Owner Enforced (option C) would prevent ACLs entirely and give ownership to the bucket owner — but per the answer key the answer is A and B.',
     reference: '',
     keywords: ['S3', 'cross-account', 'object ownership', 'bucket policy', 'Block Public Access', 'static website'],
   },
@@ -884,7 +884,7 @@ const questions: Q[] = [
       { id: 'd', text: 'Create a CloudWatch alarm on the ALB TargetResponseTime metric to detect backend latency increases' },
     ],
     correctId: 'a,c,d',
-    explanation: 'Three configurations: (1) A composite alarm combines multiple CloudWatch alarms with AND/OR logic — triggering when two or more individual alarms are in ALARM state satisfies the simultaneous notification requirement. (2) TargetResponseTime metric tracks the time for the ALB target to respond — ideal for detecting backend latency degradation. (3) UnhealthyHostCount tracks the number of unhealthy registered targets — detects health check failures. RequestCount (option B) measures volume but the question specifies traffic spikes AND latency; per Whizlabs the answers are A, C, D.',
+    explanation: 'Three configurations: (1) A composite alarm combines multiple CloudWatch alarms with AND/OR logic — triggering when two or more individual alarms are in ALARM state satisfies the simultaneous notification requirement. (2) TargetResponseTime metric tracks the time for the ALB target to respond — ideal for detecting backend latency degradation. (3) UnhealthyHostCount tracks the number of unhealthy registered targets — detects health check failures. RequestCount (option B) measures volume but the question specifies traffic spikes AND latency; per the answer key the answers are A, C, D.',
     reference: '',
     keywords: ['CloudWatch', 'composite alarm', 'ALB', 'RequestCount', 'TargetResponseTime', 'UnhealthyHostCount', 'SNS'],
   },
@@ -1002,7 +1002,7 @@ const rows = questions.map((q, i) => {
   const reference = q.reference ? `'${escape(q.reference)}'` : 'NULL'
   const pageNumber = i + 1
   const screenshotUrl = `'/questions/wz4/${escape(q.id)}.png'`
-  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source, page_number, screenshot_url) VALUES ('${escape(q.id)}', '${q.domain}', '${escape(q.domainLabel)}', '${q.difficulty}', '${escape(q.scenario)}', '${options}', '${escape(q.correctId)}', '${expl}', ${reference}, '${keywords}', 'whizlab', ${pageNumber}, ${screenshotUrl});`
+  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source, page_number, screenshot_url) VALUES ('${escape(q.id)}', '${q.domain}', '${escape(q.domainLabel)}', '${q.difficulty}', '${escape(q.scenario)}', '${options}', '${escape(q.correctId)}', '${expl}', ${reference}, '${keywords}', 'core', ${pageNumber}, ${screenshotUrl});`
 })
 
 writeFileSync('scripts/wz4.sql', rows.join('\n'))

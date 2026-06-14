@@ -4,14 +4,13 @@
  * Usage: bun run labs:compile
  */
 
-import { readdirSync, readFileSync, writeFileSync, unlinkSync, existsSync } from 'fs'
+import { readdirSync, readFileSync, writeFileSync } from 'fs'
 import { join, resolve } from 'path'
 import type { Lab } from '../lib/labs'
 import { sanitizeLab } from '../lib/sanitize-lab'
 
 const LABS_DIR = resolve('scripts/labs')
 const OUT_LABS = resolve('data/labsCatalog.ts')
-const LEGACY_OUT = resolve('data/labsWhizlabs.ts')
 const OUT_ORDER = resolve('data/labsCourseOrder.ts')
 const COURSE_INDEX = join(LABS_DIR, 'course-index.json')
 
@@ -31,7 +30,6 @@ export const labsCatalog: Lab[] = ${JSON.stringify(labs, null, 2)}
 `
 
 writeFileSync(OUT_LABS, labsBody)
-if (existsSync(LEGACY_OUT)) unlinkSync(LEGACY_OUT)
 
 const courseRaw = readFileSync(COURSE_INDEX, 'utf8')
 const courseIndex = JSON.parse(courseRaw) as {

@@ -17,7 +17,7 @@ export interface PracticeQuestion {
   }
   reference?: string
   keywords: string[]
-  source?: 'whizlab' | 'others' | 'official'
+  source?: 'core' | 'others' | 'official'
   pageNumber?: number
   screenshotUrl?: string
   /** Source attribution for screenshotUrl when it is an AWS-docs architecture diagram. */

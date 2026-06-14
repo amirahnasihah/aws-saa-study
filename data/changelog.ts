@@ -105,9 +105,9 @@ export const changelog: ChangeEntry[] = [
     ],
   },
   {
-    id: '2026-06-03-whizlabs',
+    id: '2026-06-03-practice-tests',
     date: '2026-06-03',
-    subtitle: 'Whizlabs wzs4–9',
+    subtitle: 'Core wzs4–9',
     changes: [
       { type: 'feat', text: 'wzs4–wzs9 (API GW, Lambda, App Integration, Database, ML, Analytics): 35 questions seeded to remote D1 — all answers verified via AWS docs MCP' },
       { type: 'feat', text: 'Screenshots for wzs4 (5), wzs5 (4), wzs6 (7), wzs7 (10), wzs8 (4), wzs9 (5) added to public/questions/' },
@@ -127,7 +127,7 @@ export const changelog: ChangeEntry[] = [
       { type: 'feat', text: 'wzs3 (EFS Section Test): 5 questions seeded to remote D1 — answers verified via AWS docs MCP' },
       { type: 'feat', text: 'wzs2 (Storage Section Test): 5 questions seeded to remote D1 — answers verified via AWS docs MCP' },
       { type: 'feat', text: 'wzs1 (VPC Section Test): 10 questions seeded to remote D1 — answers verified via AWS docs MCP' },
-      { type: 'feat', text: 'PT6 (wz6): 65 Whizlabs Practice Test 6 questions seeded to remote D1 — answers verified via AWS docs MCP' },
+      { type: 'feat', text: 'PT6 (wz6): 65 Core Practice Test 6 questions seeded to remote D1 — answers verified via AWS docs MCP' },
       { type: 'feat', text: 'Screenshots for wz6 (65), wzs1 (10), wzs2 (5), wzs3 (5) added to public/questions/' },
       { type: 'feat', text: 'Glossary: 14 new terms — delete marker, noncurrent versions, secondary VPC CIDR, SNI, OAC, OAI, edge-to-edge routing, transitive peering, instance store, EBS-backed, Elastic Volumes, EBS snapshot, AWS Backup, EFS performance/throughput modes, EFS mount helper' },
       { type: 'feat', text: 'awsServices notes: CloudFront OAC + Lambda@Edge, ALB SNI, API Gateway, AppFlow, SageMaker, VPC Peering edge-to-edge, EBS storage types, EFS performance/throughput modes + encryption in transit + cross-VPC tips, AWS Backup' },
@@ -138,8 +138,8 @@ export const changelog: ChangeEntry[] = [
     id: '2026-05-28',
     date: '2026-05-28',
     changes: [
-      { type: 'feat', text: 'PT4 (wz4): 65 Whizlabs Practice Test 4 questions seeded to remote D1' },
-      { type: 'feat', text: 'PT5 (wz5): 65 Whizlabs Practice Test 5 questions seeded to remote D1 — answers verified via AWS docs MCP' },
+      { type: 'feat', text: 'PT4 (wz4): 65 Core Practice Test 4 questions seeded to remote D1' },
+      { type: 'feat', text: 'PT5 (wz5): 65 Core Practice Test 5 questions seeded to remote D1 — answers verified via AWS docs MCP' },
       { type: 'feat', text: 'Screenshots for wz4 and wz5 (130 images) added to public/questions/' },
       { type: 'feat', text: 'Glossary: 15 new terms — awsvpc, ENI, EBK, PBK, ABAC, NotPrincipal, CORS, Anycast, PoP, DRA, Standby state, cooldown period, InService, bridge, host' },
       { type: 'feat', text: 'awsServices notes: CloudHSM backup (EBK/PBK), FSx Lustre DRA + S3 integration, QuickSight ML forecasting, Client VPN, Step Functions Distributed Map, X-Ray Insights, Glue Crawler, Polly StartSpeechSynthesisTask, Global Accelerator static IPs' },
@@ -162,7 +162,7 @@ export const changelog: ChangeEntry[] = [
     id: '2026-05-26',
     date: '2026-05-26',
     changes: [
-      { type: 'feat', text: 'Quiz scraping script for Whizlabs questions' },
+      { type: 'feat', text: 'Quiz import script for Core practice questions' },
       { type: 'chore', text: 'Extended .gitignore for generated files and workspace config' },
     ],
   },

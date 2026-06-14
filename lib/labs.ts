@@ -104,6 +104,3 @@ export const slugFromLabUrl = (url: string): string => {
   const segment = path.split('/').pop() ?? 'lab'
   return segment
 }
-
-/** @deprecated use slugFromLabUrl */
-export const slugFromWhizlabsUrl = slugFromLabUrl
