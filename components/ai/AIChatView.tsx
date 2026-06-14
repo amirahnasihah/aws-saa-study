@@ -7,7 +7,9 @@ import { buildAIRequestHeaders } from '@/lib/ai/client-headers'
 import { byokProviderLabel, isByokProvider, needsByokKey } from '@/lib/ai/providers'
 import AISourceLinks from '@/components/ai/AISourceLinks'
 import CopyButton from '@/components/ai/CopyButton'
-import type { ChatResponse, InternalLink } from '@/lib/ai/types'
+import BookmarkAnswerButton from '@/components/ai/BookmarkAnswerButton'
+import { chatToMarkdown, downloadTextFile, exportFilenames } from '@/lib/export'
+import type { ChatResponse } from '@/lib/ai/types'
 
 interface AIChatViewProps {
   provider: AIProvider
@@ -150,8 +152,14 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
                     internalLinks={msg.internalLinks}
                   />
                 )}
-                <div className="pl-1">
+                <div className="flex items-center gap-3 pl-1">
                   <CopyButton text={msg.content} label="Copy AI response" />
+                  <BookmarkAnswerButton
+                    question={messages[i - 1]?.role === 'user' ? messages[i - 1].content : ''}
+                    answer={msg.content}
+                    awsDocsUrl={msg.awsDocsUrl}
+                    awsDocsTitle={msg.awsDocsTitle}
+                  />
                 </div>
               </div>
             )}
@@ -196,8 +204,23 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
           }}
           placeholder="Ask an AWS question…"
           disabled={uiState === 'loading' || needsKey}
-          className="flex-1 px-4 py-2.5 rounded-xl bg-aws-card border border-aws-border/60 text-aws-text text-base sm:text-[0.8rem] font-space-mono placeholder:text-aws-muted/35 focus:outline-none focus:border-c1/40 transition-colors disabled:opacity-50"
+          className="flex-1 px-4 py-2.5 rounded-xl bg-aws-card border border-aws-border/60 text-aws-text text-base sm:text-[0.8rem] font-space-mono placeholder:text-[0.7rem] sm:placeholder:text-[0.8rem] placeholder:tracking-tight placeholder:text-aws-muted/35 focus:outline-none focus:border-c1/40 transition-colors disabled:opacity-50"
         />
+
+        {/* Download chat as Markdown, only when there are messages */}
+        {messages.length > 0 && (
+          <button
+            type="button"
+            onClick={() => downloadTextFile(exportFilenames.chat(), chatToMarkdown(messages))}
+            title="Download chat as Markdown"
+            aria-label="Download chat as Markdown"
+            className="w-10 h-10 flex items-center justify-center rounded-xl border border-aws-border/40 text-aws-muted/35 hover:text-aws-muted hover:border-aws-border/70 transition-all duration-150 shrink-0"
+          >
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6.5 1.5v7M3.5 6l3 3 3-3M2 11.5h9" />
+            </svg>
+          </button>
+        )}
 
         {/* Clear history — trash icon, only when there are messages */}
         {messages.length > 0 && (
