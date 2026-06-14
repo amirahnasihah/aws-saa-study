@@ -3,6 +3,7 @@ export const glossaryCategories: Record<string, string[]> = {
   'Compute':            ['EC2 fleet','Fleet','Spot Instances','Reserved Instances','Savings Plans','Spot','On-Demand','instance store','EBS-backed','instance store-backed','Elastic Volumes','EBS snapshot','IMDSv2','IMDS','Cold start','Provisioned Concurrency','Reserved Concurrency','Lambda Layer','Fargate','EC2 Placement Group','Spot interruption','Standby state','cooldown period','InService'],
   'Networking':         ['SSL/TLS','non-transitive','transitive','Transit Gateway','VPC Peering','VPC Endpoint','VPC','Internet Gateway','IGW','NAT Gateway','BGP','IPSec','CIDR','octet','subnet','inbound','outbound','deep packet inspection','intrusion prevention','domain filtering','Anycast','PoP','secondary VPC CIDR','SNI','VPC Link','edge-to-edge routing','transitive peering','PrivateLink','Egress','Ingress','FQDN','Latency','Throughput'],
   'Security':           ['AES-256','SSL','TLS','NACL','DDoS','SQL injection','XSS','WAF','DRT','Layer 7','Layer 3','Layer 4','ABAC','NotPrincipal','CORS','bastion host','jump host','penetration testing','AUP'],
+  'Security Services':  ['Amazon GuardDuty','Amazon Inspector','Amazon Macie','AWS Shield','Amazon Cognito','AWS Directory Service','ACM','AWS RAM','CloudHSM'],
   'Storage':            ['EBS','EFS','EFS General Purpose','EFS Max I/O','EFS Bursting Throughput','EFS Provisioned Throughput','EFS Elastic Throughput','EFS mount helper','IOPS','Elastic Volumes','EBS snapshot','WORM','DRA'],
   'Encryption':         ['envelope encryption','Compliance mode','Governance mode','legal hold','retention period','EBK','PBK'],
   'Database & HA':      ['Multi-AZ','Read Replica','Availability Zone','RPO','RTO','RDS Multi-AZ','Aurora Serverless','Aurora Replicas','DynamoDB PITR','DynamoDB Auto Scaling','CloudFormation DeletionPolicy'],
@@ -86,6 +87,17 @@ export const glossary: Record<string, string> = {
   'Layer 7': 'Application layer in the OSI model — understands HTTP, HTTPS, DNS. WAF and ALB operate here',
   'Layer 3': 'Network layer in the OSI model — handles IP routing. Shield Standard protects here against volumetric floods',
   'Layer 4': 'Transport layer in the OSI model — handles TCP/UDP ports. Shield protects SYN floods and UDP reflection attacks',
+
+  // Security services (threat detection, identity, certs)
+  'Amazon GuardDuty': 'Intelligent THREAT DETECTION — continuously analyzes CloudTrail, VPC Flow Logs, and DNS logs with ML to flag anomalies (crypto-mining, compromised instances, recon). Log-based detection, agentless. NOT a vuln scanner (Inspector) or PII finder (Macie).',
+  'Amazon Inspector': 'Automated VULNERABILITY SCANNING for EC2, ECR container images, and Lambda — checks against CVEs and network exposure. Software/CVE focus. NOT log-based threat detection (GuardDuty).',
+  'Amazon Macie': 'Uses ML to discover and classify SENSITIVE DATA (PII, credentials) in S3 buckets. Data-privacy focus, S3-specific. NOT threat detection (GuardDuty) or vuln scanning (Inspector).',
+  'AWS Shield': 'Managed DDoS protection. Shield Standard = free, automatic, Layer 3/4 (volumetric). Shield Advanced = paid, adds Layer 7 protection, DRT access, and cost-protection for scaling during an attack.',
+  'Amazon Cognito': 'Authentication for web/mobile apps. User Pools = sign-up/sign-in directory (who you are, authN). Identity Pools = exchange that identity for temporary AWS credentials (what you can access, authZ). Supports social/SAML federation.',
+  'AWS Directory Service': 'Managed Microsoft Active Directory in AWS. Managed Microsoft AD = full AD in cloud. AD Connector = proxy to on-prem AD (data stays on-prem). Simple AD = lightweight Samba-based, standalone.',
+  'ACM': 'AWS Certificate Manager — provision, manage, and auto-renew free public SSL/TLS certificates for ELB, CloudFront, and API Gateway. For CloudFront the cert MUST be in us-east-1. Cannot export public certs.',
+  'AWS RAM': 'Resource Access Manager — securely SHARE resources across accounts without duplicating them (e.g. VPC subnets, Transit Gateway, Route 53 Resolver rules, License Manager configs). Often paired with Organizations.',
+  'CloudHSM': 'Dedicated, single-tenant hardware security module — you have FULL control of keys (FIPS 140-2 Level 3). Use when compliance forbids shared/multi-tenant KMS. KMS is easier and multi-tenant; CloudHSM is for strict custody requirements.',
 
   // Encryption / Data
   'KMS': 'AWS Key Management Service — create, store, and manage encryption keys; used for data at rest encryption',

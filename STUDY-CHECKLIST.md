@@ -1,6 +1,6 @@
 # AWS SAA-C03 — Study Checklist
 
-**Progress:** 71 / 199 lectures (36%) · **Exam target:** ~2026-06-28 · **Started checklist:** 2026-06-14
+**Exam target:** ~2026-06-28 · **Started checklist:** 2026-06-14
 
 ✅ **Done:** Introduction · Getting Started · Compute (8h7m, 4 labs) · Storage (4h18m, 1 lab)
 🎯 **Remaining:** ~35.5h content + 17 labs across sections 5–14
