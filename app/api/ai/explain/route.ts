@@ -1,8 +1,9 @@
 import { buildDocsSearchPhrase, resolveAwsDocLink } from '@/lib/ai/aws-knowledge'
 import { completeJson, resolveAiProvider } from '@/lib/ai/complete-json'
 import { findInternalLinks } from '@/lib/ai/internal-links'
-import { parseAIJson } from '@/lib/ai/json'
+import { parseAIJson, salvageText } from '@/lib/ai/json'
 import { findNotesUrl } from '@/lib/ai/notes'
+import { formatRagContext, queryRag } from '@/lib/ai/rag'
 import type { ErrorResponse, ExplainResponse } from '@/lib/ai/types'
 
 export const runtime = 'edge'
@@ -41,7 +42,7 @@ interface ExplainJson {
   docsSearchPhrase?: string
 }
 
-function buildExplainUserPrompt(body: ExplainRequest, notesUrl: string): string {
+function buildExplainUserPrompt(body: ExplainRequest, notesUrl: string, ragContext: string): string {
   const lines: string[] = [`Domain: ${body.domainLabel ?? 'AWS Solutions Architect'}`]
   if (body.keywords?.length) lines.push(`Keywords: ${body.keywords.join(', ')}`)
   lines.push(`\nQuestion: ${body.question}`)
@@ -56,6 +57,7 @@ function buildExplainUserPrompt(body: ExplainRequest, notesUrl: string): string 
     )
   }
   lines.push(`\nStudy notes URL: ${notesUrl}`)
+  if (ragContext) lines.push(`\n${ragContext}`)
   return lines.join('\n')
 }
 
@@ -77,7 +79,7 @@ async function toExplainResponse(
   ])
 
   return {
-    explanation: json?.explanation ?? rawText,
+    explanation: json?.explanation ?? salvageText(rawText, 'explanation') ?? rawText,
     notesUrl,
     awsDocsUrl: awsDoc.url,
     awsDocsTitle: awsDoc.title,
@@ -101,7 +103,10 @@ export async function POST(request: Request): Promise<Response> {
 
   const keywords = parsed.keywords ?? []
   const notesUrl = findNotesUrl(keywords)
-  const userPrompt = buildExplainUserPrompt(parsed, notesUrl)
+  const ragQuery = [parsed.question, ...keywords].filter(Boolean).join(' ')
+  const ragEntries = await queryRag(ragQuery, 4, 'glossary')
+  const ragContext = formatRagContext(ragEntries)
+  const userPrompt = buildExplainUserPrompt(parsed, notesUrl, ragContext)
   const searchParts = [parsed.question, parsed.domainLabel ?? '', keywords.join(' ')]
 
   const aiResult = await completeJson(provider, apiKey, EXPLAIN_SYSTEM_PROMPT, userPrompt, 600)

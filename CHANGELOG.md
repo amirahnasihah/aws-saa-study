@@ -44,7 +44,7 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 - **feat** wzs3 (EFS Section Test): 5 questions seeded to remote D1 — answers verified via AWS docs MCP
 - **feat** wzs2 (Storage Section Test): 5 questions seeded to remote D1 — answers verified via AWS docs MCP
 - **feat** wzs1 (VPC Section Test): 10 questions seeded to remote D1 — answers verified via AWS docs MCP
-- **feat** PT6 (wz6): 65 Whizlabs Practice Test 6 questions seeded to remote D1 — answers verified via AWS docs MCP
+- **feat** PT6 (wz6): 65 Core Practice Test 6 questions seeded to remote D1 — answers verified via AWS docs MCP
 - **feat** Screenshots for wz6 (65), wzs1 (10), wzs2 (5), wzs3 (5) added to public/questions/
 - **feat** Glossary: 14 new terms — delete marker, noncurrent versions, secondary VPC CIDR, SNI, OAC, OAI, edge-to-edge routing, transitive peering, instance store, EBS-backed, Elastic Volumes, EBS snapshot, AWS Backup, EFS performance/throughput modes, EFS mount helper
 - **feat** awsServices notes: CloudFront OAC + Lambda@Edge, ALB SNI, API Gateway, AppFlow, SageMaker, VPC Peering edge-to-edge, EBS storage types, EFS performance/throughput modes + encryption in transit + cross-VPC tips, AWS Backup
@@ -52,8 +52,8 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 
 ## 2026-05-28
 
-- **feat** PT4 (wz4): 65 Whizlabs Practice Test 4 questions seeded to remote D1
-- **feat** PT5 (wz5): 65 Whizlabs Practice Test 5 questions seeded to remote D1 — answers verified via AWS docs MCP
+- **feat** PT4 (wz4): 65 Core Practice Test 4 questions seeded to remote D1
+- **feat** PT5 (wz5): 65 Core Practice Test 5 questions seeded to remote D1 — answers verified via AWS docs MCP
 - **feat** Screenshots for wz4 and wz5 (130 images) added to public/questions/
 - **feat** Glossary: 15 new terms — awsvpc, ENI, EBK, PBK, ABAC, NotPrincipal, CORS, Anycast, PoP, DRA, Standby state, cooldown period, InService, bridge, host
 - **feat** awsServices notes: CloudHSM backup (EBK/PBK), FSx Lustre DRA + S3 integration, QuickSight ML forecasting, Client VPN, Step Functions Distributed Map, X-Ray Insights, Glue Crawler, Polly StartSpeechSynthesisTask, Global Accelerator static IPs
@@ -70,7 +70,7 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 
 ## 2026-05-26
 
-- **feat** Quiz scraping script for Whizlabs questions
+- **feat** Quiz scraping script for Core practice questions
 - **chore** Extended .gitignore for generated files and workspace config
 
 ## 2026-05-25

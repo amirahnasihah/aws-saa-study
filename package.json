@@ -11,7 +11,7 @@
     "test": "echo \"No tests configured\"",
     "lint": "eslint",
     "deploy": "next build && bunx next-on-pages && bunx wrangler pages deploy --commit-dirty=true",
-    "scrape:quiz": "bun run scripts/scrape-whizlabs-quiz.ts",
+    "scrape:quiz": "bun run scripts/scrape-quiz.ts",
     "scrape:lab": "bun run scripts/scrape-course-lab.ts",
     "seed:labs": "bun run scripts/seed-labs.ts",
     "labs:compile": "bun run scripts/compile-labs-from-json.ts",
@@ -20,7 +20,8 @@
     "seed:screenshots": "bun run scripts/seed-screenshot-metadata.ts",
     "verify:aws-refs": "bun run scripts/verify-aws-references.ts",
     "changelog:draft": "bun run scripts/changelog-from-git.ts",
-    "pwa:icons": "node scripts/generate-pwa-icons.mjs"
+    "pwa:icons": "node scripts/generate-pwa-icons.mjs",
+    "rag:sync": "bun run scripts/sync-rag-index.ts"
   },
   "dependencies": {
     "@xyflow/react": "^12.10.2",

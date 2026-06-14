@@ -15,11 +15,11 @@ const extractReferences = (content: string, source: string): ReferenceRecord[] =
     }))
 
 const practiceSource = readFileSync('data/practiceQuestions.ts', 'utf8')
-const whizlabSource = readFileSync('scripts/seed-whizlab-batch2.ts', 'utf8')
+const batchSource = readFileSync('scripts/seed-batch2.ts', 'utf8')
 
 const allReferences = [
   ...extractReferences(practiceSource, 'practiceQuestions.ts'),
-  ...extractReferences(whizlabSource, 'seed-whizlab-batch2.ts'),
+  ...extractReferences(batchSource, 'seed-batch2.ts'),
 ]
 
 const uniqueByUrl = new Map<string, ReferenceRecord[]>()

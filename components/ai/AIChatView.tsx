@@ -6,7 +6,10 @@ import { useAIChatHistory } from '@/hooks/useAIChatHistory'
 import { buildAIRequestHeaders } from '@/lib/ai/client-headers'
 import { byokProviderLabel, isByokProvider, needsByokKey } from '@/lib/ai/providers'
 import AISourceLinks from '@/components/ai/AISourceLinks'
-import type { ChatResponse, InternalLink } from '@/lib/ai/types'
+import CopyButton from '@/components/ai/CopyButton'
+import BookmarkAnswerButton from '@/components/ai/BookmarkAnswerButton'
+import { chatToMarkdown, downloadTextFile, exportFilenames } from '@/lib/export'
+import type { ChatResponse } from '@/lib/ai/types'
 
 interface AIChatViewProps {
   provider: AIProvider
@@ -28,10 +31,19 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
   const [uiState, setUiState] = useState<UIState>('idle')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages, uiState])
+
+  // Auto-grow the textarea with its content, capped at ~5 lines.
+  useEffect(() => {
+    const el = textareaRef.current
+    if (!el) return
+    el.style.height = 'auto'
+    el.style.height = `${Math.min(el.scrollHeight, 140)}px`
+  }, [input])
 
   const sendMessage = async (text?: string) => {
     const content = (text ?? input).trim()
@@ -128,8 +140,13 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
         {messages.map((msg, i) => (
           <div key={i} className={msg.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
             {msg.role === 'user' ? (
-              <div className="max-w-[78%] px-3.5 py-2.5 rounded-2xl rounded-tr-sm bg-c1/10 border border-c1/15 font-space-mono text-[0.78rem] text-aws-text leading-relaxed">
-                {msg.content}
+              <div className="flex flex-col items-end gap-1 max-w-[78%]">
+                <div className="px-3.5 py-2.5 rounded-2xl rounded-tr-sm bg-c1/10 border border-c1/15 font-space-mono text-[0.78rem] text-aws-text leading-relaxed">
+                  {msg.content}
+                </div>
+                <div className="pr-1">
+                  <CopyButton text={msg.content} label="Copy your message" />
+                </div>
               </div>
             ) : (
               <div className="max-w-[92%] space-y-2">
@@ -144,6 +161,15 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
                     internalLinks={msg.internalLinks}
                   />
                 )}
+                <div className="flex items-center gap-3 pl-1">
+                  <CopyButton text={msg.content} label="Copy AI response" />
+                  <BookmarkAnswerButton
+                    question={messages[i - 1]?.role === 'user' ? messages[i - 1].content : ''}
+                    answer={msg.content}
+                    awsDocsUrl={msg.awsDocsUrl}
+                    awsDocsTitle={msg.awsDocsTitle}
+                  />
+                </div>
               </div>
             )}
           </div>
@@ -174,9 +200,10 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
       )}
 
       {/* Input row */}
-      <div className="flex gap-1.5 pt-3 border-t border-aws-border/30 shrink-0">
-        <input
-          type="text"
+      <div className="flex items-end gap-1.5 pt-3 border-t border-aws-border/30 shrink-0">
+        <textarea
+          ref={textareaRef}
+          rows={1}
           value={input}
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={(e) => {
@@ -185,10 +212,25 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
               void sendMessage()
             }
           }}
-          placeholder="Ask an AWS question…"
+          placeholder="Ask an AWS question…  (Shift+Enter for new line)"
           disabled={uiState === 'loading' || needsKey}
-          className="flex-1 px-4 py-2.5 rounded-xl bg-aws-card border border-aws-border/60 text-aws-text text-base sm:text-[0.8rem] font-space-mono placeholder:text-aws-muted/35 focus:outline-none focus:border-c1/40 transition-colors disabled:opacity-50"
+          className="flex-1 resize-none max-h-[140px] overflow-y-auto px-4 py-2.5 rounded-xl bg-aws-card border border-aws-border/60 text-aws-text text-base sm:text-[0.8rem] font-space-mono leading-relaxed placeholder:text-[0.7rem] sm:placeholder:text-[0.8rem] placeholder:tracking-tight placeholder:text-aws-muted/35 focus:outline-none focus:border-c1/40 transition-colors disabled:opacity-50"
         />
+
+        {/* Download chat as Markdown, only when there are messages */}
+        {messages.length > 0 && (
+          <button
+            type="button"
+            onClick={() => downloadTextFile(exportFilenames.chat(), chatToMarkdown(messages))}
+            title="Download chat as Markdown"
+            aria-label="Download chat as Markdown"
+            className="w-10 h-10 flex items-center justify-center rounded-xl border border-aws-border/40 text-aws-muted/35 hover:text-aws-muted hover:border-aws-border/70 transition-all duration-150 shrink-0"
+          >
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M6.5 1.5v7M3.5 6l3 3 3-3M2 11.5h9" />
+            </svg>
+          </button>
+        )}
 
         {/* Clear history — trash icon, only when there are messages */}
         {messages.length > 0 && (

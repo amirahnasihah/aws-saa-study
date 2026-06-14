@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import SearchModal from './SearchModal'
 import BookmarksPanel from './BookmarksPanel'
 import { useBookmarksCtx } from './BookmarksContext'
+import { useAnswerBookmarksCtx } from './AnswerBookmarksContext'
 
 const fabShellClass =
   'rounded-full border border-aws-border/80 bg-aws-card/95 font-space-mono text-[0.65rem] text-aws-text shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md transition-all duration-150'
@@ -12,7 +13,9 @@ const fabShellClass =
 export default function FloatingSearch() {
   const [searchOpen, setSearchOpen] = useState(false)
   const [bookmarksOpen, setBookmarksOpen] = useState(false)
-  const { count } = useBookmarksCtx()
+  const { count: serviceCount } = useBookmarksCtx()
+  const { count: answerCount } = useAnswerBookmarksCtx()
+  const count = serviceCount + answerCount
   const pathname = usePathname()
   const fabBottomClass =
     pathname === '/practice' ? 'bottom-24' : 'bottom-5 md:bottom-6'

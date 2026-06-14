@@ -18,6 +18,7 @@ interface DBRow {
   source: string
   page_number: number | null
   screenshot_url: string | null
+  screenshot_credit: string | null
 }
 
 function rowToQuestion(row: DBRow): PracticeQuestion {
@@ -35,6 +36,7 @@ function rowToQuestion(row: DBRow): PracticeQuestion {
     source: row.source as PracticeQuestion['source'],
     pageNumber: row.page_number ?? undefined,
     screenshotUrl: row.screenshot_url ?? undefined,
+    screenshotCredit: row.screenshot_credit ?? undefined,
   }
 }
 

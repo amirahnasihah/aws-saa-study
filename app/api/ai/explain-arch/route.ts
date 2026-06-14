@@ -2,6 +2,7 @@ import { completeJson } from '@/lib/ai/complete-json'
 import { findInternalLinks } from '@/lib/ai/internal-links'
 import { parseAIJson } from '@/lib/ai/json'
 import { searchAwsMultipleLinks, buildDocsSearchPhrase } from '@/lib/ai/aws-knowledge'
+import { formatRagContext, queryRag } from '@/lib/ai/rag'
 
 export const runtime = 'edge'
 
@@ -57,18 +58,7 @@ export async function POST(request: Request): Promise<Response> {
 
   const system = body.focusNode ? SYSTEM_NODE : SYSTEM_DIAGRAM
 
-  const userPrompt = [
-    `Architecture: ${body.title}`,
-    `Domain: ${body.domain}`,
-    body.tags.length ? `Tags: ${body.tags.join(', ')}` : '',
-    `Description: ${body.description}`,
-    body.nodeLabels.length ? `All components: ${body.nodeLabels.join(', ')}` : '',
-    body.focusNode ? `Focus service: ${body.focusNode}` : '',
-  ]
-    .filter(Boolean)
-    .join('\n')
-
-  // run AI explanation + AWS docs search in parallel
+  // run AI explanation + AWS docs search + RAG retrieval in parallel
   const searchTerm = buildDocsSearchPhrase([
     body.focusNode ?? body.title,
     body.domain,
@@ -77,11 +67,26 @@ export async function POST(request: Request): Promise<Response> {
 
   const searchTerms = [body.focusNode ?? body.title, body.domain, ...body.tags, ...body.nodeLabels]
   const internalLinks = findInternalLinks(searchTerms)
+  const ragQuery = [body.focusNode ?? body.title, body.domain, ...body.tags].filter(Boolean).join(' ')
 
-  const [result, awsDocs] = await Promise.all([
-    completeJson('free', '', system, userPrompt, 500),
+  const [awsDocs, ragEntries] = await Promise.all([
     searchAwsMultipleLinks(searchTerm, ['general', 'reference_documentation'], 3),
+    queryRag(ragQuery, 5),
   ])
+
+  const userPrompt = [
+    `Architecture: ${body.title}`,
+    `Domain: ${body.domain}`,
+    body.tags.length ? `Tags: ${body.tags.join(', ')}` : '',
+    `Description: ${body.description}`,
+    body.nodeLabels.length ? `All components: ${body.nodeLabels.join(', ')}` : '',
+    body.focusNode ? `Focus service: ${body.focusNode}` : '',
+    formatRagContext(ragEntries),
+  ]
+    .filter(Boolean)
+    .join('\n')
+
+  const result = await completeJson('free', '', system, userPrompt, 500)
 
   if ('error' in result) {
     return Response.json({ error: result.error }, { status: result.status })

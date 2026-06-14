@@ -938,7 +938,7 @@ const rows = allQuestions.map((q) => {
   const explanation = escape(JSON.stringify(q.explanation))
   const keywords = escape(JSON.stringify(q.keywords))
   const reference = q.reference ? `'${escape(q.reference)}'` : 'NULL'
-  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source) VALUES ('${escape(q.id)}', '${q.domain}', '${escape(q.domainLabel)}', '${q.difficulty}', '${escape(q.scenario)}', '${options}', '${escape(q.correctId)}', '${explanation}', ${reference}, '${keywords}', 'whizlab');`
+  return `INSERT OR IGNORE INTO questions (id, domain, domain_label, difficulty, scenario, options, correct_id, explanation, reference, keywords, source) VALUES ('${escape(q.id)}', '${q.domain}', '${escape(q.domainLabel)}', '${q.difficulty}', '${escape(q.scenario)}', '${options}', '${escape(q.correctId)}', '${explanation}', ${reference}, '${keywords}', 'core');`
 })
 
 writeFileSync('scripts/whizlab-batch2.sql', rows.join('\n'))

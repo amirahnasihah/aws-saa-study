@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useAIProvider } from '@/hooks/useAIProvider'
 import { getCachedHint, setCachedHint } from '@/hooks/useHintCache'
 import AIKeyModal from '@/components/AIKeyModal'
@@ -42,11 +42,17 @@ export default function PracticeQuestionHint({
   onHintActive,
 }: PracticeQuestionHintProps) {
   const { provider, key, saveKey } = useAIProvider()
-  const [uiState, setUiState] = useState<UIState>('idle')
-  const [hint, setHint] = useState<HintResponse | null>(null)
-  const [fromCache, setFromCache] = useState(false)
+  const [uiState, setUiState] = useState<UIState>(() => (getCachedHint(questionId)?.whatItsAsking?.length ? 'done' : 'idle'))
+  const [hint, setHint] = useState<HintResponse | null>(() => getCachedHint(questionId))
+  const [fromCache, setFromCache] = useState(true)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [modalProvider, setModalProvider] = useState<ByokProvider>('anthropic')
+
+  // Re-apply keyword highlighting if a hint was already generated for this question.
+  useEffect(() => {
+    if (hint?.studyKeywords?.length) applyHint(hint, onHintActive)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const showHint = (data: HintResponse, cached: boolean) => {
     setHint(data)
