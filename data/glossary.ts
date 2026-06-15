@@ -12,7 +12,7 @@ export const glossaryCategories: Record<string, string[]> = {
   'CloudFront':         ['OAC','OAI'],
   'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly','Amazon Translate','Amazon Transcribe','Amazon Bedrock'],
   'Analytics':          ['Amazon MSK','Amazon OpenSearch Service','AWS Data Exchange','Amazon Kinesis Data Streams','AWS Glue'],
-  'Management & Gov':   ['AWS Organizations','SCP','Amazon CloudWatch','AWS CloudTrail','AWS Config','AWS CloudFormation','StackSets','AWS Trusted Advisor','AWS Compute Optimizer','AWS Control Tower'],
+  'Management & Gov':   ['AWS Organizations','SCP','Amazon CloudWatch','AWS CloudTrail','AWS Config','AWS CloudFormation','StackSets','AWS Trusted Advisor','AWS Compute Optimizer','AWS Control Tower','AWS Health Dashboard'],
   'Cost Management':    ['AWS Cost Explorer','AWS Budgets','Cost and Usage Report','Cost Allocation Tags'],
   'Architecture':       ['stateful','stateless','Elastic IP','Backup and Restore','Pilot Light','Warm Standby','Active/Active','IaC','Blue/Green deployment','Canary deployment','Fan-out','Event-driven','Idempotency','Elasticity','Fault tolerance','Shared Responsibility Model','Serverless','Microservices','Containerization'],
   'IAM & Policies':     ['ARN','Principal','Identity-based policy','Resource-based policy','Permissions boundary','Managed policy','Inline policy','Trust policy','OU (Organizational Unit)','Permission denied','ABAC','NotPrincipal'],
@@ -248,6 +248,7 @@ export const glossary: Record<string, string> = {
   'AWS Trusted Advisor': 'Account-level checks across 5 pillars: cost optimization, security, fault tolerance, performance, and service limits. Full checks require Business/Enterprise Support.',
   'AWS Compute Optimizer': 'Uses ML on CloudWatch metrics to recommend right-sizing for EC2, ASG, EBS, and Lambda — reduces over-provisioning. Recommendation engine, NOT an enforcement tool.',
   'AWS Control Tower': 'Sets up and governs a secure multi-account AWS environment (landing zone) using Organizations + guardrails + SSO. Higher-level automation on top of Organizations.',
+  'AWS Health Dashboard': "Personalized view of AWS operational issues, scheduled changes, and maintenance events affecting YOUR account's resources — different from the public Service Health Dashboard. Integrates with EventBridge for automated alerting. Full API access needs Business/Enterprise Support.",
 
   // Cost Management
   'AWS Cost Explorer': 'Visualize, understand, and FORECAST AWS spend over time with filters by service/tag/account. Analysis & forecasting tool — NOT alerting (use Budgets).',
