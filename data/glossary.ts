@@ -6,7 +6,7 @@ export const glossaryCategories: Record<string, string[]> = {
   'Security Services':  ['Amazon GuardDuty','Amazon Inspector','Amazon Macie','AWS Shield','Amazon Cognito','AWS Directory Service','ACM','AWS RAM','CloudHSM'],
   'Storage':            ['EBS','EFS','EFS General Purpose','EFS Max I/O','EFS Bursting Throughput','EFS Provisioned Throughput','EFS Elastic Throughput','EFS mount helper','IOPS','Elastic Volumes','EBS snapshot','WORM','DRA'],
   'Encryption':         ['envelope encryption','Compliance mode','Governance mode','legal hold','retention period','EBK','PBK'],
-  'Database & HA':      ['Multi-AZ','Read Replica','Availability Zone','RPO','RTO','RDS Multi-AZ','Aurora Serverless','Aurora Replicas','DynamoDB PITR','DynamoDB Auto Scaling','CloudFormation DeletionPolicy'],
+  'Database & HA':      ['Multi-AZ','Read Replica','Availability Zone','RPO','RTO','RDS Multi-AZ','Aurora Serverless','Aurora Replicas','DynamoDB PITR','DynamoDB Auto Scaling','CloudFormation DeletionPolicy','RDS Proxy','Partition Key','GSI','LSI','Memcached','Lazy Loading','Write-Through'],
   'Containers':         ['awsvpc','ENI','bridge','host'],
   'Messaging':          ['SQS Long Polling','SQS Short Polling','Visibility Timeout','SQS FIFO','Dead Letter Queue','SNS fan-out','Step Functions','API Gateway throttling','API caching','Lambda authorizer','Usage Plan'],
   'CloudFront':         ['OAC','OAI'],
@@ -209,6 +209,13 @@ export const glossary: Record<string, string> = {
   'CloudFormation DeletionPolicy': 'Attribute on a CloudFormation resource that controls what happens when the resource is deleted: Delete (default), Retain (keep resource), Snapshot (create final snapshot — supported by RDS, EBS, ElastiCache, not S3).',
   'Secrets Manager': 'AWS service for storing and automatically rotating secrets (database passwords, API keys). Built-in rotation for RDS/Aurora/Redshift/DocumentDB via managed Lambda rotation function. Charged per secret per month.',
   'Aurora Replicas': 'Read-only replicas within an Aurora cluster. Serve read traffic with typically <10ms lag. Can be scaled automatically with Aurora Auto Scaling based on CPU/connections. Up to 15 replicas per cluster.',
+  'RDS Proxy': 'Fully managed connection pooler that sits between an application and RDS/Aurora. Multiplexes many app-side connections into a smaller pool of DB connections — fixes "too many connections" from Lambda or Auto Scaling fleets, and speeds up failover.',
+  'Partition Key': "DynamoDB's hash key — determines which physical partition an item is stored in. High-cardinality values spread traffic evenly and avoid a 'hot partition'.",
+  'GSI': 'Global Secondary Index — DynamoDB index with a partition/sort key DIFFERENT from the base table. Can be added or removed at any time and has its own provisioned throughput.',
+  'LSI': 'Local Secondary Index — DynamoDB index with the SAME partition key as the base table but a different sort key. Must be defined at table creation; limited to 10GB per partition key value.',
+  'Memcached': 'ElastiCache engine option: multi-threaded, simple key-value cache with NO persistence and NO replication. Data is lost if a node restarts. Use for simple, horizontally-scaled caching where durability does not matter.',
+  'Lazy Loading': 'Caching strategy: data is loaded into the cache only on a cache miss (app queries cache → miss → queries DB → writes result back to cache). Avoids filling the cache with unused data, but a cache miss costs 3 round trips and data can go stale.',
+  'Write-Through': 'Caching strategy: every write to the database is also written to the cache immediately. Cache data stays fresh and there is no cache-miss penalty for written data, but the cache can fill with rarely-read data and writes get slower.',
 
   // ML / AI services
   'Amazon Comprehend': 'AWS managed NLP service: sentiment analysis, entity recognition, key phrase extraction, topic modeling, language detection. No ML expertise needed. Analyzes text from support tickets, social media, documents.',
