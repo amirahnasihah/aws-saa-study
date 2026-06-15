@@ -41610,6 +41610,527 @@ export const labsCatalog: Lab[] = [
     "source": "course"
   },
   {
+    "slug": "using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards",
+    "title": "Using CloudWatch for Resource Monitoring, Create CloudWatch Alarms and Dashboards",
+    "level": "Intermediate",
+    "services": [
+      "AWS"
+    ],
+    "summary": "",
+    "duration": "01:30:00",
+    "tasks": [
+      {
+        "title": "Task 1: Sign in to AWS Management Console",
+        "steps": [
+          {
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page,"
+          },
+          {
+            "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+          },
+          {
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          },
+          {
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          }
+        ]
+      },
+      {
+        "title": "Task 2: Launching an EC2 Instance",
+        "steps": [
+          {
+            "text": "In this task, we are going to launch an EC2 Instance that will be used for checking various features in CloudWatch."
+          },
+          {
+            "text": "Make sure you are in the N.Virginia Region."
+          },
+          {
+            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          },
+          {
+            "text": "Navigate to Instances from the left side menu and click on Launch instances button."
+          },
+          {
+            "text": "Name : Enter MyEC2Server"
+          },
+          {
+            "text": "For Amazon Machine Image (AMI): Select Amazon Linux and the select Amazon Linux 2023 AMI from the drop-down."
+          },
+          {
+            "text": "For Instance Type: Select t2.micro"
+          },
+          {
+            "text": "For Key pair: Select Create a new key pair Button"
+          },
+          {
+            "text": "Key pair name: MyEC2Key"
+          },
+          {
+            "text": "Key pair type: RSA"
+          },
+          {
+            "text": "Private key file format: .pem"
+          },
+          {
+            "text": "Select Create key pair Button."
+          },
+          {
+            "text": "In Network Settings Click on Edit button:"
+          },
+          {
+            "text": "Auto-assign public IP: Enable"
+          },
+          {
+            "text": "Select Create new Security group"
+          },
+          {
+            "text": "Security group name : Enter MyEC2Server_SG"
+          },
+          {
+            "text": "Description : Enter Security Group to allow traffic to EC2"
+          },
+          {
+            "text": "To add SSH :"
+          },
+          {
+            "text": "Choose Type: Select SSH"
+          },
+          {
+            "text": "Source: Select Anywhere"
+          },
+          {
+            "text": "Keep Rest the things as Default and Click on Launch Instance Button."
+          },
+          {
+            "text": "Select View all Instances to View the Instance you created."
+          },
+          {
+            "text": "Launch Status: Your instance is now launching. Click on the instance ID and wait for complete initialization of the instance (until the status changes to running)."
+          },
+          {
+            "text": "Note: Select the instance and Copy the Instance-ID and save it for later, we need to search the metrics in CloudWatch based on this.",
+            "images": [
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-01.png",
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-02.png",
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-03.png",
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-04.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 3: SSH into EC2 Instance and install necessary Softwares",
+        "steps": [
+          {
+            "text": "Follow the instructions provided in SSH to EC2 instance to SSH into the EC2 instance you created."
+          },
+          {
+            "text": "Once you are logged into the EC2 instance, switch to root user."
+          },
+          {
+            "text": "sudo su"
+          },
+          {
+            "text": "Update :"
+          },
+          {
+            "text": "dnf update -y"
+          },
+          {
+            "text": "Stress Tool will be used for simulating EC2 metrics. Once we create the CloudWatch Alarm, we shall come back to SSH and trigger CPUUtilization using it."
+          },
+          {
+            "text": "dnf install stress-ng -y"
+          }
+        ]
+      },
+      {
+        "title": "Task 4: Create SNS Topic",
+        "steps": [
+          {
+            "text": "In this task, we are going to create a SNS Topic."
+          },
+          {
+            "text": "Make sure you are in the N.Virginia Region."
+          },
+          {
+            "text": "Navigate to Simple Notification Service by clicking on the Services menu available under the Application Integration section."
+          },
+          {
+            "text": "Click on Topics in the left panel and then click on Create topic button."
+          },
+          {
+            "text": "Under Details:"
+          },
+          {
+            "text": "Type: Select Standard"
+          },
+          {
+            "text": "Name: Enter MyServerMonitor"
+          },
+          {
+            "text": "Display name: Enter MyServerMonitor"
+          },
+          {
+            "text": "Leave other options as default and click on Create topic button. A SNS topic will be created."
+          },
+          {
+            "text": "Note : Please ignore if below error message appears.",
+            "images": [
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-05.png",
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-06.png",
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-07.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 5: Subscribe to an SNS Topic",
+        "steps": [
+          {
+            "text": "Once SNS topic is created, click on SNS topic MyServerMonitor."
+          },
+          {
+            "text": "Click on Create subscription button."
+          },
+          {
+            "text": "Under Details:"
+          },
+          {
+            "text": "Protocol : Select Email"
+          },
+          {
+            "text": "Endpoint : Enter your email address"
+          },
+          {
+            "text": "Note: Make sure you give proper email address as this is where your notification will be delivered."
+          },
+          {
+            "text": "You will receive a subscription confirmation to your email address"
+          },
+          {
+            "text": "Click on Confirm subscription."
+          },
+          {
+            "text": "Your email address is now subscribed to SNS Topic MyServerMonitor.",
+            "images": [
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-08.png",
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-09.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 6: Using CloudWatch to Check EC2 CPU Utilization Metrics in CloudWatch Metrics",
+        "steps": [
+          {
+            "text": "Navigate to CloudWatch by clicking on the Services menu available under the Management & Governance section."
+          },
+          {
+            "text": "Click on All metrics under Metrics in the Left Panel."
+          },
+          {
+            "text": "You should be able to see EC2 under All Metrics. If EC2 is not visible, please wait for 5-10 minutes, CloudWatch usually takes around 5-10 minutes after the creation of EC2 to start fetching metric details."
+          },
+          {
+            "text": "Click on EC2. Select Per-Instance Metrics."
+          },
+          {
+            "text": "Here you can see various metrics. Select the CPUUtilization metric to see the graph."
+          },
+          {
+            "text": "Now at the top of the screen, you can see the CPU Utilization graph (which is at zero since we have not stressed the CPU yet).",
+            "images": [
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-10.png",
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-11.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 7: Create CloudWatch Alarm",
+        "steps": [
+          {
+            "text": "CloudWatch alarms are used to watch a single CloudWatch metric or the result of a math expression based on CloudWatch metrics."
+          },
+          {
+            "text": "Click on In alarms under Alarms in the left panel of the CloudWatch dashboard."
+          },
+          {
+            "text": "Click on Create alarm available on the top right corner."
+          },
+          {
+            "text": "In the Specify metric and conditions page:"
+          },
+          {
+            "text": "Click on Select metric. It will open the Select Metrics page."
+          },
+          {
+            "text": "Scroll down and Select EC2."
+          },
+          {
+            "text": "Select Per-Instance Metrics"
+          },
+          {
+            "text": "Enter your EC2 Instance-ID in the search bar to get metrics for MyEC2Server"
+          },
+          {
+            "text": "Choose the CPUUtilization metric."
+          },
+          {
+            "text": "Click on Select metric button."
+          },
+          {
+            "text": "Now, configure the alarm with the following details:"
+          },
+          {
+            "text": "Under Metrics"
+          },
+          {
+            "text": "Period: Select 1 Minute"
+          },
+          {
+            "text": "Under Conditions"
+          },
+          {
+            "text": "Threshold type: Choose Static"
+          },
+          {
+            "text": "Whenever CPUUtilization is… : Choose Greater"
+          },
+          {
+            "text": "than: Enter 30"
+          },
+          {
+            "text": "Leave other values as default and click on Next button."
+          },
+          {
+            "text": "In Configure actions page:"
+          },
+          {
+            "text": "Under Notification"
+          },
+          {
+            "text": "Alarm state trigger: Choose In Alarm"
+          },
+          {
+            "text": "Select an SNS topic: Choose Select an existing SNS topic"
+          },
+          {
+            "text": "Send a notification to… : Choose MyServerMonitor SNS topic which was created earlier."
+          },
+          {
+            "text": "Leave other fields as default. Click on Next button."
+          },
+          {
+            "text": "In the Add a description page, (under Name and Description):"
+          },
+          {
+            "text": "Name: Enter the Name MyServerCPUUtilizationAlarm"
+          },
+          {
+            "text": "Click on Next button."
+          },
+          {
+            "text": "A preview of the Alarm will be shown. Scroll down and click on Create alarm button."
+          },
+          {
+            "text": "A new CloudWatch Alarm is now created."
+          },
+          {
+            "text": "Whenever the CPU Utilization goes above 30 for more than 1 minute, an SNS Notification will be triggered and you will receive an email.",
+            "images": [
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-12.png",
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-13.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 8: Testing CloudWatch Alarm by Stressing CPU Utilization",
+        "steps": [
+          {
+            "text": "SSH back into the EC2 instance - MyEC2Server."
+          },
+          {
+            "text": "The stress tool has already been installed. Lets run a command to increase the CPU Utilization manually."
+          },
+          {
+            "text": "sudo stress-ng --cpu 10 -v --timeout 400s"
+          },
+          {
+            "text": "This command shall monitor the process created by the stress tool(which we triggered manually). It will run for 6 minutes and 40 seconds. It will monitor CPU utilization, which should remain very near 100% for that amount of time."
+          },
+          {
+            "text": "Open another Terminal on your local machine and SSH back in EC2 instance - MyEC2Server."
+          },
+          {
+            "text": "Run this command to see the CPU utilization if you are a MAC or Linux User. For Windows User, you can navigate to Task manager."
+          },
+          {
+            "text": "top"
+          },
+          {
+            "text": "You can now see that %Cpu(s) is 100. By running this stress command, we have manually increased the CPU utilization of the EC2 Instance."
+          },
+          {
+            "text": "After 400 Seconds, the %Cpu will reduce back to 0.",
+            "images": [
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-14.png",
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-15.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 9 : Checking For an Email from the SNS Topic",
+        "steps": [
+          {
+            "text": "Navigate to your mailbox and refresh it. You should see a new email notification for MyServerCPUUtilizationAlarm."
+          },
+          {
+            "text": "We can see that mail we received contains details about our CloudWatch Alarm,(name of the alarm, when it was triggered, etc.).",
+            "images": [
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-16.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 10: Checking the CloudWatch Alarm Graph",
+        "steps": [
+          {
+            "text": "Navigate back to CloudWatch page, Click on Alarms."
+          },
+          {
+            "text": "Click on MyServerCPUUtilizationAlarm."
+          },
+          {
+            "text": "On the Graph, you can see places where CPUUtilization has gone above the 30% threshold."
+          },
+          {
+            "text": "We can trigger CPUUtilization multiple times to see the spike on the graph."
+          },
+          {
+            "text": "You have successfully triggered a CloudWatch Alarm for CPUUtilzation.",
+            "images": [
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-17.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 11: Create a CloudWatch Dashboard",
+        "steps": [
+          {
+            "text": "We can create a simple Cloudwatch dashboard to see the CPUUtilization and various other metric widgets."
+          },
+          {
+            "text": "Click on Dashboard in the left panel of the CloudWatch page."
+          },
+          {
+            "text": "Click on Create dashboard button."
+          },
+          {
+            "text": "Dashboard name: Enter MyEC2ServerDashboard"
+          },
+          {
+            "text": "Click on Create dashboard"
+          },
+          {
+            "text": "Add widget: Select Line Graph."
+          },
+          {
+            "text": "Click on Next button."
+          },
+          {
+            "text": "Select Metrics. Click on Next button."
+          },
+          {
+            "text": "On the next page, Choose EC2 under the Metrics tab. Choose Per-Instance Metrics."
+          },
+          {
+            "text": "In the search bar, enter your EC2 Instance ID. Select CPUUtilization."
+          },
+          {
+            "text": "Click on Create Widget button."
+          },
+          {
+            "text": "Depending on how many times you triggered the stress command, you will see different spikes in the timeline."
+          },
+          {
+            "text": "Now click on the Save button."
+          },
+          {
+            "text": "You can also add multiple Widgets to the same Dashboard by clicking on Add widget button."
+          },
+          {
+            "text": "Do you know?"
+          },
+          {
+            "text": "CloudWatch offers advanced features such as anomaly detection, which uses machine learning algorithms to automatically identify abnormal behavior in your metrics. This helps you to detect and investigate unusual patterns or potential performance bottlenecks in your resources.",
+            "images": [
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-18.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 12 : Validation Test",
+        "steps": [
+          {
+            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          },
+          {
+            "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+          },
+          {
+            "text": "Sample output :"
+          },
+          {
+            "text": "Completion and Conclusion"
+          },
+          {
+            "text": "You have created an EC2 Instance for which CloudWatch Monitoring will be carried out."
+          },
+          {
+            "text": "You have successfully created an Amazon SNS Topic used by CloudWatch."
+          },
+          {
+            "text": "You have successfully subscribed to SNS topic using your email address."
+          },
+          {
+            "text": "You have used CloudWatch to see CPUUtilization Metrics using CloudWatch Metrics."
+          },
+          {
+            "text": "You have successfully created and triggered a CloudWatch Alarm based on the CPUUtilzation Metric."
+          },
+          {
+            "text": "End Lab"
+          },
+          {
+            "text": "Sign out of AWS Account."
+          },
+          {
+            "text": "You have successfully completed the lab."
+          },
+          {
+            "text": "Once you have completed the steps, click on End Lab button from the lab console.",
+            "images": [
+              "/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards/step-19.gif"
+            ]
+          }
+        ]
+      }
+    ],
+    "takeaways": [],
+    "source": "course"
+  },
+  {
     "slug": "wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard",
     "title": "Wokwi IoT Device Simulation with AWS IoT Core Real-Time Dashboard",
     "level": "Advanced",

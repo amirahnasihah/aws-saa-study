@@ -350,8 +350,12 @@ const clickStepsTab = async (page: Page): Promise<void> => {
   if (!found) throw new Error('Could not find Lab Steps / Challenge Steps tab')
 }
 
+const looksLikeStepsPanel = (text: string): boolean =>
+  /Task\s*\d+|Challenge Steps|Sign in to AWS|Cloud Challenge/i.test(text) && text.length > 80
+
 const findStepsPanel = async (page: Page): Promise<Locator> => {
   const panelSelectors = [
+    '.description-section',
     '.tab-content',
     '[class*="tabs-labs"] .tab-content',
     '[role="tabpanel"]',
@@ -361,14 +365,20 @@ const findStepsPanel = async (page: Page): Promise<Locator> => {
   const matched = await panelSelectors.reduce<Promise<Locator | null>>(async (prev, sel) => {
     const existing = await prev
     if (existing) return existing
-    const panel = page.locator(sel).first()
-    if (await panel.isVisible({ timeout: 1500 }).catch(() => false)) {
-      const text = await tryText(panel)
-      if (/Task\s*\d+|Challenge Steps|Sign in to AWS|Cloud Challenge/i.test(text) && text.length > 80) {
-        return panel
-      }
-    }
-    return null
+    const panels = page.locator(sel)
+    const count = await panels.count().catch(() => 0)
+    const found = await Array.from({ length: count }, (_, i) => i).reduce<Promise<Locator | null>>(
+      async (innerPrev, i) => {
+        const hit = await innerPrev
+        if (hit) return hit
+        const panel = panels.nth(i)
+        if (!await panel.isVisible({ timeout: 1500 }).catch(() => false)) return null
+        const text = await tryText(panel)
+        return looksLikeStepsPanel(text) ? panel : null
+      },
+      Promise.resolve(null),
+    )
+    return found
   }, Promise.resolve(null))
 
   if (matched) return matched
@@ -381,6 +391,35 @@ const extractBlocks = async (panel: Locator): Promise<RawBlock[]> =>
   panel.evaluate((root) => {
     const blocks: RawBlock[] = []
     const taskRe = /^Task\s*\d+\s*:/i
+
+    const taskHeadings = [...root.querySelectorAll('h2, h3, h4')].filter((el) =>
+      taskRe.test((el as HTMLElement).innerText?.trim().replace(/\u00a0/g, ' ') ?? ''),
+    )
+
+    if (taskHeadings.length > 0) {
+      taskHeadings.forEach((h, i) => {
+        const heading = (h as HTMLElement).innerText?.trim().replace(/\s+/g, ' ') || `Task ${i + 1}`
+        const htmlParts: string[] = [h.outerHTML]
+        const textParts: string[] = []
+        let el: Element | null = h.nextElementSibling
+
+        while (el) {
+          const tag = el.tagName.toLowerCase()
+          const t = (el as HTMLElement).innerText?.trim().replace(/\u00a0/g, ' ') ?? ''
+          if (['h2', 'h3', 'h4'].includes(tag) && taskRe.test(t)) break
+          if (t) textParts.push(t)
+          htmlParts.push(el.outerHTML)
+          el = el.nextElementSibling
+        }
+
+        blocks.push({
+          heading,
+          html: htmlParts.join('\n'),
+          text: textParts.join('\n\n'),
+        })
+      })
+      return blocks
+    }
 
     const challengeBoxes = root.querySelectorAll('.description-section .box, .tab-content .box')
     if (challengeBoxes.length > 0) {
@@ -408,42 +447,8 @@ const extractBlocks = async (panel: Locator): Promise<RawBlock[]> =>
       if (blocks.length) return blocks
     }
 
-    const taskHeadings = [
-      ...root.querySelectorAll('h2, h3, h4, h5, strong, b, p, div, span'),
-    ].filter((el) => taskRe.test((el as HTMLElement).innerText?.trim() ?? ''))
-
-    const uniqueHeadings = taskHeadings.filter((el, idx, arr) => {
-      const text = (el as HTMLElement).innerText?.trim() ?? ''
-      return arr.findIndex((o) => (o as HTMLElement).innerText?.trim() === text) === idx
-    })
-
-    if (uniqueHeadings.length === 0) {
-      const text = (root as HTMLElement).innerText?.trim() ?? ''
-      if (text) blocks.push({ heading: 'Steps', html: root.innerHTML, text })
-      return blocks
-    }
-
-    uniqueHeadings.forEach((h, i) => {
-      const heading = (h as HTMLElement).innerText?.trim().replace(/\s+/g, ' ') || `Task ${i + 1}`
-      const parts: string[] = []
-      const htmlParts: string[] = []
-      let el: Element | null = h.nextElementSibling
-
-      while (el) {
-        const t = (el as HTMLElement).innerText?.trim() ?? ''
-        if (taskRe.test(t)) break
-        if (t) parts.push(t)
-        htmlParts.push(el.outerHTML)
-        el = el.nextElementSibling
-      }
-
-      blocks.push({
-        heading,
-        html: htmlParts.join('\n') || h.outerHTML,
-        text: parts.join('\n\n'),
-      })
-    })
-
+    const text = (root as HTMLElement).innerText?.trim() ?? ''
+    if (text) blocks.push({ heading: 'Steps', html: root.innerHTML, text })
     return blocks
   })
 
@@ -539,6 +544,7 @@ const scrapeLab = async (page: Page, url: string, slug: string, imageDir: string
       .split(/\n+/)
       .map((l) => l.replace(/^\d+[\).\s]+/, '').trim())
       .filter(Boolean)
+      .filter((line, i, arr) => i === 0 || line !== arr[i - 1])
 
     if (lines.length === 0 && localImages.length === 0) continue
 

@@ -122,4 +122,89 @@ export const labs: Lab[] = [
       'http vs https tripped me up once — a fresh instance has no certificate, so https just hangs. Worth remembering for the exam’s "why can’t I reach my instance" scenarios.',
     ],
   },
+  {
+    slug: 'cloudwatch-alarms-dashboard',
+    title: 'CloudWatch Resource Monitoring — Alarms, SNS Notifications & Dashboards',
+    level: 'Intermediate',
+    services: ['EC2', 'CloudWatch', 'SNS'],
+    summary: 'Launched an EC2 instance, set up an SNS email subscription, created a CloudWatch alarm on CPUUtilization, triggered it with a CPU stress test, and built a dashboard to visualize the spike.',
+    duration: '01:30:00',
+    completedOn: '2026-06-16',
+    source: 'manual',
+    tasks: [
+      {
+        title: 'Sign in and set the working region',
+        steps: [
+          { text: 'Signed in to the AWS Management Console with the provided IAM credentials, leaving the account ID untouched.' },
+          { text: 'Switched the default region to US East (N. Virginia) — us-east-1.' },
+        ],
+      },
+      {
+        title: 'Launch a test EC2 instance',
+        steps: [
+          { text: 'Launched a t2.micro Amazon Linux 2023 instance, created a new RSA key pair, enabled auto-assign public IP, and created a new security group allowing SSH from anywhere.' },
+          { text: 'Waited for status checks to pass, then noted the instance ID — needed later to find this instance specifically in CloudWatch metrics (a busy account can have many EC2 instances reporting metrics).' },
+        ],
+      },
+      {
+        title: 'Connect and install a CPU stress tool',
+        steps: [
+          { text: 'Connected via SSH (EC2 Instance Connect) and switched to root: sudo su' },
+          { text: 'Updated packages: dnf update -y' },
+          { text: 'Installed stress-ng — a tool to artificially load the CPU so I could trigger an alarm on demand instead of waiting for real traffic: dnf install stress-ng -y' },
+        ],
+      },
+      {
+        title: 'Create an SNS topic and email subscription',
+        steps: [
+          { text: 'In SNS, created a Standard topic for server monitoring notifications.' },
+          { text: 'Created an Email subscription on that topic using my own address, then confirmed the subscription via the link AWS emailed me — subscriptions stay "Pending confirmation" and won\'t deliver anything until confirmed.' },
+        ],
+      },
+      {
+        title: 'Find the instance in CloudWatch metrics',
+        steps: [
+          { text: 'In CloudWatch → Metrics → All metrics, opened the EC2 → Per-Instance Metrics namespace.' },
+          { text: 'Filtered by the instance ID I noted earlier and selected CPUUtilization to confirm the metric was reporting (baseline near 0% with no load).' },
+          { text: 'Note: a brand-new instance can take several minutes before its metrics first appear in CloudWatch.' },
+        ],
+      },
+      {
+        title: 'Create a CloudWatch alarm on CPUUtilization',
+        steps: [
+          { text: 'In CloudWatch → Alarms, created a new alarm on the same CPUUtilization metric, with a 1-minute period.' },
+          { text: 'Set the condition to Static, "Greater than" 30 (%) — low enough that a deliberate stress test would trip it quickly.' },
+          { text: 'For the alarm action, set "In alarm" state to notify the SNS topic created earlier.' },
+          { text: 'Named the alarm and reviewed the summary before creating it.' },
+        ],
+      },
+      {
+        title: 'Trigger the alarm with a CPU stress test',
+        steps: [
+          { text: 'Back on the SSH session, ran: stress-ng --cpu 10 -v --timeout 300s to push CPU usage close to 100% for 5 minutes.' },
+          { text: 'In a second SSH session, ran top to confirm %Cpu(s) was sitting near 100% while the stress process ran.' },
+          { text: 'After about a minute of sustained load above the 30% threshold, the alarm state changed to ALARM and an email notification arrived from the SNS topic.' },
+        ],
+      },
+      {
+        title: 'Review the alarm graph and build a dashboard',
+        steps: [
+          { text: 'Opened the alarm detail page and saw the CPUUtilization graph spike well above the 30% threshold line during the stress test window, then drop back to baseline once the stress process timed out.' },
+          { text: 'Created a new CloudWatch dashboard and added a line-graph widget for the same instance\'s CPUUtilization metric, so the spike is visible at a glance without opening the alarm directly.' },
+        ],
+      },
+      {
+        title: 'Validate the lab',
+        steps: [
+          { text: 'Ran the lab validation check, which confirmed the EC2 instance, SNS topic with confirmed subscription, and CloudWatch alarm all existed with the expected configuration.' },
+        ],
+      },
+    ],
+    takeaways: [
+      'An SNS subscription does nothing until confirmed — "Pending confirmation" subscriptions silently drop notifications, which looks identical to a misconfigured alarm if you don\'t check subscription status first.',
+      'EC2 default metrics (CPUUtilization, network, disk I/O, status checks) come from the hypervisor and need zero setup — but memory and disk-space usage are NOT in this set and require the CloudWatch agent, a distinction that matters for "why can\'t I see memory usage" exam scenarios.',
+      'stress-ng was the cleanest way to deterministically trigger an alarm for testing — far faster than waiting for organic load, and the 1-minute alarm period meant the ALARM state appeared almost immediately once the threshold was crossed.',
+      'A dashboard widget and an alarm can point at the exact same metric — the alarm is for "notify me when this crosses a line," the dashboard is for "let me eyeball trends over time." Both are reading the same underlying CloudWatch data.',
+    ],
+  },
 ]
