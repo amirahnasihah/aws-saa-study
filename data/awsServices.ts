@@ -134,6 +134,7 @@ export const domains: DomainData[] = [
               'Simple AD: Samba-based, basic AD features, standalone (no trust ke on-prem). Untuk simple Linux/Windows workloads yang perlukan basic LDAP/Kerberos',
               'IAM Identity Center + AWS Managed Microsoft AD = SSO untuk AWS + SaaS apps dengan full AD features',
               'Exam: "join EC2 to existing on-premises domain, AD stays on-prem" → AD Connector. "Full AD in cloud, migrate off-prem" → AWS Managed Microsoft AD',
+              'Exam: "users all WITHIN AWS, need FULL AD features" → AWS Managed Microsoft AD. "users all WITHIN AWS, need BASIC AD features" → Simple AD. "users on-premises, authenticate to Cloud Native apps using existing on-prem directory" → AD Connector. "users are external (Facebook/Google), no AD needed" → Cognito User Pools (bukan Directory Service)',
             ],
             keywords: ['Active Directory', 'Managed Microsoft AD', 'AD Connector', 'Simple AD', 'LDAP', 'Kerberos', 'Group Policy', 'on-premises AD'],
           },
@@ -174,6 +175,9 @@ export const domains: DomainData[] = [
             gunaUntuk: 'User sign-up/sign-in, federated identity (Google/Facebook), mobile app auth',
             fungsi: 'User auth untuk web/mobile apps. User Pools (authentication) vs Identity Pools (AWS credentials).',
             scenario: '"Web app perlu user registration dan login" → Cognito User Pools. "Mobile app user perlu access S3 directly" → Identity Pool untuk temp AWS credentials.',
+            tips: [
+              'Cognito User Pools support federated identity — users TAK PERLU di-create dalam AWS, boleh authenticate guna external IdPs (Facebook, Google, etc.)',
+            ],
             keywords: ['User Pools', 'Identity Pools', 'OAuth', 'JWT', 'federated identity', 'MFA'],
           },
           {
@@ -302,8 +306,10 @@ export const domains: DomainData[] = [
             tips: [
               'GuardDuty → detect threats (SIEM-like). Detective → investigate findings (forensics). Ingat: GD = detect, Detective = investigate',
               'GuardDuty findings integrate dengan Security Hub untuk centralized view',
+              'Foundational threat detection (CloudTrail MANAGEMENT events) ON by default bila GuardDuty enabled — TAK boleh disable. ListBuckets/DeleteBucket = management events, bukan data events',
+              'S3 Protection (optional, enable berasingan): monitor CloudTrail DATA events untuk S3 — object-level ops (GetObject, PutObject, DeleteObject, ListObjects) untuk detect data exfiltration/destruction. Tak perlu manually configure S3 data event logging dalam CloudTrail',
             ],
-            keywords: ['threat detection', 'ML', 'CloudTrail logs', 'VPC Flow Logs', 'no agents', 'findings'],
+            keywords: ['threat detection', 'ML', 'CloudTrail logs', 'VPC Flow Logs', 'no agents', 'findings', 'S3 Protection', 'management events', 'data events', 'object-level API'],
           },
           {
             shortName: 'Detective',
