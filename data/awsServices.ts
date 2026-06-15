@@ -906,6 +906,7 @@ export const domains: DomainData[] = [
               'Default quota: 20 GSI dan 5 LSI per table. Partition key jugak dipanggil "hash attribute", sort key dipanggil "range attribute" — istilah ni kadang muncul dalam exam wording',
               'DynamoDB Streams: setiap stream record (INSERT/MODIFY/REMOVE) kekal 24 jam je sebelum auto-removed — kalau Lambda trigger gagal proses dalam masa tu, data tu lost',
               'Item boleh ada NESTED attributes (JSON-like, e.g. Address dalam satu item) sampai 32 levels deep — DynamoDB schemaless except primary key',
+              'Primary key attribute (partition key / sort key) MESTI scalar — String, Number, atau Binary sahaja. Tak boleh guna List, Map, atau Set sebagai primary key',
             ],
             docs: [
               { label: 'Improving data access with secondary indexes', url: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SecondaryIndexes.html' },
