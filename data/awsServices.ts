@@ -1875,11 +1875,11 @@ export const domains: DomainData[] = [
           },
           {
             shortName: 'AWS AI/ML Services',
-            fullName: 'AWS AI Services — Polly, Rekognition, Lex, Comprehend, Textract, Transcribe',
-            ingat: '"Polly = cakap. Transcribe = dengar. Lex = faham + balas. Rekognition = nampak. Comprehend = baca. Textract = scan dokumen"',
+            fullName: 'AWS AI Services — Polly, Rekognition, Lex, Comprehend, Textract, Transcribe, Translate',
+            ingat: '"Polly = cakap. Transcribe = dengar. Lex = faham + balas. Rekognition = nampak. Comprehend = baca. Textract = scan dokumen. Translate = tukar bahasa"',
             gunaUntuk: 'AI/ML services untuk audio, video, text, image analysis without training models',
             fungsi: 'AWS menyediakan pelbagai AI services ready-to-use: speech, vision, NLP, document processing.',
-            storageDetails: 'Amazon Polly → Text-to-Speech (TTS): convert text jadi audio (natural voice)\nAmazon Transcribe → Speech-to-Text (STT): convert audio/video jadi text\nAmazon Lex → Conversational chatbot: NLU + ASR, maintains context, integrates Lambda (powers Alexa)\nAmazon Rekognition → Image/Video analysis: face detection, object/scene detection, labels\nAmazon Comprehend → NLP: sentiment analysis, entities, key phrases, language detection\nAmazon Textract → Document OCR: extract text, forms, tables from PDFs/images\nKinesis Video Streams → Ingest, store, process video/audio streams (for Rekognition real-time analysis)',
+            storageDetails: 'Amazon Polly → Text-to-Speech (TTS): convert text jadi audio (natural voice)\nAmazon Transcribe → Speech-to-Text (STT): convert audio/video jadi text\nAmazon Lex → Conversational chatbot: NLU + ASR, maintains context, integrates Lambda (powers Alexa)\nAmazon Rekognition → Image/Video analysis: face detection, object/scene detection, labels\nAmazon Comprehend → NLP: sentiment analysis, entities, key phrases, language detection\nAmazon Textract → Document OCR: extract text, forms, tables from PDFs/images\nAmazon Translate → Neural machine translation: convert text between languages, real-time + batch\nKinesis Video Streams → Ingest, store, process video/audio streams (for Rekognition real-time analysis)',
             detailsLabel: 'AI Services Comparison',
             tips: [
               'Polly = text → speech. Transcribe = speech → text. INGAT: P=produce speech, T=transcribe speech',
@@ -1895,8 +1895,10 @@ export const domains: DomainData[] = [
               'Textract = EXTRACT structured data from scanned documents. Key-value pairs from forms, data from tables, dates and amounts from invoices/contracts. Goes beyond basic OCR.',
               'Lex = CONVERSATIONAL chatbot with multi-turn dialogue, intent recognition, slot filling. Powers Amazon Alexa. Manages conversation state.',
               'Enterprise search across PDFs/Word/email with natural language? → Amazon Kendra (see Kendra card). Product search with spell-check/synonyms? → OpenSearch.',
+              'Translate = neural machine translation (text → text, different language). NOT speech (combine with Transcribe/Polly for audio) dan NOT sentiment analysis (use Comprehend)',
+              '"Multilingual chatbot/support ticket pipeline": Transcribe (speech→text) → Translate (translate text) → Comprehend (analyze sentiment) → Polly (text→speech in target language)',
             ],
-            keywords: ['Polly', 'Transcribe', 'Lex', 'Rekognition', 'Comprehend', 'Textract', 'Kinesis Video Streams', 'text-to-speech', 'speech-to-text', 'chatbot', 'image analysis', 'StartSpeechSynthesisTask', 'audiobook', 'OCR', 'NLP', 'sentiment analysis', 'entity recognition', 'document extraction'],
+            keywords: ['Polly', 'Transcribe', 'Lex', 'Rekognition', 'Comprehend', 'Textract', 'Translate', 'Kinesis Video Streams', 'text-to-speech', 'speech-to-text', 'chatbot', 'image analysis', 'StartSpeechSynthesisTask', 'audiobook', 'OCR', 'NLP', 'sentiment analysis', 'entity recognition', 'document extraction', 'machine translation'],
           },
           {
             shortName: 'SageMaker',
