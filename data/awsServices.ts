@@ -853,6 +853,7 @@ export const domains: DomainData[] = [
               'Aurora = 6 copies across 3 AZs auto. RDS Multi-AZ = 1 standby copy sahaja',
               'Aurora failover <30 saat. RDS Multi-AZ failover 1-2 minit',
               'Aurora storage auto-grow hingga 256 TiB — zero storage management',
+              'Storage scaling: start 10 GiB, auto-grow dalam 10 GiB increments hingga max (128-256 TiB ikut engine version) — ni SAMA untuk Aurora provisioned dan Aurora Serverless. Jangan keliru dengan Serverless v2 COMPUTE capacity range (0.5-256 ACU)',
               'Aurora Global Database: primary region + up to 5 read-only secondary regions',
               'Aurora Global Database RTO: < 1 minit (automatic managed failover). RPO: ~1 saat (replication lag)',
               'Aurora Global Database failover: secondary region promote jadi primary automatically bila primary region down — minimal manual effort',
