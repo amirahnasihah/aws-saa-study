@@ -149,8 +149,13 @@ export const domains: DomainData[] = [
               'SAML 2.0 IAM roles alone (tanpa Identity Center) = tak ada SSO portal, tak integrate SaaS apps',
               'Web identity federation = untuk PUBLIC providers (Google, Amazon, Facebook) — bukan enterprise AD',
               'Exam: "on-premises AD + SSO to AWS + SaaS apps" → IAM Identity Center with SAML 2.0',
+              'IAM Identity Center features: (1) Multi-account access — centralized access ke multiple AWS accounts dalam Organization, elak repeat config Users per account. (2) SSO ke AWS applications — satu login, tak payah ingat password berasingan. (3) SSO ke Cloud-based/SaaS apps (Salesforce, Microsoft 365) via SAML 2.0. (4) SSO ke EC2 — TAPI khusus untuk EC2 WINDOWS instances (via Fleet Manager, guna existing corporate credentials, elak share admin RDP credentials) — BUKAN Linux',
             ],
-            keywords: ['SSO', 'single sign-on', 'multiple accounts', 'federation', 'SAML 2.0', 'Active Directory', 'SaaS integration'],
+            docs: [
+              { label: 'IAM Identity Center Features', url: 'https://aws.amazon.com/iam/identity-center/features/' },
+              { label: 'Seamless SSO to EC2 Windows instances', url: 'https://aws.amazon.com/blogs/security/how-to-enable-secure-seamless-single-sign-on-to-amazon-ec2-windows-instances-with-aws-sso/' },
+            ],
+            keywords: ['SSO', 'single sign-on', 'multiple accounts', 'federation', 'SAML 2.0', 'Active Directory', 'SaaS integration', 'EC2 Windows', 'Fleet Manager'],
           },
           {
             shortName: 'Penetration Testing',
