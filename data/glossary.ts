@@ -10,7 +10,7 @@ export const glossaryCategories: Record<string, string[]> = {
   'Containers':         ['awsvpc','ENI','bridge','host'],
   'Messaging':          ['SQS Long Polling','SQS Short Polling','Visibility Timeout','SQS FIFO','Dead Letter Queue','SNS fan-out','Step Functions','API Gateway throttling','API caching','Lambda authorizer','Usage Plan'],
   'CloudFront':         ['OAC','OAI'],
-  'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly','Amazon Translate','Amazon Transcribe'],
+  'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly','Amazon Translate','Amazon Transcribe','Amazon Bedrock'],
   'Analytics':          ['Amazon MSK','Amazon OpenSearch Service','AWS Data Exchange','Amazon Kinesis Data Streams','AWS Glue'],
   'Management & Gov':   ['AWS Organizations','SCP','Amazon CloudWatch','AWS CloudTrail','AWS Config','AWS CloudFormation','StackSets','AWS Trusted Advisor','AWS Compute Optimizer','AWS Control Tower'],
   'Cost Management':    ['AWS Cost Explorer','AWS Budgets','Cost and Usage Report','Cost Allocation Tags'],
@@ -228,6 +228,7 @@ export const glossary: Record<string, string> = {
   'Amazon Polly': 'Text-to-speech service: converts written text to lifelike audio. Supports multiple voices and languages. NOT for chatbots (use Lex) or text analysis (use Comprehend).',
   'Amazon Translate': 'Neural machine translation service: converts text between languages (e.g. English ↔ Japanese). Real-time and batch. NOT speech (pair with Transcribe for audio→text→translate) or sentiment (use Comprehend).',
   'Amazon Transcribe': 'Automatic speech recognition (ASR): converts audio/video speech to text. Speaker identification, custom vocabulary, call-centre analytics. NOT text-to-speech (use Polly) or translation (use Translate).',
+  'Amazon Bedrock': 'Fully managed service for building generative AI apps using foundation models (FMs) from Amazon and third parties (Anthropic, Meta, etc.) via a single API. Supports fine-tuning and RAG (Knowledge Bases) without managing infrastructure. NOT for training models from scratch (use SageMaker).',
 
   // Analytics
   'Amazon MSK': 'Managed Streaming for Apache Kafka — fully managed Kafka cluster on AWS. Handles broker provisioning, patching, storage scaling. NO SSH to brokers. Lambda integration requires Event Source Mapping. MSK Serverless auto-scales capacity.',
