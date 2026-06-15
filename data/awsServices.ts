@@ -903,12 +903,16 @@ export const domains: DomainData[] = [
               'LSI (Local Secondary Index): SAME partition key as base table, alternate SORT key. Mesti dicipta SEMASA create table. Limit 10GB per partition key value — limit ni applies kat ITEM COLLECTION (base table item + semua LSI items utk partition key tu)',
               'GSI (Global Secondary Index): DIFFERENT partition key AND/OR sort key dari base table. Boleh dicipta/delete BILA-BILA masa. Ada own provisioned throughput (RCU/WCU) berasingan dari base table.',
               'Exam shortcut: "alternate query pattern, create anytime, own capacity" → GSI. "Alternate sort order, same partition key, must define at table creation" → LSI',
+              'Default quota: 20 GSI dan 5 LSI per table. Partition key jugak dipanggil "hash attribute", sort key dipanggil "range attribute" — istilah ni kadang muncul dalam exam wording',
+              'DynamoDB Streams: setiap stream record (INSERT/MODIFY/REMOVE) kekal 24 jam je sebelum auto-removed — kalau Lambda trigger gagal proses dalam masa tu, data tu lost',
+              'Item boleh ada NESTED attributes (JSON-like, e.g. Address dalam satu item) sampai 32 levels deep — DynamoDB schemaless except primary key',
             ],
             docs: [
               { label: 'Improving data access with secondary indexes', url: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SecondaryIndexes.html' },
               { label: 'Partitions and data distribution', url: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.Partitions.html' },
+              { label: 'Core components of Amazon DynamoDB', url: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/HowItWorks.CoreComponents.html' },
             ],
-            keywords: ['NoSQL', 'key-value', 'serverless', 'millisecond latency', 'DAX', 'Global Tables', 'streams', 'auto-scale', 'partition key', 'LSI', 'GSI', 'secondary index', 'provisioned', 'on-demand', 'hot partition', 'item collection'],
+            keywords: ['NoSQL', 'key-value', 'serverless', 'millisecond latency', 'DAX', 'Global Tables', 'streams', 'auto-scale', 'partition key', 'LSI', 'GSI', 'secondary index', 'provisioned', 'on-demand', 'hot partition', 'item collection', 'hash attribute', 'range attribute', 'nested attributes'],
           },
           {
             shortName: 'DAX',
