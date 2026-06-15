@@ -385,6 +385,8 @@ export const domains: DomainData[] = [
               'For digital signing (only sender signs): Asymmetric. For transparent encrypt+decrypt (no own/manage): Symmetric AWS managed key',
               'Multi-Region KMS keys: replicated across regions, same key material — elak cross-region API calls, reduce latency untuk global apps',
               'KMS key policy + VPC endpoint: guna condition "aws:SourceVpce" (endpoint ID) bukan "aws:SourceVpc" (VPC ID) untuk least-privilege',
+              '3 jenis KMS key: (1) AWS Owned keys — fully managed by AWS, free, tak boleh view/manage/audit langsung. (2) AWS Managed keys (aws/service-name) — dalam account anda tapi RESTRICTED kepada satu service, rotation automatic (anual), TAK boleh customize policy/rotation. (3) Customer Managed Keys (CMK) — FULL control: custom key policy, manual/auto rotation, enable/disable, audit penuh dalam CloudTrail',
+              'Exam trick: "comprehensive lifecycle management, key rotation, auditing & access control" = ciri CUSTOMER Managed Key (CMK), BUKAN AWS Managed Key — AWS Managed Key tak boleh di-customize oleh user',
             ],
             keywords: ['encryption at rest', 'CMK', 'key rotation', 'SSE-KMS', 'envelope encryption', 'CloudTrail audit', 'asymmetric keys', 'digital signing', 'multi-region keys', 'aws:SourceVpce'],
           },
