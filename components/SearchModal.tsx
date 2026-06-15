@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { domains, categoryStyles, ColorCategory } from '@/data/awsServices'
+import { domains, categoryStyles, ColorCategory, serviceSlug } from '@/data/awsServices'
 
 interface SearchResult {
   shortName: string
@@ -10,7 +10,7 @@ interface SearchResult {
   ingat: string
   domainBadge: string
   domainVariant: string
-  sectionId: string
+  slug: string
   sectionTitle: string
   sectionIcon: string
   category: ColorCategory
@@ -25,7 +25,7 @@ const searchIndex: SearchResult[] = domains.flatMap((domain) =>
       ingat: service.ingat,
       domainBadge: domain.badge.split('·')[0].trim(),
       domainVariant: domain.variant,
-      sectionId: section.id,
+      slug: serviceSlug(section.id, service.shortName),
       sectionTitle: section.title,
       sectionIcon: section.icon,
       category: section.category,
@@ -74,15 +74,15 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     onClose()
     setQuery('')
 
-    // Section anchors only exist on the cheatsheet (/) and Deep Notes (/learn).
+    // Per-service anchors only exist on the cheatsheet (/) and Deep Notes (/learn).
     // From any other page, route to Deep Notes so the anchor actually resolves.
     if (pathname !== '/' && pathname !== '/learn') {
-      router.push(`/learn#${result.sectionId}`)
+      router.push(`/learn#${result.slug}`)
       return
     }
 
     setTimeout(() => {
-      const el = document.getElementById(result.sectionId)
+      const el = document.getElementById(result.slug)
       el?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }, 120)
   }, [onClose, pathname, router])

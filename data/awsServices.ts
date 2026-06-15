@@ -20,6 +20,11 @@ export type ColorCategory =
   | 'd3analytics'
   | 'tools'
 
+// Prefixed with sectionId because some services (e.g. Penetration Testing, CloudFront)
+// appear in more than one section — a bare name slug would collide.
+export const serviceSlug = (sectionId: string, shortName: string): string =>
+  `${sectionId}-${shortName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`
+
 export interface ServiceCard {
   shortName: string
   fullName: string
