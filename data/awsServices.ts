@@ -100,7 +100,11 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Control who can access what AWS resources',
             fungsi: 'Mengurus identiti dan akses kepada perkhidmatan dan sumber AWS dengan policies',
             contohGuna: 'Create IAM Role untuk EC2 boleh read S3 — attach role ke EC2, bukan hardcode credentials dalam code',
-            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA'],
+            tips: [
+              'IAM features: Principals (Users/Groups/Roles), Policies (Allow/Deny permissions), MFA, Identity Federation (external users access AWS resources)',
+              'Exam: "Which is NOT a feature of IAM?" → "IAM Resource" is the trick option — IAM controls access TO resources, "IAM Resource" itself is not a feature',
+            ],
+            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation'],
           },
           {
             shortName: 'STS',
