@@ -15,7 +15,7 @@ export const glossaryCategories: Record<string, string[]> = {
   'Management & Gov':   ['AWS Organizations','SCP','Amazon CloudWatch','AWS CloudTrail','AWS Config','AWS CloudFormation','StackSets','AWS Trusted Advisor','AWS Compute Optimizer','AWS Control Tower'],
   'Cost Management':    ['AWS Cost Explorer','AWS Budgets','Cost and Usage Report','Cost Allocation Tags'],
   'Architecture':       ['stateful','stateless','Elastic IP','Backup and Restore','Pilot Light','Warm Standby','Active/Active','IaC','Blue/Green deployment','Canary deployment','Fan-out','Event-driven','Idempotency','Elasticity','Fault tolerance','Shared Responsibility Model','Serverless','Microservices','Containerization'],
-  'IAM & Policies':     ['ARN','Principal','Identity-based policy','Resource-based policy','Permissions boundary','Managed policy','Inline policy','Trust policy','OU','Permission denied','ABAC','NotPrincipal'],
+  'IAM & Policies':     ['ARN','Principal','Identity-based policy','Resource-based policy','Permissions boundary','Managed policy','Inline policy','Trust policy','OU (Organizational Unit)','Permission denied','ABAC','NotPrincipal'],
   'Load Balancers':     ['ALB','NLB','CLB','Target Group'],
   'S3 Features':        ['Pre-signed URL','S3 Versioning','S3 Lifecycle Policy','S3 Transfer Acceleration','SRR','delete marker','noncurrent versions','CORS'],
   'HPC / Batch':        ['PBS','Slurm','LSF'],
@@ -290,7 +290,7 @@ export const glossary: Record<string, string> = {
   'Managed policy': 'Standalone IAM policy that can be attached to multiple users, groups, or roles. AWS managed = created by AWS (e.g. AdministratorAccess). Customer managed = created by you. Easier to reuse and update than inline.',
   'Inline policy': 'IAM policy embedded directly into one specific user, group, or role. Not reusable. Deleted when the entity is deleted. Use sparingly — managed policies are preferred for maintainability.',
   'Trust policy': 'Resource-based policy on an IAM role that defines which principals (services, accounts, users) can ASSUME the role. Every role has exactly one trust policy. Example: allow EC2 service to assume the role.',
-  'OU': 'Organizational Unit — a container for AWS accounts within AWS Organizations. SCPs can be applied to OUs to restrict all accounts within. OUs can be nested. Management account is at the root.',
+  'OU (Organizational Unit)': 'Organizational Unit — a container for AWS accounts within AWS Organizations. SCPs can be applied to OUs to restrict all accounts within. OUs can be nested. Management account is at the root.',
   'Permission denied': 'When IAM evaluation results in Deny. Explicit Deny always overrides Allow. A missing Allow = implicit Deny. Order: explicit Deny → SCP limit → permissions boundary → resource policy → identity policy.',
 
   // Networking (batch2)

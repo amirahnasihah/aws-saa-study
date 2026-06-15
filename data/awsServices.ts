@@ -102,6 +102,7 @@ export const domains: DomainData[] = [
             contohGuna: 'Create IAM Role untuk EC2 boleh read S3 — attach role ke EC2, bukan hardcode credentials dalam code',
             tips: [
               'IAM Principals: entity yang boleh buat request kat AWS — Users (individu), Groups (kumpulan users), atau Roles (identity sementara yang boleh di-assume)',
+              'Users & Groups = permanent identities — perlu credentials (password untuk console, access keys untuk CLI) untuk login. Roles = temporary identities — bagi short-lived credentials yang di-assume oleh Users/Applications, tak perlu hardcode long-term credentials',
               'IAM Policy: JSON document yang define Allow/Deny untuk action tertentu pada resource tertentu — attach kat User/Group/Role',
               'Multi-Factor Authentication (MFA): extra layer security — selain password, perlu code dari device (app/hardware token) untuk login',
               'Identity Federation: user luar AWS (corporate AD, Google, Facebook) dapat temporary access AWS resources tanpa IAM user baru — guna SAML/OIDC/STS',
