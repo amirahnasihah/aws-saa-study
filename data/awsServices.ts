@@ -876,6 +876,8 @@ export const domains: DomainData[] = [
               'v2 (current): fine-grained scaling 0.5 ACU increments dalam fractions of seconds, NO connection drops, boleh dicampur dengan provisioned Aurora instances dalam cluster yang sama',
               'v2 sokong lebih banyak feature: Global Database, Multi-AZ, Read Replicas — v1 lebih limited',
               'Exam: kalau soalan sebut "instant scaling without dropping connections" atau "mix serverless + provisioned instances" → Aurora Serverless v2',
+              'Setup: pilih DB instance class "Serverless v2", set capacity range 0–256 ACU dalam increments 0.5 ACU (limit sebenar ikut engine/version)',
+              'Set minimum capacity = 0 ACU → enable auto-pause/resume (database pause sepenuhnya bila tiada connections, resume automatik bila ada request baru)',
             ],
             docs: [
               { label: 'Using Aurora serverless (v2)', url: 'https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.html' },
