@@ -107,6 +107,7 @@ export const domains: DomainData[] = [
               'Multi-Factor Authentication (MFA): extra layer security — selain password, perlu code dari device (app/hardware token) untuk login',
               'Account best practices: (1) JANGAN guna ROOT user untuk daily tasks — ROOT hanya untuk tasks yang memang require ROOT (billing, close account, dll). (2) Create Administrative User untuk daily admin tasks. (3) Enable MFA untuk ROOT & semua Users. (4) Add Users ke Groups, assign permissions kat Group — bukan standalone kat User',
               'Identity Federation: user luar AWS (corporate AD, Google, Facebook) dapat temporary access AWS resources tanpa IAM user baru — guna SAML/OIDC/STS',
+              'Policy evaluation logic: (1) Bila User baru created, semua request implicitly DENIED by default (kecuali ROOT). (2) Explicit Allow dalam Identity-based atau Resource-based Policy overrides implicit Deny tu. (3) Tapi explicit Deny SENTIASA override explicit Allow — Allow + Deny dalam policy = DENIED. (4) Permission Boundary, SCP, atau Session Policy boleh override (restrict) Allow dengan implicit Deny mereka sendiri — even kalau IAM Policy bagi Allow',
               'Exam: "Which is NOT a feature of IAM?" → "IAM Resource" is the trick option. Resource = target YANG DIKAWAL aksesnya oleh IAM (cth: S3 bucket, EC2), bukan komponen/feature IAM itu sendiri',
             ],
             keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation'],
