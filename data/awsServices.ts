@@ -105,6 +105,7 @@ export const domains: DomainData[] = [
               'Users & Groups = permanent identities — perlu credentials (password untuk console, access keys untuk CLI) untuk login. Roles = temporary identities — bagi short-lived credentials yang di-assume oleh Users/Applications, tak perlu hardcode long-term credentials',
               'IAM Policy: JSON document yang define Allow/Deny untuk action tertentu pada resource tertentu — attach kat User/Group/Role',
               'Multi-Factor Authentication (MFA): extra layer security — selain password, perlu code dari device (app/hardware token) untuk login',
+              'Account best practices: (1) JANGAN guna ROOT user untuk daily tasks — ROOT hanya untuk tasks yang memang require ROOT (billing, close account, dll). (2) Create Administrative User untuk daily admin tasks. (3) Enable MFA untuk ROOT & semua Users. (4) Add Users ke Groups, assign permissions kat Group — bukan standalone kat User',
               'Identity Federation: user luar AWS (corporate AD, Google, Facebook) dapat temporary access AWS resources tanpa IAM user baru — guna SAML/OIDC/STS',
               'Exam: "Which is NOT a feature of IAM?" → "IAM Resource" is the trick option. Resource = target YANG DIKAWAL aksesnya oleh IAM (cth: S3 bucket, EC2), bukan komponen/feature IAM itu sendiri',
             ],
