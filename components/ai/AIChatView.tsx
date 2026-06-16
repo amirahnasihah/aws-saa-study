@@ -8,6 +8,7 @@ import { byokProviderLabel, isByokProvider, needsByokKey } from '@/lib/ai/provid
 import AISourceLinks from '@/components/ai/AISourceLinks'
 import CopyButton from '@/components/ai/CopyButton'
 import BookmarkAnswerButton from '@/components/ai/BookmarkAnswerButton'
+import ChatMarkdown from '@/components/ai/ChatMarkdown'
 import { chatToMarkdown, downloadTextFile, exportFilenames } from '@/lib/export'
 import type { ChatResponse } from '@/lib/ai/types'
 
@@ -162,8 +163,8 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
               </div>
             ) : (
               <div className="max-w-[92%] space-y-2">
-                <div className="px-3.5 py-2.5 rounded-2xl rounded-tl-sm bg-aws-card border border-aws-border/60 text-[0.82rem] text-aws-text leading-[1.8]">
-                  {msg.content}
+                <div className="px-3.5 py-2.5 rounded-2xl rounded-tl-sm bg-aws-card border border-aws-border/60">
+                  <ChatMarkdown content={msg.content} />
                 </div>
                 {msg.awsDocsUrl && msg.youtubeQuery && (
                   <AISourceLinks
