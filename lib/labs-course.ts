@@ -1,69 +1,79 @@
-import type { CourseLabEntry } from '@/data/labsCourseOrder'
+import { labsCourseOrder, type CourseLabEntry } from '@/data/labsCourseOrder'
+import type { LabRowItem } from '@/lib/labs-list-item'
 import type { Lab } from '@/lib/labs'
 
-export type LabListItem = CourseLabEntry & {
-  lab: Lab
-}
-
-export type LabSection = {
+export type LabDomainSection = {
   category: string
-  items: LabListItem[]
+  items: LabRowItem[]
 }
 
-const matchesQuery = (item: LabListItem, query: string): boolean => {
+export const labDomainCategories = [...new Set(labsCourseOrder.map((entry) => entry.category))]
+
+const shortCategoryLabel = (category: string): string => {
+  const labels: Record<string, string> = {
+    '1. Domain 1: Design Secure Architectures': 'Domain 1 · Secure',
+    '2. Domain 2: Design Resilient Architectures': 'Domain 2 · Resilient',
+    '3. Domain 3: Design High-Performing Architectures': 'Domain 3 · Performance',
+    '4. Domain 4: Design Cost-Optimized Architectures': 'Domain 4 · Cost',
+    '5. Challenges': 'Challenges',
+    '6. Projects': 'Projects',
+  }
+  return labels[category] ?? category
+}
+
+export const labDomainTabs = labDomainCategories.map((category) => ({
+  id: category,
+  label: shortCategoryLabel(category),
+  count: labsCourseOrder.filter((entry) => entry.category === category).length,
+}))
+
+const matchesQuery = (item: LabRowItem, query: string): boolean => {
   const q = query.trim().toLowerCase()
   if (!q) return true
   const haystack = [
     item.title,
-    item.category,
-    item.lab.level,
-    item.lab.summary,
-    ...item.lab.services,
+    item.lab?.level ?? '',
+    item.lab?.summary ?? '',
+    ...(item.lab?.services ?? []),
   ]
     .join(' ')
     .toLowerCase()
   return haystack.includes(q)
 }
 
-export const buildLabSections = (
-  courseOrder: CourseLabEntry[],
+const toRowItem = (entry: CourseLabEntry, lab: Lab | null): LabRowItem => ({
+  index: entry.index,
+  title: entry.title,
+  slug: entry.slug,
+  duration: entry.duration,
+  lab,
+  available: Boolean(lab),
+  source: 'course',
+  subtitle: lab ? undefined : 'Not imported yet',
+})
+
+export const buildLabDomainSection = (
   labs: Lab[],
   query: string,
-): LabSection[] => {
+  activeCategory: string,
+): LabDomainSection | null => {
   const bySlug = new Map(labs.map((lab) => [lab.slug, lab]))
-  const sectionOrder: string[] = []
-  const buckets = new Map<string, LabListItem[]>()
 
-  courseOrder.forEach((entry) => {
-    const lab = bySlug.get(entry.slug)
-    if (!lab) return
-    const item: LabListItem = { ...entry, lab }
-    if (!matchesQuery(item, query)) return
-    if (!buckets.has(entry.category)) {
-      buckets.set(entry.category, [])
-      sectionOrder.push(entry.category)
-    }
-    buckets.get(entry.category)?.push(item)
-  })
+  const items = labsCourseOrder
+    .filter((entry) => entry.category === activeCategory)
+    .map((entry) => toRowItem(entry, bySlug.get(entry.slug) ?? null))
+    .filter((item) => matchesQuery(item, query))
 
-  return sectionOrder
-    .map((category) => ({
-      category,
-      items: buckets.get(category) ?? [],
-    }))
-    .filter((section) => section.items.length > 0)
+  if (items.length === 0) return null
+
+  return {
+    category: activeCategory,
+    items,
+  }
 }
 
-export const countVisibleLabs = (sections: LabSection[]): number =>
-  sections.reduce((sum, section) => sum + section.items.length, 0)
+export const countDomainLabsWithLocalPage = (labs: Lab[]): number =>
+  labsCourseOrder.filter((entry) => labs.some((lab) => lab.slug === entry.slug)).length
 
-export const formatLabDuration = (courseDuration: string, labDuration: string): string => {
-  if (courseDuration.trim()) return courseDuration
-  const hhmm = labDuration.match(/^(\d{2}):(\d{2})/)
-  if (!hhmm) return labDuration
-  const hours = Number(hhmm[1])
-  const mins = Number(hhmm[2])
-  if (hours === 0) return `${mins}m`
-  if (mins === 0) return `${hours}h`
-  return `${hours}h ${mins}m`
-}
+export const countVisibleLabs = (section: LabDomainSection | null): number =>
+  section?.items.length ?? 0

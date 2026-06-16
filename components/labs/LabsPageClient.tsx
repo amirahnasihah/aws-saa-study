@@ -4,18 +4,25 @@ import { useEffect, useMemo, useState } from 'react'
 import SiteFooter from '@/components/SiteFooter'
 import LabListRow from '@/components/labs/LabListRow'
 import {
-  buildLabTopicSections,
+  buildChecklistLabSection,
+  checklistSections,
+  countChecklistLabsWithLocalPage,
+} from '@/lib/labs-checklist'
+import { labsChecklistTotal } from '@/data/labsChecklistOrder'
+import {
+  buildLabDomainSection,
+  countDomainLabsWithLocalPage,
   countVisibleLabs,
-  labTopics,
-  labsCourseTotal,
-  labsTopicTotal,
-  type LabTopicId,
-} from '@/lib/labs-topics'
-import { labsTopicOrder } from '@/data/labsTopicOrder'
+  labDomainTabs,
+} from '@/lib/labs-course'
+import { labsCourseTotal } from '@/data/labsCourseOrder'
 import { allLabsFallback } from '@/lib/labs-fallback'
+import type { ChecklistSectionId } from '@/data/labsChecklistOrder'
 import type { Lab } from '@/lib/labs'
 
-const topicTabClass = (active: boolean) =>
+type LabsView = 'domain' | 'checklist'
+
+const tabClass = (active: boolean) =>
   [
     'shrink-0 font-space-mono text-[0.62rem] sm:text-[0.65rem] px-3 py-1.5 rounded-full border transition-colors',
     active
@@ -23,10 +30,20 @@ const topicTabClass = (active: boolean) =>
       : 'border-aws-border text-aws-muted hover:text-aws-text hover:border-aws-border/80',
   ].join(' ')
 
+const viewToggleClass = (active: boolean) =>
+  [
+    'font-space-mono text-[0.68rem] sm:text-[0.72rem] px-3.5 py-2 rounded-lg border transition-colors',
+    active
+      ? 'bg-aws-card border-c1/40 text-c1'
+      : 'border-aws-border text-aws-muted hover:text-aws-text',
+  ].join(' ')
+
 export default function LabsPageClient() {
   const [labs, setLabs] = useState<Lab[]>(allLabsFallback())
   const [query, setQuery] = useState('')
-  const [activeTopicId, setActiveTopicId] = useState<LabTopicId>('compute')
+  const [view, setView] = useState<LabsView>('domain')
+  const [activeDomainCategory, setActiveDomainCategory] = useState(labDomainTabs[0]?.id ?? '')
+  const [activeChecklistSection, setActiveChecklistSection] = useState<ChecklistSectionId>('compute')
 
   useEffect(() => {
     fetch('/api/labs')
@@ -39,28 +56,47 @@ export default function LabsPageClient() {
       .catch(() => setLabs(allLabsFallback()))
   }, [])
 
-  const sections = useMemo(
-    () => buildLabTopicSections(labs, query, activeTopicId),
-    [labs, query, activeTopicId],
+  const domainSection = useMemo(
+    () => buildLabDomainSection(labs, query, activeDomainCategory),
+    [labs, query, activeDomainCategory],
   )
 
-  const visibleCount = countVisibleLabs(sections)
-  const courseAvailableTotal = useMemo(
-    () => labsTopicOrder.filter(
-      (entry) => entry.source === 'course' && entry.slug && labs.some((lab) => lab.slug === entry.slug),
-    ).length,
-    [labs],
+  const checklistSection = useMemo(
+    () => buildChecklistLabSection(labs, query, activeChecklistSection),
+    [labs, query, activeChecklistSection],
   )
+
+  const domainAvailableTotal = useMemo(() => countDomainLabsWithLocalPage(labs), [labs])
+  const checklistAvailableTotal = useMemo(() => countChecklistLabsWithLocalPage(labs), [labs])
   const trimmedQuery = query.trim()
-  const activeItems = sections[0]?.items ?? []
 
-  const tabsWithCounts = useMemo(
-    () => labTopics.map((topic) => ({
-      ...topic,
-      count: buildLabTopicSections(labs, query, topic.id)[0]?.items.length ?? 0,
-    })).filter((t) => t.count > 0),
+  const domainTabsWithCounts = useMemo(
+    () => labDomainTabs.map((tab) => ({
+      ...tab,
+      count: buildLabDomainSection(labs, query, tab.id)?.items.length ?? 0,
+    })).filter((tab) => tab.count > 0),
     [labs, query],
   )
+
+  const checklistTabsWithCounts = useMemo(
+    () => checklistSections.map((section) => ({
+      ...section,
+      count: buildChecklistLabSection(labs, query, section.id)?.items.length ?? 0,
+    })).filter((section) => section.count > 0),
+    [labs, query],
+  )
+
+  const activeSection = view === 'domain' ? domainSection : checklistSection
+  const activeItems = activeSection?.items ?? []
+  const visibleCount = view === 'domain'
+    ? countVisibleLabs(domainSection)
+    : activeItems.length
+
+  const sectionTitle = view === 'domain'
+    ? labDomainTabs.find((tab) => tab.id === activeDomainCategory)?.label ?? 'Domain'
+    : checklistSections.find((section) => section.id === activeChecklistSection)?.label ?? 'Checklist'
+
+  const subTabs = view === 'domain' ? domainTabsWithCounts : checklistTabsWithCounts
 
   return (
     <main id="top" className="max-w-[920px] mx-auto px-5 sm:px-6 md:px-8 pt-20 pb-20 md:pb-16">
@@ -72,32 +108,73 @@ export default function LabsPageClient() {
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-aws-text">Hands-on Labs</h1>
             <p className="font-space-mono text-[0.72rem] text-aws-muted mt-1.5">
-              {labsCourseTotal} course labs · {labsTopicTotal - labsCourseTotal} video labs · topic order
+              {view === 'domain'
+                ? `${labsCourseTotal} Whizlabs course labs · exam domain order`
+                : `${labsChecklistTotal} video course labs · STUDY-CHECKLIST section order`}
             </p>
           </div>
           <span className="self-start font-space-mono text-[0.62rem] text-aws-muted bg-aws-card border border-aws-border px-2.5 py-1 rounded-full">
-            {courseAvailableTotal}/{labsCourseTotal} course · {visibleCount} shown
+            {view === 'domain'
+              ? `${domainAvailableTotal}/${labsCourseTotal} imported · ${visibleCount} shown`
+              : `${checklistAvailableTotal}/${labsChecklistTotal} imported · ${visibleCount} shown`}
           </span>
+        </div>
+
+        <div
+          className="flex gap-2 mb-5"
+          role="tablist"
+          aria-label="Labs list view"
+        >
+          <button
+            type="button"
+            role="tab"
+            aria-selected={view === 'domain'}
+            onClick={() => setView('domain')}
+            className={viewToggleClass(view === 'domain')}
+          >
+            Domain based ({labsCourseTotal})
+          </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={view === 'checklist'}
+            onClick={() => setView('checklist')}
+            className={viewToggleClass(view === 'checklist')}
+          >
+            Study checklist ({labsChecklistTotal})
+          </button>
         </div>
 
         <div
           className="flex gap-2 overflow-x-auto pb-2 mb-5 -mx-1 px-1 scrollbar-thin"
           role="tablist"
-          aria-label="Lab topics"
+          aria-label={view === 'domain' ? 'Exam domains' : 'Checklist sections'}
         >
-          {tabsWithCounts.map((topic) => (
-            <button
-              key={topic.id}
-              type="button"
-              role="tab"
-              aria-selected={activeTopicId === topic.id ? true : false}
-              onClick={() => setActiveTopicId(topic.id)}
-              className={topicTabClass(activeTopicId === topic.id)}
-            >
-              {topic.label}
-              <span className="ml-1.5 opacity-70">{topic.count}</span>
-            </button>
-          ))}
+          {subTabs.map((tab) => {
+            const active = view === 'domain'
+              ? activeDomainCategory === tab.id
+              : activeChecklistSection === tab.id
+
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={active}
+                onClick={() => {
+                  if (view === 'domain') {
+                    setActiveDomainCategory(tab.id)
+                    return
+                  }
+                  setActiveChecklistSection(tab.id as ChecklistSectionId)
+                }}
+                className={tabClass(active)}
+              >
+                {tab.label}
+                <span className="ml-1.5 opacity-70">{tab.count}</span>
+              </button>
+            )
+          })}
         </div>
 
         <div className="relative">
@@ -130,17 +207,17 @@ export default function LabsPageClient() {
       {activeItems.length === 0 ? (
         <div className="rounded-xl border border-aws-border bg-aws-card/40 px-5 py-10 text-center">
           <p className="text-aws-text font-medium mb-1">
-            {trimmedQuery ? `No labs match “${trimmedQuery}”` : 'No labs in this topic yet'}
+            {trimmedQuery ? `No labs match “${trimmedQuery}”` : 'No labs in this section yet'}
           </p>
           <p className="font-space-mono text-[0.72rem] text-aws-muted">
-            {trimmedQuery ? 'Try a service name like VPC, S3, or Lambda.' : 'Pick another topic tab above.'}
+            {trimmedQuery ? 'Try a service name like VPC, S3, or Lambda.' : 'Pick another tab above.'}
           </p>
         </div>
       ) : (
-        <section aria-labelledby="lab-topic-list">
+        <section aria-labelledby="lab-list-heading">
           <div className="flex items-center gap-3 mb-2 px-4 sm:px-5 md:px-6">
-            <h2 id="lab-topic-list" className="text-[0.95rem] sm:text-base font-bold text-aws-text">
-              {labTopics.find((t) => t.id === activeTopicId)?.label}
+            <h2 id="lab-list-heading" className="text-[0.95rem] sm:text-base font-bold text-aws-text">
+              {sectionTitle}
             </h2>
             <span className="font-space-mono text-[0.58rem] text-aws-muted">
               {activeItems.length}
@@ -148,13 +225,13 @@ export default function LabsPageClient() {
           </div>
           <ul className="rounded-xl border border-aws-border bg-aws-card/30 overflow-hidden">
             {activeItems.map((item) => (
-              <LabListRow key={`${item.topicId}-${item.index}-${item.title}`} item={item} />
+              <LabListRow key={`${view}-${item.index}-${item.title}`} item={item} />
             ))}
           </ul>
         </section>
       )}
 
-      <SiteFooter tagline="AWS SAA-C03 · Hands-on Labs · Video course topic order" />
+      <SiteFooter tagline="AWS SAA-C03 · Hands-on Labs · Domain catalog + study checklist" />
     </main>
   )
 }

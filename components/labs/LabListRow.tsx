@@ -1,6 +1,6 @@
 import Link from 'next/link'
-import type { LabListItem } from '@/lib/labs-topics'
-import { formatLabDuration } from '@/lib/labs-topics'
+import type { LabRowItem } from '@/lib/labs-list-item'
+import { formatLabDuration } from '@/lib/labs-list-item'
 
 const levelStyles: Record<string, string> = {
   Fundamental: 'text-c2',
@@ -9,13 +9,16 @@ const levelStyles: Record<string, string> = {
 }
 
 type LabListRowProps = {
-  item: LabListItem
+  item: LabRowItem
 }
 
 export default function LabListRow({ item }: LabListRowProps) {
   const duration = formatLabDuration(item.duration, item.lab?.duration ?? '')
   const level = item.lab?.level ?? 'Fundamental'
   const levelClass = levelStyles[level] ?? 'text-aws-muted'
+  const href = item.available && item.slug
+    ? `/labs/${item.slug}`
+    : item.externalUrl ?? null
 
   const inner = (
     <>
@@ -27,9 +30,9 @@ export default function LabListRow({ item }: LabListRowProps) {
         <span className="block text-[0.9rem] sm:text-[0.95rem] font-medium text-aws-text group-hover:text-c1 transition-colors leading-snug">
           {item.title}
         </span>
-        {item.source === 'video' && !item.available ? (
+        {item.subtitle ? (
           <span className="font-space-mono text-[0.58rem] text-aws-muted mt-0.5 block">
-            Video course lab · not imported yet
+            {item.subtitle}
           </span>
         ) : null}
       </span>
@@ -38,7 +41,11 @@ export default function LabListRow({ item }: LabListRowProps) {
         {duration}
       </span>
 
-      {item.source === 'video' ? (
+      {item.source === 'checklist' && !item.available && item.externalUrl ? (
+        <span className="font-space-mono text-[0.58rem] sm:text-[0.62rem] uppercase tracking-wider shrink-0 ml-1 text-c4">
+          Whizlabs
+        </span>
+      ) : item.source === 'video' ? (
         <span className="font-space-mono text-[0.58rem] sm:text-[0.62rem] uppercase tracking-wider shrink-0 ml-1 text-c4">
           Video
         </span>
@@ -48,7 +55,7 @@ export default function LabListRow({ item }: LabListRowProps) {
         </span>
       )}
 
-      {item.available ? (
+      {href ? (
         <span
           className="shrink-0 w-8 h-8 ml-1 sm:ml-2 rounded-full bg-c3/15 border border-c3/30 flex items-center justify-center
             text-c3 group-hover:bg-c3 group-hover:text-aws-bg transition-colors"
@@ -69,7 +76,7 @@ export default function LabListRow({ item }: LabListRowProps) {
     </>
   )
 
-  if (!item.available || !item.slug) {
+  if (!href) {
     return (
       <li className="border-b border-aws-border/80 last:border-b-0 opacity-75">
         <div className="flex items-center gap-3 sm:gap-4 py-3.5 sm:py-4 px-4 sm:px-5 md:px-6">
@@ -79,10 +86,28 @@ export default function LabListRow({ item }: LabListRowProps) {
     )
   }
 
+  const isExternal = href.startsWith('http')
+
+  if (isExternal) {
+    return (
+      <li className="group border-b border-aws-border/80 last:border-b-0">
+        <a
+          href={href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 sm:gap-4 py-3.5 sm:py-4 px-4 sm:px-5 md:px-6
+            hover:bg-aws-card/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-c1/40 transition-colors"
+        >
+          {inner}
+        </a>
+      </li>
+    )
+  }
+
   return (
     <li className="group border-b border-aws-border/80 last:border-b-0">
       <Link
-        href={`/labs/${item.slug}`}
+        href={href}
         className="flex items-center gap-3 sm:gap-4 py-3.5 sm:py-4 px-4 sm:px-5 md:px-6
           hover:bg-aws-card/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-c1/40 transition-colors"
       >
