@@ -199,7 +199,7 @@ const launchBrowser = async (
   }
 
   const storageState = existsSync(STORAGE_STATE) ? STORAGE_STATE : undefined
-  const browser = await chromium.launch({ headless: args.headless })
+  const browser = await chromium.launch({ headless })
   const context = await browser.newContext({
     viewport: { width: 1280, height: 900 },
     ...(storageState ? { storageState } : {}),
