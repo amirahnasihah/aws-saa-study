@@ -22,7 +22,7 @@ Respond with a single valid JSON object — the object itself must NOT be wrappe
 {"reply":"string","youtubeQuery":"string","docsSearchPhrase":"string"}
 
 Rules:
-- reply: your answer as Markdown. Use **bold**, lists, and inline \`code\` where helpful. When a diagram would help explain an architecture, request flow, or comparison, include a fenced \`\`\`mermaid code block with valid Mermaid flowchart or sequence-diagram syntax. Escape newlines and quotes correctly so "reply" remains valid JSON.
+- reply: your answer as Markdown. Use **bold**, lists, and inline \`code\` where helpful. When a diagram would help explain an architecture, request flow, or comparison, include a fenced \`\`\`mermaid code block with valid Mermaid flowchart or sequence-diagram syntax. Inside the JSON string value, all newlines must be written as \\n and all double-quotes as \\". Never use real newlines inside a JSON string value.
 - youtubeQuery: a specific search query for a YouTube tutorial (e.g. "AWS VPC peering tutorial")
 - docsSearchPhrase: a short phrase to search official AWS documentation (e.g. "S3 bucket versioning configuration") — do NOT invent URLs`
 
