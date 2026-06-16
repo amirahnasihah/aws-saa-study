@@ -39,6 +39,8 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
 
   useEffect(() => {
     let cancelled = false
+    setSvg(null)
+    setFailed(false)
 
     void (async () => {
       try {
@@ -61,7 +63,7 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
         <pre className="overflow-x-auto rounded-xl bg-aws-card border border-aws-border/60 p-3 font-space-mono text-[0.7rem] leading-relaxed">
           <code>{source}</code>
         </pre>
-        <p className="font-space-mono text-[0.58rem] text-amber-400/70">
+        <p className="font-space-mono text-xs text-amber-400/70">
           Couldn&apos;t render diagram.
         </p>
       </div>

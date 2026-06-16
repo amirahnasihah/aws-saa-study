@@ -192,7 +192,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Elasticache (4m 34s)
 - [ ] ElastiCache - Security (8m 23s)
 - [ ] ElastiCache - Session Store (7m 7s)
-- [ ] 🧪 Create Redis cluster using ElastiCache (1h)
+- [ ] 🧪 [Create Redis cluster using ElastiCache](https://business.whizlabs.com/labs/create-redis-cluster-using-elasticache) (1h)
 - [ ] Database Services (Quiz) (8Q) — target ≥80%
 
 ### Must be able to answer
