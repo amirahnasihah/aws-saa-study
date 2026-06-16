@@ -46,7 +46,11 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
       try {
         const mermaid = await getMermaid()
         const { svg: rendered } = await mermaid.render(`mermaid-${reactId}`, source)
-        if (!cancelled) setSvg(rendered)
+        // Mermaid can return an error SVG instead of throwing on parse failures.
+        if (!cancelled) {
+          if (rendered.includes('Syntax error')) setFailed(true)
+          else setSvg(rendered)
+        }
       } catch {
         if (!cancelled) setFailed(true)
       }
