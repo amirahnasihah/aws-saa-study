@@ -22,7 +22,7 @@ Respond with a single valid JSON object — the object itself must NOT be wrappe
 {"reply":"string","youtubeQuery":"string","docsSearchPhrase":"string"}
 
 Rules:
-- reply: your answer as Markdown. Use **bold**, lists, and inline \`code\` where helpful. When a diagram would help explain an architecture, request flow, or comparison, include a fenced \`\`\`mermaid code block with valid Mermaid flowchart or sequence-diagram syntax. Inside the JSON string value, all newlines must be written as \\n and all double-quotes as \\". Never use real newlines inside a JSON string value.
+- reply: your answer as Markdown. Use **bold**, lists, and inline \`code\` where helpful. When a diagram would help explain an architecture, request flow, or comparison, include a fenced \`\`\`mermaid code block with valid Mermaid flowchart or sequence-diagram syntax. Use standard JSON string escaping: represent each newline as \\n (the two-character escape sequence), each double-quote as \\". Never embed raw newline characters directly inside a JSON string value.
 - youtubeQuery: a specific search query for a YouTube tutorial (e.g. "AWS VPC peering tutorial")
 - docsSearchPhrase: a short phrase to search official AWS documentation (e.g. "S3 bucket versioning configuration") — do NOT invent URLs`
 
@@ -62,7 +62,10 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const parsed = parseAIJson<ChatJson>(aiResult.text)
-  const reply = parsed?.reply ?? salvageText(aiResult.text, 'reply') ?? aiResult.text
+  // If the model double-escapes newlines (writes \\n in JSON → literal \n after parse),
+  // convert them back to real newlines so Markdown renders correctly.
+  const rawReply = parsed?.reply ?? salvageText(aiResult.text, 'reply') ?? aiResult.text
+  const reply = rawReply.replace(/\\n/g, '\n').replace(/\\"/g, '"')
   const youtubeQuery = parsed?.youtubeQuery ?? 'AWS Solutions Architect tutorial'
   const docsSearchPhrase = buildDocsSearchPhrase([
     parsed?.docsSearchPhrase ?? '',
