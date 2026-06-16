@@ -59,9 +59,9 @@ export const labsChecklistTotal = 22
 export const labsChecklistOrder: ChecklistLabEntry[] = [
   {
     "index": 1,
-    "title": "Introduction to Amazon Elastic Compute Cloud",
-    "slug": null,
-    "duration": "EC2) (30m",
+    "title": "Introduction to Amazon Elastic Compute Cloud (EC2)",
+    "slug": "introduction-to-amazon-elastic-compute-cloud-ec2",
+    "duration": "30m",
     "sectionId": "compute",
     "externalUrl": null
   },

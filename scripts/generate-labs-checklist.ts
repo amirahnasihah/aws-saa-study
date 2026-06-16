@@ -73,8 +73,7 @@ let currentSectionNum: number | null = null
 const entries: ChecklistLabEntry[] = []
 
 const sectionHeader = /^## (\d+)\.\s+/
-const labLine =
-  /^- \[[ x]\] 🧪 (?:\[(.+?)\]\((.+?)\)|(.+?))(?: \((.+?)\))?\s*$/
+const labPrefix = /^- \[[ x]\] 🧪 /
 
 lines.forEach((line) => {
   const headerMatch = line.match(sectionHeader)
@@ -83,18 +82,19 @@ lines.forEach((line) => {
     return
   }
 
-  const labMatch = line.match(labLine)
-  if (!labMatch || currentSectionNum === null) return
+  if (!labPrefix.test(line) || currentSectionNum === null) return
 
   const sectionId = sectionNumToId.get(currentSectionNum)
   if (!sectionId) return
 
-  const linkedTitle = labMatch[1]
-  const linkedUrl = labMatch[2]
-  const plainTitle = labMatch[3]
-  const duration = labMatch[4] ?? ''
+  const raw = line.replace(labPrefix, '').trim()
+  const linked = /^\[(.+?)\]\((.+?)\)(?: \((.+?)\))?$/.exec(raw)
+  const plain = linked ? null : /^(.+) \(([^)]+)\)$/.exec(raw)
 
-  const title = (linkedTitle ?? plainTitle ?? '').trim()
+  const title = (linked?.[1] ?? plain?.[1] ?? raw).trim()
+  const linkedUrl = linked?.[2] ?? null
+  const duration = (linked?.[3] ?? plain?.[2] ?? '').trim()
+
   const externalUrl = linkedUrl?.includes('whizlabs.com/labs/') ? linkedUrl : null
   const slugFromUrl = externalUrl ? slugFromWhizlabsUrl(externalUrl) : null
   const slugFromTitle = titleToSlug.get(normalize(title)) ?? null
