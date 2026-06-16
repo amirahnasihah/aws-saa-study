@@ -34,25 +34,25 @@ function getMermaid() {
 
 export default function MermaidDiagram({ source }: MermaidDiagramProps) {
   const reactId = useId().replace(/[^a-zA-Z0-9]/g, '')
-  const [svg, setSvg] = useState<string | null>(null)
-  const [failed, setFailed] = useState(false)
+  // Track which source produced each result so we never synchronously reset
+  // state in the effect body (which triggers cascading renders).
+  const [rendered, setRendered] = useState<{ source: string; svg: string } | null>(null)
+  const [failedSource, setFailedSource] = useState<string | null>(null)
 
   useEffect(() => {
     let cancelled = false
-    setSvg(null)
-    setFailed(false)
 
     void (async () => {
       try {
         const mermaid = await getMermaid()
-        const { svg: rendered } = await mermaid.render(`mermaid-${reactId}`, source)
-        // Mermaid can return an error SVG instead of throwing on parse failures.
+        const { svg } = await mermaid.render(`mermaid-${reactId}`, source)
         if (!cancelled) {
-          if (rendered.includes('Syntax error')) setFailed(true)
-          else setSvg(rendered)
+          // Mermaid can return an error SVG instead of throwing on parse failures.
+          if (svg.includes('Syntax error')) setFailedSource(source)
+          else setRendered({ source, svg })
         }
       } catch {
-        if (!cancelled) setFailed(true)
+        if (!cancelled) setFailedSource(source)
       }
     })()
 
@@ -61,7 +61,10 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
     }
   }, [reactId, source])
 
-  if (failed) {
+  const isFailed = failedSource === source
+  const isLoading = !isFailed && rendered?.source !== source
+
+  if (isFailed) {
     return (
       <div className="mb-2 space-y-1.5 last:mb-0">
         <pre className="overflow-x-auto rounded-xl bg-aws-card border border-aws-border/60 p-3 font-space-mono text-[0.7rem] leading-relaxed">
@@ -74,7 +77,7 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
     )
   }
 
-  if (!svg) {
+  if (isLoading) {
     return (
       <div className="mb-2 rounded-xl bg-aws-card border border-aws-border/60 p-3 font-space-mono text-[0.6rem] text-aws-muted/60 last:mb-0">
         Rendering diagram…
@@ -85,7 +88,7 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
   return (
     <div
       className="mb-2 overflow-x-auto rounded-xl bg-aws-card border border-aws-border/60 p-3 last:mb-0"
-      dangerouslySetInnerHTML={{ __html: svg }}
+      dangerouslySetInnerHTML={{ __html: rendered!.svg }}
     />
   )
 }
