@@ -26,6 +26,7 @@ export default function VpcPage() {
           <div className="flex flex-wrap justify-center gap-2 mt-4">
             {[
               { href: '#mental-model', label: 'Mental Model' },
+              { href: '#vpc-diagram', label: 'VPC Diagram' },
               { href: '#cidr', label: 'CIDR & IP Structure' },
               { href: '#subnets', label: 'Subnets' },
               { href: '#sg-nacl', label: 'SG vs NACL' },
@@ -77,6 +78,51 @@ export default function VpcPage() {
                     <p className="font-space-mono text-[0.68rem] font-bold text-c4">{item.label}</p>
                     <p className="text-[0.75rem] text-aws-muted leading-snug"><GlossaryText text={item.desc} /></p>
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Whizlabs VPC Components diagram */}
+        <section className="mb-10">
+          <SectionHeader id="vpc-diagram" emoji="🗺️" title="VPC Components — Subnets & CIDR" />
+          <div className="bg-aws-card border border-aws-border rounded-xl p-5 space-y-4">
+            <p className="text-[0.78rem] text-aws-muted leading-relaxed">
+              Reference diagram dari lecture{' '}
+              <a
+                href="https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=40373"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-c4 hover:text-aws-text transition-colors"
+              >
+                AWS VPC Overview: Subnets &amp; CIDR
+              </a>
+              . Tunjuk bagaimana VPC, subnets, route tables, IGW, NAT, SG dan NACL berhubung.
+            </p>
+            <figure className="rounded-xl border border-aws-border/80 overflow-hidden bg-white/[0.02]">
+              <img
+                src="/vpc/vpc-components-subnets-cidr.png"
+                alt="AWS VPC diagram: 10.0.0.0/16 VPC with public subnet 10.0.1.0/24, private subnet 10.0.2.0/24, Internet Gateway, NAT Gateway, route tables, security groups, and NACLs"
+                loading="lazy"
+                className="w-full h-auto"
+              />
+              <figcaption className="px-4 py-3 border-t border-aws-border/60 font-space-mono text-[0.62rem] text-aws-muted leading-relaxed">
+                VPC <code className="text-c4">10.0.0.0/16</code> · Public subnet{' '}
+                <code className="text-c4">10.0.1.0/24</code> (route <code className="text-c4">0.0.0.0/0 → IGW</code>) · Private subnet{' '}
+                <code className="text-c4">10.0.2.0/24</code> (route <code className="text-c4">0.0.0.0/0 → NAT</code>)
+              </figcaption>
+            </figure>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[0.75rem]">
+              {[
+                { label: 'VPC CIDR', value: '10.0.0.0/16 — parent range untuk semua subnets dalam VPC ni' },
+                { label: 'Public subnet', value: '10.0.1.0/24 — public server + NAT Gateway; route table ada 0.0.0.0/0 → IGW' },
+                { label: 'Private subnet', value: '10.0.2.0/24 — private server; outbound internet via NAT dalam public subnet' },
+                { label: 'SG vs NACL', value: 'SG = per instance (stateful). NACL = per subnet boundary (stateless, allow + deny)' },
+              ].map((item) => (
+                <div key={item.label} className="bg-white/3 border border-aws-border/40 rounded-lg px-3 py-2.5">
+                  <p className="font-space-mono text-[0.62rem] font-bold text-c4 mb-0.5">{item.label}</p>
+                  <p className="text-aws-text leading-snug"><GlossaryText text={item.value} /></p>
                 </div>
               ))}
             </div>
