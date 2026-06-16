@@ -16,13 +16,13 @@ interface ChatRequest {
   history: ChatMessage[]
 }
 
-const CHAT_SYSTEM_PROMPT = `You are an AWS Solutions Architect study assistant. Answer questions about AWS services, architecture patterns, and exam topics concisely (3-5 sentences).
+const CHAT_SYSTEM_PROMPT = `You are an AWS Solutions Architect study assistant. Answer questions about AWS services, architecture patterns, and exam topics concisely (3-6 sentences, or a short list).
 
-Respond ONLY with valid JSON (no markdown, no code fences):
+Respond with a single valid JSON object — the object itself must NOT be wrapped in a code fence:
 {"reply":"string","youtubeQuery":"string","docsSearchPhrase":"string"}
 
 Rules:
-- reply: your answer, concise and specific to AWS
+- reply: your answer as Markdown. Use **bold**, lists, and inline \`code\` where helpful. When a diagram would help explain an architecture, request flow, or comparison, include a fenced \`\`\`mermaid code block with valid Mermaid flowchart or sequence-diagram syntax. Escape newlines and quotes correctly so "reply" remains valid JSON.
 - youtubeQuery: a specific search query for a YouTube tutorial (e.g. "AWS VPC peering tutorial")
 - docsSearchPhrase: a short phrase to search official AWS documentation (e.g. "S3 bucket versioning configuration") — do NOT invent URLs`
 
@@ -51,9 +51,10 @@ export async function POST(request: Request): Promise<Response> {
     apiKey,
     CHAT_SYSTEM_PROMPT,
     allMessages,
-    // Headroom for the JSON envelope + youtubeQuery/docsSearchPhrase so a
-    // concise reply isn't truncated mid-string (parser salvages either way).
-    700
+    // Headroom for the JSON envelope + youtubeQuery/docsSearchPhrase, plus
+    // room for an optional ```mermaid block, so a reply isn't truncated
+    // mid-string (parser salvages either way).
+    1300
   )
 
   if ('error' in aiResult) {
