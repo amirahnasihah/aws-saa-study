@@ -32,6 +32,12 @@ const components: Components = {
     </th>
   ),
   td: ({ children }) => <td className="border-b border-aws-border/30 px-2 py-1">{children}</td>,
+  blockquote: ({ children }) => (
+    <blockquote className="mb-2 border-l-2 border-c1/40 pl-3 text-aws-muted/80 last:mb-0">
+      {children}
+    </blockquote>
+  ),
+  hr: () => <hr className="my-2 border-aws-border/40" />,
   // react-markdown nests block code inside <pre>; pass <pre> through so
   // `code` below fully controls block-level rendering (incl. mermaid).
   pre: ({ children }) => <>{children}</>,
