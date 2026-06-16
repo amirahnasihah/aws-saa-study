@@ -88,7 +88,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Creating NAT Gateways in AWS",
     "slug": "creating-nat-gateways-in-aws",
     "duration": "1h 30m",
-    "topicId": "networking",
+    "topicId": "security",
     "source": "course"
   },
   {
@@ -104,7 +104,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Build Amazon VPC with Public and Private Subnets from Scratch",
     "slug": "build-amazon-vpc-with-public-and-private-subnets-from-scratch",
     "duration": "30m",
-    "topicId": "networking",
+    "topicId": "security",
     "source": "course"
   },
   {
@@ -112,7 +112,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Understanding and Configuring Layered Security in an AWS VPC",
     "slug": "understanding-and-configuring-layered-security-in-an-aws-vpc",
     "duration": "1h 0m",
-    "topicId": "networking",
+    "topicId": "security",
     "source": "course"
   },
   {
@@ -128,7 +128,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "How to Create Virtual Private Cloud (VPC) with AWS CloudFormation",
     "slug": "how-to-create-virtual-private-cloud-vpc-with-aws-cloudformation",
     "duration": "55m",
-    "topicId": "networking",
+    "topicId": "management",
     "source": "course"
   },
   {
@@ -136,7 +136,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Introduction to Creating AWS VPC Flow Logs",
     "slug": "introduction-to-creating-aws-vpc-flow-logs",
     "duration": "45m",
-    "topicId": "networking",
+    "topicId": "security",
     "source": "course"
   },
   {
@@ -144,7 +144,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Access S3 from Private EC2 instance using VPC Endpoint",
     "slug": "access-s3-from-private-ec2-instance-using-vpc-endpoint",
     "duration": "1h 30m",
-    "topicId": "networking",
+    "topicId": "storage",
     "source": "course"
   },
   {
@@ -152,7 +152,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "AWS VPC NACL Lab - Case study",
     "slug": "aws-vpc-nacl-lab-case-study",
     "duration": "1h 0m",
-    "topicId": "networking",
+    "topicId": "security",
     "source": "course"
   },
   {
@@ -160,7 +160,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Peer VPC with Transit Gateway and its components",
     "slug": "peer-vpc-with-transit-gateway-and-its-components",
     "duration": "1h 15m",
-    "topicId": "networking",
+    "topicId": "security",
     "source": "course"
   },
   {
@@ -184,7 +184,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Blocking web traffic with WAF in AWS",
     "slug": "blocking-web-traffic-with-waf-in-aws",
     "duration": "1h 0m",
-    "topicId": "networking",
+    "topicId": "security",
     "source": "course"
   },
   {
@@ -192,7 +192,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Implementing AWS WAF with ALB to block SQL Injection, Geo Location and Query string",
     "slug": "implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string",
     "duration": "2h 0m",
-    "topicId": "networking",
+    "topicId": "security",
     "source": "course"
   },
   {
@@ -216,7 +216,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "How to Encrypt an S3 bucket using AWS KMS and monitor the activities with CloudTrail",
     "slug": "how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail",
     "duration": "50m",
-    "topicId": "management",
+    "topicId": "storage",
     "source": "course"
   },
   {
@@ -232,7 +232,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "How to setup a free VPN server in AWS",
     "slug": "how-to-setup-a-free-vpn-server-in-aws",
     "duration": "1h 0m",
-    "topicId": "networking",
+    "topicId": "security",
     "source": "course"
   },
   {
@@ -240,7 +240,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Configure NAT Instance and Stream Web Logs to CloudWatch Using CloudWatch Agent",
     "slug": "configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent",
     "duration": "1h 0m",
-    "topicId": "networking",
+    "topicId": "management",
     "source": "course"
   },
   {
@@ -344,7 +344,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Introduction to Amazon CloudFront",
     "slug": "introduction-to-amazon-cloudfront",
     "duration": "1h 30m",
-    "topicId": "networking",
+    "topicId": "database",
     "source": "course"
   },
   {
@@ -352,7 +352,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Understanding CloudFront Origin Groups",
     "slug": "understanding-cloudfront-origin-groups",
     "duration": "1h 30m",
-    "topicId": "networking",
+    "topicId": "database",
     "source": "course"
   },
   {
@@ -424,7 +424,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Troubleshooting Connectivity Issues Between VPC, EC2, and Load Balancer",
     "slug": "troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer",
     "duration": "1h 0m",
-    "topicId": "networking",
+    "topicId": "compute",
     "source": "course"
   },
   {
@@ -552,7 +552,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Find vulnerabilities on Inspector2 using Lambda scanning",
     "slug": "find-vulnerabilities-on-inspector2-using-lambda-scanning",
     "duration": "1h 0m",
-    "topicId": "management",
+    "topicId": "compute",
     "source": "course"
   },
   {
@@ -576,7 +576,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Setting up the VPC environment, launching EC2 instances, and testing reachability using the AWS Reachability Analyzer",
     "slug": "setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer",
     "duration": "1h 0m",
-    "topicId": "networking",
+    "topicId": "compute",
     "source": "course"
   },
   {
@@ -736,7 +736,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Peer VPC with Transit Gateway and its components using Terraform",
     "slug": "peer-vpc-with-transit-gateway-and-its-components-using-terraform",
     "duration": "1h 15m",
-    "topicId": "networking",
+    "topicId": "management",
     "source": "course"
   },
   {
@@ -744,7 +744,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Implementing VPC peering on AWS",
     "slug": "implementing-vpc-peering-on-aws",
     "duration": "1h 0m",
-    "topicId": "networking",
+    "topicId": "management",
     "source": "course"
   },
   {
@@ -760,7 +760,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
     "title": "Cross Region Image Viewer using VPC Peering",
     "slug": "cross-region-image-viewer-using-vpc-peering",
     "duration": "1h 30m",
-    "topicId": "networking",
+    "topicId": "management",
     "source": "course"
   },
   {
