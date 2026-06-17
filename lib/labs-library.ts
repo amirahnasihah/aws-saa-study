@@ -3,6 +3,7 @@ import {
   librarySections,
   type LibrarySectionId,
 } from '@/data/labsLibraryOrder'
+import { findLabFallback } from '@/lib/labs-fallback'
 import type { LabRowItem } from '@/lib/labs-list-item'
 import type { Lab } from '@/lib/labs'
 
@@ -40,7 +41,7 @@ export const buildLibraryLabSection = (
   const items = labsLibraryOrder
     .filter((entry) => entry.sectionId === activeSectionId)
     .map((entry): LabRowItem => {
-      const lab = bySlug.get(entry.slug) ?? null
+      const lab = bySlug.get(entry.slug) ?? findLabFallback(entry.slug) ?? null
       const hasLocal = Boolean(lab)
       return {
         index: entry.index,
@@ -50,11 +51,10 @@ export const buildLibraryLabSection = (
         lab,
         available: hasLocal,
         source: 'library',
-        externalUrl: entry.externalUrl,
         subtitle: !hasLocal
-          ? 'Library lab · not imported yet'
+          ? 'Not imported yet'
           : !lab?.tasks?.some((task) => task.steps?.some((step) => (step.images?.length ?? 0) > 0))
-            ? 'Imported · no step images yet'
+            ? 'Imported · text-only steps'
             : undefined,
       }
     })
@@ -70,4 +70,6 @@ export const buildLibraryLabSection = (
 }
 
 export const countLibraryLabsWithLocalPage = (labs: Lab[]): number =>
-  labsLibraryOrder.filter((entry) => labs.some((lab) => lab.slug === entry.slug)).length
+  labsLibraryOrder.filter((entry) =>
+    labs.some((lab) => lab.slug === entry.slug) || Boolean(findLabFallback(entry.slug)),
+  ).length

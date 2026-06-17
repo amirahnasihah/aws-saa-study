@@ -16,9 +16,7 @@ export default function LabListRow({ item }: LabListRowProps) {
   const duration = formatLabDuration(item.duration, item.lab?.duration ?? '')
   const level = item.lab?.level ?? 'Fundamental'
   const levelClass = levelStyles[level] ?? 'text-aws-muted'
-  const href = item.available && item.slug
-    ? `/labs/${item.slug}`
-    : item.externalUrl ?? null
+  const href = item.available && item.slug ? `/labs/${item.slug}` : null
 
   const inner = (
     <>
@@ -41,11 +39,7 @@ export default function LabListRow({ item }: LabListRowProps) {
         {duration}
       </span>
 
-      {(item.source === 'checklist' || item.source === 'library') && !item.available && item.externalUrl ? (
-        <span className="font-space-mono text-[0.58rem] sm:text-[0.62rem] uppercase tracking-wider shrink-0 ml-1 text-c4">
-          Whizlabs
-        </span>
-      ) : item.source === 'video' ? (
+      {item.source === 'video' ? (
         <span className="font-space-mono text-[0.58rem] sm:text-[0.62rem] uppercase tracking-wider shrink-0 ml-1 text-c4">
           Video
         </span>
@@ -82,24 +76,6 @@ export default function LabListRow({ item }: LabListRowProps) {
         <div className="flex items-center gap-3 sm:gap-4 py-3.5 sm:py-4 px-4 sm:px-5 md:px-6">
           {inner}
         </div>
-      </li>
-    )
-  }
-
-  const isExternal = href.startsWith('http')
-
-  if (isExternal) {
-    return (
-      <li className="group border-b border-aws-border/80 last:border-b-0">
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 sm:gap-4 py-3.5 sm:py-4 px-4 sm:px-5 md:px-6
-            hover:bg-aws-card/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-c1/40 transition-colors"
-        >
-          {inner}
-        </a>
       </li>
     )
   }

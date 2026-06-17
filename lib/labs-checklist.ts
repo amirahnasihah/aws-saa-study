@@ -3,6 +3,7 @@ import {
   labsChecklistOrder,
   type ChecklistSectionId,
 } from '@/data/labsChecklistOrder'
+import { findLabFallback } from '@/lib/labs-fallback'
 import type { LabRowItem } from '@/lib/labs-list-item'
 import type { Lab } from '@/lib/labs'
 
@@ -39,7 +40,9 @@ export const buildChecklistLabSection = (
   const items = labsChecklistOrder
     .filter((entry) => entry.sectionId === activeSectionId)
     .map((entry): LabRowItem => {
-      const lab = entry.slug ? bySlug.get(entry.slug) ?? null : null
+      const lab = entry.slug
+        ? bySlug.get(entry.slug) ?? findLabFallback(entry.slug) ?? null
+        : null
       const hasLocal = Boolean(entry.slug && lab)
       return {
         index: entry.index,
@@ -49,12 +52,7 @@ export const buildChecklistLabSection = (
         lab,
         available: hasLocal,
         source: 'checklist',
-        externalUrl: entry.externalUrl,
-        subtitle: !hasLocal && entry.externalUrl
-          ? 'Video course lab · open on Whizlabs'
-          : !hasLocal
-            ? 'Video course lab · not imported yet'
-            : undefined,
+        subtitle: !hasLocal ? 'Video course lab · not imported yet' : undefined,
       }
     })
     .filter((item) => matchesQuery(item, query))
@@ -72,5 +70,7 @@ export const countChecklistLabsWithLocalPage = (
   labs: Lab[],
 ): number =>
   labsChecklistOrder.filter(
-    (entry) => entry.slug && labs.some((lab) => lab.slug === entry.slug),
+    (entry) => entry.slug && (
+      labs.some((lab) => lab.slug === entry.slug) || Boolean(findLabFallback(entry.slug))
+    ),
   ).length
