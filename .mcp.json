@@ -2,7 +2,13 @@
   "mcpServers": {
     "aws-documentation": {
       "command": "uvx",
-      "args": ["awslabs.aws-documentation-mcp-server@latest"]
+      "args": [
+        "awslabs.aws-documentation-mcp-server@latest"
+      ]
+    },
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=neifhjhgwyxpruziazin"
     }
   }
 }
