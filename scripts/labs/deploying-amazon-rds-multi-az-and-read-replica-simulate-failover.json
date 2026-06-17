@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -27,7 +30,7 @@
           "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
-          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
         }
       ]
     },
@@ -38,19 +41,49 @@
           "text": "In this task, we are going to launch an EC2 instance which will be used for connecting to the Amazon Aurora RDS DB instance later in the lab."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Click on Instances from the left sidebar and then click on Launch instances"
+          "text": "Click on Instances from the left sidebar and then click on Launch instances",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-01.jpg"
+          ]
+        },
+        {
+          "text": "Task 2: Launch an EC2 instance",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-02.jpg"
+          ]
         },
         {
           "text": "Name : Enter MyRdsEc2server."
         },
         {
-          "text": "For Amazon Machine Image (AMI): In Quick Start menu, select Amazon Linux 2023 kernel-6.1 AMI."
+          "text": "For Amazon Machine Image (AMI): In Quick Start menu, select Amazon Linux 2023 kernel-6.1 AMI.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-03.png"
+          ]
         },
         {
-          "text": "For Instance Type: select t2.micro"
+          "text": "Task 2: Launch an EC2 instance",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-04.png"
+          ]
+        },
+        {
+          "text": "For Instance Type: select t2.micro",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-05.png"
+          ]
+        },
+        {
+          "text": "Task 2: Launch an EC2 instance",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-06.png"
+          ]
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Key pair name: MySSHKey Key pair type: RSA Private key file format: .pem Note: If you are using putty, select the Private key file format as .ppk"
         },
         {
           "text": "For Key pair: Select Create a new key pair"
@@ -62,10 +95,13 @@
           "text": "Key pair type: RSA"
         },
         {
+          "text": "Private key file format: .pem Note: If you are using putty, select the Private key file format as .ppk"
+        },
+        {
           "text": "Private key file format: .pem"
         },
         {
-          "text": "Note: If you are using putty, select the Private key file format as .ppk"
+          "text": "Note: If you are using putty, select the Private key file format as .ppk"
         },
         {
           "text": "Select Create key pair Button."
@@ -83,46 +119,22 @@
           "text": "Security group name : Enter MyEC2Server_SG"
         },
         {
+          "text": "Description : Enter Security for ec2 server to connect with RDS To add SSH: Choose Type: SSH Source: select Anywhere"
+        },
+        {
           "text": "Description : Enter Security for ec2 server to connect with RDS"
         },
         {
-          "text": "To add SSH:"
+          "text": "To add SSH:"
         },
         {
-          "text": "Choose Type: SSH"
+          "text": "Choose Type: SSH"
         },
         {
-          "text": "Source: select Anywhere"
+          "text": "Source: select Anywhere"
         },
         {
-          "text": "Click on Advanced Details . Under the User data section, enter the following script, (which installs MySQL):"
-        },
-        {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "# Download the MySQL repository package"
-        },
-        {
-          "text": "wget https://dev.mysql.com/get/mysql80-community-release-el9-5.noarch.rpm"
-        },
-        {
-          "text": "# Install the MySQL repository package"
-        },
-        {
-          "text": "sudo dnf install mysql80-community-release-el9-5.noarch.rpm -y"
-        },
-        {
-          "text": "# Enable the MySQL community repository"
-        },
-        {
-          "text": "sudo dnf repolist enabled | grep \"mysql.*-community.*\""
-        },
-        {
-          "text": "# Install MySQL"
-        },
-        {
-          "text": "sudo dnf install mysql -y"
+          "text": "Click on Advanced Details . Under the User data section, enter the following script, (which installs MySQL):"
         },
         {
           "text": "Note: After pasting the user data, make sure to remove extra spacing."
@@ -134,10 +146,28 @@
           "text": "Select View all Instances to View the Instance you Created"
         },
         {
-          "text": "After 1-2 minutes, the Instance State will become running as shown below:"
+          "text": "After 1-2 minutes, the Instance State will become running as shown below:",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-07.jpg"
+          ]
         },
         {
-          "text": "Select the EC2 Instance and copy the Private IPv4 address. Note down IPv4 Private IP address in your text editor, navigate to the EC2 Dashboard and look in the instance details."
+          "text": "Task 2: Launch an EC2 instance",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-08.jpg"
+          ]
+        },
+        {
+          "text": "Select the EC2 Instance and copy the Private IPv4 address. Note down IPv4 Private IP address in your text editor, navigate to the EC2 Dashboard and look in the instance details.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-09.jpg"
+          ]
+        },
+        {
+          "text": "Task 2: Launch an EC2 instance",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-10.jpg"
+          ]
         }
       ]
     },
@@ -148,40 +178,67 @@
           "text": "In this task, we will create a security group specifically for the Amazon Aurora RDS instance which ensures that the RDS instance has appropriate network security settings by allowing access only through the MySQL/Aurora port (3306) from any IP address (0.0.0.0/0)."
         },
         {
-          "text": "Make sure you are in the N.Virginia Region."
+          "text": "Make sure you are in the N.Virginia Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
         },
         {
-          "text": "On the left panel menu, select the security group under the Network & Security section."
+          "text": "On the left panel menu, select the security group under the Network & Security section."
         },
         {
-          "text": "Click on the Create security group button."
+          "text": "Click on the Create security group button.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-11.jpg"
+          ]
+        },
+        {
+          "text": "Task 3: Create a Security Group for RDS instance",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-12.jpg"
+          ]
+        },
+        {
+          "text": "We are going to create a Security group for RDS with 3306 port number enabled. Security group name : Enter rds-maz-SG Description : Enter Security group for RDS Aurora VPC : Select Default VPC",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-13.jpg"
+          ]
         },
         {
           "text": "We are going to create a Security group for RDS with 3306 port number enabled."
         },
         {
-          "text": "Security group name : Enter rds-maz-SG"
+          "text": "Security group name : Enter rds-maz-SG"
         },
         {
-          "text": "Description : Enter Security group for RDS Aurora"
+          "text": "Description : Enter Security group for RDS Aurora"
         },
         {
-          "text": "VPC : Select Default VPC"
+          "text": "VPC : Select Default VPC",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-14.jpg"
+          ]
         },
         {
-          "text": "Click on the Add rule button under Inbound rules."
+          "text": "Task 3: Create a Security Group for RDS instance",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-15.jpg"
+          ]
         },
         {
-          "text": "Type : Select MYSQL/Aurora"
+          "text": "Click on the Add rule button under Inbound rules. Type : Select MYSQL/Aurora Source : Select Anywhere IPv4"
         },
         {
-          "text": "Source : Select Anywhere IPv4"
+          "text": "Click on the Add rule button under Inbound rules."
         },
         {
-          "text": "Leave everything as default and click on the Create security group button."
+          "text": "Type : Select MYSQL/Aurora"
+        },
+        {
+          "text": "Source : Select Anywhere IPv4"
+        },
+        {
+          "text": "Leave everything as default and click on the Create security group button."
         }
       ]
     },
@@ -189,76 +246,121 @@
       "title": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
       "steps": [
         {
-          "text": "In this task, we will create an aurora database using AWS RDS service. The database is configured with Multi-AZ deployment, which replicates data to a standby instance in a different availability zone, providing high availability and durability."
+          "text": "In this task, we will create an aurora database using AWS RDS service. The database is configured with Multi-AZ deployment, which replicates data to a standby instance in a different availability zone, providing high availability and durability."
         },
         {
-          "text": "Make sure you are in US East (N.Virginia) us-east-1 Region."
+          "text": "Make sure you are in US East (N.Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to RDS under the database section of the Services menu."
+          "text": "Navigate to RDS under the database section of the Services menu."
         },
         {
-          "text": "Click on Databases in the left Panel."
+          "text": "Click on Databases in the left Panel."
         },
         {
-          "text": "Click on Created database button and choose Full configuration option."
+          "text": "Click on Created database button and choose Full configuration option.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-16.png"
+          ]
         },
         {
-          "text": "Next, we'll configure the database on the Create Database Page"
+          "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-17.png"
+          ]
+        },
+        {
+          "text": "Next, we'll configure the database on the Create Database Page In Engine option: Select Aurora (MySQL Compatible)"
+        },
+        {
+          "text": "Next, we'll configure the database on the Create Database Page"
+        },
+        {
+          "text": "In Engine option: Select Aurora (MySQL Compatible)"
         },
         {
           "text": "In Engine option:"
         },
         {
-          "text": "Select Aurora (MySQL Compatible)"
+          "text": "Select Aurora (MySQL Compatible)"
         },
         {
           "text": "Choose a Database Creation Method:"
         },
         {
-          "text": "Select Full Configuration"
+          "text": "Select Full Configuration",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-18.png"
+          ]
         },
         {
           "text": "Choose Template: Dev/Test"
         },
         {
-          "text": "Cluster scalability type: Choose Provisioned"
+          "text": "Cluster scalability type: Choose Provisioned"
         },
         {
           "text": "Choosing DB instance size"
         },
         {
-          "text": "DB instance class: Choose Burstable classes (includes t classes)"
+          "text": "DB instance class: Choose Burstable classes (includes t classes)Select db.t3.medium instance.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-19.png"
+          ]
         },
         {
-          "text": "Select db.t3.medium instance."
+          "text": "DB instance class: Choose Burstable classes (includes t classes)"
+        },
+        {
+          "text": "Select db.t3.medium instance."
+        },
+        {
+          "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-20.png"
+          ]
         },
         {
           "text": "Fill in the required details for the database (Aurora Cluster Settings)"
         },
         {
-          "text": "DB cluster identifier: Specify cluster name MyAuroraCluster"
+          "text": "DB cluster identifier: Specify cluster name MyAuroraCluster"
         },
         {
-          "text": "Give the following details in the credential settings"
+          "text": "Give the following details in the credential settings"
         },
         {
-          "text": "Master Username: Enter labAdmin"
+          "text": "Master Username: Enter labAdmin"
         },
         {
           "text": "Credentials management: Select Self managed"
         },
         {
-          "text": "Master password: Enter lab123"
+          "text": "Master password: Enter lab123"
         },
         {
-          "text": "Confirm password: Enter lab123"
+          "text": "Confirm password: Enter lab123"
         },
         {
-          "text": "Note: This is the username and password used to log into your database. Please make note of them."
+          "text": "Note: This is the username and password used to log into your database. Please make note of them.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-21.png"
+          ]
         },
         {
-          "text": "Availability and Durability: Choose Multi-AZ deployment: Create Aurora Replica or Reader node in a different AZ as shown below:"
+          "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-22.png"
+          ]
+        },
+        {
+          "text": "Availability and Durability: Choose Multi-AZ deployment: Create Aurora Replica or Reader node in a different AZ as shown below:",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-23.png"
+          ]
+        },
+        {
+          "text": "Connectivity Choose the Default VPC"
         },
         {
           "text": "Connectivity"
@@ -267,13 +369,31 @@
           "text": "Choose the Default VPC"
         },
         {
+          "text": "Additional connectivity configuration Subnet group: Default Publicly accessible: Yes {IMPORTANT} Existing VPC security groups : Remove the Default security group, which is selected by default :",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-24.png"
+          ]
+        },
+        {
           "text": "Additional connectivity configuration"
         },
         {
-          "text": "Subnet group: Default"
+          "text": "Subnet group: Default"
         },
         {
-          "text": "Publicly accessible: Yes {IMPORTANT}"
+          "text": "Publicly accessible: Yes {IMPORTANT}",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-25.png"
+          ]
+        },
+        {
+          "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-26.png"
+          ]
+        },
+        {
+          "text": "Existing VPC security groups : Remove the Default security group, which is selected by default :"
         },
         {
           "text": "Existing VPC security groups :"
@@ -282,13 +402,25 @@
           "text": "Remove the Default security group, which is selected by default :"
         },
         {
-          "text": "Select rds-maz-SG for the dropdown.(This is the security group which you have created in the beginning)"
+          "text": "Select rds-maz-SG for the dropdown.(This is the security group which you have created in the beginning)",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-27.png"
+          ]
         },
         {
-          "text": "Under Monitoring, uncheck monitoring option."
+          "text": "Under Monitoring, uncheck monitoring option."
         },
         {
-          "text": "Select the Additional configuration present at the bottom of the page and enter the following details:"
+          "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-28.png"
+          ]
+        },
+        {
+          "text": "Select the Additional configuration present at the bottom of the page and enter the following details: Database options Initial database name: Enter labrds"
+        },
+        {
+          "text": "Database options Initial database name: Enter labrds"
         },
         {
           "text": "Database options"
@@ -297,19 +429,28 @@
           "text": "Initial database name: Enter labrds"
         },
         {
-          "text": "Leave other settings as default"
+          "text": "Leave other settings as default"
         },
         {
           "text": "Once the details above have been filled in, click on Create database button."
         },
         {
-          "text": "It will take around 10-15 minutes for the database to be created. Please wait until database status changes from creating to Available."
+          "text": "It will take around 10-15 minutes for the database to be created. Please wait until database status changes from creating to Available."
         },
         {
-          "text": "Once the database has been created, you should see the following page:"
+          "text": "Once the database has been created, you should see the following page:",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-29.jpg"
+          ]
         },
         {
-          "text": "Similar to the screenshot, you should be able to see that our database launched in multiple AZs, namely us-east-1c and us-east-1a"
+          "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-30.jpg"
+          ]
+        },
+        {
+          "text": "Similar to the screenshot, you should be able to see that our database launched in multiple AZs, namely us-east-1c and us-east-1a"
         }
       ]
     },
@@ -317,22 +458,28 @@
       "title": "Task 5: Connecting to the Aurora (MySQL) database on RDS",
       "steps": [
         {
-          "text": "Now we have successfully launched Aurora RDS with Multi-AZ enabled. To connect to the new Aurora database, we need the endpoint."
+          "text": "Now we have successfully launched Aurora RDS with Multi-AZ enabled. To connect to the new Aurora database, we need the endpoint."
         },
         {
-          "text": "Click on the RDS cluster name and then navigate to Connectivity & security to find the endpoint of your Master (Writer) and Reader instances, with which you can connect to your DB instance."
+          "text": "Click on the RDS cluster name and then navigate to Connectivity & security to find the endpoint of your Master (Writer) and Reader instances, with which you can connect to your DB instance."
         },
         {
           "text": "The endpoints you see to be similar to these examples:"
         },
         {
-          "text": "Master (Writer): myauroracluster.cluster-c2tbqtanuaea.us-east-1.rds.amazonaws.com"
+          "text": "Master (Writer): myauroracluster.cluster-c2tbqtanuaea.us-east-1.rds.amazonaws.com"
         },
         {
-          "text": "Reader: myauroracluster.cluster-ro-c2tbqtanuaea.us-east-1.rds.amazonaws.com"
+          "text": "Reader: myauroracluster.cluster-ro-c2tbqtanuaea.us-east-1.rds.amazonaws.com"
         },
         {
-          "text": "Note: Please carefully look at the role of the DB instance (reader vs Master (Writer)) and their respective availability zones. (here us-east-1c and us-east-1a)"
+          "text": "Task 5: Connecting to the Aurora (MySQL) database on RDS",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-31.jpg"
+          ]
+        },
+        {
+          "text": "Note: Please carefully look at the role of the DB instance (reader vs Master (Writer)) and their respective availability zones. (here us-east-1c and us-east-1a)"
         }
       ]
     },
@@ -349,13 +496,28 @@
           "text": "Navigate to RDS available under the Database section of the Services menu."
         },
         {
-          "text": "Click on Master (writer) database. Choose a and click on the security group name in this example it is rds-maz-SG under VPC security groups as shown below:"
+          "text": "Click on Master (writer) database. Choose a and click on the security group name in this example it is rds-maz-SG under VPC security groups as shown below:",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-32.png"
+          ]
+        },
+        {
+          "text": "Task 6: Connecting the EC2 Server to RDS:",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-33.png"
+          ]
         },
         {
           "text": "It will open the Security Group page. Click on Inbound rules."
         },
         {
-          "text": "Click on Edit inbound rules. The MySQL rule will already exist."
+          "text": "Click on Edit inbound rules. The MySQL rule will already exist."
+        },
+        {
+          "text": "Click on Add rule button. Type: Select MYSQL/Aurora Source: Paste the Private IP address of your MyRdsEc2server EC2 instance. Delete the old rule and then Click on Save rules button.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-34.jpg"
+          ]
         },
         {
           "text": "Click on Add rule button."
@@ -367,7 +529,16 @@
           "text": "Source: Paste the Private IP address of your MyRdsEc2server EC2 instance."
         },
         {
-          "text": "Delete the old rule and then Click on Save rules button."
+          "text": "Delete the old rule and then Click on Save rules button.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-35.jpg"
+          ]
+        },
+        {
+          "text": "Task 6: Connecting the EC2 Server to RDS:",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-36.jpg"
+          ]
         }
       ]
     },
@@ -375,109 +546,115 @@
       "title": "Task 7: Execute Database Operations via SSH",
       "steps": [
         {
-          "text": "In this task, we are going to execute database operations on the Amazon Aurora RDS database. By SSHing into the EC2 instance and accessing the database using MySQL, they can create tables, insert data, and perform queries."
+          "text": "In this task, we are going to execute database operations on the Amazon Aurora RDS database. By SSHing into the EC2 instance and accessing the database using MySQL, they can create tables, insert data, and perform queries."
         },
         {
           "text": "Navigate to the EC2 Dashboard and select the instance created."
         },
         {
-          "text": "Once the instance is launched, Select EC2 Instance Connect option and click on Connect button."
+          "text": "Once the instance is launched, Select EC2 Instance Connect option and click on Connect button."
         },
         {
-          "text": "Please follow the steps in SSH into EC2 Instance for more option to SSH."
+          "text": "Task 7: Execute Database Operations via SSH",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-37.jpg"
+          ]
+        },
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance for more option to SSH."
+        },
+        {
+          "text": "Switch to the root user using the command : sudo su"
         },
         {
           "text": "Switch to the root user using the command :"
         },
         {
-          "text": "sudo su"
-        },
-        {
           "text": "Log into the RDS instance using the below command:"
         },
         {
-          "text": "mysql -h myauroracluster.cluster-cjp5t9qppjnx.us-east-1.rds.amazonaws.com -u labAdmin -p"
+          "text": "mysql -h myauroracluster.cluster-cjp5t9qppjnx.us-east-1.rds.amazonaws.com -u labAdmin -p"
         },
         {
-          "text": "Syntax: mysql -h <Hostname> -u <username> -p"
+          "text": "Syntax: mysql -h <Hostname> -u <username> -p"
         },
         {
-          "text": "Note: Make sure to change the above Master (Writer)Cluster endpoint and Username with yours."
+          "text": "Note: Make sure to change the above Master (Writer)Cluster endpoint and Username with yours."
         },
         {
-          "text": "Host name : myauroracluster.cluster-cpoz6c7903cx.us-east-1.rds.amazonaws.com (Master(Writer)cluster endpoint)"
+          "text": "Host name : myauroracluster.cluster-cpoz6c7903cx.us-east-1.rds.amazonaws.com (Master(Writer)cluster endpoint)"
         },
         {
-          "text": "Username : Enter labAdmin"
+          "text": "Username : Enter labAdmin"
         },
         {
-          "text": "Password : Enter lab123 (Use yours incase you changed the password while creating RDS)"
+          "text": "Password : Enter lab123 (Use yours incase you changed the password while creating RDS)"
         },
         {
           "text": "You should now be able to log into the database,"
         },
         {
-          "text": "List all Databases using the below command. You will see the database labrds created while launching the RDS cluster."
+          "text": "List all Databases using the below command. You will see the database labrds created while launching the RDS cluster.show databases;"
         },
         {
-          "text": "show databases;"
+          "text": "List all Databases using the below command. You will see the database labrds created while launching the RDS cluster."
         },
         {
-          "text": "Now create the database in the Master(Writer) RDS as given in the screenshot. We'll create a demo database named auroro_db."
+          "text": "Task 7: Execute Database Operations via SSH",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-38.png"
+          ]
         },
         {
-          "text": "Create database auroro_db;"
+          "text": "Now create the database in the Master(Writer) RDS as given in the screenshot. We'll create a demo database named auroro_db.Create database auroro_db;"
+        },
+        {
+          "text": "Now create the database in the Master(Writer) RDS as given in the screenshot. We'll create a demo database named auroro_db."
         },
         {
           "text": "Select the newly-created database:"
         },
         {
-          "text": "use auroro_db;"
+          "text": "List all Databases:Show databases;"
         },
         {
           "text": "List all Databases:"
         },
         {
-          "text": "Show databases;"
+          "text": "Task 7: Execute Database Operations via SSH",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-39.png"
+          ]
         },
         {
-          "text": "Next we'll create a table named students and insert few rows of data using list of commands:"
+          "text": "Next we'll create a table named students and insert few rows of data using list of commands:"
         },
         {
-          "text": "CREATE TABLE students ( subject_id INT AUTO_INCREMENT, subject_name VARCHAR(255) NOT NULL, teacher VARCHAR(255),start_date DATE, lesson TEXT,PRIMARY KEY (subject_id));"
+          "text": "Task 7: Execute Database Operations via SSH",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-40.png"
+          ]
         },
         {
-          "text": "Select * from students;"
-        },
-        {
-          "text": "Show tables;"
+          "text": "Insert data into the table:INSERT INTO students(subject_name, teacher) VALUES ('English', 'John Taylor');INSERT INTO students(subject_name, teacher) VALUES ('Science', 'Mary Smith');INSERT INTO students(subject_name, teacher) VALUES ('Maths', 'Ted Miller');INSERT INTO students(subject_name, teacher) VALUES ('Arts', 'Suzan Carpenter');"
         },
         {
           "text": "Insert data into the table:"
         },
         {
-          "text": "INSERT INTO students(subject_name, teacher) VALUES ('English', 'John Taylor');"
-        },
-        {
-          "text": "INSERT INTO students(subject_name, teacher) VALUES ('Science', 'Mary Smith');"
-        },
-        {
-          "text": "INSERT INTO students(subject_name, teacher) VALUES ('Maths', 'Ted Miller');"
-        },
-        {
-          "text": "INSERT INTO students(subject_name, teacher) VALUES ('Arts', 'Suzan Carpenter');"
+          "text": "Now you can view the contents of the table student using the below command:select * from students;"
         },
         {
           "text": "Now you can view the contents of the table student using the below command:"
         },
         {
-          "text": "select * from students;"
+          "text": "Task 7: Execute Database Operations via SSH",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-41.png"
+          ]
         },
         {
           "text": "Exit from mysql console use the below command:"
-        },
-        {
-          "text": "exit;"
         }
       ]
     },
@@ -491,16 +668,40 @@
           "text": "Navigate to RDS Database and in Database section Select Master(Writer) Instance and in Actions dropdown, click on failover"
         },
         {
-          "text": "To test if Multi-AZ is working, we will create a situation where master fails and the read replica has to become the new Master(Writer)."
+          "text": "To test if Multi-AZ is working, we will create a situation where master fails and the read replica has to become the new Master(Writer).",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-42.jpg"
+          ]
         },
         {
-          "text": "On the next screen, confirm the Failover."
+          "text": "Task 8: Forcing a Failover to Test Multi-AZ",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-43.jpg"
+          ]
         },
         {
-          "text": "Wait for a few minutes for the RDS instances to failover."
+          "text": "On the next screen, confirm the Failover.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-44.jpg"
+          ]
+        },
+        {
+          "text": "Task 8: Forcing a Failover to Test Multi-AZ",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-45.jpg"
+          ]
+        },
+        {
+          "text": "Wait for a few minutes for the RDS instances to failover."
         },
         {
           "text": "(i.e Master (Writer) becomes Reader and Reader becomes Master (Writer) as shown below)"
+        },
+        {
+          "text": "Task 8: Forcing a Failover to Test Multi-AZ",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-46.jpg"
+          ]
         }
       ]
     },
@@ -511,40 +712,46 @@
           "text": "In this task, we are going to the new master instance and verify the presence of the database, table, and data created earlier. This step ensures that the failover was successful, and the new master instance is functioning as expected."
         },
         {
+          "text": "Now connect to RDS with new Master endpoint Copy the endpoint of the new Master(Writer)cluster and replace it with your endpoint link."
+        },
+        {
           "text": "Now connect to RDS with new Master endpoint"
         },
         {
-          "text": "Copy the endpoint of the new Master(Writer)cluster and replace it with your endpoint link."
+          "text": "Copy the endpoint of the new Master(Writer)cluster and replace it with your endpoint link."
         },
         {
-          "text": "Mysql -h <endpoint> -u <username> -p and press [Enter]"
+          "text": "Mysql -h <endpoint> -u <username> -p and press [Enter]"
         },
         {
-          "text": "mysql -h myauroracluster.cluster-ro-cjp5t9qppjnx.us-east-1.rds.amazonaws.com -u labAdmin -p"
+          "text": "mysql -h myauroracluster.cluster-ro-cjp5t9qppjnx.us-east-1.rds.amazonaws.com -u labAdmin -p"
         },
         {
-          "text": "Password: Enter lab123"
+          "text": "Password: Enter lab123"
         },
         {
-          "text": "You will be able to Log into MySQL and check for the database and table created in the master DB instance before the failover."
+          "text": "You will be able to Log into MySQL and check for the database and table created in the master DB instance before the failover."
         },
         {
           "text": "You can notice the resources created on the original master db are present, implying that the Failover worked successfully."
         },
         {
-          "text": "Show databases;"
+          "text": "Task 9: Testing the Failover Condition",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-47.png"
+          ]
         },
         {
-          "text": "Now check the existence of table named students and data (that we created earlier in the lab):"
+          "text": "Now check the existence of table named students and data (that we created earlier in the lab):use auroro_db;select * from students;"
         },
         {
-          "text": "use auroro_db;"
+          "text": "Now check the existence of table named students and data (that we created earlier in the lab):"
         },
         {
-          "text": "select * from students;"
-        },
-        {
-          "text": "Do you Know?"
+          "text": "Task 9: Testing the Failover Condition",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-48.png"
+          ]
         },
         {
           "text": "With Multi-AZ deployment, your database's transaction logs are synchronously replicated to the standby instance. This ensures that your data is durable and protected against potential data loss in the event of a primary instance failure."
@@ -555,13 +762,22 @@
       "title": "Task 10: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-49.gif"
+          ]
+        },
+        {
+          "text": "Task 10: Validation Test",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-50.gif"
+          ]
         }
       ]
     },
@@ -569,16 +785,22 @@
       "title": "Task 11: Delete AWS Resources",
       "steps": [
         {
-          "text": "Terminate EC2 Instance"
-        },
-        {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on the EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on the EC2 in the Compute section."
         },
         {
           "text": "All the EC2 Instances will be listed here,"
         },
         {
-          "text": "To terminate the EC2, perform the following task:"
+          "text": "Task 11: Delete AWS Resources",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-51.jpg"
+          ]
+        },
+        {
+          "text": "To terminate the EC2, perform the following task: Select MyRdsEc2server, Click on Instance state\nSelect Terminate instance",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-52.png"
+          ]
         },
         {
           "text": "Select MyRdsEc2server,"
@@ -587,61 +809,82 @@
           "text": "Click on Instance state"
         },
         {
-          "text": "Select Terminate instance"
+          "text": "Select Terminate instance",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-53.png"
+          ]
         },
         {
-          "text": "Finally, Click on Terminate button."
+          "text": "Finally, Click on Terminate button."
         },
         {
           "text": "EC2 Instance will be terminated."
         },
         {
-          "text": "Delete RDS DB Instances"
-        },
-        {
-          "text": "Navigate to RDS by clicking on the Services menu available under the Database section."
+          "text": "Navigate to RDS by clicking on the Services menu available under the Database section."
         },
         {
           "text": "Click on Databaes"
         },
         {
-          "text": "It will list all the RDS databases"
+          "text": "It will list all the RDS databases",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-54.png"
+          ]
         },
         {
-          "text": "Let's delete the Reader first, Click on Actions, and select Delete"
+          "text": "Let's delete the Reader first, Click on Actions, and select Delete"
+        },
+        {
+          "text": "To delete we have to perform several tasks: Type delete me to confirm\nAnd finally, click on the Delete button below.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-55.jpg"
+          ]
+        },
+        {
+          "text": "Type delete me to confirm"
+        },
+        {
+          "text": "And finally, click on the Delete button below."
+        },
+        {
+          "text": "Task 11: Delete AWS Resources",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-56.jpg"
+          ]
+        },
+        {
+          "text": "Now it's time to delete Writer first, Click on Actions, and select Delete",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-57.png"
+          ]
+        },
+        {
+          "text": "To delete we have to perform several tasks: Uncheck the option of Create final snapshot Check the acknowledge option. Type delete me for confirmation And finally, click on the Delete button below.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-58.png"
+          ]
         },
         {
           "text": "To delete we have to perform several tasks:"
         },
         {
-          "text": "Type delete me to confirm"
+          "text": "Uncheck the option of Create final snapshot"
         },
         {
-          "text": "And finally, click on the Delete button below."
+          "text": "Check the acknowledge option."
         },
         {
-          "text": "Now it's time to delete Writer first, Click on Actions, and select Delete"
+          "text": "Type delete me for confirmation"
         },
         {
-          "text": "To delete we have to perform several tasks:"
+          "text": "And finally, click on the Delete button below.",
+          "images": [
+            "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-59.png"
+          ]
         },
         {
-          "text": "Uncheck the option of Create final snapshot"
-        },
-        {
-          "text": "Check the acknowledge option."
-        },
-        {
-          "text": "Type delete me for confirmation"
-        },
-        {
-          "text": "And finally, click on the Delete button below."
-        },
-        {
-          "text": "It will take around 4 minutes to delete the database instance, you can end the lab now."
-        },
-        {
-          "text": "Completion and Conclusion"
+          "text": "It will take around 4 minutes to delete the database instance, you can end the lab now."
         },
         {
           "text": "You have successfully used the AWS management console to create an Amazon Aurora MySQL database with Multi-Az enabled."
@@ -650,13 +893,10 @@
           "text": "You have created an Amazon Aurora database on RDS."
         },
         {
-          "text": "You have successfully connected to the Amazon Aurora database and tested the failover condition with Multi-AZ enabled."
+          "text": "You have successfully connected to the Amazon Aurora database and tested the failover condition with Multi-AZ enabled."
         },
         {
           "text": "You have successfully validated the lab."
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign out of AWS Account."
@@ -665,7 +905,7 @@
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End lab from the lab console."
+          "text": "Once you have completed the steps, click on End lab from the lab console."
         }
       ]
     }

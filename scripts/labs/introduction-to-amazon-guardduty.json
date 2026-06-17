@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,19 +35,40 @@
       "title": "Task 2: Enabling Amazon GuardDuty",
       "steps": [
         {
-          "text": "Make sure to choose the US East (N. Virginia) us-east-1 region in the AWS Management console dashboard, which is present in the top right corner."
+          "text": "Make sure to choose the US East (N. Virginia) us-east-1 region in the AWS Management console dashboard, which is present in the top right corner."
         },
         {
-          "text": "Navigate to the Services menu at the top and click on GuardDuty in the Security, Identity and Compliance section."
+          "text": "Navigate to the Services menu at the top and click on GuardDuty in the Security, Identity and Compliance section."
         },
         {
-          "text": "Click on Get started."
+          "text": "Click on Get started.",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-01.png"
+          ]
         },
         {
-          "text": "Click on Enable GuardDuty. With one click, the service will be enabled."
+          "text": "Task 2: Enabling Amazon GuardDuty",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-02.png"
+          ]
         },
         {
-          "text": "In the Findings page, you will see the warning You don’t have any findings because there is no malicious activity happening in your AWS Account. Ignore the warnings, wherever you find."
+          "text": "Click on Enable GuardDuty. With one click, the service will be enabled.",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-03.png"
+          ]
+        },
+        {
+          "text": "Task 2: Enabling Amazon GuardDuty",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-04.png"
+          ]
+        },
+        {
+          "text": "In the Findings page, you will see the warning You don’t have any findings because there is no malicious activity happening in your AWS Account. Ignore the warnings, wherever you find.",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-05.png"
+          ]
         }
       ]
     },
@@ -52,19 +76,28 @@
       "title": "Task 3: Exploring Amazon GuardDuty",
       "steps": [
         {
-          "text": "Settings"
-        },
-        {
           "text": "Click on Settings in the left panel."
         },
         {
           "text": "You will see a Detector ID. A detector is a resource that represents the GuardDuty service."
         },
         {
-          "text": "Service roles: GuardDuty uses a service role to monitor your data sources on your behalf."
+          "text": "Service roles: GuardDuty uses a service role to monitor your data sources on your behalf.",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-06.png"
+          ]
+        },
+        {
+          "text": "Task 3: Exploring Amazon GuardDuty",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-07.png"
+          ]
         },
         {
           "text": "Findings export options: Findings are automatically sent to CloudWatch Events. You can also export findings to an S3 bucket. New findings are exported within 5 minutes. No need to change anything."
+        },
+        {
+          "text": "Suspend GuardDuty: Suspend GuardDuty: When you suspend GuardDuty, it stops monitoring your AWS environment and doesn't generate new findings. Your existing findings remain intact and aren't affected. Disable GuardDuty: When you disable GuardDuty, you not only stop GuardDuty from monitoring your AWS environment and generating new findings, you also lose your existing findings and your GuardDuty configurations. You can’t recover the data later."
         },
         {
           "text": "Suspend GuardDuty:"
@@ -74,9 +107,6 @@
         },
         {
           "text": "Disable GuardDuty: When you disable GuardDuty, you not only stop GuardDuty from monitoring your AWS environment and generating new findings, you also lose your existing findings and your GuardDuty configurations. You can’t recover the data later."
-        },
-        {
-          "text": "Lists"
         },
         {
           "text": "Click on Lists below Settings."
@@ -91,13 +121,28 @@
           "text": "Trusted IP Lists: Trusted IP lists consist of IP addresses that are whitelisted for secure communication with your AWS environment. GuardDuty does not generate findings for IP addresses that are included in trusted IP lists."
         },
         {
-          "text": "Threat IP Lists: Threat lists consist of known malicious IP addresses. GuardDuty generates findings for IP addresses that are included in threat lists."
+          "text": "Threat IP Lists: Threat lists consist of known malicious IP addresses. GuardDuty generates findings for IP addresses that are included in threat lists.",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-08.png"
+          ]
         },
         {
-          "text": "Accounts"
+          "text": "Task 3: Exploring Amazon GuardDuty",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-09.png"
+          ]
         },
         {
-          "text": "Click on Accounts above the settings."
+          "text": "Click on Accounts above the settings.",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-10.png"
+          ]
+        },
+        {
+          "text": "Task 3: Exploring Amazon GuardDuty",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-11.png"
+          ]
         },
         {
           "text": "You can invite other accounts to enable GuardDuty and become associated with your AWS account."
@@ -120,22 +165,49 @@
           "text": "Since there are no potential threats in our AWS Account, let us generate some sample findings and learn about them."
         },
         {
-          "text": "Navigate to settings from left panel, scroll down and click on Generate sample findings."
+          "text": "Navigate to settings from left panel, scroll down and click on Generate sample findings.",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-12.png"
+          ]
+        },
+        {
+          "text": "Task 4: Generating Sample Findings",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-13.png"
+          ]
         },
         {
           "text": "To find your sample findings, go to Findings from left panel."
         },
         {
-          "text": "Wait until the loading is completed. In the top-right corner, you should see several findings."
+          "text": "Wait until the loading is completed. In the top-right corner, you should see several findings."
         },
         {
-          "text": "You can use filter criteria to filter your findings."
+          "text": "You can use filter criteria to filter your findings.",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-14.png"
+          ]
+        },
+        {
+          "text": "Task 4: Generating Sample Findings",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-15.png"
+          ]
         },
         {
           "text": "Click on one of the sample findings."
         },
         {
-          "text": "You can see various parameters like severity, region, Account ID, Resource ID, Resource Affected, etc."
+          "text": "You can see various parameters like severity, region, Account ID, Resource ID, Resource Affected, etc.",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-16.png"
+          ]
+        },
+        {
+          "text": "Task 4: Generating Sample Findings",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-17.png"
+          ]
         },
         {
           "text": "Go through the sample to learn more about the different severities."
@@ -153,6 +225,12 @@
         },
         {
           "text": "Sample Output:"
+        },
+        {
+          "text": "Task 5: Validation of the Lab",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-18.gif"
+          ]
         }
       ]
     },
@@ -160,22 +238,16 @@
       "title": "Task 6: Disabling GuardDuty",
       "steps": [
         {
-          "text": "Go to the settings and click on DisableGuardDuty under suspend GuardDuty to stop it."
+          "text": "Go to the settings and click on DisableGuardDuty under suspend GuardDuty to stop it."
         },
         {
           "text": "Click on Disable to confirm."
         },
         {
-          "text": "You have successfully disabled GuardDuty."
-        },
-        {
-          "text": "Do You Know ?"
-        },
-        {
-          "text": "Amazon GuardDuty analyzes and monitors billions of events across your AWS accounts, including API calls, network traffic, and DNS data, to identify potential security threats and anomalies."
-        },
-        {
-          "text": "Completion and Conclusion"
+          "text": "You have successfully disabled GuardDuty.",
+          "images": [
+            "/labs/introduction-to-amazon-guardduty/step-19.jpg"
+          ]
         },
         {
           "text": "You have successfully used the AWS management console to enable Amazon GuardDuty."
@@ -190,16 +262,13 @@
           "text": "You have successfully disabled Amazon GuardDuty."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps click on End Lab from the lab console."
+          "text": "Once you have completed the steps click on End Lab from the lab console."
         }
       ]
     }

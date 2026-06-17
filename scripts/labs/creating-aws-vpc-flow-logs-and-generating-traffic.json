@@ -1,0 +1,484 @@
+{
+  "slug": "creating-aws-vpc-flow-logs-and-generating-traffic",
+  "title": "Creating AWS VPC Flow Logs and Generating Traffic",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create CloudWatch Logs",
+      "steps": [
+        {
+          "text": "In this task, we are going to set up CloudWatch Logs, which are used to store and monitor log data."
+        },
+        {
+          "text": "Navigate to the Services menu at the top and choose CloudWatch under Management and Governance."
+        },
+        {
+          "text": "Click on Log Management on the left side panel under Logs and Click on Create log group button."
+        },
+        {
+          "text": "Enter the Log Group Name: whizvpclogs and click on Create. The log group will be created."
+        },
+        {
+          "text": "Task 2: Create CloudWatch Logs"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a VPC",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an Amazon Virtual Private Cloud (VPC). A VPC provides a logically isolated section of the AWS Cloud where users can launch their resources."
+        },
+        {
+          "text": "Navigate to the Services menu at the top and select VPC under Networking and Content Delivery."
+        },
+        {
+          "text": "Click on Your VPC’s on the left side panel, then click on Create VPC and select VPC only."
+        },
+        {
+          "text": "VPC Settings:"
+        },
+        {
+          "text": "Name tag: Enter MyVPC"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter 10.1.0.0/16"
+        },
+        {
+          "text": "Task 3: Create a VPC"
+        },
+        {
+          "text": "Then leave the other fields as default and click on Create VPC."
+        },
+        {
+          "text": "Click on Your VPC's on the left panel, and it will be shown like this."
+        },
+        {
+          "text": "Task 3: Create a VPC"
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Creating an Internet Gateway",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an internet gateway and attach it to the VPC."
+        },
+        {
+          "text": "Select Internet Gateways on the left side panel and click on the Create internet gateway"
+        },
+        {
+          "text": "Enter the name as MyInternetGateway. Leave everything else as default and click on the Create internet gateway."
+        },
+        {
+          "text": "Task 4: Creating an Internet Gateway"
+        },
+        {
+          "text": "Once created, attach it to MyVPC by clicking on Actions at the top and selecting Attach to VPC."
+        },
+        {
+          "text": "Task 4: Creating an Internet Gateway"
+        },
+        {
+          "text": "Under Available VPCs, select MyVPC and then click on Attach internet gateway button."
+        },
+        {
+          "text": "Click on the Route Tables on the left side panel and then select the main route table for your VPC, i.e., MyVPC. If the rout table does not appear, please click the Refresh button in the top right panel."
+        },
+        {
+          "text": "Now click on the Routes tab and then click on Edit routes."
+        },
+        {
+          "text": "Task 4: Creating an Internet Gateway"
+        },
+        {
+          "text": "Click on Add Route Destination: Enter 0.0.0.0/0 Target: Select Internet Gateway and choose MyInternetGateway from the drop-down list. Click on Save Changes button."
+        },
+        {
+          "text": "Click on Add Route"
+        },
+        {
+          "text": "Destination: Enter 0.0.0.0/0"
+        },
+        {
+          "text": "Target: Select Internet Gateway and choose MyInternetGateway from the drop-down list."
+        },
+        {
+          "text": "Click on Save Changes button."
+        },
+        {
+          "text": "Task 4: Creating an Internet Gateway"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create a Subnet",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a subnet within the VPC. Subnets are subdivisions of a VPC and allow users to organize and isolate resources within their network."
+        },
+        {
+          "text": "Click on Subnets on the left side panel and click on Create Subnet."
+        },
+        {
+          "text": "VPC:"
+        },
+        {
+          "text": "VPC ID: Select MyVPC"
+        },
+        {
+          "text": "Subnet settings:"
+        },
+        {
+          "text": "Subnet name: Enter whizsub"
+        },
+        {
+          "text": "Availability Zone: Select US East(N.Virginia)/us-east-1a"
+        },
+        {
+          "text": "IPv4 Subnet CIDR Block: Enter 10.1.1.0/24"
+        },
+        {
+          "text": "Click on Create subnet button."
+        },
+        {
+          "text": "Task 5: Create a Subnet"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Create VPC Flow Logs",
+      "steps": [
+        {
+          "text": "In this task, we are going to create VPC Flow Logs. VPC Flow Logs capture information about the IP traffic going to and from network interfaces within the VPC."
+        },
+        {
+          "text": "Click on Your VPC's on the left side panel and select MyVPC, click on Actions, then select Create Flow Log."
+        },
+        {
+          "text": "Create flow log:"
+        },
+        {
+          "text": "Name: Enter MyVPCFlowLog"
+        },
+        {
+          "text": "Filter: Select Accept"
+        },
+        {
+          "text": "Maximum Aggregation Interval: Select 1 minute"
+        },
+        {
+          "text": "Task 6: Create VPC Flow Logs"
+        },
+        {
+          "text": "Destination: Select Send to Cloudwatch Logs"
+        },
+        {
+          "text": "Destination Log Group: Select whizvpclogs."
+        },
+        {
+          "text": "Service access: select Use an existing service role. role:"
+        },
+        {
+          "text": "Service role: Select VPCFlowLog_Role_<RANDOM_NUMBER>. This role has already been created for you."
+        },
+        {
+          "text": "Leave the other options as default, then click on Create flow log."
+        },
+        {
+          "text": "Task 6: Create VPC Flow Logs"
+        },
+        {
+          "text": "Once the flow logs are created, In the My VPC's dashboard, select MyVPC, and click on Flow Logs tab below. The flow log will be available."
+        },
+        {
+          "text": "Now, you have successfully learned how to create the VPC Flow Logs."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Creating an EC2 Instance",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an Amazon Elastic Compute Cloud (EC2) instance within the VPC."
+        },
+        {
+          "text": "Navigate to Services at the top and click on EC2 under Compute."
+        },
+        {
+          "text": "Make sure you are in the US-East (N.Virginia) us-east-1 region."
+        },
+        {
+          "text": "Select Instances on the left side panel and click on Launch instances."
+        },
+        {
+          "text": "Task 7: Creating an EC2 Instance"
+        },
+        {
+          "text": "Enter Name : labec2instance."
+        },
+        {
+          "text": "Choose an Amazon Machine Image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI in the drop-down."
+        },
+        {
+          "text": "Choose an Instance Type: Select t2.micro."
+        },
+        {
+          "text": "Task 7: Creating an EC2 Instance"
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: WhizKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Select Create key pair Button."
+        },
+        {
+          "text": "In Network Settings, Click on Edit Button:"
+        },
+        {
+          "text": "VPC : Select MyVPC"
+        },
+        {
+          "text": "Subnet: It automatically selects the Subnet we created(whizsub)"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select Create new Security group"
+        },
+        {
+          "text": "Security group name : Enter MyEC2Server_SG"
+        },
+        {
+          "text": "Description : Enter Security Group to allow traffic to EC2"
+        },
+        {
+          "text": "Task 7: Creating an EC2 Instance"
+        },
+        {
+          "text": "Check Allow SSH from and Select Anywhere from dropdown"
+        },
+        {
+          "text": "To add SSH, Choose Type: SSH Source: Select Anywhere"
+        },
+        {
+          "text": "To add SSH,"
+        },
+        {
+          "text": "Choose Type: SSH"
+        },
+        {
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "For HTTP, Select Add Security rule Button Choose Type: HTTP Source: Select Anywhere"
+        },
+        {
+          "text": "For HTTP, Select Add Security rule Button"
+        },
+        {
+          "text": "Choose Type: HTTP"
+        },
+        {
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "Task 7: Creating an EC2 Instance"
+        },
+        {
+          "text": "Under Advanced Details, scroll to IAM Instance Profile, and select VPCFlowLog_Role..."
+        },
+        {
+          "text": "Click on Launch Instances. The instance will be created within 1-2 minutes and the Instance State will change to running."
+        },
+        {
+          "text": "Task 7: Creating an EC2 Instance"
+        },
+        {
+          "text": "Copy the Public IP of the instance for future use."
+        },
+        {
+          "text": "Task 7: Creating an EC2 Instance"
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Generating Traffic",
+      "steps": [
+        {
+          "text": "In this task, we are going to generate traffic to the EC2 instance by installing an Apache server."
+        },
+        {
+          "text": "We need to SSH into the instance to generate traffic. To do so, please follow the steps in SSH into EC2 Instance."
+        },
+        {
+          "text": "Once you SSH into the instance, install an Apache Server. To install it, follow the below steps. Run these commands one-by-one."
+        },
+        {
+          "text": "This command allows you to switch to the superuser or root user. sudo su"
+        },
+        {
+          "text": "This command allows you to switch to the superuser or root user."
+        },
+        {
+          "text": "This command updates the packages and software on the EC2 instance.dnf update -y"
+        },
+        {
+          "text": "This command updates the packages and software on the EC2 instance."
+        },
+        {
+          "text": "This command installs the Apache HTTP Server, commonly known as Apache. Apache is a widely used web server software that enables the hosting of websites and serves web content.dnf install httpd -y"
+        },
+        {
+          "text": "This command installs the Apache HTTP Server, commonly known as Apache. Apache is a widely used web server software that enables the hosting of websites and serves web content."
+        },
+        {
+          "text": "This command changes the current directory to the default location where web content is served by Apache.cd /var/www/html"
+        },
+        {
+          "text": "This command changes the current directory to the default location where web content is served by Apache."
+        },
+        {
+          "text": "This command creates a simple HTML file named “index.html” and sets its content as “Response coming from server”.echo \"Response coming from server\" > /var/www/html/index.html"
+        },
+        {
+          "text": "This command creates a simple HTML file named “index.html” and sets its content as “Response coming from server”."
+        },
+        {
+          "text": "This command starts the Apache web server service. Once the service is started, Apache is ready to serve web content.systemctl start httpd"
+        },
+        {
+          "text": "This command starts the Apache web server service. Once the service is started, Apache is ready to serve web content."
+        },
+        {
+          "text": "This command configures Apache to start automatically when the EC2 instance boots up.systemctl enable httpd"
+        },
+        {
+          "text": "This command configures Apache to start automatically when the EC2 instance boots up."
+        },
+        {
+          "text": "This command checks the status of the Apache web server service.systemctl status httpd"
+        },
+        {
+          "text": "This command checks the status of the Apache web server service."
+        },
+        {
+          "text": "Task 8: Generating Traffic"
+        },
+        {
+          "text": "Copy your instance's Public IP address and paste in the search bar of your browser tab and append /index.html after the IP address and hit enter."
+        },
+        {
+          "text": "Task 8: Generating Traffic"
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Viewing log events in CloudWatch Log groups",
+      "steps": [
+        {
+          "text": "In this task, we are going to demonstrate how to view the log events captured by the VPC Flow Logs in CloudWatch Logs."
+        },
+        {
+          "text": "Navigate to the Services menu at the top and choose CloudWatch under Management and Governance."
+        },
+        {
+          "text": "Click on Log Management on the left side panel and click on whizvpclogs."
+        },
+        {
+          "text": "Go to Log streams section and click on the log stream that has been created."
+        },
+        {
+          "text": "Task 9: Viewing log events in CloudWatch Log groups"
+        },
+        {
+          "text": "You will be able to view all the log events i.e. the traffic that is being directed to our EC2 Instance."
+        },
+        {
+          "text": "Task 9: Viewing log events in CloudWatch Log groups"
+        },
+        {
+          "text": "VPC Flow Logs can be used not only for monitoring and troubleshooting purposes but also for security analysis and threat detection. By analyzing the flow log data, you can gain insights into network patterns, detect anomalies, and identify potential security threats or unauthorized access attempts. This can help enhance the security of your VPC infrastructure and protect your resources from malicious activities."
+        }
+      ]
+    },
+    {
+      "title": "Task 10 : Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Task 10 : Validation of the Lab"
+        },
+        {
+          "text": "You have successfully created CloudWatch Logs."
+        },
+        {
+          "text": "You have successfully created the VPC."
+        },
+        {
+          "text": "You have successfully created the VPC Flow Logs."
+        },
+        {
+          "text": "You have successfully created an Instance."
+        },
+        {
+          "text": "You have successfully created Subnets that should be separate, then generated some site traffic."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

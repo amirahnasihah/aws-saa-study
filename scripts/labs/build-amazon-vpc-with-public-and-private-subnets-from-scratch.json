@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,43 +32,67 @@
       "title": "Task 2 : Creating New VPC",
       "steps": [
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to VPC by clicking on Services on the top of AWS Console."
+          "text": "Navigate to VPC by clicking on Services on the top of AWS Console."
         },
         {
-          "text": "Click on VPC (under Networking & Content Delivery section) or you can also search for VPC."
+          "text": "Click on VPC (under Networking & Content Delivery section) or you can also search for VPC."
         },
         {
-          "text": "Click on Your VPCs from the left menu."
+          "text": "Click on Your VPCs from the left menu."
         },
         {
           "text": "Here you can see the list of all VPC, No need to do anything with the existing and default VPCs, we will create a new VPC for this lab."
         },
         {
-          "text": "Click on Create VPC button."
+          "text": "Click on Create VPC button. Select VPC Only Name tag: Enter a VPC name for identification to your VPC. Ex: MyVPC IPv4 CIDR block: Enter 10.0.0.0/16 IPv6 CIDR block: No need to change this, make sure No IPv6 CIDR Block is checked. Tenancy: No need to change this, make sure Default is selected. Now click on Create VPC button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-01.png"
+          ]
         },
         {
-          "text": "Select VPC Only"
+          "text": "Click on Create VPC button."
         },
         {
-          "text": "Name tag: Enter a VPC name for identification to your VPC. Ex: MyVPC"
+          "text": "Select VPC Only"
         },
         {
-          "text": "IPv4 CIDR block: Enter 10.0.0.0/16"
+          "text": "Name tag: Enter a VPC name for identification to your VPC. Ex: MyVPC"
         },
         {
-          "text": "IPv6 CIDR block: No need to change this, make sure No IPv6 CIDR Block is checked."
+          "text": "IPv4 CIDR block: Enter 10.0.0.0/16"
         },
         {
-          "text": "Tenancy: No need to change this, make sure Default is selected."
+          "text": "IPv6 CIDR block: No need to change this, make sure No IPv6 CIDR Block is checked."
         },
         {
-          "text": "Now click on Create VPC button."
+          "text": "Tenancy: No need to change this, make sure Default is selected."
         },
         {
-          "text": "Once VPC is created, it will appear with details as shown below:"
+          "text": "Now click on Create VPC button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-02.png"
+          ]
+        },
+        {
+          "text": "Task 2 : Creating New VPC",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-03.png"
+          ]
+        },
+        {
+          "text": "Once VPC is created, it will appear with details as shown below:",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-04.png"
+          ]
+        },
+        {
+          "text": "Task 2 : Creating New VPC",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-05.png"
+          ]
         }
       ]
     },
@@ -79,57 +103,129 @@
           "text": "In this lab, we will create one public subnet and a private subnet in us-east-1a and us-east-1b Availability Zones respectively as follows:"
         },
         {
-          "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet button."
+          "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet button. VPC ID: Select MyVPC from the list you created earlier. Subnet Name: Enter Name MyPublicSubnet Availability Zone: Select us-east-1a IPv4 CIDR block: Enter the range 10.0.1.0/24 Click on Create subnet button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-06.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-07.png"
+          ]
         },
         {
-          "text": "VPC ID: Select MyVPC from the list you created earlier."
+          "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet button."
         },
         {
-          "text": "Subnet Name: Enter Name MyPublicSubnet"
+          "text": "VPC ID: Select MyVPC from the list you created earlier.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-08.png"
+          ]
         },
         {
-          "text": "Availability Zone: Select us-east-1a"
+          "text": "Task 3 : Creating Subnets",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-09.png"
+          ]
         },
         {
-          "text": "IPv4 CIDR block: Enter the range 10.0.1.0/24"
+          "text": "Subnet Name: Enter Name MyPublicSubnet"
         },
         {
-          "text": "Click on Create subnet button."
+          "text": "Availability Zone: Select us-east-1a"
         },
         {
-          "text": "For the Private Subnet, click on Create subnet again."
+          "text": "IPv4 CIDR block: Enter the range 10.0.1.0/24"
         },
         {
-          "text": "VPC ID : Select MyVPC from the list you created earlier."
+          "text": "Click on Create subnet button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-10.png"
+          ]
         },
         {
-          "text": "Subnet Name : Enter Name MyPrivateSubnet"
+          "text": "Task 3 : Creating Subnets",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-11.png"
+          ]
         },
         {
-          "text": "Availability Zone : Select us-east-1b"
+          "text": "For the Private Subnet, click on Create subnet again. VPC ID : Select MyVPC from the list you created earlier. Subnet Name : Enter Name MyPrivateSubnet Availability Zone : Select us-east-1b IPv4 CIDR block : Enter the range 10.0.2.0/24 Click on Create subnet button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-12.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-13.png"
+          ]
         },
         {
-          "text": "IPv4 CIDR block : Enter the range 10.0.2.0/24"
+          "text": "For the Private Subnet, click on Create subnet again."
         },
         {
-          "text": "Click on Create subnet button."
+          "text": "VPC ID : Select MyVPC from the list you created earlier.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-14.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Creating Subnets",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-15.png"
+          ]
+        },
+        {
+          "text": "Subnet Name : Enter Name MyPrivateSubnet"
+        },
+        {
+          "text": "Availability Zone : Select us-east-1b"
+        },
+        {
+          "text": "IPv4 CIDR block : Enter the range 10.0.2.0/24"
+        },
+        {
+          "text": "Click on Create subnet button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-16.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Creating Subnets",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-17.png"
+          ]
         }
       ]
     },
     {
-      "title": "Task 4: Create and configure Internet Gateway",
+      "title": "Task 4: Create and configure Internet Gateway",
       "steps": [
         {
           "text": "In this task, we are going to create an internet gateway and configure it with the VPC."
         },
         {
-          "text": "Click on Internet Gateways from the left menu and click on Create internet gateway button."
+          "text": "Click on Internet Gateways from the left menu and click on Create internet gateway button. Name Tag: Enter MyInternetGateway Click on Create internet gateway button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-18.png"
+          ]
         },
         {
-          "text": "Name Tag: Enter MyInternetGateway"
+          "text": "Click on Internet Gateways from the left menu and click on Create internet gateway button."
         },
         {
-          "text": "Click on Create internet gateway button."
+          "text": "Name Tag: Enter MyInternetGateway"
+        },
+        {
+          "text": "Click on Create internet gateway button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-19.png"
+          ]
+        },
+        {
+          "text": "Task 4: Create and configure Internet Gateway",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-20.png"
+          ]
+        },
+        {
+          "text": "Select the Internet gateway you created from the list Click on Actions. Click on Attach to VPC. Select MyVPC which you created from the list and click on Attach internet gateway button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-21.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-22.png"
+          ]
         },
         {
           "text": "Select the Internet gateway you created from the list"
@@ -138,105 +234,230 @@
           "text": "Click on Actions."
         },
         {
-          "text": "Click on Attach to VPC."
+          "text": "Click on Attach to VPC.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-23.png"
+          ]
         },
         {
-          "text": "Select MyVPC which you created from the list and click on Attach internet gateway button."
+          "text": "Task 4: Create and configure Internet Gateway",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-24.png"
+          ]
+        },
+        {
+          "text": "Select MyVPC which you created from the list and click on Attach internet gateway button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-25.png"
+          ]
+        },
+        {
+          "text": "Task 4: Create and configure Internet Gateway",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-26.png"
+          ]
         }
       ]
     },
     {
-      "title": "Task 5: Create Route Tables",
+      "title": "Task 5: Create Route Tables",
       "steps": [
         {
           "text": "In this task, we are going to create two route tables and associate them with their respective subnets."
         },
         {
-          "text": "Go to Route Tables from the left menu and click on Create route table button."
+          "text": "Go to Route Tables from the left menu and click on Create route table button. Name: Enter PublicRouteTable VPC: Select MyVPC from the list. Click on Create route table button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-27.png"
+          ]
         },
         {
-          "text": "Name: Enter PublicRouteTable"
+          "text": "Go to Route Tables from the left menu and click on Create route table button."
         },
         {
-          "text": "VPC: Select MyVPC from the list."
+          "text": "Name: Enter PublicRouteTable"
         },
         {
-          "text": "Click on Create route table button."
+          "text": "VPC: Select MyVPC from the list."
+        },
+        {
+          "text": "Click on Create route table button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-28.png"
+          ]
+        },
+        {
+          "text": "Task 5: Create Route Tables",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-29.png"
+          ]
+        },
+        {
+          "text": "Repeat the same steps to create a route table for the Private subnet. Name: Enter PrivateRouteTable VPC: Select MyVPC from the list. Click on Create route table button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-30.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-31.png"
+          ]
         },
         {
           "text": "Repeat the same steps to create a route table for the Private subnet."
         },
         {
-          "text": "Name: Enter PrivateRouteTable"
+          "text": "Name: Enter PrivateRouteTable"
         },
         {
-          "text": "VPC: Select MyVPC from the list."
+          "text": "VPC: Select MyVPC from the list."
         },
         {
-          "text": "Click on Create route table button."
+          "text": "Click on Create route table button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-32.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-33.png"
+          ]
         },
         {
-          "text": "Now we will associate the subnets to the route tables."
+          "text": "Task 5: Create Route Tables",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-34.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-35.png"
+          ]
         },
         {
-          "text": "Select the PublicRouteTable and go to the Subnet Associations tab."
+          "text": "Now we will associate the subnets to the route tables."
         },
         {
-          "text": "Click on Edit subnet associations."
+          "text": "Select the PublicRouteTable and go to the Subnet Associations tab. Click on Edit subnet associations. Select MyPublicSubnet from the list. Click on Save associations button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-36.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-37.png"
+          ]
         },
         {
-          "text": "Select MyPublicSubnet from the list."
+          "text": "Select the PublicRouteTable and go to the Subnet Associations tab."
         },
         {
-          "text": "Click on Save associations button."
+          "text": "Click on Edit subnet associations.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-38.png"
+          ]
         },
         {
-          "text": "Select the PrivateRouteTable and go to the Subnet Associations tab."
+          "text": "Task 5: Create Route Tables",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-39.png"
+          ]
         },
         {
-          "text": "Click on Edit subnet associations."
+          "text": "Select MyPublicSubnet from the list."
         },
         {
-          "text": "Select MyPrivateSubnet from the list."
+          "text": "Click on Save associations button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-40.png"
+          ]
         },
         {
-          "text": "Click on Save associations button."
+          "text": "Task 5: Create Route Tables",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-41.png"
+          ]
         },
         {
-          "text": "Make sure not to associate any subnets with the Main Route Table."
+          "text": "Select the PrivateRouteTable and go to the Subnet Associations tab. Click on Edit subnet associations. Select MyPrivateSubnet from the list. Click on Save associations button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-42.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-43.png"
+          ]
+        },
+        {
+          "text": "Select the PrivateRouteTable and go to the Subnet Associations tab."
+        },
+        {
+          "text": "Click on Edit subnet associations.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-44.png"
+          ]
+        },
+        {
+          "text": "Task 5: Create Route Tables",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-45.png"
+          ]
+        },
+        {
+          "text": "Select MyPrivateSubnet from the list."
+        },
+        {
+          "text": "Click on Save associations button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-46.png"
+          ]
+        },
+        {
+          "text": "Task 5: Create Route Tables",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-47.png"
+          ]
+        },
+        {
+          "text": "Make sure not to associate any subnets with the Main Route Table."
+        },
+        {
+          "text": "PublicRouteTable: Add a route to allow Internet traffic to the VPC. Select PublicRouteTable. Go to Routes tab, click on Edit routes. Click on Add route button, Specify the following values: Destination: Enter 0.0.0.0/0 Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway. Click on Save changes button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-48.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-49.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-50.png"
+          ]
         },
         {
           "text": "PublicRouteTable: Add a route to allow Internet traffic to the VPC."
         },
         {
-          "text": "Select PublicRouteTable."
+          "text": "Select PublicRouteTable."
         },
         {
-          "text": "Go to Routes tab, click on Edit routes."
+          "text": "Go to Routes tab, click on Edit routes.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-51.png"
+          ]
+        },
+        {
+          "text": "Task 5: Create Route Tables",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-52.png"
+          ]
+        },
+        {
+          "text": "Click on Add route button, Specify the following values: Destination: Enter 0.0.0.0/0 Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway. Click on Save changes button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-53.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-54.png"
+          ]
         },
         {
           "text": "Click on Add route button, Specify the following values:"
         },
         {
-          "text": "Destination: Enter 0.0.0.0/0"
+          "text": "Destination: Enter 0.0.0.0/0"
         },
         {
-          "text": "Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway."
+          "text": "Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway."
         },
         {
-          "text": "Click on Save changes button."
+          "text": "Click on Save changes button.",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-55.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-56.png"
+          ]
         },
         {
-          "text": "Do you know ?"
+          "text": "Task 5: Create Route Tables",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-57.png",
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-58.png"
+          ]
         },
-        {
-          "text": "VPC Flow Logs capture information about the IP traffic flowing in and out of your VPC. It provides detailed insights into network traffic patterns, helping you analyze and troubleshoot connectivity issues, monitor security, and meet compliance requirements."
-        }
-      ]
-    },
-    {
-      "title": "Do you know ?",
-      "steps": [
         {
           "text": "VPC Flow Logs capture information about the IP traffic flowing in and out of your VPC. It provides detailed insights into network traffic patterns, helping you analyze and troubleshoot connectivity issues, monitor security, and meet compliance requirements."
         }
@@ -246,16 +467,19 @@
       "title": "Task 6 : Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 6 : Validation Test",
+          "images": [
+            "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-59.gif"
+          ]
         },
         {
           "text": "You have successfully completed and learned how to create public and private subnets."
@@ -264,19 +488,16 @@
           "text": "You have learned how to create an Internet Gateway and associate it to VPC."
         },
         {
-          "text": "You now understand how public and private subnets are different (through associating Internet Gateway or not)."
+          "text": "You now understand how public and private subnets are different (through associating Internet Gateway or not)."
         },
         {
-          "text": "The instances launched inside the public subnet will be able to access the internet and instances launched inside the private subnet will not have access to the internet."
-        },
-        {
-          "text": "End Lab"
+          "text": "The instances launched inside the public subnet will be able to access the internet and instances launched inside the private subnet will not have access to the internet."
         },
         {
           "text": "Sign out from the AWS Management Console."
         },
         {
-          "text": "Click on End Lab button from the lab console and wait till the process gets completed"
+          "text": "Click on End Lab button from the lab console and wait till the process gets completed"
         }
       ]
     }

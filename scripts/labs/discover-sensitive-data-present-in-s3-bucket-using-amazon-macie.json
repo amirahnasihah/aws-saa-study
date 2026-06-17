@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,16 +35,34 @@
       "title": "Task 2: Enable Macie for the account",
       "steps": [
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
           "text": "Navigate to Amazon Macie by clicking on the Services menu in the top, then click on Amazon Macie in the Security, Identity & Compliance section."
         },
         {
-          "text": "On the home page, click on the Get started button to configure Amazon Macie."
+          "text": "On the home page, click on the Get started button to configure Amazon Macie.",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-01.png"
+          ]
         },
         {
-          "text": "On the Get started page, click on the Enable Macie button."
+          "text": "Task 2: Enable Macie for the account",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-02.png"
+          ]
+        },
+        {
+          "text": "On the Get started page, click on the Enable Macie button.",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-03.png"
+          ]
+        },
+        {
+          "text": "Task 2: Enable Macie for the account",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-04.png"
+          ]
         }
       ]
     },
@@ -49,25 +70,40 @@
       "title": "Task 3: Create a Macie job",
       "steps": [
         {
-          "text": "Macie will try to find out all the details of the account, which may take some time. No need to wait, simply click on the Create job button."
+          "text": "Macie will try to find out all the details of the account, which may take some time. No need to wait, simply click on the Create job button.",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-05.png"
+          ]
+        },
+        {
+          "text": "Task 3: Create a Macie job",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-06.png"
+          ]
         },
         {
           "text": "For Step-1, Choose S3 Bucket,"
         },
         {
-          "text": "Note: If you are getting any error notification, leave it and continue the rest steps."
+          "text": "If you can not See the bucket, click on the Add filter criteria field and click on the Bucket name."
         },
         {
-          "text": "If you can not See the bucket, click on the Add filter criteria field and click on the Bucket name."
+          "text": "Type lab and select the bucket name starting with lab, and click on the Next button"
         },
         {
-          "text": "Type lab and select the bucket name starting with lab, and click on the Next button"
+          "text": "Task 3: Create a Macie job",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-07.png"
+          ]
         },
         {
-          "text": "NOTE : If bucket is not listed, wait for 2–5 minutes and refresh the page 2–3 times."
+          "text": "Review S3 buckets Keep everything as default and click on the Next button."
         },
         {
-          "text": "Review S3 buckets Keep everything as default and click on the Next button."
+          "text": "Task 3: Create a Macie job",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-09.png"
+          ]
         },
         {
           "text": "For Step-3, Refine the scope,"
@@ -76,22 +112,34 @@
           "text": "In Sensitive data discover options: Select One-time job"
         },
         {
-          "text": "Click on the arrow to expand the window of Additional settings"
+          "text": "Click on the arrow to expand the window of Additional settings"
         },
         {
-          "text": "Let the Object criteria be default as File name extensions."
+          "text": "Let the Object criteria be default as File name extensions."
         },
         {
-          "text": "Write csv in the textbox and click on the Include button."
+          "text": "Write csv in the textbox and click on the Include button."
         },
         {
-          "text": "Once done, click on the Next button to proceed."
+          "text": "Once done, click on the Next button to proceed."
+        },
+        {
+          "text": "Task 3: Create a Macie job",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-10.png"
+          ]
         },
         {
           "text": "For Step-4, Select managed data identifiers,"
         },
         {
           "text": "Selection type: Choose Recommended"
+        },
+        {
+          "text": "Task 3: Create a Macie job",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-11.png"
+          ]
         },
         {
           "text": "Click on the Next button."
@@ -103,25 +151,40 @@
           "text": "Click on the Manage custom identifiers, to create one."
         },
         {
-          "text": "Note: This will open in the New tab, please enable a pop-up, if it doesn't open in one click."
+          "text": "Task 3: Create a Macie job",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-12.png"
+          ]
         },
         {
-          "text": "Click on the Create option present on the top right."
+          "text": "Click on the Create option present on the top right."
         },
         {
-          "text": "?"
+          "text": "?",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-13.png"
+          ]
         },
         {
           "text": "Fill in the details, as follows:"
         },
         {
-          "text": "Name: Enter Whiz"
+          "text": "Name: Enter Whiz"
         },
         {
-          "text": "Description: Enter This identifier finds the data present in the format of AB-01 i.e. two characters, dash and followed by two numbers."
+          "text": "Description: Enter This identifier finds the data present in the format of AB-01 i.e. two characters, dash and followed by two numbers."
         },
         {
-          "text": "Regular expression: Enter [a-z]{2}-[0-9]{2}"
+          "text": "Regular expression: Enter [a-z]{2}-[0-9]{2}",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-14.png"
+          ]
+        },
+        {
+          "text": "Task 3: Create a Macie job",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-15.png"
+          ]
         },
         {
           "text": "Keep all other options as default."
@@ -130,10 +193,25 @@
           "text": "Click on the Submit button to create the Custom identifier."
         },
         {
-          "text": "Go back to the previous tab (Step 5 Select custom data identifiers ), and click on the refresh icon to see the newly created Custom identifier."
+          "text": "Task 3: Create a Macie job",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-16.png"
+          ]
         },
         {
-          "text": "Once refreshed, you will be able to see the Whiz identifier listed here. Click on the Next button."
+          "text": "Go back to the previous tab (Step 5 Select custom data identifiers ), and click on the refresh icon to see the newly created Custom identifier."
+        },
+        {
+          "text": "Once refreshed, you will be able to see the Whiz identifier listed here. Click on the Next button.",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-17.png"
+          ]
+        },
+        {
+          "text": "Task 3: Create a Macie job",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-18.png"
+          ]
         },
         {
           "text": "Select allow lists : Keep it default and click on Next button"
@@ -142,19 +220,31 @@
           "text": "In General Setting : Enter a name and description,"
         },
         {
-          "text": "Name: Enter WhizJob"
+          "text": "Name: Enter WhizJob"
         },
         {
-          "text": "Description: Enter This job scans the bucket with a name starting as lab and gathers its finding based on the regular expression pattern."
+          "text": "Description: Enter This job scans the bucket with a name starting as lab and gathers its finding based on the regular expression pattern."
         },
         {
           "text": "Click on the Next button."
         },
         {
+          "text": "Task 3: Create a Macie job",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-19.png"
+          ]
+        },
+        {
           "text": "For Step-8, Review and create,"
         },
         {
-          "text": "Review everything, click on the Submit button present below. Job is now created successfully."
+          "text": "Review everything, click on the Submit button present below. Job is now created successfully."
+        },
+        {
+          "text": "Task 3: Create a Macie job",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-20.png"
+          ]
         }
       ]
     },
@@ -168,7 +258,16 @@
           "text": "The job runs for approximately 10 minutes and gathers the findings."
         },
         {
-          "text": "After 10 minutes, the status is changed to Complete."
+          "text": "After 10 minutes, the status is changed to Complete.",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-21.png"
+          ]
+        },
+        {
+          "text": "Task 4: Macie job run and findings",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-22.png"
+          ]
         },
         {
           "text": "To view the Findings for the job, perform the following:"
@@ -180,13 +279,32 @@
           "text": "Select Show results"
         },
         {
-          "text": "And Choose Show findings"
+          "text": "And Choose Show findings",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-23.png"
+          ]
+        },
+        {
+          "text": "Task 4: Macie job run and findings",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-24.png"
+          ]
+        },
+        {
+          "text": "To check the exact results, open the finding. Note : If you can not see findings wait for more 2 minutes and refresh the page.",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-25.png"
+          ]
         },
         {
           "text": "To check the exact results, open the finding."
         },
         {
-          "text": "Note : If you can not see findings wait for more 2 minutes and refresh the page."
+          "text": "Perform the following task: Select the present finding Click on the Actions button And, Choose Export (JSON) JSON present here is in Read-only format, you may choose to download the complete report.",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-26.png",
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-27.png"
+          ]
         },
         {
           "text": "Perform the following task:"
@@ -198,13 +316,28 @@
           "text": "Click on the Actions button"
         },
         {
-          "text": "And, Choose Export (JSON)"
+          "text": "And, Choose Export (JSON)",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-28.png"
+          ]
         },
         {
-          "text": "JSON present here is in Read-only format, you may choose to download the complete report."
+          "text": "Task 4: Macie job run and findings",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-29.png"
+          ]
         },
         {
-          "text": "Do you know?"
+          "text": "JSON present here is in Read-only format, you may choose to download the complete report.",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-30.png"
+          ]
+        },
+        {
+          "text": "Task 4: Macie job run and findings",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-31.png"
+          ]
         },
         {
           "text": "Amazon Macie is an AWS service designed to enhance data security by automatically discovering, classifying, and protecting sensitive data in Amazon S3. It utilizes machine learning and natural language processing techniques to identify various types of sensitive information, such as personally identifiable information (PII), financial data, intellectual property, and more."
@@ -215,19 +348,25 @@
       "title": "Task 5: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validate button on the Right side panel."
+          "text": "Once the lab steps are completed, please click on the Validate button on the Right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-32.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 5: Validation Test",
+          "images": [
+            "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-33.gif"
+          ]
         },
         {
-          "text": "You have successfully enabled Amazon Macie."
+          "text": "You have successfully enabled Amazon Macie."
         },
         {
           "text": "You have successfully created a Macie job."
@@ -236,16 +375,13 @@
           "text": "You have successfully run the Macie job and retrieved the data."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
         }
       ]
     }
