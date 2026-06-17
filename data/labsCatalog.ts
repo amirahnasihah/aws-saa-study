@@ -27003,13 +27003,13 @@ export const labsCatalog: Lab[] = [
             "text": "Please follow the steps in SSH into EC2 Instance for more options to SSH."
           },
           {
-            "text": "For Mac/Linux users, SSH into the lab_instance by opening the terminal in your local system and execute the command below:ssh lab_user@<Your IPv4 Public IP address> Password : Enter lab@321"
+            "text": "For Mac/Linux users, SSH into the lab_instance by opening the terminal in your local system and execute the command below:ssh lab_user@<Your IPv4 Public IP address> Password : Enter <example-password>"
           },
           {
             "text": "For Mac/Linux users, SSH into the lab_instance by opening the terminal in your local system and execute the command below:"
           },
           {
-            "text": "Password : Enter lab@321"
+            "text": "Password : Enter <example-password>"
           },
           {
             "text": "Task 4: Creating an Application Load Balancer in AWS CLI",
@@ -27027,7 +27027,7 @@ export const labsCatalog: Lab[] = [
             "text": "Click on Accept"
           },
           {
-            "text": "Enter password : lab@321"
+            "text": "Enter password : <example-password>"
           },
           {
             "text": "Port : 22"
@@ -31168,19 +31168,13 @@ export const labsCatalog: Lab[] = [
     "duration": "01:30:00",
     "tasks": [
       {
-        "title": "Project Steps",
+        "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
             "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
           },
           {
-            "text": "On the AWS sign-in page,"
-          },
-          {
-            "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
-          },
-          {
-            "text": "Now copy your Username and Password in the lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
             "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
@@ -31195,11 +31189,16 @@ export const labsCatalog: Lab[] = [
             "text": "In this milestone, you will create two Virtual Private Clouds (VPCs) in different AWS regions. These VPCs will later be connected using VPC Peering for secure, cross-region communication."
           },
           {
-            "text": "Region: Virginia (us-east-1) : FrontendVPC (hosts EC2 web app)"
+            "text": "Region: Virginia (us-east-1) : FrontendVPC (hosts EC2 web app)"
           },
           {
-            "text": "Region: Mumbai (ap-south-1) : BackendVPC (hosts S3 bucket + S3 endpoint)"
-          },
+            "text": "Region: Mumbai (ap-south-1) : BackendVPC (hosts S3 bucket + S3 endpoint)"
+          }
+        ]
+      },
+      {
+        "title": "Task 2: Create a VPC in Virginia (us-east-1)",
+        "steps": [
           {
             "text": "This VPC will be used to host the frontend EC2 instance (web server)."
           },
@@ -31231,8 +31230,16 @@ export const labsCatalog: Lab[] = [
             "text": "Click Create VPC."
           },
           {
-            "text": "You have now created the Frontend VPC in Virginia."
+            "text": "Task 2: Create a VPC in Virginia (us-east-1)"
           },
+          {
+            "text": "You have now created the Frontend VPC in Virginia."
+          }
+        ]
+      },
+      {
+        "title": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)",
+        "steps": [
           {
             "text": "In this step, you will configure the FrontendVPC so that the EC2 instance can be accessed publicly over the Internet"
           },
@@ -31261,6 +31268,9 @@ export const labsCatalog: Lab[] = [
             "text": "Click Create Subnet."
           },
           {
+            "text": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)"
+          },
+          {
             "text": "You have created a public subnet inside FrontendVPC."
           },
           {
@@ -31282,6 +31292,9 @@ export const labsCatalog: Lab[] = [
             "text": "Internet Gateway is now attached to FrontendVPC."
           },
           {
+            "text": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)"
+          },
+          {
             "text": "Go to VPC Dashboard, Select Route Tables in the left side of the panel"
           },
           {
@@ -31300,7 +31313,10 @@ export const labsCatalog: Lab[] = [
             "text": "Click Create Route Table."
           },
           {
-            "text": "Select the route table, go to Routes, Click on Edit routes , then Add route:"
+            "text": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)"
+          },
+          {
+            "text": "Select the route table, go to Routes, Click on Edit routes , then Add route:"
           },
           {
             "text": "Destination: 0.0.0.0/0"
@@ -31312,6 +31328,9 @@ export const labsCatalog: Lab[] = [
             "text": "Click Save."
           },
           {
+            "text": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)"
+          },
+          {
             "text": "Go to Subnet Associations, Click on Edit subnet associations."
           },
           {
@@ -31321,8 +31340,16 @@ export const labsCatalog: Lab[] = [
             "text": "Save changes."
           },
           {
-            "text": "The public subnet now routes Internet-bound traffic via FrontendIGW."
+            "text": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)"
           },
+          {
+            "text": "The public subnet now routes Internet-bound traffic via FrontendIGW."
+          }
+        ]
+      },
+      {
+        "title": "Task 4: Create Backend VPC in Mumbai",
+        "steps": [
           {
             "text": "Open the VPC Dashboard in the AWS Console."
           },
@@ -31348,8 +31375,16 @@ export const labsCatalog: Lab[] = [
             "text": "Click Create VPC."
           },
           {
-            "text": "You have created the BackendVPC in Mumbai."
+            "text": "Task 4: Create Backend VPC in Mumbai"
           },
+          {
+            "text": "You have created the BackendVPC in Mumbai."
+          }
+        ]
+      },
+      {
+        "title": "Task 5: Create Private Subnet and Route Table (Mumbai)",
+        "steps": [
           {
             "text": "Go to VPC Dashboard, Click Subnets"
           },
@@ -31375,6 +31410,9 @@ export const labsCatalog: Lab[] = [
             "text": "Click Create Subnet."
           },
           {
+            "text": "Task 5: Create Private Subnet and Route Table (Mumbai)"
+          },
+          {
             "text": "Private subnet created inside BackendVPC."
           },
           {
@@ -31396,6 +31434,9 @@ export const labsCatalog: Lab[] = [
             "text": "Click Create Route Table."
           },
           {
+            "text": "Task 5: Create Private Subnet and Route Table (Mumbai)"
+          },
+          {
             "text": "Select the new route table, Click go to Subnet Associations and choose Edit subnet associations."
           },
           {
@@ -31405,8 +31446,16 @@ export const labsCatalog: Lab[] = [
             "text": "Save changes."
           },
           {
-            "text": "Backend private subnet is now associated with its route table."
+            "text": "Task 5: Create Private Subnet and Route Table (Mumbai)"
           },
+          {
+            "text": "Backend private subnet is now associated with its route table."
+          }
+        ]
+      },
+      {
+        "title": "Task 6: Create S3 VPC Endpoint (Private Access)",
+        "steps": [
           {
             "text": "To allow the EC2 in Virginia to fetch images from S3 in Mumbai without Internet, you will use a Gateway VPC Endpoint."
           },
@@ -31426,6 +31475,9 @@ export const labsCatalog: Lab[] = [
             "text": "Service Name: com.amazonaws.ap-south-1.s3 (S3 Gateway)"
           },
           {
+            "text": "Task 6: Create S3 VPC Endpoint (Private Access)"
+          },
+          {
             "text": "Endpoint Name: S3Endpoint"
           },
           {
@@ -31435,6 +31487,9 @@ export const labsCatalog: Lab[] = [
             "text": "Route Table: Backend-RT (enables private routing)"
           },
           {
+            "text": "Task 6: Create S3 VPC Endpoint (Private Access)"
+          },
+          {
             "text": "Click Create Endpoint."
           },
           {
@@ -31442,7 +31497,12 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "In this milestone, you will create a private S3 bucket in the Mumbai region (ap-south-1) and upload test images. This bucket will act as the central storage for images, which will later be accessed securely from the Virginia frontend via VPC Peering."
-          },
+          }
+        ]
+      },
+      {
+        "title": "Task 7: Create an S3 Bucket (Mumbai)",
+        "steps": [
           {
             "text": "Go to the S3 Dashboard in the AWS Console."
           },
@@ -31459,17 +31519,28 @@ export const labsCatalog: Lab[] = [
             "text": "Region: ap-south-1 (Mumbai)"
           },
           {
+            "text": "Task 7: Create an S3 Bucket (Mumbai)"
+          },
+          {
             "text": "In Block Public Access settings, keep all options checked (we will use private access only)."
           },
           {
             "text": "In the Bucket Versioning, Check Enabled."
           },
           {
+            "text": "Task 7: Create an S3 Bucket (Mumbai)"
+          },
+          {
             "text": "Click Create bucket."
           },
           {
             "text": "You have successfully created a private S3 bucket in Mumbai."
-          },
+          }
+        ]
+      },
+      {
+        "title": "Task 8: Upload Test Images to S3 (Mumbai)",
+        "steps": [
           {
             "text": "Before setting up cross-region access, upload some sample images to test the setup."
           },
@@ -31492,6 +31563,9 @@ export const labsCatalog: Lab[] = [
             "text": "Click Upload."
           },
           {
+            "text": "Task 8: Upload Test Images to S3 (Mumbai)"
+          },
+          {
             "text": "Test images are now stored securely in S3. These will later be accessed by the Virginia EC2 frontend app through private networking."
           },
           {
@@ -31508,7 +31582,12 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "It’s time to connect these two VPCs using VPC Peering. This will enable secure, private communication between both regions without using the public internet."
-          },
+          }
+        ]
+      },
+      {
+        "title": "Task 9: Create VPC Peering Connection (Initiate from Virginia)",
+        "steps": [
           {
             "text": "Make sure you’re in Virginia region (us-east-1), open the VPC Dashboard."
           },
@@ -31537,8 +31616,16 @@ export const labsCatalog: Lab[] = [
             "text": "Click Create Peering Connection."
           },
           {
-            "text": "A peering request has been sent from Virginia to Mumbai."
+            "text": "Task 9: Create VPC Peering Connection (Initiate from Virginia)"
           },
+          {
+            "text": "A peering request has been sent from Virginia to Mumbai."
+          }
+        ]
+      },
+      {
+        "title": "Task 10: Accept VPC Peering Connection (from Mumbai)",
+        "steps": [
           {
             "text": "Switch to the Mumbai region (ap-south-1)."
           },
@@ -31549,11 +31636,22 @@ export const labsCatalog: Lab[] = [
             "text": "You will see the pending request. Select it and Click Actions then choose Accept Request."
           },
           {
+            "text": "Task 10: Accept VPC Peering Connection (from Mumbai)"
+          },
+          {
             "text": "Confirm the acceptance."
           },
           {
-            "text": "The VPC peering connection is now active between Virginia and Mumbai."
+            "text": "Task 10: Accept VPC Peering Connection (from Mumbai)"
           },
+          {
+            "text": "The VPC peering connection is now active between Virginia and Mumbai."
+          }
+        ]
+      },
+      {
+        "title": "Task 11: Update Route Tables in Both Regions",
+        "steps": [
           {
             "text": "For communication to work, you must update the route tables in both regions to direct traffic through the peering connection."
           },
@@ -31576,6 +31674,9 @@ export const labsCatalog: Lab[] = [
             "text": "Click Save."
           },
           {
+            "text": "Task 11: Update Route Tables in Both Regions"
+          },
+          {
             "text": "Go to Route Tables."
           },
           {
@@ -31594,8 +31695,16 @@ export const labsCatalog: Lab[] = [
             "text": "Click Save."
           },
           {
-            "text": "Both VPCs can now communicate privately over the peering connection."
+            "text": "Task 11: Update Route Tables in Both Regions"
           },
+          {
+            "text": "Both VPCs can now communicate privately over the peering connection."
+          }
+        ]
+      },
+      {
+        "title": "Task 12: Update S3 Bucket Policy (Allow Access from Virginia VPC)",
+        "steps": [
           {
             "text": "Finally, update the S3 bucket policy so that only traffic coming from the Virginia VPC via peering is allowed."
           },
@@ -31606,7 +31715,10 @@ export const labsCatalog: Lab[] = [
             "text": "Select Permissions and click on Bucket Policy."
           },
           {
-            "text": "Paste the following policy (replace <Your-Bucket-Name>, <Virginia-VPC-ID> and <Your-Account-ID> with actual values):"
+            "text": "Paste the following policy (replace <Your-Bucket-Name>, <Virginia-VPC-ID> and <Your-Account-ID> with actual values):"
+          },
+          {
+            "text": "Task 12: Update S3 Bucket Policy (Allow Access from Virginia VPC)"
           },
           {
             "text": "Click Save Changes."
@@ -31616,7 +31728,12 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "This EC2 instance will act as the frontend application server. It will run a Streamlit app that fetches and displays images stored in the private S3 bucket (located in Mumbai)."
-          },
+          }
+        ]
+      },
+      {
+        "title": "Task 13: Launch EC2 Instance in Virginia (Frontend)",
+        "steps": [
           {
             "text": "Make sure you’re in Virginia region. Go to EC2 Dashboard"
           },
@@ -31633,10 +31750,19 @@ export const labsCatalog: Lab[] = [
             "text": "AMI: Amazon Linux 2023 (64-bit x86)"
           },
           {
+            "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
+          },
+          {
             "text": "Instance Type: t2.micro (Free Tier eligible)"
           },
           {
+            "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
+          },
+          {
             "text": "Key Pair (login): Use an existing key pair (or create a new one, e.g. image-key)."
+          },
+          {
+            "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
           },
           {
             "text": "Network Settings:"
@@ -31654,6 +31780,9 @@ export const labsCatalog: Lab[] = [
             "text": "In Security Group, Give name as Image-Project-SG"
           },
           {
+            "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
+          },
+          {
             "text": "Firewall (Security Group): Create new, allow:"
           },
           {
@@ -31666,17 +31795,31 @@ export const labsCatalog: Lab[] = [
             "text": "Custom TCP (8501) from Anywhere (for Streamlit UI)"
           },
           {
+            "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
+          },
+          {
             "text": "Storage: Keep default 8 GiB"
           },
           {
             "text": "IAM Role: Attach the IAM Role of cross_region_project_<RANDOM-NUMBERS>"
           },
           {
+            "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
+          },
+          {
             "text": "Click Review and Launch."
           },
           {
-            "text": "EC2 is launched successfully."
+            "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
           },
+          {
+            "text": "EC2 is launched successfully."
+          }
+        ]
+      },
+      {
+        "title": "Task 14: Connect to the EC2 Instance",
+        "steps": [
           {
             "text": "Once the EC2 is running:"
           },
@@ -31694,7 +31837,12 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "If you see the Streamlit sample app, everything’s ready!"
-          },
+          }
+        ]
+      },
+      {
+        "title": "Task 15: Install Python, Streamlit, boto3 and Pillow",
+        "steps": [
           {
             "text": "Run these commands inside EC2 after connecting:"
           },
@@ -31709,7 +31857,12 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "Install required libraries:"
-          },
+          }
+        ]
+      },
+      {
+        "title": "Task 16: Create the Streamlit Application",
+        "steps": [
           {
             "text": "Create a new Python file:"
           },
@@ -31720,8 +31873,13 @@ export const labsCatalog: Lab[] = [
             "text": "Save and exit Nano:"
           },
           {
-            "text": "Press Ctrl + X then Y and then Click Enter"
-          },
+            "text": "Press Ctrl + X then Y and then Click Enter"
+          }
+        ]
+      },
+      {
+        "title": "Task 17: Run the Streamlit Application",
+        "steps": [
           {
             "text": "Start the app:"
           },
@@ -31730,18 +31888,31 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "In this milestone, you will test the Streamlit app running on the Virginia EC2 instance to ensure it can display private images stored in the Mumbai S3 bucket."
-          },
+          }
+        ]
+      },
+      {
+        "title": "Task 18: Access the Viewer App",
+        "steps": [
           {
             "text": "Open your browser and go to:"
           },
           {
             "text": "Note: Replace <Your-EC2-Public-IP> with the public IP address of the Virginia EC2 instance."
-          },
+          }
+        ]
+      },
+      {
+        "title": "Task 19: Use the Application",
+        "steps": [
           {
             "text": "The Cross-Region Image Viewer application will open."
           },
           {
             "text": "In the dropdown menu labeled “Choose me” option, click to expand."
+          },
+          {
+            "text": "Task 19: Use the Application"
           },
           {
             "text": "You will see a list of objects (images) that you uploaded earlier to the Mumbai S3 bucket (cross-region-image-store)."
@@ -31750,14 +31921,25 @@ export const labsCatalog: Lab[] = [
             "text": "Select any image from the list and click on Enter."
           },
           {
+            "text": "Task 19: Use the Application"
+          },
+          {
             "text": "The selected image will be fetched securely across regions (from Mumbai to Virginia) and displayed in the application interface."
+          },
+          {
+            "text": "Task 19: Use the Application"
           },
           {
             "text": "If you can see your images, the cross-region architecture is working correctly."
           },
           {
             "text": "All communication happens privately via VPC peering, without making the S3 bucket public."
-          },
+          }
+        ]
+      },
+      {
+        "title": "Task 20: Validation Test",
+        "steps": [
           {
             "text": "Once the project steps are completed, please click on the Validation button on the right-side panel."
           },
@@ -31766,6 +31948,9 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "Sample output:"
+          },
+          {
+            "text": "Task 20: Validation Test"
           },
           {
             "text": "You have successfully created two isolated VPCs in Mumbai and Virginia , established Inter-Region VPC Peering for private connectivity."
@@ -54460,7 +54645,10 @@ export const labsCatalog: Lab[] = [
             "text": "Sample output :"
           },
           {
-            "text": "Task 5 : Validation Test"
+            "text": "Task 5 : Validation Test",
+            "images": [
+              "/labs/introduction-to-aws-relational-database-service/step-33.gif"
+            ]
           },
           {
             "text": "You have successfully used AWS management console to create RDS MySQL database instance."
@@ -58772,7 +58960,7 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -58781,10 +58969,10 @@ export const labsCatalog: Lab[] = [
             "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
           },
           {
-            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
           },
           {
-            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
           }
         ]
       },
@@ -58795,10 +58983,13 @@ export const labsCatalog: Lab[] = [
             "text": "Open the visual studio code."
           },
           {
+            "text": "If you have already installed and using Visual studio code, open a new window.Note: Ensure Terraform is installed on your system before starting this lab."
+          },
+          {
             "text": "If you have already installed and using Visual studio code, open a new window."
           },
           {
-            "text": "Note: Ensure Terraform is installed on your system before starting this lab."
+            "text": "Note: Ensure Terraform is installed on your system before starting this lab."
           },
           {
             "text": "A new window will open a new file and release notes page (only if you have installed or updated Visual Studio Code recently). Close the Release notes tab."
@@ -58810,28 +59001,28 @@ export const labsCatalog: Lab[] = [
             "text": "It may take up to 2 minutes to open the terminal window."
           },
           {
+            "text": "Once the terminal is ready, let us navigate to the Desktop.cd Desktop"
+          },
+          {
             "text": "Once the terminal is ready, let us navigate to the Desktop."
           },
           {
-            "text": "cd Desktop"
+            "text": "Create a new folder by running the below command.mkdir task_13081"
           },
           {
             "text": "Create a new folder by running the below command."
           },
           {
-            "text": "mkdir task_13081"
+            "text": "Change your present working directory to use the newly created folder by running the below command:cd task_13081"
           },
           {
             "text": "Change your present working directory to use the newly created folder by running the below command:"
           },
           {
-            "text": "cd task_13081"
+            "text": "Get the location of the present working directory by running the below command:pwd"
           },
           {
             "text": "Get the location of the present working directory by running the below command:"
-          },
-          {
-            "text": "pwd"
           },
           {
             "text": "Note down the location, as you will open the same in the next steps."
@@ -58840,7 +59031,7 @@ export const labsCatalog: Lab[] = [
             "text": "Now click on the first icon Explorer present on the left sidebar."
           },
           {
-            "text": "Click on the button called Open folder and navigate to the location of folder task_13081."
+            "text": "Click on the button called Open folder and navigate to the location of folder task_13081."
           },
           {
             "text": "(Optional) Click on Authorize button for allowing Visual Studio Code to use the task_13081 folder. This will only be asked when you have been using Visual Studio code for a while as you are allowing a new folder to be accessed by VSC."
@@ -58857,67 +59048,31 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, you will create variable files where you will declare all the global variables with a short description and a default value."
           },
           {
-            "text": "To create a variable file, expand the folder task_13081 and click on the New File icon to add the file."
+            "text": "To create a variable file, expand the folder task_13081 and click on the New File icon to add the file."
           },
           {
-            "text": "Name the file as variables.tf and press Enter to save it."
+            "text": "Name the file as variables.tf and press Enter to save it."
           },
           {
-            "text": "Note: Don't change the location of the new file, keep it default, i.e. inside the task_13081 folder."
+            "text": "Note: Don't change the location of the new file, keep it default, i.e. inside the task_13081 folder."
           },
           {
-            "text": "Paste the below contents in variables.tf file."
-          },
-          {
-            "text": "variable \"access_key\" {"
-          },
-          {
-            "text": "description = \"Access key to AWS console\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "variable \"secret_key\" {"
-          },
-          {
-            "text": "description = \"Secret key to AWS console\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "variable \"region\" {"
-          },
-          {
-            "text": "description = \"AWS region\""
-          },
-          {
-            "text": "}"
+            "text": "Paste the below contents in variables.tf file."
           },
           {
             "text": "In the above content, you are declaring a variable called, access_key, secret_key, and region with a short description of all 3."
           },
           {
-            "text": "After pasting the above contents, save the file by pressing ctrl + S."
+            "text": "After pasting the above contents, save the file by pressing ctrl + S."
           },
           {
-            "text": "Now expand the folder task_13081 and click on the New File icon to add the file."
+            "text": "Now expand the folder task_13081 and click on the New File icon to add the file."
           },
           {
-            "text": "Name the file as terraform.tfvars and press Enter to save it."
+            "text": "Name the file as terraform.tfvars and press Enter to save it."
           },
           {
-            "text": "Paste the below content into the terraform.tfvars file."
-          },
-          {
-            "text": "region = \"us-east-1\""
-          },
-          {
-            "text": "access_key = \"<YOUR AWS CONSOLE ACCESS ID>\""
-          },
-          {
-            "text": "secret_key = \"<YOUR AWS CONSOLE SECRET KEY>\""
+            "text": "Paste the below content into the terraform.tfvars file."
           },
           {
             "text": "In the above code, you are defining the dynamic values of variables declared earlier."
@@ -58927,6 +59082,9 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "After replacing the values of access_key and secret_key, save the file by pressing Ctrl + S."
+          },
+          {
+            "text": "Task 3: Create a variable file"
           }
         ]
       },
@@ -58943,10 +59101,13 @@ export const labsCatalog: Lab[] = [
             "text": "Select Key Pair type as RSA"
           },
           {
-            "text": "Private key format as .pem and click on Create Key Pair."
+            "text": "Private key format as .pem and click on Create Key Pair."
           },
           {
-            "text": "MySSHKey will be created."
+            "text": "Task 4: Create the key pair from EC2 Console"
+          },
+          {
+            "text": "MySSHKey will be created."
           }
         ]
       },
@@ -58954,31 +59115,16 @@ export const labsCatalog: Lab[] = [
         "title": "Task 5: Create the first VPC in main.tf file",
         "steps": [
           {
-            "text": "In this task, you will create a main.tf file where you will add details of the provider and resources."
+            "text": "In this task, you will create a main.tf file where you will add details of the provider and resources."
           },
           {
-            "text": "To create a main.tf file, expand the folder task_13081 and click on the New File icon to add the file."
+            "text": "To create a main.tf file, expand the folder task_13081 and click on the New File icon to add the file."
           },
           {
-            "text": "Name the file as main.tf and press Enter to save it."
+            "text": "Name the file as main.tf and press Enter to save it."
           },
           {
-            "text": "Paste the below content into the main.tf file."
-          },
-          {
-            "text": "provider \"aws\" {"
-          },
-          {
-            "text": "region = \"${var.region}\""
-          },
-          {
-            "text": "access_key = \"${var.access_key}\""
-          },
-          {
-            "text": "secret_key = \"${var.secret_key}\""
-          },
-          {
-            "text": "}"
+            "text": "Paste the below content into the main.tf file."
           },
           {
             "text": "In the above code, you are defining the provider as aws."
@@ -58987,34 +59133,7 @@ export const labsCatalog: Lab[] = [
             "text": "Next, we want to tell Terraform to create a first VPC"
           },
           {
-            "text": "To create an First VPC Paste the below content into the main.tf file after the provider."
-          },
-          {
-            "text": "# Create first VPC"
-          },
-          {
-            "text": "resource \"aws_vpc\" \"first_vpc\" {"
-          },
-          {
-            "text": "cidr_block = \"10.0.0.0/24\""
-          },
-          {
-            "text": "enable_dns_support = true"
-          },
-          {
-            "text": "enable_dns_hostnames = true"
-          },
-          {
-            "text": "tags = {"
-          },
-          {
-            "text": "Name = \"First_VPC\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "}"
+            "text": "To create an First VPC Paste the below content into the main.tf file after the provider."
           }
         ]
       },
@@ -59028,33 +59147,6 @@ export const labsCatalog: Lab[] = [
             "text": "To create a public subnet in first vpc add another block of code just below the vpc creation into the main.tf file."
           },
           {
-            "text": "# Create public subnet for first vpc"
-          },
-          {
-            "text": "resource \"aws_subnet\" \"public_subnet_first_vpc\" {"
-          },
-          {
-            "text": "vpc_id = aws_vpc.first_vpc.id"
-          },
-          {
-            "text": "cidr_block = \"10.0.0.0/25\""
-          },
-          {
-            "text": "availability_zone = \"us-east-1a\""
-          },
-          {
-            "text": "tags = {"
-          },
-          {
-            "text": "Name = \"Public_subnet_first_VPC\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "}"
-          },
-          {
             "text": "Save the file by pressing Ctrl + S."
           }
         ]
@@ -59066,76 +59158,7 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, you will create a Internet Gateway and Route table in main.tf file"
           },
           {
-            "text": "To create a Internet Gateway and Route Table add another block of code just below the public subnet code into the main.tf file"
-          },
-          {
-            "text": "# Create Internet Gateway"
-          },
-          {
-            "text": "resource \"aws_internet_gateway\" \"igw\" {"
-          },
-          {
-            "text": "vpc_id = aws_vpc.first_vpc.id"
-          },
-          {
-            "text": "tags = {"
-          },
-          {
-            "text": "Name = \"IGW\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Create Public Route table and attach to internet gateway"
-          },
-          {
-            "text": "resource \"aws_route_table\" \"public_rt\" {"
-          },
-          {
-            "text": "vpc_id = aws_vpc.first_vpc.id"
-          },
-          {
-            "text": "route {"
-          },
-          {
-            "text": "cidr_block = \"0.0.0.0/0\""
-          },
-          {
-            "text": "gateway_id = aws_internet_gateway.igw.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "tags = {"
-          },
-          {
-            "text": "Name = \"PublicRT\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Associate Public subnet table with public route table"
-          },
-          {
-            "text": "resource \"aws_route_table_association\" \"public_subnet_association\" {"
-          },
-          {
-            "text": "subnet_id = aws_subnet.public_subnet_first_vpc.id"
-          },
-          {
-            "text": "route_table_id = aws_route_table.public_rt.id"
-          },
-          {
-            "text": "}"
+            "text": "To create a Internet Gateway and Route Table add another block of code just below the public subnet code into the main.tf file"
           }
         ]
       },
@@ -59146,109 +59169,10 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, you will create a Security group EC2 instance in main.tf file"
           },
           {
-            "text": "To create a security group Paste the below content into the main.tf file after the route table association."
+            "text": "To create a security group Paste the below content into the main.tf file after the route table association."
           },
           {
-            "text": "# Create Security group for EC2"
-          },
-          {
-            "text": "resource \"aws_security_group\" \"ec2sg\" {"
-          },
-          {
-            "text": "name = \"whiz_sg\""
-          },
-          {
-            "text": "description = \"labsecuritygroup\""
-          },
-          {
-            "text": "vpc_id = aws_vpc.first_vpc.id"
-          },
-          {
-            "text": "ingress {"
-          },
-          {
-            "text": "from_port = 22"
-          },
-          {
-            "text": "to_port = 22"
-          },
-          {
-            "text": "protocol = \"tcp\""
-          },
-          {
-            "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "ingress {"
-          },
-          {
-            "text": "from_port = 80"
-          },
-          {
-            "text": "to_port = 80"
-          },
-          {
-            "text": "protocol = \"tcp\""
-          },
-          {
-            "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "ingress {"
-          },
-          {
-            "text": "from_port = 443"
-          },
-          {
-            "text": "to_port = 443"
-          },
-          {
-            "text": "protocol = \"tcp\""
-          },
-          {
-            "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "egress {"
-          },
-          {
-            "text": "from_port = 0"
-          },
-          {
-            "text": "to_port = 0"
-          },
-          {
-            "text": "protocol = \"-1\""
-          },
-          {
-            "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "tags = {"
-          },
-          {
-            "text": "Name = \"whiz_sg\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "Save the file by pressing Ctrl + S."
+            "text": "Save the file by pressing Ctrl + S."
           }
         ]
       },
@@ -59259,76 +59183,7 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to launch an EC2 instance in the first VPC's public subnet. This EC2 instance will be used to test the connectivity between the VPCs after peering them using the Transit Gateway."
           },
           {
-            "text": "To Launch an EC2 Instance add another block of code just below the security group code into the main.tf file"
-          },
-          {
-            "text": "# Create first VPC for EC2"
-          },
-          {
-            "text": "resource \"aws_instance\" \"first_vpc_ec2\" {"
-          },
-          {
-            "text": "ami = \"ami-0b09ffb6d8b58ca91\""
-          },
-          {
-            "text": "instance_type = \"t2.micro\""
-          },
-          {
-            "text": "key_name = \"MySSHKey\" # Make sure you use the same Key pair that you created earlier"
-          },
-          {
-            "text": "vpc_security_group_ids = [\"${aws_security_group.ec2sg.id}\"]"
-          },
-          {
-            "text": "subnet_id = aws_subnet.public_subnet_first_vpc.id"
-          },
-          {
-            "text": "iam_instance_profile = \"ContainerInstanceEC2Role\""
-          },
-          {
-            "text": "associate_public_ip_address = true"
-          },
-          {
-            "text": "user_data = <<-EOF"
-          },
-          {
-            "text": "#!/bin/bash"
-          },
-          {
-            "text": "sudo su"
-          },
-          {
-            "text": "dnf update -y"
-          },
-          {
-            "text": "dnf install httpd -y"
-          },
-          {
-            "text": "systemctl start httpd"
-          },
-          {
-            "text": "systemctl enable httpd"
-          },
-          {
-            "text": "echo \"<html><h1> Welcome to lab Public Server</h1><html>\" >"
-          },
-          {
-            "text": "/var/www/html/index.html"
-          },
-          {
-            "text": "EOF"
-          },
-          {
-            "text": "tags = {"
-          },
-          {
-            "text": "Name = \"First_VPCs_EC2\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "}"
+            "text": "To Launch an EC2 Instance add another block of code just below the security group code into the main.tf file"
           }
         ]
       },
@@ -59339,34 +59194,7 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to create the second VPC, which will be the other VPC that is peered with the first VPC using the Transit Gateway."
           },
           {
-            "text": "To create an Second VPC Paste the below content into the main.tf file after the EC2 creation."
-          },
-          {
-            "text": "# Create Second VPC"
-          },
-          {
-            "text": "resource \"aws_vpc\" \"second_vpc\" {"
-          },
-          {
-            "text": "cidr_block = \"20.0.0.0/24\""
-          },
-          {
-            "text": "enable_dns_support = true"
-          },
-          {
-            "text": "enable_dns_hostnames = true"
-          },
-          {
-            "text": "tags = {"
-          },
-          {
-            "text": "Name = \"Second_VPC\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "}"
+            "text": "To create an Second VPC Paste the below content into the main.tf file after the EC2 creation."
           }
         ]
       },
@@ -59377,25 +59205,7 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to create a private subnet within the second VPC. The private subnet will be used for launching an EC2 instance that will not have direct internet connectivity."
           },
           {
-            "text": "To create a private subnet in first vpc add another block of code just below the vpc creation into the main.tf file."
-          },
-          {
-            "text": "# Create private subnet for second vpc"
-          },
-          {
-            "text": "resource \"aws_subnet\" \"private_subnet_second_vpc\" {"
-          },
-          {
-            "text": "vpc_id = aws_vpc.second_vpc.id"
-          },
-          {
-            "text": "cidr_block = \"20.0.0.0/25\""
-          },
-          {
-            "text": "availability_zone = \"us-east-1a\""
-          },
-          {
-            "text": "}"
+            "text": "To create a private subnet in first vpc add another block of code just below the vpc creation into the main.tf file."
           }
         ]
       },
@@ -59406,73 +59216,10 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, you will create a Security group EC2 instance in main.tf file"
           },
           {
-            "text": "1. To create a security group Paste the below content into the main.tf file after the private subnet creation."
+            "text": "To create a security group Paste the below content into the main.tf file after the private subnet creation."
           },
           {
-            "text": "# Create second Security group for EC2"
-          },
-          {
-            "text": "resource \"aws_security_group\" \"privateec2sg\" {"
-          },
-          {
-            "text": "name = \"whiz_sg2\""
-          },
-          {
-            "text": "description = \"labsecuritygroup\""
-          },
-          {
-            "text": "vpc_id = aws_vpc.second_vpc.id"
-          },
-          {
-            "text": "ingress {"
-          },
-          {
-            "text": "from_port = 22"
-          },
-          {
-            "text": "to_port = 22"
-          },
-          {
-            "text": "protocol = \"tcp\""
-          },
-          {
-            "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "egress {"
-          },
-          {
-            "text": "from_port = 0"
-          },
-          {
-            "text": "to_port = 0"
-          },
-          {
-            "text": "protocol = \"-1\""
-          },
-          {
-            "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "tags = {"
-          },
-          {
-            "text": "Name = \"whiz_sg\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "Save the file by pressing Ctrl + S."
+            "text": "Save the file by pressing Ctrl + S."
           }
         ]
       },
@@ -59483,67 +59230,7 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to launch an EC2 instance in the Second VPC's private subnet. This EC2 instance will be used to test the connectivity between the VPCs after peering them using the Transit Gateway."
           },
           {
-            "text": "To Launch an EC2 Instance add another block of code just below the security group code into the main.tf file"
-          },
-          {
-            "text": "resource \"aws_instance\" \"second_vpc_ec2\" {"
-          },
-          {
-            "text": "ami = \"ami-0b09ffb6d8b58ca91\""
-          },
-          {
-            "text": "instance_type = \"t2.micro\""
-          },
-          {
-            "text": "key_name = \"MySSHKey\""
-          },
-          {
-            "text": "vpc_security_group_ids = [\"${aws_security_group.privateec2sg.id}\"]"
-          },
-          {
-            "text": "subnet_id = aws_subnet.private_subnet_second_vpc.id"
-          },
-          {
-            "text": "associate_public_ip_address = false"
-          },
-          {
-            "text": "user_data = <<-EOF"
-          },
-          {
-            "text": "#!/bin/bash"
-          },
-          {
-            "text": "sudo su"
-          },
-          {
-            "text": "dnf update -y"
-          },
-          {
-            "text": "dnf install httpd -y"
-          },
-          {
-            "text": "systemctl start httpd"
-          },
-          {
-            "text": "systemctl enable httpd"
-          },
-          {
-            "text": "echo \"<html><h1> Welcome to lab Private Server</h1><html>\" > /var/www/html/index.html"
-          },
-          {
-            "text": "EOF"
-          },
-          {
-            "text": "tags = {"
-          },
-          {
-            "text": "Name = \"Second_VPCs_EC2\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "}"
+            "text": "To Launch an EC2 Instance add another block of code just below the security group code into the main.tf file"
           }
         ]
       },
@@ -59554,25 +59241,7 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to create a Transit Gateway, which acts as a central hub for connecting multiple VPCs and on-premises networks. The Transit Gateway simplifies the network architecture and facilitates the peering between VPCs."
           },
           {
-            "text": "To create a private subnet in first vpc add another block of code just below the ec2 creation into the main.tf file."
-          },
-          {
-            "text": "resource \"aws_ec2_transit_gateway\" \"demo_tg\" {"
-          },
-          {
-            "text": "description = \"TG for peering two VPCs\""
-          },
-          {
-            "text": "tags = {"
-          },
-          {
-            "text": "Name = \"DemoTG\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "}"
+            "text": "To create a private subnet in first vpc add another block of code just below the ec2 creation into the main.tf file."
           }
         ]
       },
@@ -59583,37 +59252,7 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to create two Transit Gateway attachments, one for each of the VPCs created. These attachments establish the peering between the VPCs and the Transit Gateway."
           },
           {
-            "text": "To create a private subnet in first vpc add another block of code just below the transit gateway into the main.tf file."
-          },
-          {
-            "text": "resource \"aws_ec2_transit_gateway_vpc_attachment\" \"first_vpc_tga\" {"
-          },
-          {
-            "text": "transit_gateway_id = aws_ec2_transit_gateway.demo_tg.id"
-          },
-          {
-            "text": "vpc_id = aws_vpc.first_vpc.id"
-          },
-          {
-            "text": "subnet_ids = [aws_subnet.public_subnet_first_vpc.id]"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "resource \"aws_ec2_transit_gateway_vpc_attachment\" \"second_vpc_tga\" {"
-          },
-          {
-            "text": "transit_gateway_id = aws_ec2_transit_gateway.demo_tg.id"
-          },
-          {
-            "text": "vpc_id = aws_vpc.second_vpc.id"
-          },
-          {
-            "text": "subnet_ids = [aws_subnet.private_subnet_second_vpc.id]"
-          },
-          {
-            "text": "}"
+            "text": "To create a private subnet in first vpc add another block of code just below the transit gateway into the main.tf file."
           }
         ]
       },
@@ -59621,51 +59260,7 @@ export const labsCatalog: Lab[] = [
         "title": "Task 16: Add the routes in the route table",
         "steps": [
           {
-            "text": "To create a private subnet in first vpc add another block of code just below the tranist gateway attachment creation into the main.tf file."
-          },
-          {
-            "text": "resource \"aws_route\" \"first_vpc_route_to_second_vpc\" {"
-          },
-          {
-            "text": "route_table_id = aws_route_table.public_rt.id"
-          },
-          {
-            "text": "destination_cidr_block = aws_vpc.second_vpc.cidr_block"
-          },
-          {
-            "text": "transit_gateway_id = aws_ec2_transit_gateway.demo_tg.id"
-          },
-          {
-            "text": "depends_on = [aws_ec2_transit_gateway_vpc_attachment.second_vpc_tga]"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "resource \"aws_route\" \"second_vpc_route_to_first_vpc\" {"
-          },
-          {
-            "text": "route_table_id = aws_vpc.second_vpc.main_route_table_id"
-          },
-          {
-            "text": "destination_cidr_block = aws_vpc.first_vpc.cidr_block"
-          },
-          {
-            "text": "transit_gateway_id = aws_ec2_transit_gateway.demo_tg.id"
-          },
-          {
-            "text": "depends_on = [aws_ec2_transit_gateway_vpc_attachment.first_vpc_tga]"
-          },
-          {
-            "text": "}"
-          }
-        ]
-      },
-      {
-        "title": "Task 16:",
-        "steps": [
-          {
-            "text": "Add the routes in the route table"
+            "text": "To create a private subnet in first vpc add another block of code just below the tranist gateway attachment creation into the main.tf file."
           }
         ]
       },
@@ -59673,220 +59268,10 @@ export const labsCatalog: Lab[] = [
         "title": "Task 17: Create Output File",
         "steps": [
           {
-            "text": "In this task, you will create an output.tf file where you add details of the output you want to display.To create an output.tf file, expand the folder task_13081 and click on the New File icon to add the file."
+            "text": "In this task, you will create an output.tf file where you add details of the output you want to display.To create an output.tf file, expand the folder task_13081 and click on the New File icon to add the file."
           },
           {
             "text": "Name the file as output.tf and press Enter to save it.Paste the below content into the output.tf file."
-          },
-          {
-            "text": "# Output the First VPC ID"
-          },
-          {
-            "text": "output \"first_vpc_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the First VPC\""
-          },
-          {
-            "text": "value = aws_vpc.first_vpc.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Second VPC ID"
-          },
-          {
-            "text": "output \"second_vpc_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the Second VPC\""
-          },
-          {
-            "text": "value = aws_vpc.second_vpc.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Public Subnet ID in the First VPC"
-          },
-          {
-            "text": "output \"public_subnet_first_vpc_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the public subnet in the First VPC\""
-          },
-          {
-            "text": "value = aws_subnet.public_subnet_first_vpc.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Private Subnet ID in the Second VPC"
-          },
-          {
-            "text": "output \"private_subnet_second_vpc_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the private subnet in the Second VPC\""
-          },
-          {
-            "text": "value = aws_subnet.private_subnet_second_vpc.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Internet Gateway ID"
-          },
-          {
-            "text": "output \"internet_gateway_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the Internet Gateway for the First VPC\""
-          },
-          {
-            "text": "value = aws_internet_gateway.igw.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Route Table ID"
-          },
-          {
-            "text": "output \"public_route_table_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the public route table for the First VPC\""
-          },
-          {
-            "text": "value = aws_route_table.public_rt.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Security Group ID for Public EC2 instance"
-          },
-          {
-            "text": "output \"public_ec2_sg_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the Security Group for the public EC2 instance\""
-          },
-          {
-            "text": "value = aws_security_group.ec2sg.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Security Group ID for Private EC2 instance"
-          },
-          {
-            "text": "output \"private_ec2_sg_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the Security Group for the private EC2 instance\""
-          },
-          {
-            "text": "value = aws_security_group.privateec2sg.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Public EC2 Instance ID"
-          },
-          {
-            "text": "output \"public_ec2_instance_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the public EC2 instance\""
-          },
-          {
-            "text": "value = aws_instance.first_vpc_ec2.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Public EC2 Instance Public IP"
-          },
-          {
-            "text": "output \"public_ec2_instance_public_ip\" {"
-          },
-          {
-            "text": "description = \"The Public IP address of the public EC2 instance\""
-          },
-          {
-            "text": "value = aws_instance.first_vpc_ec2.public_ip"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Private EC2 Instance ID"
-          },
-          {
-            "text": "output \"private_ec2_instance_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the private EC2 instance\""
-          },
-          {
-            "text": "value = aws_instance.second_vpc_ec2.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Transit Gateway ID"
-          },
-          {
-            "text": "output \"transit_gateway_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the Transit Gateway\""
-          },
-          {
-            "text": "value = aws_ec2_transit_gateway.demo_tg.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Transit Gateway Attachment ID for the First VPC"
-          },
-          {
-            "text": "output \"transit_gateway_attachment_first_vpc_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the Transit Gateway attachment for the First VPC\""
-          },
-          {
-            "text": "value = aws_ec2_transit_gateway_vpc_attachment.first_vpc_tga.id"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "# Output the Transit Gateway Attachment ID for the Second VPC"
-          },
-          {
-            "text": "output \"transit_gateway_attachment_second_vpc_id\" {"
-          },
-          {
-            "text": "description = \"The ID of the Transit Gateway attachment for the Second VPC\""
-          },
-          {
-            "text": "value = aws_ec2_transit_gateway_vpc_attachment.second_vpc_tga.id"
-          },
-          {
-            "text": "}"
           }
         ]
       },
@@ -59894,19 +59279,16 @@ export const labsCatalog: Lab[] = [
         "title": "Task 18: Confirm the installation of Terraform by checking the version",
         "steps": [
           {
-            "text": "In the Visual Studio Code, open Terminal by selecting View from the Menu bar and choose Terminal."
+            "text": "In the Visual Studio Code, open Terminal by selecting View from the Menu bar and choose Terminal."
+          },
+          {
+            "text": "If you are not in the newly created folder change your present working directory by running the below command.cd task_13081"
           },
           {
             "text": "If you are not in the newly created folder change your present working directory by running the below command."
           },
           {
-            "text": "cd task_13081"
-          },
-          {
             "text": "To confirm the installation of Terraform, run the below command to check the version:"
-          },
-          {
-            "text": "terraform version"
           },
           {
             "text": "If you are getting output as command not found: terraform, this means that terraform is not installed on your system, To install terraform follow the official guide link provided in the Prerequisite section above."
@@ -59917,28 +59299,31 @@ export const labsCatalog: Lab[] = [
         "title": "Task 19: Apply terraform configurations",
         "steps": [
           {
+            "text": "Initialize Terraform by running the below command,terraform init"
+          },
+          {
             "text": "Initialize Terraform by running the below command,"
           },
           {
-            "text": "terraform init"
+            "text": "Note: terraform init will check for all the plugin dependencies and download them if required, this will be used for creating a deployment plan"
           },
           {
-            "text": "Note: terraform init will check for all the plugin dependencies and download them if required, this will be used for creating a deployment plan"
+            "text": "To generate the action plans run the below command,terraform plan"
           },
           {
             "text": "To generate the action plans run the below command,"
           },
           {
-            "text": "terraform plan"
+            "text": "Task 19: Apply terraform configurations"
           },
           {
             "text": "To create all the resources declared in main.tf configuration file, run the below command:"
           },
           {
-            "text": "terraform apply"
+            "text": "Approve the creation of all the resources by entering yes."
           },
           {
-            "text": "Approve the creation of all the resources by entering yes."
+            "text": "Task 19: Apply terraform configurations"
           },
           {
             "text": "It may take up to 2-5 minutes for the terraform apply command to create the resources."
@@ -59952,76 +59337,82 @@ export const labsCatalog: Lab[] = [
         "title": "Task 20 : Test the connectivity between two VPCs",
         "steps": [
           {
-            "text": "In this task, we are going to test the connectivity between the EC2 instances in both VPCs. This step confirms that the VPCs have been successfully peered using the Transit Gateway, and the EC2 instances can communicate with each other."
+            "text": "In this task, we are going to test the connectivity between the EC2 instances in both VPCs. This step confirms that the VPCs have been successfully peered using the Transit Gateway, and the EC2 instances can communicate with each other."
           },
           {
-            "text": "You have copied the IPv4 Public IP of the EC2 instance created in the First VPC."
+            "text": "You have copied the IPv4 Public IP of the EC2 instance created in the First VPC."
           },
           {
-            "text": "Please follow the steps for Session manager to connect into First_VPCs_EC2"
+            "text": "Please follow the steps for Session manager to connect into First_VPCs_EC2 Select First_VPCs_EC2 and click on Connect button."
           },
           {
-            "text": "Select First_VPCs_EC2 and click on Connect button."
+            "text": "Please follow the steps for Session manager to connect into First_VPCs_EC2"
           },
           {
-            "text": "Go to Session Manager and click Connect"
+            "text": "Select First_VPCs_EC2 and click on Connect button."
+          },
+          {
+            "text": "Go to Session Manager and click Connect"
           },
           {
             "text": "Once you have successfully connected in to EC2, run the following commands :"
           },
           {
+            "text": "Switch to root user :sudo su"
+          },
+          {
             "text": "Switch to root user :"
           },
           {
-            "text": "sudo su"
+            "text": "Update server repository :yum update -y"
           },
           {
             "text": "Update server repository :"
           },
           {
-            "text": "yum update -y"
+            "text": "Now we need to copy the .pem key of the EC2 instance created."
           },
           {
-            "text": "Now we need to copy the .pem key of the EC2 instance created."
+            "text": "Create a file :vi MySSHKey.pem"
           },
           {
             "text": "Create a file :"
           },
           {
-            "text": "vi MySSHKey.pem"
+            "text": "Task 20 : Test the connectivity between two VPCs"
           },
           {
-            "text": "Open the .pem key of EC2 MySSHKey in your local editor and paste it in the terminal file."
+            "text": "Open the .pem key of EC2 MySSHKey in your local editor and paste it in the terminal file."
           },
           {
             "text": "Press :wq"
           },
           {
-            "text": "File Name : No changes, press [Enter] key in your keyboard"
+            "text": "File Name : No changes, press [Enter] key in your keyboard"
           },
           {
             "text": "Change the .pem key permission"
           },
           {
-            "text": "chmod 400 MySSHKey.pem"
-          },
-          {
-            "text": "SSH into the Private EC2 MySSHKey"
-          },
-          {
-            "text": "ssh ec2-user@<IPv4 private Ip> -i ec2_ssh_key.pem"
+            "text": "SSH into the Private EC2 MySSHKey"
           },
           {
             "text": "Copy the Private IP of First_VPCs_EC2"
           },
           {
-            "text": "Example : ssh ec2-user@20.0.0.11 -i MySSHKey.pem"
+            "text": "Example : ssh ec2-user@20.0.0.11 -i MySSHKey.pem"
           },
           {
-            "text": "If the connection prompts a message to confirm connect enter yes"
+            "text": "If the connection prompts a message to confirm connect enter yes"
+          },
+          {
+            "text": "Task 20 : Test the connectivity between two VPCs"
           },
           {
             "text": "As you can see the IP address is changed to private ec2 private IP 30.0.1.154"
+          },
+          {
+            "text": "Task 20 : Test the connectivity between two VPCs"
           }
         ]
       },
@@ -60032,22 +59423,16 @@ export const labsCatalog: Lab[] = [
             "text": "To delete the resources, open Terminal again."
           },
           {
+            "text": "Run the below command to delete all the resources.terraform destroy"
+          },
+          {
             "text": "Run the below command to delete all the resources."
           },
           {
-            "text": "terraform destroy"
+            "text": "Approve the creation of all the resources by entering yes. You can see the Destroy complete! message."
           },
           {
-            "text": "Approve the creation of all the resources by entering yes. You can see the Destroy complete! message."
-          },
-          {
-            "text": "Do You Know?"
-          },
-          {
-            "text": "With Transit Gateway, you can easily add or remove VPC connections as your network grows or changes, without impacting existing connections. It provides a flexible and scalable solution for interconnecting VPCs and simplifies network administration, routing, and security."
-          },
-          {
-            "text": "Completion and Conclusion"
+            "text": "Task 21: Delete AWS Resources"
           },
           {
             "text": "You have successfully created a VPC with a public subnet & internet gateway and Launched an EC2 instance."
@@ -60065,16 +59450,13 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully tested the connectivity of VPC after peering using the Transit gateway."
           },
           {
-            "text": "End Lab"
-          },
-          {
             "text": "Sign out of AWS Account."
           },
           {
             "text": "You have successfully completed the lab."
           },
           {
-            "text": "Once you have completed the steps, click on End Lab from the lab console."
+            "text": "Once you have completed the steps, click on End Lab from the lab console."
           }
         ]
       }

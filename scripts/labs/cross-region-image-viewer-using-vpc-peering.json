@@ -9,19 +9,13 @@
   "duration": "01:30:00",
   "tasks": [
     {
-      "title": "Project Steps",
+      "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
           "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
-          "text": "On the AWS sign-in page,"
-        },
-        {
-          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
-        },
-        {
-          "text": "Now copy your Username and Password in the lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
@@ -36,11 +30,16 @@
           "text": "In this milestone, you will create two Virtual Private Clouds (VPCs) in different AWS regions. These VPCs will later be connected using VPC Peering for secure, cross-region communication."
         },
         {
-          "text": "Region: Virginia (us-east-1) : FrontendVPC (hosts EC2 web app)"
+          "text": "Region: Virginia (us-east-1) : FrontendVPC (hosts EC2 web app)"
         },
         {
-          "text": "Region: Mumbai (ap-south-1) : BackendVPC (hosts S3 bucket + S3 endpoint)"
-        },
+          "text": "Region: Mumbai (ap-south-1) : BackendVPC (hosts S3 bucket + S3 endpoint)"
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a VPC in Virginia (us-east-1)",
+      "steps": [
         {
           "text": "This VPC will be used to host the frontend EC2 instance (web server)."
         },
@@ -72,8 +71,16 @@
           "text": "Click Create VPC."
         },
         {
-          "text": "You have now created the Frontend VPC in Virginia."
+          "text": "Task 2: Create a VPC in Virginia (us-east-1)"
         },
+        {
+          "text": "You have now created the Frontend VPC in Virginia."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)",
+      "steps": [
         {
           "text": "In this step, you will configure the FrontendVPC so that the EC2 instance can be accessed publicly over the Internet"
         },
@@ -102,6 +109,9 @@
           "text": "Click Create Subnet."
         },
         {
+          "text": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)"
+        },
+        {
           "text": "You have created a public subnet inside FrontendVPC."
         },
         {
@@ -123,6 +133,9 @@
           "text": "Internet Gateway is now attached to FrontendVPC."
         },
         {
+          "text": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)"
+        },
+        {
           "text": "Go to VPC Dashboard, Select Route Tables in the left side of the panel"
         },
         {
@@ -141,7 +154,10 @@
           "text": "Click Create Route Table."
         },
         {
-          "text": "Select the route table, go to Routes, Click on Edit routes , then Add route:"
+          "text": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)"
+        },
+        {
+          "text": "Select the route table, go to Routes, Click on Edit routes , then Add route:"
         },
         {
           "text": "Destination: 0.0.0.0/0"
@@ -153,6 +169,9 @@
           "text": "Click Save."
         },
         {
+          "text": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)"
+        },
+        {
           "text": "Go to Subnet Associations, Click on Edit subnet associations."
         },
         {
@@ -162,8 +181,16 @@
           "text": "Save changes."
         },
         {
-          "text": "The public subnet now routes Internet-bound traffic via FrontendIGW."
+          "text": "Task 3: Configure Public Subnet, Internet Gateway, and Route Table (Virginia)"
         },
+        {
+          "text": "The public subnet now routes Internet-bound traffic via FrontendIGW."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create Backend VPC in Mumbai",
+      "steps": [
         {
           "text": "Open the VPC Dashboard in the AWS Console."
         },
@@ -189,8 +216,16 @@
           "text": "Click Create VPC."
         },
         {
-          "text": "You have created the BackendVPC in Mumbai."
+          "text": "Task 4: Create Backend VPC in Mumbai"
         },
+        {
+          "text": "You have created the BackendVPC in Mumbai."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create Private Subnet and Route Table (Mumbai)",
+      "steps": [
         {
           "text": "Go to VPC Dashboard, Click Subnets"
         },
@@ -216,6 +251,9 @@
           "text": "Click Create Subnet."
         },
         {
+          "text": "Task 5: Create Private Subnet and Route Table (Mumbai)"
+        },
+        {
           "text": "Private subnet created inside BackendVPC."
         },
         {
@@ -237,6 +275,9 @@
           "text": "Click Create Route Table."
         },
         {
+          "text": "Task 5: Create Private Subnet and Route Table (Mumbai)"
+        },
+        {
           "text": "Select the new route table, Click go to Subnet Associations and choose Edit subnet associations."
         },
         {
@@ -246,8 +287,16 @@
           "text": "Save changes."
         },
         {
-          "text": "Backend private subnet is now associated with its route table."
+          "text": "Task 5: Create Private Subnet and Route Table (Mumbai)"
         },
+        {
+          "text": "Backend private subnet is now associated with its route table."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Create S3 VPC Endpoint (Private Access)",
+      "steps": [
         {
           "text": "To allow the EC2 in Virginia to fetch images from S3 in Mumbai without Internet, you will use a Gateway VPC Endpoint."
         },
@@ -267,6 +316,9 @@
           "text": "Service Name: com.amazonaws.ap-south-1.s3 (S3 Gateway)"
         },
         {
+          "text": "Task 6: Create S3 VPC Endpoint (Private Access)"
+        },
+        {
           "text": "Endpoint Name: S3Endpoint"
         },
         {
@@ -276,6 +328,9 @@
           "text": "Route Table: Backend-RT (enables private routing)"
         },
         {
+          "text": "Task 6: Create S3 VPC Endpoint (Private Access)"
+        },
+        {
           "text": "Click Create Endpoint."
         },
         {
@@ -283,7 +338,12 @@
         },
         {
           "text": "In this milestone, you will create a private S3 bucket in the Mumbai region (ap-south-1) and upload test images. This bucket will act as the central storage for images, which will later be accessed securely from the Virginia frontend via VPC Peering."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Create an S3 Bucket (Mumbai)",
+      "steps": [
         {
           "text": "Go to the S3 Dashboard in the AWS Console."
         },
@@ -300,17 +360,28 @@
           "text": "Region: ap-south-1 (Mumbai)"
         },
         {
+          "text": "Task 7: Create an S3 Bucket (Mumbai)"
+        },
+        {
           "text": "In Block Public Access settings, keep all options checked (we will use private access only)."
         },
         {
           "text": "In the Bucket Versioning, Check Enabled."
         },
         {
+          "text": "Task 7: Create an S3 Bucket (Mumbai)"
+        },
+        {
           "text": "Click Create bucket."
         },
         {
           "text": "You have successfully created a private S3 bucket in Mumbai."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Upload Test Images to S3 (Mumbai)",
+      "steps": [
         {
           "text": "Before setting up cross-region access, upload some sample images to test the setup."
         },
@@ -333,6 +404,9 @@
           "text": "Click Upload."
         },
         {
+          "text": "Task 8: Upload Test Images to S3 (Mumbai)"
+        },
+        {
           "text": "Test images are now stored securely in S3. These will later be accessed by the Virginia EC2 frontend app through private networking."
         },
         {
@@ -349,7 +423,12 @@
         },
         {
           "text": "It’s time to connect these two VPCs using VPC Peering. This will enable secure, private communication between both regions without using the public internet."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Create VPC Peering Connection (Initiate from Virginia)",
+      "steps": [
         {
           "text": "Make sure you’re in Virginia region (us-east-1), open the VPC Dashboard."
         },
@@ -378,8 +457,16 @@
           "text": "Click Create Peering Connection."
         },
         {
-          "text": "A peering request has been sent from Virginia to Mumbai."
+          "text": "Task 9: Create VPC Peering Connection (Initiate from Virginia)"
         },
+        {
+          "text": "A peering request has been sent from Virginia to Mumbai."
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Accept VPC Peering Connection (from Mumbai)",
+      "steps": [
         {
           "text": "Switch to the Mumbai region (ap-south-1)."
         },
@@ -390,11 +477,22 @@
           "text": "You will see the pending request. Select it and Click Actions then choose Accept Request."
         },
         {
+          "text": "Task 10: Accept VPC Peering Connection (from Mumbai)"
+        },
+        {
           "text": "Confirm the acceptance."
         },
         {
-          "text": "The VPC peering connection is now active between Virginia and Mumbai."
+          "text": "Task 10: Accept VPC Peering Connection (from Mumbai)"
         },
+        {
+          "text": "The VPC peering connection is now active between Virginia and Mumbai."
+        }
+      ]
+    },
+    {
+      "title": "Task 11: Update Route Tables in Both Regions",
+      "steps": [
         {
           "text": "For communication to work, you must update the route tables in both regions to direct traffic through the peering connection."
         },
@@ -417,6 +515,9 @@
           "text": "Click Save."
         },
         {
+          "text": "Task 11: Update Route Tables in Both Regions"
+        },
+        {
           "text": "Go to Route Tables."
         },
         {
@@ -435,8 +536,16 @@
           "text": "Click Save."
         },
         {
-          "text": "Both VPCs can now communicate privately over the peering connection."
+          "text": "Task 11: Update Route Tables in Both Regions"
         },
+        {
+          "text": "Both VPCs can now communicate privately over the peering connection."
+        }
+      ]
+    },
+    {
+      "title": "Task 12: Update S3 Bucket Policy (Allow Access from Virginia VPC)",
+      "steps": [
         {
           "text": "Finally, update the S3 bucket policy so that only traffic coming from the Virginia VPC via peering is allowed."
         },
@@ -447,7 +556,10 @@
           "text": "Select Permissions and click on Bucket Policy."
         },
         {
-          "text": "Paste the following policy (replace <Your-Bucket-Name>, <Virginia-VPC-ID> and <Your-Account-ID> with actual values):"
+          "text": "Paste the following policy (replace <Your-Bucket-Name>, <Virginia-VPC-ID> and <Your-Account-ID> with actual values):"
+        },
+        {
+          "text": "Task 12: Update S3 Bucket Policy (Allow Access from Virginia VPC)"
         },
         {
           "text": "Click Save Changes."
@@ -457,7 +569,12 @@
         },
         {
           "text": "This EC2 instance will act as the frontend application server. It will run a Streamlit app that fetches and displays images stored in the private S3 bucket (located in Mumbai)."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 13: Launch EC2 Instance in Virginia (Frontend)",
+      "steps": [
         {
           "text": "Make sure you’re in Virginia region. Go to EC2 Dashboard"
         },
@@ -474,10 +591,19 @@
           "text": "AMI: Amazon Linux 2023 (64-bit x86)"
         },
         {
+          "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
+        },
+        {
           "text": "Instance Type: t2.micro (Free Tier eligible)"
         },
         {
+          "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
+        },
+        {
           "text": "Key Pair (login): Use an existing key pair (or create a new one, e.g. image-key)."
+        },
+        {
+          "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
         },
         {
           "text": "Network Settings:"
@@ -495,6 +621,9 @@
           "text": "In Security Group, Give name as Image-Project-SG"
         },
         {
+          "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
+        },
+        {
           "text": "Firewall (Security Group): Create new, allow:"
         },
         {
@@ -507,17 +636,31 @@
           "text": "Custom TCP (8501) from Anywhere (for Streamlit UI)"
         },
         {
+          "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
+        },
+        {
           "text": "Storage: Keep default 8 GiB"
         },
         {
           "text": "IAM Role: Attach the IAM Role of cross_region_project_<RANDOM-NUMBERS>"
         },
         {
+          "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
+        },
+        {
           "text": "Click Review and Launch."
         },
         {
-          "text": "EC2 is launched successfully."
+          "text": "Task 13: Launch EC2 Instance in Virginia (Frontend)"
         },
+        {
+          "text": "EC2 is launched successfully."
+        }
+      ]
+    },
+    {
+      "title": "Task 14: Connect to the EC2 Instance",
+      "steps": [
         {
           "text": "Once the EC2 is running:"
         },
@@ -535,7 +678,12 @@
         },
         {
           "text": "If you see the Streamlit sample app, everything’s ready!"
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 15: Install Python, Streamlit, boto3 and Pillow",
+      "steps": [
         {
           "text": "Run these commands inside EC2 after connecting:"
         },
@@ -550,7 +698,12 @@
         },
         {
           "text": "Install required libraries:"
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 16: Create the Streamlit Application",
+      "steps": [
         {
           "text": "Create a new Python file:"
         },
@@ -561,8 +714,13 @@
           "text": "Save and exit Nano:"
         },
         {
-          "text": "Press Ctrl + X then Y and then Click Enter"
-        },
+          "text": "Press Ctrl + X then Y and then Click Enter"
+        }
+      ]
+    },
+    {
+      "title": "Task 17: Run the Streamlit Application",
+      "steps": [
         {
           "text": "Start the app:"
         },
@@ -571,18 +729,31 @@
         },
         {
           "text": "In this milestone, you will test the Streamlit app running on the Virginia EC2 instance to ensure it can display private images stored in the Mumbai S3 bucket."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 18: Access the Viewer App",
+      "steps": [
         {
           "text": "Open your browser and go to:"
         },
         {
           "text": "Note: Replace <Your-EC2-Public-IP> with the public IP address of the Virginia EC2 instance."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 19: Use the Application",
+      "steps": [
         {
           "text": "The Cross-Region Image Viewer application will open."
         },
         {
           "text": "In the dropdown menu labeled “Choose me” option, click to expand."
+        },
+        {
+          "text": "Task 19: Use the Application"
         },
         {
           "text": "You will see a list of objects (images) that you uploaded earlier to the Mumbai S3 bucket (cross-region-image-store)."
@@ -591,14 +762,25 @@
           "text": "Select any image from the list and click on Enter."
         },
         {
+          "text": "Task 19: Use the Application"
+        },
+        {
           "text": "The selected image will be fetched securely across regions (from Mumbai to Virginia) and displayed in the application interface."
+        },
+        {
+          "text": "Task 19: Use the Application"
         },
         {
           "text": "If you can see your images, the cross-region architecture is working correctly."
         },
         {
           "text": "All communication happens privately via VPC peering, without making the S3 bucket public."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 20: Validation Test",
+      "steps": [
         {
           "text": "Once the project steps are completed, please click on the Validation button on the right-side panel."
         },
@@ -607,6 +789,9 @@
         },
         {
           "text": "Sample output:"
+        },
+        {
+          "text": "Task 20: Validation Test"
         },
         {
           "text": "You have successfully created two isolated VPCs in Mumbai and Virginia , established Inter-Region VPC Peering for private connectivity."
