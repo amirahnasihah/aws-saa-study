@@ -139,10 +139,10 @@
           "text": "Provide the following credentials:"
         },
         {
-          "text": "Password: password"
+          "text": "Password: <example-password>"
         },
         {
-          "text": "UNIX Password: password"
+          "text": "UNIX Password: <example-password>"
         },
         {
           "text": "New Password: <example-password>"

@@ -29469,7 +29469,7 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -29484,7 +29484,7 @@ export const labsCatalog: Lab[] = [
             "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
           },
           {
-            "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+            "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
           }
         ]
       },
@@ -29492,41 +29492,49 @@ export const labsCatalog: Lab[] = [
         "title": "Task 2 : Create a VPC",
         "steps": [
           {
-            "text": "In this task, we are going to create a Virtual Private Cloud (VPC), which provides a logically isolated section of the AWS cloud where users can launch resources such as instances, subnets, and gateways."
+            "text": "In this task, we are going to create a Virtual Private Cloud (VPC), which provides a logically isolated section of the AWS cloud where users can launch resources such as instances, subnets, and gateways."
           },
           {
-            "text": "Make sure you are in the US East (N. Virginia) us-east-1 region."
+            "text": "Make sure you are in the US East (N. Virginia) us-east-1 region."
           },
           {
-            "text": "Navigate to VPC under the services menu. Click on Your VPCs."
+            "text": "Navigate to VPC under the services menu. Click on Your VPCs."
           },
           {
-            "text": "Click on Create VPC button."
+            "text": "Click on Create VPC button."
+          },
+          {
+            "text": "Task 2 : Create a VPC",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-01.png"
+            ]
           },
           {
             "text": "Resources to create : Select VPC Only"
           },
           {
-            "text": "Name Tag : Enter MyVPC"
+            "text": "Name Tag : Enter MyVPC"
           },
           {
-            "text": "IPv4 CIDR block : Enter 10.0.0.0/16 (You can also put any other CIDR range)"
+            "text": "IPv4 CIDR block : Enter 10.0.0.0/16 (You can also put any other CIDR range)"
           },
           {
-            "text": "IPv6 CIDR block : Select No IPv6 CIDR Block"
+            "text": "IPv6 CIDR block : Select No IPv6 CIDR Block"
           },
           {
-            "text": "Tenancy : Default"
+            "text": "Tenancy : Default"
           },
           {
-            "text": "Click on Create VPC."
-          },
-          {
-            "text": "The VPC is now created.",
+            "text": "Task 2 : Create a VPC",
             "images": [
-              "/labs/creating-nat-gateways-in-aws/step-01.png",
               "/labs/creating-nat-gateways-in-aws/step-02.png"
             ]
+          },
+          {
+            "text": "Click on Create VPC."
+          },
+          {
+            "text": "The VPC is now created."
           }
         ]
       },
@@ -29534,70 +29542,79 @@ export const labsCatalog: Lab[] = [
         "title": "Task 3 : Create Public and Private Subnets",
         "steps": [
           {
-            "text": "In this task, we are going to create both public and private subnets within the VPC. Public subnets have internet connectivity, while private subnets do not have direct internet access."
+            "text": "In this task, we are going to create both public and private subnets within the VPC. Public subnets have internet connectivity, while private subnets do not have direct internet access."
           },
           {
-            "text": "Navigate to Subnets in the left panel of the VPC page."
+            "text": "Navigate to Subnets in the left panel of the VPC page."
           },
           {
-            "text": "Let's create a Public subnet. Click on Create Subnet button."
+            "text": "Let's create a Public subnet. Click on Create Subnet button."
           },
           {
-            "text": "VPC ID : select MyVPC"
+            "text": "Task 3 : Create Public and Private Subnets",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-03.png"
+            ]
           },
           {
-            "text": "Subnet Name : Enter MyPublicSubnet"
+            "text": "VPC ID : select MyVPC"
           },
           {
-            "text": "Availability Zone : No Preference"
+            "text": "Subnet Name : Enter MyPublicSubnet"
           },
           {
-            "text": "IPv4 CIDR block : Enter 10.0.0.0/24"
+            "text": "Availability Zone : No Preference"
           },
           {
-            "text": "Click on Create subnet button."
+            "text": "IPv4 CIDR block : Enter 10.0.0.0/24"
+          },
+          {
+            "text": "Click on Create subnet button."
+          },
+          {
+            "text": "Let's enable Auto Assign public IP to Instances created within this subnet, Select MyPublicSubnet , Click on Actions. Click on Edit subnet settings. Enable auto-assign public IPv4 address : Check Click on Save."
           },
           {
             "text": "Let's enable Auto Assign public IP to Instances created within this subnet,"
           },
           {
-            "text": "Select MyPublicSubnet , Click on Actions."
+            "text": "Select MyPublicSubnet , Click on Actions."
           },
           {
-            "text": "Click on Edit subnet settings."
+            "text": "Click on Edit subnet settings."
           },
           {
-            "text": "Enable auto-assign public IPv4 address : Check"
+            "text": "Enable auto-assign public IPv4 address : Check"
           },
           {
-            "text": "Click on Save."
+            "text": "Click on Save."
           },
           {
-            "text": "Now, the Instances launched inside the MyPublicSubnet will have Public IPs assigned to them by default."
+            "text": "Now, the Instances launched inside the MyPublicSubnet will have Public IPs assigned to them by default."
           },
           {
-            "text": "Let’s create a private subnet. Click on Create subnet."
+            "text": "Let’s create a private subnet. Click on Create subnet. VPC ID : select MyVPC Subnet Name : Enter MyPrivateSubnet Availability Zone : No Preference IPv4 CIDR block : Enter 10.0.1.0/24 Click on Create subnet button."
           },
           {
-            "text": "VPC ID : select MyVPC"
+            "text": "Let’s create a private subnet. Click on Create subnet."
           },
           {
-            "text": "Subnet Name : Enter MyPrivateSubnet"
+            "text": "VPC ID : select MyVPC"
           },
           {
-            "text": "Availability Zone : No Preference"
+            "text": "Subnet Name : Enter MyPrivateSubnet"
           },
           {
-            "text": "IPv4 CIDR block : Enter 10.0.1.0/24"
+            "text": "Availability Zone : No Preference"
           },
           {
-            "text": "Click on Create subnet button."
+            "text": "IPv4 CIDR block : Enter 10.0.1.0/24"
           },
           {
-            "text": "Now, two subnets are created.",
-            "images": [
-              "/labs/creating-nat-gateways-in-aws/step-03.png"
-            ]
+            "text": "Click on Create subnet button."
+          },
+          {
+            "text": "Now, two subnets are created."
           }
         ]
       },
@@ -29605,39 +29622,50 @@ export const labsCatalog: Lab[] = [
         "title": "Task 4 : Create Internet Gateway",
         "steps": [
           {
-            "text": "In this task, we are going to create an Internet Gateway, which acts as a bridge between the VPC and the internet, allowing instances in the VPC to communicate with the internet."
+            "text": "In this task, we are going to create an Internet Gateway, which acts as a bridge between the VPC and the internet, allowing instances in the VPC to communicate with the internet."
           },
           {
-            "text": "Navigate Internet Gateways in the left panel of the VPC page."
+            "text": "Navigate Internet Gateways in the left panel of the VPC page."
           },
           {
-            "text": "Click on Create Internet gateway button."
+            "text": "Click on Create Internet gateway button."
           },
           {
-            "text": "Name tag : Enter MyIGW"
+            "text": "Task 4 : Create Internet Gateway",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-04.png"
+            ]
           },
           {
-            "text": "Click on Create internet gateway button."
+            "text": "Name tag : Enter MyIGW"
+          },
+          {
+            "text": "Click on Create internet gateway button."
           },
           {
             "text": "An Internet Gateway is now created."
           },
           {
+            "text": "To attach an Internet Gateway to a VPC, Click on Actions, Select Attach to VPC. VPC : Select MyVPC Click on Attach internet gateway."
+          },
+          {
             "text": "To attach an Internet Gateway to a VPC,"
           },
           {
-            "text": "Click on Actions, Select Attach to VPC."
+            "text": "Click on Actions, Select Attach to VPC."
           },
           {
-            "text": "VPC : Select MyVPC"
+            "text": "VPC : Select MyVPC"
           },
           {
-            "text": "Click on Attach internet gateway."
+            "text": "Click on Attach internet gateway."
           },
           {
-            "text": "Now MyIGW is attached to MyVPC.",
+            "text": "Now MyIGW is attached to MyVPC."
+          },
+          {
+            "text": "Task 4 : Create Internet Gateway",
             "images": [
-              "/labs/creating-nat-gateways-in-aws/step-04.png",
               "/labs/creating-nat-gateways-in-aws/step-05.jpg"
             ]
           }
@@ -29647,73 +29675,85 @@ export const labsCatalog: Lab[] = [
         "title": "Task 5 : Create Public Route Table and Configure",
         "steps": [
           {
-            "text": "In this task, we are going to create a public route table and configure it to associate with the public subnet. The public route table defines how traffic is routed between the VPC and the internet."
+            "text": "In this task, we are going to create a public route table and configure it to associate with the public subnet. The public route table defines how traffic is routed between the VPC and the internet."
           },
           {
-            "text": "Navigate to Route Table in the left panel of the VPC page."
+            "text": "Navigate to Route Table in the left panel of the VPC page."
           },
           {
-            "text": "Click on Create route table button"
+            "text": "Click on Create route table button Name tag : Enter PublicRouteTable VPC : Select MyVPC Click on Create route table button."
           },
           {
-            "text": "Name tag : Enter PublicRouteTable"
+            "text": "Click on Create route table button"
           },
           {
-            "text": "VPC : Select MyVPC"
+            "text": "Name tag : Enter PublicRouteTable"
           },
           {
-            "text": "Click on Create route table button."
+            "text": "VPC : Select MyVPC"
           },
           {
-            "text": "A route table by name PublicRouteTable will be created."
+            "text": "Click on Create route table button."
           },
           {
-            "text": "To attach an Internet Gateway, select PublicRouteTable."
+            "text": "A route table by name PublicRouteTable will be created."
           },
           {
-            "text": "In the Routes tab below:"
+            "text": "To attach an Internet Gateway, select PublicRouteTable."
+          },
+          {
+            "text": "In the Routes tab below: Click on Edit routes. On the next page, click on Add route Destination : Enter 0.0.0.0/0 Target : Select Internet Gateway, and once the internet gateways have been created, select MyIGW Click on Save changes."
+          },
+          {
+            "text": "In the Routes tab below:"
           },
           {
             "text": "Click on Edit routes."
           },
           {
-            "text": "On the next page, click on Add route"
+            "text": "On the next page, click on Add route"
           },
           {
-            "text": "Destination : Enter 0.0.0.0/0"
+            "text": "Destination : Enter 0.0.0.0/0"
           },
           {
-            "text": "Target : Select Internet Gateway, and once the internet gateways have been created, select MyIGW"
+            "text": "Target : Select Internet Gateway, and once the internet gateways have been created, select MyIGW"
           },
           {
-            "text": "Click on Save changes."
+            "text": "Click on Save changes."
           },
           {
-            "text": "To associate the Public Subnet to the route table, Select PublicRouteTable."
+            "text": "To associate the Public Subnet to the route table, Select PublicRouteTable. Click on the Subnet Associations tab. Click on Edit subnet associations. On the next page, select MyPublicSubnet from the list displayed. Click on Save associations."
           },
           {
-            "text": "Click on the Subnet Associations tab."
+            "text": "To associate the Public Subnet to the route table, Select PublicRouteTable."
+          },
+          {
+            "text": "Click on the Subnet Associations tab."
           },
           {
             "text": "Click on Edit subnet associations."
           },
           {
-            "text": "On the next page, select MyPublicSubnet from the list displayed."
+            "text": "On the next page, select MyPublicSubnet from the list displayed."
           },
           {
-            "text": "Click on Save associations."
+            "text": "Click on Save associations."
           },
           {
             "text": "Once all the configurations are completed, it should look like below:"
           },
           {
-            "text": "Now the Instances launched within MyPublicSubnet will have access to the Internet."
-          },
-          {
-            "text": "As you can see, there is another existing route table already available for MyVPC. It is a main route table created at the time the VPC was created. We will use it while creating the NAT Gateway.",
+            "text": "Task 5 : Create Public Route Table and Configure",
             "images": [
               "/labs/creating-nat-gateways-in-aws/step-06.jpg"
             ]
+          },
+          {
+            "text": "Now the Instances launched within MyPublicSubnet will have access to the Internet."
+          },
+          {
+            "text": "As you can see, there is another existing route table already available for MyVPC. It is a main route table created at the time the VPC was created. We will use it while creating the NAT Gateway."
           }
         ]
       },
@@ -29724,22 +29764,46 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to launch an EC2 instance in the public subnet. This allows users to have a publicly accessible instance that can directly communicate with the internet."
           },
           {
-            "text": "Make sure you are in the N.Virginia region."
+            "text": "Make sure you are in the N.Virginia region."
           },
           {
-            "text": "Navigate to the Services menu in the top, click on EC2 in the Compute section."
+            "text": "Navigate to the Services menu in the top, click on EC2 in the Compute section."
           },
           {
-            "text": "Navigate to Instances on the left panel and click on Launch instances button"
+            "text": "Navigate to Instances on the left panel and click on Launch instances button"
+          },
+          {
+            "text": "Task 6 : Launch an EC2 Instance in Public Subnet",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-07.png"
+            ]
           },
           {
             "text": "Name : Enter MyPublicServer"
           },
           {
-            "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the select button."
+            "text": "Task 6 : Launch an EC2 Instance in Public Subnet",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-08.png"
+            ]
           },
           {
-            "text": "For Instance Type: select t2.micro"
+            "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the select button.",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-09.png"
+            ]
+          },
+          {
+            "text": "Task 6 : Launch an EC2 Instance in Public Subnet",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-10.png"
+            ]
+          },
+          {
+            "text": "For Instance Type: select t2.micro"
+          },
+          {
+            "text": "For Key pair: Select Create a new key pair Button Key pair name: MyKey Key pair type: RSA Private key file format: .pem"
           },
           {
             "text": "For Key pair: Select Create a new key pair Button"
@@ -29775,7 +29839,13 @@ export const labsCatalog: Lab[] = [
             "text": "Security group name : Enter MyEC2Server_SG"
           },
           {
+            "text": "Description : Enter Security Group to allow traffic to EC2 To add SSH Choose Type: Select SSH Source: Select Anywhere"
+          },
+          {
             "text": "Description : Enter Security Group to allow traffic to EC2"
+          },
+          {
+            "text": "To add SSH Choose Type: Select SSH Source: Select Anywhere"
           },
           {
             "text": "To add SSH"
@@ -29796,12 +29866,7 @@ export const labsCatalog: Lab[] = [
             "text": "Select View all Instances to View Instance you Created"
           },
           {
-            "text": "Launch Status: Your instance is now launching, Select the instance and wait for it to change status to Running.",
-            "images": [
-              "/labs/creating-nat-gateways-in-aws/step-07.png",
-              "/labs/creating-nat-gateways-in-aws/step-08.png",
-              "/labs/creating-nat-gateways-in-aws/step-09.png"
-            ]
+            "text": "Launch Status: Your instance is now launching, Select the instance and wait for it to change status to Running."
           }
         ]
       },
@@ -29812,53 +29877,67 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to launch an EC2 instance in the private subnet. This demonstrates the concept of a private subnet, which does not have direct internet access."
           },
           {
-            "text": "Click on Launch instances."
+            "text": "Click on Launch instances."
           },
           {
             "text": "Name : Enter MyPrivateServer"
           },
           {
-            "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the select button."
+            "text": "Task 7 : Launch an EC2 Instance in Private Subnet",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-11.png"
+            ]
           },
           {
-            "text": "For Instance Type: select t2.micro"
+            "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the select button.",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-12.png"
+            ]
           },
           {
-            "text": "For Key pair: Select the key pair you created before"
+            "text": "Task 7 : Launch an EC2 Instance in Private Subnet",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-13.png"
+            ]
           },
           {
-            "text": "In Network Settings Click on Edit:"
+            "text": "For Instance Type: select t2.micro"
           },
           {
-            "text": "VPC : Select MyVPC"
+            "text": "For Key pair: Select the key pair you created before"
           },
           {
-            "text": "Subnet : Select MyPrivateSubnet"
+            "text": "In Network Settings Click on Edit: VPC : Select MyVPC Subnet : Select MyPrivateSubnet Auto-assign public IP: Disable Select Select existing security group Select MyEC2Server_SG"
           },
           {
-            "text": "Auto-assign public IP: Disable"
+            "text": "In Network Settings Click on Edit:"
           },
           {
-            "text": "Select Select existing security group"
+            "text": "VPC : Select MyVPC"
           },
           {
-            "text": "Select MyEC2Server_SG"
+            "text": "Subnet : Select MyPrivateSubnet"
           },
           {
-            "text": "Keep Rest thing Default and Click on Launch Instance Button."
+            "text": "Auto-assign public IP: Disable"
           },
           {
-            "text": "Select View all Instances to View Instance you Created"
+            "text": "Select Select existing security group"
+          },
+          {
+            "text": "Select MyEC2Server_SG"
+          },
+          {
+            "text": "Keep Rest thing Default and Click on Launch Instance Button."
+          },
+          {
+            "text": "Select View all Instances to View Instance you Created"
           },
           {
             "text": "Launch Status: Your instance is now launching, Select the instance and wait for it to change status to Running."
           },
           {
-            "text": "Note the Private IP Address of MyPrivateServer : Example 10.0.1.45",
-            "images": [
-              "/labs/creating-nat-gateways-in-aws/step-10.png",
-              "/labs/creating-nat-gateways-in-aws/step-11.png"
-            ]
+            "text": "Note the Private IP Address of MyPrivateServer : Example 10.0.1.45"
           }
         ]
       },
@@ -29869,113 +29948,142 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to establish SSH connections to both the public and private EC2 instances. By testing internet connectivity from both instances, users can verify if the public instance has internet access and the private instance does not."
           },
           {
-            "text": "SSH into MyPublicServer Instance. Follow the below steps"
+            "text": "SSH into MyPublicServer Instance. Follow the below steps"
           },
           {
-            "text": "Once the instance is created. Select the instance MyPublicServer.Click on connect button"
+            "text": "Once the instance is created. Select the instance MyPublicServer.Click on connect button"
           },
           {
-            "text": "Now select the EC2 instance connect option. You can see there are four options for connecting to EC2. You can use any of the given options to get in the console but for our lab, we are using EC2 instance connect."
+            "text": "Now select the EC2 instance connect option. You can see there are four options for connecting to EC2. You can use any of the given options to get in the console but for our lab, we are using EC2 instance connect."
+          },
+          {
+            "text": "Task 8 : SSH into Public and Private EC2 Instance and Test Internet Connectivity",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-14.png"
+            ]
           },
           {
             "text": "A new tab would be opened in your browser where we can see the console."
           },
           {
+            "text": "Task 8 : SSH into Public and Private EC2 Instance and Test Internet Connectivity",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-15.png"
+            ]
+          },
+          {
+            "text": "Switch to root user: sudo su"
+          },
+          {
             "text": "Switch to root user:"
           },
           {
-            "text": "sudo su"
+            "text": "Run the updates using the following command:yum -y update"
           },
           {
             "text": "Run the updates using the following command:"
           },
           {
-            "text": "yum -y update"
+            "text": "Since the Internet Gateway MyIGW is connected to MyPublicSubnet, updates will be completed successfully."
           },
           {
-            "text": "Since the Internet Gateway MyIGW is connected to MyPublicSubnet, updates will be completed successfully."
+            "text": "Task 8 : SSH into Public and Private EC2 Instance and Test Internet Connectivity",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-16.png"
+            ]
           },
           {
-            "text": "Let’s SSH into MyPrivateEC2Server from MyPublicEC2Server."
+            "text": "Let’s SSH into MyPrivateEC2Server from MyPublicEC2Server."
           },
           {
-            "text": "In order to SSH into MyPrivateEC2Server, first, we need to create the PEM file in the public EC2 ie, MyPublicEC2Server, and copy the data from our MyKey.pem in the local machine."
+            "text": "In order to SSH into MyPrivateEC2Server, first, we need to create the PEM file in the public EC2 ie, MyPublicEC2Server, and copy the data from our MyKey.pem in the local machine."
           },
           {
-            "text": "We need MyKey.pem in order to SSH. We shall copy key details from the MyKey.pem from your local machine (which was downloaded earlier while launching EC2 instances)."
+            "text": "We need MyKey.pem in order to SSH. We shall copy key details from the MyKey.pem from your local machine (which was downloaded earlier while launching EC2 instances)."
           },
           {
-            "text": "To copy the contents of the MyKey.pem, open the file in a text editor and copy the whole content."
+            "text": "To copy the contents of the MyKey.pem, open the file in a text editor and copy the whole content."
           },
           {
-            "text": "To create the MyKey.pem in MyPublicEC2Server, run"
+            "text": "To create the MyKey.pem in MyPublicEC2Server, runvi MyKey.pem"
           },
           {
-            "text": "vi MyKey.pem"
+            "text": "To create the MyKey.pem in MyPublicEC2Server, run"
           },
           {
             "text": "Now press the following for inserting the data(You can see insert popped at the last then you can paste the key)."
           },
           {
-            "text": "Click i"
+            "text": "Click i"
           },
           {
-            "text": "Note: In the editor, copy and paste the key that looks similar to the example below:"
+            "text": "Task 8 : SSH into Public and Private EC2 Instance and Test Internet Connectivity",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-17.png"
+            ]
+          },
+          {
+            "text": "Save the File click esc:wq"
           },
           {
             "text": "Save the File"
           },
           {
-            "text": "click esc"
+            "text": "click esc:wq"
           },
           {
-            "text": ":wq"
+            "text": "click esc"
+          },
+          {
+            "text": "Task 8 : SSH into Public and Private EC2 Instance and Test Internet Connectivity",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-19.png"
+            ]
+          },
+          {
+            "text": "Check that the file was created correctly.ls"
           },
           {
             "text": "Check that the file was created correctly."
           },
           {
-            "text": "ls"
+            "text": "Task 8 : SSH into Public and Private EC2 Instance and Test Internet Connectivity",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-20.png"
+            ]
+          },
+          {
+            "text": "Update Permissions for the MyKey.pemchmod 400 MyKey.pem"
           },
           {
             "text": "Update Permissions for the MyKey.pem"
           },
           {
-            "text": "chmod 400 MyKey.pem"
+            "text": "Use the Private IP address of MyPrivateEC2Server to SSH.ssh ec2-user@<Private IP of MyPrivateEC2Server> -i MyKey.pem"
           },
           {
-            "text": "Use the Private IP address of MyPrivateEC2Server to SSH."
+            "text": "Use the Private IP address of MyPrivateEC2Server to SSH."
           },
           {
-            "text": "ssh ec2-user@<Private IP of MyPrivateEC2Server> -i MyKey.pem"
+            "text": "Task 8 : SSH into Public and Private EC2 Instance and Test Internet Connectivity",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-21.png"
+            ]
           },
           {
-            "text": "Note: Incase if this message shows Are you sure you want to continue connecting (yes/no)? : Enter yes"
+            "text": "Switch to root usersudo su"
           },
           {
             "text": "Switch to root user"
           },
           {
-            "text": "sudo su"
+            "text": "Run the updates using the following command: yum -y update"
           },
           {
             "text": "Run the updates using the following command:"
           },
           {
-            "text": "yum -y update"
-          },
-          {
-            "text": "Since no internet access is provided for EC2 instances in a private subnet, you will not be able to get updates.",
-            "images": [
-              "/labs/creating-nat-gateways-in-aws/step-12.png",
-              "/labs/creating-nat-gateways-in-aws/step-13.png",
-              "/labs/creating-nat-gateways-in-aws/step-14.png",
-              "/labs/creating-nat-gateways-in-aws/step-15.png",
-              "/labs/creating-nat-gateways-in-aws/step-16.png",
-              "/labs/creating-nat-gateways-in-aws/step-17.png",
-              "/labs/creating-nat-gateways-in-aws/step-18.png",
-              "/labs/creating-nat-gateways-in-aws/step-19.png"
-            ]
+            "text": "Since no internet access is provided for EC2 instances in a private subnet, you will not be able to get updates."
           }
         ]
       },
@@ -29989,35 +30097,51 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate to the VPC Page."
           },
           {
-            "text": "Make sure you are still in the N.Virginia Region."
+            "text": "Make sure you are still in the N.Virginia Region."
           },
           {
-            "text": "In the Left Panel, click on NAT Gateways."
+            "text": "In the Left Panel, click on NAT Gateways."
           },
           {
-            "text": "Click on Create NAT gateway button."
+            "text": "Click on Create NAT gateway button."
           },
           {
-            "text": "Name : Enter MyNATGateway"
+            "text": "Task 9 : Create a NAT Gateway",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-22.png"
+            ]
           },
           {
-            "text": "VPC: Choose MyVPC"
+            "text": "Name : Enter MyNATGateway"
+          },
+          {
+            "text": "VPC: Choose MyVPC"
           },
           {
             "text": "Connectivity type: Public and Method of Elastic IP: Automatic."
           },
           {
-            "text": "Once the new Elastic IP is allocated, click on Create NAT gateway."
+            "text": "Once the new Elastic IP is allocated, click on Create NAT gateway.",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-23.png"
+            ]
+          },
+          {
+            "text": "Task 9 : Create a NAT Gateway",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-24.png"
+            ]
           },
           {
             "text": "Note that NAT Gateway is always created in a public subnet."
           },
           {
-            "text": "NAT Gateway will be created in a few minutes. Once created, the status will change to available.",
+            "text": "NAT Gateway will be created in a few minutes. Once created, the status will change to available."
+          },
+          {
+            "text": "Task 9 : Create a NAT Gateway",
             "images": [
-              "/labs/creating-nat-gateways-in-aws/step-20.png",
-              "/labs/creating-nat-gateways-in-aws/step-21.png",
-              "/labs/creating-nat-gateways-in-aws/step-22.jpg"
+              "/labs/creating-nat-gateways-in-aws/step-25.jpg"
             ]
           }
         ]
@@ -30029,41 +30153,52 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to update the route table associated with the private subnet to include the NAT Gateway as the target for internet-bound traffic. This ensures that traffic from the private subnet is directed through the NAT Gateway for internet access."
           },
           {
-            "text": "Navigate to Route Tables in the left panel."
+            "text": "Navigate to Route Tables in the left panel."
           },
           {
-            "text": "You can see two Route Tables available for MyVPC"
+            "text": "You can see two Route Tables available for MyVPC"
+          },
+          {
+            "text": "Task 10 : Update Route table and configure NAT Gateway",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-26.jpg"
+            ]
           },
           {
             "text": "To attach Nat Gateway, select the Main Route Table (which is different from the one created by you)."
           },
           {
-            "text": "In the Routes tab below,"
+            "text": "In the Routes tab below, Click on Edit routes. In the next page, Click on Add route Destination: Enter 0.0.0.0/0 Target: Select NAT Gateway, and once the internet gateways have loaded, select the NAT Gateway you created. Click on Save changes."
           },
           {
-            "text": "Click on Edit routes."
+            "text": "In the Routes tab below,"
           },
           {
-            "text": "In the next page, Click on Add route"
+            "text": "Click on Edit routes."
           },
           {
-            "text": "Destination: Enter 0.0.0.0/0"
+            "text": "In the next page, Click on Add route"
           },
           {
-            "text": "Target: Select NAT Gateway, and once the internet gateways have loaded, select the NAT Gateway you created."
+            "text": "Destination: Enter 0.0.0.0/0"
           },
           {
-            "text": "Click on Save changes."
+            "text": "Target: Select NAT Gateway, and once the internet gateways have loaded, select the NAT Gateway you created."
+          },
+          {
+            "text": "Click on Save changes."
           },
           {
             "text": "Once all the configurations are completed, it should look like below."
           },
           {
-            "text": "Now the Instances launched within MyPrivateSubnet can access the Internet through the NAT Gateway.",
+            "text": "Task 10 : Update Route table and configure NAT Gateway",
             "images": [
-              "/labs/creating-nat-gateways-in-aws/step-23.jpg",
-              "/labs/creating-nat-gateways-in-aws/step-24.jpg"
+              "/labs/creating-nat-gateways-in-aws/step-27.jpg"
             ]
+          },
+          {
+            "text": "Now the Instances launched within MyPrivateSubnet can access the Internet through the NAT Gateway."
           }
         ]
       },
@@ -30074,49 +30209,49 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to validate that the instance in the private subnet can successfully establish an internet connection by accessing the internet through the NAT Gateway."
           },
           {
-            "text": "SSH back into MyPublicEC2Server ."
+            "text": "SSH back into MyPublicEC2Server ."
+          },
+          {
+            "text": "Switch to root user sudo su"
           },
           {
             "text": "Switch to root user"
           },
           {
-            "text": "sudo su"
+            "text": "SSH into MyPrivateEC2Server ssh ec2-user@<Private IP of MyPrivateEC2Server> -i MyKey.pem"
           },
           {
-            "text": "SSH into MyPrivateEC2Server"
+            "text": "SSH into MyPrivateEC2Server"
           },
           {
-            "text": "ssh ec2-user@<Private IP of MyPrivateEC2Server> -i MyKey.pem"
+            "text": "Switch to root user sudo su"
           },
           {
             "text": "Switch to root user"
           },
           {
-            "text": "sudo su"
+            "text": "Run the updates using the following command: yum -y update"
           },
           {
             "text": "Run the updates using the following command:"
           },
           {
-            "text": "yum -y update"
-          },
-          {
             "text": "You can see that the updates have been completed successfully in the terminal."
           },
           {
-            "text": "This shows that MyPrivateEC2Server has internet access."
-          },
-          {
-            "text": "Use exit command to close the private server connection."
-          },
-          {
-            "text": "Do You Know?"
-          },
-          {
-            "text": "NAT Gateway allows for high scalability and can handle thousands to tens of thousands of concurrent connections per second. It is designed to handle significant traffic loads and provides automatic scaling based on the demand. This means that as your network traffic increases, AWS automatically scales up the NAT Gateway capacity to accommodate the higher workload. This scalability feature ensures that your instances in the private subnet can maintain reliable and efficient internet connectivity, even during periods of high demand or traffic spikes.",
+            "text": "Task 11 : Test Internet connection from Instance inside Private Subnet",
             "images": [
-              "/labs/creating-nat-gateways-in-aws/step-25.png"
+              "/labs/creating-nat-gateways-in-aws/step-28.png"
             ]
+          },
+          {
+            "text": "This shows that MyPrivateEC2Server has internet access."
+          },
+          {
+            "text": "Use exit command to close the private server connection."
+          },
+          {
+            "text": "NAT Gateway allows for high scalability and can handle thousands to tens of thousands of concurrent connections per second. It is designed to handle significant traffic loads and provides automatic scaling based on the demand. This means that as your network traffic increases, AWS automatically scales up the NAT Gateway capacity to accommodate the higher workload. This scalability feature ensures that your instances in the private subnet can maintain reliable and efficient internet connectivity, even during periods of high demand or traffic spikes."
           }
         ]
       },
@@ -30124,16 +30259,19 @@ export const labsCatalog: Lab[] = [
         "title": "Task 12 : Validation Test",
         "steps": [
           {
-            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
           },
           {
-            "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+            "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
           },
           {
             "text": "Sample output :"
           },
           {
-            "text": "Completion and Conclusion"
+            "text": "Task 12 : Validation Test",
+            "images": [
+              "/labs/creating-nat-gateways-in-aws/step-29.gif"
+            ]
           },
           {
             "text": "You have successfully created a new VPC from scratch and created both public and private subnets."
@@ -30151,19 +30289,13 @@ export const labsCatalog: Lab[] = [
             "text": "You confirmed that the instance in the private subnet is able to connect to the internet."
           },
           {
-            "text": "End Lab"
-          },
-          {
             "text": "Sign out of AWS Account."
           },
           {
             "text": "You have successfully completed the lab."
           },
           {
-            "text": "Once you have completed the steps, click on End Lab from the lab console.",
-            "images": [
-              "/labs/creating-nat-gateways-in-aws/step-26.gif"
-            ]
+            "text": "Once you have completed the steps, click on End Lab from the lab console."
           }
         ]
       }
@@ -34532,10 +34664,10 @@ export const labsCatalog: Lab[] = [
             "text": "Provide the following credentials:"
           },
           {
-            "text": "Password: password"
+            "text": "Password: <example-password>"
           },
           {
-            "text": "UNIX Password: password"
+            "text": "UNIX Password: <example-password>"
           },
           {
             "text": "New Password: <example-password>"
@@ -41120,7 +41252,7 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -41129,10 +41261,10 @@ export const labsCatalog: Lab[] = [
             "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
           },
           {
-            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
-            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
           }
         ]
       },
@@ -41143,10 +41275,10 @@ export const labsCatalog: Lab[] = [
             "text": "In this task , we are going to create an S3 bucket with the required configurations like name, access and region."
           },
           {
-            "text": "Navigate to the Services menu at the top and click on S3 in the Storage section."
+            "text": "Navigate to the Services menu at the top and click on S3 in the Storage section."
           },
           {
-            "text": "On the S3 dashboard, click on Create bucket button and fill in the bucket details."
+            "text": "On the S3 dashboard, click on Create bucket button and fill in the bucket details."
           },
           {
             "text": "Select Region as N.Verginia to create an S3 bucket."
@@ -41155,25 +41287,43 @@ export const labsCatalog: Lab[] = [
             "text": "Bucket type Select : General purpose"
           },
           {
-            "text": "Bucket name: Enter lab-<RANDOM_NUMBER>"
+            "text": "Bucket name: Enter lab-<RANDOM_NUMBER>"
           },
           {
-            "text": "Note: S3 bucket names are globally unique, choose an available name."
+            "text": "Note: S3 bucket names are globally unique, choose an available name."
+          },
+          {
+            "text": "Task 2: Create an S3 Bucket",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-01.png"
+            ]
           },
           {
             "text": "Object ownership: Select ACLs disabled (recommended) option"
           },
           {
-            "text": "Uncheck the option, Block all public access, and check the acknowledge option."
+            "text": "Uncheck the option, Block all public access, and check the acknowledge option."
+          },
+          {
+            "text": "Task 2: Create an S3 Bucket",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-02.png"
+            ]
           },
           {
             "text": "Leave other settings as default."
           },
           {
-            "text": "Click on Create bucket button."
+            "text": "Click on Create bucket button."
           },
           {
             "text": "Your S3 Bucket is now created."
+          },
+          {
+            "text": "Task 2: Create an S3 Bucket",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-03.png"
+            ]
           }
         ]
       },
@@ -41184,19 +41334,37 @@ export const labsCatalog: Lab[] = [
             "text": "Click on your bucket name lab2346."
           },
           {
-            "text": "Click on Properties tab."
+            "text": "Click on Properties tab."
           },
           {
-            "text": "Under Bucket Versioning, click on Edit button."
+            "text": "Task 3: Enable Versioning on the S3 bucket",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-04.png"
+            ]
           },
           {
-            "text": "Bucket Versioning : Select Enable radio button."
+            "text": "Under Bucket Versioning, click on Edit button."
           },
           {
-            "text": "Now Click on the Save changes button."
+            "text": "Bucket Versioning : Select Enable radio button."
+          },
+          {
+            "text": "Task 3: Enable Versioning on the S3 bucket",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-05.png"
+            ]
+          },
+          {
+            "text": "Now Click on the Save changes button."
           },
           {
             "text": "Now Bucket versioning is enabled."
+          },
+          {
+            "text": "Task 3: Enable Versioning on the S3 bucket",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-06.png"
+            ]
           }
         ]
       },
@@ -41204,7 +41372,10 @@ export const labsCatalog: Lab[] = [
         "title": "Task 4: Upload an object and make the bucket public",
         "steps": [
           {
-            "text": "Click on the Objects tab."
+            "text": "Click on the Objects tab."
+          },
+          {
+            "text": "In the Overview, you can see the following message: This bucket is empty. Upload new objects to get started."
           },
           {
             "text": "In the Overview, you can see the following message:"
@@ -41213,40 +41384,58 @@ export const labsCatalog: Lab[] = [
             "text": "This bucket is empty. Upload new objects to get started."
           },
           {
-            "text": "Upload sample.txt file present in zip file download the zip file from our Download Me link."
+            "text": "Task 4: Upload an object and make the bucket public",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-07.png"
+            ]
+          },
+          {
+            "text": "Upload sample.txt file present in zip file download the zip file from our Download Me link."
+          },
+          {
+            "text": "To upload a file to our S3 bucket, Click on the Upload button. Click on the Add files button. Browse for the file you want to upload. Click on the Upload button. You can watch the progress of the upload from within the transfer panel at the bottom of the screen. If it's a small file, you might not see the transfer. Once your file has been uploaded, it will be displayed in the bucket."
           },
           {
             "text": "To upload a file to our S3 bucket,"
           },
           {
-            "text": "Click on the Upload button."
+            "text": "Click on the Upload button."
           },
           {
-            "text": "Click on the Add files button."
+            "text": "Click on the Add files button."
           },
           {
             "text": "Browse for the file you want to upload."
           },
           {
-            "text": "Click on the Upload button."
+            "text": "Click on the Upload button."
           },
           {
             "text": "You can watch the progress of the upload from within the transfer panel at the bottom of the screen. If it's a small file, you might not see the transfer. Once your file has been uploaded, it will be displayed in the bucket."
           },
           {
-            "text": "Now click on the Close button on the top right corner of the screen."
+            "text": "Task 4: Upload an object and make the bucket public",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-08.png"
+            ]
           },
           {
-            "text": "To copy the ARN of your S3 bucket, click on Properties tab and copy the ARN."
+            "text": "Now click on the Close button on the top right corner of the screen."
+          },
+          {
+            "text": "To copy the ARN of your S3 bucket, click on Properties tab and copy the ARN."
+          },
+          {
+            "text": "Make the bucket public with a Bucket Policy: Click the Permissions tab to configure your bucket: Scroll down to Bucket policy , click on Edit button on the Right side. The policy editor will open."
           },
           {
             "text": "Make the bucket public with a Bucket Policy:"
           },
           {
-            "text": "Click the Permissions tab to configure your bucket:"
+            "text": "Click the Permissions tab to configure your bucket:"
           },
           {
-            "text": "Scroll down to Bucket policy , click on Edit button on the Right side."
+            "text": "Scroll down to Bucket policy , click on Edit button on the Right side."
           },
           {
             "text": "The policy editor will open."
@@ -41255,61 +41444,34 @@ export const labsCatalog: Lab[] = [
             "text": "In the policy below, update your bucket ARN in the Resource key-value and copy the policy code."
           },
           {
-            "text": "Paste the bucket policy into the Bucket policy editor."
+            "text": "Paste the bucket policy into the Bucket policy editor."
           },
           {
-            "text": "{"
+            "text": "Task 4: Upload an object and make the bucket public",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-09.png"
+            ]
           },
           {
-            "text": "\"Id\": \"Policy1\","
+            "text": "Click on Save Changes button"
           },
           {
-            "text": "\"Version\": \"2012-10-17\","
+            "text": "Now again open the Objects tab, select the object name and click on Copy URL."
           },
           {
-            "text": "\"Statement\": ["
+            "text": "Task 4: Upload an object and make the bucket public",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-10.png"
+            ]
           },
           {
-            "text": "{"
+            "text": "Open a new tab, paste the URL and you will get the below output."
           },
           {
-            "text": "\"Sid\": \"Stmt1\","
-          },
-          {
-            "text": "\"Action\": ["
-          },
-          {
-            "text": "\"s3:GetObject\""
-          },
-          {
-            "text": "],"
-          },
-          {
-            "text": "\"Effect\": \"Allow\","
-          },
-          {
-            "text": "\"Resource\": \"replace-this-string-from-your-bucket-arn/*\","
-          },
-          {
-            "text": "\"Principal\": \"*\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "]"
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "Click on Save Changes button"
-          },
-          {
-            "text": "Now again open the Objects tab, select the object name and click on Copy URL."
-          },
-          {
-            "text": "Open a new tab, paste the URL and you will get the below output."
+            "text": "Task 4: Upload an object and make the bucket public",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-11.png"
+            ]
           }
         ]
       },
@@ -41320,25 +41482,31 @@ export const labsCatalog: Lab[] = [
             "text": "Now open the sample.txt file in your local text editor and update the file content as “This is version 2”."
           },
           {
-            "text": "Click on the Upload button."
+            "text": "Click on the Upload button."
           },
           {
-            "text": "Click on the Add files button."
+            "text": "Click on the Add files button."
           },
           {
             "text": "Browse for the file you want to upload."
           },
           {
-            "text": "Click on the Upload button."
+            "text": "Click on the Upload button."
           },
           {
-            "text": "Now click on the Close button on the top right corner of the screen."
+            "text": "Now click on the Close button on the top right corner of the screen."
           },
           {
             "text": "Once the file has been uploaded successfully, copy the URL and paste it into your browser."
           },
           {
-            "text": "You should see the latest version of the file you uploaded."
+            "text": "You should see the latest version of the file you uploaded."
+          },
+          {
+            "text": "Task 5: Upload different versions of the file",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-12.png"
+            ]
           },
           {
             "text": "Similarly, again edit the sample.txt and update the content as \"This is version 3\"."
@@ -41355,16 +41523,25 @@ export const labsCatalog: Lab[] = [
             "text": "Open your S3 bucket, click on Show versions. You will get the list of versions available for your sample.txt."
           },
           {
+            "text": "Task 6: Test the Versioning of the object",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-13.png"
+            ]
+          },
+          {
             "text": "Now delete the first object and try to see the output in the browser."
+          },
+          {
+            "text": "Task 6: Test the Versioning of the object",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-14.png"
+            ]
           },
           {
             "text": "You will get the output as \"This is version 2\"."
           },
           {
             "text": "Hence, when you delete the object from the bucket, the bucket pointer points to the previously available version."
-          },
-          {
-            "text": "Do you know?"
           },
           {
             "text": "Enabling versioning can impact storage costs since each version of an object consumes storage space. You are billed for the storage of all versions, including the current version and any previous versions. However, S3 provides options for lifecycle policies, which can automatically transition or expire older versions to help manage storage costs effectively."
@@ -41375,16 +41552,22 @@ export const labsCatalog: Lab[] = [
         "title": "Task 7: Validation Test",
         "steps": [
           {
-            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
           },
           {
-            "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+            "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
           },
           {
-            "text": "Sample output :"
+            "text": "Sample output :",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-15.gif"
+            ]
           },
           {
-            "text": "Completion and Conclusion"
+            "text": "Task 7: Validation Test",
+            "images": [
+              "/labs/how-to-enable-versioning-amazon-s3/step-16.gif"
+            ]
           },
           {
             "text": "You have successfully created an S3 Bucket."
@@ -41393,19 +41576,16 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully enabled Object Versioning on the Bucket."
           },
           {
-            "text": "You have successfully uploaded a test file into the Bucket and tested its versioning."
+            "text": "You have successfully uploaded a test file into the Bucket and tested its versioning."
           },
           {
             "text": "You have successfully validated the lab."
           },
           {
-            "text": "End Lab"
-          },
-          {
             "text": "Sign out from the AWS Management Console."
           },
           {
-            "text": "Click on End Lab button from the lab console and wait till the process gets completed"
+            "text": "Click on End Lab button from the lab console and wait till the process gets completed"
           }
         ]
       }
@@ -49701,7 +49881,10 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -49710,10 +49893,10 @@ export const labsCatalog: Lab[] = [
             "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
           },
           {
-            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
-            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
           }
         ]
       },
@@ -49721,39 +49904,55 @@ export const labsCatalog: Lab[] = [
         "title": "Task 2: Provision Default VPC",
         "steps": [
           {
-            "text": "Navigate to VPC by clicking on the Services menu in the top, then click on VPC or Open the Amazon VPC console via https://console.aws.amazon.com/vpc/."
+            "text": "Navigate to VPC by clicking on the Services menu in the top, then click on VPC or Open the Amazon VPC console via https://console.aws.amazon.com/vpc/."
           },
           {
-            "text": "Delete the default VPC by following the below steps:"
+            "text": "Delete the default VPC by following the below steps: In the navigation pane, choose Your VPCs. Select the VPC with value as yes in default VPC column.",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-01.png"
+            ]
           },
           {
-            "text": "In the navigation pane, choose Your VPCs."
+            "text": "In the navigation pane, choose Your VPCs."
           },
           {
-            "text": "Select the VPC with value as yes in default VPC column."
+            "text": "Select the VPC with value as yes in default VPC column.",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-02.png"
+            ]
           },
           {
-            "text": "Go to actions button and click on delete VPC button."
+            "text": "Go to actions button and click on delete VPC button."
+          },
+          {
+            "text": "Task 2: Provision Default VPC",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-03.png"
+            ]
           },
           {
             "text": "Check I acknowledge that I want to delete my default VPC option."
           },
           {
-            "text": "Type default delete VPC and click on Delete button."
+            "text": "Type default delete VPC and click on Delete button."
           },
           {
-            "text": "Now to provision Default VPC again, Refresh your console go to actions and click Create default VPC"
-          },
-          {
-            "text": "Click Create default VPC button and your default VPC will get created",
+            "text": "Task 2: Provision Default VPC",
             "images": [
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-01.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-02.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-03.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-04.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-05.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-06.png"
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-04.png"
             ]
+          },
+          {
+            "text": "Now to provision Default VPC again, Refresh your console go to actions and click Create default VPC"
+          },
+          {
+            "text": "Task 2: Provision Default VPC",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-05.png"
+            ]
+          },
+          {
+            "text": "Click Create default VPC button and your default VPC will get created"
           }
         ]
       },
@@ -49764,25 +49963,58 @@ export const labsCatalog: Lab[] = [
             "text": "Ensure you are in the US East (N. Virginia) us-east-1 Region to begin launching an EC2 instance in the Amazon cloud."
           },
           {
-            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
           },
           {
-            "text": "Click on the Instances option on the left panel, and then click on the Launch Instances button."
+            "text": "Click on the Instances option on the left panel, and then click on the Launch Instances button."
           },
           {
-            "text": "Name : Enter MyEC2Server"
+            "text": "Name : Enter MyEC2Server",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-06.png"
+            ]
           },
           {
-            "text": "Select Amazon Linux 2023 AMI from the dropdown."
+            "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-07.png"
+            ]
           },
           {
-            "text": "Note: if there are two AMI's present for Amazon Linux 2o23 kernel-6.1 AMI."
+            "text": "Select Amazon Linux 2023 AMI from the dropdown. Note: if there are two AMI's present for Amazon Linux 2o23 kernel-6.1 AMI.",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-08.png"
+            ]
+          },
+          {
+            "text": "Select Amazon Linux 2023 AMI from the dropdown."
+          },
+          {
+            "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-09.png"
+            ]
+          },
+          {
+            "text": "An instance type in AWS refers to a virtual server configuration that determines the computing resources, such as CPU, memory, and storage, available to an instance. It is the basic building block for creating an EC2 instance in the AWS cloud. For Instance Type: Select t2.micro",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-10.png"
+            ]
           },
           {
             "text": "An instance type in AWS refers to a virtual server configuration that determines the computing resources, such as CPU, memory, and storage, available to an instance. It is the basic building block for creating an EC2 instance in the AWS cloud."
           },
           {
-            "text": "For Instance Type: Select t2.micro"
+            "text": "For Instance Type: Select t2.micro",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-11.png"
+            ]
+          },
+          {
+            "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-12.png"
+            ]
           },
           {
             "text": "t2.micro is an instance type in AWS that comes with 1 vCPU, and 1GB memory and is suitable for low-traffic web servers, small development environments, and other lightweight applications."
@@ -49791,16 +50023,16 @@ export const labsCatalog: Lab[] = [
             "text": "AWS key pair is a secure pair of keys used for login and access to EC2 instances. It includes a public key placed on the instance and a private key kept on the user's local computer, used for authentication to prevent unauthorized access."
           },
           {
-            "text": "For Key pair(login): Select Create a new key pair Button"
+            "text": "For Key pair(login): Select Create a new key pair Button"
           },
           {
-            "text": "Key pair name: WhizKey"
+            "text": "Key pair name: WhizKey"
           },
           {
-            "text": "Key pair type: RSA"
+            "text": "Key pair type: RSA"
           },
           {
-            "text": "Private key file format: .pem"
+            "text": "Private key file format: .pem"
           },
           {
             "text": "In Network Settings, Click on Edit Button:"
@@ -49818,39 +50050,57 @@ export const labsCatalog: Lab[] = [
             "text": "Description: Enter Security Group to allow traffic to EC2."
           },
           {
-            "text": "We will now add the security group rules. SSH will already be present there."
+            "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-13.png"
+            ]
           },
           {
-            "text": "For HTTP, Select Add security group rule Button"
+            "text": "For HTTP, Select Add security group rule Button"
           },
           {
-            "text": "Choose Type: Select HTTP"
+            "text": "Choose Type: Select HTTP"
           },
           {
-            "text": "Source: Select Anywhere"
+            "text": "Source: Select Anywhere"
+          },
+          {
+            "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-14.png"
+            ]
           },
           {
             "text": "A security group is a virtual firewall that controls the inbound and outbound traffic for instances in a particular network in a cloud computing environment. Here we have selected SSH and HTTP rules that will allow incoming SSH and HTTP traffic to instances that are associated with the security group."
           },
           {
-            "text": "Proceed with launching the instance while leaving all other settings as default. Simply click on the Launch Instance without modifying any other configuration."
+            "text": "Proceed with launching the instance while leaving all other settings as default. Simply click on the Launch Instance without modifying any other configuration."
           },
           {
-            "text": "To view the instance that you have created, choose the View all Instances option."
+            "text": "To view the instance that you have created, choose the View all Instances option."
           },
           {
-            "text": "Launch Status: Once you have initiated the instance launch process, Go to the Instances page from the left menu and wait for your EC2 instance to become \"Running\" while ensuring the health check status is 2/2 checks passed for optimal performance."
-          },
-          {
-            "text": "Select the instance that you have created and copy the public IPv4 address within the details section and paste it into the editor for later use. An example of this process is depicted in the screenshot provided.",
+            "text": "Launch Status: Once you have initiated the instance launch process, Go to the Instances page from the left menu and wait for your EC2 instance to become \"Running\" while ensuring the health check status is 2/2 checks passed for optimal performance.",
             "images": [
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-07.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-08.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-09.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-10.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-11.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-12.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-13.png"
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-15.png"
+            ]
+          },
+          {
+            "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-16.png"
+            ]
+          },
+          {
+            "text": "Select the instance that you have created and copy the public IPv4 address within the details section and paste it into the editor for later use. An example of this process is depicted in the screenshot provided.",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-17.png"
+            ]
+          },
+          {
+            "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-18.png"
             ]
           }
         ]
@@ -49859,19 +50109,30 @@ export const labsCatalog: Lab[] = [
         "title": "Task 4 : SSH into EC2 Instance using the key pair",
         "steps": [
           {
-            "text": "Select your EC2 instance (MyEC2Server) and click on the Connect button."
+            "text": "Select your EC2 instance (MyEC2Server) and click on the Connect button.",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-19.png"
+            ]
           },
           {
-            "text": "Select EC2 Instance Connect option and click on Connect button. Keep everything else as default."
+            "text": "Task 4 : SSH into EC2 Instance using the key pair",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-20.png"
+            ]
+          },
+          {
+            "text": "Select EC2 Instance Connect option and click on Connect button. Keep everything else as default."
           },
           {
             "text": "A new tab will open in the browser where you can execute the Linux Commands."
           },
           {
-            "text": "Please follow the steps in SSH into EC2 Instance for more options to SSH.",
+            "text": "Please follow the steps in SSH into EC2 Instance for more options to SSH."
+          },
+          {
+            "text": "Task 4 : SSH into EC2 Instance using the key pair",
             "images": [
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-14.png",
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-15.png"
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-21.png"
             ]
           }
         ]
@@ -49883,16 +50144,13 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, our goal is to configure an Amazon EC2 instance to run an Apache Web Server and verify its functionality by accessing the web server via a web browser using the instance's public IPv4 address."
           },
           {
+            "text": "Switch to root user:sudo su"
+          },
+          {
             "text": "Switch to root user:"
           },
           {
-            "text": "sudo su"
-          },
-          {
             "text": "Now run the updates using the following command:"
-          },
-          {
-            "text": "dnf update -y"
           },
           {
             "text": "Once completed, lets install and run an apache server"
@@ -49901,31 +50159,19 @@ export const labsCatalog: Lab[] = [
             "text": "Install the Apache web server:"
           },
           {
-            "text": "dnf install httpd -y"
-          },
-          {
             "text": "Start the web server:"
-          },
-          {
-            "text": "systemctl start httpd"
           },
           {
             "text": "Now Enable httpd:"
           },
           {
-            "text": "systemctl enable httpd"
-          },
-          {
             "text": "Check the webserver status"
-          },
-          {
-            "text": "systemctl status httpd"
           },
           {
             "text": "You can see Active status is running."
           },
           {
-            "text": "You can test that your web server is properly installed and started by entering the public IPv4 address of your EC2 instance in the address bar of a web browser. If your web server is running, then you see the Apache test page. If you don't see the Apache test page, then verify whether you followed the above steps properly and check your inbound rules for the security group that you created."
+            "text": "You can test that your web server is properly installed and started by entering the public IPv4 address of your EC2 instance in the address bar of a web browser. If your web server is running, then you see the Apache test page. If you don't see the Apache test page, then verify whether you followed the above steps properly and check your inbound rules for the security group that you created."
           }
         ]
       },
@@ -49936,19 +50182,16 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, you will add content to the index.html file using the \"echo\" command and restart the webserver. Then, you can view the content by entering the public IPv4 address followed by \"/index.html\" in a web browser, ensuring that the URL protocol is HTTP."
           },
           {
-            "text": "To add the contents into index.html file using echo, copy and paste the below command to shell."
+            "text": "To add the contents into index.html file using echo, copy and paste the below command to shell.echo \"<html>Hi Lab, I am a public page</html>\" > /var/www/html/index.html"
           },
           {
-            "text": "echo \"<html>Hi Lab, I am a public page</html>\" > /var/www/html/index.html"
+            "text": "To add the contents into index.html file using echo, copy and paste the below command to shell."
           },
           {
             "text": "Restart the webserver by using the following command:"
           },
           {
-            "text": "systemctl restart httpd"
-          },
-          {
-            "text": "Now enter the file name, /index.html after the public IPv4 Address which you got when you created the ec2 instance in the browser, and you can see your HTML content."
+            "text": "Now enter the file name, /index.html after the public IPv4 Address which you got when you created the ec2 instance in the browser, and you can see your HTML content."
           },
           {
             "text": "Make sure URL Protocol is http not https."
@@ -49963,16 +50206,16 @@ export const labsCatalog: Lab[] = [
             "text": "Note: If the index.html page is not loading, try removing s from the link, it should be HTTP."
           },
           {
+            "text": "Task 6 : Create a web page and publish it on the instance",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-22.png"
+            ]
+          },
+          {
             "text": "If you can see the above text in the browser, then you have successfully completed the lab."
           },
           {
-            "text": "Do You Know?"
-          },
-          {
-            "text": "The Amazon EC2 P4d instance is the most powerful EC2 instance type available, with eight NVIDIA A100 Tensor Core GPUs, 1.1 TB of NVMe storage, and 400 Gbps network bandwidth, making it ideal for large-scale machine learning and HPC workloads.",
-            "images": [
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-16.png"
-            ]
+            "text": "The Amazon EC2 P4d instance is the most powerful EC2 instance type available, with eight NVIDIA A100 Tensor Core GPUs, 1.1 TB of NVMe storage, and 400 Gbps network bandwidth, making it ideal for large-scale machine learning and HPC workloads."
           }
         ]
       },
@@ -49980,7 +50223,7 @@ export const labsCatalog: Lab[] = [
         "title": "Task 7 : Validation of the Lab",
         "steps": [
           {
-            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
           },
           {
             "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
@@ -49989,7 +50232,10 @@ export const labsCatalog: Lab[] = [
             "text": "Sample output :"
           },
           {
-            "text": "Completion and Conclusion"
+            "text": "Task 7 : Validation of the Lab",
+            "images": [
+              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-23.gif"
+            ]
           },
           {
             "text": "You have successfully created and launched an Amazon EC2 instance"
@@ -50007,19 +50253,13 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully validated the lab."
           },
           {
-            "text": "End Lab"
-          },
-          {
             "text": "Sign out of AWS Account."
           },
           {
             "text": "You have successfully completed the lab."
           },
           {
-            "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed.",
-            "images": [
-              "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-17.gif"
-            ]
+            "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
           }
         ]
       }
@@ -53496,7 +53736,10 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to the AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign-in button."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -53505,10 +53748,10 @@ export const labsCatalog: Lab[] = [
             "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
           },
           {
-            "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign-in button."
+            "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign-in button."
           },
           {
-            "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+            "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
           }
         ]
       },
@@ -53519,10 +53762,16 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to create new IAM users by providing the name, password access, permissions, and tags. These users will be added to their respective groups in the next task."
           },
           {
-            "text": "Click on Services and select IAM under the Security, Identity, & Compliance section."
+            "text": "Click on Services and select IAM under the Security, Identity, & Compliance section."
           },
           {
-            "text": "In the IAM dashboard, select the IAM Users option in the left panel and click on the Create User button to create a new IAM user."
+            "text": "In the IAM dashboard, select the IAM Users option in the left panel and click on the Create User button to create a new IAM user."
+          },
+          {
+            "text": "In the Add User page, fill in the User Details section as follows: User name: Enter John (or the desired name for the user) Check the Provide user access to the AWS Management Console - optional checkbox Select Custom password under Console Password and Enter <example-password> (or the desired password for the user) Uncheck the Users must create a new password at the next sign-in (recommended) checkbox. Click on the Next button.",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-01.jpg"
+            ]
           },
           {
             "text": "In the Add User page, fill in the User Details section as follows:"
@@ -53540,34 +53789,70 @@ export const labsCatalog: Lab[] = [
             "text": "Uncheck the Users must create a new password at the next sign-in (recommended) checkbox."
           },
           {
-            "text": "Click on the Next button."
+            "text": "Click on the Next button.",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-02.jpg"
+            ]
           },
           {
-            "text": "In the Set permissions section, keep things as default. Click on the Next button."
+            "text": "Task 2: Create IAM Users",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-03.jpg"
+            ]
           },
           {
-            "text": "Scroll down and Under Tags, Click on the Add new tag button:"
+            "text": "In the Set permissions section, keep things as default. Click on the Next button."
+          },
+          {
+            "text": "Scroll down and Under Tags, Click on the Add new tag button: Key: Enter Dev-Team Value: Enter Developers",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-04.jpg"
+            ]
+          },
+          {
+            "text": "Scroll down and Under Tags, Click on the Add new tag button:"
           },
           {
             "text": "Key: Enter Dev-Team"
           },
           {
-            "text": "Value: Enter Developers"
+            "text": "Value: Enter Developers",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-05.jpg"
+            ]
           },
           {
-            "text": "Click on the Create User button"
+            "text": "Task 2: Create IAM Users",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-06.jpg"
+            ]
           },
           {
-            "text": "Note: Ignore the above error if it appears while creating Users and click on Close."
+            "text": "Click on the Create User button",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-07.jpg"
+            ]
           },
           {
-            "text": "Click on the Return to users list button and then on the Continue button."
+            "text": "Task 2: Create IAM Users",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-08.jpg"
+            ]
+          },
+          {
+            "text": "Note: Ignore the above error if it appears while creating Users and click on Close."
+          },
+          {
+            "text": "Click on the Return to users list button and then on the Continue button."
           },
           {
             "text": "Repeat the same steps and tags for the IAM user by the name Sarah."
           },
           {
-            "text": "Repeat the steps to create IAM users by the name Ted and Rita with the following details,"
+            "text": "Repeat the steps to create IAM users by the name Ted and Rita with the following details, Custom password: <example-password> Key: HR-Team Value: HR"
+          },
+          {
+            "text": "Repeat the steps to create IAM users by the name Ted and Rita with the following details,"
           },
           {
             "text": "Custom password: <example-password>"
@@ -53581,10 +53866,13 @@ export const labsCatalog: Lab[] = [
           {
             "text": "We have created 4 IAM users.",
             "images": [
-              "/labs/introduction-to-aws-identity-access-management-iam/step-01.jpg",
-              "/labs/introduction-to-aws-identity-access-management-iam/step-02.jpg",
-              "/labs/introduction-to-aws-identity-access-management-iam/step-03.jpg",
-              "/labs/introduction-to-aws-identity-access-management-iam/step-04.jpg"
+              "/labs/introduction-to-aws-identity-access-management-iam/step-09.jpg"
+            ]
+          },
+          {
+            "text": "Task 2: Create IAM Users",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-10.jpg"
             ]
           }
         ]
@@ -53596,16 +53884,32 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to create new IAM groups and will add the users to their respective groups. Moreover, we will be adding permissions to the group so that users within the group have access to the services allocated to them using the permission policies."
           },
           {
-            "text": "Select the IAM User groups in the left panel and click on the Create group"
+            "text": "Select the IAM User groups in the left panel and click on the Create group"
+          },
+          {
+            "text": "Set Group Name: User group name: Enter Dev-Team Scroll down and select John and Sarah under Add Users to the group. Scroll down to the Attach permissions Policies section and search for AmazonEC2ReadOnlyAccess and AmazonS3ReadOnlyAccess policies. These policies provide read access for EC2 and S3 to the added users in the group. Note: Do not add other policies than the ones mentioned above. You will get an error while creating a group Review all details and click on the Create group button. Repeat the same steps to create an HR-Team group. Click on the Create group User group name: HR-Team Scroll down and select Ted and Rita under Add Users to the group. Under Attach permissions Policies, select the Billing policy. Note: Do not add other policies than the ones mentioned above. You will get an error while creating a group Review all details and click on the Create group button.",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-11.jpg",
+              "/labs/introduction-to-aws-identity-access-management-iam/step-12.jpg"
+            ]
           },
           {
             "text": "Set Group Name:"
           },
           {
-            "text": "User group name: Enter Dev-Team"
+            "text": "User group name: Enter Dev-Team"
           },
           {
-            "text": "Scroll down and select John and Sarah under Add Users to the group."
+            "text": "Scroll down and select John and Sarah under Add Users to the group.",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-13.jpg"
+            ]
+          },
+          {
+            "text": "Task 3: Create IAM Groups and add IAM Users",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-14.jpg"
+            ]
           },
           {
             "text": "Scroll down to the Attach permissions Policies section and search for AmazonEC2ReadOnlyAccess and AmazonS3ReadOnlyAccess policies. These policies provide read access for EC2 and S3 to the added users in the group."
@@ -53614,19 +53918,25 @@ export const labsCatalog: Lab[] = [
             "text": "Note: Do not add other policies than the ones mentioned above. You will get an error while creating a group"
           },
           {
-            "text": "Review all details and click on the Create group button."
+            "text": "Review all details and click on the Create group button."
+          },
+          {
+            "text": "Repeat the same steps to create an HR-Team group. Click on the Create group User group name: HR-Team Scroll down and select Ted and Rita under Add Users to the group. Under Attach permissions Policies, select the Billing policy. Note: Do not add other policies than the ones mentioned above. You will get an error while creating a group Review all details and click on the Create group button.",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-15.jpg"
+            ]
           },
           {
             "text": "Repeat the same steps to create an HR-Team group."
           },
           {
-            "text": "Click on the Create group"
+            "text": "Click on the Create group"
           },
           {
-            "text": "User group name: HR-Team"
+            "text": "User group name: HR-Team"
           },
           {
-            "text": "Scroll down and select Ted and Rita under Add Users to the group."
+            "text": "Scroll down and select Ted and Rita under Add Users to the group."
           },
           {
             "text": "Under Attach permissions Policies, select the Billing policy."
@@ -53635,17 +53945,19 @@ export const labsCatalog: Lab[] = [
             "text": "Note: Do not add other policies than the ones mentioned above. You will get an error while creating a group"
           },
           {
-            "text": "Review all details and click on the Create group button."
-          },
-          {
-            "text": "Do You Know?"
-          },
-          {
-            "text": "In 2021, AWS IAM introduced a new feature called Access Analyzer, which uses automated reasoning to help identify the resources that an IAM policy allows or denies access to. This can be useful for identifying unintended access and for auditing IAM policies to ensure they conform to security best practices. Access Analyzer also provides recommendations for how to modify policies to remove unintended access, making it easier to maintain a secure AWS environment",
+            "text": "Review all details and click on the Create group button.",
             "images": [
-              "/labs/introduction-to-aws-identity-access-management-iam/step-05.jpg",
-              "/labs/introduction-to-aws-identity-access-management-iam/step-06.jpg"
+              "/labs/introduction-to-aws-identity-access-management-iam/step-16.jpg"
             ]
+          },
+          {
+            "text": "Task 3: Create IAM Groups and add IAM Users",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-17.jpg"
+            ]
+          },
+          {
+            "text": "In 2021, AWS IAM introduced a new feature called Access Analyzer, which uses automated reasoning to help identify the resources that an IAM policy allows or denies access to. This can be useful for identifying unintended access and for auditing IAM policies to ensure they conform to security best practices. Access Analyzer also provides recommendations for how to modify policies to remove unintended access, making it easier to maintain a secure AWS environment"
           }
         ]
       },
@@ -53653,19 +53965,25 @@ export const labsCatalog: Lab[] = [
         "title": "Task 4: Validation Test",
         "steps": [
           {
-            "text": "Once the lab steps are completed, please click the Lab Validation button on the left side panel. Click Validate My Lab on the Lab Validation tab."
+            "text": "Once the lab steps are completed, please click the Lab Validation button on the left side panel. Click Validate My Lab on the Lab Validation tab."
           },
           {
-            "text": "This will validate the resources in the AWS account and display whether you have completed this lab successfully or not."
+            "text": "This will validate the resources in the AWS account and display whether you have completed this lab successfully or not."
           },
           {
-            "text": "Sample output :"
+            "text": "Sample output :",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-18.gif"
+            ]
           },
           {
-            "text": "Completion and Conclusion"
+            "text": "Task 4: Validation Test",
+            "images": [
+              "/labs/introduction-to-aws-identity-access-management-iam/step-19.gif"
+            ]
           },
           {
-            "text": "In this lab, you created 4 IAM users & 2 IAM groups. At the time of the IAM groups creation, you attached the required IAM policies, added John and Sarah to the Dev Team group, and added Ted and Rita to the HR Team group."
+            "text": "In this lab, you created 4 IAM users & 2 IAM groups. At the time of the IAM groups creation, you attached the required IAM policies, added John and Sarah to the Dev Team group, and added Ted and Rita to the HR Team group."
           },
           {
             "text": "You have learned how to create IAM users and groups."
@@ -53680,10 +53998,7 @@ export const labsCatalog: Lab[] = [
             "text": "You have learned how to allow a specific user/group to access services and resources in your AWS account."
           },
           {
-            "text": "You have successfully validated the lab."
-          },
-          {
-            "text": "End Lab"
+            "text": "You have successfully validated the lab."
           },
           {
             "text": "Sign out of AWS Account."
@@ -53692,10 +54007,7 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully completed the lab."
           },
           {
-            "text": "Once you have completed the steps click on End Lab from the lab console.",
-            "images": [
-              "/labs/introduction-to-aws-identity-access-management-iam/step-07.gif"
-            ]
+            "text": "Once you have completed the steps click on End Lab from the lab console."
           }
         ]
       }
@@ -55099,10 +55411,7 @@ export const labsCatalog: Lab[] = [
             ]
           },
           {
-            "text": "Task 6 : Purge Queue and Verify the same",
-            "images": [
-              "/labs/introduction-to-simple-queuing-service-sqs/step-26.png"
-            ]
+            "text": "Task 6 : Purge Queue and Verify the same"
           },
           {
             "text": "Once you select the purge option it will ask for a confirmation. Enter the phrase purge and click on purge.",
@@ -62483,802 +62792,37 @@ export const labsCatalog: Lab[] = [
     "duration": "01:00:00",
     "tasks": [
       {
-        "title": "Task 1: Sign in to AWS Management Console Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab. On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign-in button.",
-        "steps": [
-          {
-            "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
-          },
-          {
-            "text": "If you face any issues, please go through FAQs and Troubleshooting for Labs."
-          },
-          {
-            "text": "Task 2: Create an S3 bucket"
-          },
-          {
-            "text": "Navigate to S3 in the Services menu under the Storage section."
-          },
-          {
-            "text": "In the left menu, choose Buckets, click Create Bucket, and fill in the bucket details."
-          },
-          {
-            "text": "AWS Region: Select US East (N. Virginia) us-east-1."
-          },
-          {
-            "text": "Bucket Name: Enter lab<RANDOM_NUMBER>"
-          },
-          {
-            "text": "(Note: The Bucket Name must be unique across all existing bucket names in Amazon S3)"
-          },
-          {
-            "text": "Leave other settings as default."
-          },
-          {
-            "text": "Click on Create bucket button."
-          },
-          {
-            "text": "Your S3 Bucket is now created. Once it is created Click on your bucket name."
-          },
-          {
-            "text": "In the Objects, You can see the following message"
-          },
-          {
-            "text": "You don't have any objects in this bucket."
-          },
-          {
-            "text": "Click on the Add files."
-          },
-          {
-            "text": "Download the Zip file from here."
-          },
-          {
-            "text": "Unzip the file and upload sendmessages and receivemessages files into the bucket"
-          },
-          {
-            "text": "Click on Upload button. Once your file has been uploaded, it will be displayed in the bucket."
-          },
-          {
-            "text": "Task 3: Create an SQS Queue"
-          },
-          {
-            "text": "In this task, we are going to create an sqs queue that will send and receive messages"
-          },
-          {
-            "text": "Make sure you are in the N. Virginia region."
-          },
-          {
-            "text": "Navigate to the Services menu on the top, search for SQS and select it."
-          },
-          {
-            "text": "Now, We’ll create a Queue, with all the default options. Click on Create queue button."
-          },
-          {
-            "text": "Details :"
-          },
-          {
-            "text": "Type : Select Standard"
-          },
-          {
-            "text": "Name : Enter MyMessages {IMPORTANT : use same name}"
-          },
-          {
-            "text": "Once you click on Create Queue you will get a success message."
-          },
-          {
-            "text": "Task 4: SSH into EC2 instance"
-          },
-          {
-            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region before proceeding with the Lab.?"
-          },
-          {
-            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
-          },
-          {
-            "text": "You will see a running instance named lab-instance."
-          },
-          {
-            "text": "Click on the instance and then click on the Connect button."
-          },
-          {
-            "text": "Click on the Connect button again."
-          },
-          {
-            "text": "Run the below commands."
-          },
-          {
-            "text": "Lets create sendmessage file in the nano editor."
-          },
-          {
-            "text": "nano sendMessages.sh"
-          },
-          {
-            "text": "Paste the given code in the editor, and press CTRL+X to save the file and then enter Y and click Enter button."
-          },
-          {
-            "text": "#!/bin/bash"
-          },
-          {
-            "text": "# queueurl is required to send or receive messages from SQS"
-          },
-          {
-            "text": "# Note: AWS CLI and boto3 need to use legacy endpoint"
-          },
-          {
-            "text": "# If we use the AWS CLI or SDK for Python, we need to use the legacy endpoints from https://docs.aws.amazon.com/general/latest/gr/sqs-service.html."
-          },
-          {
-            "text": "# Otherwise, you will get the following error"
-          },
-          {
-            "text": "# botocore.exceptions.ClientError: An error occurred (InvalidAddress) when calling the ReceiveMessage operation: The address https://eu-central-1.queue.amazonaws.com/ is not valid for this endpoint."
-          },
-          {
-            "text": "queueurl=$(aws sqs get-queue-url --queue-name \"MyMessages\"|jq \".QueueUrl\"|sed \"s/sqs.us-east-1.amazonaws.com/queue.amazonaws.com/g\"|sed 's/\"//g')"
-          },
-          {
-            "text": "echo \"queueurl:\" $queueurl"
-          },
-          {
-            "text": "echo \"aws sqs send-message --queue-url $queueurl --message-body Message --region us-east-1\""
-          },
-          {
-            "text": "for i in {1..2000} ;"
-          },
-          {
-            "text": "do"
-          },
-          {
-            "text": "aws sqs send-message --queue-url $queueurl --message-body \"Message-$i\" --region us-east-1 ;"
-          },
-          {
-            "text": "done;"
-          },
-          {
-            "text": "Run the below command to download the dependencies"
-          },
-          {
-            "text": "sudo yum install jq -y"
-          },
-          {
-            "text": "Execute below command to provide the execute permissions."
-          },
-          {
-            "text": "chmod +x sendMessages.sh"
-          },
-          {
-            "text": "./sendMessages.sh"
-          },
-          {
-            "text": "It will run the script to send 2000 messages to MyMessages queue."
-          },
-          {
-            "text": "Task 5: Create CloudWatch Alarms"
-          },
-          {
-            "text": "In this task we are going to create 2 alarms for scalein and scaleout ec2 instances."
-          },
-          {
-            "text": "Navigate to CloudWatch by clicking on the Services menu available under the Management & Governance section."
-          },
-          {
-            "text": "Click on All alarms under Alarms in the left panel of the CloudWatch dashboard."
-          },
-          {
-            "text": "Click on Create alarm button available on the top right corner."
-          },
-          {
-            "text": "In the Specify metric and conditions page:"
-          },
-          {
-            "text": "Click on Select metric. It will open the Select Metrics page."
-          },
-          {
-            "text": "search for SQS and select SQS > Queue Metrics."
-          },
-          {
-            "text": "Now, Select MyMessages > ApproximateNumberOfMessagesVisible and Click Select Metric. {Wait for few minutes and refresh if matric not visible}"
-          },
-          {
-            "text": "Click on Select metric button."
-          },
-          {
-            "text": "Now, configure the alarm with the following details:"
-          },
-          {
-            "text": "Under Metrics"
-          },
-          {
-            "text": "Statistic : Select Sum"
-          },
-          {
-            "text": "Period: Select 1 Minute"
-          },
-          {
-            "text": "Under Conditions"
-          },
-          {
-            "text": "Threshold type: Choose Static"
-          },
-          {
-            "text": "Whenever CPU Utilization is…: Choose Greater"
-          },
-          {
-            "text": "than: Enter 500"
-          },
-          {
-            "text": "Leave other values as default and click on Next button."
-          },
-          {
-            "text": "In Configure actions page:"
-          },
-          {
-            "text": "Under Notification : Click on Remove button and click on Next button. Click on Proceed without actions in pop-up appeared"
-          },
-          {
-            "text": "In the Add a description page, (under Name and Description):"
-          },
-          {
-            "text": "Name: Enter the Name ScaleOut"
-          },
-          {
-            "text": "Click on Next button."
-          },
-          {
-            "text": "A preview of the Alarm will be shown. Scroll down and click on Create alarm button."
-          },
-          {
-            "text": "A new CloudWatch Alarm is now created."
-          },
-          {
-            "text": "Now, Similar to ScaleOut, we also need to create a ScaleIn Alarm to launch new instances when the ApproximateNumberOfMessagesVisible is lower than 300."
-          },
-          {
-            "text": "Click on ScaleOut alarm and in Actions dropdown click on Copy"
-          },
-          {
-            "text": "In conditions change the following :"
-          },
-          {
-            "text": "Threshold type: Choose Static"
-          },
-          {
-            "text": "Whenever CPU Utilization is…: Choose Lower"
-          },
-          {
-            "text": "than: Enter 300"
-          },
-          {
-            "text": "Leave everything as default and click on Next buttons"
-          },
-          {
-            "text": "No changes needed, click on Next button."
-          },
-          {
-            "text": "Name: Enter the Name ScaleIn"
-          },
-          {
-            "text": "Click on Next button."
-          },
-          {
-            "text": "A preview of the Alarm will be shown. Scroll down and click on Create alarm button."
-          },
-          {
-            "text": "Task 6: Create a Launch Template"
-          },
-          {
-            "text": "In this task, we are going to create a Launch Template."
-          },
-          {
-            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region before proceeding with the Lab."
-          },
-          {
-            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
-          },
-          {
-            "text": "In the left navigation menu, scroll down to Launch Templates and click on Create launch template button."
-          },
-          {
-            "text": "Launch template name: Enter labLT"
-          },
-          {
-            "text": "Template version description: Enter Launch template version 1"
-          },
-          {
-            "text": "Launch template contents:"
-          },
-          {
-            "text": "Amazon machine image (AMI): Select Amazon Linux 2023"
-          },
-          {
-            "text": "Instance type: Select t2.micro"
-          },
-          {
-            "text": "Key pair (login):"
-          },
-          {
-            "text": "Key pair name: Don't include in launch template"
-          },
-          {
-            "text": "Network settings:"
-          },
-          {
-            "text": "Security groups: Select the Default security group of Default VPC"
-          },
-          {
-            "text": "Expand Advance details section;"
-          },
-          {
-            "text": "For IAM Instance profile : Select task174_<random number> Role which is pre-created for use."
-          },
-          {
-            "text": "Scroll down to user-data section and copy paste the script."
-          },
-          {
-            "text": "Note : Update the bucket name in 14th line with your bucket name"
-          },
-          {
-            "text": "#!/bin/bash"
-          },
-          {
-            "text": "# install jq"
-          },
-          {
-            "text": "sudo yum install jq -y"
-          },
-          {
-            "text": "# Update aws cli version"
-          },
-          {
-            "text": "cd /home/ec2-user"
-          },
-          {
-            "text": "curl \"https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip\" -o \"awscliv2.zip\""
-          },
-          {
-            "text": "unzip awscliv2.zip"
-          },
-          {
-            "text": "sudo ./aws/install"
-          },
-          {
-            "text": "sudo ./aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update"
-          },
-          {
-            "text": "which aws"
-          },
-          {
-            "text": "ls -l /usr/local/bin/aws"
-          },
-          {
-            "text": "aws --version"
-          },
-          {
-            "text": "# copy sendMessages.sh and receiveMessages.sh from S3"
-          },
-          {
-            "text": "aws s3 cp s3://lab324356/ . --recursive --exclude \"*\" --include \"*.sh\""
-          },
-          {
-            "text": "sudo chmod +x /home/ec2-user/*.sh"
-          },
-          {
-            "text": "nohup ./receiveMessages.sh"
-          },
-          {
-            "text": "Now, click on Create launch template button"
-          },
-          {
-            "text": "Launch template is now created."
-          },
-          {
-            "text": "Click on the View launch template button."
-          },
-          {
-            "text": "Launch template is now listed."
-          },
-          {
-            "text": "Task 7: Create an Auto Scaling Group"
-          },
-          {
-            "text": "In this task, we are going to create an Auto Scaling group."
-          },
-          {
-            "text": "Go to the left menu under EC2 and choose Auto Scaling Group under Auto Scaling"
-          },
-          {
-            "text": "Click on the Create Auto Scaling group button."
-          },
-          {
-            "text": "Step 1: Choose launch template or configuration"
-          },
-          {
-            "text": "Auto Scaling group name: Enter whiz-ASG"
-          },
-          {
-            "text": "Launch template: Select labLT"
-          },
-          {
-            "text": "Click on the Next button."
-          },
-          {
-            "text": "Step 2: Configure settings"
-          },
-          {
-            "text": "VPC: Select the Default VPC from the list."
-          },
-          {
-            "text": "Subnet: Select subnet available in us-east-1a region."
-          },
-          {
-            "text": "Click on the Next button."
-          },
-          {
-            "text": "Step 3: Configure advanced options"
-          },
-          {
-            "text": "No changes are needed on this page, click on the Next button."
-          },
-          {
-            "text": "Step 4: Configure group size and scaling policies"
-          },
-          {
-            "text": "Under Group size – optional"
-          },
-          {
-            "text": "Desired capacity: Enter 1"
-          },
-          {
-            "text": "Minimum capacity: Enter 1"
-          },
-          {
-            "text": "Maximum capacity: Enter 4"
-          },
-          {
-            "text": "No changes are needed, click on the Next button"
-          },
-          {
-            "text": "Step 5: Add notifications"
-          },
-          {
-            "text": "No changes are needed on this page, click on the Next button."
-          },
-          {
-            "text": "Step 6: Add tags"
-          },
-          {
-            "text": "No changes are needed on this page, click on the Next button."
-          },
-          {
-            "text": "Click on the Next button"
-          },
-          {
-            "text": "Now scroll down and click on the Create Auto Scaling group button."
-          },
-          {
-            "text": "Whiz-ASG Auto scaling is created successfully."
-          },
-          {
-            "text": "Now, to add scaling policies in auto scaling group"
-          },
-          {
-            "text": "Click on autoscaling group and navigate to Automatic scaling tab and click on Create dynamic scaling policy button."
-          },
-          {
-            "text": "Update the following details :"
-          },
-          {
-            "text": "Policy type : Select Simple scaling"
-          },
-          {
-            "text": "Scaling policy name: Enter ScaleOut"
-          },
-          {
-            "text": "CloudWatch alarm: Select ScaleOut"
-          },
-          {
-            "text": "Take the action: Add with 1 capacity units"
-          },
-          {
-            "text": "And then wait 60 seconds before allowing another scaling activity"
-          },
-          {
-            "text": "Click on Create button."
-          },
-          {
-            "text": "Similarly, create another scaling policy to for ScaleIn with following details:"
-          },
-          {
-            "text": "Policy type : Select Simple scaling"
-          },
-          {
-            "text": "Scaling policy name: Enter ScaleIn"
-          },
-          {
-            "text": "CloudWatch alarm: Select ScaleIn"
-          },
-          {
-            "text": "Take the action: Remove with 1 capacity units"
-          },
-          {
-            "text": "And then wait 120 seconds before allowing another scaling activity"
-          },
-          {
-            "text": "Click on Create button."
-          },
-          {
-            "text": "Now, you can see two policies added."
-          },
-          {
-            "text": "Task 8: Verifications and Monitoring"
-          },
-          {
-            "text": "We have populated the sqs queue with 2000 messages and have an auto scaling group launch with a maximum of 4 instances. We will now be verifying messages using Cloud Watch Alarms and Auto Scaling group's Activity."
-          },
-          {
-            "text": "Navigate to CloudWatch > Alarms , and check the state of Alarm status."
-          },
-          {
-            "text": "If ScaleIn alarm is in InAlarm state -> New instance will get created."
-          },
-          {
-            "text": "If ScaleOut alarm is in InAlarm state -> Launched instances will be terminated"
-          },
-          {
-            "text": "Do you know?"
-          },
-          {
-            "text": "SQS acts as a buffer between the message producers and the EC2 instances. As messages are sent to the SQS queue, EC2 instances can retrieve messages from the queue at their own pace, allowing for smooth and balanced workload distribution."
-          },
-          {
-            "text": "Task 9: Validation of the Lab"
-          },
-          {
-            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
-          },
-          {
-            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
-          },
-          {
-            "text": "Sample output :"
-          },
-          {
-            "text": "Completion and Conclusion"
-          },
-          {
-            "text": "You have successfully created and uploaded object to an s3 bucket"
-          },
-          {
-            "text": "You have successfully created an SQS Queue"
-          },
-          {
-            "text": "You have successfully created CloudWatch alarms"
-          },
-          {
-            "text": "You have successfully created Autoscaling Groups"
-          },
-          {
-            "text": "You have successfully Verified and Monitored EC2 Instances"
-          },
-          {
-            "text": "End Lab"
-          },
-          {
-            "text": "Sign out of AWS Account."
-          },
-          {
-            "text": "You have successfully completed the lab."
-          },
-          {
-            "text": "Once you have completed the steps, click on End Lab from the lab console."
-          }
-        ]
-      },
-      {
-        "title": "Task 1: Sign in to AWS Management Console",
-        "steps": [
-          {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
-          },
-          {
-            "text": "On the AWS sign-in page,"
-          },
-          {
-            "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
-          },
-          {
-            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign-in button."
-          }
-        ]
-      },
-      {
-        "title": "Task 2: Create an S3 bucket",
-        "steps": [
-          {
-            "text": "Navigate to S3 in the Services menu under the Storage section."
-          },
-          {
-            "text": "In the left menu, choose Buckets, click Create Bucket, and fill in the bucket details."
-          },
-          {
-            "text": "AWS Region: Select US East (N. Virginia) us-east-1."
-          },
-          {
-            "text": "Bucket Name: Enter lab<RANDOM_NUMBER>"
-          },
-          {
-            "text": "(Note: The Bucket Name must be unique across all existing bucket names in Amazon S3)"
-          },
-          {
-            "text": "Leave other settings as default."
-          },
-          {
-            "text": "Click on Create bucket button."
-          },
-          {
-            "text": "Your S3 Bucket is now created. Once it is created Click on your bucket name."
-          },
-          {
-            "text": "In the Objects, You can see the following message"
-          },
-          {
-            "text": "You don't have any objects in this bucket."
-          },
-          {
-            "text": "Click on the Add files."
-          },
-          {
-            "text": "Download the Zip file from here."
-          },
-          {
-            "text": "Unzip the file and upload sendmessages and receivemessages files into the bucket"
-          },
-          {
-            "text": "Click on Upload button. Once your file has been uploaded, it will be displayed in the bucket."
-          }
-        ]
-      },
-      {
-        "title": "Task 3: Create an SQS Queue",
-        "steps": [
-          {
-            "text": "In this task, we are going to create an sqs queue that will send and receive messages"
-          }
-        ]
-      },
-      {
         "title": "Task 4: SSH into EC2 instance",
         "steps": [
           {
-            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region before proceeding with the Lab.?"
-          },
-          {
-            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
-          },
-          {
-            "text": "You will see a running instance named lab-instance."
-          },
-          {
-            "text": "Click on the instance and then click on the Connect button."
-          },
-          {
-            "text": "Click on the Connect button again."
-          },
-          {
-            "text": "Run the below commands."
-          }
-        ]
-      },
-      {
-        "title": "Task 5: Create CloudWatch Alarms",
-        "steps": [
-          {
-            "text": "In this task we are going to create 2 alarms for scalein and scaleout ec2 instances."
-          },
-          {
-            "text": "Navigate to CloudWatch by clicking on the Services menu available under the Management & Governance section."
-          }
-        ]
-      },
-      {
-        "title": "Task 6: Create a Launch Template",
-        "steps": [
-          {
-            "text": "In this task, we are going to create a Launch Template."
-          },
-          {
-            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region before proceeding with the Lab."
+            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region before proceeding with the Lab.?"
           },
           {
             "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
           },
           {
-            "text": "In the left navigation menu, scroll down to Launch Templates and click on Create launch template button."
+            "text": "You will see a running instance named lab-instance.",
+            "images": [
+              "/labs/scaling-ec2-with-sqs/step-01.png"
+            ]
           },
           {
-            "text": "Launch template name: Enter labLT"
+            "text": "Click on the instance and then click on the Connect button."
           },
           {
-            "text": "Template version description: Enter Launch template version 1"
+            "text": "Click on the Connect button again.",
+            "images": [
+              "/labs/scaling-ec2-with-sqs/step-02.png"
+            ]
           },
           {
-            "text": "Launch template contents:"
+            "text": "Task 4: SSH into EC2 instance",
+            "images": [
+              "/labs/scaling-ec2-with-sqs/step-03.png"
+            ]
           },
           {
-            "text": "Amazon machine image (AMI): Select Amazon Linux 2023"
-          }
-        ]
-      },
-      {
-        "title": "Task 7: Create an Auto Scaling Group",
-        "steps": [
-          {
-            "text": "In this task, we are going to create an Auto Scaling group."
-          },
-          {
-            "text": "Go to the left menu under EC2 and choose Auto Scaling Group under Auto Scaling"
-          },
-          {
-            "text": "Click on the Create Auto Scaling group button."
-          },
-          {
-            "text": "Step 1: Choose launch template or configuration"
-          }
-        ]
-      },
-      {
-        "title": "Task 8: Verifications and Monitoring",
-        "steps": [
-          {
-            "text": "We have populated the sqs queue with 2000 messages and have an auto scaling group launch with a maximum of 4 instances. We will now be verifying messages using Cloud Watch Alarms and Auto Scaling group's Activity."
-          },
-          {
-            "text": "Navigate to CloudWatch > Alarms , and check the state of Alarm status."
-          },
-          {
-            "text": "If ScaleIn alarm is in InAlarm state -> New instance will get created."
-          },
-          {
-            "text": "If ScaleOut alarm is in InAlarm state -> Launched instances will be terminated"
-          }
-        ]
-      },
-      {
-        "title": "Task 9: Validation of the Lab",
-        "steps": [
-          {
-            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
-          },
-          {
-            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
-          },
-          {
-            "text": "Sample output :"
-          },
-          {
-            "text": "Completion and Conclusion"
-          },
-          {
-            "text": "You have successfully created and uploaded object to an s3 bucket"
-          },
-          {
-            "text": "You have successfully created an SQS Queue"
-          },
-          {
-            "text": "You have successfully created CloudWatch alarms"
-          },
-          {
-            "text": "You have successfully created Autoscaling Groups"
-          },
-          {
-            "text": "You have successfully Verified and Monitored EC2 Instances"
-          },
-          {
-            "text": "End Lab"
-          },
-          {
-            "text": "Sign out of AWS Account."
-          },
-          {
-            "text": "You have successfully completed the lab."
+            "text": "Run the below commands."
           }
         ]
       }
