@@ -61,15 +61,14 @@ function LoginForm() {
     setStep('code')
   }
 
-  const onVerifyCode = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
+  const verifyCode = async (code: string) => {
     setStatus('verifying')
     setErrorMessage('')
 
     const supabase = createSupabaseBrowserClient()
     const { error } = await supabase.auth.verifyOtp({
       email,
-      token: otp,
+      token: code,
       type: 'email',
     })
 
@@ -80,6 +79,17 @@ function LoginForm() {
     }
 
     router.push(safeNextPath)
+  }
+
+  const onVerifyCode = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    await verifyCode(otp)
+  }
+
+  const onOtpChange = (value: string) => {
+    const digits = value.replace(/\D/g, '').slice(0, 6)
+    setOtp(digits)
+    if (digits.length === 6) verifyCode(digits)
   }
 
   return (
@@ -161,7 +171,7 @@ function LoginForm() {
               required
               maxLength={6}
               value={otp}
-              onChange={(event) => setOtp(event.target.value.replace(/\D/g, ''))}
+              onChange={(event) => onOtpChange(event.target.value)}
               placeholder="000000"
               className="w-full rounded-lg border border-aws-border bg-aws-bg/60 px-3 py-2.5 text-center font-space-mono text-base tracking-[0.5em] text-aws-text outline-none transition-colors placeholder:text-aws-muted/70 focus:border-c1 sm:text-[0.8rem]"
             />
