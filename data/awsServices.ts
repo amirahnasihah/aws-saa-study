@@ -1652,7 +1652,7 @@ export const domains: DomainData[] = [
             scenario: '"Company ada on-premises app guna ActiveMQ, nak migrate ke AWS tanpa tukar code" → Amazon MQ. App baru? → guna SQS/SNS (simpler, cheaper, cloud-native). Amazon MQ = MIGRATION/LEGACY. SQS = cloud-native new apps.',
             tips: [
               'Amazon MQ vs SQS/SNS: Amazon MQ = lift-and-shift apps yang ALREADY use AMQP/MQTT/STOMP protocols. SQS/SNS = cloud-native new applications (simpler, cheaper, scales better)',
-              'Supports both ActiveMQ and RabbitMQ engines. ActiveMQ supports more protocols (AMQP, MQTT, STOMP, OpenWire, WebSocket). RabbitMQ = AMQP only tapi better for new container-based apps',
+              'Supports both ActiveMQ and RabbitMQ engines. ActiveMQ supports more protocols (AMQP, MQTT, STOMP, OpenWire, WebSocket). RabbitMQ = AMQP + JMS sahaja. App guna MQTT/STOMP → mesti ActiveMQ engine',
               'Deployment: single-instance (dev/test) or active/standby (production HA). Active/standby uses EFS for shared storage — automatic failover',
               'Exam keyword: "migrate", "existing messaging system", "MQTT", "AMQP", "without changing application code" → Amazon MQ. Jangan pilih SQS/SNS untuk migration scenarios',
             ],
