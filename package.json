@@ -44,7 +44,7 @@
     "next": "16.2.4",
     "postcss": "^8.5.13",
     "react": "19.3.0-canary-43bcbf80-20260603",
-    "react-dom": "19.3.0-canary-43bcbf80-20260603",
+    "react-dom": "19.3.0-canary-56824423-20260414",
     "react-markdown": "^10.1.0",
     "remark-gfm": "^4.0.1"
   },
