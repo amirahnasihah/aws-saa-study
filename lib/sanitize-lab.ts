@@ -16,29 +16,25 @@ const phraseReplacements: ReadonlyArray<readonly [RegExp, string]> = [
   [/business\.whizlabs\.com/gi, ''],
 ]
 
-const demoPasswords = [
-  'Whizvpn123@',
-  'mydatabasepassword',
-  'lab@123',
-  '123@lab',
-  'lab123',
-] as const
-
 const secretReplacements: ReadonlyArray<readonly [RegExp, string]> = [
+  [/Whizvpn123@/g, '<example-password>'],
+  [/mydatabasepassword/g, '<example-password>'],
+  [/lab@[0-9]+/g, '<example-password>'],
+  [/123@lab/g, '<example-password>'],
+  [/\blab123\b/g, '<example-password>'],
   [/Password:\s*password\b/gi, 'Password: <example-password>'],
   [/UNIX Password:\s*password\b/gi, 'UNIX Password: <example-password>'],
   [/New Password:\s*password\b/gi, 'New Password: <example-password>'],
   [/Retype New Password:\s*password\b/gi, 'Retype New Password: <example-password>'],
-  [/Master password:\s*Enter\s+lab123/gi, 'Master password: Enter <example-password>'],
-  [/Confirm password:\s*Enter\s+lab123/gi, 'Confirm password: Enter <example-password>'],
+  [/Master password:\s*Enter\s+lab[0-9]+/gi, 'Master password: Enter <example-password>'],
+  [/Confirm password:\s*Enter\s+lab[0-9]+/gi, 'Confirm password: Enter <example-password>'],
 ]
 
 const redactDemoSecrets = (text: string): string =>
-  secretReplacements
-    .reduce(
-      (acc, [pattern, replacement]) => acc.replace(pattern, replacement),
-      demoPasswords.reduce((acc, password) => acc.replaceAll(password, '<example-password>'), text),
-    )
+  secretReplacements.reduce(
+    (acc, [pattern, replacement]) => acc.replace(pattern, replacement),
+    text,
+  )
 
 export const sanitizeLabText = (text: string | undefined): string => {
   const value = text ?? ''

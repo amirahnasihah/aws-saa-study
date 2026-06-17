@@ -268,10 +268,10 @@
           "text": "Master username: Enter lab"
         },
         {
-          "text": "Master password: Enter <example-password>"
+          "text": "Master password: Enter lab123"
         },
         {
-          "text": "Confirm password: Enter <example-password>"
+          "text": "Confirm password: Enter lab123"
         },
         {
           "text": "Note - Make sure the master and confirm passwords should be the same. Make a note of the username and password for later use."
@@ -429,7 +429,7 @@
           "text": "You need both the endpoint and the port number to connect to the DB instance."
         },
         {
-          "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon. Connection Name : Enter a sample name MyDBConnection. Host Name: Enter the endpoint: demo-db.c03iqoooef9u.us-east-1.rds.amazonaws.comPort: 3306 Username: Enter lab Password: Click on Store in Vault option and enter a password - <example-password>. Click on Ok."
+          "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon. Connection Name : Enter a sample name MyDBConnection. Host Name: Enter the endpoint: demo-db.c03iqoooef9u.us-east-1.rds.amazonaws.comPort: 3306 Username: Enter lab Password: Click on Store in Vault option and enter a password - lab123. Click on Ok."
         },
         {
           "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon."
@@ -447,7 +447,7 @@
           "text": "Username: Enter lab"
         },
         {
-          "text": "Password: Click on Store in Vault option and enter a password - <example-password>. Click on Ok."
+          "text": "Password: Click on Store in Vault option and enter a password - lab123. Click on Ok."
         },
         {
           "text": "Task 6: Connect to RDS Database using the MySQL Workbench",
