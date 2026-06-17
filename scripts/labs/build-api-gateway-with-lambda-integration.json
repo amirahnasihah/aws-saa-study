@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,16 +32,16 @@
       "title": "Task 2: Create a Lambda Function",
       "steps": [
         {
-          "text": "Concept: AWS Lambda (FaaS) AWS Lambda is a Function-as-a-Service. You upload your code, and AWS handles the infrastructure (servers, scaling, patching)."
+          "text": "Navigate to the services menu at the top, then click on Lambda under the Compute section."
         },
         {
-          "text": "Documentation: What is AWS Lambda?"
+          "text": "Click on the Create a function button. Choose: Author from scratch. Function name: Enter whizfunction Runtime: Select Python 3.12 Click on Advanced Settings, then Enable Custom execution role option Choose the Role name as AWSLambdaEdgeExecutionRole_XXXXX. Then click on Save Click on Create function",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-01.png"
+          ]
         },
         {
-          "text": "Navigate to the services menu at the top, then click on Lambda under the Compute section."
-        },
-        {
-          "text": "Click on the Create a function button."
+          "text": "Click on the Create a function button."
         },
         {
           "text": "Choose: Author from scratch."
@@ -50,22 +50,37 @@
           "text": "Function name: Enter whizfunction"
         },
         {
-          "text": "Runtime: Select Python 3.12"
+          "text": "Runtime: Select Python 3.12"
         },
         {
-          "text": "Click on Advanced Settings, then Enable Custom execution role option"
+          "text": "Click on Advanced Settings, then Enable Custom execution role option"
+        },
+        {
+          "text": "Choose the Role name as AWSLambdaEdgeExecutionRole_XXXXX. Then click on Save Click on Create function",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-02.png"
+          ]
         },
         {
           "text": "Choose the Role name as AWSLambdaEdgeExecutionRole_XXXXX. Then click on Save"
         },
         {
+          "text": "Task 2: Create a Lambda Function",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-03.png"
+          ]
+        },
+        {
           "text": "Click on Create function"
         },
         {
-          "text": "Once the Lambda Function is created successfully, it will look like the screenshot below:"
+          "text": "Once the Lambda Function is created successfully, it will look like the screenshot below: Checkpoint You now have a piece of code (logic) deployed in the cloud. However, currently, nothing can trigger this code except a manual test. In the next steps, we will build a \"door\" (API Gateway) to let the outside world talk to this code.",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-04.png"
+          ]
         },
         {
-          "text": "Checkpoint You now have a piece of code (logic) deployed in the cloud. However, currently, nothing can trigger this code except a manual test. In the next steps, we will build a \"door\" (API Gateway) to let the outside world talk to this code."
+          "text": "Once the Lambda Function is created successfully, it will look like the screenshot below:"
         }
       ]
     },
@@ -73,19 +88,31 @@
       "title": "Task 3: Create an API",
       "steps": [
         {
-          "text": "Concept: Amazon API Gateway API Gateway acts as the \"front door\" for your applications. It handles traffic management, authorization, access control, monitoring, and API versioning. It sits between the client (e.g., a mobile app) and your backend services (e.g., Lambda)."
+          "text": "Navigate to the services menu at the top, then click on API Gateway in the Network and Content Delivery section."
         },
         {
-          "text": "Documentation: What is Amazon API Gateway?"
+          "text": "Click on Create an API. (If gets started and is not visible), then click on Build in REST API and select Protocol as REST. (Close the pop up message for Create your first API,if it is present and ignore the error warning).",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-05.png"
+          ]
         },
         {
-          "text": "Navigate to the services menu at the top, then click on API Gateway in the Network and Content Delivery section."
+          "text": "Task 3: Create an API",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-06.png"
+          ]
         },
         {
-          "text": "Click on Create an API. (If gets started and is not visible), then click on Build in REST API and select Protocol as REST. (Close the pop up message for Create your first API,if it is present and ignore the error warning)."
+          "text": "Choose to create a new API as New API. Under settings, choose the API name labAPI. Leave other options as default and click on Create API.",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-07.png"
+          ]
         },
         {
-          "text": "Choose to create a new API as New API. Under settings, choose the API name labAPI. Leave other options as default and click on Create API."
+          "text": "Task 3: Create an API",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-08.png"
+          ]
         }
       ]
     },
@@ -93,19 +120,25 @@
       "title": "Task 4: Creating a Resource",
       "steps": [
         {
-          "text": "Concept: Resources and Paths In REST design, a Resource represents an entity (noun) in your system, accessed via a URL path (e.g., /users, /products, or in this case /myawsapi). It creates the hierarchical structure of your API."
-        },
-        {
           "text": "Once the API is created, select the API."
         },
         {
-          "text": "Select Create Resource in actions."
+          "text": "Select Create Resource in actions."
         },
         {
-          "text": "Resource Name: Enter myawsapi"
+          "text": "Resource Name: Enter myawsapi"
         },
         {
-          "text": "Enter the resource name and click on Create Resource"
+          "text": "Enter the resource name and click on Create Resource",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-09.png"
+          ]
+        },
+        {
+          "text": "Task 4: Creating a Resource",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-10.png"
+          ]
         }
       ]
     },
@@ -113,28 +146,7 @@
       "title": "Task 5: Creating a Method",
       "steps": [
         {
-          "text": "Concept: HTTP Methods"
-        },
-        {
-          "text": "A Method corresponds to an HTTP verb (GET, POST, PUT, DELETE) applied to a resource."
-        },
-        {
-          "text": "GET: Retrieve data;"
-        },
-        {
-          "text": "POST: Create data;"
-        },
-        {
-          "text": "PUT/PATCH: Update data;"
-        },
-        {
-          "text": "DELETE: Remove data."
-        },
-        {
-          "text": "By selecting GET, we are defining that this endpoint is for retrieving information."
-        },
-        {
-          "text": "Once you create a resource, click on Create Method. Select Get in the drop-down list of Method Type."
+          "text": "Once you create a resource, click on Create Method. Select Get in the drop-down list of Method Type."
         },
         {
           "text": "Select the Integration Type as Lambda function."
@@ -146,28 +158,22 @@
           "text": "You are configuring API Gateway to pass the incoming HTTP request to the Lambda function. API Gateway acts as the glue between the client (web browser) and the backend (Lambda)."
         },
         {
-          "text": "Enter the Lambda Function as whizfunction and choose the us-east-1 region. Click on Create Method"
+          "text": "Enter the Lambda Function as whizfunction and choose the us-east-1 region. Click on Create Method"
         },
         {
-          "text": "Common Mistake: Region Mismatch Ensure you select the exact same region where you created your Lambda function (us-east-1). If the region doesn't match, your function won't appear in the autocomplete list."
-        },
-        {
-          "text": "PRO TIP: Lambda Proxy Integration You may see a checkbox for \"Use Lambda Proxy integration\"."
-        },
-        {
-          "text": "If Checked: The entire raw HTTP request is passed to Lambda. Your Python code must return a specifically formatted JSON response (including statusCode and headers)."
-        },
-        {
-          "text": "If Unchecked (Lab Default): API Gateway can transform the request/response. This is simpler for basic labs but less flexible for complex apps."
+          "text": "Task 5: Creating a Method",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-11.png"
+          ]
         },
         {
           "text": "Once the method has been created, your screen will look similar to the screenshot below:"
         },
         {
-          "text": "IMPORTANT: Permission Prompt You will likely see a popup saying: \"You are about to give API Gateway permission to invoke your Lambda function...\"."
+          "text": "IMPORTANT: Permission Prompt You will likely see a popup saying: \"You are about to give API Gateway permission to invoke your Lambda function...\"."
         },
         {
-          "text": "Always click OK. This automatically updates the Lambda's Resource-based Policy to allow this specific API to trigger it. Without this, your API will return a 500 Internal Server Error."
+          "text": "Always click OK. This automatically updates the Lambda's Resource-based Policy to allow this specific API to trigger it. Without this, your API will return a 500 Internal Server Error."
         }
       ]
     },
@@ -175,52 +181,67 @@
       "title": "Task 6: Deploy the API",
       "steps": [
         {
-          "text": "Concept: Deployment Stages Saving an API in the console does not make it live. You must Deploy it to a Stage. Stages represent different environments (e.g., dev, test, prod). This allows you to manage different versions of your API simultaneously."
-        },
-        {
           "text": "Once the resource and the method have been created successfully, you can deploy the API."
         },
         {
-          "text": "Click on Deploy API."
+          "text": "Click on Deploy API."
         },
         {
-          "text": "Select the Deployment Stage in the drop-down as New Stage."
+          "text": "Select the Deployment Stage in the drop-down as New Stage."
         },
         {
-          "text": "Enter Stage Name: TestingAPI and Stage description as Testing environment for my labAPI."
+          "text": "Enter Stage Name: TestingAPI and Stage description as Testing environment for my labAPI."
         },
         {
           "text": "Click on Deploy."
         },
         {
-          "text": "Once the API has been deployed, navigate to Stages. You will be able to see the following:"
+          "text": "Task 6: Deploy the API",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-12.png"
+          ]
+        },
+        {
+          "text": "Once the API has been deployed, navigate to Stages. You will be able to see the following:",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-13.png"
+          ]
+        },
+        {
+          "text": "Task 6: Deploy the API",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-14.png"
+          ]
         },
         {
           "text": "If you are getting the below permission error, ignore it. It is not required for this lab."
         },
         {
-          "text": "Copy the URL under the Invoke URL and paste the URL in the search bar of a browser tab."
+          "text": "Task 6: Deploy the API",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-15.png"
+          ]
+        },
+        {
+          "text": "Copy the URL under the Invoke URL and paste the URL in the search bar of a browser tab."
+        },
+        {
+          "text": "Now add /myawsapi at the end of deploy URL and hit Enter. NOTE: Why add /myawsapi? The Invoke URL points to the root of your stage. Your specific logic lives in the resource we created earlier: /myawsapi.Format: https://{api-id}.execute-api.{region}.amazonaws.com/{stage_name}/{resource_name}Pro Tip: Testing Tools While a browser is fine for GET requests, for POST/PUT requests or testing headers/auth, use tools like Postman or curl in the command line."
         },
         {
           "text": "Now add /myawsapi at the end of deploy URL and hit Enter."
         },
         {
-          "text": "NOTE: Why add /myawsapi? The Invoke URL points to the root of your stage. Your specific logic lives in the resource we created earlier: /myawsapi."
-        },
-        {
-          "text": "Format: https://{api-id}.execute-api.{region}.amazonaws.com/{stage_name}/{resource_name}"
-        },
-        {
-          "text": "Pro Tip: Testing Tools While a browser is fine for GET requests, for POST/PUT requests or testing headers/auth, use tools like Postman or curl in the command line."
+          "text": "You will receive the GET request from the API. Here's an example: Note on Response The \"Hello from Lambda!\" message comes from the default code provided when you created the Python Lambda function in Task 2.???"
         },
         {
           "text": "You will receive the GET request from the API. Here's an example:"
         },
         {
-          "text": "Note on Response The \"Hello from Lambda!\" message comes from the default code provided when you created the Python Lambda function in Task 2.???"
-        },
-        {
-          "text": "Do you know?"
+          "text": "Task 6: Deploy the API",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-16.png"
+          ]
         },
         {
           "text": "API Gateway is a fully managed AWS service that enables developers to create, publish, and manage APIs for their applications. It acts as a front-door to your backend services, allowing you to securely expose your APIs to clients, handle authentication and authorization, and apply various transformations and optimizations."
@@ -237,19 +258,22 @@
       "title": "Task 7: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the validation button on the right side panel."
+          "text": "Once the lab steps are completed, please click on the validation button on the right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 7: Validation Test",
+          "images": [
+            "/labs/build-api-gateway-with-lambda-integration/step-17.gif"
+          ]
         },
         {
-          "text": "You have successfully created a Lambda function."
+          "text": "You have successfully created a Lambda function."
         },
         {
           "text": "You have successfully created the API."
@@ -261,16 +285,13 @@
           "text": "You have successfully tested the API."
         },
         {
-          "text": "End Lab"
-        },
-        {
-          "text": "Sign out of AWS Account."
+          "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

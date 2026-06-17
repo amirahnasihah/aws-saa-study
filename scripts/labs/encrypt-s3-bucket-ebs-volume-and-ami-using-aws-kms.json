@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -47,6 +50,9 @@
           "text": "Select the Key Type as Symmetric and click on Next."
         },
         {
+          "text": "Under the Add Labels, give the following details: Alias: Enter Whizkey (Change the name, if there is a key present with the same name) Description: KMS key for encryption Leave everything else as default Click on Next."
+        },
+        {
           "text": "Under the Add Labels, give the following details:"
         },
         {
@@ -62,6 +68,9 @@
           "text": "Click on Next."
         },
         {
+          "text": "In the Define key administrative permissions, Key Administrators: Select the IAM User, with which you are logged in (starting with Whiz_User_) Check the Allow key administrators to delete the key Click on Next"
+        },
+        {
           "text": "In the Define key administrative permissions,"
         },
         {
@@ -74,6 +83,9 @@
           "text": "Click on Next"
         },
         {
+          "text": "In the Define key usage permissions, This account: Select the same username selected earlier. Click on Next."
+        },
+        {
           "text": "In the Define key usage permissions,"
         },
         {
@@ -84,6 +96,12 @@
         },
         {
           "text": "Review the details and click on Finish button."
+        },
+        {
+          "text": "Task 2: Creating an AWS KMS Key",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-01.png"
+          ]
         }
       ]
     },
@@ -97,7 +115,13 @@
           "text": "Navigate to the Key rotation tab."
         },
         {
-          "text": "Now, check the box for Automatically rotate. To do this, click Edit, then select Enable. In the Rotation period (in days) field, enter 365, and finally, click Save."
+          "text": "Now, check the box for Automatically rotate. To do this, click Edit, then select Enable. In the Rotation period (in days) field, enter 365, and finally, click Save."
+        },
+        {
+          "text": "Task 3: Enabling KMS Key rotation",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-02.png"
+          ]
         },
         {
           "text": "You have now successfully enabled yearly rotation for your KMS master key."
@@ -117,25 +141,43 @@
           "text": "Click on Create Bucket."
         },
         {
-          "text": "Region: Select US East (N. Virginia) us-east-1 (i.e same region as the KMS master key)"
+          "text": "Region: Select US East (N. Virginia) us-east-1 (i.e same region as the KMS master key)"
         },
         {
           "text": "In the General Configuration,"
         },
         {
-          "text": "Bucket type : General purpose"
+          "text": "Bucket type : General purpose"
         },
         {
-          "text": "Bucket name: Enter a globally unique name."
+          "text": "Bucket name: Enter a globally unique name."
         },
         {
-          "text": "Object ownership: Select ACLs enabled option and select Object Ownership as Object Writer"
+          "text": "Task 4: Creating and encrypting S3 Bucket",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-03.png"
+          ]
+        },
+        {
+          "text": "Object ownership: Select ACLs enabled option and select Object Ownership as Object Writer"
         },
         {
           "text": "In the Bucket Public Access settings for this bucket, Uncheck the Block all public access. Acknowledge the same by Checking the below option."
         },
         {
+          "text": "Task 4: Creating and encrypting S3 Bucket",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-04.png"
+          ]
+        },
+        {
           "text": "In the Bucket Versioning, Check the option Enable."
+        },
+        {
+          "text": "Task 4: Creating and encrypting S3 Bucket",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-05.png"
+          ]
         },
         {
           "text": "In the Default encryption,"
@@ -148,6 +190,12 @@
         },
         {
           "text": "Select Whizkey from the dropdown menu."
+        },
+        {
+          "text": "Task 4: Creating and encrypting S3 Bucket",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-06.png"
+          ]
         },
         {
           "text": "Keep other settings as default and click on Create Bucket."
@@ -214,10 +262,16 @@
           "text": "Click on Actions, scroll down and select Make public using ACL."
         },
         {
-          "text": "Choose Make Public and click on the Close button."
+          "text": "Choose Make Public and click on the Close button."
         },
         {
           "text": "Click the object. Copy the Object URL and paste the URL on a new browser tab."
+        },
+        {
+          "text": "Task 6: Verifying the encryption of the object",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-07.png"
+          ]
         },
         {
           "text": "Note: You are getting this error as the file is encrypted using AWS KMS Encryption and is restricting the access from outside source. To access this file it should be decrypted first."
@@ -226,7 +280,19 @@
           "text": "Click the object, and click on the Open button on the top-right corner."
         },
         {
+          "text": "Task 6: Verifying the encryption of the object",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-08.png"
+          ]
+        },
+        {
           "text": "Now you can see the object which you uploaded opened in a new tab."
+        },
+        {
+          "text": "Task 6: Verifying the encryption of the object",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-09.png"
+          ]
         },
         {
           "text": "Note: You are able to access the file as the request to open the file came from a source which can decrypt the file."
@@ -240,13 +306,19 @@
           "text": "We already have a bucket whizsource123 (Source bucket) which we will use as the source bucket from where the data will be replicated. Now we need to create a bucket that will replicate the data from the source bucket."
         },
         {
-          "text": "Change Region: From the drop down please Select Asia Pacific (Mumbai) ap-south-1"
+          "text": "Change Region: From the drop down please Select Asia Pacific (Mumbai) ap-south-1"
         },
         {
           "text": "Navigate to the S3 dashboard and click on Create Bucket."
         },
         {
-          "text": "In the General Configuration, Bucket name: Enter a globally unique name."
+          "text": "In the General Configuration, Bucket name: Enter a globally unique name."
+        },
+        {
+          "text": "Task 7: Cross-Region Replication and Versioning in S3",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-10.png"
+          ]
         },
         {
           "text": "In the Bucket Public Access settings for this bucket, Uncheck the Block all public access. Acknowledge the same by Checking the below option."
@@ -255,40 +327,67 @@
           "text": "In the Bucket Versioning, Check the option Enable."
         },
         {
+          "text": "Task 7: Cross-Region Replication and Versioning in S3",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-11.png"
+          ]
+        },
+        {
           "text": "Keep other settings as default and click on Create Bucket."
         },
         {
-          "text": "Now open the whizsource123 bucket and click on the Management tab. Scroll down and select Create Replication rule"
+          "text": "Now open the whizsource123 bucket and click on the Management tab. Scroll down and select Create Replication rule"
         },
         {
           "text": "Enter a rule name, Whizrule1, and keep the status as Enabled."
         },
         {
-          "text": "."
+          "text": ".",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-12.png"
+          ]
         },
         {
-          "text": "Choose a rule scope : Select Apply to all objects in the bucket"
+          "text": "Choose a rule scope : Select Apply to all objects in the bucket"
         },
         {
           "text": "Under Destination, select choose a bucket in this account and click on Browse S3."
         },
         {
-          "text": "In the search option enter the Mumbai region bucket name, choose by browse the S3 option."
+          "text": "In the search option enter the Mumbai region bucket name, choose by browse the S3 option."
+        },
+        {
+          "text": "Task 7: Cross-Region Replication and Versioning in S3",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-13.png"
+          ]
         },
         {
           "text": "Select the target bucket created earlier and click on Choose Path."
         },
         {
-          "text": "Under IAM Role, Choose from existing IAM roles: select replication_role<random.numbers>"
+          "text": "Under IAM Role, Choose from existing IAM roles: select replication_role<random.numbers>",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-14.png"
+          ]
         },
         {
-          "text": "Under Encryption, check Replicate objects encrypted with AWS KMS and select the alias aws/s3."
+          "text": "Under Encryption, check Replicate objects encrypted with AWS KMS and select the alias aws/s3.",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-15.png"
+          ]
         },
         {
-          "text": "AWS KMS key for encrypting destination object: Select Choose from your AWS KMS keys"
+          "text": "Task 7: Cross-Region Replication and Versioning in S3",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-16.png"
+          ]
         },
         {
-          "text": "Select aws/s3 from the dropdown menu."
+          "text": "AWS KMS key for encrypting destination object: Select Choose from your AWS KMS keys"
+        },
+        {
+          "text": "Select aws/s3 from the dropdown menu."
         },
         {
           "text": "Leave other settings as default. Review and click on Save."
@@ -309,13 +408,19 @@
           "text": "Now go to whizsource123 bucket and click on Add files. Before clicking on the Upload button, scroll down and click on the Properties option."
         },
         {
-          "text": "Choose the option to specify an encryption key and choose Override default encryption bucket settings."
+          "text": "Choose the option to specify an encryption key and choose Override default encryption bucket settings."
         },
         {
           "text": "Now in the Encryption key type, choose Amazon S3 key (SSE-S3)."
         },
         {
           "text": "Click on Upload."
+        },
+        {
+          "text": "Task 7: Cross-Region Replication and Versioning in S3",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-17.png"
+          ]
         },
         {
           "text": "Now you have successfully configured the Cross-Region Replication in S3 Bucket and the object created in whizsource123 will be replicated to whiztarget123."
@@ -325,6 +430,12 @@
         },
         {
           "text": "Click the object and select Open to see the object in the target bucket."
+        },
+        {
+          "text": "Task 7: Cross-Region Replication and Versioning in S3",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-18.png"
+          ]
         }
       ]
     },
@@ -356,6 +467,12 @@
           "text": "Click Open on the top right side of the screen."
         },
         {
+          "text": "Task 8: Disabling the KMS Key",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-19.png"
+          ]
+        },
+        {
           "text": "You can see that access is denied as the KMS Key is disabled."
         },
         {
@@ -367,7 +484,7 @@
       "title": "Task 9: Encrypting EBS volume",
       "steps": [
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
           "text": "Navigate to EC2 by clicking on the Services menu, under the Compute section."
@@ -397,6 +514,9 @@
           "text": "Key: Choose Whizkey from the list."
         },
         {
+          "text": "Tags: Key: Enter Name Value: Enter WhizEBS"
+        },
+        {
           "text": "Tags:"
         },
         {
@@ -413,6 +533,12 @@
         },
         {
           "text": "Your master key is used to encrypt/decrypt this volume."
+        },
+        {
+          "text": "Task 9: Encrypting EBS volume",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-20.png"
+          ]
         }
       ]
     },
@@ -426,7 +552,7 @@
           "text": "You can see an EC2 instance already running."
         },
         {
-          "text": "Select the instance, click on the Actions, and select Create Image under Image and Templates."
+          "text": "Select the instance, click on the Actions, and select Create Image under Image and Templates."
         },
         {
           "text": "Create Image"
@@ -450,7 +576,7 @@
           "text": "Fill in the details:"
         },
         {
-          "text": "Name: Change the name to WhizEncrypted"
+          "text": "Name: Change the name to WhizEncrypted"
         },
         {
           "text": "Destination region: Choose US East (N. Virginia)"
@@ -484,6 +610,12 @@
         },
         {
           "text": "Note: Now any instance launched with encrypted AMI will be encrypted by Whizkey."
+        },
+        {
+          "text": "Task 10: Encrypting AMI and Snapshot",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-21.png"
+          ]
         }
       ]
     },
@@ -491,16 +623,19 @@
       "title": "Task 11 : Validation of the Lab",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
         },
         {
-          "text": "Do you know?"
+          "text": "Task 11 : Validation of the Lab",
+          "images": [
+            "/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms/step-22.gif"
+          ]
         },
         {
           "text": "Key Rotation: AWS KMS supports automatic key rotation to enhance security by regularly changing encryption keys."
@@ -511,37 +646,31 @@
       "title": "Task 12: Delete AWS Resources",
       "steps": [
         {
-          "text": "Scheduling KMS Master Key Deletion"
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Navigate to Key Management Service by clicking on the Services menu, under the Security,Identity and Compliance section."
         },
         {
-          "text": "Navigate to Key Management Service by clicking on the Services menu, under the Security,Identity and Compliance section."
-        },
-        {
-          "text": "Select Whizkey, click on the Key actions button, and click Schedule key deletion."
+          "text": "Select Whizkey, click on the Key actions button, and click Schedule key deletion."
         },
         {
           "text": "Schedule key deletion"
         },
         {
-          "text": "Waiting period: 7 days"
+          "text": "Waiting period: 7 days"
         },
         {
           "text": "Check confirmation for deletion."
         },
         {
-          "text": "Click on Schedule deletion."
+          "text": "Click on Schedule deletion."
         },
         {
-          "text": "Deleting AMIs"
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
-        },
-        {
-          "text": "Navigate to EC2 by clicking on the Services menu, under the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu, under the Compute section."
         },
         {
           "text": "On the left navigation panel, click on AMIs under Images."
@@ -550,10 +679,7 @@
           "text": "Select WhizUnencrypted and WhizEncrypted AMIs and click on Actions button"
         },
         {
-          "text": "Select Deregister AMI from the dropdown menu and click on Deregister AMI."
-        },
-        {
-          "text": "Deleting Snapshots"
+          "text": "Select Deregister AMI from the dropdown menu and click on Deregister AMI."
         },
         {
           "text": "On the left navigation panel, click on Snapshots under Elastic Block Store."
@@ -562,13 +688,10 @@
           "text": "Remove the AMI ID if present in the search."
         },
         {
-          "text": "Select both snapshots and click on the Actions button"
+          "text": "Select both snapshots and click on the Actions button"
         },
         {
-          "text": "Click on Delete Snapshot and confirm by entering delete and click on Delete"
-        },
-        {
-          "text": "Deleting EC2 Instance"
+          "text": "Click on Delete Snapshot and confirm by entering delete and click on Delete"
         },
         {
           "text": "Click on Instances on the left side panel"
@@ -578,9 +701,6 @@
         },
         {
           "text": "In the pop-up screen, click on Terminate to delete the EC2."
-        },
-        {
-          "text": "Completion and Conclusion"
         },
         {
           "text": "You have created KMS Key and enabled key rotation."
@@ -598,16 +718,13 @@
           "text": "You have scheduled the deletion of KMS Master Key."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of the AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
         }
       ]
     }

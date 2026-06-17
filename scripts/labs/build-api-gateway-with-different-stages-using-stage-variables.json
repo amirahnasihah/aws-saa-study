@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,13 +24,13 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
-          "text": "Select Maybe later in New AWS Console Home page pop-up"
+          "text": "Select Maybe later in New AWS Console Home page pop-up"
         }
       ]
     },
@@ -38,76 +41,115 @@
           "text": "In this task, we are going to allow the user to create an EC2 instance, which will be used later in the lab to run CLI commands and perform actions related to the API Gateway and Lambda functions."
         },
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Navigate to Instances on the left panel and click on Launch instances"
+          "text": "Navigate to Instances on the left panel and click on Launch instances"
         },
         {
-          "text": "Name : Enter MyEC2CLIInstance"
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-01.png"
+          ]
         },
         {
-          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the Select button."
+          "text": "Name : Enter MyEC2CLIInstance"
         },
         {
-          "text": "For Instance Type: select t2.micro"
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the Select button.",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-02.png"
+          ]
         },
         {
-          "text": "For Key pair: Select Create a new key pair Button"
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-03.png"
+          ]
         },
         {
-          "text": "Key pair name: WhizKey"
+          "text": "For Instance Type: select t2.micro"
         },
         {
-          "text": "Key pair type: RSA"
+          "text": "For Key pair: Select Create a new key pair Button Key pair name: WhizKey Key pair type: RSA Private key file format: .pem"
         },
         {
-          "text": "Private key file format: .pem"
+          "text": "For Key pair: Select Create a new key pair Button"
         },
         {
-          "text": "Select Create key pair Button."
+          "text": "Key pair name: WhizKey"
         },
         {
-          "text": "In Network Settings, Click on Edit Button:"
+          "text": "Key pair type: RSA"
         },
         {
-          "text": "Auto-assign public IP: Enable"
+          "text": "Private key file format: .pem"
         },
         {
-          "text": "Select Create new Security group"
+          "text": "Select Create key pair Button."
         },
         {
-          "text": "Security group name : Enter MyEC2Server_SG"
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-04.png"
+          ]
         },
         {
-          "text": "Description : Enter Security Group to allow traffic to EC2"
+          "text": "In Network Settings, Click on Edit Button:"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select Create new Security group"
+        },
+        {
+          "text": "Security group name : Enter MyEC2Server_SG"
+        },
+        {
+          "text": "Description : Enter Security Group to allow traffic to EC2"
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-05.png"
+          ]
         },
         {
           "text": "Check Allow SSH from and Select Anywhere from dropdown"
         },
         {
-          "text": "To add SSH,"
+          "text": "To add SSH, Choose Type: SSH Source: Select Anywhere"
         },
         {
-          "text": "Choose Type: SSH"
+          "text": "To add SSH,"
         },
         {
-          "text": "Source: Select Anywhere"
+          "text": "Choose Type: SSH"
         },
         {
-          "text": "Under Advanced Settings, choose IAM Instance profile as EC2_Role_profile<RANDOM_NUMBER>."
+          "text": "Source: Select Anywhere"
         },
         {
-          "text": "Keep rest thing Default and Click on Launch Instance Button."
+          "text": "Under Advanced Settings, choose IAM Instance profile as EC2_Role_profile<RANDOM_NUMBER>."
         },
         {
-          "text": "Select View all Instances to View the Instance you created."
+          "text": "Keep rest thing Default and Click on Launch Instance Button."
         },
         {
-          "text": "Launch Status: Your instances are now launching, Navigate to Instances page from left menu and wait the status of the EC2 Instance changes to running and health check status changes to 2/2 checks passed."
+          "text": "Select View all Instances to View the Instance you created."
+        },
+        {
+          "text": "Launch Status: Your instances are now launching, Navigate to Instances page from left menu and wait the status of the EC2 Instance changes to running and health check status changes to 2/2 checks passed."
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-06.png"
+          ]
         }
       ]
     },
@@ -115,13 +157,19 @@
       "title": "Task 3: Create two Lambda Functions",
       "steps": [
         {
-          "text": "In this task, we are going to create two Lambda functions, namely ProductionLambda and TestingLambda. These functions will be integrated with the API Gateway in subsequent tasks."
+          "text": "In this task, we are going to create two Lambda functions, namely ProductionLambda and TestingLambda. These functions will be integrated with the API Gateway in subsequent tasks."
         },
         {
-          "text": "Navigate to the Services menu at the top, then click on Lambda under the Compute section."
+          "text": "Navigate to the Services menu at the top, then click on Lambda under the Compute section."
         },
         {
           "text": "Click on Create a function"
+        },
+        {
+          "text": "Task 3: Create two Lambda Functions",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-07.png"
+          ]
         },
         {
           "text": "Select Author from Scratch"
@@ -136,37 +184,31 @@
           "text": "Expand Change default execution role"
         },
         {
-          "text": "Execution Role : Click on Use an existing role and choose BasicLambdaRole"
+          "text": "Execution Role : Click on Use an existing role and choose BasicLambdaRole"
         },
         {
-          "text": "Click on the Create function"
+          "text": "Task 3: Create two Lambda Functions",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-08.png"
+          ]
+        },
+        {
+          "text": "Click on the Create function"
         },
         {
           "text": "Once the Lambda Function is created successfully copy the Function ARN."
         },
         {
+          "text": "Task 3: Create two Lambda Functions",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-09.png"
+          ]
+        },
+        {
           "text": "Function code : Replace the existing code with the below and then click on Deploy."
         },
         {
-          "text": "import json"
-        },
-        {
-          "text": "def lambda_handler(event, context):"
-        },
-        {
-          "text": "# TODO implement"
-        },
-        {
-          "text": "return {"
-        },
-        {
-          "text": "'statusCode': 200,"
-        },
-        {
-          "text": "'body': json.dumps('Message from production Lambda.')"
-        },
-        {
-          "text": "}"
+          "text": "Repeat the step 2 and 3 to create one more Lambda function with, Function Name : Enter TestingLambda Runtime : Select Python 3.12 Execution Role : Click on Use an existing role Existing role : Select Task156_Role"
         },
         {
           "text": "Repeat the step 2 and 3 to create one more Lambda function with,"
@@ -178,46 +220,34 @@
           "text": "Runtime : Select Python 3.12"
         },
         {
-          "text": "Execution Role : Click on Use an existing role"
+          "text": "Execution Role : Click on Use an existing role"
         },
         {
           "text": "Existing role : Select Task156_Role"
         },
         {
-          "text": "Once the Lambda Function is created successfully copy the Function ARN."
+          "text": "Task 3: Create two Lambda Functions",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-10.png"
+          ]
         },
         {
-          "text": "Function code : Replace the existing code with the below and then click on Deploy button."
+          "text": "Once the Lambda Function is created successfully copy the Function ARN."
         },
         {
-          "text": "import json"
+          "text": "Task 3: Create two Lambda Functions",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-11.png"
+          ]
         },
         {
-          "text": "def lambda_handler(event, context):"
-        },
-        {
-          "text": "# TODO implement"
-        },
-        {
-          "text": "return {"
-        },
-        {
-          "text": "'statusCode': 200,"
-        },
-        {
-          "text": "'body': json.dumps('Message from testing Lambda')"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "Task 4: Create an API"
+          "text": "Function code : Replace the existing code with the below and then click on Deploy button."
         },
         {
           "text": "In this task, we are going to enable the user to create a new API in API Gateway called labAPI. The API will serve as the entry point for accessing the Lambda functions."
         },
         {
-          "text": "Navigate to the Services menu at the top, then click on API Gateway in the Networking and Content Delivery section."
+          "text": "Navigate to the Services menu at the top, then click on API Gateway in the Networking and Content Delivery section."
         },
         {
           "text": "Click on Build under REST API"
@@ -226,10 +256,13 @@
           "text": "Choose the protocol: Select REST"
         },
         {
-          "text": "Choose create new API as New API, Under settings, choose the API name lab API. Leave other options as default and click on Create API."
+          "text": "Choose create new API as New API, Under settings, choose the API name lab API. Leave other options as default and click on Create API."
         },
         {
-          "text": "Task 5: Creating a Resource"
+          "text": "Task 3: Create two Lambda Functions",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-12.png"
+          ]
         },
         {
           "text": "In this task, we are going to assist the user in creating a resource within the API. In this case, the resource will be used to define the endpoint for accessing the Lambda functions."
@@ -244,19 +277,22 @@
           "text": "Resource Name: Enter labapi"
         },
         {
-          "text": "Enter the resource name and click on Create Resource button"
+          "text": "Enter the resource name and click on Create Resource button"
         },
         {
-          "text": "Task 6: Creating a Method"
+          "text": "Task 3: Create two Lambda Functions",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-13.png"
+          ]
         },
         {
           "text": "In this task, we are going to guide the user in creating a method for the resource. The method, specifically a GET method, will be integrated with the Lambda functions using the Lambda Proxy integration."
         },
         {
-          "text": "Once you create a resource labapi, click on Create method. Select Get in the drop-down list."
+          "text": "Once you create a resource labapi, click on Create method. Select Get in the drop-down list."
         },
         {
-          "text": "Select the Integration Type as Lambda Function"
+          "text": "Select the Integration Type as Lambda Function"
         },
         {
           "text": "Use Lambda Proxy integration: Check the checkbox"
@@ -268,34 +304,31 @@
           "text": "Lambda Function : Enter ${stageVariables.functionName}"
         },
         {
-          "text": "Note: Don't select the lambda function name, only enter ${stageVariables.functionName}"
+          "text": "Task 3: Create two Lambda Functions",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-14.png"
+          ]
         },
         {
-          "text": "Click on the Save and Copy the Source-ARN"
+          "text": "Click on the Save and Copy the Source-ARN",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-15.png"
+          ]
         },
         {
-          "text": "Task 7: Run the CLI command to give lambda permissions to the API using the EC2 instance"
+          "text": "?In this task, we are going to run the CLI command to give lambda permissions to the API using the EC2 instance."
         },
         {
-          "text": "?In this task, we are going to run the CLI command to give lambda permissions to the API using the EC2 instance."
+          "text": "Navigate to the EC2 page and make sure you're in the us-east-1 (N.Virginia) region."
         },
         {
-          "text": "Navigate to the EC2 page and make sure you're in the us-east-1 (N.Virginia) region."
+          "text": "Click on Instances from the left side menu and select the EC2 instance which you created in the above step."
         },
         {
-          "text": "Note: Don’t close the API Gateway page"
+          "text": "Please follow the steps in SSH into EC2 Instance."
         },
         {
-          "text": "Click on Instances from the left side menu and select the EC2 instance which you created in the above step."
-        },
-        {
-          "text": "Please follow the steps in SSH into EC2 Instance."
-        },
-        {
-          "text": "Configure the AWS CLI on the EC2 instance by running the following command:"
-        },
-        {
-          "text": "aws configure"
+          "text": "Configure the AWS CLI on the EC2 instance by running the following command:"
         },
         {
           "text": "AWS Access Key ID [None] : Enter the access key which is available below the lab credentials"
@@ -310,61 +343,37 @@
           "text": "Default output format [None] : Click the Enter button."
         },
         {
-          "text": "Copy the CLI commands for API gateway. To generate a UUID in Bash follow below command:"
+          "text": "Task 3: Create two Lambda Functions",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-16.png"
+          ]
         },
         {
-          "text": "echo STATEMENT_ID=$(uuidgen)"
+          "text": "Copy the CLI commands for API gateway. To generate a UUID in Bash follow below command:"
         },
         {
           "text": "To combine certain information to ensure uniqueness follow below command:"
         },
         {
-          "text": "STATEMENT_ID=\"my_statement_id_$(date +%s)\" # This appends current timestamp to the statement ID"
-        },
-        {
           "text": "Now, run the below command. Ensure you replace the <productionlambda-function-arn> with the function arn of production lambda and <api-gateway-arn> with the arn of the api gateway you have copied earlier."
         },
         {
-          "text": "aws lambda add-permission --function-name \"<productionlambda-function-arn>\" \\"
-        },
-        {
-          "text": "--source-arn \"<api-gateway-arn>\" \\"
-        },
-        {
-          "text": "--principal apigateway.amazonaws.com \\"
-        },
-        {
-          "text": "--statement-id \"$STATEMENT_ID\" \\"
-        },
-        {
-          "text": "--action lambda:InvokeFunction --region us-east-1"
+          "text": "Task 3: Create two Lambda Functions",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-17.png"
+          ]
         },
         {
           "text": "Now, you will be able to see a JSON success output."
         },
         {
-          "text": "Similarly, run the same command but change the function name to TestingLambda (Second lambda function you created). Ensure you replace the <testinglambda-function-arn> with the function arn of testing lambda and <api-gateway-arn> with the arn of the api gateway you have copied earlier."
+          "text": "Task 3: Create two Lambda Functions",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-18.png"
+          ]
         },
         {
-          "text": "aws lambda add-permission --function-name \"<testinglambda-function-arn>\" \\"
-        },
-        {
-          "text": "--source-arn \"<api-gateway-arn>\" \\"
-        },
-        {
-          "text": "--principal apigateway.amazonaws.com \\"
-        },
-        {
-          "text": "--statement-id \"$STATEMENT_ID\" \\"
-        },
-        {
-          "text": "--action lambda:InvokeFunction --region us-east-1"
-        },
-        {
-          "text": "Now, you will be able to see a JSON success output."
-        },
-        {
-          "text": "?"
+          "text": "Similarly, run the same command but change the function name to TestingLambda (Second lambda function you created). Ensure you replace the <testinglambda-function-arn> with the function arn of testing lambda and <api-gateway-arn> with the arn of the api gateway you have copied earlier."
         }
       ]
     },
@@ -375,7 +384,7 @@
           "text": "In this task, we are going to enable the user to create a new API in API Gateway called labAPI. The API will serve as the entry point for accessing the Lambda functions."
         },
         {
-          "text": "Navigate to the Services menu at the top, then click on API Gateway in the Networking and Content Delivery section."
+          "text": "Navigate to the Services menu at the top, then click on API Gateway in the Networking and Content Delivery section."
         },
         {
           "text": "Click on Build under REST API"
@@ -384,7 +393,124 @@
           "text": "Choose the protocol: Select REST"
         },
         {
-          "text": "Choose create new API as New API, Under settings, choose the API name lab API. Leave other options as default and click on Create API."
+          "text": "Choose create new API as New API, Under settings, choose the API name lab API. Leave other options as default and click on Create API."
+        },
+        {
+          "text": "Task 4: Create an API",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-19.png"
+          ]
+        },
+        {
+          "text": "In this task, we are going to assist the user in creating a resource within the API. In this case, the resource will be used to define the endpoint for accessing the Lambda functions."
+        },
+        {
+          "text": "Once the API is created, select the API."
+        },
+        {
+          "text": "Select Create Resource."
+        },
+        {
+          "text": "Resource Name: Enter labapi"
+        },
+        {
+          "text": "Enter the resource name and click on Create Resource button"
+        },
+        {
+          "text": "Task 4: Create an API",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-20.png"
+          ]
+        },
+        {
+          "text": "In this task, we are going to guide the user in creating a method for the resource. The method, specifically a GET method, will be integrated with the Lambda functions using the Lambda Proxy integration."
+        },
+        {
+          "text": "Once you create a resource labapi, click on Create method. Select Get in the drop-down list."
+        },
+        {
+          "text": "Select the Integration Type as Lambda Function"
+        },
+        {
+          "text": "Use Lambda Proxy integration: Check the checkbox"
+        },
+        {
+          "text": "Lambda Region: Select us-east-1"
+        },
+        {
+          "text": "Lambda Function : Enter ${stageVariables.functionName}"
+        },
+        {
+          "text": "Task 4: Create an API",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-21.png"
+          ]
+        },
+        {
+          "text": "Click on the Save and Copy the Source-ARN",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-22.png"
+          ]
+        },
+        {
+          "text": "?In this task, we are going to run the CLI command to give lambda permissions to the API using the EC2 instance."
+        },
+        {
+          "text": "Navigate to the EC2 page and make sure you're in the us-east-1 (N.Virginia) region."
+        },
+        {
+          "text": "Click on Instances from the left side menu and select the EC2 instance which you created in the above step."
+        },
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance."
+        },
+        {
+          "text": "Configure the AWS CLI on the EC2 instance by running the following command:"
+        },
+        {
+          "text": "AWS Access Key ID [None] : Enter the access key which is available below the lab credentials"
+        },
+        {
+          "text": "AWS Secret Access Key [None] : Enter the secret access key which is available below the lab credentials"
+        },
+        {
+          "text": "Default region name [None] : Enter us-east-1"
+        },
+        {
+          "text": "Default output format [None] : Click the Enter button."
+        },
+        {
+          "text": "Task 4: Create an API",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-23.png"
+          ]
+        },
+        {
+          "text": "Copy the CLI commands for API gateway. To generate a UUID in Bash follow below command:"
+        },
+        {
+          "text": "To combine certain information to ensure uniqueness follow below command:"
+        },
+        {
+          "text": "Now, run the below command. Ensure you replace the <productionlambda-function-arn> with the function arn of production lambda and <api-gateway-arn> with the arn of the api gateway you have copied earlier."
+        },
+        {
+          "text": "Task 4: Create an API",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-24.png"
+          ]
+        },
+        {
+          "text": "Now, you will be able to see a JSON success output."
+        },
+        {
+          "text": "Task 4: Create an API",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-25.png"
+          ]
+        },
+        {
+          "text": "Similarly, run the same command but change the function name to TestingLambda (Second lambda function you created). Ensure you replace the <testinglambda-function-arn> with the function arn of testing lambda and <api-gateway-arn> with the arn of the api gateway you have copied earlier."
         }
       ]
     },
@@ -404,21 +530,22 @@
           "text": "Resource Name: Enter labapi"
         },
         {
-          "text": "Enter the resource name and click on Create Resource button"
-        }
-      ]
-    },
-    {
-      "title": "Task 6: Creating a Method",
-      "steps": [
+          "text": "Enter the resource name and click on Create Resource button"
+        },
+        {
+          "text": "Task 5: Creating a Resource",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-26.png"
+          ]
+        },
         {
           "text": "In this task, we are going to guide the user in creating a method for the resource. The method, specifically a GET method, will be integrated with the Lambda functions using the Lambda Proxy integration."
         },
         {
-          "text": "Once you create a resource labapi, click on Create method. Select Get in the drop-down list."
+          "text": "Once you create a resource labapi, click on Create method. Select Get in the drop-down list."
         },
         {
-          "text": "Select the Integration Type as Lambda Function"
+          "text": "Select the Integration Type as Lambda Function"
         },
         {
           "text": "Use Lambda Proxy integration: Check the checkbox"
@@ -430,36 +557,31 @@
           "text": "Lambda Function : Enter ${stageVariables.functionName}"
         },
         {
-          "text": "Note: Don't select the lambda function name, only enter ${stageVariables.functionName}"
+          "text": "Task 5: Creating a Resource",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-27.png"
+          ]
         },
         {
-          "text": "Click on the Save and Copy the Source-ARN"
-        }
-      ]
-    },
-    {
-      "title": "Task 7: Run the CLI command to give lambda permissions to the API using the EC2 instance",
-      "steps": [
-        {
-          "text": "?In this task, we are going to run the CLI command to give lambda permissions to the API using the EC2 instance."
+          "text": "Click on the Save and Copy the Source-ARN",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-28.png"
+          ]
         },
         {
-          "text": "Navigate to the EC2 page and make sure you're in the us-east-1 (N.Virginia) region."
+          "text": "?In this task, we are going to run the CLI command to give lambda permissions to the API using the EC2 instance."
         },
         {
-          "text": "Note: Don’t close the API Gateway page"
+          "text": "Navigate to the EC2 page and make sure you're in the us-east-1 (N.Virginia) region."
         },
         {
-          "text": "Click on Instances from the left side menu and select the EC2 instance which you created in the above step."
+          "text": "Click on Instances from the left side menu and select the EC2 instance which you created in the above step."
         },
         {
-          "text": "Please follow the steps in SSH into EC2 Instance."
+          "text": "Please follow the steps in SSH into EC2 Instance."
         },
         {
-          "text": "Configure the AWS CLI on the EC2 instance by running the following command:"
-        },
-        {
-          "text": "aws configure"
+          "text": "Configure the AWS CLI on the EC2 instance by running the following command:"
         },
         {
           "text": "AWS Access Key ID [None] : Enter the access key which is available below the lab credentials"
@@ -474,61 +596,137 @@
           "text": "Default output format [None] : Click the Enter button."
         },
         {
-          "text": "Copy the CLI commands for API gateway. To generate a UUID in Bash follow below command:"
+          "text": "Task 5: Creating a Resource",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-29.png"
+          ]
         },
         {
-          "text": "echo STATEMENT_ID=$(uuidgen)"
+          "text": "Copy the CLI commands for API gateway. To generate a UUID in Bash follow below command:"
         },
         {
           "text": "To combine certain information to ensure uniqueness follow below command:"
         },
         {
-          "text": "STATEMENT_ID=\"my_statement_id_$(date +%s)\" # This appends current timestamp to the statement ID"
+          "text": "Now, run the below command. Ensure you replace the <productionlambda-function-arn> with the function arn of production lambda and <api-gateway-arn> with the arn of the api gateway you have copied earlier."
+        },
+        {
+          "text": "Task 5: Creating a Resource",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-30.png"
+          ]
+        },
+        {
+          "text": "Now, you will be able to see a JSON success output."
+        },
+        {
+          "text": "Task 5: Creating a Resource",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-31.png"
+          ]
+        },
+        {
+          "text": "Similarly, run the same command but change the function name to TestingLambda (Second lambda function you created). Ensure you replace the <testinglambda-function-arn> with the function arn of testing lambda and <api-gateway-arn> with the arn of the api gateway you have copied earlier."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Creating a Method",
+      "steps": [
+        {
+          "text": "In this task, we are going to guide the user in creating a method for the resource. The method, specifically a GET method, will be integrated with the Lambda functions using the Lambda Proxy integration."
+        },
+        {
+          "text": "Once you create a resource labapi, click on Create method. Select Get in the drop-down list."
+        },
+        {
+          "text": "Select the Integration Type as Lambda Function"
+        },
+        {
+          "text": "Use Lambda Proxy integration: Check the checkbox"
+        },
+        {
+          "text": "Lambda Region: Select us-east-1"
+        },
+        {
+          "text": "Lambda Function : Enter ${stageVariables.functionName}"
+        },
+        {
+          "text": "Task 6: Creating a Method",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-32.png"
+          ]
+        },
+        {
+          "text": "Click on the Save and Copy the Source-ARN",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-33.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Run the CLI command to give lambda permissions to the API using the EC2 instance",
+      "steps": [
+        {
+          "text": "?In this task, we are going to run the CLI command to give lambda permissions to the API using the EC2 instance."
+        },
+        {
+          "text": "Navigate to the EC2 page and make sure you're in the us-east-1 (N.Virginia) region."
+        },
+        {
+          "text": "Click on Instances from the left side menu and select the EC2 instance which you created in the above step."
+        },
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance."
+        },
+        {
+          "text": "Configure the AWS CLI on the EC2 instance by running the following command:"
+        },
+        {
+          "text": "AWS Access Key ID [None] : Enter the access key which is available below the lab credentials"
+        },
+        {
+          "text": "AWS Secret Access Key [None] : Enter the secret access key which is available below the lab credentials"
+        },
+        {
+          "text": "Default region name [None] : Enter us-east-1"
+        },
+        {
+          "text": "Default output format [None] : Click the Enter button."
+        },
+        {
+          "text": "Task 7: Run the CLI command to give lambda permissions to the API using the EC2 instance",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-34.png"
+          ]
+        },
+        {
+          "text": "Copy the CLI commands for API gateway. To generate a UUID in Bash follow below command:"
+        },
+        {
+          "text": "To combine certain information to ensure uniqueness follow below command:"
         },
         {
           "text": "Now, run the below command. Ensure you replace the <productionlambda-function-arn> with the function arn of production lambda and <api-gateway-arn> with the arn of the api gateway you have copied earlier."
         },
         {
-          "text": "aws lambda add-permission --function-name \"<productionlambda-function-arn>\" \\"
-        },
-        {
-          "text": "--source-arn \"<api-gateway-arn>\" \\"
-        },
-        {
-          "text": "--principal apigateway.amazonaws.com \\"
-        },
-        {
-          "text": "--statement-id \"$STATEMENT_ID\" \\"
-        },
-        {
-          "text": "--action lambda:InvokeFunction --region us-east-1"
+          "text": "Task 7: Run the CLI command to give lambda permissions to the API using the EC2 instance",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-35.png"
+          ]
         },
         {
           "text": "Now, you will be able to see a JSON success output."
         },
         {
-          "text": "Similarly, run the same command but change the function name to TestingLambda (Second lambda function you created). Ensure you replace the <testinglambda-function-arn> with the function arn of testing lambda and <api-gateway-arn> with the arn of the api gateway you have copied earlier."
+          "text": "Task 7: Run the CLI command to give lambda permissions to the API using the EC2 instance",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-36.png"
+          ]
         },
         {
-          "text": "aws lambda add-permission --function-name \"<testinglambda-function-arn>\" \\"
-        },
-        {
-          "text": "--source-arn \"<api-gateway-arn>\" \\"
-        },
-        {
-          "text": "--principal apigateway.amazonaws.com \\"
-        },
-        {
-          "text": "--statement-id \"$STATEMENT_ID\" \\"
-        },
-        {
-          "text": "--action lambda:InvokeFunction --region us-east-1"
-        },
-        {
-          "text": "Now, you will be able to see a JSON success output."
-        },
-        {
-          "text": "?"
+          "text": "Similarly, run the same command but change the function name to TestingLambda (Second lambda function you created). Ensure you replace the <testinglambda-function-arn> with the function arn of testing lambda and <api-gateway-arn> with the arn of the api gateway you have copied earlier."
         }
       ]
     },
@@ -539,49 +737,76 @@
           "text": "In this task, we are going to assist the user in deploying the API Gateway with two different stages: TestingAPI and ProductionAPI. These stages provide separate environments for testing and production."
         },
         {
-          "text": "Testing Lambda Stage"
+          "text": "Once the resource and the method have been created successfully, you can deploy the API."
         },
         {
-          "text": "Once the resource and the method have been created successfully, you can deploy the API."
+          "text": "Click on Deploy API."
         },
         {
-          "text": "Click on Deploy API."
+          "text": "Select the Deployment Stage in the drop-down as New Stage."
         },
         {
-          "text": "Select the Deployment Stage in the drop-down as New Stage."
+          "text": "Stage Name: Enter TestingAPI and Stage description as Testing environment for my labAPI."
         },
         {
-          "text": "Stage Name: Enter TestingAPI and Stage description as Testing environment for my labAPI."
+          "text": "Click on Deploy"
         },
         {
-          "text": "Click on Deploy"
+          "text": "Task 8: Deploy API Gateway with two different stages",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-37.png"
+          ]
         },
         {
-          "text": "Once the API has been deployed, navigate to Stages."
+          "text": "Once the API has been deployed, navigate to Stages."
         },
         {
-          "text": "Production Lambda stage"
+          "text": "Task 8: Deploy API Gateway with two different stages",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-38.png"
+          ]
         },
         {
-          "text": "Click on the Resources from the left side menu."
+          "text": "Click on the Resources from the left side menu."
         },
         {
-          "text": "Select the GET method which you have created."
+          "text": "Select the GET method which you have created.",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-39.png"
+          ]
         },
         {
-          "text": "Select Deploy API."
+          "text": "Task 8: Deploy API Gateway with two different stages",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-40.png"
+          ]
         },
         {
-          "text": "Select the Deployment Stage in the drop-down as New Stage."
+          "text": "Select Deploy API."
         },
         {
-          "text": "Stage Name: Enter ProductionAPI and Stage description as Production environment for my labAPI."
+          "text": "Select the Deployment Stage in the drop-down as New Stage."
         },
         {
-          "text": "Click on Deploy"
+          "text": "Stage Name: Enter ProductionAPI and Stage description as Production environment for my labAPI."
         },
         {
-          "text": "Once the API has been deployed, navigate to Stages."
+          "text": "Click on Deploy"
+        },
+        {
+          "text": "Task 8: Deploy API Gateway with two different stages",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-41.png"
+          ]
+        },
+        {
+          "text": "Once the API has been deployed, navigate to Stages."
+        },
+        {
+          "text": "Task 8: Deploy API Gateway with two different stages",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-42.png"
+          ]
         }
       ]
     },
@@ -592,37 +817,55 @@
           "text": "In this task, we are going to add stage variables to the deployed stages. The stage variables will be used to define the specific Lambda functions associated with each stage."
         },
         {
-          "text": "Now click on the TestingAPI stage in Stages."
+          "text": "Now click on the TestingAPI stage in Stages."
         },
         {
-          "text": "Select the Stage Variables tab in the right side page and click on Edit and then Add Stage Variable"
+          "text": "Select the Stage Variables tab in the right side page and click on Edit and then Add Stage Variable Name: Enter functionName Value: Enter TestingLambda Note: In the value field, enter the Testing lambda function name. Now click on the Save button."
         },
         {
-          "text": "Name: Enter functionName"
+          "text": "Select the Stage Variables tab in the right side page and click on Edit and then Add Stage Variable"
         },
         {
-          "text": "Value: Enter TestingLambda"
+          "text": "Name: Enter functionName"
+        },
+        {
+          "text": "Value: Enter TestingLambda"
         },
         {
           "text": "Note: In the value field, enter the Testing lambda function name."
         },
         {
-          "text": "Now click on the Save button."
+          "text": "Now click on the Save button."
         },
         {
-          "text": "Now click on the ProductionAPI stage in Stages."
+          "text": "Task 9: Add stage variables to both stages",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-43.png"
+          ]
         },
         {
-          "text": "Select the Stage Variables tab in right side page and click on Add Stage Variable"
+          "text": "Now click on the ProductionAPI stage in Stages."
         },
         {
-          "text": "Name: Enter functionName"
+          "text": "Select the Stage Variables tab in right side page and click on Add Stage Variable Name: Enter functionName Value : Enter ProductionLambda Note: In the value field, enter the production lambda function name."
         },
         {
-          "text": "Value : Enter ProductionLambda"
+          "text": "Select the Stage Variables tab in right side page and click on Add Stage Variable"
+        },
+        {
+          "text": "Name: Enter functionName"
+        },
+        {
+          "text": "Value : Enter ProductionLambda"
         },
         {
           "text": "Note: In the value field, enter the production lambda function name."
+        },
+        {
+          "text": "Task 9: Add stage variables to both stages",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-44.png"
+          ]
         }
       ]
     },
@@ -633,34 +876,52 @@
           "text": "In this task, we are going to test the API Gateway by making GET requests to the endpoints associated with the deployed stages. This ensures that the API Gateway is properly integrated with the Lambda functions and functioning as expected."
         },
         {
-          "text": "Click on the ProductionLambda stage, open the stage"
+          "text": "Click on the ProductionLambda stage, open the stage"
         },
         {
           "text": "Now click on the GET method."
         },
         {
-          "text": "Copy and Paste the Invoke URL (followed by the resource name) in the new tab to make a GET request."
+          "text": "Task 10: Test the API Gateway",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-45.png"
+          ]
+        },
+        {
+          "text": "Copy and Paste the Invoke URL (followed by the resource name) in the new tab to make a GET request."
         },
         {
           "text": "You will receive the GET request from the API. Here's an example:"
         },
         {
-          "text": "Note: If you make any mistake and after correcting it, still the API URL is showing the same error, please force refresh or clear cache."
+          "text": "Task 10: Test the API Gateway",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-46.png"
+          ]
         },
         {
-          "text": "Similarly, click on the TestingLambda stage, open the stage"
+          "text": "Similarly, click on the TestingLambda stage, open the stage"
         },
         {
           "text": "Now click on the GET method."
         },
         {
-          "text": "Copy and Paste the Invoke URL (followed by the resource name) in the new tab to make a GET request."
+          "text": "Task 10: Test the API Gateway",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-47.png"
+          ]
+        },
+        {
+          "text": "Copy and Paste the Invoke URL (followed by the resource name) in the new tab to make a GET request."
         },
         {
           "text": "You will receive the GET request from the API. Here's an example:"
         },
         {
-          "text": "Do you Know?"
+          "text": "Task 10: Test the API Gateway",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-48.png"
+          ]
         },
         {
           "text": "API Gateway is designed to handle massive scale and can support up to hundreds of thousands of concurrent API requests. This means that even if your application experiences sudden spikes in traffic, API Gateway can handle the increased load seamlessly without any additional configuration or scaling effort on your part."
@@ -671,16 +932,22 @@
       "title": "Task 11: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-49.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 11: Validation Test",
+          "images": [
+            "/labs/build-api-gateway-with-different-stages-using-stage-variables/step-50.gif"
+          ]
         },
         {
           "text": "You have successfully created an EC2 instance."
@@ -704,16 +971,13 @@
           "text": "You have successfully tested the API"
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
         }
       ]
     }

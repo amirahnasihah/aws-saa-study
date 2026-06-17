@@ -1,0 +1,112 @@
+{
+  "slug": "connect-rds-from-instance-challenge-mysql-access",
+  "title": "Challenge: Connecting RDS from EC2 Instance",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:10:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company needs its website server to talk to a secure database for storing customer data. Your job is to create a virtual computer (EC2), a MySQL database (RDS), connect them, set up a database with a table and data, test it, and clean up afterward. Here’s how to do each step super simply:"
+        },
+        {
+          "text": "Create an EC2 Instance: Launch Ec2 I=insatnce with Image: Amazon linux 2023 kernel-6.1 AMI. Region: us-east-1. Instance type:t2 micro. With key-pair and port 22, port 80, port 3306 in security groups"
+        },
+        {
+          "text": "Launch Ec2 I=insatnce with"
+        },
+        {
+          "text": "Image: Amazon linux 2023 kernel-6.1 AMI."
+        },
+        {
+          "text": "Region: us-east-1."
+        },
+        {
+          "text": "Instance type:t2 micro."
+        },
+        {
+          "text": "With key-pair and port 22, port 80, port 3306 in security groups"
+        },
+        {
+          "text": "Create an Amazon RDS Instance: Go to RDS > Create database, pick MySQL, choose Free Tier, same sg of EC2, Instance type: db.t3.micro Storage: 20 GiB Remember the username and password"
+        },
+        {
+          "text": "Go to RDS > Create database, pick MySQL, choose Free Tier, same sg of EC2,"
+        },
+        {
+          "text": "Instance type: db.t3.micro"
+        },
+        {
+          "text": "Storage: 20 GiB"
+        },
+        {
+          "text": "Remember the username and password"
+        },
+        {
+          "text": "Create a Connection to the Amazon RDS Database from the EC2 Instance: Ssh your instance Install mysql . Connect mysql to the instance"
+        },
+        {
+          "text": "Ssh your instance"
+        },
+        {
+          "text": "Install mysql ."
+        },
+        {
+          "text": "Connect mysql to the instance"
+        },
+        {
+          "text": "Create a Database, Table, and Insert Data for Testing: Once connected to instance, create table and insert data to the table Fetch the data"
+        },
+        {
+          "text": "Once connected to instance, create table and insert data to the table"
+        },
+        {
+          "text": "Fetch the data"
+        },
+        {
+          "text": "Make sure everything is correct. In the lab console, click Validate to check if the EC2 instance, RDS database, connection, and database setup are right."
+        },
+        {
+          "text": "Deleting AWS Resources."
+        },
+        {
+          "text": "Sign out of the AWS Management Console."
+        },
+        {
+          "text": "In the lab console, click End Challenge and wait for it to finish."
+        },
+        {
+          "text": "You’ve completed the RDS-EC2 connection challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

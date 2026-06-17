@@ -1,0 +1,52 @@
+{
+  "slug": "challenge-apigatewayintroduction-api-basics",
+  "title": "Challenge: Introduction to Amazon API Gateway",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Sign into AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to access the AWS Console in a new tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default, copy your Username and Password from the Lab Console, and sign in."
+        },
+        {
+          "text": "Set the AWS Region to US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign into AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to explore Amazon API Gateway by creating a simple REST API. Your job is to create a new API and validate the setup. Here’s how to proceed:"
+        },
+        {
+          "text": "Create a resource"
+        },
+        {
+          "text": "Create a GET method"
+        },
+        {
+          "text": "Confirm the API is created and visible in the API Gateway console."
+        },
+        {
+          "text": "Click Validate in the lab console to check the setup."
+        },
+        {
+          "text": "Sign out of AWS by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "Click End Lab in the lab console to complete the lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

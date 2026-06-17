@@ -1,0 +1,100 @@
+{
+  "slug": "amazon-cloudfront-challenge-secure-cdn",
+  "title": "Challenge : Introduction to Amazon CloudFront",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:45:00",
+  "tasks": [
+    {
+      "title": "Challenge section 1",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Challenge section 1"
+        },
+        {
+          "text": "XYZ Company wants its website to be fast for people everywhere, using Amazon CloudFront to share files like images. Your job is to make a storage bucket, add a file, make it public, set up CloudFront, create an error page, limit who can see the files, and test it all. Here’s how to do each step in very simple words:"
+        },
+        {
+          "text": "Create an Public S3 Bucket with ACL Enabled: Upload any Image"
+        },
+        {
+          "text": "Upload any Image"
+        },
+        {
+          "text": "Create Custom Error Folder: create error.html and save it. Create block.html and save it."
+        },
+        {
+          "text": "create error.html and save it."
+        },
+        {
+          "text": "Create block.html and save it."
+        },
+        {
+          "text": "Make the Objects Publicturn off Block all public access,"
+        },
+        {
+          "text": "turn off Block all public access,"
+        },
+        {
+          "text": "Create a Amazon CloudFront Distribution: Create a cloudfront distribution with the S3 bucket"
+        },
+        {
+          "text": "Create a cloudfront distribution with the S3 bucket"
+        },
+        {
+          "text": "Configure Custom Error Page: Create custom error page with 404 http error,set error.html as the page,, andsave."
+        },
+        {
+          "text": "Create custom error page with 404 http error,"
+        },
+        {
+          "text": "set error.html as the page,, andsave."
+        },
+        {
+          "text": "Restrict the Geographic Distribution of Your Content:Restrict the geographic region by blocking the country you are inSet block.html as the page, and save."
+        },
+        {
+          "text": "Restrict the geographic region by blocking the country you are in"
+        },
+        {
+          "text": "Set block.html as the page, and save."
+        },
+        {
+          "text": "Make sure it all works. In the lab console, click Validate to check if CloudFront and S3 are set up correctly."
+        },
+        {
+          "text": "Sign out of the AWS Management Console."
+        },
+        {
+          "text": "In the lab console, click End Challenge and wait for it to stop."
+        },
+        {
+          "text": "You’ve finished the CloudFront challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

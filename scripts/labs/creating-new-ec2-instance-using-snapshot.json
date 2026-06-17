@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,22 +35,46 @@
       "title": "Task 2 : Launch an EC2 Instance",
       "steps": [
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to Services menu in the top, then click on EC2 in the Compute section."
+          "text": "Navigate to Services menu in the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Click on Instances from the left side bar and then click on Launch Instances"
+          "text": "Click on Instances from the left side bar and then click on Launch Instances"
         },
         {
           "text": "Name : Enter MyEC2Server"
         },
         {
-          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 kernel-6.1 AMI in the search box and click on the Select button."
+          "text": "Task 2 : Launch an EC2 Instance",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-01.png"
+          ]
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 kernel-6.1 AMI in the search box and click on the Select button.",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-02.png"
+          ]
+        },
+        {
+          "text": "Task 2 : Launch an EC2 Instance",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-03.png"
+          ]
         },
         {
           "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "Task 2 : Launch an EC2 Instance",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-04.png"
+          ]
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button Key pair name: WhizKey Key pair type: RSA Private key file format: .pem"
         },
         {
           "text": "For Key pair: Select Create a new key pair Button"
@@ -80,16 +107,28 @@
           "text": "Description : Enter Security Group to allow traffic to EC2"
         },
         {
+          "text": "Task 2 : Launch an EC2 Instance",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-05.png"
+          ]
+        },
+        {
           "text": "Check Allow SSH from and Select Anywhere from dropdown"
+        },
+        {
+          "text": "To add SSH, Choose Type: SSH Source: Select Anywhere"
         },
         {
           "text": "To add SSH,"
         },
         {
-          "text": "Choose Type: SSH"
+          "text": "Choose Type: SSH"
         },
         {
-          "text": "Source: Select Anywhere"
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "For HTTP, Click on Add security group rule Choose Type: HTTP Source: Select Anywhere"
         },
         {
           "text": "For HTTP, Click on Add security group rule"
@@ -98,28 +137,10 @@
           "text": "Choose Type: HTTP"
         },
         {
-          "text": "Source: Select Anywhere"
+          "text": "Source: Select Anywhere"
         },
         {
-          "text": "Click on Advanced Details and under the User data: section, enter the following script to create an HTML page served by an Apache httpd web server."
-        },
-        {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "sudo dnf update -y"
-        },
-        {
-          "text": "sudo dnf install httpd -y"
-        },
-        {
-          "text": "echo \"<html><h1> Welcome to Lab Server 1 </h1></html>\" > /var/www/html/index.html"
-        },
-        {
-          "text": "sudo systemctl start httpd"
-        },
-        {
-          "text": "sudo systemctl enable httpd"
+          "text": "Click on Advanced Details and under the User data: section, enter the following script to create an HTML page served by an Apache httpd web server."
         },
         {
           "text": "Keep Rest thing Default and Click on Launch Instance Button."
@@ -128,13 +149,25 @@
           "text": "Select View all Instances to View Instance you Created"
         },
         {
-          "text": "Launch Status: Your instances are now launching, Navigate to Instances page from left menu and wait the status of the EC2 Instance changes to running and health check status changes to 2/2 checks passed."
+          "text": "Launch Status: Your instances are now launching, Navigate to Instances page from left menu and wait the status of the EC2 Instance changes to running and health check status changes to 2/2 checks passed."
+        },
+        {
+          "text": "Task 2 : Launch an EC2 Instance",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-06.jpg"
+          ]
         },
         {
           "text": "Select the Instance and Copy the Public IPv4 Address"
         },
         {
-          "text": "To test if the HTML page published, copy the Public IP address and run it on the browser."
+          "text": "To test if the HTML page published, copy the Public IP address and run it on the browser."
+        },
+        {
+          "text": "Task 2 : Launch an EC2 Instance",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-07.png"
+          ]
         }
       ]
     },
@@ -145,7 +178,10 @@
           "text": "Navigate to Snapshots section under Elastic Block Store from the left menu."
         },
         {
-          "text": "Click on Create Snapshot button."
+          "text": "Click on Create Snapshot button.",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-08.png"
+          ]
         },
         {
           "text": "In the Create snapshot page, fill the details below."
@@ -157,22 +193,43 @@
           "text": "Instance ID: Select MyEC2Server from the drop-down menu."
         },
         {
-          "text": "Description : Enter MyEC2Snapshot"
+          "text": "Description : Enter MyEC2Snapshot"
         },
         {
           "text": "Encrypted: Leave as it is."
         },
         {
-          "text": "Tags Click on Add Tags button"
+          "text": "Tags Click on Add Tags button Key : Enter Name Value : Enter MyEC2Snapshot",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-09.png"
+          ]
+        },
+        {
+          "text": "Tags Click on Add Tags button"
         },
         {
           "text": "Key : Enter Name"
         },
         {
-          "text": "Value : Enter MyEC2Snapshot"
+          "text": "Value : Enter MyEC2Snapshot",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-10.png"
+          ]
         },
         {
-          "text": "Once the snapshot creation is completed, the status will change to completed."
+          "text": "Task 3 : Create a Snapshot of EC2 Instance",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-11.png"
+          ]
+        },
+        {
+          "text": "Once the snapshot creation is completed, the status will change to completed."
+        },
+        {
+          "text": "Task 3 : Create a Snapshot of EC2 Instance",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-12.png"
+          ]
         }
       ]
     },
@@ -183,25 +240,37 @@
           "text": "Select the Snapshot that you have created."
         },
         {
-          "text": "Click on the Action button on top right menu and select Create image from snapshot."
+          "text": "Click on the Action button on top right menu and select Create image from snapshot."
+        },
+        {
+          "text": "Task 4 : Create an AMI from the Snapshot"
+        },
+        {
+          "text": "A pop-up window will show up. Provide the details as mentioned below to configure your AMI: Name: Enter MyEC2AMI Description: Enter My EC2 AMI Leave other settings as default. Click on Create Image button."
         },
         {
           "text": "A pop-up window will show up. Provide the details as mentioned below to configure your AMI:"
         },
         {
-          "text": "Name: Enter MyEC2AMI"
+          "text": "Name: Enter MyEC2AMI"
         },
         {
-          "text": "Description: Enter My EC2 AMI"
+          "text": "Description: Enter My EC2 AMI"
         },
         {
           "text": "Leave other settings as default."
         },
         {
-          "text": "Click on Create Image button."
+          "text": "Click on Create Image button."
         },
         {
-          "text": "Navigate to AMIs under IMAGES in the left menu to see the newly created AMI."
+          "text": "Navigate to AMIs under IMAGES in the left menu to see the newly created AMI."
+        },
+        {
+          "text": "Task 4 : Create an AMI from the Snapshot",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-15.png"
+          ]
         }
       ]
     },
@@ -209,13 +278,28 @@
       "title": "Task 5 : Launch an EC2 Instance using newly created AMI",
       "steps": [
         {
-          "text": "Select the AMI that you have created and click on the Launch Instance from AMI button to launch a new instance."
+          "text": "Select the AMI that you have created and click on the Launch Instance from AMI button to launch a new instance."
+        },
+        {
+          "text": "Task 5 : Launch an EC2 Instance using newly created AMI"
         },
         {
           "text": "Name : Enter MyEC2AMIServer"
         },
         {
+          "text": "Task 5 : Launch an EC2 Instance using newly created AMI",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-18.png"
+          ]
+        },
+        {
           "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "Task 5 : Launch an EC2 Instance using newly created AMI",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-19.png"
+          ]
         },
         {
           "text": "For Key pair: Select the key you created previously."
@@ -224,19 +308,13 @@
           "text": "In Network Settings :"
         },
         {
-          "text": "Auto-assign public IP: Enable"
+          "text": "Auto-assign public IP: Enable"
         },
         {
           "text": "Select Select existing security group and Select the group created earlier"
         },
         {
-          "text": "Click on Advanced Details and under the User data: section, enter the following script to create an HTML page served by an Apache httpd web server."
-        },
-        {
-          "text": "#!/bin/bash -ex"
-        },
-        {
-          "text": "sudo service httpd restart"
+          "text": "Click on Advanced Details and under the User data: section, enter the following script to create an HTML page served by an Apache httpd web server."
         },
         {
           "text": "Note: After pasting the user data, make sure to remove extra spacing."
@@ -248,7 +326,13 @@
           "text": "Select View all Instances to View Instance you Created"
         },
         {
-          "text": "Launch Status: Your instances are now launching, Navigate to Instances page from left menu. Wait the status of the EC2 Instance changes to running and health check status changes to 2/2 checks passed"
+          "text": "Launch Status: Your instances are now launching, Navigate to Instances page from left menu. Wait the status of the EC2 Instance changes to running and health check status changes to 2/2 checks passed"
+        },
+        {
+          "text": "Task 5 : Launch an EC2 Instance using newly created AMI",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-20.jpg"
+          ]
         }
       ]
     },
@@ -259,16 +343,22 @@
           "text": "Once your new instance status is running, copy its Public IP."
         },
         {
+          "text": "Task 6 : Test the new EC2 instance created from AMI",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-21.png"
+          ]
+        },
+        {
           "text": "Paste it into your browser."
         },
         {
-          "text": "You will be able to see the output of MyEC2AMIServer is the same as the one we got from the initial EC2 instance MyEC2Server."
+          "text": "You will be able to see the output of MyEC2AMIServer is the same as the one we got from the initial EC2 instance MyEC2Server."
         },
         {
-          "text": "Do You Know ?"
-        },
-        {
-          "text": "When creating an EC2 instance from a snapshot, the snapshot serves as a point-in-time copy of the root volume or additional volumes attached to an existing instance. By utilizing snapshots, you can capture the entire state of the volume, including the operating system, applications, and data."
+          "text": "Task 6 : Test the new EC2 instance created from AMI",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-22.png"
+          ]
         }
       ]
     },
@@ -276,28 +366,31 @@
       "title": "Task 7 : Validation of the lab",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-23.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 7 : Validation of the lab",
+          "images": [
+            "/labs/creating-new-ec2-instance-using-snapshot/step-24.gif"
+          ]
         },
         {
           "text": "You have successfully launched an EC2 Instance and created a Snapshot from it."
         },
         {
-          "text": "You have successfully created an AMI from the Snapshot."
+          "text": "You have successfully created an AMI from the Snapshot."
         },
         {
           "text": "You have successfully launched a new EC2 instance from the AMI and tested it."
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign out of AWS Account."
@@ -306,7 +399,7 @@
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
         }
       ]
     }

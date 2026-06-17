@@ -1,0 +1,214 @@
+{
+  "slug": "challenge-lab-exporting-amazon-rds-snapshot-to-s3-for-secure-backup",
+  "title": "Challenge Lab - Exporting Amazon RDS Snapshot to S3 for Secure Backup",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "02:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge lab, you'll learn how to export an Amazon RDS snapshot to an S3 bucket, enabling you to back up your RDS database and store it securely in Amazon S3 for long-term retention."
+        },
+        {
+          "text": "You are tasked with helping a client who needs to back up their RDS MySQL instance to S3 for long-term storage and auditing. Your goal is to configure the RDS instance, create the necessary S3 bucket, ensure proper security settings with KMS encryption, and export the snapshot securely to S3. Finally, you will validate the backup and clean up resources."
+        },
+        {
+          "text": "Create an S3 Bucket Enter a unique bucket name and ACLs disabled (recommended)"
+        },
+        {
+          "text": "Enter a unique bucket name and ACLs disabled (recommended)"
+        },
+        {
+          "text": "Create a KMS Key Go to Key Management Service (KMS). Select: Key type: Symmetric Add a user-defined alias Proceed through the steps and note the KMS Key ARN for later use."
+        },
+        {
+          "text": "Go to Key Management Service (KMS)."
+        },
+        {
+          "text": "Select: Key type: Symmetric Add a user-defined alias"
+        },
+        {
+          "text": "Key type: Symmetric"
+        },
+        {
+          "text": "Add a user-defined alias"
+        },
+        {
+          "text": "Proceed through the steps and note the KMS Key ARN for later use."
+        },
+        {
+          "text": "Create a Security Group for RDS Add an inbound rule: Type: MySQL/Aurora Port: 3306 Source: Your IP (or 0.0.0.0/0 only for testing)"
+        },
+        {
+          "text": "Add an inbound rule: Type: MySQL/Aurora Port: 3306 Source: Your IP (or 0.0.0.0/0 only for testing)"
+        },
+        {
+          "text": "Type: MySQL/Aurora"
+        },
+        {
+          "text": "Port: 3306"
+        },
+        {
+          "text": "Source: Your IP (or 0.0.0.0/0 only for testing)"
+        },
+        {
+          "text": "Create a MySQL RDS Instance Navigate to RDS > Databases > Create database. Choose: Engine: MySQL Method: Standard Create Template: Free tier (optional) Instance settings: Instance class: e.g., db.t3.micro Storage: 20 GiB Connectivity: Public access: Yes VPC Security Group: Select the one you created Additional configuration: Optional database name Disable backup and deletion protection (optional) Click Create database."
+        },
+        {
+          "text": "Navigate to RDS > Databases > Create database."
+        },
+        {
+          "text": "Choose: Engine: MySQL Method: Standard Create Template: Free tier (optional)"
+        },
+        {
+          "text": "Engine: MySQL"
+        },
+        {
+          "text": "Method: Standard Create"
+        },
+        {
+          "text": "Template: Free tier (optional)"
+        },
+        {
+          "text": "Instance settings: Instance class: e.g., db.t3.micro Storage: 20 GiB"
+        },
+        {
+          "text": "Instance class: e.g., db.t3.micro"
+        },
+        {
+          "text": "Storage: 20 GiB"
+        },
+        {
+          "text": "Connectivity: Public access: Yes VPC Security Group: Select the one you created"
+        },
+        {
+          "text": "Public access: Yes"
+        },
+        {
+          "text": "VPC Security Group: Select the one you created"
+        },
+        {
+          "text": "Additional configuration: Optional database name Disable backup and deletion protection (optional)"
+        },
+        {
+          "text": "Optional database name"
+        },
+        {
+          "text": "Disable backup and deletion protection (optional)"
+        },
+        {
+          "text": "Click Create database."
+        },
+        {
+          "text": "Connect to the DB Use MySQL Workbench or another client with the RDS endpoint, username, and password to connect."
+        },
+        {
+          "text": "Use MySQL Workbench or another client with the RDS endpoint, username, and password to connect."
+        },
+        {
+          "text": "Create Sample Database and Table First, create a new database. You can name it anything you like, such as sampledb. Inside that database, create a table. The table should have the following: An id column: This should be a number that increases automatically for each new row. It will be the primary key. A name column: This will store the name of the item. Keep it short, like a text field. A description column: This is for a longer description of the item. Once your table is ready, add a couple of sample rows to it. For example, one row can have the name \"Sample1\" with the description \"Description1\", and another with \"Sample2\" and \"Description2\"."
+        },
+        {
+          "text": "First, create a new database. You can name it anything you like, such as sampledb."
+        },
+        {
+          "text": "Inside that database, create a table. The table should have the following:"
+        },
+        {
+          "text": "An id column: This should be a number that increases automatically for each new row. It will be the primary key."
+        },
+        {
+          "text": "A name column: This will store the name of the item. Keep it short, like a text field."
+        },
+        {
+          "text": "A description column: This is for a longer description of the item."
+        },
+        {
+          "text": "Once your table is ready, add a couple of sample rows to it. For example, one row can have the name \"Sample1\" with the description \"Description1\", and another with \"Sample2\" and \"Description2\"."
+        },
+        {
+          "text": "Take a Manual Snapshot and Export to S3 Go to the RDS console and find your RDS database. Create a manual snapshot. Give it a name you can easily remember. Wait for the snapshot status to show \"Available\". Now, move on to export it: Choose \"Export to Amazon S3\". Fill in the details: Export identifier: any unique name S3 bucket: the one you created earlier IAM role: select the correct role from the list KMS key: choose the key you set up Start the export. This might take 20–30 minutes."
+        },
+        {
+          "text": "Go to the RDS console and find your RDS database."
+        },
+        {
+          "text": "Create a manual snapshot. Give it a name you can easily remember."
+        },
+        {
+          "text": "Wait for the snapshot status to show \"Available\"."
+        },
+        {
+          "text": "Now, move on to export it:"
+        },
+        {
+          "text": "Choose \"Export to Amazon S3\"."
+        },
+        {
+          "text": "Fill in the details: Export identifier: any unique name S3 bucket: the one you created earlier IAM role: select the correct role from the list KMS key: choose the key you set up"
+        },
+        {
+          "text": "Export identifier: any unique name"
+        },
+        {
+          "text": "S3 bucket: the one you created earlier"
+        },
+        {
+          "text": "IAM role: select the correct role from the list"
+        },
+        {
+          "text": "KMS key: choose the key you set up"
+        },
+        {
+          "text": "Start the export. This might take 20–30 minutes."
+        },
+        {
+          "text": "Verify Export in S3 Look for the exported. parquet files or folders matching your export job. Confirm that the export is successful and your table data is present."
+        },
+        {
+          "text": "Look for the exported. parquet files or folders matching your export job."
+        },
+        {
+          "text": "Confirm that the export is successful and your table data is present."
+        },
+        {
+          "text": "Click on the Validate button to submit and verify your solution."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

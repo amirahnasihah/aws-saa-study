@@ -1,0 +1,163 @@
+{
+  "slug": "challenge-lab-encrypt-an-amazon-rds-instance-using-snapshot-migration-and-kms",
+  "title": "Challenge Lab: How to Encrypt an Unencrypted RDS DB Instance",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "This challenge involves encrypting an unencrypted RDS instance while ensuring minimal downtime and data integrity. The task requires performing snapshot-based migration, using AWS KMS for encryption, and validating the encryption status of the new instance. This lab tests your ability to work with Amazon RDS, snapshots, KMS keys, and best practices for secure data migration—all without step-by-step guidance."
+        },
+        {
+          "text": "You are a Database Engineer at a company that recently revised its security policies to enforce encryption at rest for all databases. One of your MySQL RDS DB instances was previously created without encryption. Your task is to encrypt this unencrypted RDS DB instance without data loss or downtime by using snapshot-based encryption and restoration."
+        },
+        {
+          "text": "Create an Unencrypted RDS DB Instance Start by creating a new RDS database using the standard creation method. Choose MySQL as the engine type and select the Free tier template to keep costs low. Configure the instance with the following settings: DB instance class: db.t3.micro Storage: General Purpose (SSD), 20 GB Disable storage autoscaling, backups, deletion protection, and encryption Set public access to No After configuring these, click Create database. Wait for the instance status to show Available. Once ready, verify under the Configuration tab that encryption is disabled."
+        },
+        {
+          "text": "Start by creating a new RDS database using the standard creation method. Choose MySQL as the engine type and select the Free tier template to keep costs low. Configure the instance with the following settings: DB instance class: db.t3.micro Storage: General Purpose (SSD), 20 GB Disable storage autoscaling, backups, deletion protection, and encryption Set public access to No"
+        },
+        {
+          "text": "DB instance class: db.t3.micro"
+        },
+        {
+          "text": "Storage: General Purpose (SSD), 20 GB"
+        },
+        {
+          "text": "Disable storage autoscaling, backups, deletion protection, and encryption"
+        },
+        {
+          "text": "Set public access to No"
+        },
+        {
+          "text": "After configuring these, click Create database. Wait for the instance status to show Available. Once ready, verify under the Configuration tab that encryption is disabled."
+        },
+        {
+          "text": "Create a Manual Snapshot of the DB To back up your unencrypted database, create a manual snapshot: Provide a custom snapshot name Click Take snapshot Wait until the snapshot status changes to Available This snapshot will serve as the base for creating an encrypted copy."
+        },
+        {
+          "text": "To back up your unencrypted database, create a manual snapshot: Provide a custom snapshot name Click Take snapshot Wait until the snapshot status changes to Available"
+        },
+        {
+          "text": "Provide a custom snapshot name"
+        },
+        {
+          "text": "Click Take snapshot"
+        },
+        {
+          "text": "Wait until the snapshot status changes to Available"
+        },
+        {
+          "text": "This snapshot will serve as the base for creating an encrypted copy."
+        },
+        {
+          "text": "Copy the Snapshot and Enable Encryption Now, you will copy the manual snapshot, but with encryption enabled. When copying: Enter a new, unique name for the encrypted snapshot Check the box to enable encryption Choose the default KMS key or a custom KMS key if provided Once started, wait for the snapshot copy to complete."
+        },
+        {
+          "text": "Now, you will copy the manual snapshot, but with encryption enabled. When copying: Enter a new, unique name for the encrypted snapshot Check the box to enable encryption Choose the default KMS key or a custom KMS key if provided"
+        },
+        {
+          "text": "Enter a new, unique name for the encrypted snapshot"
+        },
+        {
+          "text": "Check the box to enable encryption"
+        },
+        {
+          "text": "Choose the default KMS key or a custom KMS key if provided"
+        },
+        {
+          "text": "Once started, wait for the snapshot copy to complete."
+        },
+        {
+          "text": "Restore the Encrypted Snapshot to a New DB Using the encrypted snapshot, restore a new database instance: Choose a new DB instance identifier, such as your-encrypted-db Use the db.t3.micro instance class Confirm that encryption is enabled and cannot be disabled during restoration Leave other settings as default Wait until the new instance status shows Available."
+        },
+        {
+          "text": "Using the encrypted snapshot, restore a new database instance: Choose a new DB instance identifier, such as your-encrypted-db Use the db.t3.micro instance class Confirm that encryption is enabled and cannot be disabled during restoration Leave other settings as default"
+        },
+        {
+          "text": "Choose a new DB instance identifier, such as your-encrypted-db"
+        },
+        {
+          "text": "Use the db.t3.micro instance class"
+        },
+        {
+          "text": "Confirm that encryption is enabled and cannot be disabled during restoration"
+        },
+        {
+          "text": "Leave other settings as default"
+        },
+        {
+          "text": "Wait until the new instance status shows Available."
+        },
+        {
+          "text": "Modify Original and Restored DB Identifiers (Optional) If you want to keep the same DB name after encrypting, you can rename the original unencrypted DB and the new encrypted DB: Rename the original unencrypted DB to something like your-db-old Rename the new encrypted DB to the original name, for example, your-db-name Apply changes immediately Verify that both databases show the updated names and statuses."
+        },
+        {
+          "text": "If you want to keep the same DB name after encrypting, you can rename the original unencrypted DB and the new encrypted DB: Rename the original unencrypted DB to something like your-db-old Rename the new encrypted DB to the original name, for example, your-db-name Apply changes immediately"
+        },
+        {
+          "text": "Rename the original unencrypted DB to something like your-db-old"
+        },
+        {
+          "text": "Rename the new encrypted DB to the original name, for example, your-db-name"
+        },
+        {
+          "text": "Apply changes immediately"
+        },
+        {
+          "text": "Verify that both databases show the updated names and statuses."
+        },
+        {
+          "text": "Validation Finally, check the Validation panel to confirm: One DB instance is encrypted The original unencrypted DB is either deleted or renamed The unencrypted snapshot has been deleted"
+        },
+        {
+          "text": "Finally, check the Validation panel to confirm: One DB instance is encrypted The original unencrypted DB is either deleted or renamed The unencrypted snapshot has been deleted"
+        },
+        {
+          "text": "One DB instance is encrypted"
+        },
+        {
+          "text": "The original unencrypted DB is either deleted or renamed"
+        },
+        {
+          "text": "The unencrypted snapshot has been deleted"
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

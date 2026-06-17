@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -38,7 +38,23 @@
           "text": "Ensure you are in the US East (N. Virginia) us-east-1 Region to begin creating an S3 bucket in the Amazon cloud."
         },
         {
-          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section and click on Create Bucket."
+          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section and click on Create Bucket.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-01.png"
+          ]
+        },
+        {
+          "text": "Task 2: Creating an S3 Bucket",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-02.png"
+          ]
+        },
+        {
+          "text": "On the Create Bucket page, fill in the bucket details. Select Bucket Type : General purpose Bucket name: Enter Unique name of your choice Note: Ensure you provide a unique bucket name of your choice, as S3 bucket names must be globally unique. For Object ownership: Select ACLs enabled Object ownership option: Choose Object writer",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-03.png",
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-04.png"
+          ]
         },
         {
           "text": "On the Create Bucket page, fill in the bucket details."
@@ -47,22 +63,52 @@
           "text": "Select Bucket Type : General purpose"
         },
         {
-          "text": "Bucket name: Enter Unique name of your choice"
+          "text": "Bucket name: Enter Unique name of your choice Note: Ensure you provide a unique bucket name of your choice, as S3 bucket names must be globally unique.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-05.png"
+          ]
         },
         {
-          "text": "Note: Ensure you provide a unique bucket name of your choice, as S3 bucket names must be globally unique."
+          "text": "Bucket name: Enter Unique name of your choice"
         },
         {
-          "text": "For Object ownership: Select ACLs enabled"
+          "text": "Note: Ensure you provide a unique bucket name of your choice, as S3 bucket names must be globally unique.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-06.png"
+          ]
         },
         {
-          "text": "Object ownership option: Choose Object writer"
+          "text": "Task 2: Creating an S3 Bucket",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-07.png"
+          ]
+        },
+        {
+          "text": "For Object ownership: Select ACLs enabled"
+        },
+        {
+          "text": "Object ownership option: Choose Object writer",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-08.png"
+          ]
+        },
+        {
+          "text": "Task 2: Creating an S3 Bucket",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-09.png"
+          ]
         },
         {
           "text": "Note: Please select Object owner, or else it won't allow editing the bucket ACL."
         },
         {
-          "text": "For Block Public Access settings for this bucket for this bucket section,"
+          "text": "For Block Public Access settings for this bucket for this bucket section, Uncheck the option, Block all public access, Check the I acknowledge that the current settings might result in this bucket and the objects within becoming public checkbox."
+        },
+        {
+          "text": "For Block Public Access settings for this bucket for this bucket section,"
+        },
+        {
+          "text": "Uncheck the option, Block all public access, Check the I acknowledge that the current settings might result in this bucket and the objects within becoming public checkbox."
         },
         {
           "text": "Uncheck the option, Block all public access,"
@@ -71,13 +117,25 @@
           "text": "Check the I acknowledge that the current settings might result in this bucket and the objects within becoming public checkbox."
         },
         {
+          "text": "Task 2: Creating an S3 Bucket",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-10.png"
+          ]
+        },
+        {
           "text": "Leave other settings as default."
         },
         {
-          "text": "Click on Create bucket button."
+          "text": "Click on Create bucket button."
         },
         {
           "text": "Kindly ignore the permission error if it appears during the process."
+        },
+        {
+          "text": "Task 2: Creating an S3 Bucket",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-11.png"
+          ]
         },
         {
           "text": "The S3 bucket will be created successfully."
@@ -91,37 +149,67 @@
           "text": "Click on your bucket name."
         },
         {
+          "text": "In the Overview, You can see the following message: You don't have any objects in this bucket.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-12.png"
+          ]
+        },
+        {
           "text": "In the Overview, You can see the following message:"
         },
         {
-          "text": "You don't have any objects in this bucket."
+          "text": "You don't have any objects in this bucket.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-13.png"
+          ]
         },
         {
-          "text": "You can upload any image from your local machine or download the image from this Link."
+          "text": "Task 3: Upload an object to S3 bucket",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-14.png"
+          ]
+        },
+        {
+          "text": "You can upload any image from your local machine or download the image from this Link."
+        },
+        {
+          "text": "To upload a file to our S3 bucket, Click on the Upload button. Click on Add files button. Browse for your local image or the image we provided and select it. Click on the Upload button. You can watch the progress of the upload from within the transfer panel at the top of the screen. Once your file has been uploaded, it will be displayed in the bucket.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-15.png"
+          ]
         },
         {
           "text": "To upload a file to our S3 bucket,"
         },
         {
-          "text": "Click on the Upload button."
+          "text": "Click on the Upload button."
         },
         {
-          "text": "Click on Add files button."
+          "text": "Click on Add files button."
         },
         {
           "text": "Browse for your local image or the image we provided and select it."
         },
         {
-          "text": "Click on the Upload button."
+          "text": "Click on the Upload button."
         },
         {
           "text": "You can watch the progress of the upload from within the transfer panel at the top of the screen."
         },
         {
-          "text": "Once your file has been uploaded, it will be displayed in the bucket."
+          "text": "Once your file has been uploaded, it will be displayed in the bucket.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-16.png"
+          ]
         },
         {
-          "text": "Now click on the Close button on the top right corner of the screen."
+          "text": "Task 3: Upload an object to S3 bucket",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-17.png"
+          ]
+        },
+        {
+          "text": "Now click on the Close button on the top right corner of the screen."
         }
       ]
     },
@@ -135,34 +223,73 @@
           "text": "Under Objects, Click on smiley.jpg, You will see image details like owner, size, link, etc."
         },
         {
-          "text": "A URL will be listed under the Object URL"
+          "text": "A URL will be listed under the Object URL"
+        },
+        {
+          "text": "Copy the Object URL and paste it in the browser in a new tab. You will see an AccessDenied message, which means the object is not publicly accessible.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-18.png"
+          ]
         },
         {
           "text": "Copy the Object URL and paste it in the browser in a new tab."
         },
         {
-          "text": "You will see an AccessDenied message, which means the object is not publicly accessible."
+          "text": "You will see an AccessDenied message, which means the object is not publicly accessible.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-19.png"
+          ]
         },
         {
-          "text": "Go to your smiley.jpg object and navigate to the Permissions tab."
+          "text": "Task 4: Change Bucket Permissions",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-20.png"
+          ]
         },
         {
-          "text": "Now click on the Edit button on the right side."
+          "text": "Go to your smiley.jpg object and navigate to the Permissions tab.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-21.png"
+          ]
+        },
+        {
+          "text": "Task 4: Change Bucket Permissions",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-22.png"
+          ]
+        },
+        {
+          "text": "Now click on the Edit button on the right side."
         },
         {
           "text": "Note: If the Edit button is disabled, please change the bucket ownership to ACLs enabled and choose the Object writer as the owner."
         },
         {
-          "text": "Everyone (public access) : Check the Read checkbox under Objects column."
+          "text": "Everyone (public access) : Check the Read checkbox under Objects column."
         },
         {
           "text": "Now scroll a little bit below and check I understand the effects of these changes on this object checkbox."
         },
         {
-          "text": "Now, Scroll to the bottom and click on Save changes button."
+          "text": "Task 4: Change Bucket Permissions",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-23.png"
+          ]
         },
         {
-          "text": "Now again paste the Object URL in the browser and you can see the image you have uploaded."
+          "text": "Now, Scroll to the bottom and click on Save changes button."
+        },
+        {
+          "text": "Now again paste the Object URL in the browser and you can see the image you have uploaded.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-24.png"
+          ]
+        },
+        {
+          "text": "Task 4: Change Bucket Permissions",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-25.png"
+          ]
         }
       ]
     },
@@ -176,13 +303,25 @@
           "text": "Go to the bucket by clicking on your bucket name - mys3bucketlab on the top."
         },
         {
-          "text": "Click the Permissions tab, then configure the following"
+          "text": "Task 5: Create a Bucket Policy",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-26.png"
+          ]
         },
         {
-          "text": "Scroll down to Bucket policy, click on Edit button on the Right side."
+          "text": "Click the Permissions tab, then configure the following Scroll down to Bucket policy, click on Edit button on the Right side. A blank Bucket policy editor is displayed. Copy the ARN of your bucket to the clipboard. arn:aws:s3:::mys3bucketlab-test"
+        },
+        {
+          "text": "Click the Permissions tab, then configure the following"
+        },
+        {
+          "text": "Scroll down to Bucket policy, click on Edit button on the Right side."
         },
         {
           "text": "A blank Bucket policy editor is displayed."
+        },
+        {
+          "text": "Copy the ARN of your bucket to the clipboard. arn:aws:s3:::mys3bucketlab-test"
         },
         {
           "text": "Copy the ARN of your bucket to the clipboard."
@@ -194,52 +333,13 @@
           "text": "Copy the entire policy, paste it into the bucket policy, and replace your bucket ARN with the ARN listed in the JSON below."
         },
         {
-          "text": "{"
+          "text": "Task 5: Create a Bucket Policy",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-27.gif"
+          ]
         },
         {
-          "text": "\"Id\": \"Policy1\","
-        },
-        {
-          "text": "\"Version\": \"2012-10-17\","
-        },
-        {
-          "text": "\"Statement\": ["
-        },
-        {
-          "text": "{"
-        },
-        {
-          "text": "\"Sid\": \"Stmt1\","
-        },
-        {
-          "text": "\"Action\": ["
-        },
-        {
-          "text": "\"s3:GetObject\""
-        },
-        {
-          "text": "],"
-        },
-        {
-          "text": "\"Effect\": \"Allow\","
-        },
-        {
-          "text": "\"Resource\": \"replace-this-string-with-your-bucket-arn/*\","
-        },
-        {
-          "text": "\"Principal\": \"*\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "]"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "Click on Save changes button."
+          "text": "Click on Save changes button."
         }
       ]
     },
@@ -247,19 +347,25 @@
       "title": "Task 6: Test Public Access",
       "steps": [
         {
-          "text": "Go to the bucket and upload another image; download the lab logo image from Download Me"
+          "text": "Go to the bucket and upload another image; download the lab logo image from Download Me Click on the Upload button. Click on Add files button. Browse for the downloaded image we provided and select it. Click on the Upload button."
         },
         {
-          "text": "Click on the Upload button."
+          "text": "Go to the bucket and upload another image; download the lab logo image from Download Me"
         },
         {
-          "text": "Click on Add files button."
+          "text": "Click on the Upload button."
         },
         {
-          "text": "Browse for the downloaded image we provided and select it."
+          "text": "Click on Add files button."
         },
         {
-          "text": "Click on the Upload button."
+          "text": "Browse for the downloaded image we provided and select it."
+        },
+        {
+          "text": "Click on the Upload button."
+        },
+        {
+          "text": "Once the image is uploaded successfully, click on the object name (Image name) , copy the Object URL, and open it in a browser. https://labresources.s3.amazonaws.com/lab-logo.png"
         },
         {
           "text": "Once the image is uploaded successfully, click on the object name (Image name) , copy the Object URL, and open it in a browser."
@@ -268,10 +374,13 @@
           "text": "https://labresources.s3.amazonaws.com/lab-logo.png"
         },
         {
-          "text": "You can see your image loaded successfully and is publicly accessible."
+          "text": "Task 6: Test Public Access",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-28.png"
+          ]
         },
         {
-          "text": "Do you know ?"
+          "text": "You can see your image loaded successfully and is publicly accessible."
         },
         {
           "text": "S3 has a built-in versioning feature that enables users to store multiple versions of an object within a bucket. This functionality is valuable for tracking changes and recovering previous versions of files in case of accidental deletions or data corruption."
@@ -282,16 +391,22 @@
       "title": "Task 7: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-29.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 7: Validation Test",
+          "images": [
+            "/labs/introduction-to-amazon-simple-storage-service-s3/step-30.gif"
+          ]
         },
         {
           "text": "You have successfully created a new AWS S3 Bucket."
@@ -309,13 +424,10 @@
           "text": "You have successfully validated the lab."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out from the AWS Management Console."
         },
         {
-          "text": "Click on End Lab button from the lab console and wait till the process gets completed"
+          "text": "Click on End Lab button from the lab console and wait till the process gets completed"
         }
       ]
     }

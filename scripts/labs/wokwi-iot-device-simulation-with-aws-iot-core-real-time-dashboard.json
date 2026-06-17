@@ -9,19 +9,13 @@
   "duration": "02:00:00",
   "tasks": [
     {
-      "title": "Lab Steps",
+      "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
           "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
-          "text": "On the AWS sign-in page,"
-        },
-        {
-          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
-        },
-        {
-          "text": "Now copy your User Name and Password in the lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
@@ -31,7 +25,12 @@
         },
         {
           "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an IoT Policy",
+      "steps": [
         {
           "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
@@ -45,14 +44,43 @@
           "text": "On the Policy page click on Create policy button."
         },
         {
+          "text": "Task 2: Create an IoT Policy",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-01.png"
+          ]
+        },
+        {
           "text": "For policy name: Enter whiz-policy"
+        },
+        {
+          "text": "Task 2: Create an IoT Policy",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-02.png"
+          ]
         },
         {
           "text": "For Policy Document Select JSON remove the existing and copy paste the below policy"
         },
         {
+          "text": "Task 2: Create an IoT Policy",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-03.png"
+          ]
+        },
+        {
           "text": "Click on Create button"
         },
+        {
+          "text": "Task 2: Create an IoT Policy",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-04.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create an IoT Thing",
+      "steps": [
         {
           "text": "On the left side menu Click on Thing under All devices."
         },
@@ -60,10 +88,28 @@
           "text": "Click on Create things button."
         },
         {
+          "text": "Task 3: Create an IoT Thing",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-05.png"
+          ]
+        },
+        {
           "text": "For Number of things to create: Select Create single thing and click on Next button."
         },
         {
+          "text": "Task 3: Create an IoT Thing",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-06.png"
+          ]
+        },
+        {
           "text": "For Thing name: Enter whiz-thing"
+        },
+        {
+          "text": "Task 3: Create an IoT Thing",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-07.png"
+          ]
         },
         {
           "text": "Leave rest as default and click on Next button."
@@ -72,13 +118,37 @@
           "text": "For Device Certifications leave it as default and click on Next button."
         },
         {
+          "text": "Task 3: Create an IoT Thing",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-08.png"
+          ]
+        },
+        {
           "text": "For Attach Policies select whiz-policy created above and click on Create thing button."
+        },
+        {
+          "text": "Task 3: Create an IoT Thing",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-09.png"
+          ]
         },
         {
           "text": "Download all the 5 certificates and keys in your local and click on Done."
         },
         {
+          "text": "Task 3: Create an IoT Thing",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-10.png"
+          ]
+        },
+        {
           "text": "Once certificates get downloaded navigate to downloads folder to view downloaded files."
+        },
+        {
+          "text": "Task 3: Create an IoT Thing",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-11.png"
+          ]
         },
         {
           "text": "Now first we will rename the files we will be using them later to configure authentication for the device"
@@ -90,16 +160,45 @@
           "text": "Rename the private.pem.key file to : private.pem.key"
         },
         {
+          "text": "Task 3: Create an IoT Thing",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-12.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Activate the Wokwi license key in your browser",
+      "steps": [
+        {
           "text": "Download the \"AWS_IoT_Core\" file and extract it."
         },
         {
           "text": "Navigate and Open the \"aws_iot_core\" folder."
         },
         {
+          "text": "Task 4: Activate the Wokwi license key in your browser",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-13.png"
+          ]
+        },
+        {
           "text": "Open the \"diagram.json\" file click \"Get your license key\" then click \"Open\"."
         },
         {
+          "text": "Task 4: Activate the Wokwi license key in your browser",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-14.png"
+          ]
+        },
+        {
           "text": "Click \"Get your license\" log in with your email or Gmail ID then click \"Get your license\" again."
+        },
+        {
+          "text": "Task 4: Activate the Wokwi license key in your browser",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-15.png"
+          ]
         },
         {
           "text": "Click Get your license."
@@ -108,16 +207,36 @@
           "text": "Once the popup appears in your browser, click \"Open Visual Studio Code\" allow the Wokwi Simulator extension check the checkbox and click \"Open\"."
         },
         {
+          "text": "Task 4: Activate the Wokwi license key in your browser",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-17.png"
+          ]
+        },
+        {
           "text": "?7. If you get the following notification, click Do not ask me again, and Select Open."
         },
         {
-          "text": "?"
-        },
+          "text": "?",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-18.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Attach the AWS IoT certificates in the code",
+      "steps": [
         {
           "text": "Navigate to AWS iot core service, then Click “Connect one device”"
         },
         {
-          "text": "Scroll down to find and copy the endpoint command, e.g.: arti9nb0f3kjog-ats.iot.us-east-1.amazonaws.com"
+          "text": "Scroll down to find and copy the endpoint command, e.g.: arti9nb0f3kjog-ats.iot.us-east-1.amazonaws.com"
+        },
+        {
+          "text": "Task 5: Attach the AWS IoT certificates in the code",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-19.gif"
+          ]
         },
         {
           "text": "Open VS Code aws_iot_core src secrets.h"
@@ -126,14 +245,37 @@
           "text": "Replace the existing endpoint \"aws_end_point\" in the secrets.h file"
         },
         {
+          "text": "Task 5: Attach the AWS IoT certificates in the code",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-20.png"
+          ]
+        },
+        {
           "text": "Copy and paste the certificates in “secrets.h” : Amazon Root CA1, Device Certificate, and Private Key in the respective place."
+        },
+        {
+          "text": "Task 5: Attach the AWS IoT certificates in the code",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-21.gif"
+          ]
         },
         {
           "text": "Now, Copy paste the “device_certificate” and “private.key”"
         },
         {
-          "text": "Open main.cpp, Click the tick button on the top right to compile"
+          "text": "Open main.cpp, Click the tick button on the top right to compile"
         },
+        {
+          "text": "Task 5: Attach the AWS IoT certificates in the code",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-23.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Create a public S3 bucket",
+      "steps": [
         {
           "text": "In this task, we are going to create a new S3 bucket in the US East (N. Virginia) region with a unique name disabling ACLs, and allowing public access for hosting the static website."
         },
@@ -156,6 +298,12 @@
           "text": "AWS Region: Select US East (N. Virginia) us-east-1"
         },
         {
+          "text": "Task 6: Create a public S3 bucket",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-24.png"
+          ]
+        },
+        {
           "text": "Object ownership: Select ACLs disabled (recommended) option"
         },
         {
@@ -165,8 +313,25 @@
           "text": "Check the I acknowledge that the current settings might result in this bucket and the objects within becoming public checkbox."
         },
         {
+          "text": "Task 6: Create a public S3 bucket",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-25.png"
+          ]
+        },
+        {
           "text": "Keep everything default and click on Create Bucket button."
         },
+        {
+          "text": "Task 6: Create a public S3 bucket",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-26.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Upload the HTML file and Enable Static Website Hosting settings",
+      "steps": [
         {
           "text": "In this task, we will enable static website hosting for our S3 bucket, configure it to use index.html and error.html, copy the provided endpoint, upload two files, and configure the bucket policy by copying its ARN and pasting the provided policy code."
         },
@@ -175,6 +340,12 @@
         },
         {
           "text": "Scroll down to the Static website hosting section and click on Edit button."
+        },
+        {
+          "text": "Task 7: Upload the HTML file and Enable Static Website Hosting settings",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-27.png"
+          ]
         },
         {
           "text": "In the Static website hosting dialog box"
@@ -195,13 +366,31 @@
           "text": "Click on Save Changes."
         },
         {
+          "text": "Task 7: Upload the HTML file and Enable Static Website Hosting settings",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-28.png"
+          ]
+        },
+        {
           "text": "Go to the Properties tab of your S3 bucket, and find the Static website hosting section. Copy the Endpoint provided in this section to your clipboard and save it for future reference."
         },
         {
-          "text": "The next step is to download the zip file by clicking on the replace the le html_file, extract it, and upload two files named index.html and error.html to the S3 bucket you created earlier."
+          "text": "The next step is to download the zip file by clicking on the replace the le html_file, extract it, and upload two files named index.html and error.html to the S3 bucket you created earlier."
+        },
+        {
+          "text": "Task 7: Upload the HTML file and Enable Static Website Hosting settings",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-29.png"
+          ]
         },
         {
           "text": "In the Permissions tab, Click on the Edit button beside the Bucket Policy."
+        },
+        {
+          "text": "Task 7: Upload the HTML file and Enable Static Website Hosting settings",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-30.png"
+          ]
         },
         {
           "text": "You will be able to see a Blank policy editor."
@@ -216,8 +405,19 @@
           "text": "In the policy below, Update the bucket ARN on the Resource key value and paste the below policy code in the editor."
         },
         {
-          "text": "Click on Save changes button."
+          "text": "Task 7: Upload the HTML file and Enable Static Website Hosting settings",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-31.png"
+          ]
         },
+        {
+          "text": "Click on Save changes button."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Create a Lambda Function",
+      "steps": [
         {
           "text": "In this task, we are going to create a Lambda function which is used to process the device messages."
         },
@@ -246,7 +446,19 @@
           "text": "Select “Lambda_role_ xxx”"
         },
         {
+          "text": "Task 8: Create a Lambda Function",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-32.png"
+          ]
+        },
+        {
           "text": "Leave other fields as default and click on Create function button"
+        },
+        {
+          "text": "Task 8: Create a Lambda Function",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-35.png"
+          ]
         },
         {
           "text": "If you scroll down a little bit, you can see the Code source section."
@@ -255,11 +467,28 @@
           "text": "Remove the existing code in AWS lambda lambda_function.py Copy the below code and paste it into your lambda lambda_function.py file."
         },
         {
+          "text": "Task 8: Create a Lambda Function",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-36.gif"
+          ]
+        },
+        {
           "text": "Replace the bucket name."
         },
         {
-          "text": "Save the function by clicking on Deploy button."
+          "text": "Task 8: Create a Lambda Function",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-37.gif"
+          ]
         },
+        {
+          "text": "Save the function by clicking on Deploy button."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Create an IoT Core rule",
+      "steps": [
         {
           "text": "In this task, we will create an AWS IoT rule which will call Lambda function to process the messages from the device to AWS IoT core."
         },
@@ -270,10 +499,28 @@
           "text": "Click on Create rule button."
         },
         {
+          "text": "Task 9: Create an IoT Core rule",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-38.png"
+          ]
+        },
+        {
           "text": "For Rule name: Enter whiz_rule and click on Next button."
         },
         {
+          "text": "Task 9: Create an IoT Core rule",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-39.png"
+          ]
+        },
+        {
           "text": "For the SQL Query Statement copy paste the below sql statement and click on Next button."
+        },
+        {
+          "text": "Task 9: Create an IoT Core rule",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-40.png"
+          ]
         },
         {
           "text": "Now to Attach rule actions search for Lambda and select Lambda action."
@@ -285,13 +532,36 @@
           "text": "Lambda function version: Select $Latest"
         },
         {
+          "text": "Task 9: Create an IoT Core rule",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-41.png"
+          ]
+        },
+        {
           "text": "Review all the details and click on Create button."
         },
+        {
+          "text": "Task 9: Create an IoT Core rule",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-42.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Check IoT messages in the AWS IoT Core test client",
+      "steps": [
         {
           "text": "In this task, we will test message sending and receiving using the MQTT client in the AWS IoT Core dashboard."
         },
         {
           "text": "On the AWS IoT Core console, click on MQTT test client and Click on the Subscribe to a topic tab."
+        },
+        {
+          "text": "Task 10: Check IoT messages in the AWS IoT Core test client",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-43.png"
+          ]
         },
         {
           "text": "For topic filter : Enter iot/lab and click on Subscribe button."
@@ -300,7 +570,19 @@
           "text": "Scroll down to view the subscription."
         },
         {
+          "text": "Task 10: Check IoT messages in the AWS IoT Core test client",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-44.png"
+          ]
+        },
+        {
           "text": "Now, click on Publish to a topic tab."
+        },
+        {
+          "text": "Task 10: Check IoT messages in the AWS IoT Core test client",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-45.png"
+          ]
         },
         {
           "text": "For Topic name: Select iot/lab"
@@ -309,11 +591,28 @@
           "text": "For the the Message payload copy paste the below message and click on Publish button."
         },
         {
+          "text": "Task 10: Check IoT messages in the AWS IoT Core test client",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-46.png"
+          ]
+        },
+        {
           "text": "To verify the message, go to the “Subscribe to a topic” tab in the MQTT client dashboard."
         },
         {
-          "text": "You will see the incoming messages displayed in real time as they are published."
+          "text": "Task 10: Check IoT messages in the AWS IoT Core test client",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-47.gif"
+          ]
         },
+        {
+          "text": "You will see the incoming messages displayed in real time as they are published."
+        }
+      ]
+    },
+    {
+      "title": "Task 11: Run the wokwi code and check AWS IoT Core test client",
+      "steps": [
         {
           "text": "Open the aws_iot_core folder, then navigate to the src directory and open the main.cpp file. Wait 2–3 minutes"
         },
@@ -321,13 +620,37 @@
           "text": "To compile the code, click the checkmark button in the top right corner."
         },
         {
+          "text": "Task 11: Run the wokwi code and check AWS IoT Core test client",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-48.png"
+          ]
+        },
+        {
           "text": "Once the code compiles successfully, open the diagram.json file."
+        },
+        {
+          "text": "Task 11: Run the wokwi code and check AWS IoT Core test client",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-49.png"
+          ]
         },
         {
           "text": "Click the “Run” button. Please wait 2–3 minutes, as it may take some time to connect to AWS IoT Core."
         },
         {
+          "text": "Task 11: Run the wokwi code and check AWS IoT Core test client",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-50.png"
+          ]
+        },
+        {
           "text": "Once successfully connected, the device will start sending data in JSON format."
+        },
+        {
+          "text": "Task 11: Run the wokwi code and check AWS IoT Core test client",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-51.png"
+          ]
         },
         {
           "text": "To verify the data is being sent, go to the AWS IoT Core MQTT test client."
@@ -339,23 +662,69 @@
           "text": "You will see the JSON-formatted messages appear in real time — this confirms successful data transmission from your device to AWS IoT Core."
         },
         {
+          "text": "Task 11: Run the wokwi code and check AWS IoT Core test client",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-52.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 12: Check the live website and ensure data updates in real time",
+      "steps": [
+        {
           "text": "Go to the S3 bucket where your files are stored. Click on the index.html file to open its details."
         },
         {
           "text": "Copy and click the “Object URL” from the file overview section — this is the public link to access the web page (if permissions allow)."
         },
         {
+          "text": "Task 12: Check the live website and ensure data updates in real time",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-53.gif"
+          ]
+        },
+        {
           "text": "The index.html file will open as a webpage. You should now see your hosted web content rendered in the browser."
+        },
+        {
+          "text": "Task 12: Check the live website and ensure data updates in real time",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-54.png"
+          ]
         },
         {
           "text": "Click to change the value from the sensor . (vscode)"
         },
         {
+          "text": "Task 12: Check the live website and ensure data updates in real time",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-55.png"
+          ]
+        },
+        {
           "text": "The updated data will be sent through AWS IoT Core and you will see the values update live on the webpage."
+        },
+        {
+          "text": "Task 12: Check the live website and ensure data updates in real time",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-56.gif"
+          ]
         },
         {
           "text": "If the data does not update on the webpage, try rerunning the Wokwi simulator. After restarting, wait for it to reconnect to AWS IoT Core, and the live data should begin updating again."
         },
+        {
+          "text": "Task 12: Check the live website and ensure data updates in real time",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-57.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 13: Validation of the Lab",
+      "steps": [
         {
           "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
@@ -363,7 +732,10 @@
           "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
         },
         {
-          "text": "https://labresources.lab.com/d4af9350a40053467c4d40549623c9a7/chrome-capture-2025-8-5_37_26.gif"
+          "text": "https://labresources.lab.com/d4af9350a40053467c4d40549623c9a7/chrome-capture-2025-8-5_37_26.gif",
+          "images": [
+            "/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard/step-58.gif"
+          ]
         },
         {
           "text": "You have successfully created an IoT Policy"

@@ -1,0 +1,67 @@
+{
+  "slug": "dynamodb-challenge-nosql-setup-with-aws",
+  "title": "Challenge Lab - AWS DynamoDB NOSQL Setup",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company needs a quick and easy database to store customer information for its website. Your job is to create a DynamoDB table, add some data, search for an item, and make sure it all works. Here’s how to do each step in the simplest way:"
+        },
+        {
+          "text": "Sign in to AWS Management Console:"
+        },
+        {
+          "text": "Create a DynamoDB Table:"
+        },
+        {
+          "text": "Insert Data into that DynamoDB Table:"
+        },
+        {
+          "text": "Search for an Item in the DynamoDB Table:"
+        },
+        {
+          "text": "Test if everything is correct. In the lab console, click Validate to make sure the table, data, and settings are right."
+        },
+        {
+          "text": "Sign out of the AWS Management Console."
+        },
+        {
+          "text": "In the lab console, click End Challenge and wait for it to finish."
+        },
+        {
+          "text": "You’ve completed the DynamoDB challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

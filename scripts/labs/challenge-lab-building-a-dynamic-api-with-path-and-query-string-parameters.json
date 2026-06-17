@@ -1,0 +1,145 @@
+{
+  "slug": "challenge-lab-building-a-dynamic-api-with-path-and-query-string-parameters",
+  "title": "Challenge Lab: Building a Dynamic API with Path and Query String Parameters",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge lab, you will create a RESTful API using API Gateway that can handle dynamic path and query string parameters. The Lambda function will process the incoming parameters and respond with the necessary output. You'll get hands-on experience in combining API Gateway and Lambda, two powerful AWS services that simplify serverless application development."
+        },
+        {
+          "text": "You are developing a serverless API that receives data from a user via both path and query parameters. The user sends a request like GET /user/{id}?action=details, where {id} is a path parameter and action is a query string. Your task is to set up an API Gateway to capture these parameters and trigger an AWS Lambda function to process the request accordingly."
+        },
+        {
+          "text": "Create a Lambda Function"
+        },
+        {
+          "text": "Set proper runtime (Python 3.9) and Create a new role from AWS policy templates with Basic Lambda@Edge Permission."
+        },
+        {
+          "text": "What You Need to Do in Lambda:"
+        },
+        {
+          "text": "Get the path parameter (like /servername) from the event object."
+        },
+        {
+          "text": "Get the query string parameter (like ?emailid=test@example.com) from the event object."
+        },
+        {
+          "text": "Return both values in a proper JSON response with a 200 status code."
+        },
+        {
+          "text": "How It Works"
+        },
+        {
+          "text": "The path parameter is a value in the URL path (example: /prod/servername)."
+        },
+        {
+          "text": "The query parameter is in the URL after the ? (example: ?emailid=test@example.com)."
+        },
+        {
+          "text": "When the API is called, API Gateway sends these to your Lambda function."
+        },
+        {
+          "text": "In Lambda, you read them from the event object and send them back in the response."
+        },
+        {
+          "text": "Example Response You Should Return:"
+        },
+        {
+          "text": "Just update your Lambda function to follow this logic and test it using API Gateway."
+        },
+        {
+          "text": "API Gateway Setup"
+        },
+        {
+          "text": "Create a REST API."
+        },
+        {
+          "text": "Define a resource with a path parameter ({} syntax)."
+        },
+        {
+          "text": "Create a GET method."
+        },
+        {
+          "text": "Integrate it with the Lambda function from earlier."
+        },
+        {
+          "text": "Add Query Parameter"
+        },
+        {
+          "text": "Go to Method Request under the GET method."
+        },
+        {
+          "text": "Add a query string parameter (e.g., emailid) and mark it as required."
+        },
+        {
+          "text": "Set Request Validator to: Validate body, query string parameters, and headers."
+        },
+        {
+          "text": "Then go to Integration Request:"
+        },
+        {
+          "text": "Scroll to Mapping Templates, set passthrough as recommended."
+        },
+        {
+          "text": "Add a template with Content-Type application/json."
+        },
+        {
+          "text": "Generate it using the Method Request passthrough option and save."
+        },
+        {
+          "text": "Deploy and Test"
+        },
+        {
+          "text": "Deploy the API to a new stage."
+        },
+        {
+          "text": "Hit the endpoint with: A valid path parameter value. A query string in the format ?key=value."
+        },
+        {
+          "text": "A valid path parameter value."
+        },
+        {
+          "text": "A query string in the format ?key=value."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

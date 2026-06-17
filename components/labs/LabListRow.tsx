@@ -41,7 +41,7 @@ export default function LabListRow({ item }: LabListRowProps) {
         {duration}
       </span>
 
-      {item.source === 'checklist' && !item.available && item.externalUrl ? (
+      {(item.source === 'checklist' || item.source === 'library') && !item.available && item.externalUrl ? (
         <span className="font-space-mono text-[0.58rem] sm:text-[0.62rem] uppercase tracking-wider shrink-0 ml-1 text-c4">
           Whizlabs
         </span>

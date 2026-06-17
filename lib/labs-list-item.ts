@@ -7,7 +7,7 @@ export type LabRowItem = {
   duration: string
   lab: Lab | null
   available: boolean
-  source: 'course' | 'video' | 'checklist'
+  source: 'course' | 'video' | 'checklist' | 'library'
   externalUrl?: string | null
   subtitle?: string
 }

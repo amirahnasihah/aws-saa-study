@@ -32,19 +32,10 @@
       "title": "Task 2 : Create S3 Bucket",
       "steps": [
         {
-          "text": "Navigate to the Services menu at the top and click on S3 in the Storage section."
+          "text": "Navigate to the Services menu at the top and click on S3 in the Storage section.2. In the left menu, choose Buckets, click Create Bucket and fill in the bucket details."
         },
         {
-          "text": "In the left menu, choose Buckets, click Create Bucket and fill in the bucket details."
-        },
-        {
-          "text": "a. Bucket Type Select : General purpose"
-        },
-        {
-          "text": "b. Bucket Name: Enter whiz-batch-operation"
-        },
-        {
-          "text": "Note: The Bucket Name must be Unique across all existing bucket names in Amazon S3"
+          "text": "a. Bucket Type Select : General purposeb. Bucket Name: Enter whiz-batch-operation"
         },
         {
           "text": "Object ownership: Select ACLs Enabled option then Choose Object writer"
@@ -59,7 +50,10 @@
           "text": "Click on the Create Bucket button."
         },
         {
-          "text": "Note: if you are getting any error please ignore and follow further steps."
+          "text": "Task 2 : Create S3 Bucket",
+          "images": [
+            "/labs/s3-batch-operation/step-01.png"
+          ]
         }
       ]
     },
@@ -67,10 +61,7 @@
       "title": "Task 3 : Create Manifest file",
       "steps": [
         {
-          "text": "Click on your bucket name."
-        },
-        {
-          "text": "Click to download the ZIP file, then extract it and upload the files to the S3 bucket."
+          "text": "Click on your bucket name.2. Click to download the ZIP file, then extract it and upload the files to the S3 bucket."
         },
         {
           "text": "The uploaded files are now visible in the S3 bucket."
@@ -82,79 +73,13 @@
           "text": "Now we can’t see this because the object is not public."
         },
         {
-          "text": "Note : S3 Batch Operations are typically used with inventory configurations to create a manifest file. However, once an inventory configuration is created, AWS delivers the file within 24 hours. To avoid waiting, this time we create the manifest file manually using Python."
-        },
-        {
           "text": "Open Cloud Shell present in the top right corner."
-        },
-        {
-          "text": "Paste the following in the cloudshell"
-        },
-        {
-          "text": "nano main.py"
         },
         {
           "text": "Replace the bucket name"
         },
         {
-          "text": "import boto3"
-        },
-        {
-          "text": "import csv"
-        },
-        {
-          "text": "# Replace the bucket name"
-        },
-        {
-          "text": "bucket_name = 'my-batch-test-bucket'"
-        },
-        {
-          "text": "output_file = 'jpg_manifest.csv'"
-        },
-        {
-          "text": "prefix = ''"
-        },
-        {
-          "text": "s3 = boto3.client('s3')"
-        },
-        {
-          "text": "response = s3.list_objects_v2(Bucket=bucket_name, Prefix=prefix)"
-        },
-        {
-          "text": "with open(output_file, 'w', newline='') as csvfile:"
-        },
-        {
-          "text": "writer = csv.writer(csvfile)"
-        },
-        {
-          "text": "for obj in response.get('Contents', []):"
-        },
-        {
-          "text": "key = obj['Key']"
-        },
-        {
-          "text": "if key.endswith('.jpg'):"
-        },
-        {
-          "text": "writer.writerow([bucket_name, key])"
-        },
-        {
-          "text": "print(\" Manifest created.\")"
-        },
-        {
-          "text": "# Upload to S3"
-        },
-        {
-          "text": "s3.upload_file(output_file, bucket_name, 'manifests/jpg_manifest.csv')"
-        },
-        {
-          "text": "print(\"Uploaded manifest to S3.\")"
-        },
-        {
           "text": "Click Ctrl+X, Y and then Click Enter"
-        },
-        {
-          "text": "python main.py"
         },
         {
           "text": "Now you can see: 'Manifest created. Uploaded manifest to S3.'"
@@ -168,13 +93,16 @@
       "title": "Task 4 : Create Batch Operation",
       "steps": [
         {
-          "text": "Go to Batch Operation. Click to Create Job"
-        },
-        {
-          "text": "Scroll down in the Manifest field, choose CSV, and in the Manifest object, select the S3 bucket where the manifest file is located. Then, click Next."
+          "text": "Under Scope, choose Use an existing manifest file, choose CSV, and in the Manifest object, select the S3 bucket where the manifest file is located. Then, click Next."
         },
         {
           "text": "In the 'Choose Operation' field, select 'Replace access control list (ACL)'."
+        },
+        {
+          "text": "Task 4 : Create Batch Operation",
+          "images": [
+            "/labs/s3-batch-operation/step-02.png"
+          ]
         },
         {
           "text": "Under 'Everyone (public access)', check the 'Read' checkbox."
@@ -183,30 +111,61 @@
           "text": "Also, check the box acknowledging."
         },
         {
+          "text": "Task 4 : Create Batch Operation",
+          "images": [
+            "/labs/s3-batch-operation/step-03.png"
+          ]
+        },
+        {
           "text": "Click Next"
         },
         {
           "text": "In the Configure Additional Options section, set the priority to 10."
         },
         {
-          "text": "Check the box for Generate completion report and select All tasks."
+          "text": "Check the box for Generate completion report and select All tasks."
         },
         {
-          "text": "In the Completion Report Destination, choose your bucket and add /batch-reports/jpg-acl-job/."
+          "text": "In the Source area, choose your bucket and add /batch-reports/jpg-acl-job/."
         },
         {
           "text": "The Permissions field, choose batch_operation_role-<RANDOM-NUMBERS>, then click Next"
         },
         {
-          "text": "Click Create Job."
-        }
-      ]
-    },
-    {
-      "title": "Task 6 : Validation of the Lab Once the lab steps are completed, please click on the Validation button on the Right side panel. This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not. sample output .",
-      "steps": [
+          "text": "Click Create Job."
+        },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 4 : Create Batch Operation",
+          "images": [
+            "/labs/s3-batch-operation/step-04.png"
+          ]
+        },
+        {
+          "text": "Wait for 2 minutes, then the created job will show 'Awaiting your confirmation to run'. Click to run the job."
+        },
+        {
+          "text": "Now you can see that the job has been successfully completed."
+        },
+        {
+          "text": "Now go to the bucket, copy the photo1.jpg object URL, and paste it into a new browser tab."
+        },
+        {
+          "text": "Now You can see this Image!"
+        },
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "sample output ."
+        },
+        {
+          "text": "Task 4 : Create Batch Operation",
+          "images": [
+            "/labs/s3-batch-operation/step-06.gif"
+          ]
         },
         {
           "text": "You have successfully created a manifest file listing the target JPG files in S3."
@@ -219,9 +178,6 @@
         },
         {
           "text": "You have verified that the completion report confirms all objects were processed successfully."
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign out of AWS Account."
@@ -245,6 +201,12 @@
         },
         {
           "text": "sample output ."
+        },
+        {
+          "text": "Task 6 : Validation of the Lab",
+          "images": [
+            "/labs/s3-batch-operation/step-07.gif"
+          ]
         }
       ]
     }

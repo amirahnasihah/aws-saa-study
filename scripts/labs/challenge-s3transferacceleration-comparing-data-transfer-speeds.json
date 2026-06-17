@@ -1,0 +1,82 @@
+{
+  "slug": "challenge-s3transferacceleration-comparing-data-transfer-speeds",
+  "title": "Challenge: Comparing Data Transfer Speeds with S3 Transfer Acceleration",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign into the AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to access the AWS Console in a new tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default, copy your Username and Password from the Lab Console, and sign in."
+        },
+        {
+          "text": "Set the AWS Region to US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign into the AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to compare the data transfer speeds of Amazon S3 with and without Transfer Acceleration to optimize file uploads from remote locations. Your job is to create an S3 bucket, upload a 55MB file with and without Transfer Acceleration, compare the upload times, and validate the setup. Here’s how to proceed:"
+        },
+        {
+          "text": "Configure the bucket: Bucket name: Enter a globally unique name (e.g., xyz-transfer-test-<your-initials>). Encryption: Enable Server-side encryption with Amazon S3-managed keys (SSE-S3)."
+        },
+        {
+          "text": "Bucket name: Enter a globally unique name (e.g., xyz-transfer-test-<your-initials>)."
+        },
+        {
+          "text": "Encryption: Enable Server-side encryption with Amazon S3-managed keys (SSE-S3)."
+        },
+        {
+          "text": "Click Create bucket."
+        },
+        {
+          "text": "vpc_demo (file)"
+        },
+        {
+          "text": "Note the time taken to upload"
+        },
+        {
+          "text": "Reupload a 55MB File After Enabling Transfer Acceleration"
+        },
+        {
+          "text": "You can see file uploaded faster than previous"
+        },
+        {
+          "text": "Confirm the S3 bucket is created in the us-east-1 region."
+        },
+        {
+          "text": "Verify the first 55MB file was uploaded successfully using direct upload."
+        },
+        {
+          "text": "Confirm Transfer Acceleration is enabled for the bucket."
+        },
+        {
+          "text": "Verify the second 55MB file was uploaded successfully using Transfer Acceleration."
+        },
+        {
+          "text": "Compare the upload times to ensure Transfer Acceleration provided a faster upload (results may vary based on your location and network)."
+        },
+        {
+          "text": "Click Validate in the lab console to check the setup."
+        },
+        {
+          "text": "Sign out of AWS by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "Click End Lab in the lab console to complete the lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

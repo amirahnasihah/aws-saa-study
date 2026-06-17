@@ -1,0 +1,73 @@
+{
+  "slug": "dynamodb-global-secondary-index-table-indexing",
+  "title": "Challenge : DynamoDB & Global Secondary Index",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company needs a fast database to store customer orders and query them by different fields, like email, for quick lookups. Your job is to create a DynamoDB table, add an order item, use a Global Secondary Index to query by email, and validate the setup. DynamoDB is a NoSQL database, and GSIs let you search data using keys other than the main one. Here’s how to do it with key steps and hints:"
+        },
+        {
+          "text": "Create DynamoDB Table: Create a Item inside the table Create a Global secondary index Wait a few minutes for the table and GSI to be Active."
+        },
+        {
+          "text": "Create a Item inside the table"
+        },
+        {
+          "text": "Create a Global secondary index"
+        },
+        {
+          "text": "Wait a few minutes for the table and GSI to be Active."
+        },
+        {
+          "text": "Create some more Items:"
+        },
+        {
+          "text": "Use Global Secondary Index to Fetch Data: (go to Explore Table items and click on the Scan or Query option for table that created.)"
+        },
+        {
+          "text": "In the lab console, click Validate to check the DynamoDB table, item, and GSI query. Hint: Ensure the GSI query returns the correct item before validating."
+        },
+        {
+          "text": "Sign out of the AWS Management Console by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "In the lab console, click End Lab from your dashboard and wait for it to finish."
+        },
+        {
+          "text": "You’ve completed the DynamoDB GSI challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

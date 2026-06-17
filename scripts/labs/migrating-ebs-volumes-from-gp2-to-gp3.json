@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,67 +35,133 @@
       "title": "Task 2: Launching an EC2 Instance",
       "steps": [
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on Services the menu in the top, then click on Ec2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on Services the menu in the top, then click on Ec2 in the Compute section."
         },
         {
-          "text": "Navigate to Instances on the left panel and click on Launch Instances Button."
+          "text": "Navigate to Instances on the left panel and click on Launch Instances Button."
         },
         {
-          "text": "Name : Enter MyEC2Server"
+          "text": "Name : Enter MyEC2Server",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-01.png"
+          ]
         },
         {
-          "text": "For Amazon Machine Image (AMI): Choose Amazon Linux 2023 kernel-6.1 AMI."
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-02.png"
+          ]
         },
         {
-          "text": "For Instance Type: select t2.micro"
+          "text": "For Amazon Machine Image (AMI): Choose Amazon Linux 2023 kernel-6.1 AMI.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-03.png"
+          ]
         },
         {
-          "text": "For Key pair: Select Create a new key pair Button"
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-04.png"
+          ]
         },
         {
-          "text": "Key pair name: WhizKey"
+          "text": "For Instance Type: select t2.micro",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-05.png"
+          ]
         },
         {
-          "text": "Key pair type: RSA"
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-06.png"
+          ]
         },
         {
-          "text": "Private key file format: .pem"
+          "text": "For Key pair: Select Create a new key pair Button Key pair name: WhizKey Key pair type: RSA Private key file format: .pem"
         },
         {
-          "text": "Select Create key pair Button."
+          "text": "For Key pair: Select Create a new key pair Button"
         },
         {
-          "text": "In Network Settings Click on Edit Button:"
+          "text": "Key pair name: WhizKey"
         },
         {
-          "text": "Auto-assign public IP: Enable"
+          "text": "Key pair type: RSA"
         },
         {
-          "text": "Select Create new Security group"
+          "text": "Private key file format: .pem"
         },
         {
-          "text": "Security group name : Enter MyEC2Server_SG"
+          "text": "Select Create key pair Button."
         },
         {
-          "text": "Description : Enter Security Group to allow traffic to EC2."
+          "text": "In Network Settings Click on Edit Button: Auto-assign public IP: Enable Select Create new Security group Security group name : Enter MyEC2Server_SG Description : Enter Security Group to allow traffic to EC2.In Configure storage, choose gp2.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-07.png"
+          ]
+        },
+        {
+          "text": "In Network Settings Click on Edit Button:"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select Create new Security group"
+        },
+        {
+          "text": "Security group name : Enter MyEC2Server_SG"
+        },
+        {
+          "text": "Description : Enter Security Group to allow traffic to EC2.In Configure storage, choose gp2.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-08.png"
+          ]
+        },
+        {
+          "text": "Description : Enter Security Group to allow traffic to EC2."
         },
         {
           "text": "In Configure storage, choose gp2."
         },
         {
-          "text": "Keep Rest thing Default and Click on Launch Instance Button."
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-09.png"
+          ]
         },
         {
-          "text": "Select View all Instances to View Instance you Created"
+          "text": "Keep Rest thing Default and Click on Launch Instance Button."
         },
         {
-          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running."
+          "text": "Select View all Instances to View Instance you Created"
         },
         {
-          "text": "Note down the Instance ID of the EC2 instance. A sample is shown in the screenshot below"
+          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-10.png"
+          ]
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-11.png"
+          ]
+        },
+        {
+          "text": "Note down the Instance ID of the EC2 instance. A sample is shown in the screenshot below",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-12.png"
+          ]
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-13.png"
+          ]
         }
       ]
     },
@@ -100,37 +169,109 @@
       "title": "Task 3: Migrating the EBS Volumes from gp2 to gp3",
       "steps": [
         {
-          "text": "Make sure you are in the US East (N.Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N.Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on the Volumes under Elastic Block Store section on the left navigation panel."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on the Volumes under Elastic Block Store section on the left navigation panel."
         },
         {
-          "text": "In the Search Box, paste the Instance ID of your EC2 Instance."
+          "text": "In the Search Box, paste the Instance ID of your EC2 Instance.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-14.png"
+          ]
         },
         {
-          "text": "Select the Volume associated with your EC2 Instance."
+          "text": "Task 3: Migrating the EBS Volumes from gp2 to gp3",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-15.png"
+          ]
         },
         {
-          "text": "After selecting Volume, expand the Actions button and click on Modify Volume."
+          "text": "Select the Volume associated with your EC2 Instance.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-16.png"
+          ]
         },
         {
-          "text": "In the Modify Volume, expand Volume type."
+          "text": "Task 3: Migrating the EBS Volumes from gp2 to gp3",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-17.png"
+          ]
         },
         {
-          "text": "Click on General Purpose SSD (gp3)."
+          "text": "After selecting Volume, expand the Actions button and click on Modify Volume.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-18.png"
+          ]
         },
         {
-          "text": "Keep Rest thing Default and Click on Modify Button."
+          "text": "Task 3: Migrating the EBS Volumes from gp2 to gp3",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-19.png"
+          ]
         },
         {
-          "text": "You will get a prompt to Modify the Volume, Click on Modify Button."
+          "text": "In the Modify Volume, expand Volume type.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-20.png"
+          ]
         },
         {
-          "text": "It will take some time for the Volume to be modified."
+          "text": "Task 3: Migrating the EBS Volumes from gp2 to gp3",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-21.png"
+          ]
         },
         {
-          "text": "After some time, the Volume State status will change to inuse and type will also be changed to gp3 from gp2."
+          "text": "Click on General Purpose SSD (gp3).",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-22.png"
+          ]
+        },
+        {
+          "text": "Task 3: Migrating the EBS Volumes from gp2 to gp3",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-23.png"
+          ]
+        },
+        {
+          "text": "Keep Rest thing Default and Click on Modify Button."
+        },
+        {
+          "text": "You will get a prompt to Modify the Volume, Click on Modify Button.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-24.png"
+          ]
+        },
+        {
+          "text": "Task 3: Migrating the EBS Volumes from gp2 to gp3",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-25.png"
+          ]
+        },
+        {
+          "text": "It will take some time for the Volume to be modified.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-26.png"
+          ]
+        },
+        {
+          "text": "Task 3: Migrating the EBS Volumes from gp2 to gp3",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-27.png"
+          ]
+        },
+        {
+          "text": "After some time, the Volume State status will change to inuse and type will also be changed to gp3 from gp2.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-28.png"
+          ]
+        },
+        {
+          "text": "Task 3: Migrating the EBS Volumes from gp2 to gp3",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-29.png"
+          ]
         }
       ]
     },
@@ -138,13 +279,19 @@
       "title": "Task 4: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not.",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-30.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 4: Validation Test",
+          "images": [
+            "/labs/migrating-ebs-volumes-from-gp2-to-gp3/step-31.gif"
+          ]
         },
         {
           "text": "You have successfully logged in to AWS Console."
@@ -159,13 +306,10 @@
           "text": "You have successfully validated the lab."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out from the AWS Management Console."
         },
         {
-          "text": "Click on End Lab button from the lab console and wait till the process gets completed."
+          "text": "Click on End Lab button from the lab console and wait till the process gets completed."
         }
       ]
     }

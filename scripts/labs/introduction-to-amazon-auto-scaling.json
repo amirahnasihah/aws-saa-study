@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,13 +21,13 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
-          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
         }
       ]
     },
@@ -35,37 +35,70 @@
       "title": "Task 2: Provision Default VPC",
       "steps": [
         {
-          "text": "Navigate to VPC by clicking on the Services menu in the top, then click on VPC or Open the Amazon VPC console via https://console.aws.amazon.com/vpc/."
+          "text": "Navigate to VPC by clicking on the Services menu in the top, then click on VPC or Open the Amazon VPC console via https://console.aws.amazon.com/vpc/."
         },
         {
-          "text": "Delete the default VPC by following the below steps:"
+          "text": "Delete the default VPC by following the below steps: In the navigation pane, choose Your VPCs. Select the VPC with value as yes in default VPC column. Go to Actions button and click on delete VPC button Check I acknowledge that I want to delete my default VPC option. Type delete default VPC and click on Delete button",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-01.png",
+            "/labs/introduction-to-amazon-auto-scaling/step-02.png",
+            "/labs/introduction-to-amazon-auto-scaling/step-03.png"
+          ]
         },
         {
-          "text": "In the navigation pane, choose Your VPCs."
+          "text": "Delete the default VPC by following the below steps:"
         },
         {
-          "text": "Select the VPC with value as yes in default VPC column."
+          "text": "In the navigation pane, choose Your VPCs."
         },
         {
-          "text": "Go to Actions button and click on delete VPC button"
+          "text": "Select the VPC with value as yes in default VPC column.",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-04.png"
+          ]
         },
         {
-          "text": "Check I acknowledge that I want to delete my default VPC option."
+          "text": "Task 2: Provision Default VPC",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-05.png"
+          ]
         },
         {
-          "text": "Type delete default VPC and click on Delete button"
+          "text": "Go to Actions button and click on delete VPC button",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-06.png"
+          ]
         },
         {
-          "text": "Now to provision Default VPC again"
+          "text": "Check I acknowledge that I want to delete my default VPC option."
         },
         {
-          "text": "Refresh your console go to Actions and click Create default VPC"
+          "text": "Type delete default VPC and click on Delete button",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-07.png"
+          ]
         },
         {
-          "text": "Click Create default VPC button and your default VPC will be created"
+          "text": "Now to provision Default VPC again Refresh your console go to Actions and click Create default VPC Click Create default VPC button and your default VPC will be created",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-08.png",
+            "/labs/introduction-to-amazon-auto-scaling/step-09.png"
+          ]
         },
         {
-          "text": "Note: If you are unable to delete the default VPC, please visit our Lab FAQ page for step-by-step instructions."
+          "text": "Now to provision Default VPC again"
+        },
+        {
+          "text": "Refresh your console go to Actions and click Create default VPC",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-10.png"
+          ]
+        },
+        {
+          "text": "Click Create default VPC button and your default VPC will be created",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-11.png"
+          ]
         }
       ]
     },
@@ -76,55 +109,95 @@
           "text": "In this task, we are going to create Launch Templates, which are a recommended approach for creating instances in Auto Scaling groups. By creating a Launch Template, we define the configuration settings for their EC2 instances, including the Amazon Machine Image (AMI), instance type, network settings, and security groups."
         },
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region before proceeding with the Lab."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region before proceeding with the Lab."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "In the left navigation menu, scroll down to Launch Templates and click on Create launch template button."
+          "text": "In the left navigation menu, scroll down to Launch Templates and click on Create launch template button."
         },
         {
-          "text": "Launch template name: Enter labLT"
+          "text": "Task 3: Creating Launch Template",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-12.png"
+          ]
         },
         {
-          "text": "Template version description: Enter Launch template version 1"
+          "text": "Launch template name: Enter labLT"
+        },
+        {
+          "text": "Template version description: Enter Launch template version 1"
+        },
+        {
+          "text": "Launch template contents: Amazon machine image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI Instance type: Select t2.micro",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-13.png",
+            "/labs/introduction-to-amazon-auto-scaling/step-14.png"
+          ]
         },
         {
           "text": "Launch template contents:"
         },
         {
-          "text": "Amazon machine image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI"
+          "text": "Amazon machine image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-15.png"
+          ]
         },
         {
-          "text": "Instance type: Select t2.micro"
+          "text": "Task 3: Creating Launch Template",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-16.png"
+          ]
+        },
+        {
+          "text": "Instance type: Select t2.micro",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-17.png"
+          ]
+        },
+        {
+          "text": "Task 3: Creating Launch Template",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-18.png"
+          ]
+        },
+        {
+          "text": "Key pair (login): Key pair name: Don't include in the launch template"
         },
         {
           "text": "Key pair (login):"
         },
         {
-          "text": "Key pair name: Don't include in the launch template"
+          "text": "Key pair name: Don't include in the launch template"
+        },
+        {
+          "text": "Network settings: Security groups: Select the Default security group of Default VPC"
         },
         {
           "text": "Network settings:"
         },
         {
-          "text": "Security groups: Select the Default security group of Default VPC"
+          "text": "Security groups: Select the Default security group of Default VPC"
         },
         {
           "text": "Keep all the settings as default."
         },
         {
-          "text": "Now, click on the Create launch template button"
+          "text": "Now, click on the Create launch template button"
         },
         {
           "text": "The launch template is now created."
         },
         {
-          "text": "Click on the View Launch template button."
+          "text": "Click on the View Launch template button."
         },
         {
-          "text": "The launch template is now listed."
+          "text": "The launch template is now listed.",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-19.png"
+          ]
         }
       ]
     },
@@ -138,67 +211,109 @@
           "text": "An Auto Scaling group is a scalable collection of EC2 instances. When you create an Auto Scaling group, you include information such as the subnets for the instances and the number of instances the group must maintain at all times."
         },
         {
-          "text": "Go to the left menu under EC2 and choose Auto Scaling Group under Auto Scaling"
+          "text": "Go to the left menu under EC2 and choose Auto Scaling Group under Auto Scaling"
         },
         {
           "text": "Click on the Create Auto Scaling group button."
         },
         {
+          "text": "Task 4: Create an Auto Scaling Group",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-20.png"
+          ]
+        },
+        {
+          "text": "Step 1: Choose launch template or configuration Auto Scaling group name: Enter whiz-ASG Launch template: Select labLT Click on the Next button."
+        },
+        {
           "text": "Step 1: Choose launch template or configuration"
         },
         {
-          "text": "Auto Scaling group name: Enter whiz-ASG"
+          "text": "Auto Scaling group name: Enter whiz-ASG"
         },
         {
-          "text": "Launch template: Select labLT"
+          "text": "Launch template: Select labLT"
         },
         {
-          "text": "Click on the Next button."
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Step 2: Choose instance launch options VPC: Select the Default VPC from the list. Subnet: Select all the subnets. Click on the Next button."
         },
         {
           "text": "Step 2: Choose instance launch options"
         },
         {
-          "text": "VPC: Select the Default VPC from the list."
+          "text": "VPC: Select the Default VPC from the list."
         },
         {
           "text": "Subnet: Select all the subnets."
         },
         {
-          "text": "Click on the Next button."
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Task 4: Create an Auto Scaling Group",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-21.png"
+          ]
+        },
+        {
+          "text": "Step 3: Integrate with other services No changes are needed on this page, click on the Next button."
         },
         {
           "text": "Step 3: Integrate with other services"
         },
         {
-          "text": "No changes are needed on this page, click on the Next button."
+          "text": "No changes are needed on this page, click on the Next button."
+        },
+        {
+          "text": "Step 4: Configure group size and scaling Under Group size – optional Desired capacity: Enter 2 Minimum capacity: Enter 2 Maximum capacity: Enter 2"
         },
         {
           "text": "Step 4: Configure group size and scaling"
         },
         {
+          "text": "Under Group size – optional Desired capacity: Enter 2 Minimum capacity: Enter 2 Maximum capacity: Enter 2"
+        },
+        {
           "text": "Under Group size – optional"
         },
         {
-          "text": "Desired capacity: Enter 2"
+          "text": "Desired capacity: Enter 2"
         },
         {
-          "text": "Minimum capacity: Enter 2"
+          "text": "Minimum capacity: Enter 2"
         },
         {
-          "text": "Maximum capacity: Enter 2"
+          "text": "Maximum capacity: Enter 2"
         },
         {
-          "text": "For Instance maintenance policy – is optional, leave it as it is."
+          "text": "Task 4: Create an Auto Scaling Group",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-22.png"
+          ]
         },
         {
-          "text": "No changes are needed, click on the Next button"
+          "text": "For Instance maintenance policy – is optional, leave it as it is."
+        },
+        {
+          "text": "No changes are needed, click on the Next button"
+        },
+        {
+          "text": "Step 5: Add notifications No changes are needed on this page, click on the Next button."
         },
         {
           "text": "Step 5: Add notifications"
         },
         {
-          "text": "No changes are needed on this page, click on the Next button."
+          "text": "No changes are needed on this page, click on the Next button."
+        },
+        {
+          "text": "Step 6: Add tags Enter tags in key-value pairs to identify your auto-scaling group. Click on the Add tag button. Key: Name Value: ASG-EC2 Click on the Next button",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-23.png"
+          ]
         },
         {
           "text": "Step 6: Add tags"
@@ -207,19 +322,22 @@
           "text": "Enter tags in key-value pairs to identify your auto-scaling group."
         },
         {
-          "text": "Click on the Add tag button."
+          "text": "Click on the Add tag button."
         },
         {
-          "text": "Key: Name"
+          "text": "Key: Name"
         },
         {
-          "text": "Value: ASG-EC2"
+          "text": "Value: ASG-EC2",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-24.png"
+          ]
         },
         {
-          "text": "Click on the Next button"
+          "text": "Click on the Next button"
         },
         {
-          "text": "Now scroll down and click on the Create Auto Scaling group button."
+          "text": "Now scroll down and click on the Create Auto Scaling group button."
         },
         {
           "text": "Whiz-ASG Auto scaling is created successfully."
@@ -228,10 +346,16 @@
           "text": "You will be redirected to the autoscaling group page, you will be able to see that two instances are launched by the autoscaling group."
         },
         {
-          "text": "Now go to the EC2 instances list. You will see that there are two new running instances (which were created by your autoscaling group) You can confirm this from their tag name, which you gave at the time of creating the autoscaling group."
+          "text": "Now go to the EC2 instances list. You will see that there are two new running instances (which were created by your autoscaling group) You can confirm this from their tag name, which you gave at the time of creating the autoscaling group."
         },
         {
           "text": "You have successfully created an autoscaling group with a policy of a minimum of 2 and a maximum of 2 instances."
+        },
+        {
+          "text": "Task 4: Create an Auto Scaling Group",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-25.png"
+          ]
         }
       ]
     },
@@ -239,25 +363,25 @@
       "title": "Task 5: Test Auto Scaling Group",
       "steps": [
         {
-          "text": "In this task, we are going to validate the functionality of the Auto Scaling group"
+          "text": "In this task, we are going to validate the functionality of the Auto Scaling group"
         },
         {
           "text": "For testing the auto-scaling policy, go to the EC2 instance list and select one of your instances."
         },
         {
-          "text": "Next, select an instance and click on Instance state and then Stop instance."
+          "text": "Next, select an instance and click on Instance state and then Stop instance."
         },
         {
-          "text": "Click the Stop button on the pop-up window to stop your instance."
+          "text": "Click the Stop button on the pop-up window to stop your instance."
         },
         {
-          "text": "Once your instance is stopped (after 1-2 minutes) you can see that your stopped instance will be terminating automatically, and a new instance will be launched to fulfill the policy condition. A sample screenshot is provided below:"
+          "text": "Once your instance is stopped (after 1-2 minutes) you can see that your stopped instance will be terminating automatically, and a new instance will be launched to fulfill the policy condition. A sample screenshot is provided below:",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-26.png"
+          ]
         },
         {
-          "text": "Note: Launching a new instance may take a few minutes, you can refresh the page to view the new instance."
-        },
-        {
-          "text": "Do You Know?"
+          "text": "Note: Launching a new instance may take a few minutes, you can refresh the page to view the new instance."
         },
         {
           "text": "Amazon Auto Scaling can integrate with Amazon CloudWatch, which is a monitoring and management service for AWS resources. By utilizing CloudWatch metrics, Auto Scaling can automatically adjust the capacity of EC2 instances based on predefined scaling policies. This means that as the workload increases or decreases, Auto Scaling can dynamically add or remove instances to match the demand, ensuring optimal performance and cost-efficiency."
@@ -268,34 +392,34 @@
       "title": "Task 6: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-27.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 6: Validation Test"
         },
         {
           "text": "You have successfully used the AWS management console to create a Launch Template."
         },
         {
-          "text": "You have configured your own details while creating an Auto Scaling Group."
+          "text": "You have configured your own details while creating an Auto Scaling Group."
         },
         {
-          "text": "You stopped an EC2 instance to verify a replacement instance would be created, as per the requirement."
-        },
-        {
-          "text": "End Lab"
+          "text": "You stopped an EC2 instance to verify a replacement instance would be created, as per the requirement."
         },
         {
           "text": "Sign out from the AWS Management Console."
         },
         {
-          "text": "Click on End lab button from the lab console and wait till the process gets completed"
+          "text": "Click on End lab button from the lab console and wait till the process gets completed"
         }
       ]
     }

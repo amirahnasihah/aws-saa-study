@@ -1,0 +1,94 @@
+{
+  "slug": "challenge-lab-migrating-ebs-volumes-from-gp2-to-gp3",
+  "title": "Challenge Lab: Migrating EBS volumes from gp2 to gp3",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Portal",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Portal"
+        },
+        {
+          "text": "XYZ Corp is optimizing its cloud infrastructure for better performance and cost efficiency. As a cloud engineer, your task is to launch a new EC2 instance with secure access and migrate its root volume from gp2 to the more efficient gp3 storage type."
+        },
+        {
+          "text": "Launch EC2 Instance Region: us-east-1 (N. Virginia) Name: MyEC2Server AMI: Amazon Linux 2023 kernel Instance type: t2.micro Key pair: Type: RSA, Format: .pem Network settings: Enable Auto-assign public IP Create a security group"
+        },
+        {
+          "text": "Region: us-east-1 (N. Virginia)"
+        },
+        {
+          "text": "Name: MyEC2Server"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 kernel"
+        },
+        {
+          "text": "Instance type: t2.micro"
+        },
+        {
+          "text": "Key pair: Type: RSA, Format: .pem"
+        },
+        {
+          "text": "Type: RSA, Format: .pem"
+        },
+        {
+          "text": "Network settings: Enable Auto-assign public IP Create a security group"
+        },
+        {
+          "text": "Enable Auto-assign public IP"
+        },
+        {
+          "text": "Create a security group"
+        },
+        {
+          "text": "Migrate EBS to gp3 Identify the EBS volume attached to the EC2 instance Modify the volume type to gp3 Validate the volume state as in-use and type as gp3"
+        },
+        {
+          "text": "Identify the EBS volume attached to the EC2 instance"
+        },
+        {
+          "text": "Modify the volume type to gp3"
+        },
+        {
+          "text": "Validate the volume state as in-use and type as gp3"
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

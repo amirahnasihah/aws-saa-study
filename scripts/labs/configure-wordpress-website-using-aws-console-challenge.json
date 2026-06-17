@@ -12,37 +12,31 @@
       "title": "Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
         },
         {
-          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
-        },
-        {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
-        },
-        {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
-        },
-        {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
-        },
-        {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
           "text": "In this challenge, your open-source content management system (CMS) technical skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of Web Server softwares, php, apache server and MySQL databases that are used for this challenge. This Challenge will help you understand the real-time scenarios."
         },
         {
+          "text": "Sign in to AWS Management Console",
+          "images": [
+            "/labs/configure-wordpress-website-using-aws-console-challenge/step-01.png"
+          ]
+        },
+        {
           "text": "A company XYZ wants to build their own WordPress Website in AWS Console with EC2 Instance Contents using MariaDB Database, Apache HTTP Server, PHP and WordPress Scripts. The below are the tasks that need to be performed by you in order to create the stack."
         },
         {
-          "text": "Create EC2 Instance with AMI type as Amazon Linux 2023 and instance type as t2.micro with SSH, HTTP, HTTPS."
+          "text": "Create EC2 Instance with AMI type as Amazon Linux 2023 and instance type as t2.micro with SSH, HTTP, HTTPS."
         },
         {
           "text": "Configure Apache Server and MariaDB"
@@ -60,25 +54,22 @@
           "text": "Install WordPress:"
         },
         {
-          "text": "Log into the database server to create a user and password for the MySQL database in the root user."
+          "text": "Log into the database server to create a user and password for the MySQL database in the root user."
         },
         {
-          "text": "Create a Database in phpMyAdmin."
+          "text": "Create a Database in phpMyAdmin."
         },
         {
-          "text": "Grant full privileges for the database to the WordPress."
+          "text": "Grant full privileges for the database to the WordPress."
         },
         {
           "text": "Flush the database privileges."
         },
         {
-          "text": "Create and Edit WordPress Config File:"
+          "text": "Create and Edit WordPress Config File:"
         },
         {
-          "text": "Create and Edit WordPress Config File:"
-        },
-        {
-          "text": "Transfer the contents of the wp-config-sample.php file to a new file named wp-config.php."
+          "text": "Transfer the contents of the wp-config-sample.php file to a new file named wp-config.php."
         },
         {
           "text": "Look for the section under Authentication Unique Keys and Salts."
@@ -93,19 +84,13 @@
           "text": "Provide Permissions for WordPress to use Permalinks:"
         },
         {
-          "text": "Provide Permissions for WordPress to use Permalinks:"
+          "text": "Allow all overrides in the Apache document root."
         },
         {
-          "text": "Allow all overrides in the Apache document root."
-        },
-        {
-          "text": "Provide file permissions for the Apache web server."
+          "text": "Provide file permissions for the Apache web server."
         },
         {
           "text": "Recursively modify the /var/www file permissions and restart the Apache web server."
-        },
-        {
-          "text": "Run the WordPress Installation Script:"
         },
         {
           "text": "Run the WordPress Installation Script:"
@@ -123,22 +108,13 @@
           "text": "http://YourIPAddress/mywordpresswebssite"
         },
         {
-          "text": "Enter Username as John Doe and the login password"
+          "text": "Enter Username as John Doe and the login password"
         },
         {
-          "text": "Click on the Validate to complete the challenge."
+          "text": "Click on the Validate to complete the challenge."
         },
         {
-          "text": "Click on the Validate to complete the challenge."
-        },
-        {
-          "text": "After Validation Terminate all the resources."
-        },
-        {
-          "text": "After Validation Terminate all the resources."
-        },
-        {
-          "text": "Sign out of the AWS Account."
+          "text": "After Validation Terminate all the resources."
         },
         {
           "text": "Sign out of the AWS Account."
@@ -147,13 +123,7 @@
           "text": "You have Successfully completed the challenge."
         },
         {
-          "text": "You have Successfully completed the challenge."
-        },
-        {
-          "text": "Click on End Challenge button from the lab console and wait till the process gets complete"
-        },
-        {
-          "text": "Click on End Challenge button from the lab console and wait till the process gets complete"
+          "text": "Click on End Challenge button from the lab console and wait till the process gets complete"
         }
       ]
     }

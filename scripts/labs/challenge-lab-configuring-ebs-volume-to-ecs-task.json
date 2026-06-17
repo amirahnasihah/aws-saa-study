@@ -1,0 +1,217 @@
+{
+  "slug": "challenge-lab-configuring-ebs-volume-to-ecs-task",
+  "title": "Challenge Lab - Configuring EBS Volume to ECS task",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Portal",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Portal"
+        },
+        {
+          "text": "XYZ Company wants to deploy a scalable, containerized NGINX web application using Amazon ECS with Fargate. To support persistent storage needs, they aim to attach and mount an EBS volume to the container. Your objective is to create an ECS cluster, define and run a Fargate task using a custom task definition, attach an EBS volume, and verify that the container runs successfully with the correct networking and storage configurations."
+        },
+        {
+          "text": "Create ECS Cluster Region: us-east-1 Cluster name: DemoCluster Infrastructure: AWS Fargate Keep other settings default"
+        },
+        {
+          "text": "Region: us-east-1"
+        },
+        {
+          "text": "Cluster name: DemoCluster"
+        },
+        {
+          "text": "Infrastructure: AWS Fargate"
+        },
+        {
+          "text": "Keep other settings default"
+        },
+        {
+          "text": "Create Task Definition Task Definition Name: DemoTaskDefintion Launch type: FARGATE OS: default vCPU: 0.5, Memory: 3 GB Task Execution Role: ECSDemoIAMRole (pre-created) Container: Name: nginx Image URI: Use official NGINX image from Amazon Public ECR Essential: Yes Port Mapping: Container Port: 80 Protocol: TCP Port Name: demoport (all lowercase) Storage: Volume size: 21 GiB"
+        },
+        {
+          "text": "Task Definition Name: DemoTaskDefintion"
+        },
+        {
+          "text": "Launch type: FARGATE"
+        },
+        {
+          "text": "OS: default"
+        },
+        {
+          "text": "vCPU: 0.5, Memory: 3 GB"
+        },
+        {
+          "text": "Task Execution Role: ECSDemoIAMRole (pre-created)"
+        },
+        {
+          "text": "Container: Name: nginx Image URI: Use official NGINX image from Amazon Public ECR Essential: Yes Port Mapping: Container Port: 80 Protocol: TCP Port Name: demoport (all lowercase) Storage: Volume size: 21 GiB"
+        },
+        {
+          "text": "Name: nginx"
+        },
+        {
+          "text": "Image URI: Use official NGINX image from Amazon Public ECR"
+        },
+        {
+          "text": "Essential: Yes"
+        },
+        {
+          "text": "Port Mapping:"
+        },
+        {
+          "text": "Container Port: 80"
+        },
+        {
+          "text": "Protocol: TCP"
+        },
+        {
+          "text": "Port Name: demoport (all lowercase)"
+        },
+        {
+          "text": "Storage:"
+        },
+        {
+          "text": "Volume size: 21 GiB"
+        },
+        {
+          "text": "Run ECS Task (Initial) Cluster: DemoCluster Launch type: FARGATE Task Definition: DemoTaskDefintion:1 Task Group: DemoTaskGroup Desired tasks: 1 Networking: Create new security group: Name: demo-security-group Description: Created in ECS Console Inbound rule: HTTP from Anywhere Wait for task status: RUNNING"
+        },
+        {
+          "text": "Cluster: DemoCluster"
+        },
+        {
+          "text": "Launch type: FARGATE"
+        },
+        {
+          "text": "Task Definition: DemoTaskDefintion:1"
+        },
+        {
+          "text": "Task Group: DemoTaskGroup"
+        },
+        {
+          "text": "Desired tasks: 1"
+        },
+        {
+          "text": "Networking:"
+        },
+        {
+          "text": "Create new security group:"
+        },
+        {
+          "text": "Name: demo-security-group"
+        },
+        {
+          "text": "Description: Created in ECS Console"
+        },
+        {
+          "text": "Inbound rule: HTTP from Anywhere"
+        },
+        {
+          "text": "Wait for task status: RUNNING"
+        },
+        {
+          "text": "Add EBS Volume to Task Definition Open DemoTaskDefintion Create new revision Under Storage: Volume Name: DemoVol Configuration Type: Configure at deployment Mount Point: Container: nginx Source Volume: DemoVol Container Path: /data"
+        },
+        {
+          "text": "Open DemoTaskDefintion"
+        },
+        {
+          "text": "Create new revision"
+        },
+        {
+          "text": "Under Storage:"
+        },
+        {
+          "text": "Volume Name: DemoVol"
+        },
+        {
+          "text": "Configuration Type: Configure at deployment"
+        },
+        {
+          "text": "Mount Point:"
+        },
+        {
+          "text": "Container: nginx"
+        },
+        {
+          "text": "Source Volume: DemoVol"
+        },
+        {
+          "text": "Container Path: /data"
+        },
+        {
+          "text": "Run Task with EBS Volume Use latest revision of DemoTaskDefintion Task Group: DemoTaskGroup EBS Volume Config: Type: gp3 Size: 11 GiB IOPS: 3001 Throughput: 126 File System: EXT3 Infrastructure Role: ECSDemoIAMRole Confirm task is RUNNING Verify EBS Volume is attached under Task > Volumes tab"
+        },
+        {
+          "text": "Use latest revision of DemoTaskDefintion"
+        },
+        {
+          "text": "Task Group: DemoTaskGroup"
+        },
+        {
+          "text": "EBS Volume Config:"
+        },
+        {
+          "text": "Type: gp3"
+        },
+        {
+          "text": "Size: 11 GiB"
+        },
+        {
+          "text": "IOPS: 3001"
+        },
+        {
+          "text": "Throughput: 126"
+        },
+        {
+          "text": "File System: EXT3"
+        },
+        {
+          "text": "Infrastructure Role: ECSDemoIAMRole"
+        },
+        {
+          "text": "Confirm task is RUNNING"
+        },
+        {
+          "text": "Verify EBS Volume is attached under Task > Volumes tab"
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

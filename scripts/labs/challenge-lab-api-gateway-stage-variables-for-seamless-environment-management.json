@@ -1,0 +1,169 @@
+{
+  "slug": "challenge-lab-api-gateway-stage-variables-for-seamless-environment-management",
+  "title": "Challenge Lab - Build API Gateway with different stages using stage variables",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "You are tasked with configuring a flexible API architecture. Using API Gateway, you’ll work with multiple stages for different environments, ensuring easy management and deployment. Stage variables will allow dynamic behavior, adapting the API to various scenarios, enhancing scalability, and simplifying transitions between development, testing, and production environments. The challenge tests your understanding of API Gateway, Lambda integrations, and efficient environment management."
+        },
+        {
+          "text": "You’ve been assigned to streamline the deployment of an API across multiple environments (Testing and Production). Using AWS API Gateway, you need to create and manage different stages for each environment while utilizing stage variables to dynamically configure Lambda functions per environment. The challenge is to efficiently manage permissions, deploy the stages, and ensure smooth routing without affecting each environment’s performance. Your goal is to make the deployment seamless and error-free."
+        },
+        {
+          "text": "Launch EC2 Instance for CLI Access Use Amazon Linux 2 AMI and select a t2.micro instance type. Use Pre-configured IAM Role for Lambda and API Gateway Enable auto-assign public IP and configure the security group to allow inbound SSH (port 22). Connect to the instance using your terminal and the private key."
+        },
+        {
+          "text": "Use Amazon Linux 2 AMI and select a t2.micro instance type."
+        },
+        {
+          "text": "Use Pre-configured IAM Role for Lambda and API Gateway"
+        },
+        {
+          "text": "Enable auto-assign public IP and configure the security group to allow inbound SSH (port 22)."
+        },
+        {
+          "text": "Connect to the instance using your terminal and the private key."
+        },
+        {
+          "text": "Create Two Lambda Functions For Production and Testing For each function: Runtime: Python 3.9 Function name: use something meaningful for test and prod. Use the pre-configured IAM role. Inside the Lambda editor: Find the return statement that sends the response message. Change the message to clearly say which environment the function belongs to (for example, \"Message from test Lambda\" or \"Message from production Lambda\")."
+        },
+        {
+          "text": "For each function: Runtime: Python 3.9 Function name: use something meaningful for test and prod."
+        },
+        {
+          "text": "Runtime: Python 3.9"
+        },
+        {
+          "text": "Function name: use something meaningful for test and prod."
+        },
+        {
+          "text": "Use the pre-configured IAM role."
+        },
+        {
+          "text": "Inside the Lambda editor: Find the return statement that sends the response message. Change the message to clearly say which environment the function belongs to (for example, \"Message from test Lambda\" or \"Message from production Lambda\")."
+        },
+        {
+          "text": "Find the return statement that sends the response message."
+        },
+        {
+          "text": "Change the message to clearly say which environment the function belongs to (for example, \"Message from test Lambda\" or \"Message from production Lambda\")."
+        },
+        {
+          "text": "Configure API Gateway with Stage Variables Create a new REST API and add a resource path (e.g., /labapi). Set up a GET method using Lambda Proxy Integration. When specifying the Lambda function name, use a stage variable reference rather than a fixed name. The syntax should follow the ${stageVariables.varName} format."
+        },
+        {
+          "text": "Create a new REST API and add a resource path (e.g., /labapi)."
+        },
+        {
+          "text": "Set up a GET method using Lambda Proxy Integration."
+        },
+        {
+          "text": "When specifying the Lambda function name, use a stage variable reference rather than a fixed name. The syntax should follow the ${stageVariables.varName} format."
+        },
+        {
+          "text": "Add Lambda Permissions from CLI SSH into your EC2 instance and configure AWS CLI with your access credentials and region. Generate a unique statement ID using a UUID or timestamp—this identifies the permission entry. Grant API Gateway permission to invoke the Lambda function by: Specifying the Lambda function name (production or testing). Using the API Gateway ARN with resource path /labapi, method GET, and stage (TestingAPI or ProductionAPI). Setting apigateway.amazonaws.com as the principal. Defining the action as lambda:InvokeFunction. Applying the generated statement ID. Confirming the correct API Gateway ARN reference."
+        },
+        {
+          "text": "SSH into your EC2 instance and configure AWS CLI with your access credentials and region."
+        },
+        {
+          "text": "Generate a unique statement ID using a UUID or timestamp—this identifies the permission entry."
+        },
+        {
+          "text": "Grant API Gateway permission to invoke the Lambda function by:"
+        },
+        {
+          "text": "Specifying the Lambda function name (production or testing)."
+        },
+        {
+          "text": "Using the API Gateway ARN with resource path /labapi, method GET, and stage (TestingAPI or ProductionAPI)."
+        },
+        {
+          "text": "Setting apigateway.amazonaws.com as the principal."
+        },
+        {
+          "text": "Defining the action as lambda:InvokeFunction."
+        },
+        {
+          "text": "Applying the generated statement ID."
+        },
+        {
+          "text": "Confirming the correct API Gateway ARN reference."
+        },
+        {
+          "text": "Deploy API Gateway Stages Create two stages (e.g., TestingAPI and ProductionAPI) within the API Gateway deployment. In each stage’s settings, define a stage variable named functionName and assign the corresponding Lambda function name as its value. Deploy the API to both stages using the deployment feature in the API Gateway console. Test the API Gateway by making GET requests to the endpoints associated with the deployed stages."
+        },
+        {
+          "text": "Create two stages (e.g., TestingAPI and ProductionAPI) within the API Gateway deployment."
+        },
+        {
+          "text": "In each stage’s settings, define a stage variable named functionName and assign the corresponding Lambda function name as its value."
+        },
+        {
+          "text": "Deploy the API to both stages using the deployment feature in the API Gateway console."
+        },
+        {
+          "text": "Test the API Gateway by making GET requests to the endpoints associated with the deployed stages."
+        },
+        {
+          "text": "Validate Endpoints Access each stage URL in a browser or use curl to make GET requests. Confirm that the response message reflects the function associated with that stage. The URL format should follow: https://<API_ID>.execute-api.<region>.amazonaws.com/<stageName>/labapi"
+        },
+        {
+          "text": "Access each stage URL in a browser or use curl to make GET requests."
+        },
+        {
+          "text": "Confirm that the response message reflects the function associated with that stage."
+        },
+        {
+          "text": "The URL format should follow: https://<API_ID>.execute-api.<region>.amazonaws.com/<stageName>/labapi"
+        },
+        {
+          "text": "https://<API_ID>.execute-api.<region>.amazonaws.com/<stageName>/labapi"
+        },
+        {
+          "text": "Submit & Validate Once the endpoints return the expected results for both stages, click the Validate button in the lab interface to complete the task."
+        },
+        {
+          "text": "Once the endpoints return the expected results for both stages, click the Validate button in the lab interface to complete the task."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

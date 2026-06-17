@@ -1,0 +1,175 @@
+{
+  "slug": "challenge-lab-cloudfront-distribution-with-ec2-s3-integration",
+  "title": "Challenge Lab: CloudFront Distribution with EC2 & S3 Integration",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Portal",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Portal"
+        },
+        {
+          "text": "XYZ Company wants to set up and configure an Amazon CloudFront distribution with EC2 and S3 as origins. Your task is to ensure optimal content delivery by creating the necessary configurations for both origins and testing their functionality."
+        },
+        {
+          "text": "Create S3 Bucket Region: us-east-1 Object Ownership: ACLs disabled Block Public Access: Uncheck"
+        },
+        {
+          "text": "Region: us-east-1"
+        },
+        {
+          "text": "Object Ownership: ACLs disabled"
+        },
+        {
+          "text": "Block Public Access: Uncheck"
+        },
+        {
+          "text": "Upload a file to an S3 bucket from here."
+        },
+        {
+          "text": "Make the objects publicly accessible Add bucket policy Add a policy that allows public s3:GetObject access using your bucket ARN (replace ARN in the policy)."
+        },
+        {
+          "text": "Add bucket policy"
+        },
+        {
+          "text": "Add a policy that allows public s3:GetObject access using your bucket ARN (replace ARN in the policy)."
+        },
+        {
+          "text": "Creating CloudFront Distribution Origin Domain Name: <your-bucket-name>.s3.us-east-1.amazonaws.com Web Application Firewall (WAF): Do not enable security protections"
+        },
+        {
+          "text": "Origin Domain Name: <your-bucket-name>.s3.us-east-1.amazonaws.com"
+        },
+        {
+          "text": "Web Application Firewall (WAF): Do not enable security protections"
+        },
+        {
+          "text": "Launching an EC2 Instance Region: us-east-1 Instance Name:<your-ec2-server> (e.g.,MyEC2server) AMI: Amazon Linux 2023 kernel Instance Type: t2.micro Key Pair: No keypair required Security Group: HTTP: From Anywhere SSH: Select \"Anywhere\" for SSH access"
+        },
+        {
+          "text": "Region: us-east-1"
+        },
+        {
+          "text": "Instance Name:<your-ec2-server> (e.g.,MyEC2server)"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 kernel"
+        },
+        {
+          "text": "Instance Type: t2.micro"
+        },
+        {
+          "text": "Key Pair: No keypair required"
+        },
+        {
+          "text": "Security Group: HTTP: From Anywhere SSH: Select \"Anywhere\" for SSH access"
+        },
+        {
+          "text": "HTTP: From Anywhere"
+        },
+        {
+          "text": "SSH: Select \"Anywhere\" for SSH access"
+        },
+        {
+          "text": "Configure EC2 with Apache and HTML Files Install Apache via user data or manually In /var/www/html, create two files: index.html index2.html (Add simple content to both files)"
+        },
+        {
+          "text": "Install Apache via user data or manually"
+        },
+        {
+          "text": "In /var/www/html, create two files: index.html index2.html (Add simple content to both files)"
+        },
+        {
+          "text": "index.html"
+        },
+        {
+          "text": "index2.html (Add simple content to both files)"
+        },
+        {
+          "text": "(Add simple content to both files)"
+        },
+        {
+          "text": "In CloudFront distribution, we are going to add EC2 as an origin and create an origin group EC2 Origin Domain: Public IPv4 DNS of EC2 instance Protocol: HTTP Only Origin Group Name: Whiz-Origin-Group Add both origins (EC2 and S3). Failover Criteria: 404 Not Found error code"
+        },
+        {
+          "text": "EC2 Origin Domain: Public IPv4 DNS of EC2 instance"
+        },
+        {
+          "text": "Protocol: HTTP Only"
+        },
+        {
+          "text": "Origin Group Name: Whiz-Origin-Group"
+        },
+        {
+          "text": "Add both origins (EC2 and S3)."
+        },
+        {
+          "text": "Failover Criteria: 404 Not Found error code"
+        },
+        {
+          "text": "Update CloudFront Behavior Origin and Origin Groups: Select Whiz-Origin-Group Cache Key and Origin Requests: CachingOptimized"
+        },
+        {
+          "text": "Origin and Origin Groups: Select Whiz-Origin-Group"
+        },
+        {
+          "text": "Cache Key and Origin Requests: CachingOptimized"
+        },
+        {
+          "text": "Test the Origin group Visit CloudFront Domain: /index.html: Should load from EC2 /index2.html: Should also load from EC2 Rename/delete EC2 pages and refresh /index.html Should now fallback to S3"
+        },
+        {
+          "text": "Visit CloudFront Domain:"
+        },
+        {
+          "text": "/index.html: Should load from EC2"
+        },
+        {
+          "text": "/index2.html: Should also load from EC2"
+        },
+        {
+          "text": "Rename/delete EC2 pages and refresh /index.html"
+        },
+        {
+          "text": "Should now fallback to S3"
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

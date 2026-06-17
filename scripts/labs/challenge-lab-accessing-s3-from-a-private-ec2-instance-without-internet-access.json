@@ -1,0 +1,160 @@
+{
+  "slug": "challenge-lab-accessing-s3-from-a-private-ec2-instance-without-internet-access",
+  "title": "Challenge Lab : Access S3 from Private EC2 instance using VPC Endpoint",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "This challenge involves configuring a secure environment to access Amazon S3 from a private EC2 instance using a VPC endpoint. You will complete the necessary networking and security configurations to ensure the private EC2 instance can securely interact with Amazon S3 without using a public IP or routing traffic over the internet."
+        },
+        {
+          "text": "You are a cloud engineer for a financial company. The company needs to ensure that sensitive data in an S3 bucket can be accessed by an internal EC2 application. The EC2 instance must stay in a private subnet with no internet access."
+        },
+        {
+          "text": "Your task is to set up secure access from the private EC2 instance to the S3 bucket without using a public IP."
+        },
+        {
+          "text": "Create a VPC Create a custom VPC with IPv4 CIDR block 192.168.0.0/26."
+        },
+        {
+          "text": "Create a custom VPC with IPv4 CIDR block 192.168.0.0/26."
+        },
+        {
+          "text": "Create Subnets Still within the VPC section, create two subnets inside this VPC: Public Subnet with CIDR block 10.0.1.0/24. This subnet will be connected to the internet. Private Subnet with CIDR block 10.0.2.0/24. This subnet will have no direct internet access. Choose different Availability Zones for high availability (e.g., us-east-1a and us-east-1b)."
+        },
+        {
+          "text": "Still within the VPC section, create two subnets inside this VPC: Public Subnet with CIDR block 10.0.1.0/24. This subnet will be connected to the internet. Private Subnet with CIDR block 10.0.2.0/24. This subnet will have no direct internet access."
+        },
+        {
+          "text": "Public Subnet with CIDR block 10.0.1.0/24. This subnet will be connected to the internet."
+        },
+        {
+          "text": "Private Subnet with CIDR block 10.0.2.0/24. This subnet will have no direct internet access."
+        },
+        {
+          "text": "Choose different Availability Zones for high availability (e.g., us-east-1a and us-east-1b)."
+        },
+        {
+          "text": "Attach an Internet Gateway Create an Internet Gateway and attach this to your VPC. This will allow resources in the public subnet to access the internet."
+        },
+        {
+          "text": "Create an Internet Gateway and attach this to your VPC. This will allow resources in the public subnet to access the internet."
+        },
+        {
+          "text": "Route Tables Create a Route Table and associate this route table with the public subnet. Add a route to 0.0.0.0/0 (which means \"internet\") via the Internet Gateway. The private subnet will use the default route table, which has no internet access (no extra route needs to be added here unless you add a NAT later). Enable auto-assign public IPs for the public subnet."
+        },
+        {
+          "text": "Create a Route Table and associate this route table with the public subnet."
+        },
+        {
+          "text": "Add a route to 0.0.0.0/0 (which means \"internet\") via the Internet Gateway."
+        },
+        {
+          "text": "The private subnet will use the default route table, which has no internet access (no extra route needs to be added here unless you add a NAT later)."
+        },
+        {
+          "text": "Enable auto-assign public IPs for the public subnet."
+        },
+        {
+          "text": "Create Security Groups Create two security groups. The first one is for your Bastion host. Attach it to your VPC and allow inbound traffic for SSH (port 22), HTTP (80), and HTTPS (443). You can restrict the source to your IP or use 0.0.0.0/0 if you need to open access. The second security group is for your private EC2 (used for endpoint access). Attach it to the same VPC. Add an inbound SSH rule, but instead of an IP, set the source as the security group of your Bastion host."
+        },
+        {
+          "text": "Create two security groups."
+        },
+        {
+          "text": "The first one is for your Bastion host. Attach it to your VPC and allow inbound traffic for SSH (port 22), HTTP (80), and HTTPS (443). You can restrict the source to your IP or use 0.0.0.0/0 if you need to open access."
+        },
+        {
+          "text": "The second security group is for your private EC2 (used for endpoint access). Attach it to the same VPC. Add an inbound SSH rule, but instead of an IP, set the source as the security group of your Bastion host."
+        },
+        {
+          "text": "Launch Public EC2 (Bastion) Choose Amazon Linux 2023 AMI and t2.micro instance type. Use your custom VPC, select a public subnet, and make sure auto-assign public IP is enabled. Attach the Bastion SG as the security group."
+        },
+        {
+          "text": "Choose Amazon Linux 2023 AMI and t2.micro instance type. Use your custom VPC, select a public subnet, and make sure auto-assign public IP is enabled. Attach the Bastion SG as the security group."
+        },
+        {
+          "text": "Launch Private EC2 (Endpoint Instance) Then launch the private EC2 instance the same way, but this time pick a private subnet and disable auto-assign public IP. Attach the Endpoint SG and assign an IAM role that has AmazonS3ReadOnlyAccess."
+        },
+        {
+          "text": "Then launch the private EC2 instance the same way, but this time pick a private subnet and disable auto-assign public IP. Attach the Endpoint SG and assign an IAM role that has AmazonS3ReadOnlyAccess."
+        },
+        {
+          "text": "SSH from Bastion to Private EC2 SSH into the Bastion host using your private key file. Once inside the Bastion, copy your private key content onto it and set proper permissions using chmod 400. From the Bastion, SSH into the private EC2 using its private IP."
+        },
+        {
+          "text": "SSH into the Bastion host using your private key file."
+        },
+        {
+          "text": "Once inside the Bastion, copy your private key content onto it and set proper permissions using chmod 400."
+        },
+        {
+          "text": "From the Bastion, SSH into the private EC2 using its private IP."
+        },
+        {
+          "text": "Create a VPC Gateway Endpoint for S3: Service: com.amazonaws.<region>.s3 VPC: Your created VPC Route Table: Associate the private subnet’s route table with the endpoint"
+        },
+        {
+          "text": "Service: com.amazonaws.<region>.s3"
+        },
+        {
+          "text": "VPC: Your created VPC"
+        },
+        {
+          "text": "Route Table: Associate the private subnet’s route table with the endpoint"
+        },
+        {
+          "text": "Test S3 Access from the private EC2: Use the public EC2 to SSH into the private EC2 (bastion setup) Use aws s3 ls command to list S3 buckets (you may need to configure AWS CLI)"
+        },
+        {
+          "text": "Use the public EC2 to SSH into the private EC2 (bastion setup)"
+        },
+        {
+          "text": "Use aws s3 ls command to list S3 buckets (you may need to configure AWS CLI)"
+        },
+        {
+          "text": "Validation Step Click the “Validate” button after completing the lab."
+        },
+        {
+          "text": "Click the “Validate” button after completing the lab."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

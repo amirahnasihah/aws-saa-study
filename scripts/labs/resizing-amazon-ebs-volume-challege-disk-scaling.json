@@ -1,0 +1,97 @@
+{
+  "slug": "resizing-amazon-ebs-volume-challege-disk-scaling",
+  "title": "Resizing Amazon EBS Volume Challege - Disk Scaling",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company needs more storage on its server to handle growing data without replacing the server. Your job is to launch an EC2 instance, increase the size of its EBS volume, update the server to use the new space, and validate the setup. EBS volumes are like hard drives for EC2 instances, and resizing them adds more storage capacity. Here’s how to do it with key steps and hints:"
+        },
+        {
+          "text": "Launching Amazon EC2 instance: Use Amazon Linux 2023 kernel-6.1 AMI, Instance type: t2.micro, enable Auto-assign Public IP, create security group with SSH (port 22)"
+        },
+        {
+          "text": "Use Amazon Linux 2023 kernel-6.1 AMI,"
+        },
+        {
+          "text": "Instance type: t2.micro,"
+        },
+        {
+          "text": "enable Auto-assign Public IP,"
+        },
+        {
+          "text": "create security group with SSH (port 22)"
+        },
+        {
+          "text": "Resizing the EBS volume: Go to Volumes, find the 8 GiB volume attached to instance that created, Modify Volume, change size to 20 GiB, click Modify, wait for “Completed” status. SSH into the instance Check the volume size (Enter lsblk in terminal to see the available size Enter growpart /dev/xvda 1 to increase partition size Enter df -h to find volume size)."
+        },
+        {
+          "text": "Go to Volumes, find the 8 GiB volume attached to instance that created,"
+        },
+        {
+          "text": "Modify Volume, change size to 20 GiB,"
+        },
+        {
+          "text": "click Modify, wait for “Completed” status."
+        },
+        {
+          "text": "SSH into the instance"
+        },
+        {
+          "text": "Check the volume size"
+        },
+        {
+          "text": "(Enter lsblk in terminal to see the available size"
+        },
+        {
+          "text": "Enter growpart /dev/xvda 1 to increase partition size"
+        },
+        {
+          "text": "Enter df -h to find volume size)."
+        },
+        {
+          "text": "In the lab console, click Validate to check the EC2 instance and resized EBS volume. Hint: Confirm the filesystem shows the new size before validating."
+        },
+        {
+          "text": "Sign out of the AWS Management Console by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "In the lab console, click End Lab from your dashboard and wait for it to finish."
+        },
+        {
+          "text": "You’ve completed the EBS volume resizing challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

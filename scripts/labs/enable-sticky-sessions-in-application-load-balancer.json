@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -27,7 +30,7 @@
           "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
-          "text": "Note: If you face any issues, please go through FAQs and Troubleshooting for Labs."
+          "text": "Note: If you face any issues, please go through FAQs and Troubleshooting for Labs."
         }
       ]
     },
@@ -38,43 +41,49 @@
           "text": "In this task, we are going to create a Security Group that will control the inbound and outbound traffic for the load balancer and EC2 instances."
         },
         {
-          "text": "Make sure you are in the N.Virginia Region."
+          "text": "Make sure you are in the N.Virginia Region."
         },
         {
           "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
         },
         {
-          "text": "On the left panel menu, select the Security Groups under the Network & Security section."
+          "text": "On the left panel menu, select the Security Groups under the Network & Security section."
         },
         {
-          "text": "Click on the Create security group button."
+          "text": "Click on the Create security group button."
+        },
+        {
+          "text": "We are going to create a Security group for the Launch template with port 80 number enabled. Security group name: Enter ALB-EC2-SG Description: Enter Security group for the load balancer and EC2 Instance VPC: Select Default VPC"
         },
         {
           "text": "We are going to create a Security group for the Launch template with port 80 number enabled."
         },
         {
-          "text": "Security group name: Enter ALB-EC2-SG"
+          "text": "Security group name: Enter ALB-EC2-SG"
         },
         {
-          "text": "Description: Enter Security group for the load balancer and EC2 Instance"
+          "text": "Description: Enter Security group for the load balancer and EC2 Instance"
         },
         {
-          "text": "VPC: Select Default VPC"
+          "text": "VPC: Select Default VPC"
         },
         {
-          "text": "Click on the Add rule button under Inbound rules."
+          "text": "Click on the Add rule button under Inbound rules. Type : Select HTTP Source: Select Anywhere- IPv4 Note: SSH port is not required."
         },
         {
-          "text": "Type : Select HTTP"
+          "text": "Click on the Add rule button under Inbound rules."
         },
         {
-          "text": "Source: Select Anywhere- IPv4"
+          "text": "Type : Select HTTP"
         },
         {
-          "text": "Note: SSH port is not required."
+          "text": "Source: Select Anywhere- IPv4"
         },
         {
-          "text": "Leave everything as default and click on the Create security group button."
+          "text": "Note: SSH port is not required."
+        },
+        {
+          "text": "Leave everything as default and click on the Create security group button."
         }
       ]
     },
@@ -85,13 +94,22 @@
           "text": "In this task, we are going to create the actual instances that will serve as the targets for the load balancer. This task also involves configuring the instances with Apache HTTP Server to serve a basic web page."
         },
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
           "text": "Navigate to EC2 by clicking on the Services menu in the top left, then click on EC2 in the Compute section"
         },
         {
-          "text": "Navigate to Instances on the left panel and click on Launch Instances button."
+          "text": "Navigate to Instances on the left panel and click on Launch Instances button."
+        },
+        {
+          "text": "Task 3: Launch 2 EC2 Instances",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-01.png"
+          ]
+        },
+        {
+          "text": "Under the Name and tags section : Name : Whiz-instance In Summary provide 2 instances."
         },
         {
           "text": "Under the Name and tags section :"
@@ -103,10 +121,34 @@
           "text": "In Summary provide 2 instances."
         },
         {
+          "text": "Task 3: Launch 2 EC2 Instances",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-02.png"
+          ]
+        },
+        {
+          "text": "Under the Application and OS Images (Amazon Machine Image) section : Select Quick Start tab and choose Amazon Linux 2023 kernel-6.1 under it.",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-03.png"
+          ]
+        },
+        {
           "text": "Under the Application and OS Images (Amazon Machine Image) section :"
         },
         {
-          "text": "Select Quick Start tab and choose Amazon Linux 2023 kernel-6.1 under it."
+          "text": "Select Quick Start tab and choose Amazon Linux 2023 kernel-6.1 under it.",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-04.png"
+          ]
+        },
+        {
+          "text": "Task 3: Launch 2 EC2 Instances",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-05.png"
+          ]
+        },
+        {
+          "text": "Under the Instance Type section : Instance Type : Select t2.micro"
         },
         {
           "text": "Under the Instance Type section :"
@@ -115,10 +157,13 @@
           "text": "Instance Type : Select t2.micro"
         },
         {
+          "text": "Under the Key Pair (login) section : No need to generate keypair: Select Proceed without a KeyPair"
+        },
+        {
           "text": "Under the Key Pair (login) section :"
         },
         {
-          "text": "No need to generate keypair: Select Proceed without a KeyPair"
+          "text": "No need to generate keypair: Select Proceed without a KeyPair"
         },
         {
           "text": "Under the Network Settings section :"
@@ -136,40 +181,31 @@
           "text": "Auto-assign public IP: select Enable"
         },
         {
-          "text": "Firewall (security groups) : Choose Select existing security group"
+          "text": "Firewall (security groups) : Choose Select existing security group"
         },
         {
           "text": "Common security groups : Select Security group with name ALB-EC2-SG"
         },
         {
-          "text": "Expand Advanced Details and under the User data: section, enter the following script to create an HTML page served by an Apache httpd web server"
+          "text": "Task 3: Launch 2 EC2 Instances",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-06.png"
+          ]
         },
         {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "sudo su"
-        },
-        {
-          "text": "yum update -y"
-        },
-        {
-          "text": "yum install httpd -y"
-        },
-        {
-          "text": "echo \"Hello World from $(hostname -f)\" > /var/www/html/index.html"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable http"
+          "text": "Expand Advanced Details and under the User data: section, enter the following script to create an HTML page served by an Apache httpd web server"
         },
         {
           "text": "Keep everything else as default and click on the Launch instance button."
         },
         {
           "text": "Launch Status: Your instance is now launching, Navigate to Instances page from the left menu and wait until the status of the EC2 Instance changes to running."
+        },
+        {
+          "text": "Task 3: Launch 2 EC2 Instances",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-07.png"
+          ]
         }
       ]
     },
@@ -177,97 +213,127 @@
       "title": "Task 4: Create target groups and application load balancer",
       "steps": [
         {
-          "text": "In this task, we are going to create a target group, which is a logical grouping of the EC2 instances that will receive traffic from the load balancer. Additionally, we will create an Application Load Balancer (ALB) that will distribute the incoming traffic to the target group. This task sets up the core components of load balancing."
+          "text": "In this task, we are going to create a target group, which is a logical grouping of the EC2 instances that will receive traffic from the load balancer. Additionally, we will create an Application Load Balancer (ALB) that will distribute the incoming traffic to the target group. This task sets up the core components of load balancing."
         },
         {
-          "text": "In the EC2 Console, Navigate to Target Groups, present in the left panel under Load Balancing."
+          "text": "In the EC2 Console, Navigate to Target Groups, present in the left panel under Load Balancing."
         },
         {
-          "text": "Click on the Create target group button."
+          "text": "Click on the Create target group button."
         },
         {
-          "text": "For Step 1, Specify group details"
+          "text": "Task 4: Create target groups and application load balancer",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-08.png"
+          ]
+        },
+        {
+          "text": "For Step 1, Specify group details Under Basic configurations Choose a target group : Choose Instances Target group name : Enter EC2-TG Keep all the settings as default. Scroll to the end of the page and click on the Next button."
+        },
+        {
+          "text": "For Step 1, Specify group details"
+        },
+        {
+          "text": "Under Basic configurations Choose a target group : Choose Instances Target group name : Enter EC2-TG"
         },
         {
           "text": "Under Basic configurations"
         },
         {
-          "text": "Choose a target group : Choose Instances"
+          "text": "Choose a target group : Choose Instances"
         },
         {
-          "text": "Target group name : Enter EC2-TG"
+          "text": "Target group name : Enter EC2-TG"
         },
         {
           "text": "Keep all the settings as default."
         },
         {
-          "text": "Scroll to the end of the page and click on the Next button."
+          "text": "Scroll to the end of the page and click on the Next button."
         },
         {
-          "text": "For Step 2, Register targets"
+          "text": "For Step 2, Register targets Select both the EC2 Instances and click on Include as pending below button Click on the Create target group button."
         },
         {
-          "text": "Select both the EC2 Instances and click on Include as pending below button"
+          "text": "For Step 2, Register targets"
         },
         {
-          "text": "Click on the Create target group button."
+          "text": "Select both the EC2 Instances and click on Include as pending below button"
+        },
+        {
+          "text": "Click on the Create target group button."
         },
         {
           "text": "The Target group is now created."
         },
         {
-          "text": "In the EC2 console, navigate to Load Balancers in the left-side panel."
+          "text": "In the EC2 console, navigate to Load Balancers in the left-side panel."
         },
         {
-          "text": "Click on Create load balancer at the top-left to create a new load balancer for our web servers."
+          "text": "Click on Create load balancer at the top-left to create a new load balancer for our web servers."
+        },
+        {
+          "text": "Task 4: Create target groups and application load balancer",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-09.png"
+          ]
         },
         {
           "text": "Select Load Balancer Type: Under the Application Load Balancer, click on Create Button."
         },
         {
-          "text": "For the Basic configuration section,"
+          "text": "For the Basic configuration section,"
         },
         {
-          "text": "Name: Enter Web-server-LB"
+          "text": "Name: Enter Web-server-LB"
         },
         {
-          "text": "Scheme: Select Internet-facing"
+          "text": "Scheme: Select Internet-facing"
         },
         {
-          "text": "IP address type: Choose IPv4"
+          "text": "IP address type: Choose IPv4"
         },
         {
-          "text": "For the Network mapping section:"
+          "text": "For the Network mapping section: VPC: Select Default Mappings: Choose us-east-1a and us-east-1b Note: we must specify the availability zones in which the load balancer needs to be enabled, making route traffic only to targets launched in those availability zones. You must include subnets from a minimum of two Availability zones to make our Load balancer Highly-Available. For the Security groups section, Select the ALB-EC2-SG Security group from the dropdown and remove the default security group. For the Listeners and routing section, The first listener is already present with Protocol HTTP and Port 80. Select the target group EC2-TG for the Default action forwards to option."
         },
         {
-          "text": "VPC: Select Default"
+          "text": "For the Network mapping section:"
         },
         {
-          "text": "Mappings: Choose us-east-1a and us-east-1b"
+          "text": "VPC: Select Default"
         },
         {
-          "text": "Note: we must specify the availability zones in which the load balancer needs to be enabled, making route traffic only to targets launched in those availability zones. You must include subnets from a minimum of two Availability zones to make our Load balancer Highly-Available."
+          "text": "Mappings: Choose us-east-1a and us-east-1b"
         },
         {
-          "text": "For the Security groups section, Select the ALB-EC2-SG Security group from the dropdown and remove the default security group."
+          "text": "Note: we must specify the availability zones in which the load balancer needs to be enabled, making route traffic only to targets launched in those availability zones. You must include subnets from a minimum of two Availability zones to make our Load balancer Highly-Available."
         },
         {
-          "text": "For the Listeners and routing section,"
+          "text": "For the Security groups section, Select the ALB-EC2-SG Security group from the dropdown and remove the default security group."
+        },
+        {
+          "text": "For the Listeners and routing section,"
         },
         {
           "text": "The first listener is already present with Protocol HTTP and Port 80."
         },
         {
-          "text": "Select the target group EC2-TG for the Default action forwards to option."
+          "text": "Select the target group EC2-TG for the Default action forwards to option."
         },
         {
           "text": "Keep the tags as default and click on the Create load balancer button in the bottom right corner."
         },
         {
-          "text": "You have successfully created the Application Load balancer. Click on the View load balancers button."
+          "text": "You have successfully created the Application Load balancer. Click on the View load balancers button."
         },
         {
-          "text": "Wait for 2 to 3 minutes for the load balancer to become Active."
+          "text": "Wait for 2 to 3 minutes for the load balancer to become Active."
+        },
+        {
+          "text": "Task 4: Create target groups and application load balancer",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-10.png"
+          ]
         }
       ]
     },
@@ -278,7 +344,7 @@
           "text": "In this task, we are going to enable stickiness in the target group by modifying its attributes. Stickiness ensures that subsequent requests from the same client are routed to the same target instance for a specified duration. This can be useful in scenarios where maintaining session persistence or affinity is important."
         },
         {
-          "text": "In the EC2 Console, Navigate to Target Groups, present in the left panel under Load Balancing."
+          "text": "In the EC2 Console, Navigate to Target Groups, present in the left panel under Load Balancing."
         },
         {
           "text": "Click on the name of the Target group created."
@@ -287,13 +353,19 @@
           "text": "In the Targets tab, make sure the status is Healthy for both instances."
         },
         {
-          "text": "Now switch to the Attributes tab and click on the Edit button."
+          "text": "Now switch to the Attributes tab and click on the Edit button.",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-11.png"
+          ]
         },
         {
           "text": "On the Edit attributes page, check the option of Stickiness."
         },
         {
-          "text": "Keep the stickiness type as Load balancer generated cookie and update the stickiness duration to 2 minutes."
+          "text": "Keep the stickiness type as Load balancer generated cookie and update the stickiness duration to 2 minutes.",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-12.png"
+          ]
         },
         {
           "text": "Once done, click on the Save changes button."
@@ -307,16 +379,28 @@
           "text": "In this task, we are going to test the stickiness feature by accessing the ALB's DNS name and verifying that requests from the same client are consistently routed to the same target instance within the specified duration."
         },
         {
-          "text": "In the EC2 console, navigate to Load Balancers in the left-side panel."
+          "text": "In the EC2 console, navigate to Load Balancers in the left-side panel."
         },
         {
-          "text": "Select the Load balancer present and copy the DNS name of your load balancer, and paste it into the browser."
+          "text": "Select the Load balancer present and copy the DNS name of your load balancer, and paste it into the browser."
         },
         {
-          "text": "The load balancer will stick to an instance for the duration of 2 minutes, keep refreshing and the instance will not change."
+          "text": "The load balancer will stick to an instance for the duration of 2 minutes, keep refreshing and the instance will not change.",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-13.png"
+          ]
         },
         {
-          "text": "After 2 minutes, it should be redirected to a new page."
+          "text": "Task 6: Testing the stickiness",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-14.png"
+          ]
+        },
+        {
+          "text": "After 2 minutes, it should be redirected to a new page.",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-15.png"
+          ]
         }
       ]
     },
@@ -331,6 +415,12 @@
         },
         {
           "text": "Sample Output:"
+        },
+        {
+          "text": "Task 7: Validation of the Lab",
+          "images": [
+            "/labs/enable-sticky-sessions-in-application-load-balancer/step-16.gif"
+          ]
         }
       ]
     },
@@ -338,10 +428,10 @@
       "title": "Task 8: Delete AWS Resources",
       "steps": [
         {
-          "text": "1: Terminating EC2 Instanes:"
+          "text": "In the EC2 console, navigate to Instances."
         },
         {
-          "text": "In the EC2 console, navigate to Instances."
+          "text": "To terminate both instances at once, follow the steps presented below. Select both the Instances, Click on the Instance state option present in the menu, Choose the option of Terminate instances, In the pop-up menu, click on the Terminate button."
         },
         {
           "text": "To terminate both instances at once, follow the steps presented below."
@@ -362,25 +452,25 @@
           "text": "Instances will be terminated in a few minutes."
         },
         {
-          "text": "2 Delete Load balancer"
+          "text": "In the EC2 console, navigate to Load Balancers in the left-side panel."
         },
         {
-          "text": "In the EC2 console, navigate to Load Balancers in the left-side panel."
+          "text": "Web-server-LB will be listed here."
         },
         {
-          "text": "Web-server-LB will be listed here."
+          "text": "To delete the load balancer, need to perform the following actions: Select the load balancer, Click on the Actions button, select the Delete load balancer option."
         },
         {
-          "text": "To delete the load balancer, need to perform the following actions:"
+          "text": "To delete the load balancer, need to perform the following actions:"
         },
         {
-          "text": "Select the load balancer,"
+          "text": "Select the load balancer,"
         },
         {
-          "text": "Click on the Actions button,"
+          "text": "Click on the Actions button,"
         },
         {
-          "text": "select the Delete load balancer option."
+          "text": "select the Delete load balancer option."
         },
         {
           "text": "Confirm by entering confirm on the pop-up and click on Delete button"
@@ -389,40 +479,34 @@
           "text": "MyNetwork-LB will be deleted immediately."
         },
         {
-          "text": "3 Delete Target group"
+          "text": "In the EC2 console, navigate to Target Groups in the left-side panel."
         },
         {
-          "text": "In the EC2 console, navigate to Target Groups in the left-side panel."
+          "text": "EC2-TG will be listed here."
         },
         {
-          "text": "EC2-TG will be listed here."
+          "text": "To delete the target group, need to perform the following actions: Select the target group, Click on the Actions button, select the Delete option."
         },
         {
-          "text": "To delete the target group, need to perform the following actions:"
+          "text": "To delete the target group, need to perform the following actions:"
         },
         {
-          "text": "Select the target group,"
+          "text": "Select the target group,"
         },
         {
-          "text": "Click on the Actions button,"
+          "text": "Click on the Actions button,"
         },
         {
-          "text": "select the Delete option."
+          "text": "select the Delete option."
         },
         {
-          "text": "Confirm by clicking on the Yes, Delete button when a pop-up is shown."
+          "text": "Confirm by clicking on the Yes, Delete button when a pop-up is shown."
         },
         {
-          "text": "The target group will be deleted immediately."
-        },
-        {
-          "text": "Do You Know?"
+          "text": "The target group will be deleted immediately."
         },
         {
           "text": "When stickiness is enabled in an ALB, the ALB generates a cookie and includes it in the response to the client. The client then includes this cookie in subsequent requests to the ALB. The ALB uses this cookie to associate the client with a specific target instance and ensures that subsequent requests from the same client are routed to the same instance."
-        },
-        {
-          "text": "Completion and Conclusion"
         },
         {
           "text": "You have successfully created a security group for EC2 and Load balancer"
@@ -434,10 +518,7 @@
           "text": "You have successfully created a target group and Application load balancer."
         },
         {
-          "text": "You have successfully enabled the stickiness and tested using the load balancer DNS name."
-        },
-        {
-          "text": "End Lab"
+          "text": "You have successfully enabled the stickiness and tested using the load balancer DNS name."
         },
         {
           "text": "Sign out of AWS Account."
@@ -446,7 +527,7 @@
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End lab from your lab lab console and wait till the process gets completed."
+          "text": "Once you have completed the steps, click on End lab from your lab lab console and wait till the process gets completed."
         }
       ]
     }

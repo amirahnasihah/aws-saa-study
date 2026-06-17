@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -35,13 +35,25 @@
           "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to the Services menu at the top. Click on Amazon Simple Email Service in the Business Application section."
+          "text": "Navigate to the Services menu at the top. Click on Amazon Simple Email Service in the Business Application section."
         },
         {
           "text": "On the left side menu, Select Identities"
         },
         {
-          "text": "Click on Create Identity."
+          "text": "Click on Create Identity.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-01.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create an Email Identity using SES",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-02.png"
+          ]
+        },
+        {
+          "text": "Enter the following details: Identity type: Select Email Address Email address: Enter your valid Email ID. Leave other options as default. Click on Create Identity."
         },
         {
           "text": "Enter the following details:"
@@ -50,7 +62,7 @@
           "text": "Identity type: Select Email Address"
         },
         {
-          "text": "Email address: Enter your valid Email ID."
+          "text": "Email address: Enter your valid Email ID."
         },
         {
           "text": "Leave other options as default."
@@ -59,10 +71,31 @@
           "text": "Click on Create Identity."
         },
         {
+          "text": "Task 2: Create an Email Identity using SES",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-03.png"
+          ]
+        },
+        {
           "text": "You will get the below IAM error, just ignore that. You will not need this permission to complete the lab."
         },
         {
-          "text": "Now you will be able to see that the Identity Status on the Email will be Verification Pending."
+          "text": "Task 2: Create an Email Identity using SES",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-04.png"
+          ]
+        },
+        {
+          "text": "Now you will be able to see that the Identity Status on the Email will be Verification Pending.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-05.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create an Email Identity using SES",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-06.png"
+          ]
         }
       ]
     },
@@ -73,13 +106,31 @@
           "text": "AWS will send a confirmation email to the email that you provided in the above step."
         },
         {
-          "text": "Log in to your mailbox and you will be able to see a mail from Amazon Web Services."
+          "text": "Log in to your mailbox and you will be able to see a mail from Amazon Web Services."
+        },
+        {
+          "text": "Task 3: Verify the Email address",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-07.png"
+          ]
         },
         {
           "text": "Once you click on the link, you will be routed to the success page."
         },
         {
+          "text": "Task 3: Verify the Email address",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-08.png"
+          ]
+        },
+        {
           "text": "Now go to the SES Email Address page and refresh the page. You will be able to see the Verification status as Active."
+        },
+        {
+          "text": "Task 3: Verify the Email address",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-09.jpg"
+          ]
         }
       ]
     },
@@ -90,13 +141,25 @@
           "text": "Let us send a test email to the same email address."
         },
         {
-          "text": "Click on Send Test Email."
+          "text": "Click on Send Test Email.",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-10.png"
+          ]
+        },
+        {
+          "text": "Task 4: Send a Test Email",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-11.png"
+          ]
+        },
+        {
+          "text": "Make the following changes: Email Format: Select Formatted (keep it as default) From: Your email address will be present by default Scenario: Select Custom from the drop-down menu Custom recipient: Give the same email address (for testing purposes) Subject: Enter Sending a Test Email Body: Type any text as you wish Leave other options as default. Click on Send Test Email."
         },
         {
           "text": "Make the following changes:"
         },
         {
-          "text": "Email Format: Select Formatted (keep it as default)"
+          "text": "Email Format: Select Formatted (keep it as default)"
         },
         {
           "text": "From: Your email address will be present by default"
@@ -108,7 +171,7 @@
           "text": "Custom recipient: Give the same email address (for testing purposes)"
         },
         {
-          "text": "Subject: Enter Sending a Test Email"
+          "text": "Subject: Enter Sending a Test Email"
         },
         {
           "text": "Body: Type any text as you wish"
@@ -120,10 +183,19 @@
           "text": "Click on Send Test Email."
         },
         {
+          "text": "Task 4: Send a Test Email",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-12.png"
+          ]
+        },
+        {
           "text": "Verify the mail received to your Inbox. If it is not present in your inbox, check in the spam."
         },
         {
-          "text": "Do you know?"
+          "text": "Task 4: Send a Test Email",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-13.png"
+          ]
         },
         {
           "text": "Amazon Simple Email Service (SES) is a cloud-based email sending and receiving service provided by Amazon Web Services (AWS). It is designed to help businesses and developers manage their email communications at scale. SES simplifies the process of sending transactional and marketing emails, such as notifications, alerts, newsletters, and promotional messages, while ensuring high deliverability rates and compliance with email industry standards."
@@ -134,16 +206,19 @@
       "title": "Task 5: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 5: Validation Test",
+          "images": [
+            "/labs/introduction-to-amazon-simple-email-service-ses/step-14.gif"
+          ]
         },
         {
           "text": "You have successfully logged in to the AWS Management console."
@@ -155,16 +230,13 @@
           "text": "You have successfully created verified the Email address."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of the AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps click on End from the lab console."
+          "text": "Once you have completed the steps click on End from the lab console."
         }
       ]
     }

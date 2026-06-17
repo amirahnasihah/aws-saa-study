@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,13 +24,13 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
-          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
         }
       ]
     },
@@ -38,31 +41,58 @@
           "text": "Make sure you are in US East (N.Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on the EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on the EC2 in the Compute section."
         },
         {
-          "text": "Navigate to Instances on the left panel and click on Launch instances."
+          "text": "Navigate to Instances on the left panel and click on Launch instances.",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-01.jpg"
+          ]
+        },
+        {
+          "text": "Task 2: Launch EC2 Instance",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-02.jpg"
+          ]
         },
         {
           "text": "Name : Enter MyPublicServer"
         },
         {
-          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 kernel-6.1 AMI in Quick Start menu."
+          "text": "Task 2: Launch EC2 Instance",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-03.png"
+          ]
         },
         {
-          "text": "For Instance Type: select t2.micro"
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 kernel-6.1 AMI in Quick Start menu."
+        },
+        {
+          "text": "For Instance Type: select t2.micro",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-04.png"
+          ]
+        },
+        {
+          "text": "Task 2: Launch EC2 Instance",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-05.png"
+          ]
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button Key pair name: Enter WhizKey Key pair type: Select RSA Private key file format: Select .pem"
         },
         {
           "text": "For Key pair: Select Create a new key pair Button"
         },
         {
-          "text": "Key pair name: Enter WhizKey"
+          "text": "Key pair name: Enter WhizKey"
         },
         {
-          "text": "Key pair type: Select RSA"
+          "text": "Key pair type: Select RSA"
         },
         {
-          "text": "Private key file format: Select .pem"
+          "text": "Private key file format: Select .pem"
         },
         {
           "text": "Select Create key pair Button."
@@ -80,58 +110,61 @@
           "text": "Security group name : Enter MyEC2Server_SG"
         },
         {
-          "text": "Description : Enter Security Group to allow traffic to EC2"
+          "text": "Description : Enter Security Group to allow traffic to EC2",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-06.jpg"
+          ]
         },
         {
-          "text": "To add SSH:"
+          "text": "Task 2: Launch EC2 Instance",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-07.jpg"
+          ]
         },
         {
-          "text": "Choose Type: SSH"
+          "text": "To add SSH: Choose Type: SSH Source: Anywhere"
+        },
+        {
+          "text": "To add SSH:"
+        },
+        {
+          "text": "Choose Type: SSH"
         },
         {
           "text": "Source: Anywhere"
         },
         {
-          "text": "For RDS:"
+          "text": "For RDS: Click on Add security group role Choose Type: MySQL/Aurora Source: Anywhere",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-08.jpg"
+          ]
         },
         {
-          "text": "Click on Add security group role"
+          "text": "For RDS:"
         },
         {
-          "text": "Choose Type: MySQL/Aurora"
+          "text": "Click on Add security group role"
         },
         {
-          "text": "Source: Anywhere"
+          "text": "Choose Type: MySQL/Aurora"
+        },
+        {
+          "text": "Source: Anywhere",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-09.jpg"
+          ]
+        },
+        {
+          "text": "Task 2: Launch EC2 Instance",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-10.jpg"
+          ]
+        },
+        {
+          "text": "Click on Advanced Details. Under the User data section, enter the following script, (which installs MySQL):#!/bin/bash# Download the MySQL repository packagewget https://dev.mysql.com/get/mysql80-community-release-el9-5.noarch.rpm# Install the MySQL repository packagesudo dnf install mysql80-community-release-el9-5.noarch.rpm -y# Enable the MySQL community repositorysudo dnf repolist enabled | grep \"mysql.*-community.*\"# Install MySQLsudo dnf install mysql -y"
         },
         {
           "text": "Click on Advanced Details. Under the User data section, enter the following script, (which installs MySQL):"
-        },
-        {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "# Download the MySQL repository package"
-        },
-        {
-          "text": "wget https://dev.mysql.com/get/mysql80-community-release-el9-5.noarch.rpm"
-        },
-        {
-          "text": "# Install the MySQL repository package"
-        },
-        {
-          "text": "sudo dnf install mysql80-community-release-el9-5.noarch.rpm -y"
-        },
-        {
-          "text": "# Enable the MySQL community repository"
-        },
-        {
-          "text": "sudo dnf repolist enabled | grep \"mysql.*-community.*\""
-        },
-        {
-          "text": "# Install MySQL"
-        },
-        {
-          "text": "sudo dnf install mysql -y"
         },
         {
           "text": "Keep rest thing Default and Click on Launch Instance Button."
@@ -148,31 +181,64 @@
       "title": "Task 3: Create an Amazon RDS Database",
       "steps": [
         {
-          "text": "Navigate to Aurora and RDS under Database."
+          "text": "Navigate to Aurora and RDS under Database."
         },
         {
-          "text": "Click on Create Database button"
+          "text": "Click on Create Database button"
+        },
+        {
+          "text": "Specify DB Details: Database creation method : Select Standard create",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-11.jpg"
+          ]
         },
         {
           "text": "Specify DB Details:"
         },
         {
-          "text": "Database creation method : Select Standard create"
+          "text": "Database creation method : Select Standard create",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-12.jpg"
+          ]
         },
         {
-          "text": "Engine options : Select MySQL"
+          "text": "Task 3: Create an Amazon RDS Database",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-13.jpg"
+          ]
         },
         {
-          "text": "Version : Default"
+          "text": "Engine options : Select MySQL"
         },
         {
-          "text": "Templates : Select Dev/Test. Choose Availability and durability as Single AZ-DB instance deployment (1 Instance)"
+          "text": "Version : Default",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-14.jpg"
+          ]
         },
         {
-          "text": "DB instance identifier : Enter mydbinstance"
+          "text": "Task 3: Create an Amazon RDS Database",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-15.jpg"
+          ]
         },
         {
-          "text": "Master username : Enter rdsuser"
+          "text": "Templates : Select Dev/Test. Choose Availability and durability as Single AZ-DB instance deployment (1 Instance)",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-16.png"
+          ]
+        },
+        {
+          "text": "Task 3: Create an Amazon RDS Database",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-17.png"
+          ]
+        },
+        {
+          "text": "DB instance identifier : Enter mydbinstance"
+        },
+        {
+          "text": "Master username : Enter rdsuser"
         },
         {
           "text": "Master password and Confirm password: Enter lab123"
@@ -181,25 +247,46 @@
           "text": "Note: This is the username/password combo used to log onto your database. Please make note of them somewhere safe."
         },
         {
-          "text": "DB instance class : db.t3.micro — 1 vCPU, 1 GiB RAM"
+          "text": "DB instance class : db.t3.micro — 1 vCPU, 1 GiB RAM",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-18.png"
+          ]
         },
         {
-          "text": "Storage type : General Purpose SSD (gp2)"
+          "text": "Task 3: Create an Amazon RDS Database",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-19.png"
+          ]
         },
         {
-          "text": "Allocated storage : 20"
+          "text": "Storage type : General Purpose SSD (gp2)"
         },
         {
-          "text": "Enable storage autoscaling : Uncheck"
+          "text": "Allocated storage : 20"
         },
         {
-          "text": "Public access : Select No"
+          "text": "Enable storage autoscaling : Uncheck",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-20.jpg"
+          ]
         },
         {
-          "text": "VPC Security groups : Select Choose existing"
+          "text": "Task 3: Create an Amazon RDS Database",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-21.jpg"
+          ]
         },
         {
-          "text": "Existing VPC security groups : Remove the default one and Select MyEC2Server_SG"
+          "text": "Public access : Select No"
+        },
+        {
+          "text": "VPC Security groups : Select Choose existing"
+        },
+        {
+          "text": "Existing VPC security groups : Remove the default one and Select MyEC2Server_SG"
+        },
+        {
+          "text": "Go to Additional Configuration options Initial database name: Enter mydbinstance DB parameter group: default Option group: default Enable automated backups: uncheck Log Exports: Not needed for the purpose of this lab.\nNote: Leave all the other settings as default"
         },
         {
           "text": "Go to Additional Configuration options"
@@ -232,7 +319,7 @@
           "text": "On the RDS console, the details for the new DB instance appear. The DB instance has a status of creating until the DB instance is ready to use. When the state changes to Available, you can connect to the DB instance. It can take up to 20 minutes before the new instance status becomes Available."
         },
         {
-          "text": "Once the database becomes Available, click on the database name and copy the Endpoint under Connectivity & security tab."
+          "text": "Once the database becomes Available, click on the database name and copy the Endpoint under Connectivity & security tab."
         }
       ]
     },
@@ -243,40 +330,73 @@
           "text": "In this task, we are going to establish a connection between the EC2 instance and the RDS database."
         },
         {
-          "text": "Now navigate to EC2 by clicking on the Services menu in the top, then click on the EC2 in the Compute section."
+          "text": "Now navigate to EC2 by clicking on the Services menu in the top, then click on the EC2 in the Compute section."
         },
         {
-          "text": "Navigate to Instances on the left panel and select your EC2 instance(MyPublicServer) and click on the Connect button."
+          "text": "Navigate to Instances on the left panel and select your EC2 instance(MyPublicServer) and click on the Connect button.",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-22.jpg"
+          ]
         },
         {
-          "text": "Select EC2 Instance Connect option and click on Connect button.(Keep everything else as default)"
+          "text": "Task 4: Create a connection to the Amazon RDS database from the EC2 instance",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-23.jpg"
+          ]
         },
         {
-          "text": "A new tab will open in the browser where you can execute the CLI Commands."
+          "text": "Select EC2 Instance Connect option and click on Connect button.(Keep everything else as default)",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-24.jpg"
+          ]
+        },
+        {
+          "text": "Task 4: Create a connection to the Amazon RDS database from the EC2 instance",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-25.jpg"
+          ]
+        },
+        {
+          "text": "A new tab will open in the browser where you can execute the CLI Commands.",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-26.png"
+          ]
+        },
+        {
+          "text": "Once connected to the server: Switch to the root user using the command: sudo su"
         },
         {
           "text": "Once connected to the server:"
         },
         {
+          "text": "Switch to the root user using the command: sudo su"
+        },
+        {
           "text": "Switch to the root user using the command:"
         },
         {
-          "text": "sudo su"
+          "text": "Connect to the MySQL RDS Instance with the following command: Syntax: mysql -h <mysql-instance-dns> -u <username> -p In our case: mysql -h mydbinstance.c1sh5a4j91dp.us-east-1.rds.amazonaws.com -u rdsuser -p Password : Enter lab123"
         },
         {
-          "text": "Connect to the MySQL RDS Instance with the following command:"
+          "text": "Connect to the MySQL RDS Instance with the following command:"
         },
         {
-          "text": "Syntax: mysql -h <mysql-instance-dns> -u <username> -p"
+          "text": "Syntax: mysql -h <mysql-instance-dns> -u <username> -p"
         },
         {
-          "text": "In our case: mysql -h mydbinstance.c1sh5a4j91dp.us-east-1.rds.amazonaws.com -u rdsuser -p"
+          "text": "In our case: mysql -h mydbinstance.c1sh5a4j91dp.us-east-1.rds.amazonaws.com -u rdsuser -p"
         },
         {
-          "text": "Password : Enter lab123"
+          "text": "Password : Enter lab123"
         },
         {
           "text": "You will enter the MYSQL command line."
+        },
+        {
+          "text": "Task 4: Create a connection to the Amazon RDS database from the EC2 instance",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-27.png"
+          ]
         }
       ]
     },
@@ -284,64 +404,64 @@
       "title": "Task 5: Create a Database, Table and insert data for testing",
       "steps": [
         {
-          "text": "Lets create a simple database and table to see if it's working."
+          "text": "Lets create a simple database and table to see if it's working."
+        },
+        {
+          "text": "Create a database: CREATE DATABASE SchoolDB;"
         },
         {
           "text": "Create a database:"
         },
         {
-          "text": "CREATE DATABASE SchoolDB;"
+          "text": "You can see the created database with following command: show databases;"
         },
         {
           "text": "You can see the created database with following command:"
         },
         {
-          "text": "show databases;"
+          "text": "Task 5: Create a Database, Table and insert data for testing",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-28.png"
+          ]
         },
         {
-          "text": "Switch to the database named SchoolDB."
+          "text": "Switch to the database named SchoolDB. use SchoolDB;"
         },
         {
-          "text": "use SchoolDB;"
+          "text": "Switch to the database named SchoolDB."
         },
         {
-          "text": "Create a sample table consisting of Subjects."
+          "text": "Create a sample table consisting of Subjects. CREATE TABLE IF NOT EXISTS subjects (subject_id INT AUTO_INCREMENT,subject_name VARCHAR(255) NOT NULL,teacher VARCHAR(255),start_date DATE,lesson TEXT,PRIMARY KEY (subject_id)) ENGINE=INNODB;"
         },
         {
-          "text": "CREATE TABLE IF NOT EXISTS subjects (subject_id INT AUTO_INCREMENT,subject_name VARCHAR(255) NOT NULL,teacher VARCHAR(255),start_date DATE,lesson TEXT,PRIMARY KEY (subject_id)) ENGINE=INNODB;"
+          "text": "Create a sample table consisting of Subjects."
+        },
+        {
+          "text": "Insert some details into the table:INSERT INTO subjects(subject_name, teacher) VALUES ('English', 'John Taylor');INSERT INTO subjects(subject_name, teacher) VALUES ('Science', 'Mary Smith');INSERT INTO subjects(subject_name, teacher) VALUES ('Maths', 'Ted Miller');INSERT INTO subjects(subject_name, teacher) VALUES ('Arts', 'Suzan Carpenter');"
         },
         {
           "text": "Insert some details into the table:"
         },
         {
-          "text": "INSERT INTO subjects(subject_name, teacher) VALUES ('English', 'John Taylor');"
-        },
-        {
-          "text": "INSERT INTO subjects(subject_name, teacher) VALUES ('Science', 'Mary Smith');"
-        },
-        {
-          "text": "INSERT INTO subjects(subject_name, teacher) VALUES ('Maths', 'Ted Miller');"
-        },
-        {
-          "text": "INSERT INTO subjects(subject_name, teacher) VALUES ('Arts', 'Suzan Carpenter');"
+          "text": "Let's check the items we added into the table: select * from subjects;"
         },
         {
           "text": "Let's check the items we added into the table:"
         },
         {
-          "text": "select * from subjects;"
+          "text": "Task 5: Create a Database, Table and insert data for testing",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-29.png"
+          ]
         },
         {
           "text": "Try out some more SQL commands and play around with the table to strengthen your understanding."
         },
         {
+          "text": "Run below command to exit the mysql commandexit;"
+        },
+        {
           "text": "Run below command to exit the mysql command"
-        },
-        {
-          "text": "exit;"
-        },
-        {
-          "text": "Do You Know?"
         },
         {
           "text": "The combination of Amazon RDS and Amazon EC2 provides a powerful and scalable infrastructure for building robust and high-performing applications."
@@ -352,13 +472,19 @@
       "title": "Task 6: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
+        },
+        {
+          "text": "Task 6: Validation Test",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-30.gif"
+          ]
         }
       ]
     },
@@ -366,13 +492,25 @@
       "title": "Task 7: Delete AWS Resources",
       "steps": [
         {
-          "text": "1 Deleting EC2 Instance"
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on the EC2 in the Compute section."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on the EC2 in the Compute section."
+          "text": "All the EC2 Instances will be listed here,",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-31.jpg"
+          ]
         },
         {
-          "text": "All the EC2 Instances will be listed here,"
+          "text": "Task 7: Delete AWS Resources",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-32.jpg"
+          ]
+        },
+        {
+          "text": "To terminate the EC2, perform the following task: Select MyPublicServer, Click on Instance state (If you don't see an Instance state option, click on the Actions button and then choose Instance state) Select Terminate instance",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-33.jpg"
+          ]
         },
         {
           "text": "To terminate the EC2, perform the following task:"
@@ -381,22 +519,31 @@
           "text": "Select MyPublicServer,"
         },
         {
-          "text": "Click on Instance state (If you don't see an Instance state option, click on the Actions button and then choose Instance state)"
+          "text": "Click on Instance state (If you don't see an Instance state option, click on the Actions button and then choose Instance state)"
         },
         {
-          "text": "Select Terminate instance"
+          "text": "Select Terminate instance",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-34.jpg"
+          ]
         },
         {
-          "text": "Finally, Click on terminate"
+          "text": "Finally, Click on terminate",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-35.jpg"
+          ]
+        },
+        {
+          "text": "Task 7: Delete AWS Resources",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-36.jpg"
+          ]
         },
         {
           "text": "EC2 Instance is terminated."
         },
         {
-          "text": "2 Deleting RDS DB Instance"
-        },
-        {
-          "text": "Navigate to RDS by clicking on the Services menu available under the Database section."
+          "text": "Navigate to RDS by clicking on the Services menu available under the Database section."
         },
         {
           "text": "Click on DB Instances"
@@ -405,37 +552,49 @@
           "text": "It will list all the RDS databases"
         },
         {
-          "text": "Click on Actions and select Delete"
+          "text": "Click on Actions and select Delete",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-37.jpg"
+          ]
+        },
+        {
+          "text": "To delete, we have to perform several tasks: Uncheck the option of Create final snapshot, Acknowledge by selecting the second option, Type delete me to confirm And finally, click on Delete button below.",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-38.jpg"
+          ]
         },
         {
           "text": "To delete, we have to perform several tasks:"
         },
         {
-          "text": "Uncheck the option of Create final snapshot,"
+          "text": "Uncheck the option of Create final snapshot,"
         },
         {
-          "text": "Acknowledge by selecting the second option,"
+          "text": "Acknowledge by selecting the second option,"
         },
         {
-          "text": "Type delete me to confirm"
+          "text": "Type delete me to confirm"
         },
         {
-          "text": "And finally, click on Delete button below."
+          "text": "And finally, click on Delete button below.",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-39.jpg"
+          ]
+        },
+        {
+          "text": "Task 7: Delete AWS Resources",
+          "images": [
+            "/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance/step-40.jpg"
+          ]
         },
         {
           "text": "It will take around, 5 minutes to delete the instance, you can end the lab now."
         },
         {
-          "text": "Completion and Conclusion"
-        },
-        {
           "text": "You have successfully launched an EC2 Instance in a default VPC."
         },
         {
-          "text": "You successfully ran a MySQL command and performed operations on a database created with Amazon RDS."
-        },
-        {
-          "text": "End Lab"
+          "text": "You successfully ran a MySQL command and performed operations on a database created with Amazon RDS."
         },
         {
           "text": "Sign out of AWS Account."
@@ -444,7 +603,7 @@
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

@@ -1,0 +1,91 @@
+{
+  "slug": "ami-backup-challenge-relaunch-the-backup",
+  "title": "Challenge : Creating New EC2 Instance using Snapshot",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to save a copy of its website server and use it to make more servers exactly the same. Your job is to start a virtual computer, save its storage, make a template from that, start a new computer with the template, and check if it works. Here’s how to do each step super simply:"
+        },
+        {
+          "text": "Launch an EC2 Instance: Launch an instance with Amazon-linux-2023 kernel-6.1 image and t2-micro as instance type Use port 22, port 80 in security groups Under User data enter the script to: Install apache Create simple index.html file"
+        },
+        {
+          "text": "Launch an instance with Amazon-linux-2023 kernel-6.1 image and t2-micro as instance type"
+        },
+        {
+          "text": "Use port 22, port 80 in security groups"
+        },
+        {
+          "text": "Under User data enter the script to: Install apache Create simple index.html file"
+        },
+        {
+          "text": "Install apache"
+        },
+        {
+          "text": "Create simple index.html file"
+        },
+        {
+          "text": "Create a Snapshot from the Instance:"
+        },
+        {
+          "text": "Create an AMI from the Snapshot:"
+        },
+        {
+          "text": "Launch an EC2 Instance using Newly Created AMI: Launch the instance with the newly created image with t2-micro and same sg that used before"
+        },
+        {
+          "text": "Launch the instance with the newly created image with t2-micro and same sg that used before"
+        },
+        {
+          "text": "Test the New EC2 Instance Created from AMI: Copy public IP and check webpage working or not"
+        },
+        {
+          "text": "Copy public IP and check webpage working or not"
+        },
+        {
+          "text": "Check if everything is set up right. In the lab console, click Validate to make sure the instances, snapshot, and template are correct."
+        },
+        {
+          "text": "Sign out of the AWS Management Console."
+        },
+        {
+          "text": "In the lab console, click End Challenge and wait for it to finish."
+        },
+        {
+          "text": "You’ve completed the EC2 Snapshot challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -50,8 +50,8 @@ const sectionNumToId = new Map(
   checklistSections.map((section) => [section.sectionNum, section.id]),
 )
 
-const normalize = (value: string) =>
-  value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
+const normalize = (value: string | undefined) =>
+  (value ?? '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()
 
 const labUrl = (slug: string) => `https://business.whizlabs.com/labs/${slug}`
 
@@ -60,7 +60,9 @@ const courseIndex = JSON.parse(readFileSync(COURSE_INDEX, 'utf8')) as {
 }
 
 const titleToSlug = new Map(
-  courseIndex.labs.map((lab) => [normalize(lab.title), lab.slug]),
+  courseIndex.labs
+    .filter((lab) => lab.title)
+    .map((lab) => [normalize(lab.title), lab.slug]),
 )
 
 /** Video-course labs whose checklist titles differ from the 110-lab catalog */
@@ -76,16 +78,17 @@ const checklistLabOverrides = new Map<string, { slug: string }>([
   ['Create a Docker container using Dockerfile and store the image in ECR', { slug: 'create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr' }],
 ])
 
-const INDEX_FILES = new Set(['course-index.json', 'checklist-index.json'])
+const INDEX_FILES = new Set(['course-index.json', 'checklist-index.json', 'library-index.json'])
 
 const scrapedLabsByTitle = new Map<string, { slug: string }>()
 readdirSync(resolve('scripts/labs'))
   .filter((file) => file.endsWith('.json') && !INDEX_FILES.has(file))
   .forEach((file) => {
     const lab = JSON.parse(readFileSync(join(resolve('scripts/labs'), file), 'utf8')) as {
-      title: string
+      title?: string
       slug: string
     }
+    if (!lab.title) return
     scrapedLabsByTitle.set(normalize(lab.title), { slug: lab.slug })
   })
 

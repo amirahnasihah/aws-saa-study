@@ -41,7 +41,10 @@
           "text": "Navigate to Security group on the left panel and click on Create Security group."
         },
         {
-          "text": "Fill in the below details under Basic details Name: Enter ElastiCache-SG Description: Enter Security group for ElastiCache VPC: Select Default VPC"
+          "text": "Fill in the below details under Basic details Name: Enter ElastiCache-SG Description: Enter Security group for ElastiCache VPC: Select Default VPC",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-01.png"
+          ]
         },
         {
           "text": "Fill in the below details under Basic details"
@@ -53,10 +56,16 @@
           "text": "Description: Enter Security group for ElastiCache"
         },
         {
-          "text": "VPC: Select Default VPC"
+          "text": "VPC: Select Default VPC",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-02.png"
+          ]
         },
         {
-          "text": "In the Inbound rules, We will add the incoming traffic details: To add SSH, Click on: Add rule Choose Type: SSH Source: Select Anywhere-IPv4, enter 0.0.0.0/0 For HTTP, Click on: Add rule Choose Type: HTTP Source: Select Anywhere-IPv4, enter 0.0.0.0/0 For Redis, Click on: Add rule Choose Type: Custom TCP Port range: Enter 6379 Source: Select Anywhere-IPv4, enter 0.0.0.0/0 After that, click on Create security group"
+          "text": "In the Inbound rules, We will add the incoming traffic details: To add SSH, Click on: Add rule Choose Type: SSH Source: Select Anywhere-IPv4, enter 0.0.0.0/0 For HTTP, Click on: Add rule Choose Type: HTTP Source: Select Anywhere-IPv4, enter 0.0.0.0/0 For Redis, Click on: Add rule Choose Type: Custom TCP Port range: Enter 6379 Source: Select Anywhere-IPv4, enter 0.0.0.0/0 After that, click on Create security group",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-03.png"
+          ]
         },
         {
           "text": "In the Inbound rules, We will add the incoming traffic details:"
@@ -92,7 +101,10 @@
           "text": "Source: Select Anywhere-IPv4, enter 0.0.0.0/0"
         },
         {
-          "text": "For Redis, Click on: Add rule Choose Type: Custom TCP Port range: Enter 6379 Source: Select Anywhere-IPv4, enter 0.0.0.0/0 After that, click on Create security group"
+          "text": "For Redis, Click on: Add rule Choose Type: Custom TCP Port range: Enter 6379 Source: Select Anywhere-IPv4, enter 0.0.0.0/0 After that, click on Create security group",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-04.png"
+          ]
         },
         {
           "text": "For Redis,"
@@ -107,7 +119,10 @@
           "text": "Port range: Enter 6379"
         },
         {
-          "text": "Source: Select Anywhere-IPv4, enter 0.0.0.0/0"
+          "text": "Source: Select Anywhere-IPv4, enter 0.0.0.0/0",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-05.png"
+          ]
         },
         {
           "text": "After that, click on Create security group"
@@ -121,16 +136,25 @@
       "title": "Task 3 : Create a Redis Cluster",
       "steps": [
         {
-          "text": "Navigate to ElastiCache by clicking on the Services menu in the top. Then click on Redis OSS caches under Resources and select Create cache button."
+          "text": "Navigate to ElastiCache by clicking on the Services menu in the top. Then click on Redis OSS caches under Resources and select Create cache button.",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-06.png"
+          ]
         },
         {
-          "text": "We will now create a Redis Cluster, Select Continue with Redis OSS Engine : Select Redis OSSDeployment option : Select Node-based cluster Creation method : Select Cluster cache Cluster Mode : Select Enabled"
+          "text": "We will now create a Redis Cluster, Select Continue with Redis OSS Engine : Select Redis OSSDeployment option : Select Node-based cluster Creation method : Select Cluster cache Cluster Mode : Select Enabled",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-07.png"
+          ]
         },
         {
           "text": "We will now create a Redis Cluster, Select Continue with Redis OSS"
         },
         {
-          "text": "Task 3 : Create a Redis Cluster"
+          "text": "Task 3 : Create a Redis Cluster",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-08.png"
+          ]
         },
         {
           "text": "Engine : Select Redis OSS"
@@ -145,7 +169,10 @@
           "text": "Cluster Mode : Select Enabled"
         },
         {
-          "text": "Task 3 : Create a Redis Cluster"
+          "text": "Task 3 : Create a Redis Cluster",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-09.png"
+          ]
         },
         {
           "text": "Cluster info: Name: Enter MyRedisCluster Description: Enter Redis Cluster for WhizProject"
@@ -169,7 +196,10 @@
           "text": "Check the Multi AZ Enabled checkbox"
         },
         {
-          "text": "Task 3 : Create a Redis Cluster"
+          "text": "Task 3 : Create a Redis Cluster",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-10.png"
+          ]
         },
         {
           "text": "In Cluster settings section, fill the details as follows:"
@@ -193,10 +223,16 @@
           "text": "Replicas per Shard: 1"
         },
         {
-          "text": "Task 3 : Create a Redis Cluster"
+          "text": "Task 3 : Create a Redis Cluster",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-11.png"
+          ]
         },
         {
-          "text": "Subnet group settings: Choose Create new subnet group Name: Enter elasticache-subnet-group Description: Enter Subnet group for ElastiCache VPC ID: Default VPC Click on Next button."
+          "text": "Subnet group settings: Choose Create new subnet group Name: Enter elasticache-subnet-group Description: Enter Subnet group for ElastiCache VPC ID: Default VPC Click on Next button.",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-12.png"
+          ]
         },
         {
           "text": "Subnet group settings: Choose Create new subnet group"
@@ -211,7 +247,10 @@
           "text": "VPC ID: Default VPC"
         },
         {
-          "text": "Click on Next button."
+          "text": "Click on Next button.",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-13.png"
+          ]
         },
         {
           "text": "For Advanced Settings"
@@ -220,7 +259,10 @@
           "text": "In Selected security groups, click on Manage button."
         },
         {
-          "text": "Select ElastiCache-SG, and click on the Choose button."
+          "text": "Select ElastiCache-SG, and click on the Choose button.",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-14.png"
+          ]
         },
         {
           "text": "In the Backup section: Enable automatic backups: Uncheck Leave other options as default Click on Next button."
@@ -267,13 +309,19 @@
           "text": "Choose architecture as 64-bit(x86)"
         },
         {
-          "text": "Task 4 : Launching an EC2 Instance"
+          "text": "Task 4 : Launching an EC2 Instance",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-15.png"
+          ]
         },
         {
           "text": "Choose an Instance Type: Select t2.micro."
         },
         {
-          "text": "Task 4 : Launching an EC2 Instance"
+          "text": "Task 4 : Launching an EC2 Instance",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-16.png"
+          ]
         },
         {
           "text": "Key Pair: Select Create a new key pair"
@@ -297,7 +345,10 @@
           "text": "Select ElastiCache-SG security group created in the Task 2"
         },
         {
-          "text": "Task 4 : Launching an EC2 Instance"
+          "text": "Task 4 : Launching an EC2 Instance",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-17.png"
+          ]
         },
         {
           "text": "On the right side under the Summary section,"
@@ -326,16 +377,28 @@
           "text": "On the home page, click on Redis Clusters in the left navigation panel."
         },
         {
-          "text": "If the status of the ElastiCache cluster is available."
+          "text": "If the status of the ElastiCache cluster is available.",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-18.png"
+          ]
         },
         {
-          "text": "Task 5 : Copy the ElastiCache Endpoint"
+          "text": "Task 5 : Copy the ElastiCache Endpoint",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-19.png"
+          ]
         },
         {
-          "text": "Click on the cluster name and Copy the Configuration Endpoint, and save it in the notepad, we'll use it in the later steps."
+          "text": "Click on the cluster name and Copy the Configuration Endpoint, and save it in the notepad, we'll use it in the later steps.",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-20.png"
+          ]
         },
         {
-          "text": "Task 5 : Copy the ElastiCache Endpoint"
+          "text": "Task 5 : Copy the ElastiCache Endpoint",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-21.png"
+          ]
         },
         {
           "text": "Make sure to remove the port number from the end. After removing the port number it will be:\nExample: myrediscluster.n62wo6.clustercfg.use1.cache.amazonaws.com"
@@ -369,7 +432,10 @@
           "text": "Now, connect to your Redis clusterNote: Replace the Endpoint with the copied one. Make sure to paste the endpoint without colon(:) and port numberExample: src/redis-cli -c --tls -h clustercfg.myrediscluster.2klkvn.use1.cache.amazonaws.com -p 6379"
         },
         {
-          "text": "Task 7: Install the required package and connect to the ElastiCache cluster"
+          "text": "Task 7: Install the required package and connect to the ElastiCache cluster",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-22.png"
+          ]
         }
       ]
     },
@@ -415,7 +481,10 @@
           "text": "Sample output :"
         },
         {
-          "text": "Task 9: Validation of the lab"
+          "text": "Task 9: Validation of the lab",
+          "images": [
+            "/labs/create-redis-cluster-using-elasticache/step-23.gif"
+          ]
         },
         {
           "text": "You have successfully created a Redis cluster with ElastiCache."

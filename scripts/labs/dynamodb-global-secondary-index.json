@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -27,7 +30,7 @@
           "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
-          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
         }
       ]
     },
@@ -38,31 +41,55 @@
           "text": "In this task, you will create a DynamoDB table named \"WhizOrderTable\" with specific configuration settings. Follow the steps below:"
         },
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to DynamoDB page by clicking on the Services menu at the top. DynamoDB is available under the Database section."
+          "text": "Navigate to DynamoDB page by clicking on the Services menu at the top. DynamoDB is available under the Database section."
         },
         {
-          "text": "Once you have selected Dynamodb, click on the Create Table"
+          "text": "Once you have selected Dynamodb, click on the Create Table"
+        },
+        {
+          "text": "Table details: Table name : WhizOrderTable Partition Key : UserName (String) sort key : OrderID (String)",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-01.png"
+          ]
         },
         {
           "text": "Table details:"
         },
         {
-          "text": "Table name : WhizOrderTable"
+          "text": "Table name : WhizOrderTable"
         },
         {
-          "text": "Partition Key : UserName (String)"
+          "text": "Partition Key : UserName (String)"
         },
         {
-          "text": "sort key : OrderID (String)"
+          "text": "sort key : OrderID (String)",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-02.png"
+          ]
+        },
+        {
+          "text": "Task 2 : Create DynamoDB Table",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-03.png"
+          ]
         },
         {
           "text": "Keep all other settings as default. Click on Create Table."
         },
         {
-          "text": "Once the table is created, click on the table you have created and select ExploreTable Items tab to review the default setting of the table."
+          "text": "Once the table is created, click on the table you have created and select ExploreTable Items tab to review the default setting of the table.",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-04.png"
+          ]
+        },
+        {
+          "text": "Task 2 : Create DynamoDB Table",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-05.png"
+          ]
         }
       ]
     },
@@ -73,139 +100,208 @@
           "text": "In this task, you will create items in the DynamoDB table named \"WhizOrderTable\" with specific attribute values. Follow the steps below:"
         },
         {
-          "text": "On the right side panel, click on the Explore Items under Tables."
+          "text": "On the right side panel, click on the Explore Items under Tables."
         },
         {
-          "text": "Now select the table you have created i.e WhizOrderTable and click on Create Item."
+          "text": "Now select the table you have created i.e WhizOrderTable and click on Create Item.",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-06.png"
+          ]
         },
         {
-          "text": "Once you select the create item, you’ll see UserName and OrderID, but we need 2 more attributes in our table. Click on Add new attribute and then select String from the drop down menu."
+          "text": "Task 3 : Create Item",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-07.png"
+          ]
         },
         {
-          "text": "Give the attribute name as ReturnDate"
+          "text": "Once you select the create item, you’ll see UserName and OrderID, but we need 2 more attributes in our table. Click on Add new attribute and then select String from the drop down menu."
         },
         {
-          "text": "Click on Add new attribute again and select String from the drop down menu."
+          "text": "Give the attribute name as ReturnDate"
         },
         {
-          "text": "Now Give the attribute name as UserAmount"
+          "text": "Click on Add new attribute again and select String from the drop down menu."
+        },
+        {
+          "text": "Now Give the attribute name as UserAmount"
+        },
+        {
+          "text": "Now enter the values as shown below: UserName : Enter HarryPotter OrderID : Enter 20160630-12928 ReturnDate : Enter 20190705 UserAmount : Enter 142.23",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-08.png"
+          ]
         },
         {
           "text": "Now enter the values as shown below:"
         },
         {
-          "text": "UserName : Enter HarryPotter"
+          "text": "UserName : Enter HarryPotter"
         },
         {
-          "text": "OrderID : Enter 20160630-12928"
+          "text": "OrderID : Enter 20160630-12928"
         },
         {
-          "text": "ReturnDate : Enter 20190705"
+          "text": "ReturnDate : Enter 20190705"
         },
         {
-          "text": "UserAmount : Enter 142.23"
+          "text": "UserAmount : Enter 142.23",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-09.png"
+          ]
         },
         {
-          "text": "Now click on create item."
+          "text": "Task 3 : Create Item",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-10.png"
+          ]
         },
         {
-          "text": "Navigate to the Tables and click on Index tab next to Overview section."
+          "text": "Now click on create item."
         },
         {
-          "text": "Click on Create Index."
+          "text": "Navigate to the Tables and click on Index tab next to Overview section."
         },
         {
-          "text": "Enter the Index name as WhizIndex. Enter the Paritition key as ReturnDate and Sort key as UserAmount"
+          "text": "Click on Create Index.",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-11.png"
+          ]
         },
         {
-          "text": "Leave everything as default and Click on Create index and wait until the index state changes to Active."
+          "text": "Task 3 : Create Item",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-12.png"
+          ]
         },
         {
-          "text": "Once the Global Secondary Index is active, you can check the Indexes tab to confirm. Note: It will take 5-10 minutes to be active."
+          "text": "Enter the Index name as WhizIndex. Enter the Paritition key as ReturnDate and Sort key as UserAmount"
         },
         {
-          "text": "Click on Explore table Items tab and click on Create item. Insert the following additional data into the table and click on Create item."
+          "text": "Leave everything as default and Click on Create index and wait until the index state changes to Active."
         },
         {
-          "text": "Attribute name - Attribute Value"
+          "text": "Once the Global Secondary Index is active, you can check the Indexes tab to confirm. Note: It will take 5-10 minutes to be active.",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-13.png"
+          ]
         },
         {
-          "text": "Enter UserName : Enter HarryPotter"
+          "text": "Task 3 : Create Item",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-14.png"
+          ]
         },
         {
-          "text": "Enter OrderID : Enter 20160630-28176"
+          "text": "Click on Explore table Items tab and click on Create item. Insert the following additional data into the table and click on Create item. Attribute name - Attribute Value Enter UserName : Enter HarryPotter Enter OrderID : Enter 20160630-28176 Enter ReturnDate : Enter 20190513 Enter UserAmount : Enter 88.30 Attribute name - Attribute Value Enter UserName : Enter Ron Enter OrderID : Enter 20170609-25875 Enter ReturnDate : Enter 20190628 Enter UserAmount : Enter 116.86 Attribute name - Attribute Value Enter UserName : Enter Ron Enter OrderID : Enter 20170609-4177 Enter ReturnDate : Enter 20190731 Enter UserAmount : Enter 27.89 Attribute name - Attribute Value Enter UserName : Enter Voldemort Enter OrderID : Enter 20170609-17146 Enter ReturnDate : Enter 20190511 Enter UserAmount : Enter 114.00 Attribute name - Attribute Value Enter UserName : Enter Voldemort Enter OrderID : Enter 20170609-18618 Enter ReturnDate : Enter 20190615 Enter UserAmount : Enter 122.45"
         },
         {
-          "text": "Enter ReturnDate : Enter 20190513"
+          "text": "Click on Explore table Items tab and click on Create item. Insert the following additional data into the table and click on Create item."
         },
         {
-          "text": "Enter UserAmount : Enter 88.30"
-        },
-        {
-          "text": "Attribute name - Attribute Value"
-        },
-        {
-          "text": "Enter UserName : Enter Ron"
-        },
-        {
-          "text": "Enter OrderID : Enter 20170609-25875"
-        },
-        {
-          "text": "Enter ReturnDate : Enter 20190628"
-        },
-        {
-          "text": "Enter UserAmount : Enter 116.86"
-        },
-        {
-          "text": "Attribute name - Attribute Value"
-        },
-        {
-          "text": "Enter UserName : Enter Ron"
-        },
-        {
-          "text": "Enter OrderID : Enter 20170609-4177"
-        },
-        {
-          "text": "Enter ReturnDate : Enter 20190731"
-        },
-        {
-          "text": "Enter UserAmount : Enter 27.89"
+          "text": "Attribute name - Attribute Value Enter UserName : Enter HarryPotter Enter OrderID : Enter 20160630-28176 Enter ReturnDate : Enter 20190513 Enter UserAmount : Enter 88.30"
         },
         {
           "text": "Attribute name - Attribute Value"
         },
         {
-          "text": "Enter UserName : Enter Voldemort"
+          "text": "Enter UserName : Enter HarryPotter"
         },
         {
-          "text": "Enter OrderID : Enter 20170609-17146"
+          "text": "Enter OrderID : Enter 20160630-28176"
         },
         {
-          "text": "Enter ReturnDate : Enter 20190511"
+          "text": "Enter ReturnDate : Enter 20190513"
         },
         {
-          "text": "Enter UserAmount : Enter 114.00"
+          "text": "Enter UserAmount : Enter 88.30"
+        },
+        {
+          "text": "Attribute name - Attribute Value Enter UserName : Enter Ron Enter OrderID : Enter 20170609-25875 Enter ReturnDate : Enter 20190628 Enter UserAmount : Enter 116.86"
         },
         {
           "text": "Attribute name - Attribute Value"
         },
         {
-          "text": "Enter UserName : Enter Voldemort"
+          "text": "Enter UserName : Enter Ron"
         },
         {
-          "text": "Enter OrderID : Enter 20170609-18618"
+          "text": "Enter OrderID : Enter 20170609-25875"
         },
         {
-          "text": "Enter ReturnDate : Enter 20190615"
+          "text": "Enter ReturnDate : Enter 20190628"
         },
         {
-          "text": "Enter UserAmount : Enter 122.45"
+          "text": "Enter UserAmount : Enter 116.86"
+        },
+        {
+          "text": "Attribute name - Attribute Value Enter UserName : Enter Ron Enter OrderID : Enter 20170609-4177 Enter ReturnDate : Enter 20190731 Enter UserAmount : Enter 27.89"
+        },
+        {
+          "text": "Attribute name - Attribute Value"
+        },
+        {
+          "text": "Enter UserName : Enter Ron"
+        },
+        {
+          "text": "Enter OrderID : Enter 20170609-4177"
+        },
+        {
+          "text": "Enter ReturnDate : Enter 20190731"
+        },
+        {
+          "text": "Enter UserAmount : Enter 27.89"
+        },
+        {
+          "text": "Attribute name - Attribute Value Enter UserName : Enter Voldemort Enter OrderID : Enter 20170609-17146 Enter ReturnDate : Enter 20190511 Enter UserAmount : Enter 114.00"
+        },
+        {
+          "text": "Attribute name - Attribute Value"
+        },
+        {
+          "text": "Enter UserName : Enter Voldemort"
+        },
+        {
+          "text": "Enter OrderID : Enter 20170609-17146"
+        },
+        {
+          "text": "Enter ReturnDate : Enter 20190511"
+        },
+        {
+          "text": "Enter UserAmount : Enter 114.00"
+        },
+        {
+          "text": "Attribute name - Attribute Value Enter UserName : Enter Voldemort Enter OrderID : Enter 20170609-18618 Enter ReturnDate : Enter 20190615 Enter UserAmount : Enter 122.45"
+        },
+        {
+          "text": "Attribute name - Attribute Value"
+        },
+        {
+          "text": "Enter UserName : Enter Voldemort"
+        },
+        {
+          "text": "Enter OrderID : Enter 20170609-18618"
+        },
+        {
+          "text": "Enter ReturnDate : Enter 20190615"
+        },
+        {
+          "text": "Enter UserAmount : Enter 122.45"
         },
         {
           "text": "Please note that, you need to create items for individual person. Do not add all the details of every person at once and create a single item."
         },
         {
-          "text": "The table looks something like this after creating all the items with provided data."
+          "text": "The table looks something like this after creating all the items with provided data.",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-15.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Create Item",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-16.png"
+          ]
         },
         {
           "text": "Also you can edit the values if you have made any mistake while creating the items by selecting the item, editing it and saving the changes."
@@ -219,82 +315,115 @@
           "text": "In this task, you will utilize the Global Secondary Index (ReturnDate-UserAmount-index) to fetch data from the DynamoDB table named \"WhizOrderTable.\" Follow the steps below:"
         },
         {
-          "text": "Now go to Explore Table items and click on the Scan or Query option for WhizOrderTable."
+          "text": "Now go to Explore Table items and click on the Scan or Query option for WhizOrderTable."
         },
         {
           "text": "Refresh the page before using the scan option to display the index."
         },
         {
-          "text": "Lets try with the Scan option to search for data."
+          "text": "Lets try with the Scan option to search for data."
         },
         {
           "text": "Select the “Scan” option (which is in the left upper corner)."
         },
         {
-          "text": "Table or index : Select Index - WhizIndex (You can select the Index that you've created)"
+          "text": "Table or index : Select Index - WhizIndex (You can select the Index that you've created)"
+        },
+        {
+          "text": "Expand Filters, Attribute name : Enter ReturnDate Type : Select String Condition : Select Between Value : Enter 20190501 and 20190531"
         },
         {
           "text": "Expand Filters,"
         },
         {
-          "text": "Attribute name : Enter ReturnDate"
+          "text": "Attribute name : Enter ReturnDate"
         },
         {
-          "text": "Type : Select String"
+          "text": "Type : Select String"
         },
         {
-          "text": "Condition : Select Between"
+          "text": "Condition : Select Between"
         },
         {
-          "text": "Value : Enter 20190501 and 20190531"
+          "text": "Value : Enter 20190501 and 20190531"
         },
         {
           "text": "In this example, we are trying to fetch the users who returned their orders in the month of May."
         },
         {
-          "text": "Now click on Run button."
+          "text": "Now click on Run button.",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-17.png"
+          ]
         },
         {
-          "text": "Note: If the Global secondary index is not showing in the Scan list, Please wait another 5 to 10 minutes and reload the entire page. This is an AWS side delay."
+          "text": "Task 4 : Use Global Secondary Index to Fetch Data",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-18.png"
+          ]
         },
         {
-          "text": "Now you will be able to see the items returned below based on the search filters we have given."
+          "text": "Now you will be able to see the items returned below based on the search filters we have given.",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-19.png"
+          ]
         },
         {
-          "text": "Lets try with the Query option to search for some data. (Click on Remove before proceeding with Query option)"
+          "text": "Task 4 : Use Global Secondary Index to Fetch Data",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-20.png"
+          ]
         },
         {
-          "text": "Click on Query next to Scan."
+          "text": "Lets try with the Query option to search for some data. (Click on Remove before proceeding with Query option)"
         },
         {
-          "text": "Table or index : Select Index - WhizIndex (You can select the Index that you've created)"
+          "text": "Click on Query next to Scan. Table or index : Select Index - WhizIndex (You can select the Index that you've created) ReturnDate : Enter 20190628 UserAmount (Sort key) : Select Greater than or equal to Enter Attribute Value : Enter 100",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-21.png"
+          ]
         },
         {
-          "text": "ReturnDate : Enter 20190628"
+          "text": "Click on Query next to Scan."
         },
         {
-          "text": "UserAmount (Sort key) : Select Greater than or equal to"
+          "text": "Table or index : Select Index - WhizIndex (You can select the Index that you've created)"
         },
         {
-          "text": "Enter Attribute Value : Enter 100"
+          "text": "ReturnDate : Enter 20190628"
         },
         {
-          "text": "Here we need to check which users returned an item on that particular day. To do so, we use the sort key to qualify the amount, as per the requirement."
+          "text": "UserAmount (Sort key) : Select Greater than or equal to"
         },
         {
-          "text": "Click on Run button."
+          "text": "Enter Attribute Value : Enter 100",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-22.png"
+          ]
         },
         {
-          "text": "Now you will be able to see the items returned below based on the search filters we have given."
+          "text": "Task 4 : Use Global Secondary Index to Fetch Data",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-23.png"
+          ]
         },
         {
-          "text": "This way global secondary index allows us to quickly find all the returns entered on various dates, which would normally require full table scans."
+          "text": "Here we need to check which users returned an item on that particular day. To do so, we use the sort key to qualify the amount, as per the requirement."
         },
         {
-          "text": "Do You Know?"
+          "text": "Click on Run button."
         },
         {
-          "text": "DynamoDB's Global Secondary Indexes provide flexible querying options by enabling you to create alternative indexes on non-key attributes, extending the querying capabilities beyond the primary key."
+          "text": "Now you will be able to see the items returned below based on the search filters we have given."
+        },
+        {
+          "text": "Task 4 : Use Global Secondary Index to Fetch Data",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-24.png"
+          ]
+        },
+        {
+          "text": "This way global secondary index allows us to quickly find all the returns entered on various dates, which would normally require full table scans."
         }
       ]
     },
@@ -308,10 +437,10 @@
           "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
-        },
-        {
-          "text": "Completion and Conclusion"
+          "text": "Sample output :",
+          "images": [
+            "/labs/dynamodb-global-secondary-index/step-25.gif"
+          ]
         },
         {
           "text": "You have created a DynamoDB table with Global Secondary Indexes."
@@ -320,16 +449,13 @@
           "text": "You have successfully fetched data using Global Secondary Indexes."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of the AWS account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

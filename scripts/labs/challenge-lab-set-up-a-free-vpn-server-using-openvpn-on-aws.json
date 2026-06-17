@@ -1,0 +1,121 @@
+{
+  "slug": "challenge-lab-set-up-a-free-vpn-server-using-openvpn-on-aws",
+  "title": "Challenge Lab: Set Up a Free VPN Server Using OpenVPN on AWS",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge, your task is to deploy and configure a free OpenVPN server on an EC2 instance using AWS. You'll need to locate the correct OpenVPN AMI, launch a secure instance, initialize the server, and demonstrate successful VPN connectivity via its web interface. The lab simulates a real-world scenario where a network engineer is required to quickly provision a secure VPN for remote access."
+        },
+        {
+          "text": "You need to set up a free VPN server on AWS so that remote users can securely connect to the cloud environment. To do this, you will launch an EC2 instance using the OpenVPN Access Server image from the AWS Marketplace and complete the basic setup. After configuration, users should be able to connect to the VPN and access the internet securely through it."
+        },
+        {
+          "text": "Launch a VPN Server Deploy an EC2 instance using the official OpenVPN Access Server AMI. Choose the t2.micro instance type. Configure the security group to allow required VPN ports (e.g., 943, 443, 22). Create a new RSA key pair and securely store the .pem file. Assign a public IP and ensure the instance launches successfully."
+        },
+        {
+          "text": "Deploy an EC2 instance using the official OpenVPN Access Server AMI."
+        },
+        {
+          "text": "Choose the t2.micro instance type."
+        },
+        {
+          "text": "Configure the security group to allow required VPN ports (e.g., 943, 443, 22)."
+        },
+        {
+          "text": "Create a new RSA key pair and securely store the .pem file."
+        },
+        {
+          "text": "Assign a public IP and ensure the instance launches successfully."
+        },
+        {
+          "text": "Connect and Configure VPN SSH into the instance using the key pair and the correct username. Run the OpenVPN initialization script. Use all default settings where applicable. Set up an admin password when prompted (you may choose your own for this challenge). Note the public IP of your VPN server."
+        },
+        {
+          "text": "SSH into the instance using the key pair and the correct username."
+        },
+        {
+          "text": "Run the OpenVPN initialization script."
+        },
+        {
+          "text": "Use all default settings where applicable."
+        },
+        {
+          "text": "Set up an admin password when prompted (you may choose your own for this challenge)."
+        },
+        {
+          "text": "Note the public IP of your VPN server."
+        },
+        {
+          "text": "Validate VPN Admin UI Access Open the web browser and navigate to:? https://<your-ec2-ip>:943/admin/ Log in with the configured credentials. Accept license agreement. In VPN settings, configure routing so that all client internet traffic is routed through the VPN. Save and apply settings."
+        },
+        {
+          "text": "Open the web browser and navigate to:? https://<your-ec2-ip>:943/admin/"
+        },
+        {
+          "text": "Log in with the configured credentials."
+        },
+        {
+          "text": "Accept license agreement."
+        },
+        {
+          "text": "In VPN settings, configure routing so that all client internet traffic is routed through the VPN."
+        },
+        {
+          "text": "Save and apply settings."
+        },
+        {
+          "text": "Connect as a VPN User Open: https://<your-ec2-ip>/ Log in as the user you created. Download and install the appropriate OpenVPN connector. Connect using the profile and verify VPN connection is active."
+        },
+        {
+          "text": "Open: https://<your-ec2-ip>/"
+        },
+        {
+          "text": "Log in as the user you created."
+        },
+        {
+          "text": "Download and install the appropriate OpenVPN connector."
+        },
+        {
+          "text": "Connect using the profile and verify VPN connection is active."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

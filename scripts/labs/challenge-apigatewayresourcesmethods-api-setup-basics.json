@@ -1,0 +1,88 @@
+{
+  "slug": "challenge-apigatewayresourcesmethods-api-setup-basics",
+  "title": "Challenge Lab: API Gateway - Creating Resources and Methods",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Sign into the AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to access the AWS Console in a new tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default, copy your Username and Password from the Lab Console, and sign in."
+        },
+        {
+          "text": "Set the AWS Region to US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign into the AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to create a REST API using Amazon API Gateway to expose their services. Your job is to create an API, define a resource, set up a method, and validate the setup. Here’s how to proceed:"
+        },
+        {
+          "text": "Endpoint Type: Select Regional."
+        },
+        {
+          "text": "Create a Resource in actions"
+        },
+        {
+          "text": "Create a Get Method"
+        },
+        {
+          "text": "Configure the method: Integration type: Select Mock (for testing purposes). Leave other settings as default."
+        },
+        {
+          "text": "Integration type: Select Mock (for testing purposes)."
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Test the method: Click Test in the method setup pane. Click the Test button and verify a successful response (e.g., 200 status code with a mock response)."
+        },
+        {
+          "text": "Click Test in the method setup pane."
+        },
+        {
+          "text": "Click the Test button and verify a successful response (e.g., 200 status code with a mock response)."
+        },
+        {
+          "text": "Deploy the API: Create a new stage (e.g., dev). Deploy."
+        },
+        {
+          "text": "Create a new stage (e.g., dev)."
+        },
+        {
+          "text": "Deploy."
+        },
+        {
+          "text": "Note the Invoke URL for the deployed API (e.g., https://<api-id>.execute-api.us-east-1.amazonaws.com/dev/items)."
+        },
+        {
+          "text": "Confirm the API is created with the resource /items and the GET method."
+        },
+        {
+          "text": "Verify the API is deployed to the dev stage and the invoke URL returns a successful response."
+        },
+        {
+          "text": "Click Validate in the lab console to check the setup."
+        },
+        {
+          "text": "Sign out of AWS by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "Click End Lab in the lab console to complete the lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

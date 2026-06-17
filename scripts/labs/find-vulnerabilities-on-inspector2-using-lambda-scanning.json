@@ -35,13 +35,25 @@
           "text": "Click on Get started."
         },
         {
+          "text": "Task 2: Enable Amazon Inspector for your AWS Account",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-01.png"
+          ]
+        },
+        {
           "text": "And you will be able to see Activate Inspector."
         },
         {
           "text": "Click on the Activate Inspector"
         },
         {
-          "text": "In the left-side dashboard, scroll down and click on General Settings, then click on Account Coverage."
+          "text": "Task 2: Enable Amazon Inspector for your AWS Account",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-02.png"
+          ]
+        },
+        {
+          "text": "In the left-side dashboard, scroll down and click on General Settings, then click on Account Coverage."
         },
         {
           "text": "Click on the Activate button."
@@ -53,7 +65,19 @@
           "text": "Lambda standard scanning — With this option enabled, Amazon Inspector only scans for package dependencies in your Lambda functions and associated layers."
         },
         {
+          "text": "Task 2: Enable Amazon Inspector for your AWS Account",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-03.png"
+          ]
+        },
+        {
           "text": "Click on Submit."
+        },
+        {
+          "text": "Task 2: Enable Amazon Inspector for your AWS Account",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-04.png"
+          ]
         }
       ]
     },
@@ -79,7 +103,13 @@
           "text": "Runtime : Select Python 3.11"
         },
         {
-          "text": "Expand Additional Settings, Click on custom execution role select execution role and select Lambda_role from the drop-down."
+          "text": "Expand Additional Settings, Click on custom execution role select execution role and select Lambda_role from the drop-down."
+        },
+        {
+          "text": "Task 3: Create a Lambda Function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-05.png"
+          ]
         },
         {
           "text": "Click on the Create function button."
@@ -91,22 +121,10 @@
           "text": "Remove the existing code in AWS lambda_function.py. Copy the below code and paste it into your lambda_function.py file."
         },
         {
-          "text": "import json"
-        },
-        {
-          "text": "import os"
-        },
-        {
-          "text": "import paramiko"
-        },
-        {
-          "text": "def lambda_handler(event, context):"
-        },
-        {
-          "text": "print(\"Hello world\")"
-        },
-        {
-          "text": "os.system(\"ssh -h\")"
+          "text": "Task 3: Create a Lambda Function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-07.png"
+          ]
         },
         {
           "text": "click on Deploy button."
@@ -121,6 +139,12 @@
         },
         {
           "text": "Click on the Create Layer button."
+        },
+        {
+          "text": "Task 4: Creating Layers for Lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-08.png"
+          ]
         },
         {
           "text": "Layer name: paramiko_layer"
@@ -141,7 +165,19 @@
           "text": "Runtime: python 3.11"
         },
         {
+          "text": "Task 4: Creating Layers for Lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-09.png"
+          ]
+        },
+        {
           "text": "Click on the Create button."
+        },
+        {
+          "text": "Task 4: Creating Layers for Lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-10.png"
+          ]
         }
       ]
     },
@@ -158,6 +194,12 @@
           "text": "Click on the Add Layer button."
         },
         {
+          "text": "Task 5: Adding the layers to the lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-11.png"
+          ]
+        },
+        {
           "text": "Go to the Custom Layers section."
         },
         {
@@ -167,19 +209,49 @@
           "text": "Click on the version dropdown and select the appropriate version."
         },
         {
+          "text": "Task 5: Adding the layers to the lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-12.png"
+          ]
+        },
+        {
           "text": "Click the Add button."
         },
         {
           "text": "After creating the layer scroll it will look like these."
         },
         {
+          "text": "Task 5: Adding the layers to the lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-13.png"
+          ]
+        },
+        {
           "text": "Now, go back to your Lambda function and click the Test button and click Create new test event."
+        },
+        {
+          "text": "Task 5: Adding the layers to the lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-14.png"
+          ]
         },
         {
           "text": "Enter the name as lambda_test and click Save."
         },
         {
+          "text": "Task 5: Adding the layers to the lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-15.png"
+          ]
+        },
+        {
           "text": "Now click Invoke button. It will trigger the Inspector Lambda scanning."
+        },
+        {
+          "text": "Task 5: Adding the layers to the lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-16.png"
+          ]
         }
       ]
     },
@@ -196,13 +268,37 @@
           "text": "Click on the Lambda functions to see the status of the scanning."
         },
         {
+          "text": "Task 6: Finding the vulnerability for the Lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-17.png"
+          ]
+        },
+        {
           "text": "Now click Findings from the left panel and click By Lambda function."
+        },
+        {
+          "text": "Task 6: Finding the vulnerability for the Lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-18.png"
+          ]
         },
         {
           "text": "Click on the testing_lambda and scroll down, you will be able to see the different CVE names."
         },
         {
+          "text": "Task 6: Finding the vulnerability for the Lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-19.png"
+          ]
+        },
+        {
           "text": "Click on any CVE title to see the findings details."
+        },
+        {
+          "text": "Task 6: Finding the vulnerability for the Lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-20.png"
+          ]
         },
         {
           "text": "Scroll down CVE tab to see more details."
@@ -233,6 +329,12 @@
         },
         {
           "text": "Search Tools: Includes tools for searching and analyzing vulnerabilities."
+        },
+        {
+          "text": "Task 6: Finding the vulnerability for the Lambda function",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-21.png"
+          ]
         }
       ]
     },
@@ -249,13 +351,10 @@
           "text": "Sample output :"
         },
         {
-          "text": "Do you know?"
-        },
-        {
-          "text": "Amazon Inspector for Lambda functions provides advanced security features, including dependency vulnerability scanning, Lambda layer analysis, and environment variable inspection. It enforces least privilege, checks runtime policies for compliance, and evaluates network accessibility to prevent public exposure. Inspector also maps findings to compliance frameworks like PCI-DSS, HIPAA, and GDPR, ensuring regulatory adherence for serverless applications."
-        },
-        {
-          "text": "Completion and Conclusion"
+          "text": "Task 7: Validation Test",
+          "images": [
+            "/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning/step-22.gif"
+          ]
         },
         {
           "text": "You Have Successfully logged into AWS console."
@@ -271,9 +370,6 @@
         },
         {
           "text": "You Have Successfully found the vulnerability using lambda scanning."
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign Out Of AWS Account."
