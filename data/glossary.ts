@@ -6,16 +6,16 @@ export const glossaryCategories: Record<string, string[]> = {
   'Security Services':  ['Amazon GuardDuty','Amazon Inspector','Amazon Macie','AWS Shield','Amazon Cognito','AWS Directory Service','ACM','AWS RAM','CloudHSM'],
   'Storage':            ['EBS','EFS','EFS General Purpose','EFS Max I/O','EFS Bursting Throughput','EFS Provisioned Throughput','EFS Elastic Throughput','EFS mount helper','IOPS','Elastic Volumes','EBS snapshot','WORM','DRA'],
   'Encryption':         ['envelope encryption','Compliance mode','Governance mode','legal hold','retention period','EBK','PBK'],
-  'Database & HA':      ['Multi-AZ','Read Replica','Availability Zone','RPO','RTO','RDS Multi-AZ','Aurora Serverless','Aurora Replicas','DynamoDB PITR','DynamoDB Auto Scaling','CloudFormation DeletionPolicy'],
+  'Database & HA':      ['Multi-AZ','Read Replica','Availability Zone','RPO','RTO','RDS Multi-AZ','Aurora Serverless','Aurora Replicas','DynamoDB PITR','DynamoDB Auto Scaling','CloudFormation DeletionPolicy','RDS Proxy','Partition Key','Sort Key','Item Collection','GSI','LSI','Memcached','Lazy Loading','Write-Through'],
   'Containers':         ['awsvpc','ENI','bridge','host'],
   'Messaging':          ['SQS Long Polling','SQS Short Polling','Visibility Timeout','SQS FIFO','Dead Letter Queue','SNS fan-out','Step Functions','API Gateway throttling','API caching','Lambda authorizer','Usage Plan'],
   'CloudFront':         ['OAC','OAI'],
-  'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly','Amazon Translate','Amazon Transcribe'],
+  'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly','Amazon Translate','Amazon Transcribe','Amazon Bedrock','Amazon SageMaker'],
   'Analytics':          ['Amazon MSK','Amazon OpenSearch Service','AWS Data Exchange','Amazon Kinesis Data Streams','AWS Glue'],
-  'Management & Gov':   ['AWS Organizations','SCP','Amazon CloudWatch','AWS CloudTrail','AWS Config','AWS CloudFormation','StackSets','AWS Trusted Advisor','AWS Compute Optimizer','AWS Control Tower'],
+  'Management & Gov':   ['AWS Organizations','SCP','Amazon CloudWatch','AWS CloudTrail','AWS Config','AWS CloudFormation','StackSets','AWS Trusted Advisor','AWS Compute Optimizer','AWS Control Tower','AWS Health Dashboard'],
   'Cost Management':    ['AWS Cost Explorer','AWS Budgets','Cost and Usage Report','Cost Allocation Tags'],
   'Architecture':       ['stateful','stateless','Elastic IP','Backup and Restore','Pilot Light','Warm Standby','Active/Active','IaC','Blue/Green deployment','Canary deployment','Fan-out','Event-driven','Idempotency','Elasticity','Fault tolerance','Shared Responsibility Model','Serverless','Microservices','Containerization'],
-  'IAM & Policies':     ['ARN','Principal','Identity-based policy','Resource-based policy','Permissions boundary','Managed policy','Inline policy','Trust policy','OU','Permission denied','ABAC','NotPrincipal'],
+  'IAM & Policies':     ['ARN','Principal','Identity-based policy','Resource-based policy','Permissions boundary','Managed policy','Inline policy','Trust policy','OU (Organizational Unit)','Permission denied','ABAC','NotPrincipal'],
   'Load Balancers':     ['ALB','NLB','CLB','Target Group'],
   'S3 Features':        ['Pre-signed URL','S3 Versioning','S3 Lifecycle Policy','S3 Transfer Acceleration','SRR','delete marker','noncurrent versions','CORS'],
   'HPC / Batch':        ['PBS','Slurm','LSF'],
@@ -209,6 +209,15 @@ export const glossary: Record<string, string> = {
   'CloudFormation DeletionPolicy': 'Attribute on a CloudFormation resource that controls what happens when the resource is deleted: Delete (default), Retain (keep resource), Snapshot (create final snapshot — supported by RDS, EBS, ElastiCache, not S3).',
   'Secrets Manager': 'AWS service for storing and automatically rotating secrets (database passwords, API keys). Built-in rotation for RDS/Aurora/Redshift/DocumentDB via managed Lambda rotation function. Charged per secret per month.',
   'Aurora Replicas': 'Read-only replicas within an Aurora cluster. Serve read traffic with typically <10ms lag. Can be scaled automatically with Aurora Auto Scaling based on CPU/connections. Up to 15 replicas per cluster.',
+  'RDS Proxy': 'Fully managed connection pooler that sits between an application and RDS/Aurora. Multiplexes many app-side connections into a smaller pool of DB connections — fixes "too many connections" from Lambda or Auto Scaling fleets, and speeds up failover.',
+  'Partition Key': "DynamoDB's hash key (also called the 'hash attribute') — determines which physical partition an item is stored in. High-cardinality values spread traffic evenly and avoid a 'hot partition'.",
+  'Sort Key': "DynamoDB's range key (also called the 'range attribute') — the second part of a composite primary key. Items with the same partition key are stored together, sorted by this value, enabling efficient range queries.",
+  'Item Collection': 'All items in a DynamoDB table (or table + its LSIs) that share the same partition key value. Stored together, sorted by sort key. The 10GB-per-partition-key-value limit for LSIs applies to the whole item collection.',
+  'GSI': 'Global Secondary Index — DynamoDB index with a partition/sort key DIFFERENT from the base table. Can be added or removed at any time and has its own provisioned throughput.',
+  'LSI': 'Local Secondary Index — DynamoDB index with the SAME partition key as the base table but a different sort key. Must be defined at table creation; limited to 10GB per partition key value.',
+  'Memcached': 'ElastiCache engine option: multi-threaded, simple key-value cache with NO persistence and NO replication. Data is lost if a node restarts. Use for simple, horizontally-scaled caching where durability does not matter.',
+  'Lazy Loading': 'Caching strategy: data is loaded into the cache only on a cache miss (app queries cache → miss → queries DB → writes result back to cache). Avoids filling the cache with unused data, but a cache miss costs 3 round trips and data can go stale.',
+  'Write-Through': 'Caching strategy: every write to the database is also written to the cache immediately. Cache data stays fresh and there is no cache-miss penalty for written data, but the cache can fill with rarely-read data and writes get slower.',
 
   // ML / AI services
   'Amazon Comprehend': 'AWS managed NLP service: sentiment analysis, entity recognition, key phrase extraction, topic modeling, language detection. No ML expertise needed. Analyzes text from support tickets, social media, documents.',
@@ -219,6 +228,8 @@ export const glossary: Record<string, string> = {
   'Amazon Polly': 'Text-to-speech service: converts written text to lifelike audio. Supports multiple voices and languages. NOT for chatbots (use Lex) or text analysis (use Comprehend).',
   'Amazon Translate': 'Neural machine translation service: converts text between languages (e.g. English ↔ Japanese). Real-time and batch. NOT speech (pair with Transcribe for audio→text→translate) or sentiment (use Comprehend).',
   'Amazon Transcribe': 'Automatic speech recognition (ASR): converts audio/video speech to text. Speaker identification, custom vocabulary, call-centre analytics. NOT text-to-speech (use Polly) or translation (use Translate).',
+  'Amazon Bedrock': 'Fully managed service for building generative AI apps using foundation models (FMs) from Amazon and third parties (Anthropic, Meta, etc.) via a single API. Supports fine-tuning and RAG (Knowledge Bases) without managing infrastructure. NOT for training models from scratch (use SageMaker).',
+  'Amazon SageMaker': 'End-to-end managed platform to build, train, and deploy CUSTOM ML models (your data, your algorithm/framework) — includes data prep, training, hyperparameter tuning, and real-time/batch/serverless deployment endpoints. Different from pre-built AI services (Polly, Rekognition, Comprehend) which need no training, and from Bedrock (foundation models via API, not training from scratch).',
 
   // Analytics
   'Amazon MSK': 'Managed Streaming for Apache Kafka — fully managed Kafka cluster on AWS. Handles broker provisioning, patching, storage scaling. NO SSH to brokers. Lambda integration requires Event Source Mapping. MSK Serverless auto-scales capacity.',
@@ -238,6 +249,12 @@ export const glossary: Record<string, string> = {
   'AWS Trusted Advisor': 'Account-level checks across 5 pillars: cost optimization, security, fault tolerance, performance, and service limits. Full checks require Business/Enterprise Support.',
   'AWS Compute Optimizer': 'Uses ML on CloudWatch metrics to recommend right-sizing for EC2, ASG, EBS, and Lambda — reduces over-provisioning. Recommendation engine, NOT an enforcement tool.',
   'AWS Control Tower': 'Sets up and governs a secure multi-account AWS environment (landing zone) using Organizations + guardrails + SSO. Higher-level automation on top of Organizations.',
+  'AWS Health Dashboard': "Personalized view of AWS operational issues, scheduled changes, and maintenance events affecting YOUR account's resources — different from the public Service Health Dashboard. Integrates with EventBridge for automated alerting. Full API access needs Business/Enterprise Support.",
+  'CloudWatch Logs Insights': 'Interactive query language for CloudWatch Logs — SQL-like syntax to search, filter, aggregate, and visualize log data across multiple Log Groups. Runs in the console without external tools. Use for: "count errors by Lambda function in last 1 hour". Athena is for S3 data; Logs Insights is for CloudWatch log data.',
+  'conformance pack': 'A collection of Config rules and remediation actions packaged as a single YAML template — deployable across an entire AWS Organization via StackSets. Used for compliance frameworks (CIS AWS Foundations, NIST, PCI DSS). One pack replaces dozens of manually configured individual rules.',
+  'nested stacks': 'CloudFormation stacks that are referenced and created by a parent stack using the AWS::CloudFormation::Stack resource type. Enables modular, reusable templates — e.g. one VPC stack referenced by multiple app stacks. Each nested stack has its own lifecycle (update/rollback) but is orchestrated by the parent.',
+  'Parameter Store': 'AWS Systems Manager feature for centralized, hierarchical storage of configuration data and secrets. Standard tier: free, up to 10,000 params, no expiration. Advanced tier: parameter policies (auto-expiry, change notifications), higher limits. SecureString type = KMS-encrypted at rest. No auto-rotation — use Secrets Manager when rotation is needed.',
+  'Session Manager': 'AWS Systems Manager feature providing a browser-based interactive shell to EC2 instances (and on-premises servers) without opening port 22, managing SSH keys, or running a bastion host. All session activity is logged to S3 / CloudWatch Logs and the session-start event appears in CloudTrail. Requires SSM Agent + AmazonSSMManagedInstanceCore policy on the instance.',
 
   // Cost Management
   'AWS Cost Explorer': 'Visualize, understand, and FORECAST AWS spend over time with filters by service/tag/account. Analysis & forecasting tool — NOT alerting (use Budgets).',
@@ -290,7 +307,7 @@ export const glossary: Record<string, string> = {
   'Managed policy': 'Standalone IAM policy that can be attached to multiple users, groups, or roles. AWS managed = created by AWS (e.g. AdministratorAccess). Customer managed = created by you. Easier to reuse and update than inline.',
   'Inline policy': 'IAM policy embedded directly into one specific user, group, or role. Not reusable. Deleted when the entity is deleted. Use sparingly — managed policies are preferred for maintainability.',
   'Trust policy': 'Resource-based policy on an IAM role that defines which principals (services, accounts, users) can ASSUME the role. Every role has exactly one trust policy. Example: allow EC2 service to assume the role.',
-  'OU': 'Organizational Unit — a container for AWS accounts within AWS Organizations. SCPs can be applied to OUs to restrict all accounts within. OUs can be nested. Management account is at the root.',
+  'OU (Organizational Unit)': 'Organizational Unit — a container for AWS accounts within AWS Organizations. SCPs can be applied to OUs to restrict all accounts within. OUs can be nested. Management account is at the root.',
   'Permission denied': 'When IAM evaluation results in Deny. Explicit Deny always overrides Allow. A missing Allow = implicit Deny. Order: explicit Deny → SCP limit → permissions boundary → resource policy → identity policy.',
 
   // Networking (batch2)

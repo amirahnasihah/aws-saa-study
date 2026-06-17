@@ -1,0 +1,724 @@
+{
+  "slug": "check-compliance-status-of-s3-bucket-using-aws-config",
+  "title": "Check Compliance status of S3 Bucket using AWS Config",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Creating SNS Topic",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a SNS Topic by providing the required configurations like name, display name."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) (us-east-1)"
+        },
+        {
+          "text": "Navigate to the Services menu and click on Simple Notification Service (SNS) under the Application Integration section."
+        },
+        {
+          "text": "Select Topics in the left panel and click on Create topic button."
+        },
+        {
+          "text": "Under Details Type: Select Standard Name: Enter mysnstopic Display name: Enter mysnsnotification"
+        },
+        {
+          "text": "Under Details"
+        },
+        {
+          "text": "Type: Select Standard"
+        },
+        {
+          "text": "Name: Enter mysnstopic"
+        },
+        {
+          "text": "Display name: Enter mysnsnotification"
+        },
+        {
+          "text": "Task 2: Creating SNS Topic"
+        },
+        {
+          "text": "Leave other options as default and click on Create topic button. An SNS topic will be created."
+        },
+        {
+          "text": "Copy the SNS topic ARN and save it to notepad."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Subscribing to the Topic",
+      "steps": [
+        {
+          "text": "In this task, we will subscribe to the topic created in the previous task."
+        },
+        {
+          "text": "Scroll down on the created topic page and you can see the Subscriptions there."
+        },
+        {
+          "text": "Task 3: Subscribing to the Topic"
+        },
+        {
+          "text": "Click on Create subscription button."
+        },
+        {
+          "text": "Under Details"
+        },
+        {
+          "text": "Protocol: Select Email"
+        },
+        {
+          "text": "Endpoint: Enter Your <Mail Id>"
+        },
+        {
+          "text": "Note: Make sure you give a valid mail address as you will receive an SNS notification to this mail address."
+        },
+        {
+          "text": "Click on Create Subscription button."
+        },
+        {
+          "text": "You will receive an email in your mailbox from SNS."
+        },
+        {
+          "text": "Click on Confirm subscription."
+        },
+        {
+          "text": "Task 3: Subscribing to the Topic"
+        },
+        {
+          "text": "Your email address is now subscribed to SNS Topic mysnstopic."
+        },
+        {
+          "text": "Task 3: Subscribing to the Topic"
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Setup AWS Config and Create config rule",
+      "steps": [
+        {
+          "text": "In this task, we are going to setup AWS Config and create the required configuration rules like s3-bucket-public-write-prohibited etc."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) (us-east-1)"
+        },
+        {
+          "text": "Navigate to AWS Config by clicking on the Services menu available under the Management and Governance section."
+        },
+        {
+          "text": "On the Home page of AWS Config, Click on the Get started option."
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "For the Step-1, Setting page performs the following tasks: For Recording method: Recording strategy: Select All resource types with customizable overrides Recording frequency : Continuous recording"
+        },
+        {
+          "text": "For the Step-1, Setting page performs the following tasks:"
+        },
+        {
+          "text": "For Recording method: Recording strategy: Select All resource types with customizable overrides Recording frequency : Continuous recording"
+        },
+        {
+          "text": "For Recording method:"
+        },
+        {
+          "text": "Recording strategy: Select All resource types with customizable overrides"
+        },
+        {
+          "text": "Recording frequency : Continuous recording"
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "Scroll down and For Delivery channel:"
+        },
+        {
+          "text": "Amazon S3 bucket: Select Create a bucket"
+        },
+        {
+          "text": "S3 bucket name: Keep it default"
+        },
+        {
+          "text": "Amazon SNS topic: Check the option of Stream configuration changes and notifications to an Amazon SNS topic."
+        },
+        {
+          "text": "Select the option of Choose a topic from your account"
+        },
+        {
+          "text": "SNS topic name: Select mysnstopic"
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "Click on the Next button to proceed further."
+        },
+        {
+          "text": "For Step-2, Rules, select the following rule: In the search box, enter s3-bucket-public-read-prohibited and select the displayed rule. Once checked the option, remove everything from the search box. And, enter s3-bucket-public-write-prohibited and select the displayed rule. Both the rules are selected now and Click on the Next button."
+        },
+        {
+          "text": "For Step-2, Rules, select the following rule:"
+        },
+        {
+          "text": "In the search box, enter s3-bucket-public-read-prohibited and select the displayed rule."
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "Once checked the option, remove everything from the search box."
+        },
+        {
+          "text": "And, enter s3-bucket-public-write-prohibited and select the displayed rule."
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "Both the rules are selected now and Click on the Next button."
+        },
+        {
+          "text": "For Step-3, Review everything and click on the Confirm button."
+        },
+        {
+          "text": "You will be redirected to the dashboard. Select the option of Rules from the left panel (Not the one under Aggregators)."
+        },
+        {
+          "text": "Both the rules present have a Compliance status as Non-Complaint."
+        },
+        {
+          "text": "Click on any of the rules and scroll down, and you can see the S3 bucket copy the s3 bucket name and navigate to S3 console."
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "Now navigate to S3 bucket page and select the created bucket. Navigate to the Permission tab."
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "Under Block public access (bucket settings) click on Edit button."
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "Check the check box and click on the Save Changes button, one pop-up will appear and confirm it and click on the confirm button."
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "Now, Navigate to the AWS config page, and Select the option of Rules from the left panel (Not the one under Aggregators). It may take 3 to 5mins."
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "Note: If the config rules are Non-compliant refresh the page and follow the below steps."
+        },
+        {
+          "text": "Click on the View dashboard button, to get started with setting up the AWS Config."
+        },
+        {
+          "text": "Select the Settings option present on the left panel."
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "Click on the Edit button."
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "On Edit settings page:"
+        },
+        {
+          "text": "For the Delivery method section, Amazon S3 Bucket: Select Choose a bucket from your account S3 Bucket name: Select the bucket which starts with lab.<random-numbers> Amazon SNS topic: Check Stream configuration changes and notifications to an Amazon SNS topic Select Choose a topic from your account and Select the SNS topic present."
+        },
+        {
+          "text": "For the Delivery method section,"
+        },
+        {
+          "text": "Amazon S3 Bucket: Select Choose a bucket from your account"
+        },
+        {
+          "text": "S3 Bucket name: Select the bucket which starts with lab.<random-numbers>"
+        },
+        {
+          "text": "Amazon SNS topic: Check Stream configuration changes and notifications to an Amazon SNS topic"
+        },
+        {
+          "text": "Select Choose a topic from your account and Select the SNS topic present."
+        },
+        {
+          "text": "Task 4: Setup AWS Config and Create config rule"
+        },
+        {
+          "text": "Click on the Save button."
+        },
+        {
+          "text": "Click on the Rules present on the left side panel (Not the one under Aggregators)."
+        },
+        {
+          "text": "You can see the status of Rules is Compliant now."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create and configure CloudWatch event",
+      "steps": [
+        {
+          "text": "In this task, we are going to create and configure a Cloudwatch event for the configuration rules we just created."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) (us-east-1)"
+        },
+        {
+          "text": "Navigate to EventBridge by clicking on the Services menu available under the Management and Governance section."
+        },
+        {
+          "text": "Select on the Rules present on the left panel inside Buses."
+        },
+        {
+          "text": "Task 5: Create and configure CloudWatch event"
+        },
+        {
+          "text": "Click on the Create rule button.Note: Disable the Visual rule builder opt in option."
+        },
+        {
+          "text": "Click on the Create rule button."
+        },
+        {
+          "text": "Task 5: Create and configure CloudWatch event"
+        },
+        {
+          "text": "Enter the Name as config_rule"
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Task 5: Create and configure CloudWatch event"
+        },
+        {
+          "text": "For Step 2, Build event pattern:"
+        },
+        {
+          "text": "To set up the Event Source as Others,"
+        },
+        {
+          "text": "Task 5: Create and configure CloudWatch event"
+        },
+        {
+          "text": "Scroll down and,Under Event Pattern paste the below rule in the editor window."
+        },
+        {
+          "text": "Task 5: Create and configure CloudWatch event"
+        },
+        {
+          "text": "Click on the Next button to create a custom event pattern."
+        },
+        {
+          "text": "For Targets, Choose Target Type as AWS Service"
+        },
+        {
+          "text": "Select an SNS topic and choose mysnstopic for the topic menu.Uncheck the Permission Check box (Use execution role (recommended))"
+        },
+        {
+          "text": "Select an SNS topic and choose mysnstopic for the topic menu."
+        },
+        {
+          "text": "Uncheck the Permission Check box (Use execution role (recommended))"
+        },
+        {
+          "text": "Click on the Next button to proceed with the next steps"
+        },
+        {
+          "text": "Under tags, No need to add anything and click on Next button."
+        },
+        {
+          "text": "Finally, click on the Create rule button."
+        },
+        {
+          "text": "Task 6: Create an S3 bucket"
+        },
+        {
+          "text": "In this task, we are going to create an S3 bucket by providing the required details like name , region, access etc."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
+        },
+        {
+          "text": "On the S3 Page, click on the Create bucket button and fill in the bucket details. Bucket name: Enter lab<RANDOM_NUMBER> Note: S3 bucket name is globally unique, choose a name which is available. Region: Select US East (N. Virginia) us-east-1 For Object ownership: Select ACLs disabled For Block Public Access settings for this bucket section, Uncheck the option, Block all public access, and check the acknowledge option."
+        },
+        {
+          "text": "On the S3 Page, click on the Create bucket button and fill in the bucket details."
+        },
+        {
+          "text": "Bucket name: Enter lab<RANDOM_NUMBER> Note: S3 bucket name is globally unique, choose a name which is available."
+        },
+        {
+          "text": "Bucket name: Enter lab<RANDOM_NUMBER>"
+        },
+        {
+          "text": "Note: S3 bucket name is globally unique, choose a name which is available."
+        },
+        {
+          "text": "Region: Select US East (N. Virginia) us-east-1"
+        },
+        {
+          "text": "For Object ownership: Select ACLs disabled"
+        },
+        {
+          "text": "For Block Public Access settings for this bucket section, Uncheck the option, Block all public access, and check the acknowledge option."
+        },
+        {
+          "text": "For Block Public Access settings for this bucket section,"
+        },
+        {
+          "text": "Uncheck the option, Block all public access, and check the acknowledge option."
+        },
+        {
+          "text": "Task 5: Create and configure CloudWatch event"
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Click on Create bucket button."
+        },
+        {
+          "text": "The S3 bucket is created successfully. Click on your bucket name."
+        },
+        {
+          "text": "In the Overview, You can see the following message"
+        },
+        {
+          "text": "You don't have any objects in this bucket."
+        },
+        {
+          "text": "Task 5: Create and configure CloudWatch event"
+        },
+        {
+          "text": "To upload a file to our S3 bucket,"
+        },
+        {
+          "text": "Click on Upload button."
+        },
+        {
+          "text": "Click on Add files button."
+        },
+        {
+          "text": "Browse for your local image."
+        },
+        {
+          "text": "Click on the Upload button."
+        },
+        {
+          "text": "You can watch the progress of the upload from within the transfer panel at the top of the screen."
+        },
+        {
+          "text": "Once your file has been uploaded, it will be displayed in the bucket."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Create a Lambda function",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a Lambda function by providing the required configurations like name, runtime, role , triggers etc."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1"
+        },
+        {
+          "text": "Navigate to Lambda by clicking on Services menu. Lambda is available under Compute section."
+        },
+        {
+          "text": "Click on the Create a function button. Choose Author from Scratch Function name: Enter config_lambda Runtime: Select Python 3.9"
+        },
+        {
+          "text": "Click on the Create a function button."
+        },
+        {
+          "text": "Choose Author from Scratch"
+        },
+        {
+          "text": "Function name: Enter config_lambda"
+        },
+        {
+          "text": "Runtime: Select Python 3.9"
+        },
+        {
+          "text": "Permissions: Click on Change default execution role and choose Use an existing role"
+        },
+        {
+          "text": "Existing role: Select IAM Role (task_257_role) from the list."
+        },
+        {
+          "text": "Note: This IAM Role is created during the lab creation."
+        },
+        {
+          "text": "Now leave everything as default."
+        },
+        {
+          "text": "Click on Create function button and it will take a few minutes to create the lambda function for you."
+        },
+        {
+          "text": "Click on the + Add trigger button in the function overview to integrate the CloudWatch rule with Lambda."
+        },
+        {
+          "text": "Task 7: Create a Lambda function"
+        },
+        {
+          "text": "For Trigger configuration, Search and Select the EventBridge (CloudWatch Events)"
+        },
+        {
+          "text": "Rule: Select Existing rules"
+        },
+        {
+          "text": "Existing rules: Select the CloudWatch rule config_rule."
+        },
+        {
+          "text": "Task 7: Create a Lambda function"
+        },
+        {
+          "text": "The event pattern will be shown. Click on the Add button."
+        },
+        {
+          "text": "The trigger is successfully added to the lambda function."
+        },
+        {
+          "text": "Add the environment variable for the Lambda function."
+        },
+        {
+          "text": "Switch to the Configuration tab and select the Environment variables."
+        },
+        {
+          "text": "Click on the Edit button to add the Environment variable on the left side as highlighted in the below picture."
+        },
+        {
+          "text": "Task 7: Create a Lambda function"
+        },
+        {
+          "text": "By default, there will be no Environment variable present, Click on the Add environment variable. Key : Enter TOPIC_ARN Value : Enter SNS topic ARN copied previously"
+        },
+        {
+          "text": "By default, there will be no Environment variable present, Click on the Add environment variable."
+        },
+        {
+          "text": "Key : Enter TOPIC_ARN"
+        },
+        {
+          "text": "Value : Enter SNS topic ARN copied previously"
+        },
+        {
+          "text": "Click on the Save button"
+        },
+        {
+          "text": "Paste the below code in the Code Window and complete the Setup."
+        },
+        {
+          "text": "Switch to the Code tab and double click on the lambda_function.py file inside the editor window."
+        },
+        {
+          "text": "Task 7: Create a Lambda function"
+        },
+        {
+          "text": "Make sure that the default code is visible to you. Now remove everything using Ctrl+A and Ctrl+X. And, paste the below code."
+        },
+        {
+          "text": "Once the code is pasted, click on the Deploy button to save the code."
+        },
+        {
+          "text": "Setup is completed for the lab, it's now time to test the working of the lab."
+        },
+        {
+          "text": "The next few steps include making changes in the S3 Bucket, refreshing the config rule, and checking mail for the changes."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Change permission and make the S3 Bucket public",
+      "steps": [
+        {
+          "text": "Navigate to the Services menu at the top and click on S3 in the Storage section."
+        },
+        {
+          "text": "Buckets will be listed there, click to Open the bucket name starting with lab. This bucket has been created by you in the Task 6."
+        },
+        {
+          "text": "Switch to the Permission tab and scroll to the Bucket policy window."
+        },
+        {
+          "text": "Click on the Edit button and paste the below policy."
+        },
+        {
+          "text": "And, replace the bucket ARN at both places."
+        },
+        {
+          "text": "Bucket ARN will be present on the top of the editor, click on the copy button and paste the ARN carefully."
+        },
+        {
+          "text": "Task 8: Change permission and make the S3 Bucket public"
+        },
+        {
+          "text": "Click on the Save changes button. The bucket is public, any object uploaded inside will be publicly accessible now."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Check email to see the updates",
+      "steps": [
+        {
+          "text": "Open your mail and look for the emails from no-reply@sns.amazonaws.com"
+        },
+        {
+          "text": "Click on the open this mail."
+        },
+        {
+          "text": "The email will have all the details about the violation."
+        },
+        {
+          "text": "Task 8: Check email to see the updates"
+        },
+        {
+          "text": "There are two other mail from the same sender having the Subject as AWS Notification Message."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Re-evaluate the Config rule to check the changes",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1"
+        },
+        {
+          "text": "Navigate to Config by clicking on the Services menu available under the Management and Governance section."
+        },
+        {
+          "text": "Click on the Rules present on the left panel (Not the one under Aggregators)."
+        },
+        {
+          "text": "One of the rules i.e. s3-bucket-public-read-prohibited is now showing as 1 Noncompliant resource(s)"
+        },
+        {
+          "text": "Task 9: Re-evaluate the Config rule to check the changes"
+        },
+        {
+          "text": "Click on the rule name, to see the non-compliance resource."
+        },
+        {
+          "text": "Resources in scope will show the noncompliant resource i.e. S3 Bucket."
+        },
+        {
+          "text": "Scroll to the left and check the Annotation."
+        },
+        {
+          "text": "Task 9: Re-evaluate the Config rule to check the changes"
+        },
+        {
+          "text": "Annotation: The S3 bucket ACL allows public read access. The S3 bucket policy allows public read access."
+        },
+        {
+          "text": "Click on the bucket name and select the Resource timeline option as shown below."
+        },
+        {
+          "text": "Task 9: Re-evaluate the Config rule to check the changes"
+        },
+        {
+          "text": "The events section will take some time and show the exact time when changes were made."
+        },
+        {
+          "text": "Task 9: Re-evaluate the Config rule to check the changes"
+        },
+        {
+          "text": "AWS Config allows you to track resource relationships and dependencies through the use of configuration item history and resource relationships graph. This helps you understand the impact of changes and identify potential compliance risks."
+        }
+      ]
+    },
+    {
+      "title": "Task 11 : Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "You have successfully created an SNS topic and Subscription."
+        },
+        {
+          "text": "You have successfully done the setup of AWS Config and have created Config rules."
+        },
+        {
+          "text": "You have successfully created and configured CloudWatch."
+        },
+        {
+          "text": "You have successfully created an S3 bucket and uploaded an image object in it."
+        },
+        {
+          "text": "You have successfully created a Lambda function and configured it."
+        },
+        {
+          "text": "You have successfully changed the Permission of the S3 Bucket and Made it public."
+        },
+        {
+          "text": "You have successfully received an email through SNS topic about the updates of the S3 Bucket."
+        },
+        {
+          "text": "You have successfully re-evaluated the Config rule and seen the events."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

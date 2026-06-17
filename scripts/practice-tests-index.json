@@ -1,0 +1,152 @@
+{
+  "courseUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153",
+  "discoveredAt": "2026-06-17T06:35:39.538Z",
+  "total": 16,
+  "mapped": 14,
+  "tests": [
+    {
+      "index": 1,
+      "title": "Practice Test 1 (SAA-C03)",
+      "questionCount": 65,
+      "quizId": "60503",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/60503/exam/start",
+      "kind": "pt",
+      "setId": null
+    },
+    {
+      "index": 2,
+      "title": "Practice Test 2 (SAA-C03)",
+      "questionCount": 65,
+      "quizId": "60504",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/60504/exam/start",
+      "kind": "pt",
+      "setId": "wz2"
+    },
+    {
+      "index": 3,
+      "title": "Practice Test 3 (SAA-C03)",
+      "questionCount": 65,
+      "quizId": "60697",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/60697/exam/start",
+      "kind": "pt",
+      "setId": "wz3"
+    },
+    {
+      "index": 4,
+      "title": "Practice Test 4 (SAA-C03)",
+      "questionCount": 65,
+      "quizId": "60698",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/60698/exam/start",
+      "kind": "pt",
+      "setId": "wz4"
+    },
+    {
+      "index": 5,
+      "title": "Practice Test 5 (SAA-C03)",
+      "questionCount": 65,
+      "quizId": "60758",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/60758/exam/start",
+      "kind": "pt",
+      "setId": "wz5"
+    },
+    {
+      "index": 6,
+      "title": "Practice Test 6 (SAA-C03)",
+      "questionCount": 65,
+      "quizId": "60817",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/60817/exam/start",
+      "kind": "pt",
+      "setId": "wz6"
+    },
+    {
+      "index": 7,
+      "title": "Virtual Private Cloud (VPC)",
+      "questionCount": 10,
+      "quizId": "14785",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/14785/exam/start",
+      "kind": "section",
+      "setId": "wzs1"
+    },
+    {
+      "index": 8,
+      "title": "Storage",
+      "questionCount": 5,
+      "quizId": "69829",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/69829/exam/start",
+      "kind": "section",
+      "setId": "wzs2"
+    },
+    {
+      "index": 9,
+      "title": "Amazon Elastic File System (EFS)",
+      "questionCount": 5,
+      "quizId": "14791",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/14791/exam/start",
+      "kind": "section",
+      "setId": "wzs3"
+    },
+    {
+      "index": 10,
+      "title": "API Gateway",
+      "questionCount": 5,
+      "quizId": "14796",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/14796/exam/start",
+      "kind": "section",
+      "setId": "wzs4"
+    },
+    {
+      "index": 11,
+      "title": "AWS Lambda",
+      "questionCount": 4,
+      "quizId": "14807",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/14807/exam/start",
+      "kind": "section",
+      "setId": "wzs5"
+    },
+    {
+      "index": 12,
+      "title": "Application Integration",
+      "questionCount": 7,
+      "quizId": "14825",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/14825/exam/start",
+      "kind": "section",
+      "setId": "wzs6"
+    },
+    {
+      "index": 13,
+      "title": "Database",
+      "questionCount": 10,
+      "quizId": "15466",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/15466/exam/start",
+      "kind": "section",
+      "setId": "wzs7"
+    },
+    {
+      "index": 14,
+      "title": "Machine Learning",
+      "questionCount": 4,
+      "quizId": "69669",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/69669/exam/start",
+      "kind": "section",
+      "setId": "wzs8"
+    },
+    {
+      "index": 15,
+      "title": "Analytics",
+      "questionCount": 5,
+      "quizId": "69671",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/69671/exam/start",
+      "kind": "section",
+      "setId": "wzs9"
+    },
+    {
+      "index": 16,
+      "title": "Final Test (SAA-C03)",
+      "questionCount": 65,
+      "quizId": "61082",
+      "examUrl": "https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/quiz/61082/exam/start",
+      "kind": "final",
+      "setId": null
+    }
+  ]
+}

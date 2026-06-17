@@ -1,0 +1,151 @@
+{
+  "slug": "deploying-a-highly-available-web-application-and-bastion-host-in-aws-challenge-bastion-setup",
+  "title": "Deploying a Highly Available Web Application and Bastion Host in AWS Challenge - Bastion Setup",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown"
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants a web application that stays online even if a server fails, with secure access for updates. Your job is to verify a pre-created network (VPC), set up a bastion host for secure access, launch web servers in multiple zones, create a load balancer to distribute traffic, connect via the bastion, test high availability, and validate the setup. High availability ensures the app works if one server or zone fails, and a bastion host secures server access. Here’s how to do it with key steps and hints:"
+        },
+        {
+          "text": "Check Cloudformation stack is created: Go to Services > CloudFormation > Stacks, look for a stack (e.g., lab-vpc-stack), verify status is CREATE_COMPLETE, note outputs (e.g., VPC ID, public/private subnet IDs for us-east-1a, us-east-1b). Hint: Refresh if the stack isn’t visible."
+        },
+        {
+          "text": "Go to Services > CloudFormation > Stacks, look for a stack (e.g., lab-vpc-stack), verify status is CREATE_COMPLETE,"
+        },
+        {
+          "text": "note outputs (e.g., VPC ID, public/private subnet IDs for us-east-1a, us-east-1b). Hint: Refresh if the stack isn’t visible."
+        },
+        {
+          "text": "Create a Bastion Server: Go to EC2 > Launch instances, name it bastion, pick Amazon Linux 2023 kernel AMI, choose t2.micro instance type, select the stack’s public subnet (us-east-1a), enable Auto-assign Public IP, create security group with SSH (port 22)"
+        },
+        {
+          "text": "Go to EC2 > Launch instances, name it bastion, pick Amazon Linux 2023 kernel AMI, choose t2.micro instance type,"
+        },
+        {
+          "text": "select the stack’s public subnet (us-east-1a), enable Auto-assign Public IP,"
+        },
+        {
+          "text": "create security group with SSH (port 22)"
+        },
+        {
+          "text": "Creating a Security Group for the Load Balancer: add inbound rule for HTTP (port 80) from anywhere (0.0.0.0/0), click Create security group."
+        },
+        {
+          "text": "add inbound rule for HTTP (port 80) from anywhere (0.0.0.0/0), click Create security group."
+        },
+        {
+          "text": "Steps to create Web-servers: Launch two EC2 instances. For each: Go to EC2 > Launch instances, name them web1 (us-east-1a) and web2 (us-east-1b), pick Amazon Linux 2023 kernel AMI, choose t2.micro instance type, select stack’s private subnets (us-east-1a for web1, us-east-1b for web2), disable public IP, create security group web-sg with HTTP (port 80) from loadbalancer-sg and SSH (port 22) from bastion-sg, Add user data to: Install httpd echo \"<h1>Hello from $(hostname)</h1>\" > /var/www/html/index.html"
+        },
+        {
+          "text": "Go to EC2 > Launch instances, name them web1 (us-east-1a) and web2 (us-east-1b), pick Amazon Linux 2023 kernel AMI, choose t2.micro instance type,"
+        },
+        {
+          "text": "select stack’s private subnets (us-east-1a for web1, us-east-1b for web2), disable public IP, create security group web-sg with HTTP (port 80) from loadbalancer-sg and SSH (port 22) from bastion-sg,"
+        },
+        {
+          "text": "Add user data to: Install httpd echo \"<h1>Hello from $(hostname)</h1>\" > /var/www/html/index.html"
+        },
+        {
+          "text": "Install httpd"
+        },
+        {
+          "text": "echo \"<h1>Hello from $(hostname)</h1>\" > /var/www/html/index.html"
+        },
+        {
+          "text": "Click Launch instance. Hint: Verify both instances are “Running”."
+        },
+        {
+          "text": "Create a Target Group: Create target group, Select vpc create by stack register both web ec2 as targets"
+        },
+        {
+          "text": "Create target group,"
+        },
+        {
+          "text": "Select vpc create by stack"
+        },
+        {
+          "text": "register both web ec2 as targets"
+        },
+        {
+          "text": "Create a Application Load Balancer: use loadbalancer-sg"
+        },
+        {
+          "text": "use loadbalancer-sg"
+        },
+        {
+          "text": "Connecting to web server via Bastion: SSH to bastion: chmod 400 bastion-key.pem; ssh -i <your-key-pair> ec2-user@<bastion-public-ip>. From bastion, SSH to web1 private IP: ssh ec2-user@<web1-private-ip>, run curl localhost to see “Hello from web1”. Repeat for web2."
+        },
+        {
+          "text": "SSH to bastion: chmod 400 bastion-key.pem; ssh -i <your-key-pair> ec2-user@<bastion-public-ip>."
+        },
+        {
+          "text": "From bastion, SSH to web1 private IP: ssh ec2-user@<web1-private-ip>, run curl localhost to see “Hello from web1”. Repeat for web2."
+        },
+        {
+          "text": "Checking the health of the load balancer: Go to created target group, verify both targets are “Healthy”. Open the ALB DNS name in a browser, see “Hello from web1” or “web2”."
+        },
+        {
+          "text": "Go to created target group, verify both targets are “Healthy”."
+        },
+        {
+          "text": "Open the ALB DNS name in a browser, see “Hello from web1” or “web2”."
+        },
+        {
+          "text": "Test case for High Availability: Go to EC2 > Instances, stop 1st instance, waitt 2-3 minutes, refresh ALB DNS in browser, verify it still loads (from web2). Hint: Check target group health; web1 should be “Unhealthy”."
+        },
+        {
+          "text": "Go to EC2 > Instances, stop 1st instance, waitt 2-3 minutes, refresh ALB DNS in browser, verify it still loads (from web2)."
+        },
+        {
+          "text": "Hint: Check target group health; web1 should be “Unhealthy”."
+        },
+        {
+          "text": "In the lab console, click Validate to check the stack, bastion, web servers, load balancer, and high availability."
+        },
+        {
+          "text": "Hint: Ensure the ALB serves pages after stopping one instance."
+        },
+        {
+          "text": "Sign out of the AWS Management Console by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "In the lab console, click End Lab from your dashboard and wait for it to finish."
+        },
+        {
+          "text": "You’ve completed the high availability web application challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

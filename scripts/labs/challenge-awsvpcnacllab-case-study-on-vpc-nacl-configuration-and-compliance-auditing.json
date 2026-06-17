@@ -1,0 +1,181 @@
+{
+  "slug": "challenge-awsvpcnacllab-case-study-on-vpc-nacl-configuration-and-compliance-auditing",
+  "title": "Challenge: AWS_VPC_NACL_Lab - Case Study on VPC, NACL Configuration, and Compliance Auditing",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign into the AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to access the AWS Console in a new tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default, copy your Username and Password from the Lab Console, and sign in."
+        },
+        {
+          "text": "Set the AWS Region to US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign into the AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to set up a secure network infrastructure on AWS using a Virtual Private Cloud (VPC) with public and private subnets, control traffic using Network Access Control Lists (NACLs), and monitor compliance using AWS Config. Your job is to create a VPC, configure subnets, set up an internet gateway, launch EC2 instances, configure a custom NACL, audit the setup for compliance, and validate the setup. Here’s how to proceed:"
+        },
+        {
+          "text": "Create Subnets (Public, Private)"
+        },
+        {
+          "text": "Create and Attach an Internet Gateway"
+        },
+        {
+          "text": "Create Route Tables and Associate Them with Subnets (Public, Private)"
+        },
+        {
+          "text": "Update Route Table and Configure the Internet Gateway"
+        },
+        {
+          "text": "Enable Auto-Assign Public IP for Public Subnets"
+        },
+        {
+          "text": "Launch an EC2 Instance in the Public Subnet AMI: Amazon Linux 2023 kernel AMI. Instance type: t2.micro. Network settings: Subnet: Select PublicSubnet. Auto-assign public IP:"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 kernel AMI."
+        },
+        {
+          "text": "Instance type: t2.micro."
+        },
+        {
+          "text": "Network settings: Subnet: Select PublicSubnet. Auto-assign public IP:"
+        },
+        {
+          "text": "Subnet: Select PublicSubnet."
+        },
+        {
+          "text": "Auto-assign public IP:"
+        },
+        {
+          "text": "Create security group with port 20 and port 80"
+        },
+        {
+          "text": "User script: install http and some text in index.html"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 kernel AMI."
+        },
+        {
+          "text": "Instance type: t2.micro."
+        },
+        {
+          "text": "Network settings: Subnet: Select PrivateSubnet."
+        },
+        {
+          "text": "Subnet: Select PrivateSubnet."
+        },
+        {
+          "text": "Auto-assign public IP:"
+        },
+        {
+          "text": "Create a new security group with port 22"
+        },
+        {
+          "text": "Test the Public EC2 Instance: Paste Ip in browser check for webpage"
+        },
+        {
+          "text": "Paste Ip in browser check for webpage"
+        },
+        {
+          "text": "Test the Private EC2 Instance: Connect by bastion host Ping from private Ip"
+        },
+        {
+          "text": "Connect by bastion host"
+        },
+        {
+          "text": "Ping from private Ip"
+        },
+        {
+          "text": "Testing the Public and Private Server"
+        },
+        {
+          "text": "Test the Public EC2 Instance: You will get site can’t be reached"
+        },
+        {
+          "text": "You will get site can’t be reached"
+        },
+        {
+          "text": "Test the Private EC2 Instance: You can't access as public instance in is not reach"
+        },
+        {
+          "text": "You can't access as public instance in is not reach"
+        },
+        {
+          "text": "Add the following inbound rules: Rule 100: SSH (port 22). Rule 200: HTTP (port 80) Rule 150: All ICMP IPV4."
+        },
+        {
+          "text": "Rule 100: SSH (port 22)."
+        },
+        {
+          "text": "Rule 200: HTTP (port 80)"
+        },
+        {
+          "text": "Rule 150: All ICMP IPV4."
+        },
+        {
+          "text": "Edit outbound rules."
+        },
+        {
+          "text": "Add the following rules: Rule 100: Custom TCP (1024 - 65535) Allow. Rule 150: All ICMP IPV4, Allow. Rule 200: SSH (20), Allow."
+        },
+        {
+          "text": "Rule 100: Custom TCP (1024 - 65535) Allow."
+        },
+        {
+          "text": "Rule 150: All ICMP IPV4, Allow."
+        },
+        {
+          "text": "Rule 200: SSH (20), Allow."
+        },
+        {
+          "text": "Try to ping private EC2 from public EC2"
+        },
+        {
+          "text": "Confirm the VPC is created with the correct CIDR block."
+        },
+        {
+          "text": "Verify the public and private subnets are created and associated with the correct route tables."
+        },
+        {
+          "text": "Ensure the internet gateway is attached and configured in PublicRouteTable."
+        },
+        {
+          "text": "Confirm PublicEC2 is launched in PublicSubnet with a public IP and can access the internet."
+        },
+        {
+          "text": "Confirm PrivateEC2 is launched in PrivateSubnet without a public IP and cannot access the internet."
+        },
+        {
+          "text": "Verify the custom NACL is created, associated with PublicSubnet, and has the correct rules."
+        },
+        {
+          "text": "Confirm the connectivity tests align with the NACL rules and subnet configurations."
+        },
+        {
+          "text": "Click Validate in the lab console to check the setup."
+        },
+        {
+          "text": "Sign out of AWS by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "Click End Lab in the lab console to complete the lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -9,102 +9,10 @@
   "duration": "00:30:00",
   "tasks": [
     {
-      "title": "Task 1: Sign in to AWS Management Console Click on the Open console button, and you will get redirected to AWS Console in a new browser tab.",
-      "steps": [
-        {
-          "text": "On the AWS sign-in page,"
-        },
-        {
-          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
-        },
-        {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
-        },
-        {
-          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
-        },
-        {
-          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
-        }
-      ]
-    },
-    {
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open console button, and you will get redirected to AWS Console in a new browser tab."
-        }
-      ]
-    },
-    {
-      "title": "Task 2 : Create SQS Dead-letter Queues",
-      "steps": [
-        {
-          "text": "In this task, we are going to create a Dead-Letter queue and a primary testing queue."
-        },
-        {
-          "text": "Make sure you are in the N. Virginia region."
-        },
-        {
-          "text": "Navigate to the Services menu on the top, search for SQS and select it."
-        },
-        {
-          "text": "Click on the Create queue button."
-        },
-        {
-          "text": "Details :"
-        },
-        {
-          "text": "Type : Select Standard"
-        },
-        {
-          "text": "Name : Enter WhizQueue."
-        },
-        {
-          "text": "Configurations:"
-        },
-        {
-          "text": "Message retenation period : Enter 14 Days"
-        }
-      ]
-    },
-    {
-      "title": "Task 3 : Send and Receive Messages",
-      "steps": [
-        {
-          "text": "We’ll be now sending a message from our Testing queue."
-        },
-        {
-          "text": "Click on Send and receive messages button."
-        },
-        {
-          "text": "Send message"
-        },
-        {
-          "text": "Message body : Enter My first queue message"
-        }
-      ]
-    },
-    {
-      "title": "Task 4 : Validation Test Once The Lab Steps Are Completed, Please Click On The Validation Button On The Right Side Panel. This Will Validate The Resources In The AWS Account And Shows You Whether You Have Completed This Lab Successfully Or Not. Sample Output : Completion and Conclusion",
-      "steps": [
-        {
-          "text": "You have successfully created dead-letter queue"
-        },
-        {
-          "text": "You have successfully received the message in dead-letter queue."
-        },
-        {
-          "text": "End Lab"
-        },
-        {
-          "text": "Sign out of the AWS Account."
-        },
-        {
-          "text": "You have successfully completed the lab."
-        },
-        {
-          "text": "Once you have completed the steps, click on End Lab from your lab’s dashboard."
+          "text": "Click on the Open console button, and you will get redirected to AWS Console in a new browser tab."
         }
       ]
     },
@@ -112,7 +20,7 @@
       "title": "Task 4 : Validation Test",
       "steps": [
         {
-          "text": "Once The Lab Steps Are Completed, Please Click On The Validation Button On The Right Side Panel."
+          "text": "Once The Lab Steps Are Completed, Please Click On The Validation Button On The Right Side Panel."
         },
         {
           "text": "This Will Validate The Resources In The AWS Account And Shows You Whether You Have Completed This Lab Successfully Or Not."
@@ -121,7 +29,10 @@
           "text": "Sample Output :"
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 4 : Validation Test",
+          "images": [
+            "/labs/introduction-sqs-deadletter-queue/step-01.gif"
+          ]
         }
       ]
     }

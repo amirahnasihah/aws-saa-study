@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,43 +32,106 @@
       "title": "Task 2: Create a Security Group for Launch template",
       "steps": [
         {
-          "text": "Make sure you are in the N.Virginia Region."
+          "text": "Make sure you are in the N.Virginia Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
         },
         {
-          "text": "On the left panel menu, select the security group under the Network & Security section."
+          "text": "On the left panel menu, select the security group under the Network & Security section."
         },
         {
-          "text": "Click on the Create Security Group."
+          "text": "Click on the Create Security Group."
+        },
+        {
+          "text": "We are going to create a Security group for the Launch template with port 80 number enabled. Security group name: Enter Launch-template-SG Description: Enter Security group for Launch template VPC: Select Default VPC"
         },
         {
           "text": "We are going to create a Security group for the Launch template with port 80 number enabled."
         },
         {
-          "text": "Security group name: Enter Launch-template-SG"
+          "text": "Security group name: Enter Launch-template-SG"
         },
         {
-          "text": "Description: Enter Security group for Launch template"
+          "text": "Description: Enter Security group for Launch template"
         },
         {
-          "text": "VPC: Select Default VPC"
+          "text": "VPC: Select Default VPC"
         },
         {
-          "text": "Click on the Add rule under Inbound rules."
+          "text": "Task 2: Create a Security Group for Launch template",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-01.png"
+          ]
         },
         {
-          "text": "Type : Select HTTP"
+          "text": "Click on the Add rule under Inbound rules. Type : Select HTTP Source : Select Anywhere-IPv4 In the textbox add 0.0.0.0/0",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-02.png"
+          ]
+        },
+        {
+          "text": "Click on the Add rule under Inbound rules."
+        },
+        {
+          "text": "Type : Select HTTP"
         },
         {
           "text": "Source : Select Anywhere-IPv4"
         },
         {
-          "text": "In the textbox add 0.0.0.0/0"
+          "text": "In the textbox add 0.0.0.0/0",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-03.png"
+          ]
         },
         {
           "text": "Leave everything as default and click on the Create Security Group."
+        },
+        {
+          "text": "Task 2: Create a Security Group for Launch template",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-04.png"
+          ]
+        },
+        {
+          "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key Pairs."
+        },
+        {
+          "text": "To create a new key pair, click on the Create Key Pair."
+        },
+        {
+          "text": "Fill in the details below: Name: Enter WhizKeyPair File format: pem (Linux & Mac Users) or ppk (Windows users) Leave other options as default. Click on the Create Key Pair.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-05.png"
+          ]
+        },
+        {
+          "text": "Fill in the details below:"
+        },
+        {
+          "text": "Name: Enter WhizKeyPair"
+        },
+        {
+          "text": "File format: pem (Linux & Mac Users) or ppk (Windows users)"
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on the Create Key Pair.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-06.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create a Security Group for Launch template",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-07.png"
+          ]
+        },
+        {
+          "text": "Key pair will be created."
         }
       ]
     },
@@ -76,25 +139,40 @@
       "title": "Task 3: Create a Key pair for the Launch template",
       "steps": [
         {
-          "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key Pairs."
+          "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key Pairs."
         },
         {
-          "text": "To create a new key pair, click on the Create Key Pair."
+          "text": "To create a new key pair, click on the Create Key Pair."
+        },
+        {
+          "text": "Fill in the details below: Name: Enter WhizKeyPair File format: pem (Linux & Mac Users) or ppk (Windows users) Leave other options as default. Click on the Create Key Pair.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-08.png"
+          ]
         },
         {
           "text": "Fill in the details below:"
         },
         {
-          "text": "Name: Enter WhizKeyPair"
+          "text": "Name: Enter WhizKeyPair"
         },
         {
-          "text": "File format: pem (Linux & Mac Users) or ppk (Windows users)"
+          "text": "File format: pem (Linux & Mac Users) or ppk (Windows users)"
         },
         {
           "text": "Leave other options as default."
         },
         {
-          "text": "Click on the Create Key Pair."
+          "text": "Click on the Create Key Pair.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-09.png"
+          ]
+        },
+        {
+          "text": "Task 3: Create a Key pair for the Launch template",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-10.png"
+          ]
         },
         {
           "text": "Key pair will be created."
@@ -105,37 +183,80 @@
       "title": "Task 4: Creating a Launch template",
       "steps": [
         {
-          "text": "In the left navigation pane (scroll down) within Instances, click on the Launch Templates"
+          "text": "In the left navigation pane (scroll down) within Instances, click on the Launch Templates"
         },
         {
-          "text": "Click on the Create Launch Template"
+          "text": "Click on the Create Launch Template"
         },
         {
-          "text": "Under Launch template name and description section:"
+          "text": "Under Launch template name and description section: Launch template name: Enter labLC Template version description: Type Launch template for whizdemo Leave other options as default.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-11.png"
+          ]
         },
         {
-          "text": "Launch template name: Enter labLC"
+          "text": "Under Launch template name and description section:"
         },
         {
-          "text": "Template version description: Type Launch template for whizdemo"
+          "text": "Launch template name: Enter labLC"
         },
         {
-          "text": "Leave other options as default."
+          "text": "Template version description: Type Launch template for whizdemo"
+        },
+        {
+          "text": "Leave other options as default.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-12.png"
+          ]
+        },
+        {
+          "text": "Under Launch template contents: Amazon machine image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI. Under Instance type: Select t2.micro from the below list.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-13.png",
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-14.png"
+          ]
         },
         {
           "text": "Under Launch template contents:"
         },
         {
-          "text": "Amazon machine image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI."
+          "text": "Amazon machine image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-15.png"
+          ]
         },
         {
-          "text": "Under Instance type:"
+          "text": "Under Instance type: Select t2.micro from the below list.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-16.png"
+          ]
         },
         {
-          "text": "Select t2.micro from the below list."
+          "text": "Select t2.micro from the below list.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-17.png"
+          ]
         },
         {
-          "text": "Key pair (Login): Select WhizKeyPair"
+          "text": "Task 4: Creating a Launch template",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-18.png"
+          ]
+        },
+        {
+          "text": "Key pair (Login): Select WhizKeyPair",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-19.png"
+          ]
+        },
+        {
+          "text": "Task 4: Creating a Launch template",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-20.png"
+          ]
+        },
+        {
+          "text": "Networking settings: Firewall(security groups): Select Select existing security group Security groups: Select Launch-template-SG from the drop-down"
         },
         {
           "text": "Networking settings:"
@@ -144,34 +265,31 @@
           "text": "Firewall(security groups): Select Select existing security group"
         },
         {
-          "text": "Security groups: Select Launch-template-SG from the drop-down"
+          "text": "Security groups: Select Launch-template-SG from the drop-down"
         },
         {
-          "text": "Leave all other options as default."
+          "text": "Task 4: Creating a Launch template",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-21.png"
+          ]
         },
         {
-          "text": "Expand the option of Advance details, Go to the User data at the bottom of the page and paste the below script."
+          "text": "Leave all other options as default."
         },
         {
-          "text": "#!/bin/bash"
+          "text": "Expand the option of Advance details, Go to the User data at the bottom of the page and paste the below script."
         },
         {
-          "text": "dnf update -y"
+          "text": "To create, click on the Create launch template. Upon successful creation, it will create a Launch template. Click on View launch templates button.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-22.png"
+          ]
         },
         {
-          "text": "dnf install -y httpd"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable httpd"
-        },
-        {
-          "text": "echo \"<html><h1>Response coming from Amazon Linux 2023 Server</h1></html>\" > /var/www/html/index.html"
-        },
-        {
-          "text": "To create, click on the Create launch template. Upon successful creation, it will create a Launch template. Click on View launch templates button."
+          "text": "Task 4: Creating a Launch template",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-23.png"
+          ]
         }
       ]
     },
@@ -182,37 +300,55 @@
           "text": "An Auto Scaling group is a scalable collection of EC2 instances. When you create an Auto Scaling group, you include information such as the subnets for the instances and the number of instances the group must maintain at all times."
         },
         {
-          "text": "Go to the left menu under EC2 and choose Auto Scaling Groups under Auto Scaling."
+          "text": "Go to the left menu under EC2 and choose Auto Scaling Groups under Auto Scaling."
         },
         {
-          "text": "Click on the Create Auto Scaling Group."
+          "text": "Click on the Create Auto Scaling Group."
+        },
+        {
+          "text": "Step 1 : Choose launch template Auto Scaling group name : Enter Whiz-ASG Select the Launch template labLC from the list. Leave everything as default and click on the Next",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-24.png"
+          ]
         },
         {
           "text": "Step 1 : Choose launch template"
         },
         {
-          "text": "Auto Scaling group name : Enter Whiz-ASG"
+          "text": "Auto Scaling group name : Enter Whiz-ASG"
         },
         {
-          "text": "Select the Launch template labLC from the list. Leave everything as default and click on the Next"
+          "text": "Select the Launch template labLC from the list. Leave everything as default and click on the Next",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-25.png"
+          ]
         },
         {
           "text": "Step 2: Choose instance launch options"
         },
         {
-          "text": "VPC: Select the Default VPC from the list."
+          "text": "VPC: Select the Default VPC from the list."
         },
         {
           "text": "Subnet: Select any two subnets for your Auto Scaling instances."
         },
         {
-          "text": "Click on the Next"
+          "text": "Click on the Next",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-26.png"
+          ]
         },
         {
-          "text": "Step 3: Integrate with other services"
+          "text": "Task 5: Create an Auto Scaling Group",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-27.png"
+          ]
         },
         {
-          "text": "No changes needed in this page, click on the Next"
+          "text": "Step 3: Integrate with other services"
+        },
+        {
+          "text": "No changes needed in this page, click on the Next"
         },
         {
           "text": "Step 4: Configure group size and scaling"
@@ -221,58 +357,112 @@
           "text": "Under Group size - optional"
         },
         {
-          "text": "Desired capacity : Enter 2"
+          "text": "Desired capacity : Enter 2"
         },
         {
           "text": "Under Scaling:"
         },
         {
-          "text": "Minimum capacity : Enter 2"
+          "text": "Minimum capacity : Enter 2"
         },
         {
-          "text": "Maximum capacity : Enter 2"
+          "text": "Maximum capacity : Enter 2"
+        },
+        {
+          "text": "Task 5: Create an Auto Scaling Group",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-28.png"
+          ]
+        },
+        {
+          "text": "Under Automatic Scaling - optional Select No scaling policies",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-29.png"
+          ]
         },
         {
           "text": "Under Automatic Scaling - optional"
         },
         {
-          "text": "Select No scaling policies"
+          "text": "Select No scaling policies",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-30.png"
+          ]
+        },
+        {
+          "text": "Under Instance scale-in protection No changes are needed, click on the Next"
         },
         {
           "text": "Under Instance scale-in protection"
         },
         {
-          "text": "No changes are needed, click on the Next"
+          "text": "No changes are needed, click on the Next"
+        },
+        {
+          "text": "Step 5: Add notifications No changes are needed in this page, click on the Next"
         },
         {
           "text": "Step 5: Add notifications"
         },
         {
-          "text": "No changes are needed in this page, click on the Next"
+          "text": "No changes are needed in this page, click on the Next"
+        },
+        {
+          "text": "Step 6: Add tags Enter tags in key-value pairs to identify your auto scaling group instances. Key : Enter Name Value : Enter Whiz Click on the Next",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-31.png"
+          ]
         },
         {
           "text": "Step 6: Add tags"
         },
         {
-          "text": "Enter tags in key-value pairs to identify your auto scaling group instances."
+          "text": "Enter tags in key-value pairs to identify your auto scaling group instances. Key : Enter Name Value : Enter Whiz",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-32.png"
+          ]
         },
         {
-          "text": "Key : Enter Name"
+          "text": "Enter tags in key-value pairs to identify your auto scaling group instances."
         },
         {
-          "text": "Value : Enter Whiz"
+          "text": "Key : Enter Name"
         },
         {
-          "text": "Click on the Next"
+          "text": "Value : Enter Whiz",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-33.png"
+          ]
         },
         {
-          "text": "Now Review, scroll down and click on the Create Auto Scaling Group."
+          "text": "Click on the Next"
         },
         {
-          "text": "You will be redirected to the autoscaling group page, you will be able to see that two instances are launched by the autoscaling groups."
+          "text": "Now Review, scroll down and click on the Create Auto Scaling Group."
         },
         {
-          "text": "Now go to the EC2 instances list. You will see that there are two new running instances (which were created by your autoscaling group) You can confirm this from their tag name, which you gave at the time of creating the autoscaling group."
+          "text": "You will be redirected to the autoscaling group page, you will be able to see that two instances are launched by the autoscaling groups.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-34.png"
+          ]
+        },
+        {
+          "text": "Task 5: Create an Auto Scaling Group",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-35.png"
+          ]
+        },
+        {
+          "text": "Now go to the EC2 instances list. You will see that there are two new running instances (which were created by your autoscaling group) You can confirm this from their tag name, which you gave at the time of creating the autoscaling group.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-36.png"
+          ]
+        },
+        {
+          "text": "Task 5: Create an Auto Scaling Group",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-37.png"
+          ]
         },
         {
           "text": "You have successfully created an autoscaling group with a policy to a minimum of 2 and a maximum of 2 instances."
@@ -286,6 +476,12 @@
           "text": "For testing the auto-scaling policy, go to the EC2 instance list and select one of your instances."
         },
         {
+          "text": "To terminate the EC2 instances manually: Select one of the instances randomly Click on the Instance state Choose to terminate the instance by clicking on Terminate instance.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-38.png"
+          ]
+        },
+        {
           "text": "To terminate the EC2 instances manually:"
         },
         {
@@ -295,66 +491,82 @@
           "text": "Click on the Instance state"
         },
         {
-          "text": "Choose to terminate the instance by clicking on Terminate instance."
+          "text": "Choose to terminate the instance by clicking on Terminate instance.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-39.png"
+          ]
         },
         {
-          "text": "Confirm the termination by clicking on the Terminate button."
+          "text": "Confirm the termination by clicking on the Terminate button.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-40.png"
+          ]
         },
         {
-          "text": "This will terminate your instance."
+          "text": "This will terminate your instance.",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-41.png"
+          ]
         },
         {
-          "text": "Once your instance is terminated. You can go to the Auto scaling groups page and see the Instances is 1 and the Status is Updating capacity"
+          "text": "Once your instance is terminated. You can go to the Auto scaling groups page and see the Instances is 1 and the Status is Updating capacity",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-42.png"
+          ]
         },
         {
-          "text": "Alternatively, you can look for the Activity history under Activity of your Auto scaling group to see what happened."
+          "text": "Task 6: Test Auto Scaling Group",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-43.png"
+          ]
         },
         {
-          "text": "Meanwhile, A new instance will be launched to fulfill the policy condition."
+          "text": "Alternatively, you can look for the Activity history under Activity of your Auto scaling group to see what happened."
         },
         {
-          "text": "A sample screenshot is provided below:"
+          "text": "Meanwhile, A new instance will be launched to fulfill the policy condition. A sample screenshot is provided below:",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-44.png"
+          ]
         },
         {
-          "text": "Note: Launching a new instance may take up to 5 minutes, you can refresh the page to view the new instance."
+          "text": "Task 6: Test Auto Scaling Group",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-45.png"
+          ]
         },
         {
-          "text": "Do you Know ?"
+          "text": "Task 7: Validation Test"
         },
         {
-          "text": "Launch templates support versioning, allowing you to create and manage multiple versions of a template. This enables you to easily roll back to previous configurations or test new settings without impacting existing Auto Scaling groups."
-        }
-      ]
-    },
-    {
-      "title": "Task 7: Validation Test",
-      "steps": [
-        {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-46.png"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 6: Test Auto Scaling Group",
+          "images": [
+            "/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates/step-47.png"
+          ]
         },
         {
           "text": "You have created a security group and key pair for the Launch template."
         },
         {
-          "text": "You created a Launch template and Auto Scaling."
+          "text": "You created a Launch template and Auto Scaling."
         },
         {
-          "text": "You have launched two EC2 instances through Auto scaling."
+          "text": "You have launched two EC2 instances through Auto scaling."
         },
         {
           "text": "You have tested the Auto scaling by terminating one of the instances manually."
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign out of the AWS Account"
@@ -363,7 +575,7 @@
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

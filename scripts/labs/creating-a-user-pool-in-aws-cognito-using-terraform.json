@@ -1,0 +1,273 @@
+{
+  "slug": "creating-a-user-pool-in-aws-cognito-using-terraform",
+  "title": "Creating a User Pool in AWS Cognito Using Terraform",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Setup Visual Studio Code",
+      "steps": [
+        {
+          "text": "Open the Visual Studio Code."
+        },
+        {
+          "text": "If you have already installed and using the Visual Studio code, open a new window."
+        },
+        {
+          "text": "A new window will open a new file and release notes page (only if you have installed or updated Visual Studio Code recently). Close the Release Notes tab."
+        },
+        {
+          "text": "Open the terminal by selecting View from the Menu bar and choose Terminal."
+        },
+        {
+          "text": "It may take up to 2 minutes to open the terminal window."
+        },
+        {
+          "text": "Once the terminal is ready, let us navigate to the Desktop."
+        },
+        {
+          "text": "Create a new folder by running the below command:"
+        },
+        {
+          "text": "Change your present working directory to use the newly created folder by running the command:"
+        },
+        {
+          "text": "Get the location of the present working directory by running the below command:"
+        },
+        {
+          "text": "Note down the location, as you will open the same in the next steps."
+        },
+        {
+          "text": "Now click on the first icon Explorer present on the left sidebar."
+        },
+        {
+          "text": "Click on the button called Open folder and navigate to the location of folder task_14057_cognito?"
+        },
+        {
+          "text": "Visual Studio code is now ready to use."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a variables file",
+      "steps": [
+        {
+          "text": "To create a variables file, expand the folder task_10094_sns and click on the New File icon to add the file."
+        },
+        {
+          "text": "Name the file as variables.tf and press Enter to save it."
+        },
+        {
+          "text": "Note: Don't change the location of the new file, keep it default, i.e. inside the task_10098_dynamodb folder."
+        },
+        {
+          "text": "Paste the below contents in variables.tf file.variable \"access_key\" { type = string description = \"AWS Access Key\"}variable \"secret_key\" { type = string description = \"AWS Secret Key\" sensitive = true}variable \"region\" { type = string description = \"AWS region to deploy resources\" default = \"us-east-1\"}"
+        },
+        {
+          "text": "Paste the below contents in variables.tf file."
+        },
+        {
+          "text": "In the above content, you are declaring a variable called, access_key, secret_key, and region with a short description of all 3."
+        },
+        {
+          "text": "After pasting the above contents, save the file by pressing ctrl + S."
+        },
+        {
+          "text": "Now expand the folder task_14057_cognito and click on the New File icon to add the file."
+        },
+        {
+          "text": "Name the file as terraform.tfvars and press Enter to save it."
+        },
+        {
+          "text": "Paste the below content into the terraform.tfvars file."
+        },
+        {
+          "text": "In the above code, you are defining the dynamic values of variables declared earlier."
+        },
+        {
+          "text": "Replace the values of access_key and secret_key by copying from the lab page."
+        },
+        {
+          "text": "After replacing the values of access_key and secret_key, save the file by pressing Ctrl + S."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create Cognito user pool and configuration in main.tf file",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a DynamoDB Table and its components in main.tf file."
+        },
+        {
+          "text": "To create a main.tf file, expand the folder ask_14057_cognito and click on the New File icon to add the file."
+        },
+        {
+          "text": "Name the file as main.tf and press Enter to save it."
+        },
+        {
+          "text": "Paste the below content into the main.tf file."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create an output file",
+      "steps": [
+        {
+          "text": "In this task, you will create an output.tf file where you will add details of the provider and resources."
+        },
+        {
+          "text": "To create an output.tf file, expand the folder task_14057 and click on the New File icon to add the file."
+        },
+        {
+          "text": "Name the file as output.tf and press Enter to save it.Paste the below content into the output.tf file."
+        },
+        {
+          "text": "Name the file as output.tf and press Enter to save it."
+        },
+        {
+          "text": "Paste the below content into the output.tf file."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Confirm the installation of Terraform by checking the version",
+      "steps": [
+        {
+          "text": "In the Visual Studio Code, open Terminal by selecting View from the Menu bar and choose Terminal."
+        },
+        {
+          "text": "If you are not in the newly created folder change your present working directory by running the below command."
+        },
+        {
+          "text": "To confirm the installation of Terraform, run the below command to check the version:terraform version"
+        },
+        {
+          "text": "To confirm the installation of Terraform, run the below command to check the version:"
+        },
+        {
+          "text": "If you are getting output as command not found: terraform, this means that terraform is not installed on your system, To install terraform follow the official guide link provided in the Prerequisite section above."
+        },
+        {
+          "text": "Initialize Terraform by running the below commandterraform init"
+        },
+        {
+          "text": "Initialize Terraform by running the below command"
+        },
+        {
+          "text": "Task 6: Confirm the installation of Terraform by checking the version"
+        },
+        {
+          "text": "To create all the resources declared in main.tf configuration file, run the following commandterraform plan"
+        },
+        {
+          "text": "To create all the resources declared in main.tf configuration file, run the following command"
+        },
+        {
+          "text": "Task 6: Confirm the installation of Terraform by checking the version"
+        },
+        {
+          "text": "To create all the resources declared in main.tf configuration file, run the following command,terraform apply"
+        },
+        {
+          "text": "To create all the resources declared in main.tf configuration file, run the following command,"
+        },
+        {
+          "text": "Task 6: Confirm the installation of Terraform by checking the version"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Check the resources in the AWS Console",
+      "steps": [
+        {
+          "text": "Navigate to the Cognito page by clicking on the Services menu at the top."
+        },
+        {
+          "text": "Now expand the laft side panel and click on User pools button."
+        },
+        {
+          "text": "Here, you can see the user pool created by terraform."
+        },
+        {
+          "text": "User pools support custom workflows through Lambda triggers, allowing you to customize the authentication and registration process based on your specific requirements."
+        },
+        {
+          "text": "To delete the resources, open Terminal again."
+        },
+        {
+          "text": "Run the below command to delete all the resources."
+        },
+        {
+          "text": "Enter yes to confirm the deletion."
+        },
+        {
+          "text": "Task 7: Check the resources in the AWS Console"
+        },
+        {
+          "text": "You have set up the Visual Studio Code"
+        },
+        {
+          "text": "You have successfully created variables.tf and terraform.tfvars files."
+        },
+        {
+          "text": "You have successfully created a main.tf file."
+        },
+        {
+          "text": "You have executed the terraform configurations commands to create the resources."
+        },
+        {
+          "text": "You have checked the resources created by opening the AWS Console."
+        },
+        {
+          "text": "You have deleted all the resources created."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Click on End Lab button from the lab console and wait till the process gets completed."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "To delete the resources, open Terminal again."
+        },
+        {
+          "text": "Run the below command to delete all the resources."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

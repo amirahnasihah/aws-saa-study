@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -41,7 +44,10 @@
           "text": "Click on Your VPCs from the left menu."
         },
         {
-          "text": "Here you can see the list of all VPC. No need to do anything yet. We will create a new VPC for this lab."
+          "text": "Here you can see the list of all VPC. No need to do anything yet. We will create a new VPC for this lab."
+        },
+        {
+          "text": "Click on Create VPC. Name tag: Enter MyVPC IPv4 CIDR block: Enter 10.0.0.0/16 IPv6 CIDR block: No need to change this, make sure No IPv6 CIDR Block is checked. Tenancy: No need to change this, just be sure Default is selected. Click on Create VPC."
         },
         {
           "text": "Click on Create VPC."
@@ -56,13 +62,19 @@
           "text": "IPv6 CIDR block: No need to change this, make sure No IPv6 CIDR Block is checked."
         },
         {
-          "text": "Tenancy: No need to change this, just be sure Default is selected."
+          "text": "Tenancy: No need to change this, just be sure Default is selected."
         },
         {
           "text": "Click on Create VPC."
         },
         {
           "text": "Once the VPC is created, it will look like the example below:"
+        },
+        {
+          "text": "Task 2: Creating a New VPC",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-01.png"
+          ]
         }
       ]
     },
@@ -71,6 +83,12 @@
       "steps": [
         {
           "text": "Note: In this lab, we will create one public subnet and a private subnet in us-east-1a and us-east-1b Availability Zones."
+        },
+        {
+          "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet. VPC ID : Select MyVPC from the list. Subnet Name : Enter MyPublicSubnet Availability Zone : Select us-east-1a IPv4 CIDR block : Enter the range 10.0.1.0/24 Click on Create Subnet",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-02.png"
+          ]
         },
         {
           "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet."
@@ -88,7 +106,19 @@
           "text": "IPv4 CIDR block : Enter the range 10.0.1.0/24"
         },
         {
-          "text": "Click on Create Subnet"
+          "text": "Click on Create Subnet",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-03.png"
+          ]
+        },
+        {
+          "text": "Task 3: Creating Subnets",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-04.png"
+          ]
+        },
+        {
+          "text": "For Private Subnet, click on Create Subnet again. VPC ID : Select MyVPC from the list. Subnet Name : Enter MyPrivateSubnet Availability Zone : Select us-east-1b IPv4 CIDR block : Enter the range 10.0.2.0/24 Click on Create subnet."
         },
         {
           "text": "For Private Subnet, click on Create Subnet again."
@@ -107,6 +137,12 @@
         },
         {
           "text": "Click on Create subnet."
+        },
+        {
+          "text": "Task 3: Creating Subnets",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-05.png"
+          ]
         }
       ]
     },
@@ -120,6 +156,9 @@
           "text": "To enable Internet access, an Internet gateway needed to be attached to the VPC."
         },
         {
+          "text": "Click on Internet Gateways from the left menu and click Create Internet Gateway. Name Tag : Enter MyInternetGateway Click on Create Internet Gateway."
+        },
+        {
           "text": "Click on Internet Gateways from the left menu and click Create Internet Gateway."
         },
         {
@@ -127,6 +166,9 @@
         },
         {
           "text": "Click on Create Internet Gateway."
+        },
+        {
+          "text": "Select the Internet gateway you created from the list. Click on Actions. Click on Attach to VPC. Select MyVPC and click on Attach to VPC."
         },
         {
           "text": "Select the Internet gateway you created from the list."
@@ -139,6 +181,12 @@
         },
         {
           "text": "Select MyVPC and click on Attach to VPC."
+        },
+        {
+          "text": "Task 4: Create and attach an Internet Gateway",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-06.png"
+          ]
         }
       ]
     },
@@ -146,19 +194,28 @@
       "title": "Task 5: Create Route Tables and Associate them it with Subnets",
       "steps": [
         {
+          "text": "Go to Route Tables from the left menu and click on Create route table. Name Tag: Enter PublicRouteTable. VPC: Select MyVPC from the list. Click on Create route table."
+        },
+        {
           "text": "Go to Route Tables from the left menu and click on Create route table."
         },
         {
-          "text": "Name Tag: Enter PublicRouteTable."
+          "text": "Name Tag: Enter PublicRouteTable."
         },
         {
-          "text": "VPC: Select MyVPC from the list."
+          "text": "VPC: Select MyVPC from the list."
         },
         {
-          "text": "Click on Create route table."
+          "text": "Click on Create route table."
         },
         {
-          "text": "We will be using the default (main) Route Table created by VPC for the RDS database tier."
+          "text": "We will be using the default (main) Route Table created by VPC for the RDS database tier."
+        },
+        {
+          "text": "Task 5: Create Route Tables and Associate them it with Subnets",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-07.png"
+          ]
         },
         {
           "text": "You will be able to see the Route table with VPC ID MyVPC and Main as Yes"
@@ -170,7 +227,16 @@
           "text": "Name Tag: Enter PrivateRouteTable and [Enter]"
         },
         {
+          "text": "Task 5: Create Route Tables and Associate them it with Subnets",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-08.png"
+          ]
+        },
+        {
           "text": "Now associate the subnets to the route tables."
+        },
+        {
+          "text": "Click on PublicRouteTable and go to the Action and in that go to Edit Subnet Associations tab. Click on Edit Subnet Associations. Select MyPublicSubnet from the list. Click on Save Associations"
         },
         {
           "text": "Click on PublicRouteTable and go to the Action and in that go to Edit Subnet Associations tab."
@@ -183,6 +249,9 @@
         },
         {
           "text": "Click on Save Associations"
+        },
+        {
+          "text": "Click on PrivateRouteTable and go to the Action and in that go to Edit Subnet Associations tab. Click on Edit Subnet Associations. Select MyPrivateSubnet from the list. Click on Save Associations"
         },
         {
           "text": "Click on PrivateRouteTable and go to the Action and in that go to Edit Subnet Associations tab."
@@ -211,13 +280,28 @@
           "text": "Go to the Routes tab click on Edit routes. On the next page, click on Add route."
         },
         {
+          "text": "Specify the following values: Destination: Enter 0.0.0.0/0 Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway. Click on Save changes.",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-09.png"
+          ]
+        },
+        {
           "text": "Specify the following values:"
         },
         {
           "text": "Destination: Enter 0.0.0.0/0"
         },
         {
-          "text": "Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway."
+          "text": "Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway.",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-10.png"
+          ]
+        },
+        {
+          "text": "Task 6: Update Route Table and Configure the Internet Gateway",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-11.png"
+          ]
         },
         {
           "text": "Click on Save changes."
@@ -254,58 +338,79 @@
       "title": "Task 8: Launching an EC2 Instance in the Public Subnet",
       "steps": [
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
         },
         {
           "text": "Navigate to Instances from the left side menu and click on Launch Instance."
         },
         {
-          "text": "Enter name as MyPublicEC2Server"
+          "text": "Enter name as MyPublicEC2Server"
         },
         {
-          "text": "Choose an Amazon Machine Image (AMI): Select Amazon Linux 2023 AMI."
+          "text": "Choose an Amazon Machine Image (AMI): Select Amazon Linux 2023 AMI."
         },
         {
-          "text": "Choose architecture as 64-bit(x86)"
+          "text": "Choose architecture as 64-bit(x86)"
         },
         {
-          "text": "Choose an Instance Type: Select t2.micro."
+          "text": "Task 8: Launching an EC2 Instance in the Public Subnet",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-12.png"
+          ]
         },
         {
-          "text": "For Key pair: Select Create a new key pair Button"
+          "text": "Choose an Instance Type: Select t2.micro."
         },
         {
-          "text": "Key pair name: WhizKey"
+          "text": "Task 8: Launching an EC2 Instance in the Public Subnet",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-13.png"
+          ]
         },
         {
-          "text": "Key pair type: RSA"
+          "text": "For Key pair: Select Create a new key pair Button"
         },
         {
-          "text": "Private key file format: .pem"
+          "text": "Key pair name: WhizKey"
         },
         {
-          "text": "Select Create key pair Button."
+          "text": "Key pair type: RSA"
         },
         {
-          "text": "In Network Settings Click on Edit Button:"
+          "text": "Private key file format: .pem"
         },
         {
-          "text": "VPC : MyVPC"
+          "text": "Select Create key pair Button."
         },
         {
-          "text": "Subnet : Choose MyPublicSubnet"
+          "text": "Task 8: Launching an EC2 Instance in the Public Subnet",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-14.png"
+          ]
         },
         {
-          "text": "Auto-assign public IP: Enable"
+          "text": "In Network Settings Click on Edit Button:"
         },
         {
-          "text": "Select Create new Security group"
+          "text": "VPC : MyVPC"
         },
         {
-          "text": "Security group name : Enter MyWebserverSG"
+          "text": "Subnet : Choose MyPublicSubnet"
         },
         {
-          "text": "Description : Enter My EC2 Security Group"
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select Create new Security group"
+        },
+        {
+          "text": "Security group name : Enter MyWebserverSG"
+        },
+        {
+          "text": "Description : Enter My EC2 Security Group"
+        },
+        {
+          "text": "Check Allow SSH from and Select Anywhere from dropdown Choose Type: SSH Source: Anywhere"
         },
         {
           "text": "Check Allow SSH from and Select Anywhere from dropdown"
@@ -317,46 +422,25 @@
           "text": "Source: Anywhere"
         },
         {
-          "text": "For HTTP, Select Add Security rule Button"
+          "text": "For HTTP, Select Add Security rule Button Choose Type: HTTP Source: Select Anywhere"
         },
         {
-          "text": "Choose Type: HTTP"
+          "text": "Choose Type: HTTP"
         },
         {
           "text": "Source: Select Anywhere"
         },
         {
-          "text": "Under the Advanced Details, scroll down to the User data section, enter the following script to create an HTML page served by Apache:"
+          "text": "Under the Advanced Details, scroll down to the User data section, enter the following script to create an HTML page served by Apache:"
         },
         {
-          "text": "#!/bin/bash"
+          "text": "Keep Rest thing Default and Click on Launch Instance Button."
         },
         {
-          "text": "sudo su"
+          "text": "Select View all Instances to View Instance you Created"
         },
         {
-          "text": "yum update -y"
-        },
-        {
-          "text": "yum install httpd -y"
-        },
-        {
-          "text": "echo \"<html><h1>Welcome to Lab Server </h1><html>\" >> /var/www/html/index.html"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable httpd"
-        },
-        {
-          "text": "Keep Rest thing Default and Click on Launch Instance Button."
-        },
-        {
-          "text": "Select View all Instances to View Instance you Created"
-        },
-        {
-          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running."
+          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running."
         }
       ]
     },
@@ -364,43 +448,58 @@
       "title": "Task 9: Launching an EC2 Instance in the Private Subnet",
       "steps": [
         {
-          "text": "Click on Launch Instances again at the top right of the EC2 dashboard."
+          "text": "Click on Launch Instances again at the top right of the EC2 dashboard."
         },
         {
-          "text": "Enter name as MyPrivateEC2Server"
+          "text": "Enter name as MyPrivateEC2Server"
         },
         {
-          "text": "Choose an Amazon Machine Image (AMI): Select Amazon Linux 2023 AMI."
+          "text": "Choose an Amazon Machine Image (AMI): Select Amazon Linux 2023 AMI."
         },
         {
-          "text": "Choose architecture as 64-bit(x86)"
+          "text": "Choose architecture as 64-bit(x86)"
         },
         {
-          "text": "Choose an Instance Type: Select t2.micro."
+          "text": "Task 9: Launching an EC2 Instance in the Private Subnet",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-15.png"
+          ]
         },
         {
-          "text": "For Key pair: Select the existing key pair."
+          "text": "Choose an Instance Type: Select t2.micro."
         },
         {
-          "text": "In Network Settings Click on Edit Button:"
+          "text": "Task 9: Launching an EC2 Instance in the Private Subnet",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-16.png"
+          ]
         },
         {
-          "text": "VPC : MyVPC"
+          "text": "For Key pair: Select the existing key pair."
         },
         {
-          "text": "Subnet : Choose MyPrivateSubnet"
+          "text": "In Network Settings Click on Edit Button:"
+        },
+        {
+          "text": "VPC : MyVPC"
+        },
+        {
+          "text": "Subnet : Choose MyPrivateSubnet"
         },
         {
           "text": "Auto-assign public IP: Disable"
         },
         {
-          "text": "Select Create new Security group"
+          "text": "Select Create new Security group"
         },
         {
-          "text": "Security group name : Enter MyServerSG"
+          "text": "Security group name : Enter MyServerSG"
         },
         {
-          "text": "Description : Enter My EC2 Security Group"
+          "text": "Description : Enter My EC2 Security Group"
+        },
+        {
+          "text": "Check Allow SSH from and Select Anywhere from dropdown Choose Type: SSH Source: Select Anywhere"
         },
         {
           "text": "Check Allow SSH from and Select Anywhere from dropdown"
@@ -412,25 +511,34 @@
           "text": "Source: Select Anywhere"
         },
         {
-          "text": "For ALL ICMP IPv4 , Select Add Security rule Button"
+          "text": "For ALL ICMP IPv4 , Select Add Security rule Button Choose Type: All ICMP IPv4. Source: Select Anywhere"
         },
         {
-          "text": "Choose Type: All ICMP IPv4."
+          "text": "For ALL ICMP IPv4 , Select Add Security rule Button"
+        },
+        {
+          "text": "Choose Type: All ICMP IPv4."
         },
         {
           "text": "Source: Select Anywhere"
         },
         {
-          "text": "Keep Rest thing Default and Click on Launch Instance Button."
+          "text": "Keep Rest thing Default and Click on Launch Instance Button."
         },
         {
-          "text": "Select View all Instances to View Instance you Created"
+          "text": "Select View all Instances to View Instance you Created"
         },
         {
           "text": "Note the Private IP Address of MyPrivateEC2Server."
         },
         {
           "text": "Two servers are launched and ready."
+        },
+        {
+          "text": "Task 9: Launching an EC2 Instance in the Private Subnet",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-17.png"
+          ]
         }
       ]
     },
@@ -438,28 +546,50 @@
       "title": "Task 10: Testing Both EC2 instances",
       "steps": [
         {
+          "text": "Public EC2 instances: We have installed a web application on this server. Select the MyPublicEC2Server EC2 instance from the instance list. From the Description tab, copy the IPv4 Public IP. Now paste this IP in you Web Browser and click [Enter] You will be able to see the following page:",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-18.png",
+            "/labs/aws-vpc-nacl-lab-case-study/step-19.png"
+          ]
+        },
+        {
           "text": "Public EC2 instances: We have installed a web application on this server."
         },
         {
           "text": "Select the MyPublicEC2Server EC2 instance from the instance list."
         },
         {
-          "text": "From the Description tab, copy the IPv4 Public IP."
+          "text": "From the Description tab, copy the IPv4 Public IP.",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-20.png"
+          ]
         },
         {
           "text": "Now paste this IP in you Web Browser and click [Enter]"
         },
         {
-          "text": "You will be able to see the following page:"
+          "text": "You will be able to see the following page:",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-21.png"
+          ]
+        },
+        {
+          "text": "Next, we will try to ping the Private EC2 from the Public EC2 instance. SSH into EC2 Instance Please follow the steps in SSH into EC2 Instance. Once connected to the server: Change to root user:"
         },
         {
           "text": "Next, we will try to ping the Private EC2 from the Public EC2 instance."
         },
         {
+          "text": "SSH into EC2 Instance Please follow the steps in SSH into EC2 Instance."
+        },
+        {
           "text": "SSH into EC2 Instance"
         },
         {
-          "text": "Please follow the steps in SSH into EC2 Instance."
+          "text": "Please follow the steps in SSH into EC2 Instance."
+        },
+        {
+          "text": "Once connected to the server: Change to root user:"
         },
         {
           "text": "Once connected to the server:"
@@ -468,19 +598,25 @@
           "text": "Change to root user:"
         },
         {
-          "text": "sudo su"
+          "text": "Copy the Private IP of MyPrivateEC2Server from the Description tab.",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-22.png"
+          ]
         },
         {
-          "text": "Copy the Private IP of MyPrivateEC2Server from the Description tab."
-        },
-        {
-          "text": "Ping the Private Instance using the Private IPv4. ping <Private IP address>"
+          "text": "Ping the Private Instance using the Private IPv4. ping <Private IP address>"
         },
         {
           "text": "Example: ping 10.0.2.161"
         },
         {
-          "text": "Press [Ctrl] + C to stop instead of pause."
+          "text": "Task 10: Testing Both EC2 instances",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-23.png"
+          ]
+        },
+        {
+          "text": "Press [Ctrl] + C to stop instead of pause."
         },
         {
           "text": "Note: You were able to do these tasks because the Default NACL that was created during VPC creation allows both INBOUND and OUTBOUND by Default."
@@ -494,10 +630,13 @@
           "text": "Note: By default, both subnets will be associated with the Default NACL of MyVPC. Once you create a custom NACL and attach it to the public subnet and private Subnet."
         },
         {
-          "text": "Navigate to VPC under the Services menu. Click on Network ACLs under Security"
+          "text": "Navigate to VPC under the Services menu. Click on Network ACLs under Security"
         },
         {
           "text": "Click on Create Network ACL"
+        },
+        {
+          "text": "Create Network ACL: Name tag: Enter MyPublicNACL VPC: Select MyVPC from the dropdown list. Click on Create."
         },
         {
           "text": "Create Network ACL:"
@@ -512,6 +651,9 @@
           "text": "Click on Create."
         },
         {
+          "text": "Associating MyPublicNACL to the Public Subnet Select the Action tab and click on Edit subnet associations Select both the Public and Private subnets from the table. Click on Save changes"
+        },
+        {
           "text": "Associating MyPublicNACL to the Public Subnet"
         },
         {
@@ -524,19 +666,31 @@
           "text": "Click on Save changes"
         },
         {
+          "text": "Renaming the Main NACL Select the Default NACL of the VPC MyVPC Enter the name MyPrivateNACL and click on Save",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-24.png"
+          ]
+        },
+        {
           "text": "Renaming the Main NACL"
         },
         {
-          "text": "Select the Default NACL of the VPC MyVPC"
+          "text": "Select the Default NACL of the VPC MyVPC",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-25.png"
+          ]
         },
         {
-          "text": "Enter the name MyPrivateNACL and click on Save"
+          "text": "Enter the name MyPrivateNACL and click on Save"
         }
       ]
     },
     {
       "title": "Task 12: Testing the Public and Private Server",
       "steps": [
+        {
+          "text": "Public EC2 Instance: Navigate to the EC2 Instance Dashboard. Click on Instances from the left side menu. Select the MyPublicEC2Server EC2 instance from the instance list."
+        },
         {
           "text": "Public EC2 Instance:"
         },
@@ -547,16 +701,28 @@
           "text": "Select the MyPublicEC2Server EC2 instance from the instance list."
         },
         {
+          "text": "Task 12: Testing the Public and Private Server",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-26.png"
+          ]
+        },
+        {
           "text": "From the Description tab, copy the IPv4 Public IP."
         },
         {
           "text": "Now paste this IP into your web browser and click [Enter]"
         },
         {
-          "text": "You will see the following page:"
+          "text": "You will see the following page:",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-27.png"
+          ]
         },
         {
           "text": "Note: This is because the Custom NACL which is attached to your Public subnet restricts both INBOUND and OUTBOUND traffic."
+        },
+        {
+          "text": "Private EC2 Instance: Since the Public NACL restricts all traffic, you won't be able to SSH into the public EC2 Instance to ping the Private Instance. Next, we are going to solve this."
         },
         {
           "text": "Private EC2 Instance:"
@@ -573,7 +739,7 @@
       "title": "Task 13: Adding Rules to Custom NACL (MyPublicNACL)",
       "steps": [
         {
-          "text": "Navigate to VPC under the Services menu. Click on Network ACLs under Security."
+          "text": "Navigate to VPC under the Services menu. Click on Network ACLs under Security."
         },
         {
           "text": "Select MyPublicNACL from the list."
@@ -582,7 +748,16 @@
           "text": "In the Inbound rules, click Edit inbound rules"
         },
         {
+          "text": "Add the following rules: HTTP click on Add rules, Rule# : Enter 100 Type: Choose HTTP (80) Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow For ALL ICMP- IPv4, click on Add rules, Rule# : Enter 150 Type: Choose ALL ICMP - IPv4 Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow For SSH, click on Add rules, Rule# : Enter 200 Type: Choose SSH (22) Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow Click on Save changes",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-28.png"
+          ]
+        },
+        {
           "text": "Add the following rules:"
+        },
+        {
+          "text": "HTTP click on Add rules, Rule# : Enter 100 Type: Choose HTTP (80) Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow"
         },
         {
           "text": "HTTP click on Add rules,"
@@ -594,10 +769,13 @@
           "text": "Type: Choose HTTP (80)"
         },
         {
-          "text": "Source: Enter 0.0.0.0/0"
+          "text": "Source: Enter 0.0.0.0/0"
         },
         {
           "text": "Allow / Deny: Select Allow"
+        },
+        {
+          "text": "For ALL ICMP- IPv4, click on Add rules, Rule# : Enter 150 Type: Choose ALL ICMP - IPv4 Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow"
         },
         {
           "text": "For ALL ICMP- IPv4, click on Add rules,"
@@ -615,6 +793,12 @@
           "text": "Allow / Deny: Select Allow"
         },
         {
+          "text": "For SSH, click on Add rules, Rule# : Enter 200 Type: Choose SSH (22) Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow Click on Save changes",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-29.png"
+          ]
+        },
+        {
           "text": "For SSH, click on Add rules,"
         },
         {
@@ -627,7 +811,10 @@
           "text": "Source: Enter 0.0.0.0/0"
         },
         {
-          "text": "Allow / Deny: Select Allow"
+          "text": "Allow / Deny: Select Allow",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-30.png"
+          ]
         },
         {
           "text": "Click on Save changes"
@@ -636,7 +823,16 @@
           "text": "In the Outbound rules Tab, Click Edit outbound rules"
         },
         {
+          "text": "Add the following rules: Custom Port is already available, Rule# : Enter 100 Type: Choose Custom TCP Rule Port Range: Enter 1024 - 65535 Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow For ALL ICMP- IPv4, click on Add rules, Rule# : Enter 150 Type: Choose ALL ICMP - IPv4 Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow For SSH, click on Add rules , Rule# : Enter 200 Type: Choose SSH (22) Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow Click on Save",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-31.png"
+          ]
+        },
+        {
           "text": "Add the following rules:"
+        },
+        {
+          "text": "Custom Port is already available, Rule# : Enter 100 Type: Choose Custom TCP Rule Port Range: Enter 1024 - 65535 Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow"
         },
         {
           "text": "Custom Port is already available,"
@@ -657,6 +853,9 @@
           "text": "Allow / Deny: Select Allow"
         },
         {
+          "text": "For ALL ICMP- IPv4, click on Add rules, Rule# : Enter 150 Type: Choose ALL ICMP - IPv4 Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow"
+        },
+        {
           "text": "For ALL ICMP- IPv4, click on Add rules,"
         },
         {
@@ -672,6 +871,12 @@
           "text": "Allow / Deny: Select Allow"
         },
         {
+          "text": "For SSH, click on Add rules , Rule# : Enter 200 Type: Choose SSH (22) Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-32.png"
+          ]
+        },
+        {
           "text": "For SSH, click on Add rules ,"
         },
         {
@@ -684,7 +889,10 @@
           "text": "Source: Enter 0.0.0.0/0"
         },
         {
-          "text": "Allow / Deny: Select Allow"
+          "text": "Allow / Deny: Select Allow",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-33.png"
+          ]
         },
         {
           "text": "Click on Save"
@@ -695,7 +903,16 @@
       "title": "Task 14: Testing Both EC2 instances",
       "steps": [
         {
+          "text": "We will try to ping the Private EC2 from the Public EC2 instance. SSH into EC2 Instance Please follow the steps in SSH into EC2 Instance. Once connected to the server: Change to root user:sudo su Copy the Private IP of MyPrivateEC2Server from the Description tab. Ping to the Private Instance using the Private IPv4. ping <Private IP address> Example:",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-34.png"
+          ]
+        },
+        {
           "text": "We will try to ping the Private EC2 from the Public EC2 instance."
+        },
+        {
+          "text": "SSH into EC2 Instance Please follow the steps in SSH into EC2 Instance."
         },
         {
           "text": "SSH into EC2 Instance"
@@ -704,31 +921,49 @@
           "text": "Please follow the steps in SSH into EC2 Instance."
         },
         {
+          "text": "Once connected to the server: Change to root user:sudo su"
+        },
+        {
           "text": "Once connected to the server:"
+        },
+        {
+          "text": "Change to root user:sudo su"
         },
         {
           "text": "Change to root user:"
         },
         {
-          "text": "sudo su"
+          "text": "Copy the Private IP of MyPrivateEC2Server from the Description tab.",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-35.png"
+          ]
         },
         {
-          "text": "Copy the Private IP of MyPrivateEC2Server from the Description tab."
+          "text": "Task 14: Testing Both EC2 instances",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-36.png"
+          ]
         },
         {
-          "text": "Ping to the Private Instance using the Private IPv4. ping <Private IP address>"
+          "text": "Ping to the Private Instance using the Private IPv4. ping <Private IP address> Example:"
+        },
+        {
+          "text": "Ping to the Private Instance using the Private IPv4. ping <Private IP address>"
         },
         {
           "text": "Example:"
+        },
+        {
+          "text": "Task 14: Testing Both EC2 instances",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-37.png"
+          ]
         },
         {
           "text": "Press [Ctrl] + C again to cancel the process instead of pausing it."
         },
         {
           "text": "Note: You were able to do these tasks because we added NACL Rules."
-        },
-        {
-          "text": "Do you know?"
         },
         {
           "text": "By participating in the AWS VPC NACL Lab, users acquire a range of practical skills and knowledge, including the ability to create NACLs, define rule sets for specific subnets, evaluate traffic patterns, implement allow and deny rules, and analyze the impact of NACL configurations on network communication. Additionally, participants gain insight into optimizing NACL configurations for different use cases, securing sensitive workloads, and mitigating potential security risks within their AWS VPCs."
@@ -739,7 +974,7 @@
       "title": "Task 15: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
         },
         {
           "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
@@ -748,7 +983,10 @@
           "text": "Sample output :"
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 15: Validation Test",
+          "images": [
+            "/labs/aws-vpc-nacl-lab-case-study/step-38.gif"
+          ]
         },
         {
           "text": "You have created a VPC using the VPC Wizard."
@@ -781,16 +1019,13 @@
           "text": "You have tested our VPC."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

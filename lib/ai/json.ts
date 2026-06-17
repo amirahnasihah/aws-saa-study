@@ -1,6 +1,7 @@
-/** Remove markdown code fences that some models wrap JSON in. */
+/** Remove a code fence that wraps the ENTIRE response (some models do this),
+ *  without touching fences that appear inside a JSON string value. */
 function stripFences(text: string): string {
-  return text.replace(/```(?:json)?/gi, '')
+  return text.trim().replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '')
 }
 
 function tryParse<T>(text: string): T | null {

@@ -1,0 +1,146 @@
+{
+  "slug": "deploy-container-using-aws-app-runner",
+  "title": "Deploy Container using AWS App Runner",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Deploy the Container Image",
+      "steps": [
+        {
+          "text": "Navigate to AWS App Runner service in AWS Console."
+        },
+        {
+          "text": "On the App Runner dashboard, click the \"Create an App Runner service\" button."
+        },
+        {
+          "text": "Task 2: Deploy the Container Image"
+        },
+        {
+          "text": "In the Source and deployment section,"
+        },
+        {
+          "text": "Select Container registry as the repository type."
+        },
+        {
+          "text": "Choose Amazon ECR Public as the provider."
+        },
+        {
+          "text": "Enter the container image URI:"
+        },
+        {
+          "text": "For the Deployment trigger, select \"Manual\"."
+        },
+        {
+          "text": "Click the Next button."
+        },
+        {
+          "text": "Task 2: Deploy the Container Image"
+        },
+        {
+          "text": "In the Configure service section,"
+        },
+        {
+          "text": "Enter the service name as \"Whiz-Container\"."
+        },
+        {
+          "text": "Set the Virtual CPU to 1 vCPU."
+        },
+        {
+          "text": "Set the Virtual memory to 2 GB."
+        },
+        {
+          "text": "Enter the port use 8080."
+        },
+        {
+          "text": "Leave the environment variables, auto-scaling and health check settings as default."
+        },
+        {
+          "text": "Click the Next button."
+        },
+        {
+          "text": "Task 2: Deploy the Container Image"
+        },
+        {
+          "text": "Review the settings for Source and deployment, and Configure service to ensure accuracy."
+        },
+        {
+          "text": "Click the \"Create & deploy\" button."
+        },
+        {
+          "text": "After clicking \"Create & deploy\", check the service overview page, it will be in Operation-in-Progress status."
+        },
+        {
+          "text": "View the App Runner event logs to confirm \"Deployment completed successfully\"."
+        },
+        {
+          "text": "Task 2: Deploy the Container Image"
+        },
+        {
+          "text": "Copy the default domain URL, paste it into a new tab and view the web application as below."
+        },
+        {
+          "text": "Task 2: Deploy the Container Image"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and show you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample Output,"
+        },
+        {
+          "text": "Task 3: Validation of the Lab"
+        },
+        {
+          "text": "You have successfully pulled the public ECR image."
+        },
+        {
+          "text": "You have successfully deployed the containerized web application."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

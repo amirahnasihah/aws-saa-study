@@ -1,0 +1,148 @@
+{
+  "slug": "challenge-lab-find-vulnerabilities-on-inspector2-using-lambda-scanning",
+  "title": "Challenge Lab : Find vulnerabilities on Inspector2 using Lambda scanning",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:15:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Portal",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Portal"
+        },
+        {
+          "text": "XYZ company wants to enhance the security posture of its serverless applications by using Amazon Inspector to scan a Lambda function for software vulnerabilities. Your task is to enable Inspector, configure a Lambda function with a vulnerable dependency, and verify vulnerability findings."
+        },
+        {
+          "text": "Enable Amazon Inspector"
+        },
+        {
+          "text": "Activate Lambda standard scanning"
+        },
+        {
+          "text": "Create Lambda Function"
+        },
+        {
+          "text": "Region: us-east-1"
+        },
+        {
+          "text": "Name: testing_lambda"
+        },
+        {
+          "text": "Runtime: Python 3.11"
+        },
+        {
+          "text": "Role: Lambda_role (existing)"
+        },
+        {
+          "text": "Code: Use os.system(\"ssh -h\")"
+        },
+        {
+          "text": "import json"
+        },
+        {
+          "text": "import os"
+        },
+        {
+          "text": "import paramiko"
+        },
+        {
+          "text": "def lambda_handler(event, context):"
+        },
+        {
+          "text": "print(\"Hello world\")"
+        },
+        {
+          "text": "os.system(\"ssh -h\")"
+        },
+        {
+          "text": "Deploy function"
+        },
+        {
+          "text": "Create Lambda Layer"
+        },
+        {
+          "text": "Name: paramiko_layer"
+        },
+        {
+          "text": "Runtime: Python 3.11"
+        },
+        {
+          "text": "Architecture: x86_64"
+        },
+        {
+          "text": "Upload provided ZIP Paramiko_layer"
+        },
+        {
+          "text": "Paramiko_layer"
+        },
+        {
+          "text": "Create layer"
+        },
+        {
+          "text": "Attach Layer to Function"
+        },
+        {
+          "text": "Function: testing_lambda"
+        },
+        {
+          "text": "Layer: paramiko_layer"
+        },
+        {
+          "text": "Attach latest version"
+        },
+        {
+          "text": "Trigger Lambda Scan"
+        },
+        {
+          "text": "Create and run test event"
+        },
+        {
+          "text": "Trigger Inspector scan"
+        },
+        {
+          "text": "Review Findings"
+        },
+        {
+          "text": "Check testing_lambda under Inspector findings"
+        },
+        {
+          "text": "Review CVEs and vulnerability details"
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

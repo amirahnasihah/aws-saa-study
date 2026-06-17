@@ -1,0 +1,103 @@
+{
+  "slug": "introduction-to-amazon-aurora-challenge-aurora-connect",
+  "title": "Introduction to Amazon Aurora Connect - Challenge Lab",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants a fast, reliable database to store customer data for its application. Your job is to set up an Amazon Aurora MySQL database, create a security group to allow access, connect to the database, run SQL commands to manage data, validate the setup, and clean up resources. Amazon Aurora is a high-performance database compatible with MySQL, supporting features like read replicas for scalability (copies of the database for handling read traffic). Here’s how to do each step super simply, with hints to keep you on track:"
+        },
+        {
+          "text": "Create a Security Group for RDS instance: In us-east-1 create a security group with MySql/Aurora"
+        },
+        {
+          "text": "In us-east-1 create a security group with MySql/Aurora"
+        },
+        {
+          "text": "Create an RDS Database Instance Create a Database with selecting Aurora Mysql pick Dev/Test template pick db.t3.medium for DB instance class, choose Don’t create an Aurora Replica, Choose default VPC and add 3306 port to sg"
+        },
+        {
+          "text": "Create a Database with selecting Aurora Mysql"
+        },
+        {
+          "text": "pick Dev/Test template"
+        },
+        {
+          "text": "pick db.t3.medium for DB instance class,"
+        },
+        {
+          "text": "choose Don’t create an Aurora Replica,"
+        },
+        {
+          "text": "Choose default VPC and add 3306 port to sg"
+        },
+        {
+          "text": "Connecting to an Amazon Aurora MySQL RDS Database on a DB Instance: Copy the endpoint from the connection and security"
+        },
+        {
+          "text": "Copy the endpoint from the connection and security"
+        },
+        {
+          "text": "Connecting from a Windows Machine: Install MYSQL Workbench (If not downloaded)and connect to the Aurora Database"
+        },
+        {
+          "text": "Install MYSQL Workbench (If not downloaded)and connect to the Aurora Database"
+        },
+        {
+          "text": "Execute Database Operations for Windows users: Create database, tables Insert values Fetch items"
+        },
+        {
+          "text": "Create database, tables"
+        },
+        {
+          "text": "Insert values"
+        },
+        {
+          "text": "Fetch items"
+        },
+        {
+          "text": "Make sure everything is correct. In the lab console, click Validate to check if both CloudFormation stacks created the VPCs and subnets correctly."
+        },
+        {
+          "text": "Sign out of the AWS Management Console by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "In the lab console, click End Lab from your dashboard and wait for it to finish."
+        },
+        {
+          "text": "You’ve successfully completed the Aurora lab! You created an Amazon Aurora MySQL database, configured it, connected to it, executed SQL queries, and cleaned up resources."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

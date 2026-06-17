@@ -1,0 +1,91 @@
+{
+  "slug": "challenge-amazoneksclustersetup-eks-basics",
+  "title": "Challenge Lab: Create a cluster in Amazon EKS and install kubectl",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:15:00",
+  "tasks": [
+    {
+      "title": "Sign into AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to access the AWS Console in a new tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default, copy your Username and Password from the Lab Console, and sign in."
+        },
+        {
+          "text": "Set the AWS Region to US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign into AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to set up a Kubernetes cluster using Amazon EKS and manage it via kubectl. Your job is to create an EKS cluster, set up AWS CloudShell, install kubectl, configure CloudShell to communicate with the cluster, validate the setup, and clean up resources. Here’s how to proceed:"
+        },
+        {
+          "text": "Select the Kubernetes version (e.g., the latest stable version available)."
+        },
+        {
+          "text": "Choose existing IAM role for cluster and Node"
+        },
+        {
+          "text": "Attach the role to the cluster."
+        },
+        {
+          "text": "Select only 4 subnets {us-east-1a, us-east-1b, us-east-1c and us-east-1d}"
+        },
+        {
+          "text": "Launch CloudShell."
+        },
+        {
+          "text": "Verify that the region in CloudShell is set to us-east-1 (if not, change it using aws configure)."
+        },
+        {
+          "text": "Download the Amazon EKS vended kubectl binary for your cluster's Kubernetes version from Amazon S3.."
+        },
+        {
+          "text": "Move the binary to a directory in your PATH (e.g., /usr/local/bin)."
+        },
+        {
+          "text": "Verify the installation by checking the kubectl version."
+        },
+        {
+          "text": "Configure AWS CLI to use your credentials (if not already configured)."
+        },
+        {
+          "text": "Update the kubeconfig file to connect to your EKS cluster:"
+        },
+        {
+          "text": "Use the AWS CLI command to update kubeconfig for your cluster (xyz-eks-cluster in us-east-1)."
+        },
+        {
+          "text": "Test the connection by running a command to list the cluster nodes and verify communication with the EKS cluster."
+        },
+        {
+          "text": "Confirm the EKS cluster is active and accessible."
+        },
+        {
+          "text": "Verify that kubectl is installed in CloudShell and can communicate with the cluster (e.g., list nodes successfully)."
+        },
+        {
+          "text": "Click Validate in the lab console to check the setup."
+        },
+        {
+          "text": "After validation"
+        },
+        {
+          "text": "Sign out of AWS by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "Click End Lab in the lab console to complete the lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

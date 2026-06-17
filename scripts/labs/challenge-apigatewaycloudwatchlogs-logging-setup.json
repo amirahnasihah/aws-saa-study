@@ -1,0 +1,97 @@
+{
+  "slug": "challenge-apigatewaycloudwatchlogs-logging-setup",
+  "title": "Challenge Lab: Enabling CloudWatch Logs in API Gateway",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign into the AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to access the AWS Console in a new tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default, copy your Username and Password from the Lab Console, and sign in."
+        },
+        {
+          "text": "Set the AWS Region to US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign into the AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to enable logging for their API Gateway using CloudWatch Logs to monitor API activity. Your job is to create an API, set up resources and methods, enable CloudWatch Logs, deploy the API, and validate the setup. Here’s how to proceed:"
+        },
+        {
+          "text": "Copy the ARN of the existing IAM Role"
+        },
+        {
+          "text": "Configure the resource: Resource Name: Enter logs. Resource Path: Automatically set to /logs."
+        },
+        {
+          "text": "Resource Name: Enter logs."
+        },
+        {
+          "text": "Resource Path: Automatically set to /logs."
+        },
+        {
+          "text": "Click Create Resource."
+        },
+        {
+          "text": "Verify the resource /logs appears under the root (/) in the resource tree."
+        },
+        {
+          "text": "Integration type: AWS Service"
+        },
+        {
+          "text": "Region: us-east-1"
+        },
+        {
+          "text": "Aws service: cloudwatch"
+        },
+        {
+          "text": "Http method: post"
+        },
+        {
+          "text": "Execution role: Paste the ARN of IAM that copied earlier"
+        },
+        {
+          "text": "Create"
+        },
+        {
+          "text": "URL for the deployed API (e.g., https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/logs)."
+        },
+        {
+          "text": "ccess the URL in a browser to generate some API calls."
+        },
+        {
+          "text": "Verify logs in CloudWatch > Log groups."
+        },
+        {
+          "text": "Confirm the API is created with the resource /logs and the GET method."
+        },
+        {
+          "text": "Verify CloudWatch Logs are enabled, and logs are being generated for API calls."
+        },
+        {
+          "text": "Ensure the API is deployed to the prod stage and the invoke URL returns a successful response."
+        },
+        {
+          "text": "Click Validate in the lab console to check the setup."
+        },
+        {
+          "text": "Sign out of AWS by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "Click End Lab in the lab console to complete the lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

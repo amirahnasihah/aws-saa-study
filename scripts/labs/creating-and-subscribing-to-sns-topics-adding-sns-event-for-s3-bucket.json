@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your UserName and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -27,7 +30,7 @@
           "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
-          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
         }
       ]
     },
@@ -35,31 +38,64 @@
       "title": "Task 2: Create SNS Topic",
       "steps": [
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to SNS by clicking on the Services menu available under the Application Integration section."
+          "text": "Navigate to SNS by clicking on the Services menu available under the Application Integration section."
         },
         {
-          "text": "Click on Topics in left panel. Click Create topic"
+          "text": "Click on Topics in left panel. Click Create topic",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-01.jpg"
+          ]
         },
         {
-          "text": "Select the Type as Standard."
+          "text": "Task 2: Create SNS Topic",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-02.jpg"
+          ]
         },
         {
-          "text": "Under Details:"
+          "text": "Select the Type as Standard."
         },
         {
-          "text": "Name : Enter mysnsnotification"
+          "text": "Under Details: Name : Enter mysnsnotification Display name : Enter mysnsnotification",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-03.jpg"
+          ]
         },
         {
-          "text": "Display name : Enter mysnsnotification"
+          "text": "Under Details:"
+        },
+        {
+          "text": "Name : Enter mysnsnotification"
+        },
+        {
+          "text": "Display name : Enter mysnsnotification",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-04.jpg"
+          ]
+        },
+        {
+          "text": "Task 2: Create SNS Topic",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-05.jpg"
+          ]
         },
         {
           "text": "Leave other options as default and click on Create topic."
         },
         {
-          "text": "An SNS topic is now created."
+          "text": "An SNS topic is now created.",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-06.jpg"
+          ]
+        },
+        {
+          "text": "Task 2: Create SNS Topic",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-07.jpg"
+          ]
         },
         {
           "text": "Copy the ARN and save it for later."
@@ -73,22 +109,40 @@
           "text": "In this task, we are going to subscribe an email address to the SNS Topic created in the previous task"
         },
         {
-          "text": "Once the SNS topic is created, scroll down below and click on Create Subscription"
+          "text": "Once the SNS topic is created, scroll down below and click on Create Subscription",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-08.jpg"
+          ]
+        },
+        {
+          "text": "Under Details: Protocol : Select Email Endpoint : Enter <your Mail ID> Leave other settings as default and click on create subscription. Note: Make sure you give a valid email address, as you will receive an SNS notification to this email address. Check your Spam box if you don't see the email in your Inbox.",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-09.jpg"
+          ]
         },
         {
           "text": "Under Details:"
         },
         {
-          "text": "Protocol : Select Email"
+          "text": "Protocol : Select Email"
         },
         {
-          "text": "Endpoint : Enter <your Mail ID>"
+          "text": "Endpoint : Enter <your Mail ID>"
         },
         {
-          "text": "Leave other settings as default and click on create subscription."
+          "text": "Leave other settings as default and click on create subscription.",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-10.jpg"
+          ]
         },
         {
-          "text": "Note: Make sure you give a valid email address, as you will receive an SNS notification to this email address."
+          "text": "Task 3: Subscribe to SNS Topic",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-11.jpg"
+          ]
+        },
+        {
+          "text": "Note: Make sure you give a valid email address, as you will receive an SNS notification to this email address."
         },
         {
           "text": "Check your Spam box if you don't see the email in your Inbox."
@@ -97,10 +151,22 @@
           "text": "You will receive an email confirming your subscription to your email."
         },
         {
-          "text": "Click on Confirm subscription."
+          "text": "Task 3: Subscribe to SNS Topic",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-12.png"
+          ]
         },
         {
-          "text": "Your email address is now subscribed to the SNS Topic mysnsnotification."
+          "text": "Click on Confirm subscription."
+        },
+        {
+          "text": "Task 3: Subscribe to SNS Topic",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-13.png"
+          ]
+        },
+        {
+          "text": "Your email address is now subscribed to the SNS Topic mysnsnotification."
         }
       ]
     },
@@ -108,10 +174,25 @@
       "title": "Task 4: Create an S3 Bucket",
       "steps": [
         {
-          "text": "Navigate to AWS S3 by clicking on Services in the top left corner. S3 is available under Storage."
+          "text": "Navigate to AWS S3 by clicking on Services in the top left corner. S3 is available under Storage."
         },
         {
-          "text": "In the S3 dashboard, click on the Create Bucket button and fill in the bucket details."
+          "text": "In the S3 dashboard, click on the Create Bucket button and fill in the bucket details.",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-14.jpg"
+          ]
+        },
+        {
+          "text": "Task 4: Create an S3 Bucket",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-15.jpg"
+          ]
+        },
+        {
+          "text": "In the General Configuration: Select Bucket type : General purpose Bucket name: Enter mys3buckettestingsns-{yourname} Example : mys3buckettestingsns-sam\n(Note: The Bucket Name must be unique across all existing bucket names in Amazon S3) Region: Select US East (N. Virginia) us-east-1 from dropdown.",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-16.png"
+          ]
         },
         {
           "text": "In the General Configuration:"
@@ -120,25 +201,31 @@
           "text": "Select Bucket type : General purpose"
         },
         {
-          "text": "Bucket name: Enter mys3buckettestingsns-{yourname}"
+          "text": "Bucket name: Enter mys3buckettestingsns-{yourname}"
         },
         {
-          "text": "Example : mys3buckettestingsns-sam"
+          "text": "Example : mys3buckettestingsns-sam\n(Note: The Bucket Name must be unique across all existing bucket names in Amazon S3)"
         },
         {
-          "text": "(Note: The Bucket Name must be unique across all existing bucket names in Amazon S3)"
+          "text": "Region: Select US East (N. Virginia) us-east-1 from dropdown.",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-17.png"
+          ]
         },
         {
-          "text": "Region: Select US East (N. Virginia) us-east-1 from dropdown."
+          "text": "Task 4: Create an S3 Bucket",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-18.png"
+          ]
         },
         {
-          "text": "Object ownership: Select ACLs disabled (recommended) option"
+          "text": "Object ownership: Select ACLs disabled (recommended) option"
         },
         {
           "text": "Leave all other settings as default and click on Create bucket."
         },
         {
-          "text": "Select the created bucket and click Copy ARN on the top. Save the ARN for later use."
+          "text": "Select the created bucket and click Copy ARN on the top. Save the ARN for later use."
         }
       ]
     },
@@ -149,25 +236,25 @@
           "text": "In this task, we are going to update the Access Policy of the SNS topic to enable it to send notification events based on S3 bucket event"
         },
         {
-          "text": "Navigate back to the SNS page."
+          "text": "Navigate back to the SNS page."
         },
         {
-          "text": "Click on Topics."
+          "text": "Click on Topics."
         },
         {
-          "text": "Click on mysnsnotification."
+          "text": "Click on mysnsnotification."
         },
         {
-          "text": "Click on Edit in the top right corner to edit the Access Policy of the SNS topic."
+          "text": "Click on Edit in the top right corner to edit the Access Policy of the SNS topic."
         },
         {
-          "text": "Expand Access Policy."
+          "text": "Expand Access Policy."
         },
         {
           "text": "Update the SNS policy as shown below:"
         },
         {
-          "text": "Note: Here we need to update two things after pasting the below policy."
+          "text": "Note: Here we need to update two things after pasting the below policy."
         },
         {
           "text": "Remove the old SNS policy and add the new policy to the SNS topic"
@@ -177,96 +264,6 @@
         },
         {
           "text": "S3 bucket ARN in the Condition section below."
-        },
-        {
-          "text": "{"
-        },
-        {
-          "text": "\"Version\": \"2008-10-17\","
-        },
-        {
-          "text": "\"Id\": \"__default_policy_ID\","
-        },
-        {
-          "text": "\"Statement\": ["
-        },
-        {
-          "text": "{"
-        },
-        {
-          "text": "\"Sid\": \"__default_statement_ID\","
-        },
-        {
-          "text": "\"Effect\": \"Allow\","
-        },
-        {
-          "text": "\"Principal\": {"
-        },
-        {
-          "text": "\"AWS\": \"*\""
-        },
-        {
-          "text": "},"
-        },
-        {
-          "text": "\"Action\": ["
-        },
-        {
-          "text": "\"SNS:GetTopicAttributes\","
-        },
-        {
-          "text": "\"SNS:SetTopicAttributes\","
-        },
-        {
-          "text": "\"SNS:AddPermission\","
-        },
-        {
-          "text": "\"SNS:RemovePermission\","
-        },
-        {
-          "text": "\"SNS:DeleteTopic\","
-        },
-        {
-          "text": "\"SNS:Subscribe\","
-        },
-        {
-          "text": "\"SNS:ListSubscriptionsByTopic\","
-        },
-        {
-          "text": "\"SNS:Publish\","
-        },
-        {
-          "text": "\"SNS:Receive\""
-        },
-        {
-          "text": "],"
-        },
-        {
-          "text": "\"Resource\": \"<Your_SNS_Topic_ARN>\","
-        },
-        {
-          "text": "\"Condition\": {"
-        },
-        {
-          "text": "\"ArnLike\": {"
-        },
-        {
-          "text": "\"aws:SourceArn\": \"<Your_Bucket_ARN>\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "]"
-        },
-        {
-          "text": "}"
         },
         {
           "text": "Note: Make sure to update the bucket ARN and SNS topic in the above policy."
@@ -289,19 +286,31 @@
           "text": "Navigate back to the S3 page."
         },
         {
-          "text": "Click on the S3 bucket that you have created in the above step."
+          "text": "Click on the S3 bucket that you have created in the above step."
         },
         {
           "text": "Go to the Properties tab and scroll down to Event notifications."
         },
         {
-          "text": "Click on Create event notification button."
+          "text": "Click on Create event notification button.",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-19.jpg"
+          ]
         },
         {
-          "text": "Event name : Enter myemaileventforput"
+          "text": "Task 6: Create S3 Event",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-20.jpg"
+          ]
         },
         {
-          "text": "Event types : Check PUT"
+          "text": "Event name : Enter myemaileventforput"
+        },
+        {
+          "text": "Event types : Check PUT",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-21.png"
+          ]
         },
         {
           "text": "Under Destination, select SNS Topic"
@@ -310,13 +319,28 @@
           "text": "Under SNS topic, select topic name created earlier."
         },
         {
-          "text": "Click on Save changes."
+          "text": "Click on Save changes.",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-22.png"
+          ]
         },
         {
-          "text": "Note: If you are getting the below error, make sure to check that you have added PUT as condition above and completed Task 5 i.e. Updating the SNS Access Policy."
+          "text": "Note: If you are getting the below error, make sure to check that you have added PUT as condition above and completed Task 5 i.e. Updating the SNS Access Policy.",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-23.png"
+          ]
         },
         {
-          "text": "Now the S3 bucket has been enabled event notifications for putting new objects through our SNS topic."
+          "text": "Now the S3 bucket has been enabled event notifications for putting new objects through our SNS topic.",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-24.jpg"
+          ]
+        },
+        {
+          "text": "Task 6: Create S3 Event",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-25.jpg"
+          ]
         }
       ]
     },
@@ -336,16 +360,22 @@
           "text": "Now click on Add Files and upload an image from your local system."
         },
         {
-          "text": "Once the image is successfully uploaded to the S3 bucket, click on Close. Now you can see the uploaded image under Objects."
+          "text": "Once the image is successfully uploaded to the S3 bucket, click on Close. Now you can see the uploaded image under Objects.",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-26.png"
+          ]
         },
         {
           "text": "You have successfully received an SNS notification based on the PUT object event in S3 bucket."
         },
         {
-          "text": "Go to your mailbox. You should have received an email from SNS."
+          "text": "Task 7: Testing the SNS Notification",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-27.png"
+          ]
         },
         {
-          "text": "Do you know?"
+          "text": "Go to your mailbox. You should have received an email from SNS."
         },
         {
           "text": "Amazon SNS service now supports message filtering based on message attributes. With this feature, customers can now subscribe to a topic and receive only a subset of messages based on specific message attributes. This can help reduce the amount of processing needed for applications that receive high volumes of messages, as well as provide more granular control over which messages are processed by which subscribers"
@@ -356,16 +386,22 @@
       "title": "Task 8: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-28.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 8: Validation Test",
+          "images": [
+            "/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket/step-29.gif"
+          ]
         },
         {
           "text": "You have successfully used the AWS management console to create an Amazon SNS Topic."
@@ -377,16 +413,13 @@
           "text": "You have successfully created an S3 bucket event to get SNS notifications sent to your email address."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

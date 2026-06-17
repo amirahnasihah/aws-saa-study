@@ -1,0 +1,88 @@
+{
+  "slug": "creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket-challenge-bucket-monitor",
+  "title": "Creating and Subscribing to SNS Topics, Adding SNS event for S3 bucket Challenge - Bucket Monitor",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to get email alerts when files are added to a storage bucket to track uploads. Your job is to create an SNS topic, subscribe an email address, make an S3 bucket, connect the bucket to the topic, and test it. SNS sends messages, like emails, when events happen, and S3 can trigger these for actions like file uploads. Here’s how to do it with only the important steps and hints:"
+        },
+        {
+          "text": "Create an SNS Topic: Create standard SNS topic with Email-subscription"
+        },
+        {
+          "text": "Create standard SNS topic with Email-subscription"
+        },
+        {
+          "text": "Create an publicS3 bucket: pick us-east-1,"
+        },
+        {
+          "text": "pick us-east-1,"
+        },
+        {
+          "text": "Update an SNS Topic Access Policy: Update Policy that allows SNS to send notification event on s3 events Hint: Ensure the bucket name matches exactly."
+        },
+        {
+          "text": "Update Policy that allows SNS to send notification event on s3 events"
+        },
+        {
+          "text": "Hint: Ensure the bucket name matches exactly."
+        },
+        {
+          "text": "Create an S3 Event notification for event type PUT and destination: SNS Topic"
+        },
+        {
+          "text": "Testing the SNS Notification: Upload file to S3 and check for the notification in Email Check spam"
+        },
+        {
+          "text": "Upload file to S3 and check for the notification in Email"
+        },
+        {
+          "text": "Check spam"
+        },
+        {
+          "text": "In the lab console, click Validate to check the SNS topic, subscription, S3 bucket, and event setup. Hint: Ensure the test email was received before validating."
+        },
+        {
+          "text": "Sign out of the AWS Management Console by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "In the lab console, click End Lab and wait for it to finish."
+        },
+        {
+          "text": "You’ve completed the SNS and S3 event setup challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

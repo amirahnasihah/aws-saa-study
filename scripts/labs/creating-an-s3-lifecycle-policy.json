@@ -1,0 +1,225 @@
+{
+  "slug": "creating-an-s3-lifecycle-policy",
+  "title": "Creating an S3 Lifecycle Policy",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an S3 Bucket",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an S3 bucket by providing the required configurations such as name, region, and ACLs."
+        },
+        {
+          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
+        },
+        {
+          "text": "On the S3 dashboard, click on Create bucket button."
+        },
+        {
+          "text": "Bucket name: Enter whizzz"
+        },
+        {
+          "text": "Note: S3 bucket names are globally unique, choose a name that is available."
+        },
+        {
+          "text": "Object ownership: Select ACLs disabled (recommended) option"
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Task 2: Create an S3 Bucket"
+        },
+        {
+          "text": "Click on the Create bucket button."
+        },
+        {
+          "text": "Ignore any type of warnings."
+        },
+        {
+          "text": "Task 2: Create an S3 Bucket"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Upload an Object",
+      "steps": [
+        {
+          "text": "Click on the bucket name and click on Upload button."
+        },
+        {
+          "text": "Download our sample text file from here or upload any file from your machine."
+        },
+        {
+          "text": "Click on the Add files button."
+        },
+        {
+          "text": "Browse for our sample.txt file or the file you've chosen instead. Click on the Upload button. You can watch the progress of the upload from within the transfer panel at the bottom of the screen. Since this is a very small file, you might not see the transfer. Once your file has been uploaded, it will be displayed in the bucket."
+        },
+        {
+          "text": "Browse for our sample.txt file or the file you've chosen instead."
+        },
+        {
+          "text": "Click on the Upload button."
+        },
+        {
+          "text": "You can watch the progress of the upload from within the transfer panel at the bottom of the screen. Since this is a very small file, you might not see the transfer. Once your file has been uploaded, it will be displayed in the bucket."
+        },
+        {
+          "text": "Click on the Close button on the Top Right corner of the page."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Creating a Lifecycle Rule",
+      "steps": [
+        {
+          "text": "In this task, you will learn how to set up a Lifecycle Rule for an S3 Bucket object. The rule includes storage class transitions and automatic deletion of expired objects and incomplete multipart uploads. By following the steps, you can create and enable a rule that will manage your objects according to your requirements."
+        },
+        {
+          "text": "Click on the Management tab."
+        },
+        {
+          "text": "Under the Lifecycle rules, click on Create lifecycle rule to create a Lifecycle rule for the uploaded object."
+        },
+        {
+          "text": "Lifecycle rule name: Enter whiztest"
+        },
+        {
+          "text": "Choose a rule scope: Select Apply to all objects in the bucket and Acknowledge the checkbox."
+        },
+        {
+          "text": "Task 4: Creating a Lifecycle Rule"
+        },
+        {
+          "text": "Under Lifecycle rule action: Select the following checkboxes."
+        },
+        {
+          "text": "Task 4: Creating a Lifecycle Rule"
+        },
+        {
+          "text": "For Transition current versions of objects between storage classes section,"
+        },
+        {
+          "text": "Choose storage class transitions: Select One zone- IA"
+        },
+        {
+          "text": "Days after object creation: Enter 30"
+        },
+        {
+          "text": "Click on Add transition button"
+        },
+        {
+          "text": "Choose storage class transitions: Select Glacier Flexible Retrieval (formerly Glacier)"
+        },
+        {
+          "text": "Days after object creation: Enter 90"
+        },
+        {
+          "text": "Acknowledge the checkbox."
+        },
+        {
+          "text": "Task 4: Creating a Lifecycle Rule"
+        },
+        {
+          "text": "For Expire current versions of objects section,"
+        },
+        {
+          "text": "Days after object creation: Enter 120"
+        },
+        {
+          "text": "Task 4: Creating a Lifecycle Rule"
+        },
+        {
+          "text": "Note: In this option, you are specifying that after 120 days, the objects will be expired (deleted automatically)."
+        },
+        {
+          "text": "For Delete expired object delete markers or incomplete multipart uploads Section"
+        },
+        {
+          "text": "For Incomplete multipart uploads: Check the option of Delete incomplete multipart uploads"
+        },
+        {
+          "text": "Number of days: Enter 90"
+        },
+        {
+          "text": "Task 4: Creating a Lifecycle Rule"
+        },
+        {
+          "text": "Finally, review the transitions and click on Create rule button."
+        },
+        {
+          "text": "Now a Lifecycle Rule has been created and is in the enabled state."
+        },
+        {
+          "text": "Intelligent-Tiering storage class uses machine learning algorithms to automatically move objects between two access tiers: frequent access and infrequent access. This means that objects that are frequently accessed will be stored in the frequent access tier, while objects that are infrequently accessed will be moved to the infrequent access tier, helping to reduce storage costs without sacrificing performance."
+        }
+      ]
+    },
+    {
+      "title": "Task 5 : Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Task 5 : Validation Test"
+        },
+        {
+          "text": "You have successfully created an S3 bucket and uploaded the sample.txt file to the bucket."
+        },
+        {
+          "text": "You have configured the details of a Lifecycle Rule."
+        },
+        {
+          "text": "You have successfully validated the Lab."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -1,0 +1,130 @@
+{
+  "slug": "challenge-vpcfortress-security-citadel",
+  "title": "Challenge Lab - Configuring Layered Security in an AWS VPC",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Open the AWS Management Console in a new browser tab via Open Console."
+        },
+        {
+          "text": "Retain the default Account ID, enter the provided IAM Username and Password, and sign in."
+        },
+        {
+          "text": "Select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company needs a secure AWS VPC with layered security using Terraform. Your job is to set up a VPC with public and private subnets, route tables, an internet gateway, security groups, network ACLs, and EC2 instances, then test and validate the setup. Here’s how to proceed:"
+        },
+        {
+          "text": "Create and Attach an Internet Gateway"
+        },
+        {
+          "text": "Create Two Subnets(1 public, 1 private)"
+        },
+        {
+          "text": "Create Route Tables, Configure Routes, and Associate Them with Subnets"
+        },
+        {
+          "text": "Create a public route table: Associate with IGW,PublicSubnet."
+        },
+        {
+          "text": "Associate with IGW,PublicSubnet."
+        },
+        {
+          "text": "Create a private route table: Associate with PrivateSubnet (no internet route)."
+        },
+        {
+          "text": "Associate with PrivateSubnet (no internet route)."
+        },
+        {
+          "text": "Add inbound rules: SSH (port 22) from 0.0.0.0/0. All ICMP – IPv4 ports from 0.0.0.0/0."
+        },
+        {
+          "text": "SSH (port 22) from 0.0.0.0/0."
+        },
+        {
+          "text": "All ICMP – IPv4 ports from 0.0.0.0/0."
+        },
+        {
+          "text": "Allow all outbound traffic."
+        },
+        {
+          "text": "Select VPC."
+        },
+        {
+          "text": "Create and Add rules: Inbound rules : Add rules for SSH (port 22) and All ICMP IPv4 Outbound: Add rules for Custom TCP Rule (port 1024 - 65535) and All ICMP IPv4"
+        },
+        {
+          "text": "Inbound rules : Add rules for SSH (port 22) and All ICMP IPv4"
+        },
+        {
+          "text": "Outbound: Add rules for Custom TCP Rule (port 1024 - 65535) and All ICMP IPv4"
+        },
+        {
+          "text": "Associate the NACL with PublicSubnet and PrivateSubnet."
+        },
+        {
+          "text": "Region: us-east-1:"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 AMI"
+        },
+        {
+          "text": "INSTANCE TYPE: t2.micro . Launch one in PublicSubnet1 (name: PublicEC2): Enable Auto-assign Public IP. Launch one in PrivateSubnet1 (name: PrivateEC2): Disable public IP. Assign previously created SG. Keypair"
+        },
+        {
+          "text": "Launch one in PublicSubnet1 (name: PublicEC2): Enable Auto-assign Public IP."
+        },
+        {
+          "text": "Enable Auto-assign Public IP."
+        },
+        {
+          "text": "Launch one in PrivateSubnet1 (name: PrivateEC2): Disable public IP."
+        },
+        {
+          "text": "Disable public IP."
+        },
+        {
+          "text": "Assign previously created SG."
+        },
+        {
+          "text": "Keypair"
+        },
+        {
+          "text": "SSH into PublicEC2 using its public IP ."
+        },
+        {
+          "text": "Verify connectivity (e.g., ping google.com)."
+        },
+        {
+          "text": "Ping the private IP of your private_instance"
+        },
+        {
+          "text": "Make sure everything is correct. In the lab console, click Validate to check if both CloudFormation stacks created the VPCs and subnets correctly."
+        },
+        {
+          "text": "Sign out of the AWS Management Console by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "In the lab console, click End Challenge and wait for it to complete."
+        },
+        {
+          "text": "You’ve completed the challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

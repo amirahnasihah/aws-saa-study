@@ -1,0 +1,183 @@
+{
+  "source": "STUDY-CHECKLIST.md",
+  "generatedAt": "2026-06-17T06:35:33.662Z",
+  "total": 22,
+  "labs": [
+    {
+      "index": 1,
+      "title": "Introduction to Amazon Elastic Compute Cloud (EC2)",
+      "slug": "introduction-to-amazon-elastic-compute-cloud-ec2",
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-elastic-compute-cloud-ec2",
+      "sectionId": "compute",
+      "duration": "30m"
+    },
+    {
+      "index": 2,
+      "title": "Creating an application load balancer from AWS CLI",
+      "slug": "creating-an-application-load-balancer-from-aws-cli",
+      "url": "https://business.whizlabs.com/labs/creating-an-application-load-balancer-from-aws-cli",
+      "sectionId": "compute",
+      "duration": "1h"
+    },
+    {
+      "index": 3,
+      "title": "Creating an Application Load Balancer and Auto Scaling Group in AWS",
+      "slug": "creating-an-application-load-balancer-and-auto-scaling-group-in-aws",
+      "url": "https://business.whizlabs.com/labs/creating-an-application-load-balancer-and-auto-scaling-group-in-aws",
+      "sectionId": "compute",
+      "duration": "1h 30m"
+    },
+    {
+      "index": 4,
+      "title": "Creating and configuring a network load balancer in AWS",
+      "slug": "creating-and-configuring-a-network-load-balancer-in-aws",
+      "url": "https://business.whizlabs.com/labs/creating-and-configuring-a-network-load-balancer-in-aws",
+      "sectionId": "compute",
+      "duration": "1h"
+    },
+    {
+      "index": 5,
+      "title": "Creating S3 Lifecycle Policy",
+      "slug": "creating-an-s3-lifecycle-policy",
+      "url": "https://business.whizlabs.com/labs/creating-an-s3-lifecycle-policy",
+      "sectionId": "storage",
+      "duration": "30m"
+    },
+    {
+      "index": 6,
+      "title": "Introduction to Amazon GuardDuty",
+      "slug": "introduction-to-amazon-guardduty",
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-guardduty",
+      "sectionId": "security",
+      "duration": "30m"
+    },
+    {
+      "index": 7,
+      "title": "Discover sensitive data present in S3 bucket using Amazon Macie",
+      "slug": "discover-sensitive-data-present-in-s3-bucket-using-amazon-macie",
+      "url": "https://business.whizlabs.com/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie",
+      "sectionId": "security",
+      "duration": "1h"
+    },
+    {
+      "index": 8,
+      "title": "Deploying Amazon RDS Multi-AZ and Read Replica, Simulate Failover",
+      "slug": "deploying-amazon-rds-multi-az-and-read-replica-simulate-failover",
+      "url": "https://business.whizlabs.com/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover",
+      "sectionId": "database",
+      "duration": "1h 30m"
+    },
+    {
+      "index": 9,
+      "title": "Create Redis cluster using ElastiCache",
+      "slug": "create-redis-cluster-using-elasticache",
+      "url": "https://business.whizlabs.com/labs/create-redis-cluster-using-elasticache",
+      "sectionId": "database",
+      "duration": "1h"
+    },
+    {
+      "index": 10,
+      "title": "Using CloudWatch for Resource Monitoring, Create CloudWatch Alarms and Dashboards",
+      "slug": "using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards",
+      "url": "https://business.whizlabs.com/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards",
+      "sectionId": "management",
+      "duration": "1h 30m"
+    },
+    {
+      "index": 11,
+      "title": "Check Compliance status of S3 Bucket using AWS Config",
+      "slug": "check-compliance-status-of-s3-bucket-using-aws-config",
+      "url": "https://business.whizlabs.com/labs/check-compliance-status-of-s3-bucket-using-aws-config",
+      "sectionId": "management",
+      "duration": "1h 30m"
+    },
+    {
+      "index": 12,
+      "title": "Auditing Resource Compliance with AWS config",
+      "slug": "auditing-resource-compliance-with-aws-config",
+      "url": "https://business.whizlabs.com/labs/auditing-resource-compliance-with-aws-config",
+      "sectionId": "management",
+      "duration": "45m"
+    },
+    {
+      "index": 13,
+      "title": "Introduction to Amazon CloudFormation",
+      "slug": "introduction-to-amazon-cloudformation",
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-cloudformation",
+      "sectionId": "management",
+      "duration": "30m"
+    },
+    {
+      "index": 14,
+      "title": "Build Amazon VPC with Public and Private Subnets from Scratch",
+      "slug": "build-amazon-vpc-with-public-and-private-subnets-from-scratch",
+      "url": "https://business.whizlabs.com/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch",
+      "sectionId": "networking",
+      "duration": "30m"
+    },
+    {
+      "index": 15,
+      "title": "Creating AWS VPC Flow Logs and Generating Traffic",
+      "slug": "creating-aws-vpc-flow-logs-and-generating-traffic",
+      "url": "https://business.whizlabs.com/labs/creating-aws-vpc-flow-logs-and-generating-traffic",
+      "sectionId": "networking",
+      "duration": "1h"
+    },
+    {
+      "index": 16,
+      "title": "Creating NAT Gateways in AWS",
+      "slug": "creating-nat-gateways-in-aws",
+      "url": "https://business.whizlabs.com/labs/creating-nat-gateways-in-aws",
+      "sectionId": "networking",
+      "duration": "1h 30m"
+    },
+    {
+      "index": 17,
+      "title": "Peer VPC with Transit Gateway and its components",
+      "slug": "peer-vpc-with-transit-gateway-and-its-components",
+      "url": "https://business.whizlabs.com/labs/peer-vpc-with-transit-gateway-and-its-components",
+      "sectionId": "networking",
+      "duration": "1h 15m"
+    },
+    {
+      "index": 18,
+      "title": "Introduction to Amazon CloudFront",
+      "slug": "introduction-to-amazon-cloudfront",
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-cloudfront",
+      "sectionId": "networking",
+      "duration": "1h 30m"
+    },
+    {
+      "index": 19,
+      "title": "Transfer data to S3 using Amazon Kinesis Firehose",
+      "slug": "transfer-data-to-s3-using-amazon-kinesis-firehose",
+      "url": "https://business.whizlabs.com/labs/transfer-data-to-s3-using-amazon-kinesis-firehose",
+      "sectionId": "analytics",
+      "duration": "1h 30m"
+    },
+    {
+      "index": 20,
+      "title": "Perform ETL operation in Glue with S3",
+      "slug": "perform-etl-operation-in-glue-with-s3",
+      "url": "https://business.whizlabs.com/labs/perform-etl-operation-in-glue-with-s3",
+      "sectionId": "analytics",
+      "duration": "45m"
+    },
+    {
+      "index": 21,
+      "title": "Create a cluster in Amazon EKS and install kubectl",
+      "slug": "create-a-cluster-in-amazon-eks-and-install-kubectl",
+      "url": "https://business.whizlabs.com/labs/create-a-cluster-in-amazon-eks-and-install-kubectl",
+      "sectionId": "containers",
+      "duration": "1h"
+    },
+    {
+      "index": 22,
+      "title": "Create a Docker container using Dockerfile and store the image in ECR",
+      "slug": "create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr",
+      "url": "https://business.whizlabs.com/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr",
+      "sectionId": "containers",
+      "duration": "1h"
+    }
+  ]
+}

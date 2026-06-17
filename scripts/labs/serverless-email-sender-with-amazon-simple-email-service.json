@@ -1,0 +1,380 @@
+{
+  "slug": "serverless-email-sender-with-amazon-simple-email-service",
+  "title": "Serverless Email Sender with Amazon Simple-Email-Service",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1.?"
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Verify SES Email Identities",
+      "steps": [
+        {
+          "text": "Navigate to Amazon Simple Email Service in the AWS Console and click on Identities in the left-side of the console."
+        },
+        {
+          "text": "Task 2: Verify SES Email Identities"
+        },
+        {
+          "text": "Click Create Identity and then select Email Address"
+        },
+        {
+          "text": "Add one sender email address (e.g., email.sender@gmail.com) and Click on Create Identity,"
+        },
+        {
+          "text": "Task 2: Verify SES Email Identities"
+        },
+        {
+          "text": "Again, We are going to create another Identity, So Go to Identities and Select Create Identity."
+        },
+        {
+          "text": "Select Email Address and give another email address (e,g., email.recipient@gmail.com) here. Click Create Identities."
+        },
+        {
+          "text": "Open your inbox in both the account and click the verification link from AWS."
+        },
+        {
+          "text": "You can check from the Identities tab if the email ID's are verified."
+        },
+        {
+          "text": "Task 2: Verify SES Email Identities"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create and Configure S3 Bucket",
+      "steps": [
+        {
+          "text": "Navigate to the S3 console, Select Create Bucket"
+        },
+        {
+          "text": "Bucket Name: email-whiz-bucket."
+        },
+        {
+          "text": "Task 3: Create and Configure S3 Bucket"
+        },
+        {
+          "text": "Uncheck Block all public access and Check the acknowledge button."
+        },
+        {
+          "text": "Task 3: Create and Configure S3 Bucket"
+        },
+        {
+          "text": "Click Create Bucket."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Upload and Configure HTML",
+      "steps": [
+        {
+          "text": "Go to the bucket we created and select Upload."
+        },
+        {
+          "text": "Click on Add Files, Upload email.html and Click on Upload."
+        },
+        {
+          "text": "Click on the uploaded object and Click Open button to test whether the object is working."
+        },
+        {
+          "text": "Task 4: Upload and Configure HTML"
+        },
+        {
+          "text": "You can see the html static page hosted through S3."
+        },
+        {
+          "text": "Task 4: Upload and Configure HTML"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create the Lambda Function",
+      "steps": [
+        {
+          "text": "Navigate to Lambda Function and click on Create Function"
+        },
+        {
+          "text": "Choose Author from scratch"
+        },
+        {
+          "text": "Function name: emailsendingfunction"
+        },
+        {
+          "text": "Runtime: Python 3.12"
+        },
+        {
+          "text": "In the Change default execution role section, Click on Use an existing function, Select SES_lambda"
+        },
+        {
+          "text": "Click Create Function"
+        },
+        {
+          "text": "Task 5: Create the Lambda Function"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Lambda Function Code",
+      "steps": [
+        {
+          "text": "In the Lambda function which we created now, Click on the Code Source and replace the following function code."
+        },
+        {
+          "text": "Be sure to replace 'your_verified_sender@example.com' with the actual verified sender from SES."
+        },
+        {
+          "text": "Save the code by Clicking Deploy."
+        },
+        {
+          "text": "Task 6: Lambda Function Code"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Run and Test Lambda Manually",
+      "steps": [
+        {
+          "text": "Click Test tab from the Lambda Console."
+        },
+        {
+          "text": "Select Create new event."
+        },
+        {
+          "text": "Name the event name as test_email_event and click Save."
+        },
+        {
+          "text": "JSON Format:"
+        },
+        {
+          "text": "Be sure to replace the recipient email address and Click Save."
+        },
+        {
+          "text": "Click Test to invoke the function."
+        },
+        {
+          "text": "Check the function execution for logs."
+        },
+        {
+          "text": "Task 7: Run and Test Lambda Manually"
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Create API Gateway",
+      "steps": [
+        {
+          "text": "Navigate to API Gateway and Click on Create an API."
+        },
+        {
+          "text": "Select HTTP API and Click on Build."
+        },
+        {
+          "text": "Task 8: Create API Gateway"
+        },
+        {
+          "text": "Set API name: email-api"
+        },
+        {
+          "text": "Under Integration, Select Lambda, and Select the Lambda function which we created earlier"
+        },
+        {
+          "text": "Click on Next."
+        },
+        {
+          "text": "Task 8: Create API Gateway"
+        },
+        {
+          "text": "In the Configure Routes page, Click on Add Routes."
+        },
+        {
+          "text": "Select method as POST"
+        },
+        {
+          "text": "Replace Resource Path as /send-email"
+        },
+        {
+          "text": "In the Integration Target, confirm your Lambda function is selected."
+        },
+        {
+          "text": "Click on Next."
+        },
+        {
+          "text": "Task 8: Create API Gateway"
+        },
+        {
+          "text": "In the Define stages page, Set the Stage name to prod"
+        },
+        {
+          "text": "Turn on the Auto-Deploy toggle."
+        },
+        {
+          "text": "Click on Next."
+        },
+        {
+          "text": "Task 8: Create API Gateway"
+        },
+        {
+          "text": "Review and Click Create."
+        },
+        {
+          "text": "Task 8: Create API Gateway"
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Add Integration and Deploy API Gateway",
+      "steps": [
+        {
+          "text": "In the API Gateway panel, Select Routes option in the left side of the console."
+        },
+        {
+          "text": "You will see the /send-email listed under POST method."
+        },
+        {
+          "text": "Task 9: Add Integration and Deploy API Gateway"
+        },
+        {
+          "text": "Same in the left side of the panel, Choose CORS, Click on Configure."
+        },
+        {
+          "text": "Set the following Values,"
+        },
+        {
+          "text": "Access-Control-Allow-Origin : *"
+        },
+        {
+          "text": "Access-Control-Allow-Headers : content-type"
+        },
+        {
+          "text": "Access-Control-Allow-Methods : POST"
+        },
+        {
+          "text": "Click Save Changes after entering the above values."
+        },
+        {
+          "text": "Task 9: Add Integration and Deploy API Gateway"
+        }
+      ]
+    },
+    {
+      "title": "Task 10 : Get your API Endpoints",
+      "steps": [
+        {
+          "text": "Click on APIs in the left side of the console"
+        },
+        {
+          "text": "In the left side of the console, You will see a API Link, Click on it"
+        },
+        {
+          "text": "Task 10 : Get your API Endpoints"
+        },
+        {
+          "text": "Copy the invoke URL."
+        },
+        {
+          "text": "Task 10 : Get your API Endpoints"
+        },
+        {
+          "text": "In the Browser, We opened earlier through S3, Paste the URL into API Gateway URL and add /send-email in the end."
+        },
+        {
+          "text": "In the Recipient Email, Add your recipient email you given before that is verified in SES."
+        },
+        {
+          "text": "Add any Message, in the message box, you can also enter HTML tags to make highlight your mail."
+        },
+        {
+          "text": "Click Send Email"
+        },
+        {
+          "text": "You will receive Email Sent! message!"
+        },
+        {
+          "text": "Task 10 : Get your API Endpoints"
+        }
+      ]
+    },
+    {
+      "title": "Task 11: Check in Inbox for the Message",
+      "steps": [
+        {
+          "text": "Open the recipient's email. Navigate to Inbox."
+        },
+        {
+          "text": "Check Inbox or Spam for the mail function."
+        },
+        {
+          "text": "You can find the message you sent through the browser in the email."
+        },
+        {
+          "text": "Task 11: Check in Inbox for the Message"
+        }
+      ]
+    },
+    {
+      "title": "Task 12: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and show you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Task 12: Validation of the Lab"
+        },
+        {
+          "text": "You have successfully logged into AWS portal"
+        },
+        {
+          "text": "You have successfully Verified Email identities in Simple Email service"
+        },
+        {
+          "text": "You have successfully uploaded a static HTML form to an S3 bucket."
+        },
+        {
+          "text": "You have successfully created a Lambda function"
+        },
+        {
+          "text": "You have successfully created API gateway and enabled CORS for browser based requests."
+        },
+        {
+          "text": "You have successfully send the mail to recipients"
+        },
+        {
+          "text": "Sign out of the AWS Console."
+        },
+        {
+          "text": "Confirm that resources are working as expected or clean them up if needed."
+        },
+        {
+          "text": "You have completed the Serverless Email Marketing lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

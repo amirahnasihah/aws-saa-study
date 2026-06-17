@@ -1,0 +1,361 @@
+{
+  "slug": "hybrid-web-app-using-vmware-ubuntu-and-aws-rds",
+  "title": "Hybrid web app using VMware Ubuntu and AWS RDS",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Install the required packages in the VM",
+      "steps": [
+        {
+          "text": "Open the terminal, execute these commands one-by-one:"
+        },
+        {
+          "text": "Execute this command to install the packages of apache server and MySQL:"
+        },
+        {
+          "text": "Install the required tools for the VM:"
+        },
+        {
+          "text": "Enable the apache and verify the status"
+        },
+        {
+          "text": "Task 2: Install the required packages in the VM"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Enable the port and firewall with SSH",
+      "steps": [
+        {
+          "text": "Execute this command one-by-one to enable the port for Public access to the RDS with Port 80 and 443 allowed"
+        },
+        {
+          "text": "Task 3: Enable the port and firewall with SSH"
+        },
+        {
+          "text": "apache2 — web server, php + libapache2-mod-php + php-mysql — small server-side runtime and MySQL driver (we use PHP for DB connection only),default-mysql-client — mysql CLI for testing RDS, curl, netcat-openbsd (nc) — debug connectivity, ufw — uncomplicated firewall."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create RDS in AWS console",
+      "steps": [
+        {
+          "text": "In this task, we create Amazon RDS instance with MySQL database to connect with Local VM’s frontend"
+        },
+        {
+          "text": "Step 1:"
+        },
+        {
+          "text": "Go to AWS console and in the Search bar type “RDS” and select the Aurora and RDS"
+        },
+        {
+          "text": "Step 2:"
+        },
+        {
+          "text": "Click Create a database button"
+        },
+        {
+          "text": "Task 4: Create RDS in AWS console"
+        },
+        {
+          "text": "Step 3:"
+        },
+        {
+          "text": "Select “Standard create” in the database creation method, for the Engine options select the “MySQL”"
+        },
+        {
+          "text": "Task 4: Create RDS in AWS console"
+        },
+        {
+          "text": "Step 4:"
+        },
+        {
+          "text": "For the templates select Sandbox and in default RDS goes Single-AZ in the deployment options."
+        },
+        {
+          "text": "Step 5:"
+        },
+        {
+          "text": "For the DB instance identifier, type the name 'db-hybrid-host'"
+        },
+        {
+          "text": "Master username - “admin” which is used for login to the DB instance"
+        },
+        {
+          "text": "In the credentials management tab, select the Self-managed to make our own password for this instance."
+        },
+        {
+          "text": "Type the strong password for the database and remember to write it down by giving the confirmed master password."
+        },
+        {
+          "text": "Step 6:"
+        },
+        {
+          "text": "In the Instance configuration, in the DB instance class - Select “Burstable classes (includes t classes)”."
+        },
+        {
+          "text": "In the dropdown, make sure to select the db.t3.micro series instance type, which is enough for our database IOPS."
+        },
+        {
+          "text": "Task 4: Create RDS in AWS console"
+        },
+        {
+          "text": "Step 7:"
+        },
+        {
+          "text": "Select the storage type General Purpose SSD (gp-2)"
+        },
+        {
+          "text": "Set the allocated storage - “20” Gib only"
+        },
+        {
+          "text": "Uncheck the 'Enable storage autoscaling' in the Additional storage configuration."
+        },
+        {
+          "text": "Task 4: Create RDS in AWS console"
+        },
+        {
+          "text": "Step 8:"
+        },
+        {
+          "text": "In the connectivity tab,"
+        },
+        {
+          "text": "Select “Don’t connect to an EC2 compute instance”, thus we are not creating any EC2 instance resources."
+        },
+        {
+          "text": "Select the IPv4 for the network type."
+        },
+        {
+          "text": "Make sure the Default VPC is selected."
+        },
+        {
+          "text": "Select the “Default” in the DB subnet group."
+        },
+        {
+          "text": "Step 9:"
+        },
+        {
+          "text": "Select the Public access: Yes"
+        },
+        {
+          "text": "For the VPC security group(firewall)- create New"
+        },
+        {
+          "text": "Type the name of the New VPC security group - “hybrid-host-vpc”"
+        },
+        {
+          "text": "Leave others default and Click Create database"
+        },
+        {
+          "text": "Task 4: Create RDS in AWS console"
+        },
+        {
+          "text": "Step 10:"
+        },
+        {
+          "text": "Get your RDS endpoint,"
+        },
+        {
+          "text": "After the RDS status becomes available, Click the created database 'db-hybrid-host'."
+        },
+        {
+          "text": "In the Connectivity&Security tab, copy the Endpoint which we will use it to connect our VM with RDS."
+        },
+        {
+          "text": "Task 4: Create RDS in AWS console"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Change the Inbound rules of RDS for VM access",
+      "steps": [
+        {
+          "text": "In the Search bar type “EC2” and select the “EC2”"
+        },
+        {
+          "text": "In the sidebar, “Network & security” blade Select the “Security Groups” option"
+        },
+        {
+          "text": "Task 5: Change the Inbound rules of RDS for VM access"
+        },
+        {
+          "text": "There we have created the separate VPC, which was created during RDS creation, click on “hybrid-host-VPC”."
+        },
+        {
+          "text": "Task 5: Change the Inbound rules of RDS for VM access"
+        },
+        {
+          "text": "Click “Edit inbound rules”"
+        },
+        {
+          "text": "Task 5: Change the Inbound rules of RDS for VM access"
+        },
+        {
+          "text": "Make sure your VM's Public IP exists in the inbound rules in default."
+        },
+        {
+          "text": "Task 5: Change the Inbound rules of RDS for VM access"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Connect the RDS with VMware and create a Database",
+      "steps": [
+        {
+          "text": "In this task, we connect the RDS MySQL engine with Local VM and create a Simple database for the webserver"
+        },
+        {
+          "text": "Navigate to the terminal,Enter this command to connect with MySQL shell."
+        },
+        {
+          "text": "Enter the Password of the RDS"
+        },
+        {
+          "text": "Task 6: Connect the RDS with VMware and create a Database"
+        },
+        {
+          "text": "Execute this command one-by-one to create the database and add sample data in prior"
+        },
+        {
+          "text": "You see the rows, that means your DB is working."
+        },
+        {
+          "text": "Now exit the MySQL shell with “exit” command"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Create the simple web-app for Apache server",
+      "steps": [
+        {
+          "text": "In this task, we create the frontend for the simple admission form which gets simple details (Name, email) from the user to save in the RDS."
+        },
+        {
+          "text": "Navigate to the terminal, Paste this Command to create a HTML file"
+        },
+        {
+          "text": "Which opens the new tab in the terminal itself, paste this code"
+        },
+        {
+          "text": "Press Ctrl +O, then Enter, Ctrl +X to exit the tab to save the file."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Create backend PHP script to insert the data",
+      "steps": [
+        {
+          "text": "In the terminal again, create a php file for form submission"
+        },
+        {
+          "text": "Paste this code, and remember to replace the credentials in the code"
+        },
+        {
+          "text": "Press Ctrl +O, then Enter, Ctrl +X to save and exit"
+        },
+        {
+          "text": "Now you have to verify the result in the browser, as before check the internal IP of the Virtual machine"
+        },
+        {
+          "text": "Open the browser and paste this to render the web forms"
+        },
+        {
+          "text": "Now you can enter the data of the students db. Click submit button to the data get appended in the table as much you want."
+        },
+        {
+          "text": "On the successful entry, you get Admission submitted successfully! message in web page."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Creating the View page to verify the table",
+      "steps": [
+        {
+          "text": "In the terminal, creation for the php file execute this command"
+        },
+        {
+          "text": "Paste this code and remember to change the credentials and save"
+        },
+        {
+          "text": "Task 9: Creating the View page to verify the table"
+        },
+        {
+          "text": "Open the browser and Paste this to see your student data rendered on a webpage."
+        },
+        {
+          "text": "Task 9: Creating the View page to verify the table"
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and show you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output:"
+        },
+        {
+          "text": "You have successfully Signed into AWS portal"
+        },
+        {
+          "text": "You have successfully installed Apache web server, PHP and MySQL client on the VM."
+        },
+        {
+          "text": "You have successfully created and configured an Amazon RDS instance (MySQL)"
+        },
+        {
+          "text": "You have successfully connected the local Ubuntu web server with the RDS."
+        },
+        {
+          "text": "You have successfully developed a simple web app and stores user data into the RDS database."
+        },
+        {
+          "text": "You have successfully completed the hybrid deployed workflow with VM and AWS."
+        },
+        {
+          "text": "Sign out of the AWS Console."
+        },
+        {
+          "text": "Confirm that resources are working as expected and clean them respectively in the console."
+        },
+        {
+          "text": "You have completed this Lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

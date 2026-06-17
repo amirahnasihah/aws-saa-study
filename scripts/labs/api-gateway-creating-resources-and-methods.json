@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button"
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button"
         },
         {
-          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,31 +32,49 @@
       "title": "Task 2: Create an API",
       "steps": [
         {
-          "text": "In this task, we are going to set up an API in Amazon API Gateway."
+          "text": "In this task, we are going to set up an API in Amazon API Gateway."
         },
         {
-          "text": "Navigate to the Services menu at the top, then click on API Gateway under the Network and Content Delivery section."
+          "text": "Navigate to the Services menu at the top, then click on API Gateway under the Network and Content Delivery section."
         },
         {
-          "text": "Scroll down and click on Build in REST API."
+          "text": "Scroll down and click on Build in REST API."
         },
         {
-          "text": "Ignore the pop-up, create your first API."
+          "text": "Task 2: Create an API",
+          "images": [
+            "/labs/api-gateway-creating-resources-and-methods/step-01.png"
+          ]
         },
         {
-          "text": "Then choose New API under Create new API."
+          "text": "Ignore the pop-up, create your first API."
         },
         {
-          "text": "Enter API name as Lab API."
+          "text": "Then choose New API under Create new API."
+        },
+        {
+          "text": "Enter API name as Lab API."
         },
         {
           "text": "Security Policy: Select SecurityPolicy_TLS13.... Policy"
         },
         {
+          "text": "Task 2: Create an API",
+          "images": [
+            "/labs/api-gateway-creating-resources-and-methods/step-02.png"
+          ]
+        },
+        {
           "text": "Click on Create API Button"
         },
         {
-          "text": "You have created, Lab API"
+          "text": "You have created, Lab API"
+        },
+        {
+          "text": "Task 2: Create an API",
+          "images": [
+            "/labs/api-gateway-creating-resources-and-methods/step-03.png"
+          ]
         }
       ]
     },
@@ -67,16 +85,31 @@
           "text": "In this task, we are going to create a resource within the API."
         },
         {
-          "text": "Once the API is created, click on the Lab API"
+          "text": "Once the API is created, click on the Lab API"
         },
         {
-          "text": "Click Create Resource button"
+          "text": "Click Create Resource button",
+          "images": [
+            "/labs/api-gateway-creating-resources-and-methods/step-04.png"
+          ]
+        },
+        {
+          "text": "Task 3: Creating a Resource",
+          "images": [
+            "/labs/api-gateway-creating-resources-and-methods/step-05.png"
+          ]
         },
         {
           "text": "Resource Name: Enter lab"
         },
         {
-          "text": "Once you enter the resource name, click on Create Resource."
+          "text": "Once you enter the resource name, click on Create Resource."
+        },
+        {
+          "text": "Task 3: Creating a Resource",
+          "images": [
+            "/labs/api-gateway-creating-resources-and-methods/step-06.png"
+          ]
         }
       ]
     },
@@ -84,13 +117,16 @@
       "title": "Task 4: Creating Method",
       "steps": [
         {
-          "text": "Once you have created the resource, click on Create Method. Select Get from the dropdown list of Method Type."
+          "text": "Once you have created the resource, click on Create Method. Select Get from the dropdown list of Method Type."
         },
         {
-          "text": "Select the Integration Type as Mock and click on Create Method."
+          "text": "Select the Integration Type as Mock and click on Create Method."
         },
         {
-          "text": "Do You Know?"
+          "text": "Task 4: Creating Method",
+          "images": [
+            "/labs/api-gateway-creating-resources-and-methods/step-07.png"
+          ]
         },
         {
           "text": "API Gateway is built to handle high levels of traffic and concurrency, making it suitable for a wide range of applications, from small projects to large-scale enterprise systems. It automatically scales to accommodate varying levels of API traffic, ensuring that applications can handle a significant number of concurrent requests without compromising performance or reliability."
@@ -101,25 +137,28 @@
       "title": "Task 5: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/api-gateway-creating-resources-and-methods/step-08.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 5: Validation Test",
+          "images": [
+            "/labs/api-gateway-creating-resources-and-methods/step-09.gif"
+          ]
         },
         {
-          "text": "You have successfully created an API."
+          "text": "You have successfully created an API."
         },
         {
-          "text": "You have successfully created an API resource and method."
-        },
-        {
-          "text": "End Lab"
+          "text": "You have successfully created an API resource and method."
         },
         {
           "text": "Sign out of the AWS Account."
@@ -128,7 +167,7 @@
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps click on End Lab from the lab console."
+          "text": "Once you have completed the steps click on End Lab from the lab console."
         }
       ]
     }

@@ -1,0 +1,115 @@
+{
+  "slug": "challenge-efsmount-shared-storage-sync",
+  "title": "Challenge Lab - Mount EFS on EC2",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Open the AWS Management Console in a new browser tab via Open Console."
+        },
+        {
+          "text": "Retain the default Account ID, enter the provided IAM Username and Password, and sign in."
+        },
+        {
+          "text": "Select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company needs to share a file system across multiple EC2 instances using AWS Elastic File System (EFS). Your job is to launch two EC2 instances, create an EFS file system, mount it on both instances, and test the shared storage. Here’s how to proceed:"
+        },
+        {
+          "text": "Navigate to EC2 > Instances > Launch instances."
+        },
+        {
+          "text": "Launch two EC2 instances in AMI: Amazon Linux 2023 AMI, Instance type: t2.micro. Enable Auto-assign Public IP. Create a new security group allowing SSH (port 22) and NFS (port 2049) Launch with key pair."
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 AMI,"
+        },
+        {
+          "text": "Instance type: t2.micro."
+        },
+        {
+          "text": "Enable Auto-assign Public IP."
+        },
+        {
+          "text": "Create a new security group allowing SSH (port 22) and NFS (port 2049)"
+        },
+        {
+          "text": "Launch with key pair."
+        },
+        {
+          "text": "Note the public IPs of both instances."
+        },
+        {
+          "text": "SSH into EC2-1"
+        },
+        {
+          "text": "Install the EFS mount"
+        },
+        {
+          "text": "Create a mount point:"
+        },
+        {
+          "text": "Mount the EFS file system"
+        },
+        {
+          "text": "Verify the mount"
+        },
+        {
+          "text": "SSH into EC2-2"
+        },
+        {
+          "text": "Install the EFS mount"
+        },
+        {
+          "text": "Create a mount point"
+        },
+        {
+          "text": "Verify the mount:"
+        },
+        {
+          "text": "On EC2-1, create a test file in the EFS mount"
+        },
+        {
+          "text": "On EC2-2, verify the file exists"
+        },
+        {
+          "text": "On EC2-2, create another file"
+        },
+        {
+          "text": "On EC2-1, verify the new file"
+        },
+        {
+          "text": "Ensure all resources (EC2 instances, EFS file system, mounts) are created and configured correctly."
+        },
+        {
+          "text": "Verify the file system is shared between both instances."
+        },
+        {
+          "text": "In the lab console, click Validate to check the setup."
+        },
+        {
+          "text": "Sign out of the AWS Management Console by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "In the lab console, click End Challenge and wait for it to complete."
+        },
+        {
+          "text": "You’ve completed the EFSMount Shared Storage challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

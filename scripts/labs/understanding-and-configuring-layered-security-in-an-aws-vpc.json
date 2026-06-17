@@ -9,10 +9,13 @@
   "duration": "01:00:00",
   "tasks": [
     {
-      "title": "Task 1: Sign in to AWS Management Console",
+      "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,65 +24,69 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
-        },
-        {
-          "text": "Note: There is no Validation function for this lab."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
     {
-      "title": "Task 2: Creating a new VPC",
+      "title": "Task 2: Creating a new VPC",
       "steps": [
         {
           "text": "In this task, we are going to create a new VPC with the required configurations such as name, IPv4 CIDR block."
         },
         {
-          "text": "Make sure to choose the N.Virginia region in the AWS Management Control dashboard, which is present in the top right corner."
+          "text": "Make sure to choose the N.Virginia region in the AWS Management Control dashboard, which is present in the top right corner."
         },
         {
-          "text": "Navigate and click on VPC which will be available under the Networking & Content Delivery section of Services"
+          "text": "Navigate and click on VPC which will be available under the Networking & Content Delivery section of Services"
         },
         {
-          "text": "Click on Your VPCs from the left menu and Click on Create VPC button."
+          "text": "Click on Your VPCs from the left menu and Click on Create VPC button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-01.png"
+          ]
         },
         {
-          "text": "In Create VPC page fill the following details,"
+          "text": "Task 2: Creating a new VPC",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-02.png"
+          ]
+        },
+        {
+          "text": "In Create VPC page fill the following details,"
         },
         {
           "text": "Select VPC Only"
         },
         {
-          "text": "Name tag: Enter lab_VPC"
+          "text": "Name tag: Enter lab_VPC"
         },
         {
-          "text": "IPV4 CIDR Block: Enter 10.0.0.0/16"
+          "text": "IPV4 CIDR Block: Enter 10.0.0.0/16"
         },
         {
-          "text": "IPV6 CIDR block: Select No IPV6 CIDR block"
+          "text": "IPV6 CIDR block: Select No IPV6 CIDR block"
         },
         {
-          "text": "Tenancy: Default"
+          "text": "Tenancy: Default",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-03.png"
+          ]
         },
         {
-          "text": "Click on Create VPC button."
-        }
-      ]
-    },
-    {
-      "title": "Concept: Amazon Virtual Private Cloud (VPC) Amazon VPC allows you to create a logically isolated network within AWS where you can launch AWS resources such as EC2 instances, databases, and load balancers.\nA VPC gives you control over: IP address ranges using CIDR blocks\nSubnets within the network\nRoute tables to control traffic\nSecurity layers such as Security Groups and Network ACLs Creating a custom VPC allows organizations to design secure and scalable network architectures for their cloud infrastructure.",
-      "steps": [
-        {
-          "text": "Concept: Amazon Virtual Private Cloud (VPC)"
+          "text": "Task 2: Creating a new VPC",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-04.png"
+          ]
         },
         {
-          "text": "Amazon VPC allows you to create a logically isolated network within AWS where you can launch AWS resources such as EC2 instances, databases, and load balancers."
-        },
-        {
-          "text": "A VPC gives you control over:"
+          "text": "Click on Create VPC button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-05.png"
+          ]
         },
         {
           "text": "IP address ranges using CIDR blocks"
@@ -92,287 +99,318 @@
         },
         {
           "text": "Security layers such as Security Groups and Network ACLs"
-        },
-        {
-          "text": "Creating a custom VPC allows organizations to design secure and scalable network architectures for their cloud infrastructure."
         }
       ]
     },
     {
-      "title": "Task 3: Creating and attaching an Internet gateway",
+      "title": "Task 3: Creating and attaching an Internet gateway",
       "steps": [
         {
           "text": "In this task, we are going to create an internet gateway and will attach it to the created VPC."
         },
         {
-          "text": "Click on Internet Gateways from the left menu and click on Create internet gateway button and enter the following details:"
+          "text": "Click on Internet Gateways from the left menu and click on Create internet gateway button and enter the following details:"
         },
         {
-          "text": "Name tag: Enter lab_IGW"
+          "text": "Name tag: Enter lab_IGW"
         },
         {
-          "text": "Click on Create internet gateway button."
+          "text": "Click on Create internet gateway button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-06.png"
+          ]
         },
         {
           "text": "Select the Internet gateway you created from the list."
         },
         {
-          "text": "Click on Actions button."
+          "text": "Click on Actions button."
         },
         {
-          "text": "Click on Attach to VPC button."
+          "text": "Click on Attach to VPC button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-07.png"
+          ]
         },
         {
-          "text": "Select MyVPC from the drop-down and click on Attach internet gateway button."
+          "text": "Task 3: Creating and attaching an Internet gateway",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-08.png"
+          ]
         },
         {
-          "text": "Pro Tip: Internet Gateway and Public Access"
-        },
-        {
-          "text": "An Internet Gateway (IGW) enables communication between resources in your VPC and the public internet."
-        },
-        {
-          "text": "However, attaching an Internet Gateway alone does not make a subnet public."
-        },
-        {
-          "text": "A subnet becomes public only when its route table contains a route (0.0.0.0/0) pointing to the Internet Gateway."
-        },
-        {
-          "text": "This routing configuration allows instances in that subnet to send and receive internet traffic."
+          "text": "Select MyVPC from the drop-down and click on Attach internet gateway button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-09.png"
+          ]
         }
       ]
     },
     {
-      "title": "Task 4: Creating two Subnets",
+      "title": "Task 4: Creating two Subnets",
       "steps": [
         {
-          "text": "You will create 2 Subnets, one for public and another for private resources. First, we will create a public subnet."
+          "text": "You will create 2 Subnets, one for public and another for private resources. First, we will create a public subnet."
         },
         {
-          "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet button."
+          "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet button."
         },
         {
-          "text": "VPC ID: Select lab_VPC (Select the VPC which you created from the dropdown)"
+          "text": "VPC ID: Select lab_VPC (Select the VPC which you created from the dropdown)"
         },
         {
-          "text": "Name tag: Enter public_subnet"
+          "text": "Name tag: Enter public_subnet"
         },
         {
-          "text": "Availability zone: Select No Preference"
+          "text": "Availability zone: Select No Preference"
         },
         {
-          "text": "IPv4 CIDR block: Enter 10.0.1.0/24"
+          "text": "IPv4 CIDR block: Enter 10.0.1.0/24",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-10.png"
+          ]
         },
         {
-          "text": "Click on Create subnet button"
+          "text": "Task 4: Creating two Subnets",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-11.png"
+          ]
         },
         {
-          "text": "For Private Subnet, click on Create Subnet again."
+          "text": "Click on Create subnet button"
         },
         {
-          "text": "VPC ID: Select lab_VPC (Select the VPC which you created from the dropdown)"
+          "text": "For Private Subnet, click on Create Subnet again."
         },
         {
-          "text": "Name tag: Enter private_subnet"
+          "text": "VPC ID: Select lab_VPC (Select the VPC which you created from the dropdown)"
         },
         {
-          "text": "Availability zone: Select No Preference"
+          "text": "Name tag: Enter private_subnet"
         },
         {
-          "text": "IPv4 CIDR block: Enter 10.0.2.0/24"
+          "text": "Availability zone: Select No Preference"
         },
         {
-          "text": "Click on Create subnet button."
-        }
-      ]
-    },
-    {
-      "title": "Concept: Public and Private Subnets\nSubnets divide a VPC into smaller network segments. Public Subnet: Contains resources that must be accessible from the internet, such as web servers. These subnets typically have routes pointing to an Internet Gateway.\nPrivate Subnet: Contains internal resources such as application servers or databases that should not be directly accessible from the internet. This separation helps implement multi-tier architectures and improves security.",
-      "steps": [
-        {
-          "text": "Concept: Public and Private Subnets"
+          "text": "IPv4 CIDR block: Enter 10.0.2.0/24"
         },
         {
-          "text": "Subnets divide a VPC into smaller network segments."
+          "text": "Click on Create subnet button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-12.png",
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-13.png"
+          ]
         },
         {
           "text": "Public Subnet: Contains resources that must be accessible from the internet, such as web servers. These subnets typically have routes pointing to an Internet Gateway."
         },
         {
           "text": "Private Subnet: Contains internal resources such as application servers or databases that should not be directly accessible from the internet."
-        },
-        {
-          "text": "This separation helps implement multi-tier architectures and improves security."
         }
       ]
     },
     {
-      "title": "Task 5: Creating Route tables, configuring routes and associating them with Subnets",
+      "title": "Task 5: Creating Route tables, configuring routes and associating them with Subnets",
       "steps": [
         {
-          "text": "You will create 2 route tables, one for public routes and another for private routes."
+          "text": "You will create 2 route tables, one for public routes and another for private routes."
         },
         {
-          "text": "Go to Route Tables from the left menu and click on Create route table button."
+          "text": "Go to Route Tables from the left menu and click on Create route table button."
         },
         {
-          "text": "Name tag: Enter public_route"
+          "text": "Name tag: Enter public_route"
         },
         {
-          "text": "VPC: Select lab_VPC (Select the VPC you created from the dropdown)"
+          "text": "VPC: Select lab_VPC (Select the VPC you created from the dropdown)"
         },
         {
-          "text": "Click on Create route table button."
+          "text": "Click on Create route table button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-14.png"
+          ]
         },
         {
-          "text": "Similarly, go to Route Tables from the left menu and click on Create route table."
+          "text": "Similarly, go to Route Tables from the left menu and click on Create route table."
         },
         {
-          "text": "Name tag: Enter private_route"
+          "text": "Name tag: Enter private_route"
         },
         {
-          "text": "VPC: Select lab_VPC (Select the VPC you created from the dropdown)"
+          "text": "VPC: Select lab_VPC (Select the VPC you created from the dropdown)"
         },
         {
-          "text": "Click on Create route table button."
+          "text": "Click on Create route table button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-15.png"
+          ]
         },
         {
-          "text": "Now, you need to add routes to the Route Tables."
+          "text": "Task 5: Creating Route tables, configuring routes and associating them with Subnets",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-16.png"
+          ]
         },
         {
-          "text": "Select public_route."
+          "text": "Now, you need to add routes to the Route Tables."
         },
         {
-          "text": "Go to the Routes tab. Click on Edit routes. On the next page, click on Add route."
+          "text": "Select public_route."
+        },
+        {
+          "text": "Go to the Routes tab. Click on Edit routes. On the next page, click on Add route."
+        },
+        {
+          "text": "Specify the following values: Destination: Enter 0.0.0.0/0 Target: Select Internet Gateway from the dropdown menu to select lab_IGW. Click on Save changes button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-17.png"
+          ]
         },
         {
           "text": "Specify the following values:"
         },
         {
-          "text": "Destination: Enter 0.0.0.0/0"
+          "text": "Destination: Enter 0.0.0.0/0"
         },
         {
-          "text": "Target: Select Internet Gateway from the dropdown menu to select lab_IGW."
+          "text": "Target: Select Internet Gateway from the dropdown menu to select lab_IGW."
         },
         {
-          "text": "Click on Save changes button."
+          "text": "Click on Save changes button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-18.png"
+          ]
         },
         {
-          "text": "Next, you need to associate the public_subnet with this public_route. Select the public_route and go to the Actions and in that go to Edit Subnet Associations tab."
+          "text": "Next, you need to associate the public_subnet with this public_route. Select the public_route and go to the Actions and in that go to Edit Subnet Associations tab. Click on Edit Subnet Associations. Select public_subnet from the list. Click on Save Associations button."
         },
         {
-          "text": "Click on Edit Subnet Associations."
+          "text": "Next, you need to associate the public_subnet with this public_route. Select the public_route and go to the Actions and in that go to Edit Subnet Associations tab."
         },
         {
-          "text": "Select public_subnet from the list."
+          "text": "Click on Edit Subnet Associations."
         },
         {
-          "text": "Click on Save Associations button."
+          "text": "Select public_subnet from the list."
         },
         {
-          "text": "Similarly, you need to associate the private_subnet with this private_route. Select the private_route and go to the Actions and in that go to Edit Subnet Associations tab."
+          "text": "Click on Save Associations button."
         },
         {
-          "text": "Click on Edit Subnet Associations."
+          "text": "Task 5: Creating Route tables, configuring routes and associating them with Subnets",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-19.jpg"
+          ]
         },
         {
-          "text": "Select private_subnet from the list."
+          "text": "Similarly, you need to associate the private_subnet with this private_route. Select the private_route and go to the Actions and in that go to Edit Subnet Associations tab. Click on Edit Subnet Associations. Select private_subnet from the list. Click on Save Associations button."
         },
         {
-          "text": "Click on Save Associations button."
+          "text": "Similarly, you need to associate the private_subnet with this private_route. Select the private_route and go to the Actions and in that go to Edit Subnet Associations tab."
+        },
+        {
+          "text": "Click on Edit Subnet Associations."
+        },
+        {
+          "text": "Select private_subnet from the list."
+        },
+        {
+          "text": "Click on Save Associations button."
+        },
+        {
+          "text": "Task 5: Creating Route tables, configuring routes and associating them with Subnets",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-20.jpg"
+          ]
+        },
+        {
+          "text": "Destination – The IP address range for the traffic"
+        },
+        {
+          "text": "Target – Where the traffic should be directed (Internet Gateway, NAT Gateway, etc.)"
+        },
+        {
+          "text": "local route ? enables communication within the VPC"
+        },
+        {
+          "text": "0.0.0/0 ? directs internet-bound traffic to the Internet Gateway"
         }
       ]
     },
     {
-      "title": "Deep Dive: Route Tables in VPC Networking\nA Route Table controls how network traffic flows within a VPC. Each route contains: Destination – The IP address range for the traffic\nTarget – Where the traffic should be directed (Internet Gateway, NAT Gateway, etc.)\nFor example: local route ? enables communication within the VPC\n0.0.0.0/0 ? directs internet-bound traffic to the Internet Gateway Associating route tables with subnets determines whether a subnet behaves as public or private.",
-      "steps": [
-        {
-          "text": "Deep Dive: Route Tables in VPC Networking"
-        },
-        {
-          "text": "A Route Table controls how network traffic flows within a VPC."
-        },
-        {
-          "text": "Each route contains:"
-        },
-        {
-          "text": "Destination – The IP address range for the traffic"
-        },
-        {
-          "text": "Target – Where the traffic should be directed (Internet Gateway, NAT Gateway, etc.)"
-        },
-        {
-          "text": "For example:"
-        },
-        {
-          "text": "local route ? enables communication within the VPC"
-        },
-        {
-          "text": "0.0.0/0 ? directs internet-bound traffic to the Internet Gateway"
-        },
-        {
-          "text": "Associating route tables with subnets determines whether a subnet behaves as public or private."
-        }
-      ]
-    },
-    {
-      "title": "Task 6: Creating Security Group",
+      "title": "Task 6: Creating Security Group",
       "steps": [
         {
           "text": "In this task, we are going to create a security group for the EC2 Instance."
         },
         {
-          "text": "Go to Security Group from the left menu and click on Create security group button and then provide the following details:"
+          "text": "Go to Security Group from the left menu and click on Create security group button and then provide the following details:"
         },
         {
-          "text": "Security group name: Enter lab_securitygroup"
+          "text": "Security group name: Enter lab_securitygroup"
         },
         {
-          "text": "Description: Enter Security group for multilayered VPC"
+          "text": "Description: Enter Security group for multilayered VPC"
         },
         {
-          "text": "VPC: Select lab_VPC (select from the dropdown)"
+          "text": "VPC: Select lab_VPC (select from the dropdown)",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-21.png"
+          ]
         },
         {
-          "text": "Under Inbound Rules, click on Add Rule button."
+          "text": "Task 6: Creating Security Group",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-22.png"
+          ]
         },
         {
-          "text": "To add SSH,"
+          "text": "Under Inbound Rules, click on Add Rule button."
         },
         {
-          "text": "Choose Type: Select SSH"
+          "text": "To add SSH, Choose Type: Select SSH Source: Anywhere-IPv4"
         },
         {
-          "text": "Source: Anywhere-IPv4"
+          "text": "To add SSH,"
         },
         {
-          "text": "To add All ICMP - IPv4,"
+          "text": "Choose Type: Select SSH"
         },
         {
-          "text": "Click on Add Rule"
+          "text": "Source: Anywhere-IPv4"
         },
         {
-          "text": "Choose Type: Select All ICMP - IPv4"
+          "text": "To add All ICMP - IPv4, Click on Add Rule Choose Type: Select All ICMP - IPv4 Source: Anywhere IPv4",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-23.png"
+          ]
         },
         {
-          "text": "Source: Anywhere IPv4"
+          "text": "To add All ICMP - IPv4,"
         },
         {
-          "text": "Click on Create security group button."
-        }
-      ]
-    },
-    {
-      "title": "Concept: Security Groups\nSecurity Groups act as virtual firewalls that control inbound and outbound traffic for EC2 instances. Key characteristics: Stateful – If inbound traffic is allowed, the response is automatically allowed.\nInstance-level security – Applied directly to EC2 instances.\nRule-based filtering – Controls traffic based on ports, protocols, and IP ranges. Security groups are commonly used to allow only specific traffic such as SSH (port 22) or HTTP (port 80).",
-      "steps": [
-        {
-          "text": "Concept: Security Groups"
+          "text": "Click on Add Rule"
         },
         {
-          "text": "Security Groups act as virtual firewalls that control inbound and outbound traffic for EC2 instances."
+          "text": "Choose Type: Select All ICMP - IPv4"
         },
         {
-          "text": "Key characteristics:"
+          "text": "Source: Anywhere IPv4",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-24.png"
+          ]
+        },
+        {
+          "text": "Task 6: Creating Security Group",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-25.png"
+          ]
+        },
+        {
+          "text": "Click on Create security group button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-26.png"
+          ]
         },
         {
           "text": "Stateful – If inbound traffic is allowed, the response is automatically allowed."
@@ -382,133 +420,155 @@
         },
         {
           "text": "Rule-based filtering – Controls traffic based on ports, protocols, and IP ranges."
-        },
-        {
-          "text": "Security groups are commonly used to allow only specific traffic such as SSH (port 22) or HTTP (port 80)."
         }
       ]
     },
     {
-      "title": "Task 7: Creating and configuring Network ACL",
+      "title": "Task 7: Creating and configuring Network ACL",
       "steps": [
         {
           "text": "Network Access Control Lists (ACLs) in AWS are used to control inbound and outbound traffic at the subnet level. They act as virtual firewalls that provide an additional layer of security for your Amazon Virtual Private Cloud (VPC). In this task, we are going to create and configure Network ACL by adding required inbound and outbound rules."
         },
         {
-          "text": "Go to Network ACLs from the left menu and click on Create network ACL. Provide the following details:"
+          "text": "Go to Network ACLs from the left menu and click on Create network ACL. Provide the following details:"
         },
         {
-          "text": "Name tag: Enter lab_NACL"
+          "text": "Name tag: Enter lab_NACL"
         },
         {
-          "text": "VPC: Select lab_VPC (Select the VPC which you created from the dropdown)"
+          "text": "VPC: Select lab_VPC (Select the VPC which you created from the dropdown)"
         },
         {
-          "text": "Click on Create network ACL button."
+          "text": "Click on Create network ACL button."
         },
         {
-          "text": "Select lab_NACL and go to Inbound rules tab. Click on Edit inbound rules and then click on the Add new rule."
+          "text": "Task 7: Creating and configuring Network ACL",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-27.png"
+          ]
+        },
+        {
+          "text": "Select lab_NACL and go to Inbound rules tab. Click on Edit inbound rules and then click on the Add new rule."
         },
         {
           "text": "Add the following rules:"
         },
         {
-          "text": "For SSH, click on Add new rule,"
+          "text": "For SSH, click on Add new rule, Rule number : Enter 100 Type: Choose SSH (22) Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow"
         },
         {
-          "text": "Rule number : Enter 100"
+          "text": "For SSH, click on Add new rule,"
         },
         {
-          "text": "Type: Choose SSH (22)"
+          "text": "Rule number : Enter 100"
         },
         {
-          "text": "Source: Enter 0.0.0.0/0"
+          "text": "Type: Choose SSH (22)"
         },
         {
-          "text": "Allow / Deny: Select Allow"
+          "text": "Source: Enter 0.0.0.0/0"
         },
         {
-          "text": "For ALL ICMP- IPv4, click on Add new rule,"
+          "text": "Allow / Deny: Select Allow"
         },
         {
-          "text": "Rule number : Enter 200"
+          "text": "For ALL ICMP- IPv4, click on Add new rule, Rule number : Enter 200 Type: Choose ALL ICMP - IPv4 Source: Enter 0.0.0.0/0 Allow / Deny: Select Allow"
         },
         {
-          "text": "Type: Choose ALL ICMP - IPv4"
+          "text": "For ALL ICMP- IPv4, click on Add new rule,"
         },
         {
-          "text": "Source: Enter 0.0.0.0/0"
+          "text": "Rule number : Enter 200"
         },
         {
-          "text": "Allow / Deny: Select Allow"
+          "text": "Type: Choose ALL ICMP - IPv4"
         },
         {
-          "text": "Click on Save changes button."
+          "text": "Source: Enter 0.0.0.0/0"
+        },
+        {
+          "text": "Allow / Deny: Select Allow"
+        },
+        {
+          "text": "Click on Save changes button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-28.png"
+          ]
+        },
+        {
+          "text": "Task 7: Creating and configuring Network ACL",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-29.png"
+          ]
         },
         {
           "text": "NACLs are stateless. You need to add the rules in Outbound rules too."
         },
         {
-          "text": "Select lab_NACL and go to Outbound rules tab. Click on Edit Outbound rules and then click on the Add Rule button."
+          "text": "Select lab_NACL and go to Outbound rules tab. Click on Edit Outbound rules and then click on the Add Rule button."
         },
         {
-          "text": "For ALL ICMP- IPv4, click on Add new rule,"
+          "text": "For ALL ICMP- IPv4, click on Add new rule, Rule# : Enter 100 Type: Choose ALL ICMP - IPv4 Destination: Enter 0.0.0.0/0 Allow / Deny: Select Allow"
         },
         {
-          "text": "Rule# : Enter 100"
+          "text": "For ALL ICMP- IPv4, click on Add new rule,"
         },
         {
-          "text": "Type: Choose ALL ICMP - IPv4"
+          "text": "Rule# : Enter 100"
         },
         {
-          "text": "Destination: Enter 0.0.0.0/0"
+          "text": "Type: Choose ALL ICMP - IPv4"
         },
         {
-          "text": "Allow / Deny: Select Allow"
+          "text": "Destination: Enter 0.0.0.0/0"
         },
         {
-          "text": "For Custom TCP Rule, click on Add new rule,"
+          "text": "Allow / Deny: Select Allow"
         },
         {
-          "text": "Rule# : Enter 200"
+          "text": "For Custom TCP Rule, click on Add new rule, Rule# : Enter 200 Type: Choose Custom TCP Rule Port Range: Enter 1024 - 65535 Destination: Enter 0.0.0.0/0 Allow / Deny: Select Allow"
         },
         {
-          "text": "Type: Choose Custom TCP Rule"
+          "text": "For Custom TCP Rule, click on Add new rule,"
         },
         {
-          "text": "Port Range: Enter 1024 - 65535"
+          "text": "Rule# : Enter 200"
         },
         {
-          "text": "Destination: Enter 0.0.0.0/0"
+          "text": "Type: Choose Custom TCP Rule"
         },
         {
-          "text": "Allow / Deny: Select Allow"
+          "text": "Port Range: Enter 1024 - 65535"
         },
         {
-          "text": "Click on Save changes button."
+          "text": "Destination: Enter 0.0.0.0/0"
         },
         {
-          "text": "You need to associate both public and private subnets with the NACL."
+          "text": "Allow / Deny: Select Allow"
         },
         {
-          "text": "Select lab_NACL and go to the Subnet associations tab. Click on Edit subnet associations."
+          "text": "Click on Save changes button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-30.png"
+          ]
         },
         {
-          "text": "Choose all the available subnets and then click on Save changes button."
-        }
-      ]
-    },
-    {
-      "title": "Concept: Network Access Control Lists (NACLs)\nNetwork ACLs provide an additional layer of security at the subnet level. Key characteristics: Stateless filtering – Return traffic must be explicitly allowed.\nSubnet-level control – Applied to entire subnets instead of individual instances.\nRule numbering system – Lower rule numbers are evaluated first. In most AWS architectures, Security Groups and NACLs work together to provide layered security.",
-      "steps": [
-        {
-          "text": "Concept: Network Access Control Lists (NACLs)"
+          "text": "You need to associate both public and private subnets with the NACL."
         },
         {
-          "text": "Network ACLs provide an additional layer of security at the subnet level."
+          "text": "Select lab_NACL and go to the Subnet associations tab. Click on Edit subnet associations."
         },
         {
-          "text": "Key characteristics:"
+          "text": "Choose all the available subnets and then click on Save changes button.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-31.png"
+          ]
+        },
+        {
+          "text": "Task 7: Creating and configuring Network ACL",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-32.png"
+          ]
         },
         {
           "text": "Stateless filtering – Return traffic must be explicitly allowed."
@@ -518,20 +578,17 @@
         },
         {
           "text": "Rule numbering system – Lower rule numbers are evaluated first."
-        },
-        {
-          "text": "In most AWS architectures, Security Groups and NACLs work together to provide layered security."
         }
       ]
     },
     {
-      "title": "Task 8: Launching 2 EC2 Instances",
+      "title": "Task 8: Launching 2 EC2 Instances",
       "steps": [
         {
-          "text": "Navigate to Services and choose EC2 under Compute"
+          "text": "Navigate to Services and choose EC2 under Compute"
         },
         {
-          "text": "Navigate to Instances on the left panel and click on Launch Instances button."
+          "text": "Navigate to Instances on the left panel and click on Launch Instances button."
         },
         {
           "text": "Name : Enter public_instance"
@@ -540,40 +597,67 @@
           "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the select button."
         },
         {
-          "text": "Note: if there are two AMI's present for Amazon Linux 2 AMI, choose any of them."
+          "text": "Task 8: Launching 2 EC2 Instances",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-33.png"
+          ]
         },
         {
-          "text": "For Instance Type: Select t2.micro"
+          "text": "For Instance Type: Select t2.micro"
         },
         {
-          "text": "For Key pair: Select Create a new key pair Button"
+          "text": "Task 8: Launching 2 EC2 Instances",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-34.png"
+          ]
         },
         {
-          "text": "Key pair name: WhizKey"
+          "text": "For Key pair: Select Create a new key pair Button Key pair name: WhizKey Key pair type: RSA Private key file format: .pem"
         },
         {
-          "text": "Key pair type: RSA"
+          "text": "For Key pair: Select Create a new key pair Button"
         },
         {
-          "text": "Private key file format: .pem"
+          "text": "Key pair name: WhizKey"
         },
         {
-          "text": "Select Create key pair Button."
+          "text": "Key pair type: RSA"
         },
         {
-          "text": "In Network Settings Click on Edit button:"
+          "text": "Private key file format: .pem"
         },
         {
-          "text": "VPC: Select lab_VPC"
+          "text": "Select Create key pair Button."
         },
         {
-          "text": "Subnet: Select public_subnet"
+          "text": "In Network Settings Click on Edit button: VPC: Select lab_VPC Subnet: Select public_subnet Auto-assign public IP: Enable Choose Select an existing security group and remove default one then select lab_securitygroup",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-35.png"
+          ]
         },
         {
-          "text": "Auto-assign public IP: Enable"
+          "text": "In Network Settings Click on Edit button:"
         },
         {
-          "text": "Choose Select an existing security group and remove default one then select lab_securitygroup"
+          "text": "VPC: Select lab_VPC"
+        },
+        {
+          "text": "Subnet: Select public_subnet"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Choose Select an existing security group and remove default one then select lab_securitygroup",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-36.png"
+          ]
+        },
+        {
+          "text": "Task 8: Launching 2 EC2 Instances",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-37.png"
+          ]
         },
         {
           "text": "Keep Rest thing Default and Click on Launch Instance Button."
@@ -583,6 +667,9 @@
         },
         {
           "text": "Similar to the above, launch another EC2 instance:"
+        },
+        {
+          "text": "Name the instance as private_instanceInstance type: t2.micro"
         },
         {
           "text": "Name the instance as private_instance"
@@ -603,24 +690,22 @@
           "text": "Auto-assign public IP: Disable"
         },
         {
-          "text": "Choose Select an existing security group and remove default one then select lab_securitygroup"
+          "text": "Choose Select an existing security group and remove default one then select lab_securitygroup",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-38.png"
+          ]
+        },
+        {
+          "text": "Task 8: Launching 2 EC2 Instances",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-39.png"
+          ]
         },
         {
           "text": "Keep Rest thing Default and Click on Launch Instance Button."
         },
         {
           "text": "Select View all Instances to View Instance you Created."
-        }
-      ]
-    },
-    {
-      "title": "Pro Tip: Multi-Tier Architecture Deploying instances across public and private subnets is a common three-tier architecture pattern: Public Layer – Web servers accessible from the internet\nApplication Layer – Backend services in private subnets\nDatabase Layer – Databases isolated from direct internet access This architecture improves both security and scalability of applications hosted in AWS.",
-      "steps": [
-        {
-          "text": "Pro Tip: Multi-Tier Architecture"
-        },
-        {
-          "text": "Deploying instances across public and private subnets is a common three-tier architecture pattern:"
         },
         {
           "text": "Public Layer – Web servers accessible from the internet"
@@ -630,29 +715,41 @@
         },
         {
           "text": "Database Layer – Databases isolated from direct internet access"
-        },
-        {
-          "text": "This architecture improves both security and scalability of applications hosted in AWS."
         }
       ]
     },
     {
-      "title": "Task 9: Testing the EC2 instances",
+      "title": "Task 9: Testing the EC2 instances",
       "steps": [
         {
-          "text": "Now you'll be able to see both the Instances."
+          "text": "Now you'll be able to see both the Instances.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-40.png"
+          ]
         },
         {
-          "text": "Copy the Private IPv4 Address of the private_instance."
+          "text": "Copy the Private IPv4 Address of the private_instance.",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-41.png"
+          ]
         },
         {
-          "text": "SSH into public_instance EC2 Instance."
+          "text": "Task 9: Testing the EC2 instances",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-42.png"
+          ]
         },
         {
-          "text": "Please follow the steps in SSH into EC2 Instance."
+          "text": "SSH into public_instance EC2 Instance."
         },
         {
-          "text": "Ping the private IP of your private_instance by using the below command:"
+          "text": "Please follow the steps in SSH into EC2 Instance."
+        },
+        {
+          "text": "Ping the private IP of your private_instance by using the below command: ping <your Private EC2 IPv4 address>"
+        },
+        {
+          "text": "Ping the private IP of your private_instance by using the below command:"
         },
         {
           "text": "ping <your Private EC2 IPv4 address>"
@@ -661,10 +758,13 @@
           "text": "Once you execute this command, you will receive a response from the IP."
         },
         {
-          "text": "Press [Ctrl] + C to cancel the process."
+          "text": "Task 9: Testing the EC2 instances",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-43.png"
+          ]
         },
         {
-          "text": "Do you know?"
+          "text": "Press [Ctrl] + C to cancel the process."
         },
         {
           "text": "Security groups are applied at the instance level and provide stateful control over traffic, while NACLs are applied at the subnet level and provide stateless control over traffic."
@@ -672,66 +772,31 @@
       ]
     },
     {
-      "title": "Do you know?",
+      "title": "Task 10 : Validation of the Lab",
       "steps": [
         {
-          "text": "Security groups are applied at the instance level and provide stateful control over traffic, while NACLs are applied at the subnet level and provide stateless control over traffic."
-        }
-      ]
-    },
-    {
-      "title": "Task 10 : Validation of the Lab",
-      "steps": [
-        {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
         },
         {
-          "text": "Completion and Conclusion"
-        },
-        {
-          "text": "Resources for Skill Up"
-        },
-        {
-          "text": "Amazon VPC User Guide"
-        },
-        {
-          "text": "https://docs.aws.amazon.com/vpc/latest/userguide/what-is-amazon-vpc.html"
-        },
-        {
-          "text": "Security Groups Documentation:"
-        },
-        {
-          "text": "https://docs.aws.amazon.com/vpc/latest/userguide/VPC_SecurityGroups.html"
-        },
-        {
-          "text": "Network ACL Documentation:"
-        },
-        {
-          "text": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html"
-        },
-        {
-          "text": "Best Practice:"
-        },
-        {
-          "text": "AWS VPC Security Best Practices"
-        },
-        {
-          "text": "https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-best-practices.html"
+          "text": "Task 10 : Validation of the Lab",
+          "images": [
+            "/labs/understanding-and-configuring-layered-security-in-an-aws-vpc/step-44.gif"
+          ]
         },
         {
           "text": "You have successfully created a new VPC."
         },
         {
-          "text": "You have successfully created and attached an Internet Gateway."
+          "text": "You have successfully created and attached an Internet Gateway."
         },
         {
-          "text": "You have successfully created two subnets for public and private AWS instances."
+          "text": "You have successfully created two subnets for public and private AWS instances."
         },
         {
           "text": "You have successfully created and configured the Route Table."
@@ -740,16 +805,13 @@
           "text": "You have successfully created a Security Group."
         },
         {
-          "text": "You have successfully created and configured Network ACL."
+          "text": "You have successfully created and configured Network ACL."
         },
         {
-          "text": "You have successfully launched 2 EC2 instances (one in a public subnet and one in a private subnet)."
+          "text": "You have successfully launched 2 EC2 instances (one in a public subnet and one in a private subnet)."
         },
         {
-          "text": "You have successfully tested the EC2 instance."
-        },
-        {
-          "text": "End Lab"
+          "text": "You have successfully tested the EC2 instance."
         },
         {
           "text": "Sign out from the AWS Account."
@@ -758,7 +820,7 @@
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps click on End Lab from the lab console."
+          "text": "Once you have completed the steps click on End Lab from the lab console."
         }
       ]
     }

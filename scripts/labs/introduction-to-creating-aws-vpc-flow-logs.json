@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -35,16 +35,32 @@
           "text": "In this task, you will create a CloudWatch Log Group called \"whizvpclogs\" using the CloudWatch service. Follow the steps below:"
         },
         {
-          "text": "Navigate to the Services menu at the top and choose CloudWatch under Management and Governance."
+          "text": "Navigate to the Services menu at the top and choose CloudWatch under Management and Governance."
         },
         {
-          "text": "Click on Log Management under Logs in the left-side panel, click on Create Log Group."
+          "text": "Click on Log Management under Logs in the left-side panel, click on Create Log Group.",
+          "images": [
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-01.png"
+          ]
         },
         {
-          "text": "Enter the Log Group Name : whizvpclogs and click on Create button."
+          "text": "Task 2: Create a CloudWatch Log",
+          "images": [
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-02.png"
+          ]
         },
         {
-          "text": "Note: You can ignore the error related to fetching CloudWatch metrics"
+          "text": "Enter the Log Group Name : whizvpclogs and click on Create button.Note: You can ignore the error related to fetching CloudWatch metrics",
+          "images": [
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-03.png",
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-04.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create a CloudWatch Log",
+          "images": [
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-05.png"
+          ]
         }
       ]
     },
@@ -58,10 +74,19 @@
           "text": "Click on Your VPC’s in the left side panel then click on Create VPC."
         },
         {
-          "text": "Select VPC only."
+          "text": "Select VPC only."
         },
         {
-          "text": "Enter the Name tag: whizvpc and enter IPv4 CIDR block: 10.1.0.0/16. Leave other options as default and click on Create button."
+          "text": "Enter the Name tag: whizvpc and enter IPv4 CIDR block: 10.1.0.0/16. Leave other options as default and click on Create button.",
+          "images": [
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-07.png"
+          ]
+        },
+        {
+          "text": "Task 3: Create a VPC",
+          "images": [
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-08.png"
+          ]
         }
       ]
     },
@@ -87,13 +112,25 @@
           "text": "Once the flow logs are created, scroll down click on Flow Logs."
         },
         {
-          "text": "Now you have successfully learned how to create VPC Flow Logs."
+          "text": "Task 4: Create VPC Flow Logs",
+          "images": [
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-09.png"
+          ]
         },
         {
-          "text": "Do You Know?"
+          "text": "Now you have successfully learned how to create VPC Flow Logs. Do You Know?AWS VPC Flow Logs can be used not only for network monitoring and security analysis but also for troubleshooting and performance analysis of your Amazon Virtual Private Cloud (VPC) environment.",
+          "images": [
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-10.png"
+          ]
         },
         {
-          "text": "AWS VPC Flow Logs can be used not only for network monitoring and security analysis but also for troubleshooting and performance analysis of your Amazon Virtual Private Cloud (VPC) environment."
+          "text": "Now you have successfully learned how to create VPC Flow Logs."
+        },
+        {
+          "text": "Task 4: Create VPC Flow Logs",
+          "images": [
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-11.png"
+          ]
         }
       ]
     },
@@ -101,37 +138,40 @@
       "title": "Task 5: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validate button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validate button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-12.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 5: Validation Test",
+          "images": [
+            "/labs/introduction-to-creating-aws-vpc-flow-logs/step-13.gif"
+          ]
         },
         {
           "text": "You have successfully created the CloudWatch Logs."
         },
         {
-          "text": "You have successfully created the VPC."
+          "text": "You have successfully created the VPC."
         },
         {
-          "text": "You have successfully created the VPC Flow Logs."
+          "text": "You have successfully created the VPC Flow Logs."
         },
         {
-          "text": "End Lab"
-        },
-        {
-          "text": "Sign out of AWS Account."
+          "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps click on End Lab from the lab console."
+          "text": "Once you have completed the steps click on End Lab from the lab console."
         }
       ]
     }

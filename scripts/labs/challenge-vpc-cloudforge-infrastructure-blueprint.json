@@ -1,0 +1,61 @@
+{
+  "slug": "challenge-vpc-cloudforge-infrastructure-blueprint",
+  "title": "Challenge Lab - Create Virtual Private Cloud (VPC) with AWS CloudFormation",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:15:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company needs a virtual network with subnets to organize its cloud resources efficiently. Your job is to use AWS CloudFormation templates to create a VPC and subnets, deploy two different templates, study their structure, and test the setup. A CloudFormation template is a file (in JSON or YAML) that tells AWS what to create, with sections like AWS Template Format Version (sets the template version), Description (explains the template), Metadata (extra info), Parameters (user inputs), Mappings (fixed values), Conditions (logic for resources), Resources (what to create, like VPCs—this part is required), and Outputs (results to show). Here’s how to do each step super simply:"
+        },
+        {
+          "text": "Create Subnets using the VPC_Template CloudFormation Stack: Go to cloud-formation, create stack and write template.yml files to create 2 vpc’s with subnets, internet-gateway and attach it to VPC"
+        },
+        {
+          "text": "Go to cloud-formation, create stack and write template.yml files to create 2 vpc’s with subnets, internet-gateway and attach it to VPC"
+        },
+        {
+          "text": "Make sure everything is correct. In the lab console, click Validate to check if both CloudFormation stacks created the VPCs and subnets correctly."
+        },
+        {
+          "text": "Sign out of the AWS Management Console."
+        },
+        {
+          "text": "In the lab console, click End Challenge and wait for it to finish."
+        },
+        {
+          "text": "You’ve completed the CloudFormation VPC challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -27,7 +30,7 @@
           "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
-          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
         }
       ]
     },
@@ -61,64 +64,150 @@
           "text": "Make sure you are in US East (N. Virginia) us-east-1."
         },
         {
-          "text": "Select the Services button in the top and select Elastic Container Service under the Containers section."
+          "text": "Select the Services button in the top and select Elastic Container Service under the Containers section."
         },
         {
           "text": "Click on Cluster from the left panel."
         },
         {
-          "text": "Click on the Create Cluster button."
+          "text": "Click on the Create Cluster button.",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-01.png"
+          ]
         },
         {
-          "text": "Keep the Cluster name field as it is (default value)."
+          "text": "Task 3: Creating Container and Task Definition",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-02.png"
+          ]
         },
         {
-          "text": "Keep the rest of the things as default and click on the create button."
+          "text": "Keep the Cluster name field as it is (default value).",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-03.png"
+          ]
         },
         {
-          "text": "The cluster will be created successfully."
+          "text": "Task 3: Creating Container and Task Definition",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-04.png"
+          ]
+        },
+        {
+          "text": "Keep the rest of the things as default and click on the create button."
+        },
+        {
+          "text": "The cluster will be created successfully.",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-05.png"
+          ]
+        },
+        {
+          "text": "Task 3: Creating Container and Task Definition",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-06.png"
+          ]
         },
         {
           "text": "Navigate to Task Definitions in the left navigation panel."
         },
         {
-          "text": "Click on Create new task definition and click on Create new task definition."
+          "text": "Click on Create new task definition and click on Create new task definition.",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-07.png"
+          ]
+        },
+        {
+          "text": "Step 1: Configure task definitions and containers Task Definition family : Enter whizdefinition Launch type: Select AWS FargateCPU: Select .25 vCPU and Memory: Select 1 GB Task Role and Task Execution Role: Select NoneNote : Make sure to change task execution role to select none. by default it is Create new role. Container -1 Name : Enter sample-app Image URL: Enter httpd:2.4 Uncheck Use log collection",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-08.png",
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-09.png",
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-10.png",
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-11.png"
+          ]
         },
         {
           "text": "Step 1: Configure task definitions and containers"
         },
         {
-          "text": "Task Definition family : Enter whizdefinition"
+          "text": "Task Definition family : Enter whizdefinition",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-12.png"
+          ]
+        },
+        {
+          "text": "Task 3: Creating Container and Task Definition",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-13.png"
+          ]
+        },
+        {
+          "text": "Launch type: Select AWS FargateCPU: Select .25 vCPU and Memory: Select 1 GB"
         },
         {
           "text": "Launch type: Select AWS Fargate"
         },
         {
-          "text": "CPU: Select .25 vCPU and Memory: Select 1 GB"
+          "text": "CPU: Select .25 vCPU and Memory: Select 1 GB"
+        },
+        {
+          "text": "Task Role and Task Execution Role: Select NoneNote : Make sure to change task execution role to select none. by default it is Create new role.",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-14.png"
+          ]
         },
         {
           "text": "Task Role and Task Execution Role: Select None"
         },
         {
-          "text": "Note : Make sure to change task execution role to select none. by default it is Create new role."
+          "text": "Task 3: Creating Container and Task Definition",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-15.png"
+          ]
+        },
+        {
+          "text": "Container -1 Name : Enter sample-app Image URL: Enter httpd:2.4 Uncheck Use log collection",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-16.png",
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-17.png"
+          ]
         },
         {
           "text": "Container -1"
         },
         {
-          "text": "Name : Enter sample-app"
+          "text": "Name : Enter sample-app"
         },
         {
-          "text": "Image URL: Enter httpd:2.4"
+          "text": "Image URL: Enter httpd:2.4"
         },
         {
-          "text": "Uncheck Use log collection"
+          "text": "Uncheck Use log collection",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-18.png",
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-19.png"
+          ]
         },
         {
-          "text": "Leave everything as default and click on Create button."
+          "text": "Task 3: Creating Container and Task Definition",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-20.png"
+          ]
         },
         {
-          "text": "The task definition will be created successfully."
+          "text": "Leave everything as default and click on Create button."
+        },
+        {
+          "text": "The task definition will be created successfully.",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-22.png"
+          ]
+        },
+        {
+          "text": "Task 3: Creating Container and Task Definition",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-23.png"
+          ]
         }
       ]
     },
@@ -135,7 +224,25 @@
           "text": "The Amazon ECS sample application is a web-based Hello World–style application that is meant to run indefinitely."
         },
         {
-          "text": "Click on Deploy button and then on Create Service."
+          "text": "Click on Deploy button and then on Create Service.",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-24.png"
+          ]
+        },
+        {
+          "text": "Task 4: Defining the service",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-25.png"
+          ]
+        },
+        {
+          "text": "You will be redirected to the service page.Service Name: enter whizservice Existing Cluster: Choose the previously created cluster. In our case, the cluster name is whizcluster Compute options: Select Launch Type Launch type: select Fargate Schedling strategy: select Replica (default)Desired Tasks : Enter 2 Scroll down and expand Networking section Under Security group, Select Create a new security group Security group name: Enter whizecssg Security group description: Enter Security group for ECS cluster Type : Select HTTP Source: Select Anywhere",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-26.png",
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-27.png",
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-28.png",
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-29.jpg"
+          ]
         },
         {
           "text": "You will be redirected to the service page."
@@ -144,13 +251,29 @@
           "text": "Service Name: enter whizservice"
         },
         {
-          "text": "Existing Cluster: Choose the previously created cluster. In our case, the cluster name is whizcluster"
+          "text": "Existing Cluster: Choose the previously created cluster. In our case, the cluster name is whizcluster"
         },
         {
           "text": "Compute options: Select Launch Type"
         },
         {
-          "text": "Launch type: select Fargate"
+          "text": "Launch type: select Fargate",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-30.png",
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-31.png"
+          ]
+        },
+        {
+          "text": "Task 4: Defining the service",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-32.png"
+          ]
+        },
+        {
+          "text": "Schedling strategy: select Replica (default)Desired Tasks : Enter 2",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-34.png"
+          ]
         },
         {
           "text": "Schedling strategy: select Replica (default)"
@@ -159,7 +282,19 @@
           "text": "Desired Tasks : Enter 2"
         },
         {
-          "text": "Scroll down and expand Networking section"
+          "text": "Task 4: Defining the service",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-35.png"
+          ]
+        },
+        {
+          "text": "Scroll down and expand Networking section"
+        },
+        {
+          "text": "Under Security group, Select Create a new security group Security group name: Enter whizecssg Security group description: Enter Security group for ECS cluster Type : Select HTTP Source: Select Anywhere",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-36.jpg"
+          ]
         },
         {
           "text": "Under Security group, Select Create a new security group"
@@ -174,7 +309,16 @@
           "text": "Type : Select HTTP"
         },
         {
-          "text": "Source: Select Anywhere"
+          "text": "Source: Select Anywhere",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-37.jpg"
+          ]
+        },
+        {
+          "text": "Task 4: Defining the service",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-38.jpg"
+          ]
         },
         {
           "text": "Click on Create button."
@@ -185,25 +329,43 @@
       "title": "Task 6: Viewing the service",
       "steps": [
         {
-          "text": "Wait till the service gets deployed and You will see the service created successfully."
+          "text": "Wait till the service gets deployed and You will see the service created successfully.",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-39.png"
+          ]
+        },
+        {
+          "text": "Task 6: Viewing the service",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-40.png"
+          ]
         },
         {
           "text": "If your service is a web-based application, such as the Amazon ECS sample application, you can view its containers with a web browser."
         },
         {
-          "text": "Navigate to the Tasks tab."
+          "text": "Navigate to the Tasks tab."
         },
         {
-          "text": "Click on a task from the list of tasks in your service."
+          "text": "Click on a task from the list of tasks in your service.",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-41.png"
+          ]
         },
         {
-          "text": "Switch to the Networking tab. Copy the Public IPv4 IP address."
+          "text": "Switch to the Networking tab. Copy the Public IPv4 IP address.",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-42.png"
+          ]
         },
         {
-          "text": "Enter http:// before your IP address and enter it in your web browser, and you should see a webpage that displays ”It works”."
+          "text": "Task 6: Viewing the service",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-43.png"
+          ]
         },
         {
-          "text": "Do You Know?"
+          "text": "Enter http:// before your IP address and enter it in your web browser, and you should see a webpage that displays ”It works”."
         },
         {
           "text": "ECS allows developers to easily scale their containerized applications up or down based on demand. It can automatically manage the provisioning and distribution of containers across clusters, allowing for efficient resource utilization. This scalability enables businesses to handle varying workloads and adapt to changing traffic patterns without manual intervention."
@@ -214,16 +376,22 @@
       "title": "Task 7: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-44.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 7: Validation Test",
+          "images": [
+            "/labs/getting-started-with-amazon-elastic-container-service-using-fargate/step-45.gif"
+          ]
         },
         {
           "text": "You have successfully created a Task definition, Service and Cluster using Fargate."
@@ -232,16 +400,13 @@
           "text": "You have tested the Amazon ECS sample app."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End lab from the lab console."
+          "text": "Once you have completed the steps, click on End lab from the lab console."
         }
       ]
     }

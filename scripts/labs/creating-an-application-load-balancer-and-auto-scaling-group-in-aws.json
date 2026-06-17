@@ -1,0 +1,687 @@
+{
+  "slug": "creating-an-application-load-balancer-and-auto-scaling-group-in-aws",
+  "title": "Creating an Application Load Balancer and Auto Scaling Group in AWS",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a Security Group for the Load balancer",
+      "steps": [
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
+        },
+        {
+          "text": "On the left panel menu, select the Security Groups under the Network & Security section."
+        },
+        {
+          "text": "Click on the Create security group button."
+        },
+        {
+          "text": "Task 2: Create a Security Group for the Load balancer"
+        },
+        {
+          "text": "We are going to create a Security group for the Launch template with port 80 number enabled."
+        },
+        {
+          "text": "Security group name: Enter Load-balancer-SG"
+        },
+        {
+          "text": "Description: Enter Security group for Load balancer"
+        },
+        {
+          "text": "VPC: Select Default VPC"
+        },
+        {
+          "text": "Task 2: Create a Security Group for the Load balancer"
+        },
+        {
+          "text": "Click on the Add rule button under Inbound rules. Type : Select HTTP Source : Select Anywhere-IPv4 In the textbox add 0.0.0.0/0"
+        },
+        {
+          "text": "Click on the Add rule button under Inbound rules."
+        },
+        {
+          "text": "Type : Select HTTP"
+        },
+        {
+          "text": "Source : Select Anywhere-IPv4"
+        },
+        {
+          "text": "In the textbox add 0.0.0.0/0"
+        },
+        {
+          "text": "Leave everything as default and click on the Create security group button."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a Security Group for Launch template",
+      "steps": [
+        {
+          "text": "Click on the Create security group button."
+        },
+        {
+          "text": "We are going to create a Security group for the Launch template with port 80 number enabled. Security group name: Enter Launch-template-SG Description: Enter Security group for Launch template VPC: Select Default VPC"
+        },
+        {
+          "text": "We are going to create a Security group for the Launch template with port 80 number enabled."
+        },
+        {
+          "text": "Security group name: Enter Launch-template-SG"
+        },
+        {
+          "text": "Description: Enter Security group for Launch template"
+        },
+        {
+          "text": "VPC: Select Default VPC"
+        },
+        {
+          "text": "Task 3: Create a Security Group for Launch template"
+        },
+        {
+          "text": "Click on the Add rule button under Inbound rules. Here we will add SSH from the open internet and HTTP from the security group of a Load Balancer. Type : Select SSH Source : Select Anywhere-IPv4 In the textbox add 0.0.0.0/0 Click on the Add rule button to add HTTP Type : Select HTTP Source : Select Custom In the textbox type, Load-balancer-SG, select it."
+        },
+        {
+          "text": "Click on the Add rule button under Inbound rules."
+        },
+        {
+          "text": "Here we will add SSH from the open internet and HTTP from the security group of a Load Balancer."
+        },
+        {
+          "text": "Type : Select SSH"
+        },
+        {
+          "text": "Source : Select Anywhere-IPv4"
+        },
+        {
+          "text": "In the textbox add 0.0.0.0/0"
+        },
+        {
+          "text": "Click on the Add rule button to add HTTP"
+        },
+        {
+          "text": "Type : Select HTTP"
+        },
+        {
+          "text": "Source : Select Custom"
+        },
+        {
+          "text": "In the textbox type, Load-balancer-SG, select it."
+        },
+        {
+          "text": "Task 3: Create a Security Group for Launch template"
+        },
+        {
+          "text": "Leave everything as default and click on the Create security group button."
+        },
+        {
+          "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key Pairs."
+        },
+        {
+          "text": "To create a new key pair, click on the Create key pair button."
+        },
+        {
+          "text": "Task 3: Create a Security Group for Launch template"
+        },
+        {
+          "text": "Fill in the details below:"
+        },
+        {
+          "text": "Name: Enter WhizKeyPair"
+        },
+        {
+          "text": "File format: pem (Linux & Mac Users) or ppk (Windows users)"
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on the Create key pair button."
+        },
+        {
+          "text": "Key pair will be created."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create a Key Pair for the Launch template",
+      "steps": [
+        {
+          "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key Pairs."
+        },
+        {
+          "text": "To create a new key pair, click on the Create key pair button."
+        },
+        {
+          "text": "Task 4: Create a Key Pair for the Launch template"
+        },
+        {
+          "text": "Fill in the details below:"
+        },
+        {
+          "text": "Name: Enter WhizKeyPair"
+        },
+        {
+          "text": "File format: pem (Linux & Mac Users) or ppk (Windows users)"
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Click on the Create key pair button."
+        },
+        {
+          "text": "Key pair will be created."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Creating a Launch template",
+      "steps": [
+        {
+          "text": "In the left navigation pane (scroll down) within Instances, click on the Launch templates"
+        },
+        {
+          "text": "Click on the Create launch template button."
+        },
+        {
+          "text": "Task 5: Creating a Launch template"
+        },
+        {
+          "text": "Under Launch template name and description section:"
+        },
+        {
+          "text": "Launch template name: Enter labLC"
+        },
+        {
+          "text": "Template version description: Enter Launch template for whizdemo"
+        },
+        {
+          "text": "Leave other options as default."
+        },
+        {
+          "text": "Under Launch template contents:"
+        },
+        {
+          "text": "Select Amazon Linux from the Quick Start"
+        },
+        {
+          "text": "Amazon machine image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "Task 5: Creating a Launch template"
+        },
+        {
+          "text": "Under Instance type: Select t2.micro from the below list."
+        },
+        {
+          "text": "Under Instance type:"
+        },
+        {
+          "text": "Select t2.micro from the below list."
+        },
+        {
+          "text": "Key pair (Login): Select WhizKeyPair"
+        },
+        {
+          "text": "Task 5: Creating a Launch template"
+        },
+        {
+          "text": "Subnet: Choose any subnet from the list."
+        },
+        {
+          "text": "Security groups: Select Launch-template-SG from the list."
+        },
+        {
+          "text": "Task 5: Creating a Launch template"
+        },
+        {
+          "text": "Leave all other options as default."
+        },
+        {
+          "text": "Expand the option of Advanced details, Go to the User data, and paste the below script."
+        },
+        {
+          "text": "To create, click on the Create launch template button. Upon successful creation, it will create a Launch template."
+        },
+        {
+          "text": "Task 5: Creating a Launch template"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Create Target group and The Load Balancer",
+      "steps": [
+        {
+          "text": "(I) Create Target group :"
+        },
+        {
+          "text": "In the EC2 console, navigate to Target Groups from the left navigation panel."
+        },
+        {
+          "text": "Click on Create Target Group button."
+        },
+        {
+          "text": "Target Type: Select Instances"
+        },
+        {
+          "text": "Name: Enter web-server-TG"
+        },
+        {
+          "text": "Protocol: Choose HTTP"
+        },
+        {
+          "text": "Port : Enter 80"
+        },
+        {
+          "text": "Note: The target group is used to route requests to one or more registered targets"
+        },
+        {
+          "text": "Health check:"
+        },
+        {
+          "text": "Protocol: Select HTTP"
+        },
+        {
+          "text": "Path: Enter /health.html"
+        },
+        {
+          "text": "Note: The load balancer periodically sends pings, attempts connections, or sends requests to test the EC2 instances. These tests are called health checks."
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Leave this page as default and click on Create target group button."
+        },
+        {
+          "text": "(II) Create Load Balancer :"
+        },
+        {
+          "text": "In the EC2 console, navigate to Load balancers in the left-side panel."
+        },
+        {
+          "text": "Click on Create load balancer button at the top-left to create a new load balancer for our web servers."
+        },
+        {
+          "text": "Task 6: Create Target group and The Load Balancer"
+        },
+        {
+          "text": "On the next screen, choose Create button under Application Load Balancer since we are testing the high availability of the web application."
+        },
+        {
+          "text": "In Basic configuration:"
+        },
+        {
+          "text": "Name: Enter Web-server-LB"
+        },
+        {
+          "text": "Scheme: Select Internet-facing"
+        },
+        {
+          "text": "IP address type: Choose IPv4"
+        },
+        {
+          "text": "Task 6: Create Target group and The Load Balancer"
+        },
+        {
+          "text": "Availability Zones VPC: Choose Default Availability Zones : Select us-east-1a and us-east-1b."
+        },
+        {
+          "text": "Availability Zones"
+        },
+        {
+          "text": "VPC: Choose Default"
+        },
+        {
+          "text": "Availability Zones : Select us-east-1a and us-east-1b."
+        },
+        {
+          "text": "Task 6: Create Target group and The Load Balancer"
+        },
+        {
+          "text": "Security Groups: Remove the default one and choose Load-balancer-SG"
+        },
+        {
+          "text": "Security Groups:"
+        },
+        {
+          "text": "Remove the default one and choose Load-balancer-SG"
+        },
+        {
+          "text": "In the listener part select the Target group that you have created earlier. if it is not visible click on refresh button."
+        },
+        {
+          "text": "Task 6: Create Target group and The Load Balancer"
+        },
+        {
+          "text": "Click on Create Load Balancer button."
+        },
+        {
+          "text": "You have successfully created the Application Load balancer."
+        },
+        {
+          "text": "Task 6: Create Target group and The Load Balancer"
+        },
+        {
+          "text": "Wait for 2 to 3 minutes for the load balancer to become Active."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Create an Auto Scaling Group",
+      "steps": [
+        {
+          "text": "An Auto Scaling group is a scalable collection of EC2 instances. When you create an Auto Scaling group, you include information such as the subnets for the instances and the number of instances the group must maintain at all times."
+        },
+        {
+          "text": "Go to the left menu under EC2 and choose Auto Scaling Groups under Auto Scaling."
+        },
+        {
+          "text": "Click on the Create Auto Scaling group button."
+        },
+        {
+          "text": "Task 7: Create an Auto Scaling Group"
+        },
+        {
+          "text": "Step 1 : Choose launch template"
+        },
+        {
+          "text": "Auto Scaling group name : Enter Whiz-ASG"
+        },
+        {
+          "text": "Select the Launch template labLC from the list and click on the Next button."
+        },
+        {
+          "text": "Step 2: Choose instance launch options"
+        },
+        {
+          "text": "VPC: Select the Default VPC from the list."
+        },
+        {
+          "text": "Subnet: Select Subnet of us-east-1a and us-east-1b"
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Step 3 : Integrate with other services Load balancing - optional: Attach to an existing load balancer Attach to an existing load balancer: Choose from your load balancer target groups Existing load balancer target groups: web-server-TG"
+        },
+        {
+          "text": "Step 3 : Integrate with other services"
+        },
+        {
+          "text": "Load balancing - optional: Attach to an existing load balancer"
+        },
+        {
+          "text": "Attach to an existing load balancer: Choose from your load balancer target groups"
+        },
+        {
+          "text": "Existing load balancer target groups: web-server-TG"
+        },
+        {
+          "text": "Task 7: Create an Auto Scaling Group"
+        },
+        {
+          "text": "Health check - optional: Health check type: EC2 (default) and Check the Turn on Elastic Load Balancing health checks checkbox. Health check grace period: 180 seconds"
+        },
+        {
+          "text": "Health check - optional:"
+        },
+        {
+          "text": "Health check type: EC2 (default) and Check the Turn on Elastic Load Balancing health checks checkbox."
+        },
+        {
+          "text": "Health check grace period: 180 seconds"
+        },
+        {
+          "text": "Task 7: Create an Auto Scaling Group"
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Step 4: Configure group size and scaling Under Group size Desired capacity : 2Under Scaling, set the following limits Minimum capacity : Enter 1 Maximum capacity : Enter 2 Automatic scaling Select Target tracking scaling policy Scaling policy name: Target tracking policy Metric value: Average CPU Utilization Target value:Enter 30 Instance need: 200 seconds warm up before including in metric Under Instance scale-in protection No changes are needed, click on the Next button."
+        },
+        {
+          "text": "Step 4: Configure group size and scaling"
+        },
+        {
+          "text": "Under Group size Desired capacity : 2Under Scaling, set the following limits Minimum capacity : Enter 1 Maximum capacity : Enter 2"
+        },
+        {
+          "text": "Under Group size"
+        },
+        {
+          "text": "Desired capacity : 2Under Scaling, set the following limits"
+        },
+        {
+          "text": "Desired capacity : 2"
+        },
+        {
+          "text": "Under Scaling, set the following limits"
+        },
+        {
+          "text": "Minimum capacity : Enter 1"
+        },
+        {
+          "text": "Maximum capacity : Enter 2"
+        },
+        {
+          "text": "Task 7: Create an Auto Scaling Group"
+        },
+        {
+          "text": "Automatic scaling Select Target tracking scaling policy Scaling policy name: Target tracking policy Metric value: Average CPU Utilization Target value:Enter 30 Instance need: 200 seconds warm up before including in metric"
+        },
+        {
+          "text": "Automatic scaling"
+        },
+        {
+          "text": "Select Target tracking scaling policy"
+        },
+        {
+          "text": "Scaling policy name: Target tracking policy"
+        },
+        {
+          "text": "Metric value: Average CPU Utilization"
+        },
+        {
+          "text": "Target value:Enter 30"
+        },
+        {
+          "text": "Instance need: 200 seconds warm up before including in metric"
+        },
+        {
+          "text": "Task 7: Create an Auto Scaling Group"
+        },
+        {
+          "text": "Under Instance scale-in protection No changes are needed, click on the Next button."
+        },
+        {
+          "text": "Under Instance scale-in protection"
+        },
+        {
+          "text": "No changes are needed, click on the Next button."
+        },
+        {
+          "text": "Step 5: Add notifications No changes are needed in this page, click on the Next button."
+        },
+        {
+          "text": "Step 5: Add notifications"
+        },
+        {
+          "text": "No changes are needed in this page, click on the Next button."
+        },
+        {
+          "text": "Step 6: Add tags Enter tags in key-value pairs to identify your auto scaling group instances. Key: Enter Name Value: Enter Whiz"
+        },
+        {
+          "text": "Step 6: Add tags"
+        },
+        {
+          "text": "Enter tags in key-value pairs to identify your auto scaling group instances. Key: Enter Name Value: Enter Whiz"
+        },
+        {
+          "text": "Enter tags in key-value pairs to identify your auto scaling group instances."
+        },
+        {
+          "text": "Key: Enter Name"
+        },
+        {
+          "text": "Value: Enter Whiz"
+        },
+        {
+          "text": "Task 7: Create an Auto Scaling Group"
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Now Review, scroll down and click on the Create Auto Scalling Group button."
+        },
+        {
+          "text": "You will be redirected to the autoscaling group page, you will be able to see that one instance is launched by the autoscaling group."
+        },
+        {
+          "text": "Now go to the EC2 instances list. You will see that there are two running instances (created by your Auto Scaling group), based on the desired capacity you configured. You can confirm this from their tag name, which you provided while creating the Auto Scaling group."
+        },
+        {
+          "text": "Task 7: Create an Auto Scaling Group"
+        },
+        {
+          "text": "You have successfully created an Auto Scaling group with a desired capacity of 2, a minimum capacity of 1, and a maximum capacity of 2 instances."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: SSH into EC2 Instance",
+      "steps": [
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Install the stress",
+      "steps": [
+        {
+          "text": "Switch to root user:sudo su"
+        },
+        {
+          "text": "Switch to root user:"
+        },
+        {
+          "text": "Now run the updates using the following command:"
+        },
+        {
+          "text": "Once completed, let's install and run an stress Install the required packages and librariessudo dnf update -ysudo dnf install stress -ystress --cpu 2 --timeout 300s"
+        },
+        {
+          "text": "Once completed, let's install and run an stress"
+        },
+        {
+          "text": "Install the required packages and librariessudo dnf update -ysudo dnf install stress -ystress --cpu 2 --timeout 300s"
+        },
+        {
+          "text": "Install the required packages and libraries"
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Test Auto Scaling Group and Elastic Load Balancer",
+      "steps": [
+        {
+          "text": "The Auto Scaling Group maintains the desired capacity of 2 instances. If an instance becomes unhealthy or is terminated, Auto Scaling automatically launches a replacement instance to maintain the desired capacity"
+        },
+        {
+          "text": "That we can see in Auto scaling page also. Capacity count will be increased. Note: It will take 10-15 min to launch all instances"
+        },
+        {
+          "text": "That we can see in Auto scaling page also. Capacity count will be increased."
+        },
+        {
+          "text": "Copy the DNS of your load balancer, and paste it into the browser."
+        },
+        {
+          "text": "Task 10: Test Auto Scaling Group and Elastic Load Balancer"
+        },
+        {
+          "text": "The load balancer will now try to route to a new instance every time."
+        },
+        {
+          "text": "Task 10: Test Auto Scaling Group and Elastic Load Balancer"
+        },
+        {
+          "text": "Autoscaling groups support rolling updates, which allow you to update your application without downtime. When updating the launch configuration or the Amazon Machine Image (AMI) used by the autoscaling group, it can gradually replace instances one-by-one, ensuring that your application remains available throughout the update process."
+        }
+      ]
+    },
+    {
+      "title": "Task 11: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the right-side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Task 11: Validation of the Lab"
+        },
+        {
+          "text": "You have created a security group and key pair for the Launch template."
+        },
+        {
+          "text": "You have created a Launch template and Auto Scaling."
+        },
+        {
+          "text": "You have created an Application load balancer with Target group."
+        },
+        {
+          "text": "You have tested the autoscaling by stressing the load on the first EC2 instance."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

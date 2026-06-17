@@ -1,0 +1,121 @@
+{
+  "slug": "challenge-waffirewall-web-traffic-shield",
+  "title": "Challenge: WAFFirewall - Web Traffic Shield",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Open the AWS Management Console in a new browser tab via Open Console."
+        },
+        {
+          "text": "Retain the default Account ID, enter the provided IAM Username and Password, and sign in."
+        },
+        {
+          "text": "Select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company needs to secure web traffic to its application by blocking specific IP addresses using AWS WAF. Your job is to set up web servers, an Application Load Balancer (ALB), a WAF with an IP set, and test the blocking and unblocking of traffic. Here’s how to proceed:"
+        },
+        {
+          "text": "Create security group."
+        },
+        {
+          "text": "Add inbound rules for HTTP (port 80)"
+        },
+        {
+          "text": "Launch instances."
+        },
+        {
+          "text": "Launch two EC2 instances in us-east-1: Use Amazon Linux 2023 kernel-6.1 AMI, t2.micro instance type. Enable Auto-assign Public IP. Create a security group allowing HTTP (port 80) and SSH (port 22)."
+        },
+        {
+          "text": "Use Amazon Linux 2023 kernel-6.1 AMI,"
+        },
+        {
+          "text": "t2.micro instance type."
+        },
+        {
+          "text": "Enable Auto-assign Public IP."
+        },
+        {
+          "text": "Create a security group allowing HTTP (port 80) and SSH (port 22)."
+        },
+        {
+          "text": "SSH into each instance and user script(Install httpd and add some text in index.html)"
+        },
+        {
+          "text": "Verify each web server is accessible via its public IP."
+        },
+        {
+          "text": "Create Load Balancer > Application Load Balancer."
+        },
+        {
+          "text": "Assign the security group created in first step."
+        },
+        {
+          "text": "Create a target group with HTTP protocol and health checks."
+        },
+        {
+          "text": "Register the two EC2 instances to the target group and create"
+        },
+        {
+          "text": "Copy and paste dns name in browser"
+        },
+        {
+          "text": "Ensure traffic is distributed across both EC2 instances."
+        },
+        {
+          "text": "create an Ip set in WAF to block the IP of your local network/32"
+        },
+        {
+          "text": "IN WAF create a waf acl for created load balancer and add a rule to block traffica from the created ip set."
+        },
+        {
+          "text": "Access the load balancer’s DNS name from the blocked IP"
+        },
+        {
+          "text": "Verify access is denied (should see a 403 Forbidden error)."
+        },
+        {
+          "text": "Access the DNS name from an unblocked IP to confirm normal access (displays “Web Server”)."
+        },
+        {
+          "text": "IN IP unblock the traffic by deleting the public ip from ip sets."
+        },
+        {
+          "text": "Test the load balancer’s DNS name again from the previously blocked IP to confirm access is restored."
+        },
+        {
+          "text": "Ensure all resources (security group, EC2 instances, ALB, IP set, web ACL) are created and configured correctly."
+        },
+        {
+          "text": "Verify WAF blocking and unblocking functionality."
+        },
+        {
+          "text": "In the lab console, click Validate to check the setup."
+        },
+        {
+          "text": "Sign out of the AWS Management Console by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "In the lab console, click End Challenge and wait for it to complete."
+        },
+        {
+          "text": "You’ve completed the WAFFirewall Web Traffic challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

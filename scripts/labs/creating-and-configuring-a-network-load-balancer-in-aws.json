@@ -1,0 +1,626 @@
+{
+  "slug": "creating-and-configuring-a-network-load-balancer-in-aws",
+  "title": "Creating and configuring a network load balancer in AWS",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Select Maybe later in New Home Console page pop-up"
+        },
+        {
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Launching an EC2 Instance",
+      "steps": [
+        {
+          "text": "In this task, we are going to create an EC2 instance, which will serve as one of the targets for the Network Load Balancer"
+        },
+        {
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Click on Instances from the left sidebar and then click on Launch instances button."
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance"
+        },
+        {
+          "text": "Name : Enter NLBEC2server"
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance"
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): In the Quick Start menu, select Amazon Linux 2023 AMI"
+        },
+        {
+          "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance"
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button Key pair name: WhizKey Key pair type: RSA Private key file format: .pem"
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: WhizKey"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Select Create key pair Button."
+        },
+        {
+          "text": "In Network Settings, Click on Edit:"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Select Create new Security group"
+        },
+        {
+          "text": "Security group name : Enter NLBserver-SG"
+        },
+        {
+          "text": "Description : Enter Security Group to allow traffic to EC2"
+        },
+        {
+          "text": "To add SSH Choose Type : Select SSH Source : Choose Anywhere"
+        },
+        {
+          "text": "To add SSH"
+        },
+        {
+          "text": "Choose Type : Select SSH"
+        },
+        {
+          "text": "Source : Choose Anywhere"
+        },
+        {
+          "text": "For HTTP, click on Add security group rule. Choose Type : Select HTTP Source : Choose Anywhere"
+        },
+        {
+          "text": "For HTTP, click on Add security group rule."
+        },
+        {
+          "text": "Choose Type : Select HTTP"
+        },
+        {
+          "text": "Source : Choose Anywhere"
+        },
+        {
+          "text": "For Nginx, Click on Add security group rule. Choose Type : Select Custom TCP Rule Port Range : Enter 8080 Source : Choose Anywhere"
+        },
+        {
+          "text": "For Nginx, Click on Add security group rule."
+        },
+        {
+          "text": "Choose Type : Select Custom TCP Rule"
+        },
+        {
+          "text": "Port Range : Enter 8080"
+        },
+        {
+          "text": "Source : Choose Anywhere"
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance"
+        },
+        {
+          "text": "Expand Advanced Details."
+        },
+        {
+          "text": "Under the User data section, copy and paste the below code. This code installs Apache Server and also creates a web page."
+        },
+        {
+          "text": "Keep rest thing Default and Click on Launch Instance Button."
+        },
+        {
+          "text": "Select View all Instances to View the Instance you Created"
+        },
+        {
+          "text": "Launch Status: Your instances are now launching, Navigate to Instances page from left menu and wait the status of the EC2 Instance changes to running."
+        },
+        {
+          "text": "Now in the EC2 dashboard, you can see the instance is running as shown below:"
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Creating Network Load Balancer",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a Network Load Balancer (NLB) in AWS. The NLB distributes incoming traffic across multiple targets (in this case, the EC2 instance created in the previous task)."
+        },
+        {
+          "text": "Navigate to Load Balancers from the EC2 left menu bar under the sub-heading Load Balancing."
+        },
+        {
+          "text": "Click on the Create Load Balancer button."
+        },
+        {
+          "text": "Task 3: Creating Network Load Balancer"
+        },
+        {
+          "text": "Select Load Balancer Type: Under the Network load balancer, click on Create button."
+        },
+        {
+          "text": "Task 3: Creating Network Load Balancer"
+        },
+        {
+          "text": "The next five screens will require configuration modification from the default values provided. If a field is not mentioned, leave it as default or empty."
+        },
+        {
+          "text": "Configure Load Balancer: Name : Enter MyNetwork-LB Scheme : Select internet-facing VPC : Select default VPC Mappings : Select all available zones using a checkbox."
+        },
+        {
+          "text": "Name : Enter MyNetwork-LB"
+        },
+        {
+          "text": "Scheme : Select internet-facing"
+        },
+        {
+          "text": "VPC : Select default VPC"
+        },
+        {
+          "text": "Mappings : Select all available zones using a checkbox."
+        },
+        {
+          "text": "Security groups:Select NLBserver-SG security group which we created while launcing EC2"
+        },
+        {
+          "text": "Select NLBserver-SG security group which we created while launcing EC2"
+        },
+        {
+          "text": "Listeners and routing:Load Balancer Protocol : Select TCPLoad Balancer Port : Choose 80Default action : Create target group"
+        },
+        {
+          "text": "Listeners and routing:"
+        },
+        {
+          "text": "Load Balancer Protocol : Select TCP"
+        },
+        {
+          "text": "Load Balancer Port : Choose 80"
+        },
+        {
+          "text": "Default action : Create target group"
+        },
+        {
+          "text": "Task 3: Creating Network Load Balancer"
+        },
+        {
+          "text": "Choose a target type: Instances Target group name: Enter Apache-TG Protocol: Choose TCP Port: 80 Click Next Select NLBEC2Server and select Include as pending below button Click Create target group button Ignore the warning message and click Continue Now we can see Apache-TG target group created."
+        },
+        {
+          "text": "Target group name: Enter Apache-TG"
+        },
+        {
+          "text": "Protocol: Choose TCP"
+        },
+        {
+          "text": "Port: 80"
+        },
+        {
+          "text": "Click Next"
+        },
+        {
+          "text": "Select NLBEC2Server and select Include as pending below button"
+        },
+        {
+          "text": "Click Create target group button"
+        },
+        {
+          "text": "Ignore the warning message and click Continue"
+        },
+        {
+          "text": "Now we can see Apache-TG target group created."
+        },
+        {
+          "text": "Now go back to the Load Balancers tab, and select Apache-TG in Default Action in Listeners and routing."
+        },
+        {
+          "text": "Click on Refresh button if target-group is not visible"
+        },
+        {
+          "text": "Click on Create load balancer button"
+        },
+        {
+          "text": "Click on View Load BalancersAfter 1–2 minutes, the state will change to active and is ready."
+        },
+        {
+          "text": "Click on View Load Balancers"
+        },
+        {
+          "text": "After 1–2 minutes, the state will change to active and is ready."
+        },
+        {
+          "text": "Task 3: Creating Network Load Balancer"
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create Target Group for Nginx",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a target group specifically for the Nginx service running on the EC2 instance."
+        },
+        {
+          "text": "Navigate to Target Groups available in the left menu of EC2 Page. It will be available under the sub-heading Load Balancing."
+        },
+        {
+          "text": "Click on Create target group"
+        },
+        {
+          "text": "Task 4: Create Target Group for Nginx"
+        },
+        {
+          "text": "In the Create Target Group form Basic configuration:"
+        },
+        {
+          "text": "Choose a target type: Instances"
+        },
+        {
+          "text": "Target group name : Enter Nginx-TG"
+        },
+        {
+          "text": "Protocol : choose TCP"
+        },
+        {
+          "text": "Port : Enter 8080"
+        },
+        {
+          "text": "Task 4: Create Target Group for Nginx"
+        },
+        {
+          "text": "Leave other settings as default. Click on the Next button."
+        },
+        {
+          "text": "Select the NLBEC2server and select Include as pending below button"
+        },
+        {
+          "text": "Click Create target group button"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Creating a New Listener for Nginx on port 8080",
+      "steps": [
+        {
+          "text": "In this task, we are going to add a new listener to the load balancer, specifically for the Nginx service on port 8080. Listeners define how the load balancer handles incoming traffic and which target group to route the traffic to."
+        },
+        {
+          "text": "Now we need to add a new listener for Nginx to listen for traffic on port 8080."
+        },
+        {
+          "text": "Navigate to the Load Balancer console and select the MyNetwork-LB. Click on Add Listener as shown below:"
+        },
+        {
+          "text": "Task 5: Creating a New Listener for Nginx on port 8080"
+        },
+        {
+          "text": "Now add the new listener as follows:"
+        },
+        {
+          "text": "Protocol : Select TCP"
+        },
+        {
+          "text": "Port : Enter 8080"
+        },
+        {
+          "text": "Chose the Nginx-TG as shown below:"
+        },
+        {
+          "text": "Task 5: Creating a New Listener for Nginx on port 8080"
+        },
+        {
+          "text": "Both Listeners will be shown."
+        },
+        {
+          "text": "Task 5: Creating a New Listener for Nginx on port 8080"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Installing and configuring Nginx",
+      "steps": [
+        {
+          "text": "In this task, we are going to install and configure the Nginx service on the EC2 instance. This task ensures that the Nginx service is running on the specified port (8080) and ready to receive traffic from the load balancer."
+        },
+        {
+          "text": "SSH into the EC2 instance, following the steps in SSH into EC2 Instance."
+        },
+        {
+          "text": "Switch to the root user using the command:sudo su"
+        },
+        {
+          "text": "Switch to the root user using the command:"
+        },
+        {
+          "text": "You will see apache is already installed and listening on port 80. To do so, run the following commands:"
+        },
+        {
+          "text": "To find version: httpd -v"
+        },
+        {
+          "text": "To find version:"
+        },
+        {
+          "text": "To find HTTPD running: lsof -i tcp:80"
+        },
+        {
+          "text": "To find HTTPD running:"
+        },
+        {
+          "text": "Task 6: Installing and configuring Nginx"
+        },
+        {
+          "text": "Now install Nginx using below command:sudo dnf install nginx -y"
+        },
+        {
+          "text": "Now install Nginx using below command:"
+        },
+        {
+          "text": "Now we need to change the port number for Nginx service to 8080 because HTTPD service already running on port. To do so, type the following commands: cd /etc/nginxvi nginx.conf"
+        },
+        {
+          "text": "Now we need to change the port number for Nginx service to 8080 because HTTPD service already running on port. To do so, type the following commands:"
+        },
+        {
+          "text": "Task 6: Installing and configuring Nginx"
+        },
+        {
+          "text": "Scroll down and edit the 'listen' line to port number 8080."
+        },
+        {
+          "text": "Task 6: Installing and configuring Nginx"
+        },
+        {
+          "text": "To edit in vi, press i to insert. After editing, press esc and give command :wq which saves the file and quits from vi. Now change the default port number 80 to 8080 as shown below:"
+        },
+        {
+          "text": "Task 6: Installing and configuring Nginx"
+        },
+        {
+          "text": "Start the Nginx service using the below command: service nginx start"
+        },
+        {
+          "text": "Start the Nginx service using the below command:"
+        },
+        {
+          "text": "You can check the status of Nginx service using the below command: lsof -i tcp:8080"
+        },
+        {
+          "text": "You can check the status of Nginx service using the below command:"
+        },
+        {
+          "text": "Task 6: Installing and configuring Nginx"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Testing Network Load Balancer",
+      "steps": [
+        {
+          "text": "In this task, we are going to test the Network Load Balancer and verify that it properly distributes traffic to the target groups. By accessing the load balancer's DNS name with the appropriate port, users can check if the Apache and Nginx services respond correctly."
+        },
+        {
+          "text": "Wait 3 to 4 minutes until the target reaches healthy status and navigate to the Load balancer console and copy the DNS name. Enter the address in the browser."
+        },
+        {
+          "text": "MyNetwork-LB-0a4ff4cc035bae63.elb.us-east-1.amazonaws.com"
+        },
+        {
+          "text": "Task 7: Testing Network Load Balancer"
+        },
+        {
+          "text": "You will see the default apache page. By default network load balancer will route the traffic to port 80"
+        },
+        {
+          "text": "Task 7: Testing Network Load Balancer"
+        },
+        {
+          "text": "Now repeat the above step by appending port number 8080 at the end of load balancer endpoint (as shown below) and you will get the Nginx default page. MyNetwork-LB-0a4ff4cc035bae63.elb.us-east-1.amazonaws.com:8080"
+        },
+        {
+          "text": "Now repeat the above step by appending port number 8080 at the end of load balancer endpoint (as shown below) and you will get the Nginx default page."
+        },
+        {
+          "text": "MyNetwork-LB-0a4ff4cc035bae63.elb.us-east-1.amazonaws.com:8080"
+        },
+        {
+          "text": "Task 7: Testing Network Load Balancer"
+        },
+        {
+          "text": "From the above steps we have successfully created the Network load balancer and routed the traffic to two different services ( Apache and Nginx ) listening on two different ports (80 and 8080)."
+        },
+        {
+          "text": "We have also successfully created and tested the Network Load Balancer."
+        },
+        {
+          "text": "Network load balancers have an amazing capability to handle millions of concurrent connections. Operating at the transport layer, they efficiently distribute incoming network traffic across multiple backend servers or instances. With advanced algorithms, they ensure optimal resource utilization, high availability, and scalability for applications and services. This capability enables organizations to deliver seamless and responsive experiences to a large number of users."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Task 8: Validation Test"
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "Deleting Load balancer"
+        },
+        {
+          "text": "In the EC2 console, navigate to Load balancers in the left-side panel."
+        },
+        {
+          "text": "MyNetwork-LB will be listed here."
+        },
+        {
+          "text": "To delete the load balancer, need to perform the following actions: Select the load balancer, Click on the Actions button, Select the Delete load balancer option."
+        },
+        {
+          "text": "To delete the load balancer, need to perform the following actions:"
+        },
+        {
+          "text": "Select the load balancer,"
+        },
+        {
+          "text": "Click on the Actions button,"
+        },
+        {
+          "text": "Select the Delete load balancer option."
+        },
+        {
+          "text": "Confirm by Entering on the Confirm and clicking on Delete button when a pop-up is shown."
+        },
+        {
+          "text": "MyNetwork-LB will be deleted immediately."
+        },
+        {
+          "text": "Deleting Target groups"
+        },
+        {
+          "text": "In the EC2 console, navigate to Target Groups in the left-side panel."
+        },
+        {
+          "text": "Apache-TG will be listed here."
+        },
+        {
+          "text": "To delete the target group, need to perform the following actions: Select the target group, Click on the Actions button, select the Delete option"
+        },
+        {
+          "text": "To delete the target group, need to perform the following actions:"
+        },
+        {
+          "text": "Select the target group,"
+        },
+        {
+          "text": "Click on the Actions button,"
+        },
+        {
+          "text": "select the Delete option"
+        },
+        {
+          "text": "Confirm by clicking on the Yes, Delete button when a pop-up is shown."
+        },
+        {
+          "text": "Web-server-TG will be deleted immediately."
+        },
+        {
+          "text": "Similarly delete Nginx-TG"
+        },
+        {
+          "text": "Terminate EC2 Instances"
+        },
+        {
+          "text": "In the EC2 console, navigate to Instances in the left-side panel."
+        },
+        {
+          "text": "EC2 Instance NLBEC2Server will be listed here."
+        },
+        {
+          "text": "To terminate the EC2 Instances, need to perform the following actions: Select the EC2 instances, Click on the Instance state button, select the Terminate instance option"
+        },
+        {
+          "text": "To terminate the EC2 Instances, need to perform the following actions:"
+        },
+        {
+          "text": "Select the EC2 instances,"
+        },
+        {
+          "text": "Click on the Instance state button,"
+        },
+        {
+          "text": "select the Terminate instance option"
+        },
+        {
+          "text": "Confirm by clicking on the Terminate button when a pop-up is shown."
+        },
+        {
+          "text": "EC2 Instances will be terminated immediately."
+        },
+        {
+          "text": "You have successfully used the AWS management console to create an Amazon EC2 instance."
+        },
+        {
+          "text": "You have created a Network Load Balancer with an Apache Target group."
+        },
+        {
+          "text": "You have created an Nginx Target group and attached the EC2 server to route traffic on port 8080."
+        },
+        {
+          "text": "You tested the Network Load Balancer."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

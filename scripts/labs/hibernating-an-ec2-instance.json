@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,76 +32,121 @@
       "title": "Task 2: Launching an EC2 Instance",
       "steps": [
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to Instances on the left panel and click on Launch instances."
+          "text": "Navigate to Instances on the left panel and click on Launch instances."
         },
         {
           "text": "Enter the Name for the Instance"
         },
         {
-          "text": "Name : Enter WhizInstance"
+          "text": "Name : Enter WhizInstance"
         },
         {
-          "text": "Choose an Amazon Machine Image (AMI): Select Amazon Linux 2023 AMI in the drop-down."
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-01.png"
+          ]
         },
         {
-          "text": "Choose architecture as 64-bit(x86)"
+          "text": "Choose an Amazon Machine Image (AMI): Select Amazon Linux 2023 AMI in the drop-down."
         },
         {
-          "text": "Choose an Instance Type: Select t2.micro."
+          "text": "Choose architecture as 64-bit(x86)"
         },
         {
-          "text": "Key Pair: Select Create a new key pair"
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-02.png"
+          ]
         },
         {
-          "text": "Key pair type : Select RSA"
+          "text": "Choose an Instance Type: Select t2.micro."
         },
         {
-          "text": "Key pair name: Enter MyEC2Key"
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-03.png"
+          ]
         },
         {
-          "text": "Private key file format: Select .pem"
+          "text": "Key Pair: Select Create a new key pair"
         },
         {
-          "text": "Click on the create Key pair button."
+          "text": "Key pair type : Select RSA"
         },
         {
-          "text": "Click on the drop-down of the Network Settings."
+          "text": "Key pair name: Enter MyEC2Key"
+        },
+        {
+          "text": "Private key file format: Select .pem"
+        },
+        {
+          "text": "Click on the create Key pair button."
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-04.png"
+          ]
+        },
+        {
+          "text": "Click on the drop-down of the Network Settings."
         },
         {
           "text": "Configure Security Group:"
         },
         {
-          "text": "Select Create security group"
+          "text": "Select Create security group"
         },
         {
-          "text": "Select SSH type"
+          "text": "Select SSH type"
         },
         {
-          "text": "Source Type: Select My IP."
+          "text": "Source Type: Select My IP.",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-05.png"
+          ]
         },
         {
-          "text": "Click on the Advanced option at the top right corner of the Configure Storage."
+          "text": "Click on the Advanced option at the top right corner of the Configure Storage."
         },
         {
-          "text": "Click on Volume 1 (AMI Root)."
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-06.png"
+          ]
         },
         {
-          "text": "Select Encrypted option from the Encrypted drop-down and (default) aws/ebs key from the KMS Key drop-down."
+          "text": "Click on Volume 1 (AMI Root)."
         },
         {
-          "text": "Click on the Advanced details button and select Enable from the Stop-Hibernate Behaviour drop-down."
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-07.png"
+          ]
         },
         {
-          "text": "Review and Launch: Review all settings and click on Launch Instance at the bottom right."
+          "text": "Select Encrypted option from the Encrypted drop-down and (default) aws/ebs key from the KMS Key drop-down."
         },
         {
-          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till the status changes to Running."
+          "text": "Click on the Advanced details button and select Enable from the Stop-Hibernate Behaviour drop-down."
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-08.png"
+          ]
+        },
+        {
+          "text": "Review and Launch: Review all settings and click on Launch Instance at the bottom right."
+        },
+        {
+          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till the status changes to Running."
         }
       ]
     },
@@ -109,64 +154,82 @@
       "title": "Task 3: Testing Hibernation of an EC2 Instance",
       "steps": [
         {
-          "text": "We can test the hibernation of the EC2 either using the Dashboard or using CloudShell."
+          "text": "We can test the hibernation of the EC2 either using the Dashboard or using CloudShell. Wait till the Status Check of instance become passed."
         },
         {
-          "text": "Wait till the Status Check of instance become passed."
+          "text": "Select the instance from the Instances panel and click on Instance State."
         },
         {
-          "text": "Method 1:"
+          "text": "Click on Hibernate Instance."
         },
         {
-          "text": "Select the instance from the Instances panel and click on Instance State."
+          "text": "Task 3: Testing Hibernation of an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-09.png"
+          ]
         },
         {
-          "text": "Click on Hibernate Instance."
+          "text": "Select the Hibernate button.",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-10.png"
+          ]
         },
         {
-          "text": "Select the Hibernate button."
+          "text": "Task 3: Testing Hibernation of an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-11.png"
+          ]
         },
         {
-          "text": "You can see that the Instance state has been changed from Running to Stopped."
+          "text": "You can see that the Instance state has been changed from Running to Stopped."
         },
         {
-          "text": "Select the Instance again and Select Instance State as Start Instance."
+          "text": "Task 3: Testing Hibernation of an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-12.png"
+          ]
+        },
+        {
+          "text": "Select the Instance again and Select Instance State as Start Instance."
+        },
+        {
+          "text": "Task 3: Testing Hibernation of an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-13.png"
+          ]
         },
         {
           "text": "We can see that Instance starts running again."
         },
         {
-          "text": "Method 2:"
+          "text": "Go to EC2 Dashboard and copy the Instance ID of your instance."
         },
         {
-          "text": "Go to EC2 Dashboard and copy the Instance ID of your instance."
+          "text": "Go to AWS CloudShell by clicking on at the top right of the AWS console.",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-14.png"
+          ]
         },
         {
-          "text": "Go to AWS CloudShell by clicking on at the top right of the AWS console."
+          "text": "We can use the Stop action to hibernate an instance because we have enabled the Stop-Hibernation behavior. To hibernate the instance, run the command:"
         },
         {
-          "text": "We can use the Stop action to hibernate an instance because we have enabled the Stop-Hibernation behavior. To hibernate the instance, run the command:"
-        },
-        {
-          "text": "aws ec2 stop-instances --instance-ids <instance_id>"
-        },
-        {
-          "text": "Note:- Replace <instance_id> with the Instance ID you have copied in Step 1. Wait for 2 to 3 minutes for the instance to get stopped."
+          "text": "Task 3: Testing Hibernation of an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-15.png"
+          ]
         },
         {
           "text": "Run the following command to start the instance."
         },
         {
-          "text": "aws ec2 start-instances --instance-ids <instance_id>"
-        },
-        {
-          "text": "Note:- Replace <instance_id> with the Instance ID you have copied in Step 1."
-        },
-        {
           "text": "Wait for a few minutes and run the command again. You can see that the instance state has changed from pending to running state."
         },
         {
-          "text": "Do you know?"
+          "text": "Task 3: Testing Hibernation of an EC2 Instance",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-16.png"
+          ]
         },
         {
           "text": "Hibernating an Amazon Elastic Compute Cloud (EC2) instance is a feature provided by AWS that allows you to pause an EC2 instance instead of stopping it. When you stop a traditional EC2 instance, it goes into a stopped state, and you're no longer charged for the instance's compute resources (CPU and memory). However, when you start it again, you need to wait for the instance to boot up, which can take some time, and you may lose any in-memory data or configurations that were stored on the instance."
@@ -177,13 +240,19 @@
       "title": "Task 4: Validation of the Lab",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
+        },
+        {
+          "text": "Task 4: Validation of the Lab",
+          "images": [
+            "/labs/hibernating-an-ec2-instance/step-17.gif"
+          ]
         }
       ]
     },
@@ -191,19 +260,16 @@
       "title": "Task 5: Deletion of AWS Resources",
       "steps": [
         {
-          "text": "Terminate EC2 Instance :-"
+          "text": "Terminate EC2 Instance :-"
         },
         {
-          "text": "In the navigation pane, choose Instances."
+          "text": "In the navigation pane, choose Instances."
         },
         {
-          "text": "Select the instance, and choose Instance state and click on Terminate instance."
+          "text": "Select the instance, and choose Instance state and click on Terminate instance."
         },
         {
-          "text": "Choose Terminate when prompted for confirmation."
-        },
-        {
-          "text": "Completion and Conclusion"
+          "text": "Choose Terminate when prompted for confirmation."
         },
         {
           "text": "You have successfully launched an EC2 Instance."
@@ -212,16 +278,13 @@
           "text": "You have successfully hibernated an EC2 Instance."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of the AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Click on End Lab button from the lab console and wait till the process gets completed."
+          "text": "Click on End Lab button from the lab console and wait till the process gets completed."
         }
       ]
     }

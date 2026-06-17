@@ -27,6 +27,12 @@
           "text": "In this challenge lab, your AWS Kinesis skills are put to the test. You'll deploy a sample website on an EC2 Linux instance, configure Apache web server to capture real-time logs, and stream them to AWS S3 using Kinesis Data Streams, Kinesis Agent, and Kinesis Firehose. This hands-on exercise will hone your skills in setting up efficient data pipelines for streaming, processing, and storing logs on AWS."
         },
         {
+          "text": "Sign in to AWS Management Console",
+          "images": [
+            "/labs/challenge-build-a-real-time-data-streaming-system-with-amazon-kinesis-data-stream-and-kinesis-agent/step-01.png"
+          ]
+        },
+        {
           "text": "As an AWS Cloud Architect at XYZ Company, you proposed implementing an optimized log processing pipeline to efficiently manage the vast amounts of log data generated daily by our e-commerce platform hosted on Amazon Elastic Compute Cloud (EC2) instances. Leveraging Amazon Kinesis Data Streams, Amazon Kinesis Firehose, and Amazon Simple Storage Service (S3), the pipeline aims to streamline log ingestion, processing, and storage."
         },
         {
@@ -126,7 +132,7 @@
           "text": "Check the CloudWatch metrics of Kinesis Data Stream and Firehose."
         },
         {
-          "text": "Click On the Validate to Complete the Challenge. In the second checkbox in the validation part, you should mention the folder name alone i.e., marvel-master."
+          "text": "Click On the Validate to Complete the Challenge. In the second checkbox in the validation part, you should mention the folder name alone i.e., marvel-master."
         },
         {
           "text": "Sign Out of the AWS account."

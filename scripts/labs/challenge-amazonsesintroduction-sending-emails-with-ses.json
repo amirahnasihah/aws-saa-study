@@ -1,0 +1,91 @@
+{
+  "slug": "challenge-amazonsesintroduction-sending-emails-with-ses",
+  "title": "Challenge: Amazon_SES_Introduction - Sending Emails with SES",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:25:00",
+  "tasks": [
+    {
+      "title": "Sign into the AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to access the AWS Console in a new tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default, copy your Username and Password from the Lab Console, and sign in."
+        },
+        {
+          "text": "Set the AWS Region to US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign into the AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to explore Amazon Simple Email Service (SES) to send emails. Your job is to create an email identity, verify it, send a test email, and validate the setup. Here’s how to proceed:"
+        },
+        {
+          "text": "Identity type: Email address"
+        },
+        {
+          "text": "Open the email and click the verification link provided."
+        },
+        {
+          "text": "After clicking the link, return to the SES console and refresh the Verified identities page."
+        },
+        {
+          "text": "Verify the status of the email address changes to Verified."
+        },
+        {
+          "text": "In the SES console, go to Email sending (under Configuration) > Send test email."
+        },
+        {
+          "text": "Configure the test email: Sender: Select the verified email address Recipient: Enter a verified recipient email address Subject: Body: Email format:"
+        },
+        {
+          "text": "Sender: Select the verified email address"
+        },
+        {
+          "text": "Recipient: Enter a verified recipient email address"
+        },
+        {
+          "text": "Subject: Body:"
+        },
+        {
+          "text": "Email format:"
+        },
+        {
+          "text": "Click Send test email."
+        },
+        {
+          "text": "Check the recipient’s inbox"
+        },
+        {
+          "text": "Verify the email contains the subject Test Email from Amazon SES and the body text as specified."
+        },
+        {
+          "text": "Confirm the email identity is created and verified in SES."
+        },
+        {
+          "text": "If in sandbox mode, verify the recipient email address also verified."
+        },
+        {
+          "text": "Ensure the test email was sent successfully and received in the recipient’s inbox."
+        },
+        {
+          "text": "Click Validate in the lab console to check the setup."
+        },
+        {
+          "text": "Sign out of AWS by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "Click End Lab in the lab console to complete the lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -35,6 +35,12 @@
           "text": "In the AWS Management Console, you can find the VPC service by clicking on the “Services” dropdown at the top and type VPC in the search bar. Then, select the VPC service from the search results."
         },
         {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-01.png"
+          ]
+        },
+        {
           "text": "Once you're in the VPC service, you'll see the option to create a new VPC on the side menu or by clicking on the create VPC button and VPC only."
         },
         {
@@ -44,16 +50,31 @@
           "text": "Specify an IPv4 CIDR block for your VPC (10.0.0.0/16) in the IPv4 CIDR block field."
         },
         {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-02.png"
+          ]
+        },
+        {
           "text": "Click on the Create VPC button."
         },
         {
-          "text": "Note : Kindly Ignore the error message if anything popped up!"
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-03.png"
+          ]
         },
         {
           "text": "Within your newly created VPC, you'll need to create two subnets: one public and one private."
         },
         {
           "text": "To create a subnet, go to the subnets section in the VPC service and click on the Create Subnet button."
+        },
+        {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-05.png"
+          ]
         },
         {
           "text": "Click the VPC which we created before i.e., Nat_vpc"
@@ -71,7 +92,19 @@
           "text": "IPv4 subnet CIDR block: 10.0.1.0/24"
         },
         {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-06.png"
+          ]
+        },
+        {
           "text": "scroll down click add “Add new Subnet”"
+        },
+        {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-07.png"
+          ]
         },
         {
           "text": "Now we are going to create the same steps,"
@@ -89,6 +122,12 @@
           "text": "Click Create Subnet ."
         },
         {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-08.png"
+          ]
+        },
+        {
           "text": "Configure the route tables and internet gateway for the public subnet"
         },
         {
@@ -104,22 +143,64 @@
           "text": "Select vpc : “Nat_vpc”"
         },
         {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-09.png"
+          ]
+        },
+        {
           "text": "Click Subnet associations then “Edit subnet associations”"
+        },
+        {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-10.png"
+          ]
         },
         {
           "text": "Select PublicSubnet then click Save associations ."
         },
         {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-11.png"
+          ]
+        },
+        {
           "text": "Next, go to the Internet Gateways section and create a new internet gateway."
+        },
+        {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-12.png"
+          ]
         },
         {
           "text": "Internet Gateway Name: My-Internet-Gateway"
         },
         {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-13.png"
+          ]
+        },
+        {
           "text": "Once Internet gateway is created attach it the VPC that you have created."
         },
         {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-14.png"
+          ]
+        },
+        {
           "text": "In the ”Nat_public_rt“ route table, click on Edit routes, then add your internet gateway. The destination should be (0.0.0.0/0), and the target should be the internet gateway."
+        },
+        {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-16.png"
+          ]
         },
         {
           "text": "Again create a route table for “PrivateSubnet”"
@@ -131,10 +212,22 @@
           "text": "Select vpc : “Nat_vpc”"
         },
         {
-          "text": "Click Subnet associations then “Edit subnet associations”"
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-17.png"
+          ]
         },
         {
-          "text": "Select PrivateSubnet then click Save associations."
+          "text": "Click Subnet associations then “Edit subnet associations”"
+        },
+        {
+          "text": "Select PrivateSubnet then click Save associations."
+        },
+        {
+          "text": "Task 2 : VPC and Subnet Setup",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-18.png"
+          ]
         }
       ]
     },
@@ -154,7 +247,19 @@
           "text": "Choose “Amazon Linux 2023 AMI”"
         },
         {
+          "text": "Task 3 : Launch EC2 instance within this VPC",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-19.png"
+          ]
+        },
+        {
           "text": "For Instance Type: Select t2.micro"
+        },
+        {
+          "text": "Task 3 : Launch EC2 instance within this VPC",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-21.png"
+          ]
         },
         {
           "text": "You'll need to create a key pair to securely connect to your EC2 instances. Select the Create a new key pair option."
@@ -172,7 +277,13 @@
           "text": "Private key file format: .pem"
         },
         {
-          "text": "Make sure to select the Nat_vpc and public subnet we created earlier."
+          "text": "Task 3 : Launch EC2 instance within this VPC",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-22.png"
+          ]
+        },
+        {
+          "text": "Make sure to select the Nat_vpc and public subnet we created earlier."
         },
         {
           "text": "In Network Settings Click on Edit Button:"
@@ -190,10 +301,16 @@
           "text": "Description: “Security Group to allow traffic to EC2 “"
         },
         {
+          "text": "Task 3 : Launch EC2 instance within this VPC",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-23.png"
+          ]
+        },
+        {
           "text": "We will now add the security group rules. SSH will already be present there."
         },
         {
-          "text": "Click to add rules:"
+          "text": "Click to add rules: For HTTP: Set the Source type to 0.0.0.0 (Anywhere) For HTTPS: Set the Source to 10.0.0.0/16 For All ICMP-IPv4: Set the Source to 10.0.0.0/16"
         },
         {
           "text": "For HTTP: Set the Source type to 0.0.0.0 (Anywhere)"
@@ -202,7 +319,13 @@
           "text": "For HTTPS: Set the Source to 10.0.0.0/16"
         },
         {
-          "text": "For All ICMP-IPv4: Set the Source to 10.0.0.0/16"
+          "text": "For All ICMP-IPv4: Set the Source to 10.0.0.0/16"
+        },
+        {
+          "text": "Task 3 : Launch EC2 instance within this VPC",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-24.png"
+          ]
         },
         {
           "text": "Click Launch Instance."
@@ -223,10 +346,22 @@
           "text": "Auto assign Public IP - Disable"
         },
         {
-          "text": "Create a new security group for this instance as private_ins_sg, allowing inbound traffic from the first instance's security group."
+          "text": "Create a new security group for this instance as private_ins_sg, allowing inbound traffic from the first instance's security group."
+        },
+        {
+          "text": "Task 3 : Launch EC2 instance within this VPC",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-25.png"
+          ]
         },
         {
           "text": "In the Inbound Security Group Rules, leave the default settings as they are and add new rule For HTTP: Set the Source to 10.0.0.0/16"
+        },
+        {
+          "text": "Task 3 : Launch EC2 instance within this VPC",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-26.png"
+          ]
         },
         {
           "text": "Click Launch Instance."
@@ -243,10 +378,19 @@
           "text": "Select the NAT instance, go to the Actions menu, then choose Networking and click on Change Source/Destionation Check. Enable the Save option and Click on Save Opti."
         },
         {
+          "text": "Task 4 : Enable NAT Configuration for EC2 Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-27.png"
+          ]
+        },
+        {
           "text": "Open your Local terminal and navigate to the location where your .pem file is stored."
         },
         {
-          "text": "chmod 400 \"WhizKey.pem\""
+          "text": "Task 4 : Enable NAT Configuration for EC2 Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-29.png"
+          ]
         },
         {
           "text": "Then, Upload your .pem key from your local machine to the EC2 NAT instance using the following"
@@ -255,10 +399,13 @@
           "text": "Command:"
         },
         {
-          "text": "scp -i WhizKey.pem WhizKey.pem ec2-user@<ec2-Nat-instance-public-ip>:/home/ec2-user/"
+          "text": "Replace the <ec2-Nat-instance-public-ip> and the Key pair name accordingly."
         },
         {
-          "text": "Replace the <ec2-Nat-instance-public-ip> and the Key pair name accordingly."
+          "text": "Task 4 : Enable NAT Configuration for EC2 Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-30.png"
+          ]
         },
         {
           "text": "Navigate to VPC and Go to Route table Section. Select private_rt."
@@ -267,7 +414,13 @@
           "text": "Select Routes Option and click Edit Routes Option."
         },
         {
-          "text": "Click Add route"
+          "text": "Task 4 : Enable NAT Configuration for EC2 Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-31.png"
+          ]
+        },
+        {
+          "text": "Click Add route"
         },
         {
           "text": "Destination : 0.0.0.0/0"
@@ -279,7 +432,19 @@
           "text": "Click “Save changes “"
         },
         {
+          "text": "Task 4 : Enable NAT Configuration for EC2 Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-32.gif"
+          ]
+        },
+        {
           "text": "Now, Navigate to EC2, Connect the Nat_instance"
+        },
+        {
+          "text": "Task 4 : Enable NAT Configuration for EC2 Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-33.png"
+          ]
         },
         {
           "text": "Copy paste the command on NAT instance :"
@@ -288,55 +453,28 @@
           "text": "Enable IP forwarding :"
         },
         {
-          "text": "sudo dnf update -y"
-        },
-        {
-          "text": "echo 'net.ipv4.ip_forward=1' | sudo tee /etc/sysctl.d/custom-ip-forwarding.conf"
-        },
-        {
-          "text": "sudo sysctl -p /etc/sysctl.d/custom-ip-forwarding.conf"
-        },
-        {
           "text": "Setting up ip-tables for NAT (correct interface!)"
         },
         {
           "text": "Check correct interface by the below command:"
         },
         {
-          "text": "ip a"
+          "text": "Task 4 : Enable NAT Configuration for EC2 Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-34.png"
+          ]
         },
         {
-          "text": "Note : Replace enX0 with your actual network interface (e.g., enX0, ens5,..). Run ip a to confirm your interface name before applying the below code."
-        },
-        {
-          "text": "sudo yum install iptables-services -y"
-        },
-        {
-          "text": "sudo systemctl enable iptables"
-        },
-        {
-          "text": "sudo systemctl start iptables"
-        },
-        {
-          "text": "sudo iptables -t nat -A POSTROUTING -o enX0 -j MASQUERADE # Replace enX0 with your actual interface if different"
-        },
-        {
-          "text": "sudo service iptables save"
+          "text": "Note : Replace enX0 with your actual network interface (e.g., enX0, ens5,..). Run ip a to confirm your interface name before applying the below code."
         },
         {
           "text": "Ensure iptables FORWARD chain is ACCEPT :"
         },
         {
-          "text": "sudo iptables -P FORWARD ACCEPT"
-        },
-        {
-          "text": "sudo iptables -L FORWARD"
-        },
-        {
-          "text": "# There should NOT be a REJECT rule—remove it if present!"
-        },
-        {
-          "text": "sudo iptables -D FORWARD -j REJECT --reject-with icmp-host-prohibited"
+          "text": "Task 4 : Enable NAT Configuration for EC2 Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-35.png"
+          ]
         },
         {
           "text": "Paste and run each command one at a time to see where it might hang or fail."
@@ -345,16 +483,34 @@
           "text": "Again go to Instance Page and Select Nat_Instance. Click on Connect and Open new tab."
         },
         {
+          "text": "Task 4 : Enable NAT Configuration for EC2 Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-36.png"
+          ]
+        },
+        {
           "text": "Now we doing, Private instance via ssh command which is running inside NAT instance"
         },
         {
-          "text": "Command : ssh -i \"WhizKey.pem\" ec2-user@<Private_ins-Private-IP-Address>"
+          "text": "Command : ssh -i \"WhizKey.pem\" ec2-user@<Private_ins-Private-IP-Address>"
+        },
+        {
+          "text": "Task 4 : Enable NAT Configuration for EC2 Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-37.png"
+          ]
         },
         {
           "text": "Check the internet connectivity in the private_instance"
         },
         {
           "text": "ping google.com or ping 8.8.8.8"
+        },
+        {
+          "text": "Task 4 : Enable NAT Configuration for EC2 Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-38.png"
+          ]
         }
       ]
     },
@@ -368,16 +524,13 @@
           "text": "Install Nginx ,Copy paste the command"
         },
         {
-          "text": "sudo dnf update -y"
-        },
-        {
-          "text": "sudo dnf install nginx -y"
+          "text": "Task 5 : Install Nginx (Webpage) in the Private Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-39.png"
+          ]
         },
         {
           "text": "Set up a Simple Web Page"
-        },
-        {
-          "text": "echo \"<h1>Hello from lab</h1>\" | sudo tee /usr/share/nginx/html/index.html"
         },
         {
           "text": "This replaces the default NGINX homepage with a custom message"
@@ -386,19 +539,22 @@
           "text": "Enable and Start NGINX"
         },
         {
-          "text": "sudo systemctl enable nginx"
-        },
-        {
-          "text": "sudo systemctl start nginx"
-        },
-        {
-          "text": "sudo systemctl status nginx"
-        },
-        {
           "text": "You should see output like active (running)"
         },
         {
+          "text": "Task 5 : Install Nginx (Webpage) in the Private Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-40.png"
+          ]
+        },
+        {
           "text": "Now, Again Login NAT_instance, Click Connect, Use EC2 Instance Connect (Browser-based SSH), You're now inside the NAT instance terminal."
+        },
+        {
+          "text": "Task 5 : Install Nginx (Webpage) in the Private Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-41.png"
+          ]
         },
         {
           "text": "We will now create a configuration file that tells NGINX to forward requests it receives to the private EC2 instance where the actual web page is hosted."
@@ -410,25 +566,10 @@
           "text": "Install NGINX :"
         },
         {
-          "text": "sudo dnf install nginx -y"
-        },
-        {
-          "text": "sudo systemctl enable nginx"
-        },
-        {
-          "text": "sudo systemctl start nginx"
-        },
-        {
-          "text": "sudo systemctl status nginx"
-        },
-        {
           "text": "Configure NGINX as a Reverse Proxy"
         },
         {
           "text": "Open a new NGINX configuration file"
-        },
-        {
-          "text": "sudo nano /etc/nginx/conf.d/reverse-proxy.conf"
         },
         {
           "text": "Paste the following configuration"
@@ -437,31 +578,10 @@
           "text": "Replace 10.0.1.10 with the private IP address of your private_ins."
         },
         {
-          "text": "server {"
-        },
-        {
-          "text": "listen 80;"
-        },
-        {
-          "text": "location / {"
-        },
-        {
-          "text": "proxy_pass http://10.0.1.10;"
-        },
-        {
-          "text": "proxy_set_header Host $host;"
-        },
-        {
-          "text": "proxy_set_header X-Real-IP $remote_addr;"
-        },
-        {
-          "text": "proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
+          "text": "Task 5 : Install Nginx (Webpage) in the Private Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-42.png"
+          ]
         },
         {
           "text": "Save and exit the file ."
@@ -476,16 +596,16 @@
           "text": "Test the new configuration for syntax errors"
         },
         {
-          "text": "sudo nginx -t"
-        },
-        {
           "text": "You should see:"
         },
         {
-          "text": "Reload NGINX to apply the changes"
+          "text": "Task 5 : Install Nginx (Webpage) in the Private Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-43.png"
+          ]
         },
         {
-          "text": "sudo systemctl restart nginx"
+          "text": "Reload NGINX to apply the changes"
         },
         {
           "text": "Disable Firewalld and Flush IPTables Rules"
@@ -494,22 +614,10 @@
           "text": "Run these commands on the NAT instance to stop firewalld and flush iptables"
         },
         {
-          "text": "sudo systemctl stop firewalld"
-        },
-        {
-          "text": "sudo iptables -F"
-        },
-        {
-          "text": "sudo iptables -t nat -F"
-        },
-        {
-          "text": "sudo iptables -P INPUT ACCEPT"
-        },
-        {
-          "text": "sudo iptables -P FORWARD ACCEPT"
-        },
-        {
-          "text": "sudo iptables -P OUTPUT ACCEPT"
+          "text": "Task 5 : Install Nginx (Webpage) in the Private Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-44.png"
+          ]
         },
         {
           "text": "This will allow traffic on port 80, which is necessary for NGINX reverse proxy to work."
@@ -521,28 +629,22 @@
           "text": "Copy the NAT instance's public IP and open it in your web browser."
         },
         {
+          "text": "Task 5 : Install Nginx (Webpage) in the Private Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-45.png"
+          ]
+        },
+        {
           "text": "You should see the page served from the private EC2 instance, like:"
         },
         {
-          "text": "Again run this commands, which Setup iptables NAT:"
+          "text": "Task 5 : Install Nginx (Webpage) in the Private Instance",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-46.png"
+          ]
         },
         {
-          "text": "Note : Replace enX0 with your actual network interface (e.g., enX0, ens5,..), Run ip a to confirm your interface name before applying the below code."
-        },
-        {
-          "text": "sudo yum install iptables-services -y"
-        },
-        {
-          "text": "sudo systemctl enable iptables"
-        },
-        {
-          "text": "sudo systemctl start iptables"
-        },
-        {
-          "text": "sudo iptables -t nat -A POSTROUTING -o enX0 -j MASQUERADE # Replace ens5 with your actual interface if different"
-        },
-        {
-          "text": "sudo service iptables save"
+          "text": "Again run this commands, which Setup iptables NAT:"
         }
       ]
     },
@@ -556,6 +658,12 @@
           "text": "Then open the Actions menu, navigate to the Security settings, choose Modify IAM Role, select the EC2_CloudWatch_Agent_policy from the list of available roles, and confirm the update to attach the role to your instance."
         },
         {
+          "text": "Task 6 : Install and Configure CloudWatch Agent",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-47.png"
+          ]
+        },
+        {
           "text": "Now we going to Connect to your private EC2 instance again,"
         },
         {
@@ -565,91 +673,16 @@
           "text": "Now we doing, Private instance via ssh command which is running inside NAT instance"
         },
         {
-          "text": "Command : ssh -i \"WhizKey.pem\" ec2-user@<Private_ins-Private-IP-Address>"
+          "text": "Command : ssh -i \"WhizKey.pem\" ec2-user@<Private_ins-Private-IP-Address>"
         },
         {
           "text": "Install CloudWatch Agent"
         },
         {
-          "text": "sudo dnf install -y amazon-cloudwatch-agent"
-        },
-        {
           "text": "Create agent config file"
         },
         {
-          "text": "sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc/"
-        },
-        {
-          "text": "sudo nano /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json"
-        },
-        {
           "text": "Paste this config (for monitoring NGINX logs)"
-        },
-        {
-          "text": "{"
-        },
-        {
-          "text": "\"logs\": {"
-        },
-        {
-          "text": "\"logs_collected\": {"
-        },
-        {
-          "text": "\"files\": {"
-        },
-        {
-          "text": "\"collect_list\": ["
-        },
-        {
-          "text": "{"
-        },
-        {
-          "text": "\"file_path\": \"/var/log/nginx/access.log\","
-        },
-        {
-          "text": "\"log_group_name\": \"/nginx/access\","
-        },
-        {
-          "text": "\"log_stream_name\": \"{instance_id}-access\","
-        },
-        {
-          "text": "\"timezone\": \"UTC\""
-        },
-        {
-          "text": "},"
-        },
-        {
-          "text": "{"
-        },
-        {
-          "text": "\"file_path\": \"/var/log/nginx/error.log\","
-        },
-        {
-          "text": "\"log_group_name\": \"/nginx/error\","
-        },
-        {
-          "text": "\"log_stream_name\": \"{instance_id}-error\","
-        },
-        {
-          "text": "\"timezone\": \"UTC\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "]"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
         },
         {
           "text": "Save the file"
@@ -664,25 +697,16 @@
           "text": "Start the agent with your config"
         },
         {
-          "text": "sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl \\"
-        },
-        {
-          "text": "-a fetch-config \\"
-        },
-        {
-          "text": "-m ec2 \\"
-        },
-        {
-          "text": "-c file:/opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json \\"
-        },
-        {
-          "text": "-s"
-        },
-        {
           "text": "Confirm Logs in CloudWatch :"
         },
         {
           "text": "Go to AWS Console, Search for CloudWatch, Select Log Groups in the left panel."
+        },
+        {
+          "text": "Task 6 : Install and Configure CloudWatch Agent",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-49.png"
+          ]
         },
         {
           "text": "Open the log groups in the CloudWatch console and view the log streams associated with your EC2 instance ID."
@@ -691,10 +715,10 @@
           "text": "Check whether logs from your EC2 instance are being successfully delivered and displayed in the selected log streams."
         },
         {
-          "text": "Do You Know?"
-        },
-        {
-          "text": "While NAT Instances are great for cost-effective small-scale use cases, NAT Gateways are more scalable and highly available. With NAT Gateways, you don't need to manage instances, and AWS automatically scales them. However, NAT Instances are often cheaper in smaller environments and offer full control."
+          "text": "Task 6 : Install and Configure CloudWatch Agent",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-50.png"
+          ]
         }
       ]
     },
@@ -708,7 +732,10 @@
           "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 7: Validation of the Lab",
+          "images": [
+            "/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent/step-52.gif"
+          ]
         },
         {
           "text": "You have successfully created an VPC"
@@ -724,9 +751,6 @@
         },
         {
           "text": "You have connected Cloud Watch Agent to AWS CloudWatch,"
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign out of AWS Account."

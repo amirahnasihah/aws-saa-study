@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,13 +24,13 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
-          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
         }
       ]
     },
@@ -35,19 +38,22 @@
       "title": "Task 2: Check CloudFormation stack is created",
       "steps": [
         {
-          "text": "In this lab we will create a VPC using CloudFormation with one public and two private subnets. This VPC will be used in the lab to create resources."
+          "text": "In this lab we will create a VPC using CloudFormation with one public and two private subnets. This VPC will be used in the lab to create resources."
         },
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to the Management & Governance section and locate the Services button. Once you click on the Services button, then select CloudFormation"
+          "text": "Navigate to the Management & Governance section and locate the Services button. Once you click on the Services button, then select CloudFormation"
         },
         {
           "text": "Under CloudFormation stacks, you will be able to see a stack getting created."
         },
         {
-          "text": "Now wait until the Stack status changes to CREATE_COMPLETE and please refresh the stack page to view the latest status."
+          "text": "Now wait until the Stack status changes to CREATE_COMPLETE and please refresh the stack page to view the latest status.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-01.png"
+          ]
         }
       ]
     },
@@ -55,76 +61,133 @@
       "title": "Task 3: Create a Bastion Server",
       "steps": [
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Navigate to Instances on the left panel and click on Launch Instances"
+          "text": "Navigate to Instances on the left panel and click on Launch Instances"
         },
         {
-          "text": "Name : Enter Bastion-Server"
+          "text": "Name : Enter Bastion-Server"
         },
         {
-          "text": "For Amazon Machine Image (AMI): Make sure that the selected machine is Amazon Linux AMI 2023."
+          "text": "Task 3: Create a Bastion Server",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-02.png"
+          ]
         },
         {
-          "text": "Instance Type: Select t2.micro"
+          "text": "For Amazon Machine Image (AMI): Make sure that the selected machine is Amazon Linux AMI 2023."
         },
         {
-          "text": "For Key pair: Select Create a new key pair"
+          "text": "Task 3: Create a Bastion Server",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-03.png"
+          ]
         },
         {
-          "text": "Key pair name: BastionKey"
+          "text": "Instance Type: Select t2.micro",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-04.png"
+          ]
         },
         {
-          "text": "Key pair type: RSA"
+          "text": "Task 3: Create a Bastion Server",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-05.png"
+          ]
         },
         {
-          "text": "Private key file format: .pem"
+          "text": "For Key pair: Select Create a new key pair Key pair name: BastionKey Key pair type: RSA Private key file format: .pem"
         },
         {
-          "text": "Select Create key pair Button."
+          "text": "For Key pair: Select Create a new key pair"
         },
         {
-          "text": "In Network Settings Click on Edit:"
+          "text": "Key pair name: BastionKey"
         },
         {
-          "text": "VPC : Select Bastion-VPC"
+          "text": "Key pair type: RSA"
         },
         {
-          "text": "Subnet : Select Public Subnet 1"
+          "text": "Private key file format: .pem"
         },
         {
-          "text": "Auto-assign public IP: Enable"
+          "text": "Select Create key pair Button.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-06.png"
+          ]
         },
         {
-          "text": "Select Create new Security group"
+          "text": "Task 3: Create a Bastion Server",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-07.png"
+          ]
         },
         {
-          "text": "Security group name : Enter Bastion-SG"
+          "text": "In Network Settings Click on Edit:"
         },
         {
-          "text": "Description : Enter Security group for Bastion-server"
+          "text": "VPC : Select Bastion-VPC"
         },
         {
-          "text": "To add SSH:"
+          "text": "Subnet : Select Public Subnet 1"
         },
         {
-          "text": "Choose Type : SSH"
+          "text": "Auto-assign public IP: Enable"
         },
         {
-          "text": "Source : Anywhere"
+          "text": "Select Create new Security group"
         },
         {
-          "text": "Keep Rest thing Default and Click on Launch Instance Button."
+          "text": "Security group name : Enter Bastion-SG"
         },
         {
-          "text": "Select View all Instances to View Instance you Created"
+          "text": "Description : Enter Security group for Bastion-server"
         },
         {
-          "text": "Launch Status: Your instances are now launching, navigate to Instances and wait for 1-2 minutes (until the Bastion-server's status changes from pending to running)."
+          "text": "To add SSH: Choose Type : SSH Source : Anywhere",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-08.png"
+          ]
+        },
+        {
+          "text": "To add SSH:"
+        },
+        {
+          "text": "Choose Type : SSH"
+        },
+        {
+          "text": "Source : Anywhere",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-09.png"
+          ]
+        },
+        {
+          "text": "Task 3: Create a Bastion Server",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-10.png"
+          ]
+        },
+        {
+          "text": "Keep Rest thing Default and Click on Launch Instance Button."
+        },
+        {
+          "text": "Select View all Instances to View Instance you Created"
+        },
+        {
+          "text": "Launch Status: Your instances are now launching, navigate to Instances and wait for 1-2 minutes (until the Bastion-server's status changes from pending to running).",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-11.png"
+          ]
+        },
+        {
+          "text": "Task 3: Create a Bastion Server",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-12.png"
+          ]
         }
       ]
     },
@@ -132,34 +195,43 @@
       "title": "Task 4: Creating a Security Group for the Load Balancer",
       "steps": [
         {
-          "text": "Navigate to the Ec2 Dashboard, scroll down to Security Groups in left menu and click on Create security group."
+          "text": "Navigate to the Ec2 Dashboard, scroll down to Security Groups in left menu and click on Create security group."
         },
         {
-          "text": "Configure the security group as follows:"
+          "text": "Configure the security group as follows:"
         },
         {
-          "text": "Security group name: Enter LoadBalancer-SG"
+          "text": "Security group name: Enter LoadBalancer-SG"
         },
         {
-          "text": "Description: Enter Security group for the Load balancer"
+          "text": "Description: Enter Security group for the Load balancer"
         },
         {
-          "text": "VPC: Select Bastion-VPC (remove the default VPC)"
+          "text": "VPC: Select Bastion-VPC (remove the default VPC)"
         },
         {
-          "text": "Click on Inbound Rules and add the port as follows:"
+          "text": "Click on Inbound Rules and add the port as follows:"
         },
         {
-          "text": "Type : Select HTTP"
+          "text": "Type : Select HTTP"
         },
         {
-          "text": "Source: Select Anywhere-IPv4"
+          "text": "Source: Select Anywhere-IPv4",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-13.png"
+          ]
         },
         {
-          "text": "Leave everything as default and click on Create Security Group."
+          "text": "Task 4: Creating a Security Group for the Load Balancer",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-14.png"
+          ]
         },
         {
-          "text": "The security group for the load balancer will be created."
+          "text": "Leave everything as default and click on Create Security Group."
+        },
+        {
+          "text": "The security group for the load balancer will be created."
         }
       ]
     },
@@ -167,163 +239,206 @@
       "title": "Task 5: Creating Web-servers",
       "steps": [
         {
-          "text": "Note: As part of AWS best practices, the web servers should reside in private subnets. We have created a private subnet and NAT gateway. The private subnet is attached to a route table to route traffic via NAT gateway to the internet. Please select the private subnet while launching web servers in the next section."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Navigate to Instances and Click on Launch Instances."
         },
         {
-          "text": "Navigate to Instances and Click on Launch Instances."
+          "text": "Name : Enter Web-server-1",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-15.png"
+          ]
         },
         {
-          "text": "Name : Enter Web-server-1"
+          "text": "Task 5: Creating Web-servers",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-16.png"
+          ]
         },
         {
-          "text": "For Amazon Machine Image (AMI): Make sure that the selected machine is Amazon Linux AMI 2023."
+          "text": "For Amazon Machine Image (AMI): Make sure that the selected machine is Amazon Linux AMI 2023.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-17.png"
+          ]
         },
         {
-          "text": "Instance Type: Select t2.micro."
+          "text": "Instance Type: Select t2.micro.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-18.png"
+          ]
         },
         {
-          "text": "For Key pair: Select Create a new key pair Button"
+          "text": "For Key pair: Select Create a new key pair Button Key pair name: WebKey Key pair type: RSA Private key file format: .pem"
         },
         {
-          "text": "Key pair name: WebKey"
+          "text": "For Key pair: Select Create a new key pair Button"
         },
         {
-          "text": "Key pair type: RSA"
+          "text": "Key pair name: WebKey"
         },
         {
-          "text": "Private key file format: .pem"
+          "text": "Key pair type: RSA"
         },
         {
-          "text": "Select Create key pair Button."
+          "text": "Private key file format: .pem"
         },
         {
-          "text": "In Network Settings Click on Edit:"
+          "text": "Select Create key pair Button.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-19.png"
+          ]
         },
         {
-          "text": "VPC : Select Bastion-VPC"
+          "text": "Task 5: Creating Web-servers",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-20.png"
+          ]
         },
         {
-          "text": "Subnet : Select Private Subnet 1"
+          "text": "In Network Settings Click on Edit: VPC : Select Bastion-VPC Subnet : Select Private Subnet 1 Select Create new Security group Security group name : Enter web-server-SG Description : Enter Security group for web servers On port 22, we choose the Bastion-SG security group as its source to allow SSH connection to web servers from only the bastion server by restricting the public SSH connection. Type bastion in source and select the Bastion-SG. On port 80, choose the LoadBalancer-SG as its source to serve the traffic coming through the load balancer. Type Load in source and select LoadBalancer-SG. To add SSH: Choose Type : SSH Source : Custom and Select Bastion-SG To add HTTP: Click on Add security group rule Choose Type : HTTP Source : Custom and Select LoadBalancer-SG",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-21.png",
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-22.png"
+          ]
         },
         {
-          "text": "Select Create new Security group"
+          "text": "In Network Settings Click on Edit:"
         },
         {
-          "text": "Security group name : Enter web-server-SG"
+          "text": "VPC : Select Bastion-VPC"
         },
         {
-          "text": "Description : Enter Security group for web servers"
+          "text": "Subnet : Select Private Subnet 1"
         },
         {
-          "text": "On port 22, we choose the Bastion-SG security group as its source to allow SSH connection to web servers from only the bastion server by restricting the public SSH connection. Type bastion in source and select the Bastion-SG."
+          "text": "Select Create new Security group"
         },
         {
-          "text": "On port 80, choose the LoadBalancer-SG as its source to serve the traffic coming through the load balancer. Type Load in source and select LoadBalancer-SG."
+          "text": "Security group name : Enter web-server-SG"
         },
         {
-          "text": "To add SSH:"
+          "text": "Description : Enter Security group for web servers",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-23.png"
+          ]
         },
         {
-          "text": "Choose Type : SSH"
+          "text": "Task 5: Creating Web-servers",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-24.png"
+          ]
         },
         {
-          "text": "Source : Custom and Select Bastion-SG"
+          "text": "On port 22, we choose the Bastion-SG security group as its source to allow SSH connection to web servers from only the bastion server by restricting the public SSH connection. Type bastion in source and select the Bastion-SG."
         },
         {
-          "text": "To add HTTP: Click on Add security group rule"
+          "text": "On port 80, choose the LoadBalancer-SG as its source to serve the traffic coming through the load balancer. Type Load in source and select LoadBalancer-SG."
+        },
+        {
+          "text": "To add SSH: Choose Type : SSH Source : Custom and Select Bastion-SG"
+        },
+        {
+          "text": "To add SSH:"
+        },
+        {
+          "text": "Choose Type : SSH"
+        },
+        {
+          "text": "Source : Custom and Select Bastion-SG"
+        },
+        {
+          "text": "To add HTTP: Click on Add security group rule Choose Type : HTTP Source : Custom and Select LoadBalancer-SG",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-25.png"
+          ]
+        },
+        {
+          "text": "To add HTTP: Click on Add security group rule"
         },
         {
           "text": "Choose Type : HTTP"
         },
         {
-          "text": "Source : Custom and Select LoadBalancer-SG"
+          "text": "Source : Custom and Select LoadBalancer-SG",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-26.png"
+          ]
         },
         {
-          "text": "Click on Advanced Details and under the User data: section, enter the following script:"
+          "text": "Click on Advanced Details and under the User data: section, enter the following script:"
         },
         {
-          "text": "#!/bin/bash"
+          "text": "Keep everything as default and click on Launch Instance button. Select View all Instances to View Instance you Created"
         },
         {
-          "text": "sudo su"
+          "text": "Launch Status: Your instances are now launching,Navigate to Instances and wait for 1-2 minutes (until the Bastion-server's status changes from pending to running)."
         },
         {
-          "text": "dnf update -y"
+          "text": "After a few minutes, you will see the new instance named web-server-1 running along with the Bastion-server created in the earlier step.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-27.png"
+          ]
         },
         {
-          "text": "dnf install httpd -y"
+          "text": "Task 5: Creating Web-servers",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-28.png"
+          ]
         },
         {
-          "text": "systemctl start httpd"
+          "text": "Repeat the above steps from Step1 to create Web-server-2. You need 2 instances for this lab."
         },
         {
-          "text": "systemctl enable httpd"
+          "text": "For key, select WebKey"
         },
         {
-          "text": "echo \"REQUEST HANDLING BY SERVER 1\" > /var/www/html/index.html"
+          "text": "In Network Settings Click on Edit: VPC : Select Bastion-VPC Subnet : Select Private Subnet 2 Security group : Select existing security group Select web-server-SG",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-29.png"
+          ]
         },
         {
-          "text": "Keep everything as default and click on Launch Instance button. Select View all Instances to View Instance you Created"
+          "text": "In Network Settings Click on Edit:"
         },
         {
-          "text": "Launch Status: Your instances are now launching,Navigate to Instances and wait for 1-2 minutes (until the Bastion-server's status changes from pending to running)."
+          "text": "VPC : Select Bastion-VPC"
         },
         {
-          "text": "After a few minutes, you will see the new instance named web-server-1 running along with the Bastion-server created in the earlier step."
+          "text": "Subnet : Select Private Subnet 2"
         },
         {
-          "text": "Repeat the above steps from Step1 to create Web-server-2. You need 2 instances for this lab."
+          "text": "Security group : Select existing security group"
         },
         {
-          "text": "For key, select WebKey"
+          "text": "Select web-server-SG",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-30.png"
+          ]
         },
         {
-          "text": "In Network Settings Click on Edit:"
+          "text": "Task 5: Creating Web-servers",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-31.png"
+          ]
         },
         {
-          "text": "VPC : Select Bastion-VPC"
+          "text": "Click on Advanced Details and under the User data: section, enter the following script:#!/bin/bashsudo sudnf update -ydnf install httpd -ysystemctl start httpdsystemctl enable httpdecho \"REQUEST HANDLING BY SERVER 2\" > /var/www/html/index.html"
         },
         {
-          "text": "Subnet : Select Private Subnet 2"
+          "text": "Click on Advanced Details and under the User data: section, enter the following script:"
         },
         {
-          "text": "Security group : Select existing security group"
+          "text": "Keep Rest thing Default and Click on Launch Instance Button. Select View all Instances to View Instance you Created."
         },
         {
-          "text": "Select web-server-SG"
+          "text": "Now you will see three servers running namely Bastion-server, Web-server-1, and Web-server-2."
         },
         {
-          "text": "Click on Advanced Details and under the User data: section, enter the following script:"
-        },
-        {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "sudo su"
-        },
-        {
-          "text": "dnf update -y"
-        },
-        {
-          "text": "dnf install httpd -y"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable httpd"
-        },
-        {
-          "text": "echo \"REQUEST HANDLING BY SERVER 2\" > /var/www/html/index.html"
-        },
-        {
-          "text": "Keep Rest thing Default and Click on Launch Instance Button. Select View all Instances to View Instance you Created."
-        },
-        {
-          "text": "Now you will see three servers running namely Bastion-server, Web-server-1, and Web-server-2."
+          "text": "Task 5: Creating Web-servers",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-32.png"
+          ]
         }
       ]
     },
@@ -331,76 +446,139 @@
       "title": "Task 6: Creating a Target Group",
       "steps": [
         {
-          "text": "In the left side menu, scroll down to the bottom and click on Target Groups under Load Balancing"
+          "text": "In the left side menu, scroll down to the bottom and click on Target Groups under Load Balancing"
         },
         {
-          "text": "Click on the Create Target Group"
+          "text": "Click on the Create Target Group"
         },
         {
-          "text": "Under Basic Configuration:"
+          "text": "Under Basic Configuration: Under settings : Choose a target type : Select Instances Target group name : Enter web-app-TG Protocol : HTTP Port : 80 VPC : Select Bastion-VPC Protocol version: Select HTTP1 Health check protocol : Select HTTP (default) Path : Enter /index.html",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-33.png"
+          ]
         },
         {
-          "text": "Under settings :"
+          "text": "Under Basic Configuration:"
         },
         {
-          "text": "Choose a target type : Select Instances"
+          "text": "Under settings : Choose a target type : Select Instances Target group name : Enter web-app-TG Protocol : HTTP Port : 80 VPC : Select Bastion-VPC Protocol version: Select HTTP1 Health check protocol : Select HTTP (default) Path : Enter /index.html",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-34.png"
+          ]
         },
         {
-          "text": "Target group name : Enter web-app-TG"
+          "text": "Under settings :"
         },
         {
-          "text": "Protocol : HTTP"
+          "text": "Choose a target type : Select Instances"
         },
         {
-          "text": "Port : 80"
+          "text": "Target group name : Enter web-app-TG"
         },
         {
-          "text": "VPC : Select Bastion-VPC"
+          "text": "Protocol : HTTP"
         },
         {
-          "text": "Protocol version: Select HTTP1"
+          "text": "Port : 80"
         },
         {
-          "text": "Health check protocol : Select HTTP (default)"
+          "text": "VPC : Select Bastion-VPC"
         },
         {
-          "text": "Path : Enter /index.html"
+          "text": "Protocol version: Select HTTP1",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-35.png"
+          ]
         },
         {
-          "text": "Click on Advanced health check settings to expand it:"
+          "text": "Task 6: Creating a Target Group",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-36.png"
+          ]
         },
         {
-          "text": "Healthy threshold: Enter 3"
+          "text": "Health check protocol : Select HTTP (default)"
         },
         {
-          "text": "Unhealthy threshold: 2 (Default)"
+          "text": "Path : Enter /index.html"
         },
         {
-          "text": "Timeout: 5 seconds (Default)"
+          "text": "Click on Advanced health check settings to expand it: Healthy threshold: Enter 3 Unhealthy threshold: 2 (Default) Timeout: 5 seconds (Default) Interval: Enter 6 seconds Success codes: 200 (Default)",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-37.png"
+          ]
         },
         {
-          "text": "Interval: Enter 6 seconds"
+          "text": "Click on Advanced health check settings to expand it:"
         },
         {
-          "text": "Success codes: 200 (Default)"
+          "text": "Healthy threshold: Enter 3"
         },
         {
-          "text": "Click on Next"
+          "text": "Unhealthy threshold: 2 (Default)"
+        },
+        {
+          "text": "Timeout: 5 seconds (Default)"
+        },
+        {
+          "text": "Interval: Enter 6 seconds"
+        },
+        {
+          "text": "Success codes: 200 (Default)"
+        },
+        {
+          "text": "Task 6: Creating a Target Group",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-38.png"
+          ]
+        },
+        {
+          "text": "Click on Next"
+        },
+        {
+          "text": "Register Targets : Under Instances, select the two web-server EC2 instances which you created in the above step and click on Include as pending below.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-39.png"
+          ]
         },
         {
           "text": "Register Targets :"
         },
         {
-          "text": "Under Instances, select the two web-server EC2 instances which you created in the above step and click on Include as pending below."
+          "text": "Under Instances, select the two web-server EC2 instances which you created in the above step and click on Include as pending below.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-40.png"
+          ]
+        },
+        {
+          "text": "Review targets: Review everything and click on Create Target Group",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-41.png"
+          ]
         },
         {
           "text": "Review targets:"
         },
         {
-          "text": "Review everything and click on Create Target Group"
+          "text": "Review everything and click on Create Target Group",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-42.png"
+          ]
+        },
+        {
+          "text": "Task 6: Creating a Target Group",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-43.png"
+          ]
         },
         {
           "text": "You have successfully created a target group."
+        },
+        {
+          "text": "Task 6: Creating a Target Group",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-44.png"
+          ]
         }
       ]
     },
@@ -408,64 +586,91 @@
       "title": "Task 7: Creating a load balancer",
       "steps": [
         {
-          "text": "In the EC2 console, navigate to Load Balancer in the left side panel."
+          "text": "In the EC2 console, navigate to Load Balancer in the left side panel."
         },
         {
-          "text": "Click on Create Load Balancer at the top left to create a new load balancer for our web servers."
+          "text": "Click on Create Load Balancer at the top left to create a new load balancer for our web servers."
         },
         {
-          "text": "On the next screen, choose Create under Application Load balancer since we are testing the high availability of the web app."
+          "text": "On the next screen, choose Create under Application Load balancer since we are testing the high availability of the web app."
         },
         {
-          "text": "The next few screens will require some custom configurations. If a field is not mentioned, leave it as default or empty."
+          "text": "The next few screens will require some custom configurations. If a field is not mentioned, leave it as default or empty. Scroll down to Basic Configuration: Load balancer name : Enter Web-application-LB Scheme : Choose internet-facing IP address type : Select IPv4"
         },
         {
-          "text": "Scroll down to Basic Configuration:"
+          "text": "The next few screens will require some custom configurations. If a field is not mentioned, leave it as default or empty."
         },
         {
-          "text": "Load balancer name : Enter Web-application-LB"
+          "text": "Scroll down to Basic Configuration: Load balancer name : Enter Web-application-LB Scheme : Choose internet-facing IP address type : Select IPv4"
         },
         {
-          "text": "Scheme : Choose internet-facing"
+          "text": "Scroll down to Basic Configuration:"
         },
         {
-          "text": "IP address type : Select IPv4"
+          "text": "Load balancer name : Enter Web-application-LB"
+        },
+        {
+          "text": "Scheme : Choose internet-facing"
+        },
+        {
+          "text": "IP address type : Select IPv4"
+        },
+        {
+          "text": "Network mapping: VPC: Select Bastion-VPC Mappings: Make sure you select the two Public Subnets in the Availability zone i.e us-east-1a and us-east-1b."
         },
         {
           "text": "Network mapping:"
         },
         {
-          "text": "VPC: Select Bastion-VPC"
+          "text": "VPC: Select Bastion-VPC"
         },
         {
-          "text": "Mappings: Make sure you select the two Public Subnets in the Availability zone i.e us-east-1a and us-east-1b."
+          "text": "Mappings: Make sure you select the two Public Subnets in the Availability zone i.e us-east-1a and us-east-1b."
+        },
+        {
+          "text": "Security groups: Remove the default security group and Select LoadBalancer-SG from the drop-down menu."
         },
         {
           "text": "Security groups:"
         },
         {
-          "text": "Remove the default security group and Select LoadBalancer-SG from the drop-down menu."
+          "text": "Remove the default security group and Select LoadBalancer-SG from the drop-down menu."
+        },
+        {
+          "text": "Listeners and routing: Protocol : HTTP Port : 80Default action(forward to): Select the target group web-app-TG from the drop-down menu.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-45.png"
+          ]
         },
         {
           "text": "Listeners and routing:"
         },
         {
-          "text": "Protocol : HTTP"
+          "text": "Protocol : HTTP"
         },
         {
-          "text": "Port : 80"
+          "text": "Port : 80Default action(forward to): Select the target group web-app-TG from the drop-down menu.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-46.png"
+          ]
         },
         {
-          "text": "Default action(forward to): Select the target group web-app-TG from the drop-down menu."
-        },
-        {
-          "text": "Now scroll down and click on Create Load Balancer button."
+          "text": "Now scroll down and click on Create Load Balancer button."
         },
         {
           "text": "You have successfully created an application load balancer."
         },
         {
-          "text": "Please wait for 3-4 minutes to see this ALB change to Active state."
+          "text": "Please wait for 3-4 minutes to see this ALB change to Active state.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-47.png"
+          ]
+        },
+        {
+          "text": "Task 7: Creating a load balancer",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-48.png"
+          ]
         }
       ]
     },
@@ -473,40 +678,37 @@
       "title": "Task 8: Connecting to web server via Bastion",
       "steps": [
         {
-          "text": "SSH into the Bastion server using the Bastion PEM key: bastionkey.pem"
+          "text": "SSH into the Bastion server using the Bastion PEM key: bastionkey.pem"
         },
         {
-          "text": "To SSH into web servers via Bastion server, we need the web server key that we used to launch the previous web servers (web-serverkey)."
+          "text": "To SSH into web servers via Bastion server, we need the web server key that we used to launch the previous web servers (web-serverkey)."
         },
         {
-          "text": "Open the web-serverkey file on your local system and then copy the text content."
+          "text": "Open the web-serverkey file on your local system and then copy the text content."
         },
         {
-          "text": "Navigate to the Bastion server and create a file named web-serverkey.pem using below command."
+          "text": "Navigate to the Bastion server and create a file named web-serverkey.pem using below command."
         },
         {
-          "text": "nano web-serverkey.pem"
+          "text": "Paste the content and save it by click CTRL+X then Y and press Enter to save your private key."
         },
         {
-          "text": "Paste the content and save it by click CTRL+X then Y and press Enter to save your private key."
+          "text": "Make sure you have changed the permission of the key file to 400. You can change the permission using below command"
         },
         {
-          "text": "Make sure you have changed the permission of the key file to 400. You can change the permission using below command"
+          "text": "Now you can log into the web servers using the private key copied to the bastion server with the help of below commands."
         },
         {
-          "text": "chmod 400 web-serverkey.pem"
+          "text": "Syntax : ssh -i web-serverkey.pem ec2-user@<Web-server-1 private IP>"
         },
         {
-          "text": "Now you can log into the web servers using the private key copied to the bastion server with the help of below commands."
+          "text": "Example: ssh -i web-serverkey.pem ec2-user@172.31.101.237"
         },
         {
-          "text": "Note: You don't have a public IPs for the web servers since we created them in a private subnet."
-        },
-        {
-          "text": "Syntax : ssh -i web-serverkey.pem ec2-user@<Web-server-1 private IP>"
-        },
-        {
-          "text": "Example: ssh -i web-serverkey.pem ec2-user@172.31.101.237"
+          "text": "Task 8: Connecting to web server via Bastion",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-49.png"
+          ]
         }
       ]
     },
@@ -514,25 +716,50 @@
       "title": "Task 9: Checking the health of the load balancer",
       "steps": [
         {
-          "text": "Navigate to Target Groups under the Load Balancers"
+          "text": "Navigate to Target Groups under the Load Balancers"
         },
         {
-          "text": "Select the target group you created and then click on Targets to see the Status of the attached targets."
+          "text": "Select the target group you created and then click on Targets to see the Status of the attached targets."
         },
         {
-          "text": "It should show Healthy for the Load Balancer to work properly. You may need to wait for 2-5 minutes before the load balancer's status updates to \"Healthy\""
+          "text": "It should show Healthy for the Load Balancer to work properly. You may need to wait for 2-5 minutes before the load balancer's status updates to \"Healthy\""
         },
         {
-          "text": "Now navigate to Load Balancers and select the load balancer that you created earlier. Under Details, copy the DNS name and paste it into the browser."
+          "text": "Now navigate to Load Balancers and select the load balancer that you created earlier. Under Details, copy the DNS name and paste it into the browser. Example: DNS URL: Web-application-LB-1317306189.us-east-1.elb.amazonaws.com",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-50.png"
+          ]
         },
         {
-          "text": "Example: DNS URL: Web-application-LB-1317306189.us-east-1.elb.amazonaws.com"
+          "text": "Now navigate to Load Balancers and select the load balancer that you created earlier. Under Details, copy the DNS name and paste it into the browser."
         },
         {
-          "text": "Refresh the browser a couple of times to see the requests being served from both servers. Seeing output similar to REQUEST HANDLING BY SERVER 1 & REQUEST HANDLING BY SERVER 2 implies that load is shared between the two web servers via Application Load Balancer."
+          "text": "Example: DNS URL: Web-application-LB-1317306189.us-east-1.elb.amazonaws.com",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-51.png"
+          ]
         },
         {
-          "text": "Now we have successfully created a bastion server, two web servers and an Application Load balancer, registered the targets to the load balancer and tested the working of Load Balancer."
+          "text": "Task 9: Checking the health of the load balancer",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-52.png"
+          ]
+        },
+        {
+          "text": "Refresh the browser a couple of times to see the requests being served from both servers. Seeing output similar to REQUEST HANDLING BY SERVER 1 & REQUEST HANDLING BY SERVER 2 implies that load is shared between the two web servers via Application Load Balancer.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-53.png",
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-54.png"
+          ]
+        },
+        {
+          "text": "Task 9: Checking the health of the load balancer",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-55.png"
+          ]
+        },
+        {
+          "text": "Now we have successfully created a bastion server, two web servers and an Application Load balancer, registered the targets to the load balancer and tested the working of Load Balancer."
         }
       ]
     },
@@ -540,7 +767,7 @@
       "title": "Task 10: Test case for High Availability",
       "steps": [
         {
-          "text": "To check for high availability, we will make one of the instances unhealthy and test whether we get response from the other server."
+          "text": "To check for high availability, we will make one of the instances unhealthy and test whether we get response from the other server."
         },
         {
           "text": "If your instance is shown as Unhealthy then it's status would be one of the following:"
@@ -558,25 +785,40 @@
           "text": "Terminated"
         },
         {
-          "text": "Navigate to the EC2 dashboard and select Web-server-1. Click on Instance state and then click on Stop instance. Click Stop to confirm."
+          "text": "Navigate to the EC2 dashboard and select Web-server-1. Click on Instance state and then click on Stop instance. Click Stop to confirm.",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-57.png"
+          ]
         },
         {
-          "text": "Navigate to Target groups and click on web-app-TG. Here you will find the status of Web-server-1 (which should be unhealthy because it is unused)."
+          "text": "Task 10: Test case for High Availability",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-58.png"
+          ]
         },
         {
-          "text": "Navigate to Load balancers-->Description-->DNS name. Copy the DNS name and paste it into your browser. You should see the response \"REQUEST HANDLING BY SERVER 2\" FROM WEB-SERVER-2."
+          "text": "Navigate to Target groups and click on web-app-TG. Here you will find the status of Web-server-1 (which should be unhealthy because it is unused).",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-59.png"
+          ]
+        },
+        {
+          "text": "Task 10: Test case for High Availability",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-60.png"
+          ]
+        },
+        {
+          "text": "Navigate to Load balancers-->Description-->DNS name. Copy the DNS name and paste it into your browser. You should see the response \"REQUEST HANDLING BY SERVER 2\" FROM WEB-SERVER-2."
         },
         {
           "text": "If you refresh a few times, you will continue to see the response only from Web-server-2"
         },
         {
-          "text": "Repeat step 3 by stopping Web-server-2 and starting Web-server-1 back up. This time you should see the response \"REQUEST HANDLING BY SERVER 1\" from Web-server-1."
+          "text": "Repeat step 3 by stopping Web-server-2 and starting Web-server-1 back up. This time you should see the response \"REQUEST HANDLING BY SERVER 1\" from Web-server-1. Do You Know ? In addition to SSH and RDP access, a bastion server can be configured to support other secure remote access protocols such as HTTPS, allowing for flexible and secure management of resources."
         },
         {
-          "text": "Do You Know ?"
-        },
-        {
-          "text": "In addition to SSH and RDP access, a bastion server can be configured to support other secure remote access protocols such as HTTPS, allowing for flexible and secure management of resources."
+          "text": "Repeat step 3 by stopping Web-server-2 and starting Web-server-1 back up. This time you should see the response \"REQUEST HANDLING BY SERVER 1\" from Web-server-1."
         }
       ]
     },
@@ -584,16 +826,22 @@
       "title": "Task 11: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-61.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 11: Validation Test",
+          "images": [
+            "/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws/step-62.gif"
+          ]
         },
         {
           "text": "We have launched a Bastion server and two web-servers. We were able to SSH into the servers via Bastion Server successfully."
@@ -608,16 +856,13 @@
           "text": "We successfully tested the high availability of the web application by making one of the web servers unhealthy."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of the AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

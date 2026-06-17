@@ -1,0 +1,103 @@
+{
+  "slug": "introduction-to-simple-queuing-service-sqs-challenge-queue-configuration",
+  "title": "Introduction to Simple Queuing Service (SQS) Challenge - Queue Configuration",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company needs a system to handle messages between its applications, ensuring reliable delivery and flexible processing. Your job is to create Standard and FIFO SQS queues, configure long polling, visibility timeout, and delay queue, purge a queue, review key SQS concepts, and validate the setup. SQS is a message queue service that helps apps communicate by storing and forwarding messages. Here’s how to do it with key steps and hints:"
+        },
+        {
+          "text": "Create a standard and fifo sqs queues"
+        },
+        {
+          "text": "Send a message from the FIFO Queue and Poll for the messages to get all the messages"
+        },
+        {
+          "text": "Similarly, Send a message from the Standard Queue and poll for the messages to get all the messages"
+        },
+        {
+          "text": "Configuring Long Polling for the queue: In Standardqueue set Receive message wait time to 20 seconds. Repeat for MyFIFOQueue.fifo."
+        },
+        {
+          "text": "In Standardqueue set Receive message wait time to 20 seconds."
+        },
+        {
+          "text": "Repeat for MyFIFOQueue.fifo."
+        },
+        {
+          "text": "Configuring Visibility Timeout: In StandardQueue set Visibility timeout to 5 minutes, Repeat for MyFIFOQueue.fifo."
+        },
+        {
+          "text": "In StandardQueue set Visibility timeout to 5 minutes,"
+        },
+        {
+          "text": "Repeat for MyFIFOQueue.fifo."
+        },
+        {
+          "text": "Configuring Delay Queue: In MyStandardQueue, set Delivery delay to 60 seconds. Repeat for MyFIFOQueue.fifo."
+        },
+        {
+          "text": "In MyStandardQueue, set Delivery delay to 60 seconds."
+        },
+        {
+          "text": "Repeat for MyFIFOQueue.fifo."
+        },
+        {
+          "text": "Purge Queue and verify the same: In StandardQueue, go to Purge queue, go to Send and receive messages, click Poll for messages, verify no messages appear Repeat for MyFIFOQueue.fifo."
+        },
+        {
+          "text": "In StandardQueue, go to Purge queue, go to Send and receive messages, click Poll for messages,"
+        },
+        {
+          "text": "verify no messages appear"
+        },
+        {
+          "text": "Repeat for MyFIFOQueue.fifo."
+        },
+        {
+          "text": "Make sure everything is correct. In the lab console, click Validate to check if both CloudFormation stacks created the VPCs and subnets correctly."
+        },
+        {
+          "text": "Sign out of the AWS Management Console by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "In the lab console, click End Lab from your dashboard and wait for it to finish."
+        },
+        {
+          "text": "You’ve completed the SQS introduction challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

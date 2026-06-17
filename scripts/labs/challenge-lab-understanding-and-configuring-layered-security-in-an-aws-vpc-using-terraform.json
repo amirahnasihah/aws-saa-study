@@ -1,0 +1,229 @@
+{
+  "slug": "challenge-lab-understanding-and-configuring-layered-security-in-an-aws-vpc-using-terraform",
+  "title": "Challenge Lab : Understanding and Configuring Layered Security in an AWS VPC Using Terraform",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Portal",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Portal"
+        },
+        {
+          "text": "XYZ company wants to set up a secure and well-structured AWS network environment by creating a VPC with public and private subnets across different availability zones, configure internet connectivity via an Internet Gateway, implement route tables for proper traffic routing, establish security groups to control inbound and outbound traffic, and apply network ACLs for additional subnet-level security controls."
+        },
+        {
+          "text": "Setup Visual Studio Code."
+        },
+        {
+          "text": "Create variables.tf and terraform.tfvars: Declare necessary variables for AWS access keys, secret keys, and region in the variables.tf file. Define values for these variables in terraform.tfvars."
+        },
+        {
+          "text": "Declare necessary variables for AWS access keys, secret keys, and region in the variables.tf file."
+        },
+        {
+          "text": "Define values for these variables in terraform.tfvars."
+        },
+        {
+          "text": "Create main.tf and add provider + VPC Create a file named main.tf. Add provider block with AWS credentials. Add aws_vpc resource block with CIDR block 10.0.0.0/16."
+        },
+        {
+          "text": "Create a file named main.tf."
+        },
+        {
+          "text": "Add provider block with AWS credentials."
+        },
+        {
+          "text": "Add aws_vpc resource block with CIDR block 10.0.0.0/16."
+        },
+        {
+          "text": "Add Internet Gateway In main.tf, define an aws_internet_gateway resource. Attach it to the created VPC."
+        },
+        {
+          "text": "In main.tf, define an aws_internet_gateway resource."
+        },
+        {
+          "text": "Attach it to the created VPC."
+        },
+        {
+          "text": "Create Subnets Add a public subnet (10.0.1.0/24) with public IP mapping in AZ us-east-1a. Add a private subnet (10.0.2.0/24) in AZ us-east-1b."
+        },
+        {
+          "text": "Add a public subnet (10.0.1.0/24) with public IP mapping in AZ us-east-1a."
+        },
+        {
+          "text": "Add a private subnet (10.0.2.0/24) in AZ us-east-1b."
+        },
+        {
+          "text": "Route Tables Create a public route table with a default route via Internet Gateway. Create a private route table without routes. Associate each route table with the appropriate subnet."
+        },
+        {
+          "text": "Create a public route table with a default route via Internet Gateway."
+        },
+        {
+          "text": "Create a private route table without routes."
+        },
+        {
+          "text": "Associate each route table with the appropriate subnet."
+        },
+        {
+          "text": "Security Group Create a security group that allows: Inbound: SSH (port 22) and ICMP (all types). Outbound: All traffic."
+        },
+        {
+          "text": "Create a security group that allows:"
+        },
+        {
+          "text": "Inbound: SSH (port 22) and ICMP (all types)."
+        },
+        {
+          "text": "Outbound: All traffic."
+        },
+        {
+          "text": "Network ACL Create a NACL and associate it with both subnets. Add: Inbound: Allow SSH (TCP 22) and ICMP from all. Outbound: Allow ICMP and high TCP ports (1024–65535)."
+        },
+        {
+          "text": "Create a NACL and associate it with both subnets."
+        },
+        {
+          "text": "Add: Inbound: Allow SSH (TCP 22) and ICMP from all. Outbound: Allow ICMP and high TCP ports (1024–65535)."
+        },
+        {
+          "text": "Inbound: Allow SSH (TCP 22) and ICMP from all."
+        },
+        {
+          "text": "Outbound: Allow ICMP and high TCP ports (1024–65535)."
+        },
+        {
+          "text": "Launch 2 EC2 Instances Create Key Pair (aws_key_pair and tls_private_key) Launch public_instance in public subnet Launch private_instance in private subnet Use Instance Type: t2.micro for both instances Use Same Key: <key-name> Attach Same Security Group to both instances."
+        },
+        {
+          "text": "Create Key Pair (aws_key_pair and tls_private_key)"
+        },
+        {
+          "text": "Launch public_instance in public subnet"
+        },
+        {
+          "text": "Launch private_instance in private subnet"
+        },
+        {
+          "text": "Use Instance Type: t2.micro for both instances"
+        },
+        {
+          "text": "Use Same Key: <key-name>"
+        },
+        {
+          "text": "Attach Same Security Group to both instances."
+        },
+        {
+          "text": "Create Output File Create output.tf file. Add output blocks for: Public and private instance IPs Public and private subnet IDs TLS private key (sensitive)"
+        },
+        {
+          "text": "Create output.tf file."
+        },
+        {
+          "text": "Add output blocks for: Public and private instance IPs Public and private subnet IDs TLS private key (sensitive)"
+        },
+        {
+          "text": "Public and private instance IPs"
+        },
+        {
+          "text": "Public and private subnet IDs"
+        },
+        {
+          "text": "TLS private key (sensitive)"
+        },
+        {
+          "text": "Confirm the installation of Terraform by checking the version."
+        },
+        {
+          "text": "Apply Terraform configurations. terraform init terraform plan terraform apply"
+        },
+        {
+          "text": "terraform init"
+        },
+        {
+          "text": "terraform plan"
+        },
+        {
+          "text": "terraform apply"
+        },
+        {
+          "text": "Verify AWS Resources in Console Region: US East (N. Virginia) us-east-1 Validate: EC2 instances Security groups VPC, Subnets Route Tables Internet Gateway Network ACL (inbound, outbound rules and associations)"
+        },
+        {
+          "text": "Region: US East (N. Virginia) us-east-1"
+        },
+        {
+          "text": "Validate: EC2 instances Security groups VPC, Subnets Route Tables Internet Gateway Network ACL (inbound, outbound rules and associations)"
+        },
+        {
+          "text": "EC2 instances"
+        },
+        {
+          "text": "Security groups"
+        },
+        {
+          "text": "VPC, Subnets"
+        },
+        {
+          "text": "Route Tables"
+        },
+        {
+          "text": "Internet Gateway"
+        },
+        {
+          "text": "Network ACL (inbound, outbound rules and associations)"
+        },
+        {
+          "text": "Test EC2 Instances SSH into public_instance using EC2 Instance Connect. Switch to root: sudo su Ping private_instance using its private IP. Press Ctrl+C to stop cancel the process."
+        },
+        {
+          "text": "SSH into public_instance using EC2 Instance Connect."
+        },
+        {
+          "text": "Switch to root: sudo su"
+        },
+        {
+          "text": "Ping private_instance using its private IP."
+        },
+        {
+          "text": "Press Ctrl+C to stop cancel the process."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

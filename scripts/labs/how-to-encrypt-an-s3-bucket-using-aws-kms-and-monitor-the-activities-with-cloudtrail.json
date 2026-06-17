@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,172 +21,310 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
-        }
-      ]
-    },
-    {
-      "title": "Task 2: Create a customer-managed KMS key",
-      "steps": [
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
         {
           "text": "In this task, you will create a customer-managed KMS key and use it to encrypt S3 objects."
         },
         {
-          "text": "Navigate to Key Management Service by clicking on Services in the AWS Management Console, and selecting Key Management Service under Security, Identity and Compliance section."
+          "text": "Navigate to Key Management Service by clicking on Services in the AWS Management Console, and selecting Key Management Service under Security, Identity and Compliance section."
         },
         {
-          "text": "Click on Create a Key"
+          "text": "Click on Create a Key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-01.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-02.png"
+          ]
+        },
+        {
+          "text": "Under configure key: Key type : Select Symmetric Key usage : Select Encrypt and Decrypt",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-03.png"
+          ]
         },
         {
           "text": "Under configure key:"
         },
         {
-          "text": "Key type : Select Symmetric"
+          "text": "Key type : Select Symmetric"
         },
         {
-          "text": "Key usage : Select Encrypt and Decrypt"
+          "text": "Key usage : Select Encrypt and Decrypt",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-04.png"
+          ]
         },
         {
-          "text": "Click on Next"
-        },
-        {
-          "text": "Under Add labels:"
-        },
-        {
-          "text": "Alias : Enter whiz-kms-key"
-        },
-        {
-          "text": "Description : Enter KMS key to encrypt S3 Objects"
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-05.png"
+          ]
         },
         {
           "text": "Click on Next"
         },
         {
-          "text": "Under Define key administrative permissions:"
+          "text": "Under Add labels: Alias : Enter whiz-kms-key Description : Enter KMS key to encrypt S3 Objects",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-06.png"
+          ]
         },
         {
-          "text": "Key administrators: Select the role that is associated with the account you are working with. For example: Whiz_user-<RANDOM_NUMBER>"
+          "text": "Under Add labels:"
+        },
+        {
+          "text": "Alias : Enter whiz-kms-key"
+        },
+        {
+          "text": "Description : Enter KMS key to encrypt S3 Objects",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-07.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-08.png"
+          ]
         },
         {
           "text": "Click on Next"
+        },
+        {
+          "text": "Under Define key administrative permissions: Key administrators: Select the role that is associated with the account you are working with. For example: Whiz_user-<RANDOM_NUMBER>",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-09.png"
+          ]
+        },
+        {
+          "text": "Under Define key administrative permissions:"
+        },
+        {
+          "text": "Key administrators: Select the role that is associated with the account you are working with. For example: Whiz_user-<RANDOM_NUMBER>",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-10.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-11.png"
+          ]
+        },
+        {
+          "text": "Click on Next"
+        },
+        {
+          "text": "Under Define Key usage permissions: Select the role that is associated with the account you are working with. For Whiz_user-<RANDOM_NUMBER>",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-12.png"
+          ]
         },
         {
           "text": "Under Define Key usage permissions:"
         },
         {
-          "text": "Select the role that is associated with the account you are working with. For Whiz_user-<RANDOM_NUMBER>"
+          "text": "Select the role that is associated with the account you are working with. For Whiz_user-<RANDOM_NUMBER>",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-13.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-14.png"
+          ]
         },
         {
           "text": "Click on Next. In Edit key policy, leave everything as default and click Next."
         },
         {
-          "text": "Review everything and click on the Finish button."
+          "text": "Review everything and click on the Finish button."
         },
         {
-          "text": "You have successfully created the KMS key."
+          "text": "You have successfully created the KMS key.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-15.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-16.png"
+          ]
         },
         {
           "text": "Copy the Key ID and paste it in the notepad, we will use this later in the lab."
-        }
-      ]
-    },
-    {
-      "title": "Task 3: Create an S3 bucket",
-      "steps": [
+        },
         {
           "text": "In this task, you will create an S3 bucket to upload and encrypt an object an aslo to store events."
         },
         {
-          "text": "Navigate to S3 by clicking on Services in the AWS Management Console, and selecting S3 under Storage section."
+          "text": "Navigate to S3 by clicking on Services in the AWS Management Console, and selecting S3 under Storage section."
         },
         {
           "text": "Click on Create Bucket"
         },
         {
-          "text": "Under General configuration:"
+          "text": "Under General configuration: Bucket type : General purpose Bucket name : Enter a unique name within the global namespace."
         },
         {
-          "text": "Bucket type : General purpose"
+          "text": "Under General configuration:"
         },
         {
-          "text": "Bucket name : Enter a unique name within the global namespace."
+          "text": "Bucket type : General purpose"
         },
         {
-          "text": "Object ownership: Select ACLs enabled option and choose Object writer as the Object owner"
+          "text": "Bucket name : Enter a unique name within the global namespace."
+        },
+        {
+          "text": "Object ownership: Select ACLs enabled option and choose Object writer as the Object owner",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-17.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-18.png"
+          ]
         },
         {
           "text": "Leave the rest as default and click on Create Bucket."
         },
         {
           "text": "You have successfully created an S3 bucket."
-        }
-      ]
-    },
-    {
-      "title": "Task 4: Create a CloudTrail and configure it to store events in S3",
-      "steps": [
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-19.png"
+          ]
+        },
         {
           "text": "In this task, you will create a CloudTrail and configure it to store KMS activities in S3 bucket."
         },
         {
-          "text": "Navigate to CloudTrail by clicking on Services in the AWS Management Console, and selecting CloudTrail under Management & Governance section."
+          "text": "Navigate to CloudTrail by clicking on Services in the AWS Management Console, and selecting CloudTrail under Management & Governance section."
         },
         {
-          "text": "Click on the menu section (three lines) on the left side panel and click on Trails."
+          "text": "Click on the menu section (three lines) on the left side panel and click on Trails."
         },
         {
           "text": "Click on Create Trail."
         },
         {
-          "text": "Under General details:"
+          "text": "Under General details: Trail name : Enter whiz-kms-trails Storage location : Choose Use existing S3 bucket Trail log bucket name : Click on Browse and choose the S3 bucket that you have created earlier(i.e lab-cloudtrail-kms)"
         },
         {
-          "text": "Trail name : Enter whiz-kms-trails"
+          "text": "Under General details:"
         },
         {
-          "text": "Storage location : Choose Use existing S3 bucket"
+          "text": "Trail name : Enter whiz-kms-trails"
         },
         {
-          "text": "Trail log bucket name : Click on Browse and choose the S3 bucket that you have created earlier(i.e lab-cloudtrail-kms)"
+          "text": "Storage location : Choose Use existing S3 bucket"
         },
         {
-          "text": "Log file SSE-KMS encryption : Uncheck Enabled"
+          "text": "Trail log bucket name : Click on Browse and choose the S3 bucket that you have created earlier(i.e lab-cloudtrail-kms)"
+        },
+        {
+          "text": "Log file SSE-KMS encryption : Uncheck Enabled",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-20.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-21.png"
+          ]
         },
         {
           "text": "Leave the rest as default and click on Next."
         },
         {
+          "text": "Choose log events: Event type : Check both Management events and Data events.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-22.png"
+          ]
+        },
+        {
           "text": "Choose log events:"
         },
         {
-          "text": "Event type : Check both Management events and Data events."
+          "text": "Event type : Check both Management events and Data events.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-23.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-24.png"
+          ]
+        },
+        {
+          "text": "Management events: API activity : Check both Read and Write",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-25.png"
+          ]
         },
         {
           "text": "Management events:"
         },
         {
-          "text": "API activity : Check both Read and Write"
+          "text": "API activity : Check both Read and Write",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-26.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-27.png"
+          ]
+        },
+        {
+          "text": "Data events: Click on Switch to basic event selectors button. Click on Continue button on pop up. All current and future S3 buckets : Uncheck both Read and Write Individual bucket selection : Click on Browse and choose the S3 bucket that we have created earlier(i.e lab-cloudtrail-kms) Make sure you have checked both Read and Write next to the Browse.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-28.png"
+          ]
         },
         {
           "text": "Data events:"
         },
         {
-          "text": "Click on Switch to basic event selectors button."
+          "text": "Click on Switch to basic event selectors button."
         },
         {
           "text": "Click on Continue button on pop up."
         },
         {
-          "text": "All current and future S3 buckets : Uncheck both Read and Write"
+          "text": "All current and future S3 buckets : Uncheck both Read and Write"
         },
         {
-          "text": "Individual bucket selection : Click on Browse and choose the S3 bucket that we have created earlier(i.e lab-cloudtrail-kms)"
+          "text": "Individual bucket selection : Click on Browse and choose the S3 bucket that we have created earlier(i.e lab-cloudtrail-kms)"
         },
         {
-          "text": "Make sure you have checked both Read and Write next to the Browse."
+          "text": "Make sure you have checked both Read and Write next to the Browse.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-29.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-30.png"
+          ]
         },
         {
           "text": "Click on Next."
@@ -195,65 +333,118 @@
           "text": "Review everything and click on Create Trail."
         },
         {
-          "text": "You have successfully created a CloudTrail and can find yours under Trails."
-        }
-      ]
-    },
-    {
-      "title": "Task 5: Uploading an object and encrypting it",
-      "steps": [
+          "text": "You have successfully created a CloudTrail and can find yours under Trails.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-31.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-32.png"
+          ]
+        },
         {
           "text": "In this task, you will upload an image from our local PC and encrypt it using the KMS key we have created in Task 3."
         },
         {
-          "text": "Navigate to S3 by clicking on Services in the AWS Management Console, and selecting S3 under the Storage section."
+          "text": "Navigate to S3 by clicking on Services in the AWS Management Console, and selecting S3 under the Storage section."
         },
         {
-          "text": "Click on the S3 bucket (lab-cloudtrail-kms) we have created."
+          "text": "Click on the S3 bucket (lab-cloudtrail-kms) we have created.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-33.png"
+          ]
         },
         {
-          "text": "Click on the Upload button."
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-34.png"
+          ]
         },
         {
-          "text": "Click on Add files and choose a picture from your local PC and Click on the Upload button."
+          "text": "Click on the Upload button.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-35.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-36.png"
+          ]
+        },
+        {
+          "text": "Click on Add files and choose a picture from your local PC and Click on the Upload button.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-37.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-38.png"
+          ]
         },
         {
           "text": "Click on the object which we have uploaded. Go to the Properties tab."
         },
         {
-          "text": "Scroll down to Server-side encryption settings and click Edit:"
+          "text": "Scroll down to Server-side encryption settings and click Edit: Encryption settings : Override bucket settings for default encryption Encryption key type : Select Server Side Encryption with AWS Key Management Service key(SSE-KMS) AWS KMS key : Select Choose from your AWS KMS keys and from the drop-down menu select the KMS key we have created i.e whiz-kms-key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-39.png"
+          ]
         },
         {
-          "text": "Encryption settings : Override bucket settings for default encryption"
+          "text": "Scroll down to Server-side encryption settings and click Edit:"
         },
         {
-          "text": "Encryption key type : Select Server Side Encryption with AWS Key Management Service key(SSE-KMS)"
+          "text": "Encryption settings : Override bucket settings for default encryption"
         },
         {
-          "text": "AWS KMS key : Select Choose from your AWS KMS keys and from the drop-down menu select the KMS key we have created i.e whiz-kms-key"
+          "text": "Encryption key type : Select Server Side Encryption with AWS Key Management Service key(SSE-KMS)"
         },
         {
-          "text": "Leave everything as default and click on the Save Changes button."
+          "text": "AWS KMS key : Select Choose from your AWS KMS keys and from the drop-down menu select the KMS key we have created i.e whiz-kms-key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-40.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-41.png"
+          ]
+        },
+        {
+          "text": "Leave everything as default and click on the Save Changes button."
         },
         {
           "text": "Click on close and you will see your uploaded picture under the objects section."
         },
         {
           "text": "Note the Last Modified time in the notepad."
-        }
-      ]
-    },
-    {
-      "title": "Task 6: Accessing the encrypted object",
-      "steps": [
+        },
         {
           "text": "In this task, you will try to access the encrypted object through both S3 console and Object URL."
         },
         {
-          "text": "Click on the picture you have uploaded and click on Open on the top right side of your screen."
+          "text": "Click on the picture you have uploaded and click on Open on the top right side of your screen.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-42.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-43.png"
+          ]
         },
         {
           "text": "The picture opens in a new tab/window."
+        },
+        {
+          "text": "What happens behind the scenes Amazon S3 sends the encrypted data key to AWS KMS. AWS KMS decrypts the key by using the appropriate master key and sends the plaintext key back to Amazon S3. Amazon S3 decrypts the cypher text and removes the plaintext data key from memory as soon as possible."
         },
         {
           "text": "What happens behind the scenes"
@@ -271,19 +462,55 @@
           "text": "Close the tab/window that displayed your picture."
         },
         {
-          "text": "Now copy the Object URL and paste it into a new tab of your browser and hit Enter."
+          "text": "Now copy the Object URL and paste it into a new tab of your browser and hit Enter."
         },
         {
-          "text": "You will see a page with the message “Access denied.” And that is because by default, the public access is blocked."
+          "text": "You will see a page with the message “Access denied.” And that is because by default, the public access is blocked.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-44.png"
+          ]
         },
         {
-          "text": "Go back to the bucket, click on the Permissions section."
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-45.png"
+          ]
         },
         {
-          "text": "Under Block public access, click on Edit and uncheck Block all public access and click on Save changes."
+          "text": "Go back to the bucket, click on the Permissions section.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-46.png"
+          ]
         },
         {
-          "text": "In the next screen, Type confirm and click on Confirm button."
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-47.png"
+          ]
+        },
+        {
+          "text": "Under Block public access, click on Edit and uncheck Block all public access and click on Save changes.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-48.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-49.png"
+          ]
+        },
+        {
+          "text": "In the next screen, Type confirm and click on Confirm button.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-50.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-51.png"
+          ]
         },
         {
           "text": "You have successfully edited Block Public Access settings."
@@ -292,16 +519,662 @@
           "text": "Now go to the Objects tab and click on your object."
         },
         {
-          "text": "On the top right corner, click the Object actions drop-down menu and click on Make public using ACL."
+          "text": "On the top right corner, click the Object actions drop-down menu and click on Make public using ACL."
         },
         {
-          "text": "Click on Make public button."
+          "text": "Click on Make public button."
         },
         {
-          "text": "Now refresh the tab where you have pasted the Object URL earlier."
+          "text": "Now refresh the tab where you have pasted the Object URL earlier."
         },
         {
-          "text": "You should see a message something like this."
+          "text": "You should see a message something like this.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-52.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-53.png"
+          ]
+        },
+        {
+          "text": "This is because the picture is encrypted and you are not able to view it using the public link. If you are uploading or accessing objects encrypted by SSE-KMS, you need to use AWS Signature Version 4 for added security."
+        },
+        {
+          "text": "In this task, you will access and view our CloudTrail log files in the S3 bucket related to KMS encryption operations."
+        },
+        {
+          "text": "Go back to the S3 bucket we have created and you will be able to find one more object with the name AWSLogs/.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-54.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-55.png"
+          ]
+        },
+        {
+          "text": "Click on it and click on the next directory too representing your account number."
+        },
+        {
+          "text": "Now click on the CloudTrail/ directory and click on us-east-1/."
+        },
+        {
+          "text": "In case if you do not see any objects under CloudTrail/, please wait for 5 minutes and refresh the objects."
+        },
+        {
+          "text": "Now click on the <year>, <month> and <date> one after the other."
+        },
+        {
+          "text": "You will be able to see CloudTrail logs.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-56.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-57.png"
+          ]
+        },
+        {
+          "text": "Click on the log file whose Last modified time is greater than the timestamp of the picture when it is uploaded.(Refer your notepad)"
+        },
+        {
+          "text": "If there is no log file whose Last modified time is greater than the timestamp of the picture when it is uploaded, wait for 5 more minutes."
+        },
+        {
+          "text": "Click on the latest log file from the list."
+        },
+        {
+          "text": "Click on Open."
+        },
+        {
+          "text": "Press Ctrl+F and search for the Key Id you have saved in the notepad and the picture name you have created."
+        },
+        {
+          "text": "If you are unable to find them, copy the object URL of the picture you have uploaded again and paste it in the browser and note down the time."
+        },
+        {
+          "text": "Wait for some time and now search for the logs whose time is greater than that of what you just noted down."
+        },
+        {
+          "text": "Now you will be able to find the Key ID in the log record."
+        },
+        {
+          "text": "Encrypting an S3 bucket using AWS Key Management Service (KMS) and monitoring the activities with CloudTrail is a secure way to protect your data and track any changes or access to the bucket. Here are some points to consider for each heading:"
+        },
+        {
+          "text": "Once the lab steps are completed, please click on the Validate button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-58.gif"
+          ]
+        },
+        {
+          "text": "You have successfully created a KMS key and an S3 bucket."
+        },
+        {
+          "text": "You have successfully created a CloudTrail and configured it to store events in S3."
+        },
+        {
+          "text": "You have successfully monitored KMS activity using CloudTrail Logs in S3 bucket."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a customer-managed KMS key",
+      "steps": [
+        {
+          "text": "In this task, you will create a customer-managed KMS key and use it to encrypt S3 objects."
+        },
+        {
+          "text": "Navigate to Key Management Service by clicking on Services in the AWS Management Console, and selecting Key Management Service under Security, Identity and Compliance section."
+        },
+        {
+          "text": "Click on Create a Key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-59.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create a customer-managed KMS key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-60.png"
+          ]
+        },
+        {
+          "text": "Under configure key: Key type : Select Symmetric Key usage : Select Encrypt and Decrypt",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-61.png"
+          ]
+        },
+        {
+          "text": "Under configure key:"
+        },
+        {
+          "text": "Key type : Select Symmetric"
+        },
+        {
+          "text": "Key usage : Select Encrypt and Decrypt",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-62.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create a customer-managed KMS key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-63.png"
+          ]
+        },
+        {
+          "text": "Click on Next"
+        },
+        {
+          "text": "Under Add labels: Alias : Enter whiz-kms-key Description : Enter KMS key to encrypt S3 Objects",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-64.png"
+          ]
+        },
+        {
+          "text": "Under Add labels:"
+        },
+        {
+          "text": "Alias : Enter whiz-kms-key"
+        },
+        {
+          "text": "Description : Enter KMS key to encrypt S3 Objects",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-65.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create a customer-managed KMS key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-66.png"
+          ]
+        },
+        {
+          "text": "Click on Next"
+        },
+        {
+          "text": "Under Define key administrative permissions: Key administrators: Select the role that is associated with the account you are working with. For example: Whiz_user-<RANDOM_NUMBER>",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-67.png"
+          ]
+        },
+        {
+          "text": "Under Define key administrative permissions:"
+        },
+        {
+          "text": "Key administrators: Select the role that is associated with the account you are working with. For example: Whiz_user-<RANDOM_NUMBER>",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-68.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create a customer-managed KMS key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-69.png"
+          ]
+        },
+        {
+          "text": "Click on Next"
+        },
+        {
+          "text": "Under Define Key usage permissions: Select the role that is associated with the account you are working with. For Whiz_user-<RANDOM_NUMBER>",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-70.png"
+          ]
+        },
+        {
+          "text": "Under Define Key usage permissions:"
+        },
+        {
+          "text": "Select the role that is associated with the account you are working with. For Whiz_user-<RANDOM_NUMBER>",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-71.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create a customer-managed KMS key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-72.png"
+          ]
+        },
+        {
+          "text": "Click on Next. In Edit key policy, leave everything as default and click Next."
+        },
+        {
+          "text": "Review everything and click on the Finish button."
+        },
+        {
+          "text": "You have successfully created the KMS key.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-73.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create a customer-managed KMS key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-74.png"
+          ]
+        },
+        {
+          "text": "Copy the Key ID and paste it in the notepad, we will use this later in the lab."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create an S3 bucket",
+      "steps": [
+        {
+          "text": "In this task, you will create an S3 bucket to upload and encrypt an object an aslo to store events."
+        },
+        {
+          "text": "Navigate to S3 by clicking on Services in the AWS Management Console, and selecting S3 under Storage section."
+        },
+        {
+          "text": "Click on Create Bucket"
+        },
+        {
+          "text": "Under General configuration: Bucket type : General purpose Bucket name : Enter a unique name within the global namespace."
+        },
+        {
+          "text": "Under General configuration:"
+        },
+        {
+          "text": "Bucket type : General purpose"
+        },
+        {
+          "text": "Bucket name : Enter a unique name within the global namespace."
+        },
+        {
+          "text": "Object ownership: Select ACLs enabled option and choose Object writer as the Object owner",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-75.png"
+          ]
+        },
+        {
+          "text": "Task 3: Create an S3 bucket",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-76.png"
+          ]
+        },
+        {
+          "text": "Leave the rest as default and click on Create Bucket."
+        },
+        {
+          "text": "You have successfully created an S3 bucket."
+        },
+        {
+          "text": "Task 3: Create an S3 bucket",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-77.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create a CloudTrail and configure it to store events in S3",
+      "steps": [
+        {
+          "text": "In this task, you will create a CloudTrail and configure it to store KMS activities in S3 bucket."
+        },
+        {
+          "text": "Navigate to CloudTrail by clicking on Services in the AWS Management Console, and selecting CloudTrail under Management & Governance section."
+        },
+        {
+          "text": "Click on the menu section (three lines) on the left side panel and click on Trails."
+        },
+        {
+          "text": "Click on Create Trail."
+        },
+        {
+          "text": "Under General details: Trail name : Enter whiz-kms-trails Storage location : Choose Use existing S3 bucket Trail log bucket name : Click on Browse and choose the S3 bucket that you have created earlier(i.e lab-cloudtrail-kms)"
+        },
+        {
+          "text": "Under General details:"
+        },
+        {
+          "text": "Trail name : Enter whiz-kms-trails"
+        },
+        {
+          "text": "Storage location : Choose Use existing S3 bucket"
+        },
+        {
+          "text": "Trail log bucket name : Click on Browse and choose the S3 bucket that you have created earlier(i.e lab-cloudtrail-kms)"
+        },
+        {
+          "text": "Log file SSE-KMS encryption : Uncheck Enabled",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-78.png"
+          ]
+        },
+        {
+          "text": "Task 4: Create a CloudTrail and configure it to store events in S3",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-79.png"
+          ]
+        },
+        {
+          "text": "Leave the rest as default and click on Next."
+        },
+        {
+          "text": "Choose log events: Event type : Check both Management events and Data events.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-80.png"
+          ]
+        },
+        {
+          "text": "Choose log events:"
+        },
+        {
+          "text": "Event type : Check both Management events and Data events.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-81.png"
+          ]
+        },
+        {
+          "text": "Task 4: Create a CloudTrail and configure it to store events in S3",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-82.png"
+          ]
+        },
+        {
+          "text": "Management events: API activity : Check both Read and Write",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-83.png"
+          ]
+        },
+        {
+          "text": "Management events:"
+        },
+        {
+          "text": "API activity : Check both Read and Write",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-84.png"
+          ]
+        },
+        {
+          "text": "Task 4: Create a CloudTrail and configure it to store events in S3",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-85.png"
+          ]
+        },
+        {
+          "text": "Data events: Click on Switch to basic event selectors button. Click on Continue button on pop up. All current and future S3 buckets : Uncheck both Read and Write Individual bucket selection : Click on Browse and choose the S3 bucket that we have created earlier(i.e lab-cloudtrail-kms) Make sure you have checked both Read and Write next to the Browse.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-86.png"
+          ]
+        },
+        {
+          "text": "Data events:"
+        },
+        {
+          "text": "Click on Switch to basic event selectors button."
+        },
+        {
+          "text": "Click on Continue button on pop up."
+        },
+        {
+          "text": "All current and future S3 buckets : Uncheck both Read and Write"
+        },
+        {
+          "text": "Individual bucket selection : Click on Browse and choose the S3 bucket that we have created earlier(i.e lab-cloudtrail-kms)"
+        },
+        {
+          "text": "Make sure you have checked both Read and Write next to the Browse.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-87.png"
+          ]
+        },
+        {
+          "text": "Task 4: Create a CloudTrail and configure it to store events in S3",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-88.png"
+          ]
+        },
+        {
+          "text": "Click on Next."
+        },
+        {
+          "text": "Review everything and click on Create Trail."
+        },
+        {
+          "text": "You have successfully created a CloudTrail and can find yours under Trails.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-89.png"
+          ]
+        },
+        {
+          "text": "Task 4: Create a CloudTrail and configure it to store events in S3",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-90.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Uploading an object and encrypting it",
+      "steps": [
+        {
+          "text": "In this task, you will upload an image from our local PC and encrypt it using the KMS key we have created in Task 3."
+        },
+        {
+          "text": "Navigate to S3 by clicking on Services in the AWS Management Console, and selecting S3 under the Storage section."
+        },
+        {
+          "text": "Click on the S3 bucket (lab-cloudtrail-kms) we have created.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-91.png"
+          ]
+        },
+        {
+          "text": "Task 5: Uploading an object and encrypting it",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-92.png"
+          ]
+        },
+        {
+          "text": "Click on the Upload button.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-93.png"
+          ]
+        },
+        {
+          "text": "Task 5: Uploading an object and encrypting it",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-94.png"
+          ]
+        },
+        {
+          "text": "Click on Add files and choose a picture from your local PC and Click on the Upload button.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-95.png"
+          ]
+        },
+        {
+          "text": "Task 5: Uploading an object and encrypting it",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-96.png"
+          ]
+        },
+        {
+          "text": "Click on the object which we have uploaded. Go to the Properties tab."
+        },
+        {
+          "text": "Scroll down to Server-side encryption settings and click Edit: Encryption settings : Override bucket settings for default encryption Encryption key type : Select Server Side Encryption with AWS Key Management Service key(SSE-KMS) AWS KMS key : Select Choose from your AWS KMS keys and from the drop-down menu select the KMS key we have created i.e whiz-kms-key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-97.png"
+          ]
+        },
+        {
+          "text": "Scroll down to Server-side encryption settings and click Edit:"
+        },
+        {
+          "text": "Encryption settings : Override bucket settings for default encryption"
+        },
+        {
+          "text": "Encryption key type : Select Server Side Encryption with AWS Key Management Service key(SSE-KMS)"
+        },
+        {
+          "text": "AWS KMS key : Select Choose from your AWS KMS keys and from the drop-down menu select the KMS key we have created i.e whiz-kms-key",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-98.png"
+          ]
+        },
+        {
+          "text": "Task 5: Uploading an object and encrypting it",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-99.png"
+          ]
+        },
+        {
+          "text": "Leave everything as default and click on the Save Changes button."
+        },
+        {
+          "text": "Click on close and you will see your uploaded picture under the objects section."
+        },
+        {
+          "text": "Note the Last Modified time in the notepad."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Accessing the encrypted object",
+      "steps": [
+        {
+          "text": "In this task, you will try to access the encrypted object through both S3 console and Object URL."
+        },
+        {
+          "text": "Click on the picture you have uploaded and click on Open on the top right side of your screen.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-100.png"
+          ]
+        },
+        {
+          "text": "Task 6: Accessing the encrypted object",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-101.png"
+          ]
+        },
+        {
+          "text": "The picture opens in a new tab/window."
+        },
+        {
+          "text": "What happens behind the scenes Amazon S3 sends the encrypted data key to AWS KMS. AWS KMS decrypts the key by using the appropriate master key and sends the plaintext key back to Amazon S3. Amazon S3 decrypts the cypher text and removes the plaintext data key from memory as soon as possible."
+        },
+        {
+          "text": "What happens behind the scenes"
+        },
+        {
+          "text": "Amazon S3 sends the encrypted data key to AWS KMS."
+        },
+        {
+          "text": "AWS KMS decrypts the key by using the appropriate master key and sends the plaintext key back to Amazon S3."
+        },
+        {
+          "text": "Amazon S3 decrypts the cypher text and removes the plaintext data key from memory as soon as possible."
+        },
+        {
+          "text": "Close the tab/window that displayed your picture."
+        },
+        {
+          "text": "Now copy the Object URL and paste it into a new tab of your browser and hit Enter."
+        },
+        {
+          "text": "You will see a page with the message “Access denied.” And that is because by default, the public access is blocked.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-102.png"
+          ]
+        },
+        {
+          "text": "Task 6: Accessing the encrypted object",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-103.png"
+          ]
+        },
+        {
+          "text": "Go back to the bucket, click on the Permissions section.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-104.png"
+          ]
+        },
+        {
+          "text": "Task 6: Accessing the encrypted object",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-105.png"
+          ]
+        },
+        {
+          "text": "Under Block public access, click on Edit and uncheck Block all public access and click on Save changes.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-106.png"
+          ]
+        },
+        {
+          "text": "Task 6: Accessing the encrypted object",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-107.png"
+          ]
+        },
+        {
+          "text": "In the next screen, Type confirm and click on Confirm button.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-108.png"
+          ]
+        },
+        {
+          "text": "Task 6: Accessing the encrypted object",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-109.png"
+          ]
+        },
+        {
+          "text": "You have successfully edited Block Public Access settings."
+        },
+        {
+          "text": "Now go to the Objects tab and click on your object."
+        },
+        {
+          "text": "On the top right corner, click the Object actions drop-down menu and click on Make public using ACL."
+        },
+        {
+          "text": "Click on Make public button."
+        },
+        {
+          "text": "Now refresh the tab where you have pasted the Object URL earlier."
+        },
+        {
+          "text": "You should see a message something like this.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-110.png"
+          ]
+        },
+        {
+          "text": "Task 6: Accessing the encrypted object",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-111.png"
+          ]
         },
         {
           "text": "This is because the picture is encrypted and you are not able to view it using the public link. If you are uploading or accessing objects encrypted by SSE-KMS, you need to use AWS Signature Version 4 for added security."
@@ -315,22 +1188,40 @@
           "text": "In this task, you will access and view our CloudTrail log files in the S3 bucket related to KMS encryption operations."
         },
         {
-          "text": "Go back to the S3 bucket we have created and you will be able to find one more object with the name AWSLogs/."
+          "text": "Go back to the S3 bucket we have created and you will be able to find one more object with the name AWSLogs/.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-112.png"
+          ]
+        },
+        {
+          "text": "Task 7: Monitoring KMS activity using CloudTrail Logs",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-113.png"
+          ]
         },
         {
           "text": "Click on it and click on the next directory too representing your account number."
         },
         {
-          "text": "Now click on the CloudTrail/ directory and click on us-east-1/."
+          "text": "Now click on the CloudTrail/ directory and click on us-east-1/."
         },
         {
-          "text": "In case if you do not see any objects under CloudTrail/, please wait for 5 minutes and refresh the objects."
+          "text": "In case if you do not see any objects under CloudTrail/, please wait for 5 minutes and refresh the objects."
         },
         {
-          "text": "Now click on the <year>, <month> and <date> one after the other."
+          "text": "Now click on the <year>, <month> and <date> one after the other."
         },
         {
-          "text": "You will be able to see CloudTrail logs."
+          "text": "You will be able to see CloudTrail logs.",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-114.png"
+          ]
+        },
+        {
+          "text": "Task 7: Monitoring KMS activity using CloudTrail Logs",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-115.png"
+          ]
         },
         {
           "text": "Click on the log file whose Last modified time is greater than the timestamp of the picture when it is uploaded.(Refer your notepad)"
@@ -342,10 +1233,10 @@
           "text": "Click on the latest log file from the list."
         },
         {
-          "text": "Click on Open."
+          "text": "Click on Open."
         },
         {
-          "text": "Press Ctrl+F and search for the Key Id you have saved in the notepad and the picture name you have created."
+          "text": "Press Ctrl+F and search for the Key Id you have saved in the notepad and the picture name you have created."
         },
         {
           "text": "If you are unable to find them, copy the object URL of the picture you have uploaded again and paste it in the browser and note down the time."
@@ -357,9 +1248,6 @@
           "text": "Now you will be able to find the Key ID in the log record."
         },
         {
-          "text": "Do you know?"
-        },
-        {
           "text": "Encrypting an S3 bucket using AWS Key Management Service (KMS) and monitoring the activities with CloudTrail is a secure way to protect your data and track any changes or access to the bucket. Here are some points to consider for each heading:"
         }
       ]
@@ -368,19 +1256,19 @@
       "title": "Task 8: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validate button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validate button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail/step-116.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
-        },
-        {
-          "text": "You have successfully created a KMS key and an S3 bucket."
+          "text": "You have successfully created a KMS key and an S3 bucket."
         },
         {
           "text": "You have successfully created a CloudTrail and configured it to store events in S3."
@@ -389,16 +1277,13 @@
           "text": "You have successfully monitored KMS activity using CloudTrail Logs in S3 bucket."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of the AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

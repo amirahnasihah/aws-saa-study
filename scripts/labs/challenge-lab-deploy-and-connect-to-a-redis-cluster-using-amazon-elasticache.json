@@ -1,0 +1,157 @@
+{
+  "slug": "challenge-lab-deploy-and-connect-to-a-redis-cluster-using-amazon-elasticache",
+  "title": "Challenge Lab: Deploy and Connect to a Redis Cluster using Amazon ElastiCache",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge lab, you are taking on the role of a Cloud Engineer for a tech company that needs a fast and scalable caching solution to improve application performance. Your objective is to create a Redis cluster using Amazon ElastiCache with cluster mode enabled and test it using an Amazon EC2 instance ."
+        },
+        {
+          "text": "Your company, ShopSmart, is preparing for its biggest online event of the year — the Great Festive Sale. Millions of users will visit the site to browse, add items to carts, and checkout in real-time.To support this surge in demand, the backend team needs a highly available, low-latency session store to track user sessions, cart data, and login tokens without relying on slower disk-based databases."
+        },
+        {
+          "text": "Create a security group"
+        },
+        {
+          "text": "Create a security group in the default VPC"
+        },
+        {
+          "text": "Add inbound rules: SSH: port 22, 0.0.0.0/0 HTTP: port 80, 0.0.0.0/0 Redis: port 6379, 0.0.0.0/0"
+        },
+        {
+          "text": "SSH: port 22, 0.0.0.0/0"
+        },
+        {
+          "text": "HTTP: port 80, 0.0.0.0/0"
+        },
+        {
+          "text": "Redis: port 6379, 0.0.0.0/0"
+        },
+        {
+          "text": "Deploy the Redis Cluster"
+        },
+        {
+          "text": "Create a Redis (OSS) Cluster with: Cluster mode enabled One shard with one replica Instance type: cache.t2.micro Engine version: 6.2 Subnet group created in default VPC"
+        },
+        {
+          "text": "Cluster mode enabled"
+        },
+        {
+          "text": "One shard with one replica"
+        },
+        {
+          "text": "Instance type: cache.t2.micro"
+        },
+        {
+          "text": "Engine version: 6.2"
+        },
+        {
+          "text": "Subnet group created in default VPC"
+        },
+        {
+          "text": "Launch an EC2 Instance"
+        },
+        {
+          "text": "Launch an EC2 instance with: Amazon Linux 2023 kernel-6.1 AMI Instance type: t2.micro Select the security group created earlier Create a new key pair for SSH access"
+        },
+        {
+          "text": "Amazon Linux 2023 kernel-6.1 AMI"
+        },
+        {
+          "text": "Instance type: t2.micro"
+        },
+        {
+          "text": "Select the security group created earlier"
+        },
+        {
+          "text": "Create a new key pair for SSH access"
+        },
+        {
+          "text": "Connect to EC2 and Install Redis CLI"
+        },
+        {
+          "text": "SSH into the EC2 instance"
+        },
+        {
+          "text": "Run commands to install dependencies and Redis CLI Use the default package manager to refresh all installed packages. Amazon Linux supports an extra repository with more packages. Find out how to enable it. You’ll need a C compiler. Look for a memory allocator Redis prefers. You’ll also need packages that help Redis support encryption (hint: TLS) and testing (hint: TCL). Use a command-line utility to download files from a URL. Redis source is hosted on its official website. It's a compressed file (.tar.gz). Look up how to extract it. You need to go inside the extracted folder to build the application.Use the make command with a specific option that enables TLS during compilation."
+        },
+        {
+          "text": "Use the default package manager to refresh all installed packages."
+        },
+        {
+          "text": "Amazon Linux supports an extra repository with more packages. Find out how to enable it."
+        },
+        {
+          "text": "You’ll need a C compiler."
+        },
+        {
+          "text": "Look for a memory allocator Redis prefers."
+        },
+        {
+          "text": "You’ll also need packages that help Redis support encryption (hint: TLS) and testing (hint: TCL)."
+        },
+        {
+          "text": "Use a command-line utility to download files from a URL. Redis source is hosted on its official website."
+        },
+        {
+          "text": "It's a compressed file (.tar.gz). Look up how to extract it."
+        },
+        {
+          "text": "You need to go inside the extracted folder to build the application.Use the make command with a specific option that enables TLS during compilation."
+        },
+        {
+          "text": "Connect to Redis Cluster"
+        },
+        {
+          "text": "Retrieve the Configuration Endpoint of your ElastiCache Redis cluster (remove the port)"
+        },
+        {
+          "text": "Use the redis-cli to connect securely:"
+        },
+        {
+          "text": "Run Test Commands"
+        },
+        {
+          "text": "Within Redis CLI:"
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

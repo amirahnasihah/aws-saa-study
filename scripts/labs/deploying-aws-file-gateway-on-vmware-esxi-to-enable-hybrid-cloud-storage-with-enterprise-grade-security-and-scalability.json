@@ -1,0 +1,377 @@
+{
+  "slug": "deploying-aws-file-gateway-on-vmware-esxi-to-enable-hybrid-cloud-storage-with-enterprise-grade-security-and-scalability",
+  "title": "Deploying AWS File Gateway on VMware ESXi to enable hybrid cloud storage with enterprise-grade security and scalability",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Download the .ova file from Storage Gateway",
+      "steps": [
+        {
+          "text": "In this task, we download the .ova file from the AWS Storage Gateway File Gateway page."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) Region."
+        },
+        {
+          "text": "Navigate to Storage gateway by clicking on the Services menu in the top, then click on Storage gateway"
+        },
+        {
+          "text": "Click “Create gateway” ."
+        },
+        {
+          "text": "Task 2: Download the .ova file from Storage Gateway"
+        },
+        {
+          "text": "Enter ‘lab-storage-gateway’ as the gateway name. In the Gateway options, select Amazon S3 File Gateway."
+        },
+        {
+          "text": "Task 2: Download the .ova file from Storage Gateway"
+        },
+        {
+          "text": "Scroll down to Platform options to Select “VMware ESXi” as the platform."
+        },
+        {
+          "text": "Download the .ova file ."
+        },
+        {
+          "text": "Click the Download OVF template button to download the .ova file."
+        },
+        {
+          "text": "In the last step, check the box labeled ‘Confirm Setup Gateway’ before proceeding."
+        },
+        {
+          "text": "Click Next ."
+        },
+        {
+          "text": "Task 2: Download the .ova file from Storage Gateway"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Import the .ova file via VMware",
+      "steps": [
+        {
+          "text": "In this task, we will import the .ova file into VMware."
+        },
+        {
+          "text": "Open your VMware application. In the top left corner, click “File” and select the “Open” option. Then, browse to and select the downloaded .ova file."
+        },
+        {
+          "text": "Task 3: Import the .ova file via VMware"
+        },
+        {
+          "text": "Provide the VM name as \"storage_gateway\" and proceed to import the OVA file."
+        },
+        {
+          "text": "Click on the blue text that says “Edit virtual machine settings” (right under “Power on this virtual machine”)."
+        },
+        {
+          "text": "Task 3: Import the .ova file via VMware"
+        },
+        {
+          "text": "Select the existing \"Hard Disk (SCSI)\" from the list on the left and Click the “Add” button at the bottom of the window.This opens the Add Hardware Wizard."
+        },
+        {
+          "text": "Task 3: Import the .ova file via VMware"
+        },
+        {
+          "text": "Select Hard Disk under Hardware Type and click Next. to select Disk type as SCSI Click next ."
+        },
+        {
+          "text": "Task 3: Import the .ova file via VMware"
+        },
+        {
+          "text": "Select “create a new virtual disk”"
+        },
+        {
+          "text": "Task 3: Import the .ova file via VMware"
+        },
+        {
+          "text": "Enter 60 GB as the disk size , keep the default option Split virtual disk into multiple files, then click Next and Finish."
+        },
+        {
+          "text": "Task 3: Import the .ova file via VMware"
+        },
+        {
+          "text": "After adding the 60 GB hard disk, it appears in the device list. Now, click \"OK\" to save the changes."
+        },
+        {
+          "text": "Task 3: Import the .ova file via VMware"
+        },
+        {
+          "text": "Click to start “Power on this virtual machine”"
+        },
+        {
+          "text": "Task 3: Import the .ova file via VMware"
+        },
+        {
+          "text": "Once the VM has started, log in by typing the username \"admin\"."
+        },
+        {
+          "text": "Task 3: Import the .ova file via VMware"
+        },
+        {
+          "text": "Provide the following credentials:"
+        },
+        {
+          "text": "Password: password"
+        },
+        {
+          "text": "UNIX Password: password"
+        },
+        {
+          "text": "New Password: lab@123"
+        },
+        {
+          "text": "Retype New Password: lab@123"
+        },
+        {
+          "text": "Task 3: Import the .ova file via VMware"
+        },
+        {
+          "text": "Copy the IP address."
+        },
+        {
+          "text": "Task 3: Import the .ova file via VMware"
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create Amazon S3 File Gateway",
+      "steps": [
+        {
+          "text": "In this task, we will set up the complete configuration of the S3 File Storage Gateway."
+        },
+        {
+          "text": "Go to AWS Storage Gateway. Since we have already completed Step 1, verify that you are currently on Step 2. Paste the local IP address of the VM (storage-gateway-vm) without making any changes, then click Next."
+        },
+        {
+          "text": "Task 4: Create Amazon S3 File Gateway"
+        },
+        {
+          "text": "Click Activate Gateway."
+        },
+        {
+          "text": "Task 4: Create Amazon S3 File Gateway"
+        },
+        {
+          "text": "Now, we have previously added a 60 GB hard disk to the local VM, which is showing on the portal. This disk acts as a cache. Next, select Deactivate Logging in the CloudWatch Log Group, choose No Alarm in CloudWatch Alarm."
+        },
+        {
+          "text": "Task 4: Create Amazon S3 File Gateway"
+        },
+        {
+          "text": "Note: Wait for 2 to 5 minutes for the local VM hard disk to appear in the portal. If it doesn’t show up, your VM’s network connection may not be stable or properly configured."
+        },
+        {
+          "text": "Task 4: Create Amazon S3 File Gateway"
+        },
+        {
+          "text": "Then, click Configure."
+        },
+        {
+          "text": "Congratulations! We have successfully created the S3 File Gateway."
+        },
+        {
+          "text": "Task 4: Create Amazon S3 File Gateway"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create an S3 bucket and configure it for file sharing",
+      "steps": [
+        {
+          "text": "In this task, we create an S3 bucket and add a file share to the Storage Gateway."
+        },
+        {
+          "text": "Navigate to the Services menu at the top and click on S3 in the Storage section."
+        },
+        {
+          "text": "On the S3 dashboard, click on the Create bucket button and fill in the bucket details."
+        },
+        {
+          "text": "Select Region as N.Virginia to create an S3 bucket."
+        },
+        {
+          "text": "Bucket type Select : General purpose"
+        },
+        {
+          "text": "Bucket name: Enter whiz-bucket-<RANDOM_NUMBER>"
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "Object ownership: Select ACLs disabled (recommended) option."
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Click on the Create bucket button."
+        },
+        {
+          "text": "Go to the Storage Gateway service, click on Gateways, and on the right side, select Create File Share."
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "Select the recently created gateway (lab-storage-gateway), choose the file share protocol as SMB, select the S3 bucket you created earlier, and set User Authentication to Guest access."
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "In the User Authentication section, click Configure on the right side, set the password to lab@123, then click Save and Create file share."
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "After clicking on Save, Scroll down and click on Customize configuration."
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "Click on Next, Go to Connect S3. In the IAM Role Section, choose Fileshare_iam_role_<RANDOM-NUMBER>"
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "Click on Next. If you see any pop-up message for not setting password, Go to User Access and set the password again and Save."
+        },
+        {
+          "text": "Leave everything as default, Click Next. Finally, Click Create."
+        },
+        {
+          "text": "Once the file share is created, it may take few minutes for the status to change to \"Available\". During this process, do not disconnect or change your Wi-Fi connection, as it can affect the entire lab setup."
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "Scroll down to copy the Windows mount command"
+        },
+        {
+          "text": "E.g., net use [WindowsDriveLetter]: \\\\192.168.137.129\\whiz-bucket-gateway."
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "On your computer, open Command Prompt and run it as Administrator."
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "Paste the mount command, replace [WindowsDriveLetter] with w, and run the command."
+        },
+        {
+          "text": "Eg : net use w: \\\\192.168.137.129\\whiz-bucket-gateway"
+        },
+        {
+          "text": "User name : smbguest"
+        },
+        {
+          "text": "Password : lab@123"
+        },
+        {
+          "text": "Click Enter"
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "You should now see the message: \"The command completed successfully.\""
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "Press Win + E to open Windows Explorer, then open the mounted storage."
+        },
+        {
+          "text": "If you couldn't see the mounted Storage, Go to the search box in the Windows Explorer, Run the command which we copied before. If you receive any network credential detail, Enter the username and password we used in step 4."
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        },
+        {
+          "text": "Now, go to the S3 bucket you created (e.g., whiz-bucket-storage-gateway), open it, and you will see the folder you created. Congratulations! You have successfully completed the process."
+        },
+        {
+          "text": "Task 5: Create an S3 bucket and configure it for file sharing"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample Output :"
+        },
+        {
+          "text": "Task 7: Validation of the Lab"
+        },
+        {
+          "text": "You have successfully deployed the Amazon S3 File Gateway on a VMware VM."
+        },
+        {
+          "text": "You created and configured an S3 bucket for file sharing."
+        },
+        {
+          "text": "You mounted the file share on a local Windows machine and verified access."
+        },
+        {
+          "text": "You demonstrated seamless integration between on-premises storage and AWS cloud."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

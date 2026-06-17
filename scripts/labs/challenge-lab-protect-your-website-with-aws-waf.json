@@ -1,0 +1,163 @@
+{
+  "slug": "challenge-lab-protect-your-website-with-aws-waf",
+  "title": "Challenge Lab - Implementing AWS WAF with ALB to block SQL Injection, Geo Location and Query string",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "02:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "You work for SafeShop, which runs a website on two EC2 servers behind a load balancer. Your task is to set up AWS WAF to block attacks like SQL injection and allow only US visitors."
+        },
+        {
+          "text": "Attach the WAF to the load balancer to protect the site."
+        },
+        {
+          "text": "Verify that safe traffic gets through and malicious traffic is blocked."
+        },
+        {
+          "text": "Launch Two EC2 Instances Launch two Amazon Linux 2 EC2 instances in a region of your choice. Choose your own meaningful names for these instances. Create or reuse a security group that allows: SSH (port 22) from your IP HTTP (port 80) from anywhere Use user data scripts to install Apache and create distinct homepage messages on each instance. Enable public IP assignment."
+        },
+        {
+          "text": "Launch two Amazon Linux 2 EC2 instances in a region of your choice."
+        },
+        {
+          "text": "Choose your own meaningful names for these instances. Create or reuse a security group that allows: SSH (port 22) from your IP"
+        },
+        {
+          "text": "Create or reuse a security group that allows:"
+        },
+        {
+          "text": "SSH (port 22) from your IP"
+        },
+        {
+          "text": "HTTP (port 80) from anywhere"
+        },
+        {
+          "text": "Use user data scripts to install Apache and create distinct homepage messages on each instance."
+        },
+        {
+          "text": "Enable public IP assignment."
+        },
+        {
+          "text": "Create a Target Group Create a target group with a name you choose. Protocol: HTTP, Port: 80. Register your two EC2 instances. Configure health checks on HTTP port 80."
+        },
+        {
+          "text": "Create a target group with a name you choose."
+        },
+        {
+          "text": "Protocol: HTTP, Port: 80."
+        },
+        {
+          "text": "Register your two EC2 instances."
+        },
+        {
+          "text": "Configure health checks on HTTP port 80."
+        },
+        {
+          "text": "Create an Application Load Balancer (ALB) Create an ALB with a custom name. Scheme: Internet-facing. Enable all Availability Zones in your region. Assign the security group from Task 1. Listener on HTTP port 80. Default action: Forward to your custom target group."
+        },
+        {
+          "text": "Create an ALB with a custom name."
+        },
+        {
+          "text": "Scheme: Internet-facing."
+        },
+        {
+          "text": "Enable all Availability Zones in your region."
+        },
+        {
+          "text": "Assign the security group from Task 1."
+        },
+        {
+          "text": "Listener on HTTP port 80."
+        },
+        {
+          "text": "Default action: Forward to your custom target group."
+        },
+        {
+          "text": "Test ALB Get the ALB DNS name. Open it in a browser and refresh multiple times. Verify that responses come from both EC2 instances alternately."
+        },
+        {
+          "text": "Get the ALB DNS name."
+        },
+        {
+          "text": "Open it in a browser and refresh multiple times."
+        },
+        {
+          "text": "Verify that responses come from both EC2 instances alternately."
+        },
+        {
+          "text": "Create AWS WAF Web ACL Create a Web ACL with a custom name. Associate it with your ALB. Add these rules (customize rule names as you like): Geo Location blocking — allow only your country, block others. Query string blocking — block requests containing a query parameter named admin. AWS Managed rule group — enable SQL injection protection. Default action: Allow."
+        },
+        {
+          "text": "Create a Web ACL with a custom name."
+        },
+        {
+          "text": "Associate it with your ALB."
+        },
+        {
+          "text": "Add these rules (customize rule names as you like): Geo Location blocking — allow only your country, block others. Query string blocking — block requests containing a query parameter named admin. AWS Managed rule group — enable SQL injection protection."
+        },
+        {
+          "text": "Geo Location blocking — allow only your country, block others."
+        },
+        {
+          "text": "Query string blocking — block requests containing a query parameter named admin."
+        },
+        {
+          "text": "AWS Managed rule group — enable SQL injection protection."
+        },
+        {
+          "text": "Default action: Allow."
+        },
+        {
+          "text": "Test WAF Rules Test SQL Injection block using a malicious query string. Test query string block with parameter admin. Test geo location block (via VPN or asking someone outside allowed countries)."
+        },
+        {
+          "text": "Test SQL Injection block using a malicious query string."
+        },
+        {
+          "text": "Test query string block with parameter admin."
+        },
+        {
+          "text": "Test geo location block (via VPN or asking someone outside allowed countries)."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,16 +35,22 @@
       "title": "Task 2 : Create a Security Group for RDS instance",
       "steps": [
         {
-          "text": "Make sure you are in the N.Virginia Region."
+          "text": "Make sure you are in the N.Virginia Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
         },
         {
-          "text": "On the left panel menu, select the security group under the Network & Security section."
+          "text": "On the left panel menu, select the security group under the Network & Security section."
         },
         {
-          "text": "Click on the Create Security Group."
+          "text": "Click on the Create Security Group."
+        },
+        {
+          "text": "We are going to create a Security group for RDS with a 3306 port number enabled. Security group name : Enter RDS_lab_sg Description: Enter Security group for RDS VPC: Select Default VPC",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-01.png"
+          ]
         },
         {
           "text": "We are going to create a Security group for RDS with a 3306 port number enabled."
@@ -50,22 +59,46 @@
           "text": "Security group name : Enter RDS_lab_sg"
         },
         {
-          "text": "Description: Enter Security group for RDS"
+          "text": "Description: Enter Security group for RDS"
         },
         {
-          "text": "VPC: Select Default VPC"
+          "text": "VPC: Select Default VPC",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-02.png"
+          ]
         },
         {
-          "text": "Click on the Add Rule button under Inbound rules."
+          "text": "Task 2 : Create a Security Group for RDS instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-03.png"
+          ]
         },
         {
-          "text": "Type: Select MYSQL/Aurora"
+          "text": "Click on the Add Rule button under Inbound rules. Type: Select MYSQL/Aurora Source: Select Anywhere Ipv4"
         },
         {
-          "text": "Source: Select Anywhere Ipv4"
+          "text": "Click on the Add Rule button under Inbound rules."
         },
         {
-          "text": "Leave everything as default and click on the Create Security Group button."
+          "text": "Type: Select MYSQL/Aurora"
+        },
+        {
+          "text": "Source: Select Anywhere Ipv4"
+        },
+        {
+          "text": "Task 2 : Create a Security Group for RDS instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-04.png"
+          ]
+        },
+        {
+          "text": "Leave everything as default and click on the Create Security Group button."
+        },
+        {
+          "text": "Task 2 : Create a Security Group for RDS instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-05.png"
+          ]
         }
       ]
     },
@@ -73,10 +106,10 @@
       "title": "Task 3 : Create RDS Database Instance",
       "steps": [
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to Aurora and RDS by clicking on the Services menu available under the Database section."
+          "text": "Navigate to Aurora and RDS by clicking on the Services menu available under the Database section."
         },
         {
           "text": "Click on Create Database."
@@ -85,13 +118,37 @@
           "text": "Database creation method : Full configuration"
         },
         {
+          "text": "Task 3 : Create RDS Database Instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-06.png"
+          ]
+        },
+        {
           "text": "Engine options : Select MySQL"
         },
         {
-          "text": "Version : Default"
+          "text": "Version : Default",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-07.png"
+          ]
         },
         {
-          "text": "Templates : Select Dev/Test, choose Single-AZ DB Instance deployment (1 Instance) as Availability and durability"
+          "text": "Task 3 : Create RDS Database Instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-08.png"
+          ]
+        },
+        {
+          "text": "Templates : Select Dev/Test, choose Single-AZ DB Instance deployment (1 Instance) as Availability and durability",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-09.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Create RDS Database Instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-10.png"
+          ]
         },
         {
           "text": "DB instance identifier : mydatabaseinstance"
@@ -103,19 +160,34 @@
           "text": "Master username : mydatabaseuser"
         },
         {
-          "text": "Master password and Confirm password: mydatabasepassword"
+          "text": "Master password and Confirm password: mydatabasepassword Note: This is the username/password combo used to log onto your database. Please make note of them somewhere safe.",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-11.png"
+          ]
         },
         {
-          "text": "Note: This is the username/password combo used to log onto your database. Please make note of them somewhere safe."
+          "text": "Task 3 : Create RDS Database Instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-12.png"
+          ]
         },
         {
-          "text": "DB instance class : db.t3.micro — 2 vCPU, 1 GiB RAM"
+          "text": "DB instance class : db.t3.micro — 2 vCPU, 1 GiB RAM",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-13.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Create RDS Database Instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-14.png"
+          ]
+        },
+        {
+          "text": "Storage type : General Purpose SSD (gp3). Note: By default, it will be gp2, kindly change to gp3."
         },
         {
           "text": "Storage type : General Purpose SSD (gp3)."
-        },
-        {
-          "text": "Note: By default, it will be gp2, kindly change to gp3."
         },
         {
           "text": "Allocated storage : 20 (default)"
@@ -124,16 +196,43 @@
           "text": "Click on Additional storage configuration to expand."
         },
         {
-          "text": "Enable storage autoscaling : Uncheck"
+          "text": "Enable storage autoscaling : Uncheck",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-15.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Create RDS Database Instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-16.png"
+          ]
         },
         {
           "text": "Public access : Select Yes"
         },
         {
-          "text": "VPC security groups : Select Choose existing"
+          "text": "VPC security groups : Select Choose existing Note: Remove the default one and select RDS_lab_sg instead",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-17.png"
+          ]
+        },
+        {
+          "text": "VPC security groups : Select Choose existing"
         },
         {
           "text": "Note: Remove the default one and select RDS_lab_sg instead"
+        },
+        {
+          "text": "Task 3 : Create RDS Database Instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-18.png"
+          ]
+        },
+        {
+          "text": "Click on Additional Configuration in the bottom of the page to expand it: Initial database name: mydatabase DB parameter group: default Option group: default Enable automated backups: uncheck Note: Leave all the other setting as default",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-19.png"
+          ]
         },
         {
           "text": "Click on Additional Configuration in the bottom of the page to expand it:"
@@ -148,22 +247,37 @@
           "text": "Option group: default"
         },
         {
-          "text": "Enable automated backups: uncheck"
+          "text": "Enable automated backups: uncheck",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-20.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Create RDS Database Instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-21.png"
+          ]
         },
         {
           "text": "Note: Leave all the other setting as default"
         },
         {
-          "text": "Click on Create database"
-        },
-        {
-          "text": "Note: You can ignore the Enable Monitoring Error."
+          "text": "Click on Create databaseNote: You can ignore the Enable Monitoring Error."
         },
         {
           "text": "Navigate to Databases."
         },
         {
-          "text": "On the RDS console, the details for the new DB instance appear. The DB instance has a status of creating until the DB instance is ready to use. When the state changes to Available, you can connect to the DB instance. It can take up to 20 minutes before the new instance status becomes Available."
+          "text": "On the RDS console, the details for the new DB instance appear. The DB instance has a status of creating until the DB instance is ready to use. When the state changes to Available, you can connect to the DB instance. It can take up to 20 minutes before the new instance status becomes Available.",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-22.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Create RDS Database Instance",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-23.png"
+          ]
         }
       ]
     },
@@ -171,46 +285,82 @@
       "title": "Task 4 : Connecting to RDS Database on a DB Instance using the MySQL Workbench",
       "steps": [
         {
-          "text": "In this task, we will connect to a database on a MySQL DB instance using MySQL monitor commands. One GUI-based application you can use to connect is MySQL workbench, which you have already downloaded and installed based on instructions in the prerequisite section."
+          "text": "In this task, we will connect to a database on a MySQL DB instance using MySQL monitor commands. One GUI-based application you can use to connect is MySQL workbench, which you have already downloaded and installed based on instructions in the prerequisite section."
+        },
+        {
+          "text": "To connect to a database on a DB instance using MySQL monitor, find the endpoint (DNS name) and port number for your DB Instance. Navigate to Databases and click on mydatabaseinstance. Under Connectivity & security section, copy and note the endpoint and port. Endpoint: Copy the endpoint Port: 3306 You need both the endpoint and the port number to connect to the DB instance.",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-24.png"
+          ]
         },
         {
           "text": "To connect to a database on a DB instance using MySQL monitor, find the endpoint (DNS name) and port number for your DB Instance."
         },
         {
-          "text": "Navigate to Databases and click on mydatabaseinstance."
+          "text": "Navigate to Databases and click on mydatabaseinstance."
         },
         {
-          "text": "Under Connectivity & security section, copy and note the endpoint and port."
+          "text": "Under Connectivity & security section, copy and note the endpoint and port. Endpoint: Copy the endpoint Port: 3306 You need both the endpoint and the port number to connect to the DB instance.",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-25.png"
+          ]
         },
         {
-          "text": "Endpoint: Copy the endpoint"
+          "text": "Under Connectivity & security section, copy and note the endpoint and port."
         },
         {
-          "text": "Port: 3306"
+          "text": "Endpoint: Copy the endpoint",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-26.png"
+          ]
+        },
+        {
+          "text": "Task 4 : Connecting to RDS Database on a DB Instance using the MySQL Workbench",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-27.png"
+          ]
+        },
+        {
+          "text": "Port: 3306"
         },
         {
           "text": "You need both the endpoint and the port number to connect to the DB instance."
         },
         {
-          "text": "Open MySQL Workbench. Click on the plus icon aside on MySQL Connections"
+          "text": "Open MySQL Workbench. Click on the plus icon aside on MySQL Connections Connection Name: Enter a sample name MyDatabseConnection Host Name: Past the Endpoint that you copied Port : 3306 Username : mydatabaseuser Password : Click on Store in keychain and enter password mydatabasepassword Click on ok."
         },
         {
-          "text": "Connection Name: Enter a sample name MyDatabseConnection"
+          "text": "Open MySQL Workbench. Click on the plus icon aside on MySQL Connections"
+        },
+        {
+          "text": "Connection Name: Enter a sample name MyDatabseConnection"
         },
         {
           "text": "Host Name: Past the Endpoint that you copied"
         },
         {
-          "text": "Port : 3306"
+          "text": "Port : 3306"
         },
         {
-          "text": "Username : mydatabaseuser"
+          "text": "Username : mydatabaseuser"
         },
         {
-          "text": "Password : Click on Store in keychain and enter password mydatabasepassword Click on ok."
+          "text": "Password : Click on Store in keychain and enter password mydatabasepassword Click on ok."
         },
         {
-          "text": "Click on Test Connection to make sure that you are able to connect to the database properly."
+          "text": "Task 4 : Connecting to RDS Database on a DB Instance using the MySQL Workbench",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-28.png"
+          ]
+        },
+        {
+          "text": "Click on Test Connection to make sure that you are able to connect to the database properly."
+        },
+        {
+          "text": "Task 4 : Connecting to RDS Database on a DB Instance using the MySQL Workbench",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-29.png"
+          ]
         },
         {
           "text": "Click on ok and ok again to save the connection."
@@ -219,16 +369,28 @@
           "text": "A database connection will be created in MySQL Workbench"
         },
         {
+          "text": "Task 4 : Connecting to RDS Database on a DB Instance using the MySQL Workbench",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-30.png"
+          ]
+        },
+        {
           "text": "Click on it to open the database. Enter the database password if prompted."
         },
         {
-          "text": "After successfully connecting and opening the database, you can create tables and perform various queries over the connected database."
+          "text": "After successfully connecting and opening the database, you can create tables and perform various queries over the connected database.",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-31.jpg"
+          ]
         },
         {
-          "text": "Navigate to the Schemas tab to see databases available to start doing database operations. More details on database operations are available here."
+          "text": "Task 4 : Connecting to RDS Database on a DB Instance using the MySQL Workbench",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-32.jpg"
+          ]
         },
         {
-          "text": "Do You Know?"
+          "text": "Navigate to the Schemas tab to see databases available to start doing database operations. More details on database operations are available here."
         },
         {
           "text": "AWS RDS supports the integration of geospatial data, allowing you to store, query, and analyze location-based information efficiently."
@@ -239,16 +401,16 @@
       "title": "Task 5 : Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 5 : Validation Test"
         },
         {
           "text": "You have successfully used AWS management console to create RDS MySQL database instance."
@@ -260,16 +422,13 @@
           "text": "You have used the GUI tool MySQL Workbench to connect to the Amazon RDS instance created."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
         }
       ]
     }

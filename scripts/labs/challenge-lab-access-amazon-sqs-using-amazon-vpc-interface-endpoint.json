@@ -1,0 +1,208 @@
+{
+  "slug": "challenge-lab-access-amazon-sqs-using-amazon-vpc-interface-endpoint",
+  "title": "Challenge Lab: Access Amazon SQS using Amazon VPC Interface Endpoint",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:15:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Portal",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Portal"
+        },
+        {
+          "text": "XYZ Company wants to securely connect their EC2 instances to Amazon SQS within a custom VPC. In this challenge lab, you will set up the infrastructure to create a private and secure connection to SQS. This includes configuring an SQS queue, creating the VPC, subnets, security groups, and setting up an interface endpoint for SQS. After the setup, your task is to test the configuration by sending a message from the EC2 instance to the SQS queue, ensuring secure communication."
+        },
+        {
+          "text": "Create an SQS Queue Region: us-east-1 Queue Name: <your-queue-name> (eg:MyWhizQueue) Type: Standard Save Queue URL"
+        },
+        {
+          "text": "Region: us-east-1"
+        },
+        {
+          "text": "Queue Name: <your-queue-name> (eg:MyWhizQueue)"
+        },
+        {
+          "text": "Type: Standard"
+        },
+        {
+          "text": "Save Queue URL"
+        },
+        {
+          "text": "Create a VPC Region: us-east-1 VPC Name: MyVPC CIDR Block: 192.168.0.0/26 IPv6 CIDR block: none Tenancy: Default Enable DNS Hostnames: Edit VPC settings to enable DNS hostnames."
+        },
+        {
+          "text": "Region: us-east-1"
+        },
+        {
+          "text": "VPC Name: MyVPC"
+        },
+        {
+          "text": "CIDR Block: 192.168.0.0/26"
+        },
+        {
+          "text": "IPv6 CIDR block: none"
+        },
+        {
+          "text": "Tenancy: Default"
+        },
+        {
+          "text": "Enable DNS Hostnames: Edit VPC settings to enable DNS hostnames."
+        },
+        {
+          "text": "Create and Attach an Internet Gateway Internet Gateway Name: <MyInternetGateway> Attach to VPC: MyVPC"
+        },
+        {
+          "text": "Internet Gateway Name: <MyInternetGateway>"
+        },
+        {
+          "text": "Attach to VPC: MyVPC"
+        },
+        {
+          "text": "Create a Subnet VPC: MyVPC Subnet Name: Subnet CIDR Block: 192.168.0.0/27 Availability Zone: us-east-1a"
+        },
+        {
+          "text": "VPC: MyVPC"
+        },
+        {
+          "text": "Subnet Name: Subnet"
+        },
+        {
+          "text": "CIDR Block: 192.168.0.0/27"
+        },
+        {
+          "text": "Availability Zone: us-east-1a"
+        },
+        {
+          "text": "Enable Auto-Assign Public IPv4 for Subnet Edit subnet settings to enable auto-assign public IPv4 address."
+        },
+        {
+          "text": "Edit subnet settings to enable auto-assign public IPv4 address."
+        },
+        {
+          "text": "Update Main Route Table Destination: 0.0.0.0/0 Target: Internet Gateway"
+        },
+        {
+          "text": "Destination: 0.0.0.0/0"
+        },
+        {
+          "text": "Target: Internet Gateway"
+        },
+        {
+          "text": "Create a Security Group for EC2 Instance Security Group Name: <your-security-group-name> (e.g., EI-SG) Inbound Rules: SSH from Anywhere, All traffic from 192.168.0.0/26 Outbound Rule: Modify to 192.168.0.0/26"
+        },
+        {
+          "text": "Security Group Name: <your-security-group-name> (e.g., EI-SG)"
+        },
+        {
+          "text": "Inbound Rules: SSH from Anywhere, All traffic from 192.168.0.0/26"
+        },
+        {
+          "text": "Outbound Rule: Modify to 192.168.0.0/26"
+        },
+        {
+          "text": "Launch an EC2 Instance Instance Name: Endpoint-Instance AMI: Amazon Linux 2023 kernel-6.1 Instance Type: t2.micro Key Pair: WhizKeypair VPC: MyVPC Security Group: Select created security group (e.g., EI-SG) IAM role: Select pre-configured IAM role with SQS access."
+        },
+        {
+          "text": "Instance Name: Endpoint-Instance"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 kernel-6.1"
+        },
+        {
+          "text": "Instance Type: t2.micro"
+        },
+        {
+          "text": "Key Pair: WhizKeypair"
+        },
+        {
+          "text": "VPC: MyVPC"
+        },
+        {
+          "text": "Security Group: Select created security group (e.g., EI-SG)"
+        },
+        {
+          "text": "IAM role: Select pre-configured IAM role with SQS access."
+        },
+        {
+          "text": "SSH into EC2 Instance Use the WhizKeypair.pem to SSH into the Endpoint instance. Test sending a message to SQS. Use the send_message() function from the AWS SDK (Boto3) to send a message to the SQS queue. Verify Message"
+        },
+        {
+          "text": "Use the WhizKeypair.pem to SSH into the Endpoint instance."
+        },
+        {
+          "text": "Test sending a message to SQS."
+        },
+        {
+          "text": "Use the send_message() function from the AWS SDK (Boto3) to send a message to the SQS queue."
+        },
+        {
+          "text": "Verify Message"
+        },
+        {
+          "text": "Create a VPC Endpoint for SQS Service Name: com.amazonaws.us-east-1.sqs Endpoint Type: Select Interface VPC: MyVPC Security Group: Select created security group (e.g., EI-SG) Subnet: Select the previously created subnet"
+        },
+        {
+          "text": "Service Name: com.amazonaws.us-east-1.sqs"
+        },
+        {
+          "text": "Endpoint Type: Select Interface"
+        },
+        {
+          "text": "VPC: MyVPC"
+        },
+        {
+          "text": "Security Group: Select created security group (e.g., EI-SG)"
+        },
+        {
+          "text": "Subnet: Select the previously created subnet"
+        },
+        {
+          "text": "Send Message to SQS Queue Use the SQS send-message command to send a message."
+        },
+        {
+          "text": "Use the SQS send-message command to send a message."
+        },
+        {
+          "text": "Verify Message in SQS Navigate to SQS Console and check the queue to ensure the message was received."
+        },
+        {
+          "text": "Navigate to SQS Console and check the queue to ensure the message was received."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

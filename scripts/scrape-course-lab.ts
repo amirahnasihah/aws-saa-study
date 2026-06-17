@@ -10,6 +10,9 @@
  * Batch scrape from manifest:
  *   bun run scrape:lab -- --batch [--offset 0] [--limit 5] [--skip-existing]
  *
+ * Re-scrape labs that have steps but no step images yet:
+ *   bun run scrape:lab -- --batch --missing-images [--offset 0] [--limit 10]
+ *
  * Auth (pick one):
  *   --cdp-endpoint chrome     Use your open Chrome (enable chrome://inspect/#remote-debugging)
  *   --cdp-endpoint http://127.0.0.1:9222
@@ -59,6 +62,7 @@ interface CliArgs {
   offset: number
   limit?: number
   skipExisting: boolean
+  missingImages: boolean
   cdpEndpoint?: string
 }
 
@@ -92,7 +96,7 @@ const parseArgs = (): CliArgs => {
   --url <lab-url>              Scrape one lab
   --course <course-url>        Discover labs (+ --list-only to skip scrape)
   --batch                      Scrape from ${COURSE_INDEX_PATH}
-  [--offset N] [--limit N] [--skip-existing] [--headless] [--no-seed] [--slug <id>]
+  [--offset N] [--limit N] [--skip-existing] [--missing-images] [--headless] [--no-seed] [--slug <id>]
   [--cdp-endpoint chrome|http://127.0.0.1:9222]`)
     process.exit(1)
   }
@@ -108,6 +112,7 @@ const parseArgs = (): CliArgs => {
     offset: parseInt(get('--offset') ?? '0', 10),
     limit: get('--limit') ? parseInt(get('--limit')!, 10) : undefined,
     skipExisting: args.includes('--skip-existing'),
+    missingImages: args.includes('--missing-images'),
     cdpEndpoint: resolveCdpEndpoint(get('--cdp-endpoint')),
   }
 }
@@ -127,7 +132,7 @@ const waitForLogin = async (page: Page, returnUrl: string): Promise<void> => {
 const isOnLoginPage = (url: string): boolean =>
   url.includes('/login') || url.includes('/signin')
 
-const ensureAuth = async (page: Page, targetUrl: string, headless: boolean): Promise<void> => {
+export const ensureAuth = async (page: Page, targetUrl: string, headless: boolean): Promise<void> => {
   await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 60_000 })
   if (!isOnLoginPage(page.url())) return
   if (headless) {
@@ -350,8 +355,12 @@ const clickStepsTab = async (page: Page): Promise<void> => {
   if (!found) throw new Error('Could not find Lab Steps / Challenge Steps tab')
 }
 
+const looksLikeStepsPanel = (text: string): boolean =>
+  /Task\s*\d+|Challenge Steps|Sign in to AWS|Cloud Challenge/i.test(text) && text.length > 80
+
 const findStepsPanel = async (page: Page): Promise<Locator> => {
   const panelSelectors = [
+    '.description-section',
     '.tab-content',
     '[class*="tabs-labs"] .tab-content',
     '[role="tabpanel"]',
@@ -361,26 +370,93 @@ const findStepsPanel = async (page: Page): Promise<Locator> => {
   const matched = await panelSelectors.reduce<Promise<Locator | null>>(async (prev, sel) => {
     const existing = await prev
     if (existing) return existing
-    const panel = page.locator(sel).first()
-    if (await panel.isVisible({ timeout: 1500 }).catch(() => false)) {
-      const text = await tryText(panel)
-      if (/Task\s*\d+|Challenge Steps|Sign in to AWS|Cloud Challenge/i.test(text) && text.length > 80) {
-        return panel
-      }
-    }
-    return null
+    const panels = page.locator(sel)
+    const count = await panels.count().catch(() => 0)
+    const found = await Array.from({ length: count }, (_, i) => i).reduce<Promise<Locator | null>>(
+      async (innerPrev, i) => {
+        const hit = await innerPrev
+        if (hit) return hit
+        const panel = panels.nth(i)
+        if (!await panel.isVisible({ timeout: 1500 }).catch(() => false)) return null
+        const text = await tryText(panel)
+        return looksLikeStepsPanel(text) ? panel : null
+      },
+      Promise.resolve(null),
+    )
+    return found
   }, Promise.resolve(null))
 
   if (matched) return matched
   throw new Error('Steps panel not found — expected .tab-content with tasks or challenge sections')
 }
 
-type RawBlock = { heading: string; html: string; text: string }
+type RawStep = { text: string; imageUrls: string[] }
+type RawBlock = { heading: string; steps: RawStep[] }
 
 const extractBlocks = async (panel: Locator): Promise<RawBlock[]> =>
   panel.evaluate((root) => {
-    const blocks: RawBlock[] = []
+    const blocks: Array<{ heading: string; steps: RawStep[] }> = []
     const taskRe = /^Task\s*\d+\s*:/i
+
+    const parseStepsFromHtml = (html: string): RawStep[] => {
+      const wrap = document.createElement('div')
+      wrap.innerHTML = html
+      const fromBlocks = [...wrap.querySelectorAll('p, li')]
+        .map((el) => {
+          const text = (el as HTMLElement).innerText?.trim().replace(/\u00a0/g, ' ') ?? ''
+          const imageUrls = [...el.querySelectorAll('img')]
+            .map((img) => img.getAttribute('src'))
+            .filter((src): src is string => Boolean(src))
+          return { text, imageUrls }
+        })
+        .filter((step) => step.text.length > 0 || step.imageUrls.length > 0)
+
+      if (fromBlocks.length > 0) return fromBlocks
+
+      const imageUrls = [...wrap.querySelectorAll('img')]
+        .map((img) => img.getAttribute('src'))
+        .filter((src): src is string => Boolean(src))
+      const text = (wrap as HTMLElement).innerText?.trim().replace(/\u00a0/g, ' ') ?? ''
+      const lines = text
+        .split(/\n+/)
+        .map((line) => line.replace(/^\d+[\).\s]+/, '').trim())
+        .filter(Boolean)
+
+      if (lines.length === 0 && imageUrls.length === 0) return []
+
+      return lines.length
+        ? lines.map((line, index) => ({
+            text: line,
+            imageUrls: index === lines.length - 1 ? imageUrls : [],
+          }))
+        : [{ text: 'Steps', imageUrls }]
+    }
+
+    const taskHeadings = [...root.querySelectorAll('h2, h3, h4')].filter((el) =>
+      taskRe.test((el as HTMLElement).innerText?.trim().replace(/\u00a0/g, ' ') ?? ''),
+    )
+
+    if (taskHeadings.length > 0) {
+      taskHeadings.forEach((h, i) => {
+        const heading = (h as HTMLElement).innerText?.trim().replace(/\s+/g, ' ') || `Task ${i + 1}`
+        const htmlParts: string[] = []
+        let el: Element | null = h.nextElementSibling
+
+        while (el) {
+          const tag = el.tagName.toLowerCase()
+          const t = (el as HTMLElement).innerText?.trim().replace(/\u00a0/g, ' ') ?? ''
+          if (['h2', 'h3', 'h4'].includes(tag) && taskRe.test(t)) break
+          htmlParts.push(el.outerHTML)
+          el = el.nextElementSibling
+        }
+
+        blocks.push({
+          heading,
+          steps: parseStepsFromHtml(htmlParts.join('\n')),
+        })
+      })
+      return blocks
+    }
 
     const challengeBoxes = root.querySelectorAll('.description-section .box, .tab-content .box')
     if (challengeBoxes.length > 0) {
@@ -388,75 +464,23 @@ const extractBlocks = async (panel: Locator): Promise<RawBlock[]> =>
         const titleEl = box.querySelector('.descri-block > strong, strong') as HTMLElement | null
         const heading = titleEl?.innerText?.trim().replace(/\s+/g, ' ')
           || `Challenge section ${i + 1}`
-        const stepEls = box.querySelectorAll('p, li')
-        const parts = [...stepEls]
-          .map((el) => (el as HTMLElement).innerText?.trim() ?? '')
-          .filter(Boolean)
-        const descriText = (box.querySelector('.descri-block') as HTMLElement | null)?.innerText?.trim() ?? ''
-        const lines = descriText
-          .split('\n')
-          .map((l) => l.trim())
-          .filter((l) => l && l !== heading)
-        const merged = parts.length ? parts : lines
-
         blocks.push({
           heading,
-          html: box.innerHTML,
-          text: merged.join('\n\n'),
+          steps: parseStepsFromHtml(box.innerHTML),
         })
       })
       if (blocks.length) return blocks
     }
 
-    const taskHeadings = [
-      ...root.querySelectorAll('h2, h3, h4, h5, strong, b, p, div, span'),
-    ].filter((el) => taskRe.test((el as HTMLElement).innerText?.trim() ?? ''))
-
-    const uniqueHeadings = taskHeadings.filter((el, idx, arr) => {
-      const text = (el as HTMLElement).innerText?.trim() ?? ''
-      return arr.findIndex((o) => (o as HTMLElement).innerText?.trim() === text) === idx
-    })
-
-    if (uniqueHeadings.length === 0) {
-      const text = (root as HTMLElement).innerText?.trim() ?? ''
-      if (text) blocks.push({ heading: 'Steps', html: root.innerHTML, text })
-      return blocks
-    }
-
-    uniqueHeadings.forEach((h, i) => {
-      const heading = (h as HTMLElement).innerText?.trim().replace(/\s+/g, ' ') || `Task ${i + 1}`
-      const parts: string[] = []
-      const htmlParts: string[] = []
-      let el: Element | null = h.nextElementSibling
-
-      while (el) {
-        const t = (el as HTMLElement).innerText?.trim() ?? ''
-        if (taskRe.test(t)) break
-        if (t) parts.push(t)
-        htmlParts.push(el.outerHTML)
-        el = el.nextElementSibling
-      }
-
+    const text = (root as HTMLElement).innerText?.trim() ?? ''
+    if (text) {
       blocks.push({
-        heading,
-        html: htmlParts.join('\n') || h.outerHTML,
-        text: parts.join('\n\n'),
+        heading: 'Steps',
+        steps: parseStepsFromHtml(root.innerHTML),
       })
-    })
-
+    }
     return blocks
   })
-
-const extractImagesFromHtml = (html: string): string[] => {
-  const urls: string[] = []
-  const re = /<img[^>]+src=["']([^"']+)["']/gi
-  let m = re.exec(html)
-  while (m) {
-    urls.push(m[1])
-    m = re.exec(html)
-  }
-  return [...new Set(urls)]
-}
 
 const absolutizeUrl = (src: string, base: string): string => {
   if (src.startsWith('http://') || src.startsWith('https://')) return src
@@ -497,7 +521,7 @@ const scrapeMetadata = async (page: Page): Promise<{
   return { title, level, duration, services: services.length ? services : ['AWS'] }
 }
 
-const scrapeLab = async (page: Page, url: string, slug: string, imageDir: string): Promise<Lab> => {
+export const scrapeLab = async (page: Page, url: string, slug: string, imageDir: string): Promise<Lab> => {
   console.log(`\n[${slug}] ${url}`)
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60_000 })
   await page.waitForSelector('h1, [class*="lab"]', { timeout: 20_000 }).catch(() => undefined)
@@ -521,36 +545,41 @@ const scrapeLab = async (page: Page, url: string, slug: string, imageDir: string
   const tasks: LabTask[] = []
 
   for (const block of blocks) {
-    const imageUrls = extractImagesFromHtml(block.html).map((src) => absolutizeUrl(src, url))
-    const localImages: string[] = []
+    const steps = await block.steps.reduce<Promise<LabTask['steps']>>(async (prev, rawStep) => {
+      const acc = await prev
+      const text = rawStep.text.replace(/^\d+[\).\s]+/, '').trim()
+      if (!text && rawStep.imageUrls.length === 0) return acc
 
-    await imageUrls.reduce(async (prev, imgUrl) => {
-      await prev
-      imgCounter += 1
-      const ext = imgUrl.match(/\.(png|jpe?g|gif|webp)(\?|$)/i)?.[1]?.toLowerCase() ?? 'png'
-      const filename = `step-${String(imgCounter).padStart(2, '0')}.${ext}`
-      const dest = join(imageDir, filename)
-      if (await downloadImage(page, imgUrl, dest)) {
-        localImages.push(`/labs/${slug}/${filename}`)
-      }
-    }, Promise.resolve())
+      const localImages: string[] = []
+      await rawStep.imageUrls.reduce(async (imagePrev, src) => {
+        await imagePrev
+        const imgUrl = absolutizeUrl(src, url)
+        imgCounter += 1
+        const ext = imgUrl.match(/\.(png|jpe?g|gif|webp)(\?|$)/i)?.[1]?.toLowerCase() ?? 'png'
+        const filename = `step-${String(imgCounter).padStart(2, '0')}.${ext}`
+        const dest = join(imageDir, filename)
+        if (await downloadImage(page, imgUrl, dest)) {
+          localImages.push(`/labs/${slug}/${filename}`)
+        }
+      }, Promise.resolve())
 
-    const lines = block.text
-      .split(/\n+/)
-      .map((l) => l.replace(/^\d+[\).\s]+/, '').trim())
-      .filter(Boolean)
+      acc.push({
+        text: text || block.heading,
+        images: localImages.length ? localImages : undefined,
+      })
+      return acc
+    }, Promise.resolve([]))
 
-    if (lines.length === 0 && localImages.length === 0) continue
-
-    const steps = lines.length
-      ? lines.map((text, i) => ({
-          text,
-          images: i === lines.length - 1 && localImages.length ? localImages : undefined,
-        }))
-      : [{ text: block.heading, images: localImages.length ? localImages : undefined }]
-
-    tasks.push({ title: block.heading, steps })
+    const dedupedSteps = steps.filter((step, index, arr) => index === 0 || step.text !== arr[index - 1]?.text)
+    if (dedupedSteps.length === 0) continue
+    tasks.push({ title: block.heading, steps: dedupedSteps })
   }
+
+  const imageCount = tasks.reduce(
+    (sum, task) => sum + task.steps.reduce((inner, step) => inner + (step.images?.length ?? 0), 0),
+    0,
+  )
+  console.log(`  ${tasks.length} tasks · ${imageCount} images`)
 
   return {
     slug,
@@ -565,7 +594,16 @@ const scrapeLab = async (page: Page, url: string, slug: string, imageDir: string
   }
 }
 
-const persistLab = (lab: Lab, seed: boolean): void => {
+export const labJsonHasImages = (slug: string): boolean => {
+  const jsonPath = join(LABS_DIR, `${slug}.json`)
+  if (!existsSync(jsonPath)) return false
+  const lab = JSON.parse(readFileSync(jsonPath, 'utf8')) as Lab
+  return lab.tasks?.some((task) =>
+    task.steps?.some((step) => (step.images?.length ?? 0) > 0),
+  ) ?? false
+}
+
+export const persistLab = (lab: Lab, seed: boolean): void => {
   const clean = sanitizeLab(lab)
   const imageDir = resolve(`public/labs/${clean.slug}`)
   const jsonPath = join(LABS_DIR, `${clean.slug}.json`)
@@ -584,7 +622,7 @@ const persistLab = (lab: Lab, seed: boolean): void => {
   }
 }
 
-const launchBrowser = async (
+export const launchBrowser = async (
   headless: boolean,
   cdpEndpoint?: string,
 ): Promise<{ context: BrowserContext; close: () => Promise<void> }> => {
@@ -651,7 +689,8 @@ const main = async (): Promise<void> => {
   }
 
   const slice = entries.slice(args.offset, args.limit ? args.offset + args.limit : undefined)
-  console.log(`\nBatch: ${slice.length} labs (offset ${args.offset})`)
+  const modeLabel = args.missingImages ? 'missing-images' : 'batch'
+  console.log(`\n${modeLabel}: ${slice.length} labs (offset ${args.offset})`)
 
   if (slice.length === 0) {
     await close()
@@ -667,7 +706,11 @@ const main = async (): Promise<void> => {
   await slice.reduce(async (prev, entry) => {
     await prev
     const jsonPath = join(LABS_DIR, `${entry.slug}.json`)
-    if (args.skipExisting && existsSync(jsonPath)) {
+    if (args.missingImages && labJsonHasImages(entry.slug)) {
+      console.log(`\n[skip has images] ${entry.slug}`)
+      return
+    }
+    if (args.skipExisting && existsSync(jsonPath) && !args.missingImages) {
       console.log(`\n[skip] ${entry.slug}`)
       return
     }
@@ -698,4 +741,6 @@ const main = async (): Promise<void> => {
   await close()
 }
 
-main().catch((err: unknown) => { console.error(err); process.exit(1) })
+if (import.meta.main) {
+  main().catch((err: unknown) => { console.error(err); process.exit(1) })
+}

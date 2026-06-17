@@ -1,0 +1,459 @@
+{
+  "slug": "hybrid-monitoring-system-deploymentusing-prometheus-with-grafana-on-awsand-vmware",
+  "title": "Hybrid Monitoring System Deployment using Prometheus with Grafana on AWS and VMware",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2 : Install and Configure Node Exporter on Local VMware Ubuntu VM",
+      "steps": [
+        {
+          "text": "In this task, we download and install Node Exporter on a local Ubuntu machine."
+        },
+        {
+          "text": "We perform all commands in root user mode, so switch to the root user. (Provide root user password )"
+        },
+        {
+          "text": "Open a terminal.Update the package index to ensure you have the latest package information."
+        },
+        {
+          "text": "Task 2 : Install and Configure Node Exporter on Local VMware Ubuntu VM"
+        },
+        {
+          "text": "download and Install Node Exporter (Download the specified version (v1.8.2) to ensure compatibility)"
+        },
+        {
+          "text": "Extract the file ."
+        },
+        {
+          "text": "Move the binary to a system path."
+        },
+        {
+          "text": "To Set executable permissions."
+        },
+        {
+          "text": "Task 2 : Install and Configure Node Exporter on Local VMware Ubuntu VM"
+        },
+        {
+          "text": "Create a systemd service file ."
+        },
+        {
+          "text": "Add the following content to run Node Exporter service file ."
+        },
+        {
+          "text": "Task 2 : Install and Configure Node Exporter on Local VMware Ubuntu VM"
+        },
+        {
+          "text": "Save the file (Ctrl+x ,Y, Enter) and exit"
+        },
+        {
+          "text": "Start and enable the service, and reload systemd to recognize the new service."
+        },
+        {
+          "text": "Check the service status to ensure it’s running."
+        },
+        {
+          "text": "Task 2 : Install and Configure Node Exporter on Local VMware Ubuntu VM"
+        },
+        {
+          "text": "Test the metrics endpoint to open Firefox Browser"
+        },
+        {
+          "text": "Task 2 : Install and Configure Node Exporter on Local VMware Ubuntu VM"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Launch an EC2 Instance",
+      "steps": [
+        {
+          "text": "In this task, we will create an EC2 Ubuntu instance."
+        },
+        {
+          "text": "Ensure you are in the US East (N. Virginia) us-east-1 Region to begin launching an EC2 instance in the Amazon cloud."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Click on the Instances option on the left panel, and then click on the Launch Instances button."
+        },
+        {
+          "text": "Name: Enter Ubuntu_server"
+        },
+        {
+          "text": "Task 3: Launch an EC2 Instance"
+        },
+        {
+          "text": "Select Ubuntu Server 24.04 LTS (HVM), SSD Volume from the dropdown."
+        },
+        {
+          "text": "Task 3: Launch an EC2 Instance"
+        },
+        {
+          "text": "Scroll down to choose"
+        },
+        {
+          "text": "Architecture : 64-bit (x86)"
+        },
+        {
+          "text": "Instance Type: t3.micro"
+        },
+        {
+          "text": "Task 3: Launch an EC2 Instance"
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: MyEC2Key"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Select Create key pair Button."
+        },
+        {
+          "text": "In Network Settings Click on Edit:"
+        },
+        {
+          "text": "Choose Default vpc and in the subnet section, select us-east-1a"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Choose : Create security group"
+        },
+        {
+          "text": "Security group name: Enter lab_sg"
+        },
+        {
+          "text": "Description: Security group for the lab_sg"
+        },
+        {
+          "text": "Task 3: Launch an EC2 Instance"
+        },
+        {
+          "text": "We will now add the security group rules. SSH will already be present there."
+        },
+        {
+          "text": "Click to add rules:"
+        },
+        {
+          "text": "For type: Custom TCP, port range: 3000, Source type to 0.0.0.0 (Anywhere)"
+        },
+        {
+          "text": "For type: Custom TCP, port range: 8428, Source type to 0.0.0.0 (Anywhere)"
+        },
+        {
+          "text": "Task 3: Launch an EC2 Instance"
+        },
+        {
+          "text": "Click Launch Instance."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Install and Configure Prometheus on Local VMware Ubuntu VM",
+      "steps": [
+        {
+          "text": "In this task, we will download and install Prometheus, configure it on a local VMware Ubuntu machine, access the Prometheus web UI and perform queries. Prometheus aggregates metrics from Node Exporter and forwards them to the cloud VM."
+        },
+        {
+          "text": "Download and Extract Prometheus open terminal and copy paste the commands."
+        },
+        {
+          "text": "Download version 2.54.1 for stability."
+        },
+        {
+          "text": "Extract and Move binaries to a system path ."
+        },
+        {
+          "text": "Set executable permissions."
+        },
+        {
+          "text": "Task 4: Install and Configure Prometheus on Local VMware Ubuntu VM"
+        },
+        {
+          "text": "Create Configuration Directory and File."
+        },
+        {
+          "text": "Add the following content to scrape Node Exporter and enable remote write to the cloud VM, replacing <cloud-vm-ip> with your AWS Ubuntu_server Public IP."
+        },
+        {
+          "text": "Task 4: Install and Configure Prometheus on Local VMware Ubuntu VM"
+        },
+        {
+          "text": "Save the file (Ctrl+x ,Y, Enter) and exit .Create a systemd service file"
+        },
+        {
+          "text": "Add the following content:"
+        },
+        {
+          "text": "Save and exit (Ctrl+x ,Y, Enter) ."
+        },
+        {
+          "text": "Start and Enable the Prometheus Service"
+        },
+        {
+          "text": "Reload systemd :"
+        },
+        {
+          "text": "To check if the service is running."
+        },
+        {
+          "text": "Task 4: Install and Configure Prometheus on Local VMware Ubuntu VM"
+        },
+        {
+          "text": "Now you access the Prometheus Web UI."
+        },
+        {
+          "text": "Open http://localhost:9090 in a (firefox) browser to confirm the UI loads."
+        },
+        {
+          "text": "Paste the Prometheus queries into the query area, then select the 'Graph' tab and check the 'Use local time' option."
+        },
+        {
+          "text": "To adjust the time to your current local time."
+        },
+        {
+          "text": "Task 4: Install and Configure Prometheus on Local VMware Ubuntu VM"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Install and Configure vmagent on Local VMware Ubuntu VM",
+      "steps": [
+        {
+          "text": "vmagent acts as an intermediary to forward metrics from Prometheus to the AWS cloud VM."
+        },
+        {
+          "text": "Download and Extract Prometheus open terminal and copy paste the commands."
+        },
+        {
+          "text": "Download version 2.54.1 for stability."
+        },
+        {
+          "text": "Extract and Move binaries to a system path and Set executable permissions."
+        },
+        {
+          "text": "Task 5: Install and Configure vmagent on Local VMware Ubuntu VM"
+        },
+        {
+          "text": "Create a systemd service file."
+        },
+        {
+          "text": "Add the following content, replacing <cloud-vm-ip> with your aws Ubuntu_server Public IP."
+        },
+        {
+          "text": "Task 5: Install and Configure vmagent on Local VMware Ubuntu VM"
+        },
+        {
+          "text": "Save and exit (Ctrl+x ,Y, Enter)."
+        },
+        {
+          "text": "Start and Enable the vmagent Service"
+        },
+        {
+          "text": "Verify the status."
+        },
+        {
+          "text": "Task 5: Install and Configure vmagent on Local VMware Ubuntu VM"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Install VictoriaMetrics on AWS EC2 Instance",
+      "steps": [
+        {
+          "text": "In this task, we will install and configure VictoriaMetrics on an AWS EC2 instance. VictoriaMetrics will store metrics received from the local vmagent."
+        },
+        {
+          "text": "Connect to the Ec2 instance via ssh or Browser based Console"
+        },
+        {
+          "text": "We perform all commands in root user mode, so switch to the root user. (Provide root user password )"
+        },
+        {
+          "text": "Open a terminal.Update the package index to ensure you have the latest package information."
+        },
+        {
+          "text": "Install required tools."
+        },
+        {
+          "text": "Download and Extract VictoriaMetrics. (Download version 1.93.0)"
+        },
+        {
+          "text": "Extract and Move binaries to a system path and Set executable permissions."
+        },
+        {
+          "text": "Create a systemd service file"
+        },
+        {
+          "text": "Add the following content and Save and exit (Ctrl+x ,Y, Enter)."
+        },
+        {
+          "text": "Start and Enable the victoriametrics Service"
+        },
+        {
+          "text": "To check Verify status (active) running or Not"
+        },
+        {
+          "text": "Test the endpoint"
+        },
+        {
+          "text": "Task 6: Install VictoriaMetrics on AWS EC2 Instance"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Install and Configure Grafana on AWS EC2 Instance",
+      "steps": [
+        {
+          "text": "In this task, we will install VictoriaMetrics and create a Grafana dashboard. Grafana will visualize metrics stored in VictoriaMetrics on the cloud VM."
+        },
+        {
+          "text": "Install grafana and dependencies:"
+        },
+        {
+          "text": "Start the Grafana service and enable it to automatically start on boot."
+        },
+        {
+          "text": "Check the service status running or not."
+        },
+        {
+          "text": "Task 7: Install and Configure Grafana on AWS EC2 Instance"
+        },
+        {
+          "text": "To access Grafana, open a web browser and go to http://<EC2-public-ip>:3000."
+        },
+        {
+          "text": "Use the default login credentials: Username: admin, Password: admin. Upon login, you will be prompted to set a new password for security reasons. Enter your new password, confirm it, and save the changes to complete the process."
+        },
+        {
+          "text": "Task 7: Install and Configure Grafana on AWS EC2 Instance"
+        },
+        {
+          "text": "In the Grafana UI, click on the Connections in the left-hand menu and Select Data Sources"
+        },
+        {
+          "text": "Task 7: Install and Configure Grafana on AWS EC2 Instance"
+        },
+        {
+          "text": "From the user input field type or, choose Prometheus"
+        },
+        {
+          "text": "Task 7: Install and Configure Grafana on AWS EC2 Instance"
+        },
+        {
+          "text": "Scroll down in the connection section, Prometheus server URL field to provide."
+        },
+        {
+          "text": "Task 7: Install and Configure Grafana on AWS EC2 Instance"
+        },
+        {
+          "text": "Click Save & Test to save the configuration and check the connection."
+        },
+        {
+          "text": "Task 7: Install and Configure Grafana on AWS EC2 Instance"
+        },
+        {
+          "text": "Go to Dashboards (four squares icon) and click 'New' to access the import option."
+        },
+        {
+          "text": "Task 7: Install and Configure Grafana on AWS EC2 Instance"
+        },
+        {
+          "text": "Scroll down, enter the number 1860, and click Load."
+        },
+        {
+          "text": "Task 7: Install and Configure Grafana on AWS EC2 Instance"
+        },
+        {
+          "text": "Scroll down and select Promotheus and click import"
+        },
+        {
+          "text": "Task 7: Install and Configure Grafana on AWS EC2 Instance"
+        },
+        {
+          "text": "Congratulations! You’ve now created the Grafana dashboard. You can view the data from your local Ubuntu machine and explore the metrics."
+        },
+        {
+          "text": "Note : If you couldn't able to see the metrics dashboard, your local network may get blocked! So, ensure you have better network!"
+        },
+        {
+          "text": "Task 7: Install and Configure Grafana on AWS EC2 Instance"
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample Output"
+        },
+        {
+          "text": "Task 8: Validation of the Lab"
+        },
+        {
+          "text": "You have successfully installed Node Exporter and Prometheus on your local Ubuntu machine."
+        },
+        {
+          "text": "You have successfully configured Prometheus to scrape metrics from Node Exporter and forward them to your cloud-based VictoriaMetrics instance."
+        },
+        {
+          "text": "You have installed Grafana on an AWS EC2 instance and connected it to Prometheus for visualizing real-time system metrics."
+        },
+        {
+          "text": "You have successfully set up VictoriaMetrics on AWS EC2 for efficient storage and retrieval of monitoring data."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

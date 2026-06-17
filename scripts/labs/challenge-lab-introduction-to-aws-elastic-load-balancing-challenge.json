@@ -24,19 +24,20 @@
           "text": "In this challenge, your AWS compute skills are put to the test. You'll be given a requirement, and you have to reach it using your knowledge."
         },
         {
+          "text": "Challenge section 1",
+          "images": [
+            "/labs/challenge-lab-introduction-to-aws-elastic-load-balancing-challenge/step-01.png",
+            "/labs/challenge-lab-introduction-to-aws-elastic-load-balancing-challenge/step-02.png"
+          ]
+        },
+        {
           "text": "A company, XYZ wants to build their Website in AWS Console with EC2 Instance Contents using, Apache HTTP Server Scripts. The website should be highly available in case of any server failures. Below are the tasks you have to perform to create the Load balancer and EC2 instances."
         },
         {
           "text": "Launch 2 EC2 Instances Instance 1 and Instance 2, type as t2.micro with SSH, HTTP, HTTPS."
         },
         {
-          "text": "Advanced details and under the User data: section, Enter the script to create an HTML page served by an Apache httpd web server, create a custom html page as below:"
-        },
-        {
-          "text": "Instance 1 webpage should display: Welcome to Lab Server 1"
-        },
-        {
-          "text": "Instance 2 webpage should display: Welcome to Lab Server 2"
+          "text": "Advanced details and under the User data: section, Enter the script to create an HTML page served by an Apache httpd web server, create a custom html page as below: Instance 1 webpage should display: Welcome to Lab Server 1 Instance 2 webpage should display: Welcome to Lab Server 2"
         },
         {
           "text": "Instance 1 webpage should display: Welcome to Lab Server 1"
@@ -69,16 +70,7 @@
           "text": "Your Load Balancer will be listed there."
         },
         {
-          "text": "To delete the load balancer, you need to perform the following actions:"
-        },
-        {
-          "text": "Select the load balancer,"
-        },
-        {
-          "text": "Click on the Actions button,"
-        },
-        {
-          "text": "Select the Delete option."
+          "text": "To delete the load balancer, you need to perform the following actions: Select the load balancer, Click on the Actions button, Select the Delete option."
         },
         {
           "text": "Select the load balancer,"
@@ -99,13 +91,7 @@
           "text": "In the EC2 console, navigate to Target groups in the left-side panel."
         },
         {
-          "text": "To delete the target group, you need to perform the following actions:"
-        },
-        {
-          "text": "Click on the Actions button,"
-        },
-        {
-          "text": "Select the Delete option."
+          "text": "To delete the target group, you need to perform the following actions: Click on the Actions button, Select the Delete option."
         },
         {
           "text": "Click on the Actions button,"
@@ -120,16 +106,7 @@
           "text": "In the EC2 console, navigate to Instances in the left-side panel."
         },
         {
-          "text": "To terminate the EC2 Instances, need to perform the following actions:"
-        },
-        {
-          "text": "Select the EC2 instance"
-        },
-        {
-          "text": "Click on the Instance state button,"
-        },
-        {
-          "text": "Select the Terminate instance option"
+          "text": "To terminate the EC2 Instances, need to perform the following actions: Select the EC2 instance Click on the Instance state button, Select the Terminate instance option"
         },
         {
           "text": "Select the EC2 instance"

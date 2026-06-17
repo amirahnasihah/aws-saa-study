@@ -1,0 +1,175 @@
+{
+  "slug": "challenge-lab-setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer",
+  "title": "Challenge Lab : Setting up the VPC environment, launching EC2 instances, and testing reachability using the AWS Reachability Analyzer",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:15:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Portal",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Portal"
+        },
+        {
+          "text": "XYZ Company wants to test internal connectivity between resources within a custom Virtual Private Cloud (VPC) environment. As part of this, you are tasked with creating a secure VPC with both public and private subnets, launching EC2 instances in each, and verifying communication between them using AWS Reachability Analyzer. This setup helps ensure proper network configuration and access control between public-facing and internal resources."
+        },
+        {
+          "text": "Create VPC Name: reachability-test-VPC CIDR block: 10.0.0.0/16"
+        },
+        {
+          "text": "Name: reachability-test-VPC"
+        },
+        {
+          "text": "CIDR block: 10.0.0.0/16"
+        },
+        {
+          "text": "Create Subnets Public Subnet: 10.0.1.0/24 Private Subnet: 10.0.2.0/24"
+        },
+        {
+          "text": "Public Subnet: 10.0.1.0/24"
+        },
+        {
+          "text": "Private Subnet: 10.0.2.0/24"
+        },
+        {
+          "text": "Configure Internet Access Create a Route Table Name: MY-RT Create and attach an Internet Gateway Name: My-Internet-Gateway Add route: 0.0.0.0/0 ? target: Internet Gateway Associate MY-RT with the public subnet"
+        },
+        {
+          "text": "Create a Route Table Name: MY-RT"
+        },
+        {
+          "text": "Name: MY-RT"
+        },
+        {
+          "text": "Create and attach an Internet Gateway Name: My-Internet-Gateway"
+        },
+        {
+          "text": "Name: My-Internet-Gateway"
+        },
+        {
+          "text": "Add route: 0.0.0.0/0 ? target: Internet Gateway"
+        },
+        {
+          "text": "Associate MY-RT with the public subnet"
+        },
+        {
+          "text": "Launch EC2 Instances Instance 1: Public Subnet Name: MyEC2Server1 AMI: Amazon Linux 2023 kernel-6.1 Type: t2.micro Key Pair: WhizKey (.pem, RSA) Network: VPC: reachability-test-VPC Subnet: public subnet Auto-assign Public IP: Enabled Security Group: MyEC2Server_SG Inbound: SSH + HTTP from Anywhere Instance 2: Private Subnet Name: MyEC2Server2 Same config as above, except: Subnet: private subnet Security Group: PrivateEC2Server_SG Inbound: Allow All Traffic from MyEC2Server_SG"
+        },
+        {
+          "text": "Instance 1: Public Subnet Name: MyEC2Server1 AMI: Amazon Linux 2023 kernel-6.1 Type: t2.micro Key Pair: WhizKey (.pem, RSA)"
+        },
+        {
+          "text": "Name: MyEC2Server1"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 kernel-6.1"
+        },
+        {
+          "text": "Type: t2.micro"
+        },
+        {
+          "text": "Key Pair: WhizKey (.pem, RSA)"
+        },
+        {
+          "text": "Network: VPC: reachability-test-VPC Subnet: public subnet Auto-assign Public IP: Enabled"
+        },
+        {
+          "text": "VPC: reachability-test-VPC"
+        },
+        {
+          "text": "Subnet: public subnet"
+        },
+        {
+          "text": "Auto-assign Public IP: Enabled"
+        },
+        {
+          "text": "Security Group: MyEC2Server_SG Inbound: SSH + HTTP from Anywhere Instance 2: Private Subnet Name: MyEC2Server2 Same config as above, except: Subnet: private subnet Security Group: PrivateEC2Server_SG Inbound: Allow All Traffic from MyEC2Server_SG"
+        },
+        {
+          "text": "Inbound: SSH + HTTP from Anywhere"
+        },
+        {
+          "text": "Instance 2: Private Subnet"
+        },
+        {
+          "text": "Name: MyEC2Server2"
+        },
+        {
+          "text": "Same config as above, except:"
+        },
+        {
+          "text": "Subnet: private subnet Security Group: PrivateEC2Server_SG Inbound: Allow All Traffic from MyEC2Server_SG"
+        },
+        {
+          "text": "Security Group: PrivateEC2Server_SG Inbound: Allow All Traffic from MyEC2Server_SG"
+        },
+        {
+          "text": "Inbound: Allow All Traffic from MyEC2Server_SG"
+        },
+        {
+          "text": "Run Reachability Test Open Reachability Analyzer Create analysis: Name: ec2-to-ec2-reachability Source: MyEC2Server1 Destination: MyEC2Server2 Analyze path"
+        },
+        {
+          "text": "Open Reachability Analyzer"
+        },
+        {
+          "text": "Create analysis: Name: ec2-to-ec2-reachability Source: MyEC2Server1 Destination: MyEC2Server2"
+        },
+        {
+          "text": "Name: ec2-to-ec2-reachability"
+        },
+        {
+          "text": "Source: MyEC2Server1"
+        },
+        {
+          "text": "Destination: MyEC2Server2"
+        },
+        {
+          "text": "Analyze path"
+        },
+        {
+          "text": "Review Results Check if the result is Reachable If Unreachable, review diagnostics for cause"
+        },
+        {
+          "text": "Check if the result is Reachable"
+        },
+        {
+          "text": "If Unreachable, review diagnostics for cause"
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

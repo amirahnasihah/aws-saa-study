@@ -1,0 +1,91 @@
+{
+  "slug": "challenge-lab-hands-on-with-ec2-instance-hibernation",
+  "title": "Challenge Lab - EC2 Instance Hibernation",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Portal",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Portal"
+        },
+        {
+          "text": "XYZ Company wants to launch an EC2 instance with hibernation enabled to ensure that critical application data is preserved across instance stops and starts. This will allow their development team to quickly resume operations without data loss."
+        },
+        {
+          "text": "Launch an Instance including Stop-Hibernate option. Region: US East (N. Virginia) – us-east-1 AMI: Amazon Linux 2023 kernel, 64-bit (x86) Instance Type: t2.micro create key pair Security Group: SSH from My IP Root Volume: Volume 1 (AMI Root), Encrypted (aws/ebs key) Stop-Hibernate Behavior: Enabled"
+        },
+        {
+          "text": "Region: US East (N. Virginia) – us-east-1"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 kernel, 64-bit (x86)"
+        },
+        {
+          "text": "Instance Type: t2.micro"
+        },
+        {
+          "text": "create key pair"
+        },
+        {
+          "text": "Security Group: SSH from My IP"
+        },
+        {
+          "text": "Root Volume: Volume 1 (AMI Root), Encrypted (aws/ebs key)"
+        },
+        {
+          "text": "Stop-Hibernate Behavior: Enabled"
+        },
+        {
+          "text": "Testing Hibernation via Console. Hibernate and start the instance to verify it resumes in the running state."
+        },
+        {
+          "text": "Hibernate and start the instance to verify it resumes in the running state."
+        },
+        {
+          "text": "Testing Hibernation via CloudShell Copy Instance ID and hibernate using CloudShell. Start and verify it resumes running. (Hint: Use stop/start commands.)"
+        },
+        {
+          "text": "Copy Instance ID and hibernate using CloudShell."
+        },
+        {
+          "text": "Start and verify it resumes running. (Hint: Use stop/start commands.)"
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

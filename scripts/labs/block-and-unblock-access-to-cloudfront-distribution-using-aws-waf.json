@@ -9,22 +9,13 @@
   "duration": "01:30:00",
   "tasks": [
     {
-      "title": "Project Steps",
+      "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
-        },
-        {
-          "text": "On the AWS sign-in page,"
-        },
-        {
-          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project."
-        },
-        {
-          "text": "Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project. Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -33,163 +24,104 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project."
         },
         {
-          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project."
+          "text": "Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Copy the S3 Object URL of the Sample template to create CloudFormation stack",
+      "steps": [
+        {
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Click on the S3 bucket name starting with lab to open.",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-01.png"
+          ]
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "This bucket is created during the start of project, Click on the S3 object \"WAF_CF_template.template\" to open.",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-02.png"
+          ]
         },
         {
-          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+          "text": "To copy the Object URL, click on the copy icon of the Object URL.",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-03.png"
+          ]
         },
         {
-          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+          "text": "Copy and save it to the notepad, you will need this during the CloudFormation Stack creation.\nCopied content example: https://s3.amazonaws.com/lab.1379.27205996/WAF_CF_template.template"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create a CloudFormation stack using a template present in an S3 Bucket",
+      "steps": [
+        {
+          "text": "Navigate to CloudFormation. Click Services, click on CloudFormation in the Management & Governance section."
         },
         {
-          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
+          "text": "On the CloudFormation dashboard, click on Create Stack",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-04.png"
+          ]
         },
         {
-          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
-        },
-        {
-          "text": "Click on the S3 bucket name starting with lab to open."
-        },
-        {
-          "text": "Click on the S3 bucket name starting with lab to open."
-        },
-        {
-          "text": "This bucket is created during the start of project, Click on the S3 object \"WAF_CF_template.template\" to open."
-        },
-        {
-          "text": "This bucket is created during the start of project, Click on the S3 object \"WAF_CF_template.template\" to open."
-        },
-        {
-          "text": "To copy the Object URL, click on the copy icon of the Object URL."
-        },
-        {
-          "text": "To copy the Object URL, click on the copy icon of the Object URL."
-        },
-        {
-          "text": "Copy and save it to the notepad, you will need this during the CloudFormation Stack creation."
-        },
-        {
-          "text": "Copied content example: https://s3.amazonaws.com/lab.1379.27205996/WAF_CF_template.template"
-        },
-        {
-          "text": "Copy and save it to the notepad, you will need this during the CloudFormation Stack creation."
-        },
-        {
-          "text": "Copied content example: https://s3.amazonaws.com/lab.1379.27205996/WAF_CF_template.template"
-        },
-        {
-          "text": "Navigate to CloudFormation. Click Services, click on CloudFormation in the Management & Governance section."
-        },
-        {
-          "text": "Navigate to CloudFormation. Click Services, click on CloudFormation in the Management & Governance section."
-        },
-        {
-          "text": "On the CloudFormation dashboard, click on Create Stack"
-        },
-        {
-          "text": "On the CloudFormation dashboard, click on Create Stack"
+          "text": "For Step-1, Specify template. Prerequisite - Prepare template : Select Choose an existing template Specify Template : Template source : Select Amazon S3 URL Amazon S3 URL : Paste the URL copied from earlier. https://s3.amazonaws.com/lab.1379.27205996/WAF_CF_template.template Click on Next.",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-05.png"
+          ]
         },
         {
           "text": "For Step-1, Specify template."
         },
         {
-          "text": "Prerequisite - Prepare template : Select Choose an existing template"
+          "text": "Prerequisite - Prepare template : Select Choose an existing template"
+        },
+        {
+          "text": "Specify Template : Template source : Select Amazon S3 URL Amazon S3 URL : Paste the URL copied from earlier. https://s3.amazonaws.com/lab.1379.27205996/WAF_CF_template.template Click on Next.",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-06.png"
+          ]
         },
         {
           "text": "Specify Template :"
         },
         {
-          "text": "Template source : Select Amazon S3 URL"
+          "text": "Template source : Select Amazon S3 URL"
         },
         {
-          "text": "Amazon S3 URL : Paste the URL copied from earlier. https://s3.amazonaws.com/lab.1379.27205996/WAF_CF_template.template"
+          "text": "Amazon S3 URL : Paste the URL copied from earlier. https://s3.amazonaws.com/lab.1379.27205996/WAF_CF_template.template"
         },
         {
-          "text": "Click on Next."
+          "text": "Click on Next."
         },
         {
-          "text": "For Step-1, Specify template."
-        },
-        {
-          "text": "Prerequisite - Prepare template : Select Choose an existing template"
-        },
-        {
-          "text": "Prerequisite - Prepare template : Select Choose an existing template"
-        },
-        {
-          "text": "Specify Template :"
-        },
-        {
-          "text": "Template source : Select Amazon S3 URL"
-        },
-        {
-          "text": "Amazon S3 URL : Paste the URL copied from earlier. https://s3.amazonaws.com/lab.1379.27205996/WAF_CF_template.template"
-        },
-        {
-          "text": "Click on Next."
-        },
-        {
-          "text": "Specify Template :"
-        },
-        {
-          "text": "Template source : Select Amazon S3 URL"
-        },
-        {
-          "text": "Template source : Select Amazon S3 URL"
-        },
-        {
-          "text": "Amazon S3 URL : Paste the URL copied from earlier. https://s3.amazonaws.com/lab.1379.27205996/WAF_CF_template.template"
-        },
-        {
-          "text": "Amazon S3 URL : Paste the URL copied from earlier. https://s3.amazonaws.com/lab.1379.27205996/WAF_CF_template.template"
-        },
-        {
-          "text": "Click on Next."
+          "text": "For Step-2, Specify stack details Stack Name: Enter DemoStack Keep all the options as default Click on Next button."
         },
         {
           "text": "For Step-2, Specify stack details"
         },
         {
-          "text": "Stack Name: Enter DemoStack"
+          "text": "Stack Name: Enter DemoStack"
         },
         {
           "text": "Keep all the options as default"
         },
         {
-          "text": "Click on Next button."
+          "text": "Click on Next button."
         },
         {
-          "text": "For Step-2, Specify stack details"
-        },
-        {
-          "text": "Stack Name: Enter DemoStack"
-        },
-        {
-          "text": "Stack Name: Enter DemoStack"
-        },
-        {
-          "text": "Keep all the options as default"
-        },
-        {
-          "text": "Keep all the options as default"
-        },
-        {
-          "text": "Click on Next button."
-        },
-        {
-          "text": "Click on Next button."
+          "text": "For Step-3, Configure stack options, In the Permissions tab, select the IAM role name. In the dropdown, please select the IAM role.\nKeep remaining everything as default and click on Next button."
         },
         {
           "text": "For Step-3, Configure stack options,"
@@ -198,319 +130,150 @@
           "text": "In the Permissions tab, select the IAM role name. In the dropdown, please select the IAM role."
         },
         {
-          "text": "Keep remaining everything as default and click on Next button."
+          "text": "Keep remaining everything as default and click on Next button."
         },
         {
-          "text": "For Step-3, Configure stack options,"
+          "text": "Stack creation is having status as CREATE_IN_PROGRESS and it may take up to 15 minutes for the status to change to CREATE_COMPLETE.",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-07.png"
+          ]
         },
         {
-          "text": "In the Permissions tab, select the IAM role name. In the dropdown, please select the IAM role."
-        },
-        {
-          "text": "In the Permissions tab, select the IAM role name. In the dropdown, please select the IAM role."
-        },
-        {
-          "text": "Keep remaining everything as default and click on Next button."
-        },
-        {
-          "text": "Stack creation is having status as CREATE_IN_PROGRESS and it may take up to 15 minutes for the status to change to CREATE_COMPLETE."
-        },
-        {
-          "text": "Stack creation is having status as CREATE_IN_PROGRESS and it may take up to 15 minutes for the status to change to CREATE_COMPLETE."
-        },
-        {
-          "text": "After some time, the status has changed to CREATE_COMPLETE."
-        },
-        {
-          "text": "After some time, the status has changed to CREATE_COMPLETE."
+          "text": "After some time, the status has changed to CREATE_COMPLETE."
         },
         {
           "text": "Switch to the Outputs tab and click to open WebsiteURL and CloudFront URL in a new tab."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create the WAF Web ACL and Rules",
+      "steps": [
+        {
+          "text": "Click On Services And Select WAF & Shield Under The Security, Identity And Compliance Section."
         },
         {
-          "text": "Switch to the Outputs tab and click to open WebsiteURL and CloudFront URL in a new tab."
+          "text": "In the left panel, scroll to the bottom and click Switch to the old WAF Console.",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-08.png"
+          ]
         },
         {
-          "text": "Click On Services And Select WAF & Shield Under The Security, Identity And Compliance Section."
+          "text": "Open IP Sets section from left sidebar and perform the following task:\n• From drop down make sure it is Global (CloudFront).\n• Click on the Create IP Set button for creating IPv4 IP set • Name: Enter IP_match_v4\n• Select IP version: IPv4",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-09.png"
+          ]
         },
         {
-          "text": "In the left panel, scroll to the bottom and click Switch to the old WAF Console."
+          "text": "Open IP Sets section from left sidebar and perform the following task:\n• From drop down make sure it is Global (CloudFront).\n• Click on the Create IP Set button for creating IPv4 IP set"
         },
         {
-          "text": "Open IP Sets section from left sidebar and perform the following task:"
-        },
-        {
-          "text": "• From drop down make sure it is Global (CloudFront)."
-        },
-        {
-          "text": "• Click on the Create IP Set button for creating IPv4 IP set"
-        },
-        {
-          "text": "• Name: Enter IP_match_v4"
-        },
-        {
-          "text": "• Select IP version: IPv4"
-        },
-        {
-          "text": "Open IP Sets section from left sidebar and perform the following task:"
-        },
-        {
-          "text": "• From drop down make sure it is Global (CloudFront)."
-        },
-        {
-          "text": "• Click on the Create IP Set button for creating IPv4 IP set"
-        },
-        {
-          "text": "• Name: Enter IP_match_v4"
-        },
-        {
-          "text": "• Select IP version: IPv4"
+          "text": "• Name: Enter IP_match_v4\n• Select IP version: IPv4"
         },
         {
           "text": "IP addresses : 10.0.0.0/32"
         },
         {
-          "text": "IP addresses : 10.0.0.0/32"
+          "text": "• Keep all the fields as default and click on the Create IP Set button."
         },
         {
-          "text": "• Keep all the fields as default and click on the Create IP Set button."
-        },
-        {
-          "text": "• IP_match_v4 IP Set is created successfully."
-        },
-        {
-          "text": "• From drop down make sure it is Global (CloudFront)."
-        },
-        {
-          "text": "• Click on the Create IP Set button again for creating ipv6 IP set"
-        },
-        {
-          "text": "• Name: Enter IP_match_v6"
-        },
-        {
-          "text": "• Select IP version as IPv6"
+          "text": "• IP_match_v4 IP Set is created successfully.\n• From drop down make sure it is Global (CloudFront).\n• Click on the Create IP Set button again for creating ipv6 IP set\n• Name: Enter IP_match_v6\n• Select IP version as IPv6"
         },
         {
           "text": "Add IP address : 2001:db8:a0b:12f0::1/128"
         },
         {
-          "text": "• Keep all the fields as default and click on the Create IP Set button."
+          "text": "Task 4: Create the WAF Web ACL and Rules",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-10.png"
+          ]
         },
         {
-          "text": "• IP_match_v6 IP Set is created successfully."
+          "text": "• Keep all the fields as default and click on the Create IP Set button.\n• IP_match_v6 IP Set is created successfully."
         },
         {
-          "text": "Open Web ACLs from left menu"
+          "text": "Open Web ACLs from left menu"
         },
         {
-          "text": "Change the Filter to Global (CloudFront)."
+          "text": "Change the Filter to Global (CloudFront)."
         },
         {
-          "text": "Click on the Create web ACL button."
+          "text": "Click on the Create web ACL button.",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-11.png"
+          ]
         },
         {
-          "text": "For Step-1, Name web ACL, fill the below details:"
+          "text": "For Step-1, Name web ACL, fill the below details:\n• Resource Type: Select Global resources (CloudFront Distributions and AWS Amplify Applications)\n• Web ACL Name: Enter Whiz\n• CloudWatch metric name: Enter Whiz • Under Associate Click on Add AWS Resources button .\n• A pop up will appear Add AWS resources to associate: Select the CloudFront distribution present as shown below.\n• Click Add button • Click on the Next button to proceed. For Step-2, Add Rules and rule groups, complete the below requirements given:\n• Click on the Add rule button then select Add my own rules and rule groups. • Select Rule builder. • Name: Enter Rule\n• Rule type: Regular rule (default) • To Add Statement and action, Choose the following: • if a request : matches the statement • inspect : Originate from an IP address in • IP Set : IP_match_v4. • Action : Block • Click on the Add Rule button.\n• Click on the Add rule button again then select Add my own rules and rule groups. • Select Rule builder. • Name: Enter Rule2\n• Rule type: Regular rule (default) • To Add Statement and action, Choose the following: • if a request : matches the statement • inspect : Originate from an IP address in • IP Set : IP_match_v6. • Action : Block",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-12.png",
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-13.png",
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-14.png",
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-15.png",
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-16.png",
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-17.png",
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-18.png"
+          ]
         },
         {
-          "text": "• Resource Type: Select Global resources (CloudFront Distributions and AWS Amplify Applications)"
+          "text": "For Step-2, Add Rules and rule groups, complete the below requirements given:\n• Click on the Add rule button then select Add my own rules and rule groups. • Select Rule builder. • Name: Enter Rule\n• Rule type: Regular rule (default) • To Add Statement and action, Choose the following: • if a request : matches the statement • inspect : Originate from an IP address in • IP Set : IP_match_v4. • Action : Block • Click on the Add Rule button.\n• Click on the Add rule button again then select Add my own rules and rule groups. • Select Rule builder. • Name: Enter Rule2\n• Rule type: Regular rule (default) • To Add Statement and action, Choose the following: • if a request : matches the statement • inspect : Originate from an IP address in • IP Set : IP_match_v6. • Action : Block",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-19.png",
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-20.png",
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-21.png",
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-22.png",
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-23.png"
+          ]
         },
         {
-          "text": "• Web ACL Name: Enter Whiz"
+          "text": "• Click on the Add Rule button.\n• Default Web ACL action for requests that don't match any rules: Select Allow."
         },
         {
-          "text": "• CloudWatch metric name: Enter Whiz"
+          "text": "• Click on the Next button."
         },
         {
-          "text": "• Under Associate Click on Add AWS Resources button ."
+          "text": "For Step-3, keep Set rule priority as default and click Next."
         },
         {
-          "text": "• A pop up will appear Add AWS resources to associate: Select the CloudFront distribution present as shown below."
+          "text": "For Step-4, keep Configure metrics as default and click Next."
         },
         {
-          "text": "• Click Add button"
+          "text": "For Step-5, review and click on Create Web ACL button."
         },
         {
-          "text": "• Click on the Next button to proceed."
-        },
-        {
-          "text": "For Step-2, Add Rules and rule groups, complete the below requirements given:"
-        },
-        {
-          "text": "• Click on the Add rule button then select Add my own rules and rule groups."
-        },
-        {
-          "text": "• Select Rule builder."
-        },
-        {
-          "text": "• Name: Enter Rule"
-        },
-        {
-          "text": "• Rule type: Regular rule (default)"
-        },
-        {
-          "text": "• To Add Statement and action, Choose the following:"
-        },
-        {
-          "text": "• if a request : matches the statement"
-        },
-        {
-          "text": "• inspect : Originate from an IP address in"
-        },
-        {
-          "text": "• IP Set : IP_match_v4."
-        },
-        {
-          "text": "• Action : Block"
-        },
-        {
-          "text": "• Click on the Add Rule button."
-        },
-        {
-          "text": "• Click on the Add rule button again then select Add my own rules and rule groups."
-        },
-        {
-          "text": "• Select Rule builder."
-        },
-        {
-          "text": "• Name: Enter Rule2"
-        },
-        {
-          "text": "• Rule type: Regular rule (default)"
-        },
-        {
-          "text": "• To Add Statement and action, Choose the following:"
-        },
-        {
-          "text": "• if a request : matches the statement"
-        },
-        {
-          "text": "• inspect : Originate from an IP address in"
-        },
-        {
-          "text": "• IP Set : IP_match_v6."
-        },
-        {
-          "text": "• Action : Block"
-        },
-        {
-          "text": "For Step-2, Add Rules and rule groups, complete the below requirements given:"
-        },
-        {
-          "text": "• Click on the Add rule button then select Add my own rules and rule groups."
-        },
-        {
-          "text": "• Select Rule builder."
-        },
-        {
-          "text": "• Name: Enter Rule"
-        },
-        {
-          "text": "• Rule type: Regular rule (default)"
-        },
-        {
-          "text": "• To Add Statement and action, Choose the following:"
-        },
-        {
-          "text": "• if a request : matches the statement"
-        },
-        {
-          "text": "• inspect : Originate from an IP address in"
-        },
-        {
-          "text": "• IP Set : IP_match_v4."
-        },
-        {
-          "text": "• Action : Block"
-        },
-        {
-          "text": "• Click on the Add Rule button."
-        },
-        {
-          "text": "• Click on the Add rule button again then select Add my own rules and rule groups."
-        },
-        {
-          "text": "• Select Rule builder."
-        },
-        {
-          "text": "• Name: Enter Rule2"
-        },
-        {
-          "text": "• Rule type: Regular rule (default)"
-        },
-        {
-          "text": "• To Add Statement and action, Choose the following:"
-        },
-        {
-          "text": "• if a request : matches the statement"
-        },
-        {
-          "text": "• inspect : Originate from an IP address in"
-        },
-        {
-          "text": "• IP Set : IP_match_v6."
-        },
-        {
-          "text": "• Action : Block"
-        },
-        {
-          "text": "• Click on the Add Rule button."
-        },
-        {
-          "text": "• Default Web ACL action for requests that don't match any rules: Select Allow."
-        },
-        {
-          "text": "• Click on the Next button."
-        },
-        {
-          "text": "For Step-3, keep Set rule priority as default and click Next."
-        },
-        {
-          "text": "For Step-4, keep Configure metrics as default and click Next."
-        },
-        {
-          "text": "For Step-5, review and click on Create Web ACL button."
-        },
-        {
-          "text": "Web ACL Whiz is created successfully."
-        },
-        {
-          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
-        },
-        {
-          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
-        },
-        {
-          "text": "Click on the to Instances on the left panel."
-        },
+          "text": "Web ACL Whiz is created successfully.",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-24.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 5: SSH into EC2 Instance using Session manager and run the scripts",
+      "steps": [
         {
-          "text": "Click on the to Instances on the left panel."
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Select the instance by clicking on the Instance id."
+          "text": "Click on the to Instances on the left panel."
         },
         {
-          "text": "Select the instance by clicking on the Instance id."
+          "text": "Select the instance by clicking on the Instance id.",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-25.png"
+          ]
         },
         {
           "text": "Click on the Connect button."
         },
         {
-          "text": "Click on the Connect button."
-        },
-        {
-          "text": "Switch to the Session Manager tab and click on the Connect button."
-        },
-        {
-          "text": "Switch to the Session Manager tab and click on the Connect button."
+          "text": "Switch to the Session Manager tab and click on the Connect button.",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-26.png"
+          ]
         },
         {
           "text": "The session manager will start the session that can be used for SSH."
-        },
-        {
-          "text": "The session manager will start the session that can be used for SSH."
-        },
-        {
-          "text": "Change the directory to root:"
         },
         {
           "text": "Change the directory to root:"
@@ -522,7 +285,10 @@
           "text": "Make sure both the files are present, run the below command to list the files present in this directory:"
         },
         {
-          "text": "Run the below command for blocking the EC2 Instance website:"
+          "text": "Task 5: SSH into EC2 Instance using Session manager and run the scripts",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-27.jpg"
+          ]
         },
         {
           "text": "Run the below command for blocking the EC2 Instance website:"
@@ -537,112 +303,106 @@
           "text": "Block the access of CloudFront also. Paste the below command to the session manager's terminal:"
         },
         {
-          "text": "Refresh the CloudFront distribution page."
+          "text": "Refresh the CloudFront distribution page."
+        },
+        {
+          "text": "Task 5: SSH into EC2 Instance using Session manager and run the scripts",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-28.png"
+          ]
         },
         {
           "text": "Note: It may take up to 10 minutes for the changes to be reflected in CloudFront. Please refresh after every 30 seconds if the above error is not appearing."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Delete the IP address and test the working of CloudFront",
+      "steps": [
+        {
+          "text": "Click On Services And Select WAF & Shield Under The Security, Identity And Compliance Section."
         },
         {
-          "text": "Click On Services And Select WAF & Shield Under The Security, Identity And Compliance Section."
+          "text": "Go to Web ACLs click on the Rule button, first you need to delete both rules then you can delete IP sets because it is attached to the Web ACLs."
         },
         {
-          "text": "Click On Services And Select WAF & Shield Under The Security, Identity And Compliance Section."
+          "text": "Task 6: Delete the IP address and test the working of CloudFront",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-29.png"
+          ]
         },
         {
-          "text": "Go to Web ACLs click on the Rule button, first you need to delete both rules then you can delete IP sets because it is attached to the Web ACLs."
+          "text": "Navigate To IP Sets From Left Sidebar, select both IP one by one."
         },
         {
-          "text": "Go to Web ACLs click on the Rule button, first you need to delete both rules then you can delete IP sets because it is attached to the Web ACLs."
+          "text": "Change The Filter To Global(Cloudfront)"
         },
         {
-          "text": "Navigate To IP Sets From Left Sidebar, select both IP one by one."
+          "text": "Click On The IP_match_v4, now click on the Delete button."
         },
         {
-          "text": "Navigate To IP Sets From Left Sidebar, select both IP one by one."
+          "text": "Task 6: Delete the IP address and test the working of CloudFront",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-30.png"
+          ]
         },
         {
-          "text": "Change The Filter To Global(Cloudfront)"
-        },
-        {
-          "text": "Change The Filter To Global(Cloudfront)"
-        },
-        {
-          "text": "Click On The IP_match_v4, now click on the Delete button."
-        },
-        {
-          "text": "Click On The IP_match_v4, now click on the Delete button."
-        },
-        {
-          "text": "Same way select IP_match_v6 And Delete By Clicking On The Delete Button."
-        },
-        {
-          "text": "Same way select IP_match_v6 And Delete By Clicking On The Delete Button."
-        },
-        {
-          "text": "IP's Are Deleted When You See The Confirmation."
+          "text": "Same way select IP_match_v6 And Delete By Clicking On The Delete Button."
         },
         {
           "text": "IP's Are Deleted When You See The Confirmation."
         },
         {
-          "text": "Run the below command."
-        },
-        {
-          "text": "aws ec2 authorize-security-group-ingress \\"
-        },
-        {
-          "text": "--group-id $(aws ec2 describe-instances --instance-ids $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --query 'Reservations[0].Instances[0].SecurityGroups[0].GroupId' --output text) \\"
-        },
-        {
-          "text": "--protocol tcp \\"
-        },
-        {
-          "text": "--port 80 \\"
-        },
-        {
-          "text": "--cidr 0.0.0.0/0"
-        },
-        {
-          "text": "Now Refresh The CloudFront Distribution Domain Page and Website URL Page."
+          "text": "Run the below command.aws ec2 authorize-security-group-ingress \\ --group-id $(aws ec2 describe-instances --instance-ids $(curl -s http://169.254.169.254/latest/meta-data/instance-id) --query 'Reservations[0].Instances[0].SecurityGroups[0].GroupId' --output text) \\ --protocol tcp \\ --port 80 \\ --cidr 0.0.0.0/0Now Refresh The CloudFront Distribution Domain Page and Website URL Page."
         },
         {
           "text": "Run the below command."
         },
         {
-          "text": "Now Refresh The CloudFront Distribution Domain Page and Website URL Page."
+          "text": "Now Refresh The CloudFront Distribution Domain Page and Website URL Page."
         },
         {
           "text": "Note: It may take up to 1 minute for the page to be ready."
+        }
+      ]
+    },
+    {
+      "title": "Task 7 : Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
-        },
-        {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
         },
         {
-          "text": "Navigate to CloudFormation by Clicking on Services, click on CloudFormation in the Management & Governance section."
+          "text": "Task 7 : Validation of the Lab",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-31.gif"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "Navigate to CloudFormation by Clicking on Services, click on CloudFormation in the Management & Governance section."
         },
         {
-          "text": "Navigate to CloudFormation by Clicking on Services, click on CloudFormation in the Management & Governance section."
+          "text": "Click on the Stacks present on the left sidebar."
         },
         {
-          "text": "Click on the Stacks present on the left sidebar."
+          "text": "Select the CloudFormation stack present and Click on the Delete button."
         },
         {
-          "text": "Click on the Stacks present on the left sidebar."
-        },
-        {
-          "text": "Select the CloudFormation stack present and Click on the Delete button."
-        },
-        {
-          "text": "Select the CloudFormation stack present and Click on the Delete button."
-        },
-        {
-          "text": "Confirm the deletion by clicking on the Delete stack button."
+          "text": "Task 8: Delete AWS Resources",
+          "images": [
+            "/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf/step-32.jpg"
+          ]
         },
         {
           "text": "Confirm the deletion by clicking on the Delete stack button."
@@ -651,16 +411,7 @@
           "text": "CloudFormation stack is deleted successfully."
         },
         {
-          "text": "CloudFormation stack is deleted successfully."
-        },
-        {
           "text": "You have successfully created and launched Amazon EC2 Instance using the CloudFormation stack."
-        },
-        {
-          "text": "You have successfully created and launched Amazon EC2 Instance using the CloudFormation stack."
-        },
-        {
-          "text": "You have successfully created CloudFront distribution using the CloudFormation stack."
         },
         {
           "text": "You have successfully created CloudFront distribution using the CloudFormation stack."
@@ -669,16 +420,7 @@
           "text": "You have successfully created Web ACL using AWS WAF Classic."
         },
         {
-          "text": "You have successfully created Web ACL using AWS WAF Classic."
-        },
-        {
           "text": "You have successfully done SSH using Session Manager."
-        },
-        {
-          "text": "You have successfully done SSH using Session Manager."
-        },
-        {
-          "text": "You have successfully blocked traffic of the EC2 instance's website and CloudFront distribution domain by running the scripts."
         },
         {
           "text": "You have successfully blocked traffic of the EC2 instance's website and CloudFront distribution domain by running the scripts."
@@ -687,25 +429,13 @@
           "text": "You have successfully updated the Web ACL for allowing CloudFront distribution domain."
         },
         {
-          "text": "You have successfully updated the Web ACL for allowing CloudFront distribution domain."
-        },
-        {
-          "text": "Sign out of AWS Account."
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the project."
         },
         {
-          "text": "You have successfully completed the project."
-        },
-        {
-          "text": "Once you have completed the steps, click on End Project from the lab console."
-        },
-        {
-          "text": "Once you have completed the steps, click on End Project from the lab console."
+          "text": "Once you have completed the steps, click on End Project from the lab console."
         }
       ]
     }

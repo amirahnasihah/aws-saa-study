@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,37 +32,49 @@
       "title": "Task 2: Create a VPC",
       "steps": [
         {
-          "text": "Make sure you are in the N.Virginia Region."
+          "text": "Make sure you are in the N.Virginia Region."
         },
         {
-          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Network and Content Delivery section."
+          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Network and Content Delivery section."
         },
         {
-          "text": "To create a VPC click on Your VPCs the present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+          "text": "To create a VPC click on Your VPCs the present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
         },
         {
-          "text": "Create a new VPC by clicking on the Create VPC button."
+          "text": "Create a new VPC by clicking on the Create VPC button."
         },
         {
-          "text": "Select VPC only."
+          "text": "Task 2: Create a VPC",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-01.jpg"
+          ]
         },
         {
-          "text": "Name tag - optional:Enter MyVPC"
+          "text": "Select VPC only."
         },
         {
-          "text": "IPv4 CIDR block: Enter 192.168.0.0/26"
+          "text": "Name tag - optional:Enter MyVPC"
+        },
+        {
+          "text": "IPv4 CIDR block: Enter 192.168.0.0/26"
         },
         {
           "text": "IPv6 CIDR block: No IPv6 CIDR block"
         },
         {
-          "text": "Tenancy: Default"
+          "text": "Tenancy: Default"
         },
         {
-          "text": "Click on the Create VPC button to create the MyVPC."
+          "text": "Click on the Create VPC button to create the MyVPC."
         },
         {
           "text": "VPC is now created."
+        },
+        {
+          "text": "Task 2: Create a VPC",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-02.jpg"
+          ]
         }
       ]
     },
@@ -73,31 +85,61 @@
           "text": "By default, instances that are launched in a VPC cannot communicate with the Internet. To enable Internet access, an Internet gateway needed to be attached to the VPC."
         },
         {
-          "text": "Click on Internet Gateways from the left menu and click on Create internet gateway."
+          "text": "Click on Internet Gateways from the left menu and click on Create internet gateway.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-03.jpg"
+          ]
         },
         {
-          "text": "Name Tag : Enter MyInternetGateway"
+          "text": "Task 3: Create and attach an Internet Gateway with custom VPC",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-04.jpg"
+          ]
         },
         {
-          "text": "Click on Create internet gateway."
+          "text": "Name Tag : Enter MyInternetGateway"
+        },
+        {
+          "text": "Click on Create internet gateway."
         },
         {
           "text": "Select the Internet gateway you created from the list."
         },
         {
-          "text": "Click on Actions."
+          "text": "Click on Actions."
         },
         {
-          "text": "Select the Attach to VPC."
+          "text": "Select the Attach to VPC.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-05.jpg"
+          ]
         },
         {
-          "text": "Available VPCs: Select the MyVPC"
+          "text": "Task 3: Create and attach an Internet Gateway with custom VPC",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-06.jpg"
+          ]
         },
         {
-          "text": "And click on the Attach internet gateway button."
+          "text": "Available VPCs: Select the MyVPC"
+        },
+        {
+          "text": "Task 3: Create and attach an Internet Gateway with custom VPC",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-07.jpg"
+          ]
+        },
+        {
+          "text": "And click on the Attach internet gateway button."
         },
         {
           "text": "The Internet gateway is now attached with MyVPC."
+        },
+        {
+          "text": "Task 3: Create and attach an Internet Gateway with custom VPC",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-08.jpg"
+          ]
         }
       ]
     },
@@ -105,55 +147,85 @@
       "title": "Task 4: Create a Public and Private Subnet",
       "steps": [
         {
-          "text": "To create a subnet click on Subnets the present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+          "text": "To create a subnet click on Subnets the present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
         },
         {
-          "text": "Click on the Create Subnet button."
+          "text": "Click on the Create Subnet button.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-09.jpg"
+          ]
+        },
+        {
+          "text": "Task 4: Create a Public and Private Subnet",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-10.jpg"
+          ]
         },
         {
           "text": "In the VPC ID, select MyVPC."
         },
         {
+          "text": "Task 4: Create a Public and Private Subnet",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-11.png"
+          ]
+        },
+        {
           "text": "Create the first subnet, you will use this subnet to launch public instances, this subnet will be associated with the main route table of the VPC:"
         },
         {
-          "text": "Select the MyVPC from the drop-down."
+          "text": "Select the MyVPC from the drop-down."
         },
         {
-          "text": "Subnet name: Enter Public subnet"
+          "text": "Subnet name: Enter Public subnet"
         },
         {
-          "text": "Availability Zone: Select US East (N. Virginia) / us-east-1a"
+          "text": "Availability Zone: Select US East (N. Virginia) / us-east-1a"
         },
         {
-          "text": "IPV4 CIDR block: Enter 192.168.0.1/27"
+          "text": "IPV4 CIDR block: Enter 192.168.0.1/27"
         },
         {
-          "text": "Click on the Create subnet button to create the subnet."
+          "text": "Click on the Create subnet button to create the subnet.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-12.jpg"
+          ]
         },
         {
-          "text": "Create another subnet, click on the Create subnet button."
+          "text": "Task 4: Create a Public and Private Subnet",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-13.jpg"
+          ]
+        },
+        {
+          "text": "Create another subnet, click on the Create subnet button."
         },
         {
           "text": "The second will be called Private subnet, you will use this subnet to launch private instances, this subnet will be associated with a custom route table of the same VPC:"
         },
         {
-          "text": "Select the MyVPC from the drop-down."
+          "text": "Select the MyVPC from the drop-down."
         },
         {
-          "text": "Subnet name: Enter Private subnet"
+          "text": "Subnet name: Enter Private subnet"
         },
         {
-          "text": "Availability Zone: Select US East (N. Virginia) / us-east-1b"
+          "text": "Availability Zone: Select US East (N. Virginia) / us-east-1b"
         },
         {
-          "text": "IPV4 CIDR block: Enter 192.168.0.32/27"
+          "text": "IPV4 CIDR block: Enter 192.168.0.32/27"
         },
         {
-          "text": "Finally, click on the Create Subnet button."
+          "text": "Finally, click on the Create Subnet button."
         },
         {
           "text": "Both the subnets are now created."
+        },
+        {
+          "text": "Task 4: Create a Public and Private Subnet",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-14.jpg"
+          ]
         }
       ]
     },
@@ -161,22 +233,43 @@
       "title": "Task 5: Configure the Public subnet to enable auto-assign public IPv4 address",
       "steps": [
         {
-          "text": "To modify the auto-assign IP settings for the Public subnet, do the following:"
+          "text": "To modify the auto-assign IP settings for the Public subnet, do the following: Select the Public subnet Click on the Actions button Choose Edit subnet settings from the options.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-15.jpg"
+          ]
         },
         {
-          "text": "Select the Public subnet"
+          "text": "To modify the auto-assign IP settings for the Public subnet, do the following:"
         },
         {
-          "text": "Click on the Actions button"
+          "text": "Select the Public subnet"
         },
         {
-          "text": "Choose Edit subnet settings from the options."
+          "text": "Click on the Actions button"
         },
         {
-          "text": "Check the option Enable auto-assign public IPv4 address under Auto-assign IP settings."
+          "text": "Choose Edit subnet settings from the options.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-16.jpg"
+          ]
         },
         {
-          "text": "Click on Save button and modification is done now."
+          "text": "Check the option Enable auto-assign public IPv4 address under Auto-assign IP settings."
+        },
+        {
+          "text": "Task 5: Configure the Public subnet to enable auto-assign public IPv4 address",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-17.jpg"
+          ]
+        },
+        {
+          "text": "Click on Save button and modification is done now."
+        },
+        {
+          "text": "Task 5: Configure the Public subnet to enable auto-assign public IPv4 address",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-18.jpg"
+          ]
         }
       ]
     },
@@ -187,87 +280,121 @@
           "text": "In this task, we are going to create public route tables and associate it with the subnet."
         },
         {
-          "text": "Go to Route Tables from the left menu and click on Create route table button."
+          "text": "Go to Route Tables from the left menu and click on Create route table button.Name: Enter PublicRouteTableVPC: Select MyVPC from the list.Click on Create route table button.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-19.jpg"
+          ]
         },
         {
-          "text": "Name: Enter PublicRouteTable"
+          "text": "Go to Route Tables from the left menu and click on Create route table button."
         },
         {
-          "text": "VPC: Select MyVPC from the list."
+          "text": "Name: Enter PublicRouteTable"
         },
         {
-          "text": "Click on Create route table button."
+          "text": "VPC: Select MyVPC from the list."
+        },
+        {
+          "text": "Click on Create route table button.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-20.jpg"
+          ]
+        },
+        {
+          "text": "Task 6: Create a Route Table for the Public subnet",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-21.jpg"
+          ]
+        },
+        {
+          "text": "Repeat the same steps to create a route table for the Private subnet.Name: Enter PrivateRouteTableVPC: Select MyVPC from the list.Click on Create route table button."
         },
         {
           "text": "Repeat the same steps to create a route table for the Private subnet."
         },
         {
-          "text": "Name: Enter PrivateRouteTable"
+          "text": "Name: Enter PrivateRouteTable"
         },
         {
-          "text": "VPC: Select MyVPC from the list."
+          "text": "VPC: Select MyVPC from the list."
         },
         {
-          "text": "Click on Create route table button."
+          "text": "Click on Create route table button."
         },
         {
-          "text": "Now we will associate the subnets to the route tables."
+          "text": "Now we will associate the subnets to the route tables."
         },
         {
-          "text": "Select the PublicRouteTable and go to the Subnet Associations tab."
+          "text": "Select the PublicRouteTable and go to the Subnet Associations tab.Click on Edit subnet associations.Select MyPublicSubnet from the list.Click on Save associations button.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-22.jpg"
+          ]
         },
         {
-          "text": "Click on Edit subnet associations."
+          "text": "Select the PublicRouteTable and go to the Subnet Associations tab."
         },
         {
-          "text": "Select MyPublicSubnet from the list."
+          "text": "Click on Edit subnet associations."
         },
         {
-          "text": "Click on Save associations button."
+          "text": "Select MyPublicSubnet from the list."
         },
         {
-          "text": "Select the PrivateRouteTable and go to the Subnet Associations tab."
+          "text": "Click on Save associations button.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-23.jpg"
+          ]
         },
         {
-          "text": "Click on Edit subnet associations."
+          "text": "Task 6: Create a Route Table for the Public subnet",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-24.jpg"
+          ]
         },
         {
-          "text": "Select MyPrivateSubnet from the list."
+          "text": "Select the PrivateRouteTable and go to the Subnet Associations tab.Click on Edit subnet associations.Select MyPrivateSubnet from the list.Click on Save associations button."
         },
         {
-          "text": "Click on Save associations button."
+          "text": "Select the PrivateRouteTable and go to the Subnet Associations tab."
         },
         {
-          "text": "Make sure not to associate any subnets with the Main Route Table."
+          "text": "Click on Edit subnet associations."
+        },
+        {
+          "text": "Select MyPrivateSubnet from the list."
+        },
+        {
+          "text": "Click on Save associations button."
+        },
+        {
+          "text": "Make sure not to associate any subnets with the Main Route Table."
+        },
+        {
+          "text": "PublicRouteTable: Add a route to allow Internet traffic to the VPC.Select PublicRouteTable.Go to Routes tab, click on Edit routes and on the next page, click on Add route button.Specify the following values: Destination: Enter 0.0.0.0/0Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway.Click on Save changes button."
         },
         {
           "text": "PublicRouteTable: Add a route to allow Internet traffic to the VPC."
         },
         {
-          "text": "Select PublicRouteTable."
+          "text": "Select PublicRouteTable."
         },
         {
-          "text": "Go to Routes tab, click on Edit routes and on the next page, click on Add route button."
+          "text": "Go to Routes tab, click on Edit routes and on the next page, click on Add route button."
+        },
+        {
+          "text": "Specify the following values: Destination: Enter 0.0.0.0/0Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway.Click on Save changes button."
         },
         {
           "text": "Specify the following values:"
         },
         {
-          "text": "Destination: Enter 0.0.0.0/0"
+          "text": "Destination: Enter 0.0.0.0/0"
         },
         {
-          "text": "Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway."
+          "text": "Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway."
         },
         {
-          "text": "Click on Save changes button."
-        }
-      ]
-    },
-    {
-      "title": "Task 6:",
-      "steps": [
-        {
-          "text": "Create a Route Table for the Public subnet"
+          "text": "Click on Save changes button."
         }
       ]
     },
@@ -275,85 +402,124 @@
       "title": "Task 7: Create Security groups",
       "steps": [
         {
-          "text": "In this lab, we will create two security groups, the first one will be used for Bastion host and the second one for private instance having access to VPC Endpoint for S3."
+          "text": "In this lab, we will create two security groups, the first one will be used for Bastion host and the second one for private instance having access to VPC Endpoint for S3."
         },
         {
-          "text": "To get started with creating security groups, click on the Security groups , present in the SECURITY section in the left sidebar."
+          "text": "To get started with creating security groups, click on the Security groups , present in the SECURITY section in the left sidebar."
         },
         {
-          "text": "Click on the Create Security group button"
+          "text": "Click on the Create Security group button"
         },
         {
-          "text": "Fill in the below details under Basic details:"
+          "text": "Fill in the below details under Basic details:"
         },
         {
-          "text": "Enter Security group name as Bastion-SG"
+          "text": "Enter Security group name as Bastion-SG"
         },
         {
-          "text": "Enter Description as Security group for the bastion host"
+          "text": "Enter Description as Security group for the bastion host"
         },
         {
-          "text": "Select the MyVPC under the VPC field."
+          "text": "Select the MyVPC under the VPC field.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-25.jpg"
+          ]
         },
         {
-          "text": "By default, no inbound rule will be allowed, and when you check in the outbound rules, there is only one rule present that has a Type with All traffic because Security groups are Stateful in nature, when inbound is allowed outbound is also allowed."
+          "text": "Task 7: Create Security groups",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-26.jpg"
+          ]
         },
         {
-          "text": "To add the Inbound rules for the same, click on the Add rule button."
+          "text": "By default, no inbound rule will be allowed, and when you check in the outbound rules, there is only one rule present that has a Type with All traffic because Security groups are Stateful in nature, when inbound is allowed outbound is also allowed."
         },
         {
-          "text": "We will add 3 rules for the Bastion host security group i.e. SSH, HTTP, and HTTPS."
+          "text": "To add the Inbound rules for the same, click on the Add rule button."
         },
         {
-          "text": "For the first rule, Select the Type as SSH, Source as Anywhere-IPv4 and enter 0.0.0.0/0"
+          "text": "We will add 3 rules for the Bastion host security group i.e. SSH, HTTP, and HTTPS."
         },
         {
-          "text": "For the second rule, click on the Add rule button. Select the Type as HTTP, Source as Anywhere-IPv4 and enter 0.0.0.0/0"
+          "text": "For the first rule, Select the Type as SSH, Source as Anywhere-IPv4 and enter 0.0.0.0/0"
         },
         {
-          "text": "For the third rule, click on the Add rule button. Select the Type as HTTPS, Source as Anywhere-IPv4 and enter 0.0.0.0/0"
+          "text": "For the second rule, click on the Add rule button. Select the Type as HTTP, Source as Anywhere-IPv4 and enter 0.0.0.0/0"
         },
         {
-          "text": "Finally, click on the Create Security group button."
+          "text": "For the third rule, click on the Add rule button. Select the Type as HTTPS, Source as Anywhere-IPv4 and enter 0.0.0.0/0",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-27.png"
+          ]
         },
         {
-          "text": "The security group for the Bastion host is now created."
+          "text": "Finally, click on the Create Security group button."
         },
         {
-          "text": "Click on the Security groups button, present in the SECURITY section in the left sidebar."
+          "text": "The security group for the Bastion host is now created."
         },
         {
-          "text": "To create the second security group, click on the Create Security Group button."
+          "text": "Task 7: Create Security groups",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-28.jpg"
+          ]
         },
         {
-          "text": "Fill in the below details under Basic details:"
+          "text": "Click on the Security groups button, present in the SECURITY section in the left sidebar."
         },
         {
-          "text": "Enter Security group name as Endpoint-SG"
+          "text": "To create the second security group, click on the Create Security Group button."
         },
         {
-          "text": "Enter Description as Security group for S3 endpoint"
+          "text": "Fill in the below details under Basic details:"
         },
         {
-          "text": "Select the MyVPC under the VPC field."
+          "text": "Enter Security group name as Endpoint-SG"
         },
         {
-          "text": "To add the Inbound rules for the same, click on the Add rule button."
+          "text": "Enter Description as Security group for S3 endpoint"
         },
         {
-          "text": "We will add 1 rule for the S3 endpoint security group i.e. SSH only. But here our source will be Bastion host security group,"
+          "text": "Select the MyVPC under the VPC field.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-29.jpg"
+          ]
         },
         {
-          "text": "you will select the ID of Bastion-SG security group."
+          "text": "Task 7: Create Security groups",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-30.jpg"
+          ]
         },
         {
-          "text": "For the rule, select the Type as SSH, Source as Custom, and type Bastion, Bastion hosts security group will be shown, select that Security group."
+          "text": "To add the Inbound rules for the same, click on the Add rule button."
         },
         {
-          "text": "Finally, click on the Create Security group button."
+          "text": "We will add 1 rule for the S3 endpoint security group i.e. SSH only. But here our source will be Bastion host security group,"
         },
         {
-          "text": "The security group for the Bastion host is now created. And, it will be listed there."
+          "text": "you will select the ID of Bastion-SG security group."
+        },
+        {
+          "text": "For the rule, select the Type as SSH, Source as Custom, and type Bastion, Bastion hosts security group will be shown, select that Security group."
+        },
+        {
+          "text": "Task 7: Create Security groups",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-31.png"
+          ]
+        },
+        {
+          "text": "Finally, click on the Create Security group button."
+        },
+        {
+          "text": "The security group for the Bastion host is now created. And, it will be listed there."
+        },
+        {
+          "text": "Task 7: Create Security groups",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-32.jpg"
+          ]
         }
       ]
     },
@@ -361,64 +527,100 @@
       "title": "Task 8: Create a Bastion host (Publicly accessible EC2 Instance)",
       "steps": [
         {
-          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Navigate to Instances on the left panel and click on Launch instances."
+          "text": "Navigate to Instances on the left panel and click on Launch instances."
         },
         {
-          "text": "Name : Enter Bastion-host."
+          "text": "Task 8: Create a Bastion host (Publicly accessible EC2 Instance)",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-33.jpg"
+          ]
         },
         {
-          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the Select button"
+          "text": "Name : Enter Bastion-host."
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the Select button"
+        },
+        {
+          "text": "Task 8: Create a Bastion host (Publicly accessible EC2 Instance)",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-34.png"
+          ]
         },
         {
           "text": "Note: if there are two AMI's present for Amazon Linux 2023 AMI, choose kernel-6.1 AMI."
         },
         {
-          "text": "For Instance Type: select t2.micro"
+          "text": "For Instance Type: select t2.micro"
         },
         {
-          "text": "For Key pair: Select Create a new key pair Button"
+          "text": "Task 8: Create a Bastion host (Publicly accessible EC2 Instance)",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-35.jpg"
+          ]
         },
         {
-          "text": "Key pair name: WhizKey"
+          "text": "For Key pair: Select Create a new key pair Button"
         },
         {
-          "text": "Key pair type: RSA"
+          "text": "Key pair name: WhizKey"
         },
         {
-          "text": "Private key file format: .pem"
+          "text": "Key pair type: RSA"
         },
         {
-          "text": "Select Create key pair Button."
+          "text": "Private key file format: .pem"
         },
         {
-          "text": "In Network Settings Click on Edit Button:"
+          "text": "Select Create key pair Button.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-36.jpg"
+          ]
         },
         {
-          "text": "VPC: Choose MyVPC"
+          "text": "Task 8: Create a Bastion host (Publicly accessible EC2 Instance)",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-37.jpg"
+          ]
         },
         {
-          "text": "Subnet : Choose Public Subnet"
+          "text": "In Network Settings Click on Edit Button:"
         },
         {
-          "text": "Auto-assign public IP: Enable"
+          "text": "VPC: Choose MyVPC"
         },
         {
-          "text": "Select existing security group"
+          "text": "Subnet : Choose Public Subnet"
         },
         {
-          "text": "Security group name : Choose Bastion-SG"
+          "text": "Auto-assign public IP: Enable"
         },
         {
-          "text": "Keep rest thing default and Click on Launch Instance button."
+          "text": "Select existing security group"
         },
         {
-          "text": "Select View all Instances to view Instance you created"
+          "text": "Security group name : Choose Bastion-SG",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-38.jpg"
+          ]
         },
         {
-          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running."
+          "text": "Task 8: Create a Bastion host (Publicly accessible EC2 Instance)",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-39.jpg"
+          ]
+        },
+        {
+          "text": "Keep rest thing default and Click on Launch Instance button."
+        },
+        {
+          "text": "Select View all Instances to view Instance you created"
+        },
+        {
+          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running."
         }
       ]
     },
@@ -426,52 +628,79 @@
       "title": "Task 9: Create an Endpoint instance (Privately accessible EC2 instance)",
       "steps": [
         {
-          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Navigate to Instances on the left panel and click on Launch instances."
+          "text": "Navigate to Instances on the left panel and click on Launch instances."
         },
         {
-          "text": "Name : Enter Endpoint-instance."
+          "text": "Name : Enter Endpoint-instance."
         },
         {
-          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the Select button."
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the Select button."
+        },
+        {
+          "text": "Task 9: Create an Endpoint instance (Privately accessible EC2 instance)",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-40.png"
+          ]
         },
         {
           "text": "Note: if there are two AMI's present for Amazon Linux 2023 AMI, choose kernel-6.1 AMI."
         },
         {
-          "text": "For Instance Type: select t2.micro"
+          "text": "For Instance Type: select t2.micro"
         },
         {
-          "text": "For Key pair: Select the key pair made during the previous task."
+          "text": "Task 9: Create an Endpoint instance (Privately accessible EC2 instance)",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-41.jpg"
+          ]
         },
         {
-          "text": "In Network Settings Click on Edit Button:"
+          "text": "For Key pair: Select the key pair made during the previous task."
         },
         {
-          "text": "VPC: Choose MyVPC"
+          "text": "In Network Settings Click on Edit Button:"
         },
         {
-          "text": "Subnet : Private Subnet"
+          "text": "VPC: Choose MyVPC"
         },
         {
-          "text": "Select existing security group"
+          "text": "Subnet : Private Subnet"
         },
         {
-          "text": "Security group name : Choose Endpoint-SG"
+          "text": "Select existing security group"
         },
         {
-          "text": "Keep rest thing Default and Click on Launch Instance button."
+          "text": "Security group name : Choose Endpoint-SG",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-42.png"
+          ]
         },
         {
-          "text": "Select View all Instances to view Instance you created"
+          "text": "Task 9: Create an Endpoint instance (Privately accessible EC2 instance)",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-43.png"
+          ]
         },
         {
-          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running."
+          "text": "Keep rest thing Default and Click on Launch Instance button."
         },
         {
-          "text": "Navigate to Instances and wait for 1-2 minutes (until the Endpoint-instance's status changes from pending to running state)"
+          "text": "Select View all Instances to view Instance you created"
+        },
+        {
+          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running."
+        },
+        {
+          "text": "Navigate to Instances and wait for 1-2 minutes (until the Endpoint-instance's status changes from pending to running state)"
+        },
+        {
+          "text": "Task 9: Create an Endpoint instance (Privately accessible EC2 instance)",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-44.jpg"
+          ]
         }
       ]
     },
@@ -479,43 +708,49 @@
       "title": "Task 10: SSH into Endpoint instance (Privately accessible) through Bastion host",
       "steps": [
         {
-          "text": "SSH into the Bastion instance using the Bastion PEM key: WhizKey.pem"
+          "text": "SSH into the Bastion instance using the Bastion PEM key: WhizKey.pem"
         },
         {
-          "text": "To SSH into Endpoint instance via the Bastion instance, we need the WhizKey.pem to be present on the Bastion instance."
+          "text": "To SSH into Endpoint instance via the Bastion instance, we need the WhizKey.pem to be present on the Bastion instance."
         },
         {
-          "text": "Open the WhizKey.pem file on your local system and then copy the text content."
+          "text": "Open the WhizKey.pem file on your local system and then copy the text content."
         },
         {
-          "text": "Navigate to the Bastion Instance and create a file named WhizKey.pem using the below command:"
+          "text": "Navigate to the Bastion Instance and create a file named WhizKey.pem using the below command:"
         },
         {
-          "text": "vi WhizKey.pem"
+          "text": "Press i and paste the content of WhizKey.pem. Save it by pressing Esc key and type :wq and hit Enter."
         },
         {
-          "text": "Press i and paste the content of WhizKey.pem. Save it by pressing Esc key and type :wq and hit Enter."
+          "text": "Make sure you have changed the permission of the key file to 400. You can change the permission using the below command:"
         },
         {
-          "text": "Make sure you have changed the permission of the key file to 400. You can change the permission using the below command:"
+          "text": "Task 10: SSH into Endpoint instance (Privately accessible) through Bastion host",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-45.png"
+          ]
         },
         {
-          "text": "chmod 400 WhizKey.pem"
+          "text": "Now you can log into the web servers using the private key copied to the bastion server with the help of the below commands."
         },
         {
-          "text": "Now you can log into the web servers using the private key copied to the bastion server with the help of the below commands."
+          "text": "Note: You don't have public IP's for the Endpoint instance since we created them in a private subnet."
         },
         {
-          "text": "Note: You don't have public IP's for the Endpoint instance since we created them in a private subnet."
+          "text": "Syntax : ssh -i WhizKey.pem ec2-user@<Endpoint instance's Private IP>"
         },
         {
-          "text": "Syntax : ssh -i WhizKey.pem ec2-user@<Endpoint instance's Private IP>"
+          "text": "Example: ssh -i WhizKey.pem ec2-user@192.168.0.55."
         },
         {
-          "text": "Example: ssh -i WhizKey.pem ec2-user@192.168.0.55."
+          "text": "When asked for confirmation type: yes"
         },
         {
-          "text": "When asked for confirmation type: yes"
+          "text": "Task 10: SSH into Endpoint instance (Privately accessible) through Bastion host",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-46.png"
+          ]
         },
         {
           "text": "Enter the following command aws configure"
@@ -536,10 +771,16 @@
           "text": "Note: Though the assigned IAM role is having access for S3 Read, listing the bucket through AWS CLI command got failed, saying, connection timeout on S3's endpoint."
         },
         {
-          "text": "As, this instance's security group is only allowed to do SSH, running any other command, will fail."
+          "text": "Task 10: SSH into Endpoint instance (Privately accessible) through Bastion host",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-47.png"
+          ]
         },
         {
-          "text": "Let's add the permission to access the S3 endpoints using the VPC Endpoint for S3."
+          "text": "As, this instance's security group is only allowed to do SSH, running any other command, will fail."
+        },
+        {
+          "text": "Let's add the permission to access the S3 endpoints using the VPC Endpoint for S3."
         }
       ]
     },
@@ -547,22 +788,46 @@
       "title": "Task 11: Create a VPC Endpoint for S3, attach it to the Private subnet's Route table",
       "steps": [
         {
-          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking and Content Delivery section."
+          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking and Content Delivery section."
         },
         {
-          "text": "Click on Endpoints present under PrivateLink and Lattice."
+          "text": "Click on Endpoints present under PrivateLink and Lattice."
         },
         {
-          "text": "Click on the Create endpoints button."
+          "text": "Click on the Create endpoints button.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-48.png"
+          ]
         },
         {
-          "text": "Make sure the Service category is selected for AWS services. In the Service name search bar, type s3, and press enter"
+          "text": "Task 11: Create a VPC Endpoint for S3, attach it to the Private subnet's Route table",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-49.png"
+          ]
         },
         {
-          "text": "The endpoint of Type, Gateway with Service name as com.amazonaws.us-east-1.s3 will be listed."
+          "text": "Make sure the Service category is selected for AWS services. In the Service name search bar, type s3, and press enter",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-50.jpg"
+          ]
+        },
+        {
+          "text": "Task 11: Create a VPC Endpoint for S3, attach it to the Private subnet's Route table",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-51.jpg"
+          ]
+        },
+        {
+          "text": "The endpoint of Type, Gateway with Service name as com.amazonaws.us-east-1.s3 will be listed."
         },
         {
           "text": "Change the VPC, and select MyVPC."
+        },
+        {
+          "text": "Task 11: Create a VPC Endpoint for S3, attach it to the Private subnet's Route table",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-53.jpg"
+          ]
         },
         {
           "text": "Check the option for Route Table having name as PrivateRouteTable."
@@ -571,16 +836,19 @@
           "text": "Finally, click on the Create endpoint button."
         },
         {
-          "text": "An endpoint will be created."
+          "text": "An endpoint will be created."
         },
         {
-          "text": "Click on the Close button, and within a few moments, you will see the endpoint will be listed."
+          "text": "Click on the Close button, and within a few moments, you will see the endpoint will be listed."
         },
         {
-          "text": "(Optional) To check whether the endpoint is associated with the custom route table (RT for Private subnet) or not."
+          "text": "Task 11: Create a VPC Endpoint for S3, attach it to the Private subnet's Route table",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-54.jpg"
+          ]
         },
         {
-          "text": "12. Go to the Route tables, Select the custom route table and click on the Routes options below, you will see an entry of S3."
+          "text": "(Optional) To check whether the endpoint is associated with the custom route table (RT for Private subnet) or not. 12. Go to the Route tables, Select the custom route table and click on the Routes options below, you will see an entry of S3."
         }
       ]
     },
@@ -588,10 +856,13 @@
       "title": "Task 12: List all the S3 bucket and it's objects",
       "steps": [
         {
+          "text": "Now SSH into the Endpoint instance from your bastion instance as mentioned in task 10.Enter aws configure. Access Key: Paste the access key provided to you. Secret Key: Paste the secret key provided to you."
+        },
+        {
           "text": "Now SSH into the Endpoint instance from your bastion instance as mentioned in task 10."
         },
         {
-          "text": "Enter aws configure."
+          "text": "Enter aws configure."
         },
         {
           "text": "Access Key: Paste the access key provided to you."
@@ -600,28 +871,31 @@
           "text": "Secret Key: Paste the secret key provided to you."
         },
         {
+          "text": "Task 12: List all the S3 bucket and it's objects",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-55.png"
+          ]
+        },
+        {
           "text": "Default region name: us-east-1"
         },
         {
-          "text": "Default output-format: Enter [ENTER]"
+          "text": "Default output-format: Enter [ENTER]"
         },
         {
           "text": "List all the bucket's using the following AWS CLI command:"
         },
         {
-          "text": "aws s3 ls"
+          "text": "Task 12: List all the S3 bucket and it's objects",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-56.png"
+          ]
         },
         {
           "text": "List the objects of the S3 bucket starting with name lab-bucket.."
         },
         {
           "text": "Replace the S3 bucket name for the below command"
-        },
-        {
-          "text": "aws s3 ls s3://lab-bucket"
-        },
-        {
-          "text": "Do you know?"
         },
         {
           "text": "VPC Endpoint Service enables private connectivity, you can avoid data transfer charges associated with public internet traffic. By utilizing VPC endpoints, you can significantly reduce data transfer costs, especially if you have large volumes of data flowing between your VPC and AWS services."
@@ -632,13 +906,22 @@
       "title": "Task 13: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-57.gif"
+          ]
+        },
+        {
+          "text": "Task 13: Validation Test",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-58.gif"
+          ]
         }
       ]
     },
@@ -646,13 +929,13 @@
       "title": "Task 14: Delete AWS Resources",
       "steps": [
         {
-          "text": "Delete VPC Endpoint"
+          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking and Content Delivery section."
         },
         {
-          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking and Content Delivery section."
+          "text": "Click on Endpoints present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
         },
         {
-          "text": "Click on Endpoints present in the VIRTUAL PRIVATE CLOUD section on the left sidebar."
+          "text": "To delete the VPC endpoint, perform the following tasks: Select the Endpoint, Click on the Actions button, Choose the option of Delete VPC endpoints"
         },
         {
           "text": "To delete the VPC endpoint, perform the following tasks:"
@@ -667,22 +950,28 @@
           "text": "Choose the option of Delete VPC endpoints"
         },
         {
-          "text": "Confirm the deletion by typing delete."
+          "text": "Task 14: Delete AWS Resources",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-59.png"
+          ]
         },
         {
-          "text": "5. The endpoint will be deleted immediately."
+          "text": "Confirm the deletion by typing delete. 5. The endpoint will be deleted immediately."
         },
         {
-          "text": "EC2 Instance termination"
-        },
-        {
-          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
         },
         {
           "text": "Click on Instances on the left panel."
         },
         {
           "text": "EC2 Instances will be listed here."
+        },
+        {
+          "text": "Task 14: Delete AWS Resources",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-60.png"
+          ]
         },
         {
           "text": "To terminate both the present instances, perform the following tasks:"
@@ -694,19 +983,34 @@
           "text": "Click on the Instance state"
         },
         {
-          "text": "Choose to Terminate instance"
+          "text": "Choose to Terminate instance",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-61.png"
+          ]
         },
         {
-          "text": "To confirm the termination of both the selected EC2 instance, click on the Terminate button."
+          "text": "Task 14: Delete AWS Resources",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-62.png"
+          ]
+        },
+        {
+          "text": "To confirm the termination of both the selected EC2 instance, click on the Terminate button.",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-63.png"
+          ]
         },
         {
           "text": "The instance will be terminated in a minute or so."
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 14: Delete AWS Resources",
+          "images": [
+            "/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint/step-64.png"
+          ]
         },
         {
-          "text": "We have launched two EC2 instances i.e. Bastion instance and Endpoint instance. We were able to SSH into the Endpoint instance via Bastion Instance successfully."
+          "text": "We have launched two EC2 instances i.e. Bastion instance and Endpoint instance. We were able to SSH into the Endpoint instance via Bastion Instance successfully."
         },
         {
           "text": "We have created a VPC endpoint for S3 to securely access S3 Buckets and their objects without going to the internet i.e. within Amazon's network through the Endpoint instance."
@@ -715,16 +1019,13 @@
           "text": "We tested the VPC endpoint for S3 from the private instance."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of the AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

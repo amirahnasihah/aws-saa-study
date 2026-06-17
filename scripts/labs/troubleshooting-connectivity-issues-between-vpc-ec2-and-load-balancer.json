@@ -65,6 +65,12 @@
           "text": "Now click on the Create VPC button."
         },
         {
+          "text": "Task 2: Create a VPC",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-01.gif"
+          ]
+        },
+        {
           "text": "Once VPC is created, it will appear with details as shown below:"
         }
       ]
@@ -79,7 +85,19 @@
           "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet button."
         },
         {
+          "text": "Task 3: Creating Subnets",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-02.png"
+          ]
+        },
+        {
           "text": "VPC ID: Select MyVPC from the list you created earlier."
+        },
+        {
+          "text": "Task 3: Creating Subnets",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-03.png"
+          ]
         },
         {
           "text": "Subnet Name: Enter Name MyPublicSubnet1"
@@ -94,6 +112,12 @@
           "text": "Click on Create subnet button."
         },
         {
+          "text": "Task 3: Creating Subnets",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-04.png"
+          ]
+        },
+        {
           "text": "Repeat the same steps to create another subnet, but the availability Zone: Select us-east-1b."
         },
         {
@@ -101,6 +125,12 @@
         },
         {
           "text": "IPv4 CIDR block: Enter the range 10.0.2.0/24"
+        },
+        {
+          "text": "Task 3: Creating Subnets",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-05.png"
+          ]
         }
       ]
     },
@@ -120,6 +150,12 @@
           "text": "Click on Create internet gateway button."
         },
         {
+          "text": "Task 4: Create and configure Internet Gateway",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-06.png"
+          ]
+        },
+        {
           "text": "Select the Internet gateway you created from the list"
         },
         {
@@ -130,6 +166,12 @@
         },
         {
           "text": "Select MyVPC which you created from the list and click on Attach internet gateway button."
+        },
+        {
+          "text": "Task 4: Create and configure Internet Gateway",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-07.png"
+          ]
         }
       ]
     },
@@ -150,6 +192,12 @@
         },
         {
           "text": "Click on Create route table button."
+        },
+        {
+          "text": "Task 5: Create Route Tables",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-08.png"
+          ]
         },
         {
           "text": "Now we will associate the subnets to the route tables."
@@ -174,6 +222,12 @@
         },
         {
           "text": "Click on Save changes button."
+        },
+        {
+          "text": "Task 5: Create Route Tables",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-09.png"
+          ]
         }
       ]
     },
@@ -196,10 +250,19 @@
           "text": "Name : Enter EC2server"
         },
         {
-          "text": "For Amazon Machine Image (AMI): In the Quick Start menu, select Amazon Linux 2023 kernel-6.1 AMI"
+          "text": "For Amazon Machine Image (AMI): In the Quick Start menu, select Amazon Linux 2023 kernel-6.1 AMI",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-10.png"
+          ]
         },
         {
           "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "Task 6: Launching an EC2 Instance",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-11.png"
+          ]
         },
         {
           "text": "For Key pair: Proceed without a key pair (Not recommended)"
@@ -226,34 +289,22 @@
           "text": "Description : Enter Security Group to allow traffic to EC2"
         },
         {
+          "text": "Task 6: Launching an EC2 Instance",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-12.png"
+          ]
+        },
+        {
           "text": "Expand Advanced Details."
         },
         {
           "text": "Under the User data section, copy and paste the below code. This code installs Apache Server and also creates a web page."
         },
         {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "sudo dnf update -y"
-        },
-        {
-          "text": "sudo dnf install -y httpd"
-        },
-        {
-          "text": "sudo systemctl start httpd"
-        },
-        {
-          "text": "sudo systemctl enable httpd"
-        },
-        {
-          "text": "echo \"<html><h1>Response coming from server</h1></html>\" | sudo tee /var/www/html/index.html"
-        },
-        {
-          "text": "sudo systemctl restart httpd"
-        },
-        {
-          "text": "Note: After pasting the user data, make sure to remove extra spacing."
+          "text": "Task 6: Launching an EC2 Instance",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-13.png"
+          ]
         },
         {
           "text": "Keep rest thing Default and Click on Launch Instance Button."
@@ -266,6 +317,12 @@
         },
         {
           "text": "Now in the EC2 dashboard, you can see the instance is running as shown below:"
+        },
+        {
+          "text": "Task 6: Launching an EC2 Instance",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-14.png"
+          ]
         }
       ]
     },
@@ -276,10 +333,22 @@
           "text": "In the left side menu, scroll down to the bottom and select Load Balancer under Load Balancing."
         },
         {
+          "text": "Task 7: Creating Application Load Balancer",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-15.png"
+          ]
+        },
+        {
           "text": "Click on the Create load balancer button."
         },
         {
           "text": "Select Load Balancer Type: Under the Application Load Balancer, click on Create button."
+        },
+        {
+          "text": "Task 7: Creating Application Load Balancer",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-16.png"
+          ]
         },
         {
           "text": "Configure Load Balancer:"
@@ -294,16 +363,31 @@
           "text": "Ip Address: IPv4"
         },
         {
-          "text": "Network Mappings: MyVPC and select both subnets"
+          "text": "Task 7: Creating Application Load Balancer",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-17.png"
+          ]
         },
         {
-          "text": "Note: If you are getting any error while adding the subnet, ignore it and follow the rest of the steps."
+          "text": "Network Mappings: MyVPC and select both subnets Note: If you are getting any error while adding the subnet, ignore it and follow the rest of the steps."
+        },
+        {
+          "text": "Task 7: Creating Application Load Balancer",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-18.png"
+          ]
         },
         {
           "text": "Security groups:"
         },
         {
           "text": "Select EC2server-SG security group which we created while launching EC2"
+        },
+        {
+          "text": "Task 7: Creating Application Load Balancer",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-19.png"
+          ]
         },
         {
           "text": "Listeners and routing:"
@@ -327,6 +411,12 @@
           "text": "Target group name: Apache-TG"
         },
         {
+          "text": "Task 7: Creating Application Load Balancer",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-20.png"
+          ]
+        },
+        {
           "text": "Everything leaves it as default."
         },
         {
@@ -345,10 +435,22 @@
           "text": "Now we can see Apache-TG target group created."
         },
         {
+          "text": "Task 7: Creating Application Load Balancer",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-21.gif"
+          ]
+        },
+        {
           "text": "Now go back to the Load Balancers tab, and select Apache-TG in Default Action in Listeners and routing."
         },
         {
           "text": "Click on Refresh button if target-group is not visible"
+        },
+        {
+          "text": "Task 7: Creating Application Load Balancer",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-22.png"
+          ]
         },
         {
           "text": "Click on Create load balancer button"
@@ -358,6 +460,12 @@
         },
         {
           "text": "After 1–2 minutes, the state will change to active and is ready."
+        },
+        {
+          "text": "Task 7: Creating Application Load Balancer",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-23.png"
+          ]
         }
       ]
     },
@@ -375,6 +483,12 @@
         },
         {
           "text": "If the DNS name is not showing in the web page, there is some issue with your configuration."
+        },
+        {
+          "text": "Task 8: Testing Application Load Balancer",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-24.png"
+          ]
         }
       ]
     },
@@ -415,6 +529,12 @@
           "text": "If Subnet is not associated, click edit subnet associations, select your both public subnet, and save."
         },
         {
+          "text": "Task 9: Troubleshooting and Fixing Issues",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-25.png"
+          ]
+        },
+        {
           "text": "Step 3: Verify Security Group Rules"
         },
         {
@@ -437,6 +557,12 @@
         },
         {
           "text": "Click on add rule select HTTP and click on save rules."
+        },
+        {
+          "text": "Task 9: Troubleshooting and Fixing Issues",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-26.png"
+          ]
         }
       ]
     },
@@ -450,7 +576,10 @@
           "text": "Click on your Ec2 instance and click on instance state and reboot your Ec2 Instance."
         },
         {
-          "text": "Task 11: Testing Application Load Balancer and Ec2"
+          "text": "Task 10: Rebooting the Ec2 instance",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-27.png"
+          ]
         },
         {
           "text": "Now we are going to test the Application Load balancer DNS name again in web page."
@@ -472,6 +601,12 @@
         },
         {
           "text": "If you are getting this error, please try repeating the troubleshooting steps."
+        },
+        {
+          "text": "Task 10: Rebooting the Ec2 instance",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-28.png"
+          ]
         }
       ]
     },
@@ -486,6 +621,12 @@
         },
         {
           "text": "A new tab will open in the browser where you can execute the Linux Commands."
+        },
+        {
+          "text": "Task 12: SSH into your EC2 instance",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-29.png"
+          ]
         }
       ]
     },
@@ -493,22 +634,13 @@
       "title": "Task 13: Re-Installing the Apache Server on the EC2 instance",
       "steps": [
         {
-          "text": "Note: The re-installation process helps validate that the Apache server installation and configuration steps have been executed correctly. If there were any issues during the initial setup, this step provides an opportunity to identify and resolve them."
-        },
-        {
           "text": "Now again, we are going to troubleshoot the Amazon EC2 instance to run an Apache Web Server and verify its functionality by accessing the web server via a web browser using the instance's public IPv4 address."
         },
         {
           "text": "Switch to root user"
         },
         {
-          "text": "sudo su"
-        },
-        {
           "text": "Now run the updates using the following command:"
-        },
-        {
-          "text": "yum -y update"
         },
         {
           "text": "Once completed, lets install and run an apache server"
@@ -517,25 +649,13 @@
           "text": "Install the Apache web server:"
         },
         {
-          "text": "yum install httpd -y"
-        },
-        {
           "text": "Start the web server:"
-        },
-        {
-          "text": "systemctl start httpd"
         },
         {
           "text": "Now Enable httpd:"
         },
         {
-          "text": "systemctl enable httpd"
-        },
-        {
           "text": "Check the webserver status"
-        },
-        {
-          "text": "systemctl status httpd"
         },
         {
           "text": "You can see Active status is running."
@@ -544,19 +664,25 @@
           "text": "To add the contents into index.html file using echo, copy and paste the below command to shell."
         },
         {
-          "text": "echo \"<html><h1>Response coming from server</h1></html>\" > /var/www/html/index.html"
-        },
-        {
           "text": "Restart the webserver by using the following command:"
-        },
-        {
-          "text": "systemctl restart httpd"
         },
         {
           "text": "Load balancer DNS name:"
         },
         {
+          "text": "Task 13: Re-Installing the Apache Server on the EC2 instance",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-30.png"
+          ]
+        },
+        {
           "text": "EC2 instance public Ip:"
+        },
+        {
+          "text": "Task 13: Re-Installing the Apache Server on the EC2 instance",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-31.png"
+          ]
         }
       ]
     },
@@ -570,16 +696,10 @@
           "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
-        },
-        {
-          "text": "Do you know?"
-        },
-        {
-          "text": "Troubleshooting connectivity issues between VPC, EC2, and Load Balancer involves addressing overlooked aspects like misconfigured security groups, subtle route table errors, and conflicting Network ACL rules. These misconfigurations can silently block traffic or cause unexpected issues. Additionally, ensuring proper health check settings on the load balancer is crucial to avoid false negatives."
-        },
-        {
-          "text": "Completion and Conclusion"
+          "text": "Sample output :",
+          "images": [
+            "/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer/step-32.gif"
+          ]
         },
         {
           "text": "You Have Successfully logged into AWS console."
@@ -595,9 +715,6 @@
         },
         {
           "text": "You Have Successfully done the troubleshooting steps"
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign Out Of AWS Account."

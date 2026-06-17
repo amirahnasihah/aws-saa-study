@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,160 +35,151 @@
       "title": "Task 2: Create S3 Bucket",
       "steps": [
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
+          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
         },
         {
-          "text": "In the S3 dashboard, click on the Create bucket button and fill in the bucket details."
+          "text": "In the S3 dashboard, click on the Create bucket button and fill in the bucket details."
         },
         {
-          "text": "Bucket name: Enter lab1234567"
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-01.png"
+          ]
         },
         {
-          "text": "Note: S3 Bucket names are globally unique, choose a name that is available."
+          "text": "Bucket name: Enter lab1234567 Note: S3 Bucket names are globally unique, choose a name that is available."
         },
         {
-          "text": "Region: Select US East (N. Virginia) us-east-1."
+          "text": "Bucket name: Enter lab1234567"
+        },
+        {
+          "text": "Note: S3 Bucket names are globally unique, choose a name that is available."
+        },
+        {
+          "text": "Region: Select US East (N. Virginia) us-east-1."
         },
         {
           "text": "Object Ownership: ACLs disabled"
         },
         {
-          "text": "Scroll down to Block Public Access settings for bucket and Uncheck the Block all Public Access and acknowledge the change."
+          "text": "Scroll down to Block Public Access settings for bucket and Uncheck the Block all Public Access and acknowledge the change.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-02.png"
+          ]
         },
         {
           "text": "No need to change anything further, just click on the Create bucket button."
-        }
-      ]
-    },
-    {
-      "title": "Task 3: Upload a file to an S3 bucket",
-      "steps": [
+        },
         {
           "text": "Enter the S3 bucket by clicking on your bucket name."
+        },
+        {
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-03.png"
+          ]
         },
         {
           "text": "Download our sample index.html file from here."
         },
         {
+          "text": "To upload a file to our S3 bucket, Click on Upload. Click on Add files. Browse for your local image or the image we provided and select it. Click on the Upload button. You can watch the progress of the upload from within the transfer panel at the bottom of the screen. Once your file has been uploaded, click on Close and you can see an object in the bucket. Note: Uploading files other than index.html will result in validation failure. Please upload the same index.html file only.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-04.png"
+          ]
+        },
+        {
           "text": "To upload a file to our S3 bucket,"
         },
         {
-          "text": "Click on Upload."
+          "text": "Click on Upload."
         },
         {
-          "text": "Click on Add files."
+          "text": "Click on Add files."
         },
         {
           "text": "Browse for your local image or the image we provided and select it."
         },
         {
-          "text": "Click on the Upload button."
+          "text": "Click on the Upload button."
         },
         {
           "text": "You can watch the progress of the upload from within the transfer panel at the bottom of the screen."
         },
         {
-          "text": "Once your file has been uploaded, click on Close and you can see an object in the bucket."
+          "text": "Once your file has been uploaded, click on Close and you can see an object in the bucket."
         },
         {
-          "text": "Note: Uploading files other than index.html will result in validation failure. Please upload the same index.html file only."
-        }
-      ]
-    },
-    {
-      "title": "Task 4: Make the objects publicly accessible",
-      "steps": [
+          "text": "Note: Uploading files other than index.html will result in validation failure. Please upload the same index.html file only.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-05.png"
+          ]
+        },
         {
           "text": "In this task, we are going to configure the permissions of the S3 bucket to allow public access to the uploaded objects. This step ensures that the content stored in the S3 bucket can be accessed by CloudFront and served to end-users."
         },
         {
-          "text": "Click the Permissions tab to configure your bucket."
+          "text": "Click the Permissions tab to configure your bucket. In the Permissions tab, Edit the Bucket Policy. You will be able to see a Blank policy editor. Before creating the policy, you will need to copy the ARN (Amazon Resource Name) of your bucket. Copy the ARN of your bucket to the clipboard. It is displayed at the top of the policy editor. It looks like ARN:“arn:aws:s3:::your-bucket-name\". In the policy below, update the bucket ARN on the Resource key-value and copy the policy code."
         },
         {
-          "text": "In the Permissions tab, Edit the Bucket Policy."
+          "text": "Click the Permissions tab to configure your bucket."
+        },
+        {
+          "text": "In the Permissions tab, Edit the Bucket Policy."
         },
         {
           "text": "You will be able to see a Blank policy editor."
         },
         {
-          "text": "Before creating the policy, you will need to copy the ARN (Amazon Resource Name) of your bucket."
+          "text": "Before creating the policy, you will need to copy the ARN (Amazon Resource Name) of your bucket."
         },
         {
-          "text": "Copy the ARN of your bucket to the clipboard. It is displayed at the top of the policy editor. It looks like ARN:“arn:aws:s3:::your-bucket-name\"."
+          "text": "Copy the ARN of your bucket to the clipboard. It is displayed at the top of the policy editor. It looks like ARN:“arn:aws:s3:::your-bucket-name\"."
         },
         {
           "text": "In the policy below, update the bucket ARN on the Resource key-value and copy the policy code."
         },
         {
+          "text": "Copy the bucket policy. { \"Id\": \"Policy1\", \"Version\": \"2012-10-17\", \"Statement\": [ { \"Sid\": \"Stmt1\", \"Action\": [ \"s3:GetObject\" ], \"Effect\": \"Allow\", \"Resource\": \"replace-this-string-with-your-bucket-arn/*\", \"Principal\": \"*\" } ] }",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-06.gif"
+          ]
+        },
+        {
           "text": "Copy the bucket policy."
         },
         {
-          "text": "{"
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-07.gif"
+          ]
         },
         {
-          "text": "\"Id\": \"Policy1\","
+          "text": "Click on Save changes."
         },
         {
-          "text": "\"Version\": \"2012-10-17\","
+          "text": "Select CloudFront under Networking and Content Delivery from the Services menu."
         },
         {
-          "text": "\"Statement\": ["
+          "text": "Navigate to the left side and select Distributions tab."
         },
         {
-          "text": "{"
+          "text": "Now click on the Create distribution button."
         },
         {
-          "text": "\"Sid\": \"Stmt1\","
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-08.png"
+          ]
         },
         {
-          "text": "\"Action\": ["
+          "text": "Choose a plan, select Pay as you go, click on Next."
         },
         {
-          "text": "\"s3:GetObject\""
-        },
-        {
-          "text": "],"
-        },
-        {
-          "text": "\"Effect\": \"Allow\","
-        },
-        {
-          "text": "\"Resource\": \"replace-this-string-with-your-bucket-arn/*\","
-        },
-        {
-          "text": "\"Principal\": \"*\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "]"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "Click on Save changes."
-        }
-      ]
-    },
-    {
-      "title": "Task 5: Creating CloudFront Distribution",
-      "steps": [
-        {
-          "text": "Select CloudFront under Networking and Content Delivery from the Services menu."
-        },
-        {
-          "text": "Navigate to the left side and select Distributions tab."
-        },
-        {
-          "text": "Now click on the Create distribution button."
-        },
-        {
-          "text": "Choose a plan, select Pay as you go, click on Next."
+          "text": "Now, configure the distribution as followsUnder Distribution options,"
         },
         {
           "text": "Now, configure the distribution as follows"
@@ -206,6 +200,12 @@
           "text": "Custom domain : optional leave it."
         },
         {
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-09.png"
+          ]
+        },
+        {
           "text": "Click on the Next button."
         },
         {
@@ -218,19 +218,34 @@
           "text": "Leave other options as it is and click on the Next button."
         },
         {
-          "text": "For Web Application Firewall (WAF) select Do not enable security protections"
+          "text": "For Web Application Firewall (WAF) select Do not enable security protections"
         },
         {
-          "text": "Click on the Next button, scroll down, and lastly click on the Create Distribution button."
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-10.png"
+          ]
         },
         {
-          "text": "You can see that CloudFront is enabled and deployed"
+          "text": "Click on the Next button, scroll down, and lastly click on the Create Distribution button."
         },
         {
-          "text": "Note: This process will take around 10–15 minutes."
+          "text": "You can see that CloudFront is enabled and deployed Note: This process will take around 10–15 minutes. You can see the Deploying status changed and the last modified time is present."
         },
         {
-          "text": "You can see the Deploying status changed and the last modified time is present."
+          "text": "You can see that CloudFront is enabled and deployed"
+        },
+        {
+          "text": "Note: This process will take around 10–15 minutes."
+        },
+        {
+          "text": "You can see the Deploying status changed and the last modified time is present."
+        },
+        {
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-11.png"
+          ]
         },
         {
           "text": "The domain name that Amazon CloudFront assigns to your distribution appears in the list of distributions."
@@ -245,36 +260,49 @@
           "text": "Copy and paste the domain of CloudFront distribution in the new tab of your browser and add /index.html in the URL."
         },
         {
-          "text": "It should display the index.html page present in the S3 bucket."
-        }
-      ]
-    },
-    {
-      "title": "Task 6: Launching an EC2 Instance",
-      "steps": [
+          "text": "It should display the index.html page present in the S3 bucket.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-12.png"
+          ]
+        },
         {
           "text": "In this task, we are going to launch an Amazon EC2 instance. The EC2 instance will serve as another origin for the CloudFront distribution, alongside the S3 bucket."
         },
         {
-          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
         },
         {
           "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Navigate to Instances from the left side menu and click on Launch instance button."
+          "text": "Navigate to Instances from the left side menu and click on Launch instance button."
         },
         {
-          "text": "Under the Name and tags section : Name – MyEC2server"
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-13.png"
+          ]
         },
         {
-          "text": "Choose an Amazon Machine Image (AMI): Search for Amazon Linux 2023 kernel-6.1 AMI."
+          "text": "Under the Name and tags section : Name – MyEC2server"
         },
         {
-          "text": "Choose an Instance Type: select t2.micro."
+          "text": "Choose an Amazon Machine Image (AMI): Search for Amazon Linux 2023 kernel-6.1 AMI.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-14.png"
+          ]
         },
         {
-          "text": "Keypair Details: No need to generate Keypair for this instance, you can proceed without a keypair."
+          "text": "Choose an Instance Type: select t2.micro."
+        },
+        {
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-15.png"
+          ]
+        },
+        {
+          "text": "Keypair Details: No need to generate Keypair for this instance, you can proceed without a keypair."
         },
         {
           "text": "Under the Network Settings section :"
@@ -292,7 +320,7 @@
           "text": "Auto-assign public IP: select Enable"
         },
         {
-          "text": "Firewall (security groups) : Select Create security group"
+          "text": "Firewall (security groups) : Select Create security group"
         },
         {
           "text": "Security group name : MyEC2Server_SG"
@@ -301,67 +329,59 @@
           "text": "Description : Security Group to allow traffic to EC2"
         },
         {
+          "text": "For HTTP: Choose Type: Select HTTP Source: Select Anywhere"
+        },
+        {
           "text": "For HTTP:"
         },
         {
-          "text": "Choose Type: Select HTTP"
+          "text": "Choose Type: Select HTTP"
         },
         {
-          "text": "Source: Select Anywhere"
+          "text": "Source: Select Anywhere"
         },
         {
-          "text": "Click on Advanced Details : Scroll to the end and paste the below script in the user data section."
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-16.png"
+          ]
         },
         {
-          "text": "#!/bin/bash"
+          "text": "Click on Advanced Details : Scroll to the end and paste the below script in the user data section."
         },
         {
-          "text": "yum update -y"
-        },
-        {
-          "text": "yum install -y httpd"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable httpd"
-        },
-        {
-          "text": "echo \"<h1>Hello, this index.html page from $(hostname -f)</h1>\" > /var/www/html/index.html"
-        },
-        {
-          "text": "chmod 644 /var/www/html/index.html"
-        },
-        {
-          "text": "echo \"<h1>Hello, this index2.html page from $(hostname -f)</h1>\" > /var/www/html/index2.html"
-        },
-        {
-          "text": "chmod 644 /var/www/html/index2.html"
-        },
-        {
-          "text": "systemctl restart httpd"
-        },
-        {
-          "text": "Keep everything else as default and click on the Launch instances button."
+          "text": "Keep everything else as default and click on the Launch instances button."
         },
         {
           "text": "After 1–2 minutes, the Instance State will change to running."
         },
         {
-          "text": "Note down the sample Public IPv4 DNS Address of the EC2 instance."
+          "text": "Note down the sample Public IPv4 DNS Address of the EC2 instance."
         },
         {
-          "text": "Try accessing the Public IPv4 DNS address by pasting in the browser and adding /index.html at the end, you will see the response as present below."
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-17.png"
+          ]
+        },
+        {
+          "text": "Try accessing the Public IPv4 DNS address by pasting in the browser and adding /index.html at the end, you will see the response as present below."
+        },
+        {
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-18.png"
+          ]
         },
         {
           "text": "Now update the URL by modifying /index.html to /index2.html"
-        }
-      ]
-    },
-    {
-      "title": "Task 7: Add EC2 as the Origin and create Origin Group",
-      "steps": [
+        },
+        {
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-19.png"
+          ]
+        },
         {
           "text": "In this task, we are going to add the EC2 instance as an additional origin to the CloudFront distribution and create an origin group. This allows CloudFront to distribute the content from both the S3 bucket and the EC2 instance, providing redundancy and failover capabilities."
         },
@@ -369,10 +389,16 @@
           "text": "Before adding EC2 Instance as Origin, make sure CloudFront distribution is having Enabled status"
         },
         {
-          "text": "Once the CloudFront distribution is having Enabled status, click on the ID to add the origin."
+          "text": "Once the CloudFront distribution is having Enabled status, click on the ID to add the origin.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-20.png"
+          ]
         },
         {
-          "text": "Switch to the Origins tab and click on the Create origin button."
+          "text": "Switch to the Origins tab and click on the Create origin button.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-21.png"
+          ]
         },
         {
           "text": "In the first option Origin domain, paste the copied Public IPv4 DNS of EC2 Instance."
@@ -387,13 +413,28 @@
           "text": "Keep all the options as default and click on the Create origin button."
         },
         {
-          "text": "Now there are two origins present."
+          "text": "Now there are two origins present.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-22.png"
+          ]
         },
         {
-          "text": "Go back to the General tab, you will see these changes are getting deployed."
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-23.png"
+          ]
         },
         {
-          "text": "Wait for 5-10 minutes until you see the Deploying status changes and the Last modified time is present."
+          "text": "Go back to the General tab, you will see these changes are getting deployed."
+        },
+        {
+          "text": "Wait for 5-10 minutes until you see the Deploying status changes and the Last modified time is present."
+        },
+        {
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-24.png"
+          ]
         },
         {
           "text": "Switch to Origins tab and scroll below and click on the Create origin group button."
@@ -408,7 +449,7 @@
           "text": "Once both the Origins are added, give a name as Whiz-Origin-Group in the next field."
         },
         {
-          "text": "For the failover criteria, Select 404 Not found error code present."
+          "text": "For the failover criteria, Select 404 Not found error code present."
         },
         {
           "text": "Once done, click on the Create origin group button."
@@ -417,10 +458,16 @@
           "text": "Origin group is now created."
         },
         {
-          "text": "Go back to the General tab, you will see these changes are getting deployed."
+          "text": "Go back to the General tab, you will see these changes are getting deployed."
         },
         {
-          "text": "Wait for 5-10 minutes until you see the Deploying status changes and the Last modified time is present."
+          "text": "Wait for 5-10 minutes until you see the Deploying status changes and the Last modified time is present."
+        },
+        {
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-25.png"
+          ]
         },
         {
           "text": "Now Switch to the Behaviors tab."
@@ -429,10 +476,16 @@
           "text": "Select the present behavior and click on the Edit button."
         },
         {
-          "text": "On the Edit behavior page, for the Origin and origin groups option, select the present Origin Group i.e. Whiz-Origin-Group from the dropdown."
+          "text": "On the Edit behavior page, for the Origin and origin groups option, select the present Origin Group i.e. Whiz-Origin-Group from the dropdown."
         },
         {
           "text": "In Cache key and origin requests, select CachingOptimized"
+        },
+        {
+          "text": "Task 2: Create S3 Bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-26.png"
+          ]
         },
         {
           "text": "Scroll to the end of the page and click on the Save changes button."
@@ -441,10 +494,476 @@
           "text": "The default cache behavior is now updated to the Origin group."
         },
         {
+          "text": "Go back to the General tab, you will see these changes are getting deployed.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-27.png"
+          ]
+        },
+        {
+          "text": "Wait for 5-10 minutes until you see the Deploying status changes and the Last modified time is present.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-28.png"
+          ]
+        },
+        {
+          "text": "Now you can test the origin group."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Upload a file to an S3 bucket",
+      "steps": [
+        {
+          "text": "Enter the S3 bucket by clicking on your bucket name."
+        },
+        {
+          "text": "Task 3: Upload a file to an S3 bucket",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-29.png"
+          ]
+        },
+        {
+          "text": "Download our sample index.html file from here."
+        },
+        {
+          "text": "To upload a file to our S3 bucket, Click on Upload. Click on Add files. Browse for your local image or the image we provided and select it. Click on the Upload button. You can watch the progress of the upload from within the transfer panel at the bottom of the screen. Once your file has been uploaded, click on Close and you can see an object in the bucket. Note: Uploading files other than index.html will result in validation failure. Please upload the same index.html file only.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-30.png"
+          ]
+        },
+        {
+          "text": "To upload a file to our S3 bucket,"
+        },
+        {
+          "text": "Click on Upload."
+        },
+        {
+          "text": "Click on Add files."
+        },
+        {
+          "text": "Browse for your local image or the image we provided and select it."
+        },
+        {
+          "text": "Click on the Upload button."
+        },
+        {
+          "text": "You can watch the progress of the upload from within the transfer panel at the bottom of the screen."
+        },
+        {
+          "text": "Once your file has been uploaded, click on Close and you can see an object in the bucket."
+        },
+        {
+          "text": "Note: Uploading files other than index.html will result in validation failure. Please upload the same index.html file only.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-31.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Make the objects publicly accessible",
+      "steps": [
+        {
+          "text": "In this task, we are going to configure the permissions of the S3 bucket to allow public access to the uploaded objects. This step ensures that the content stored in the S3 bucket can be accessed by CloudFront and served to end-users."
+        },
+        {
+          "text": "Click the Permissions tab to configure your bucket. In the Permissions tab, Edit the Bucket Policy. You will be able to see a Blank policy editor. Before creating the policy, you will need to copy the ARN (Amazon Resource Name) of your bucket. Copy the ARN of your bucket to the clipboard. It is displayed at the top of the policy editor. It looks like ARN:“arn:aws:s3:::your-bucket-name\". In the policy below, update the bucket ARN on the Resource key-value and copy the policy code."
+        },
+        {
+          "text": "Click the Permissions tab to configure your bucket."
+        },
+        {
+          "text": "In the Permissions tab, Edit the Bucket Policy."
+        },
+        {
+          "text": "You will be able to see a Blank policy editor."
+        },
+        {
+          "text": "Before creating the policy, you will need to copy the ARN (Amazon Resource Name) of your bucket."
+        },
+        {
+          "text": "Copy the ARN of your bucket to the clipboard. It is displayed at the top of the policy editor. It looks like ARN:“arn:aws:s3:::your-bucket-name\"."
+        },
+        {
+          "text": "In the policy below, update the bucket ARN on the Resource key-value and copy the policy code."
+        },
+        {
+          "text": "Copy the bucket policy. { \"Id\": \"Policy1\", \"Version\": \"2012-10-17\", \"Statement\": [ { \"Sid\": \"Stmt1\", \"Action\": [ \"s3:GetObject\" ], \"Effect\": \"Allow\", \"Resource\": \"replace-this-string-with-your-bucket-arn/*\", \"Principal\": \"*\" } ] }",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-32.gif"
+          ]
+        },
+        {
+          "text": "Copy the bucket policy."
+        },
+        {
+          "text": "Task 4: Make the objects publicly accessible",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-33.gif"
+          ]
+        },
+        {
+          "text": "Click on Save changes."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Creating CloudFront Distribution",
+      "steps": [
+        {
+          "text": "Select CloudFront under Networking and Content Delivery from the Services menu."
+        },
+        {
+          "text": "Navigate to the left side and select Distributions tab."
+        },
+        {
+          "text": "Now click on the Create distribution button."
+        },
+        {
+          "text": "Task 5: Creating CloudFront Distribution",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-34.png"
+          ]
+        },
+        {
+          "text": "Choose a plan, select Pay as you go, click on Next."
+        },
+        {
+          "text": "Now, configure the distribution as followsUnder Distribution options,"
+        },
+        {
+          "text": "Now, configure the distribution as follows"
+        },
+        {
+          "text": "Under Distribution options,"
+        },
+        {
+          "text": "Distribution name : CF_Distribution"
+        },
+        {
+          "text": "Description : CloudFront distribution for origin groups"
+        },
+        {
+          "text": "Choose : Single website or app"
+        },
+        {
+          "text": "Custom domain : optional leave it."
+        },
+        {
+          "text": "Task 5: Creating CloudFront Distribution",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-35.png"
+          ]
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Origin type : Select Amazon S3"
+        },
+        {
+          "text": "S3 origin : Click on the Browse S3 button and select the previously created bucket."
+        },
+        {
+          "text": "Leave other options as it is and click on the Next button."
+        },
+        {
+          "text": "For Web Application Firewall (WAF) select Do not enable security protections"
+        },
+        {
+          "text": "Task 5: Creating CloudFront Distribution",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-36.png"
+          ]
+        },
+        {
+          "text": "Click on the Next button, scroll down, and lastly click on the Create Distribution button."
+        },
+        {
+          "text": "You can see that CloudFront is enabled and deployed Note: This process will take around 10–15 minutes. You can see the Deploying status changed and the last modified time is present."
+        },
+        {
+          "text": "You can see that CloudFront is enabled and deployed"
+        },
+        {
+          "text": "Note: This process will take around 10–15 minutes."
+        },
+        {
+          "text": "You can see the Deploying status changed and the last modified time is present."
+        },
+        {
+          "text": "Task 5: Creating CloudFront Distribution",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-37.png"
+          ]
+        },
+        {
+          "text": "The domain name that Amazon CloudFront assigns to your distribution appears in the list of distributions."
+        },
+        {
+          "text": "Copy and paste the domain of the CloudFront distribution in the new tab of your browser."
+        },
+        {
+          "text": "It will throw an error because the S3 bucket is having object index.html and to access that enter the same in the path."
+        },
+        {
+          "text": "Copy and paste the domain of CloudFront distribution in the new tab of your browser and add /index.html in the URL."
+        },
+        {
+          "text": "It should display the index.html page present in the S3 bucket.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-38.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Launching an EC2 Instance",
+      "steps": [
+        {
+          "text": "In this task, we are going to launch an Amazon EC2 instance. The EC2 instance will serve as another origin for the CloudFront distribution, alongside the S3 bucket."
+        },
+        {
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Navigate to Instances from the left side menu and click on Launch instance button."
+        },
+        {
+          "text": "Task 6: Launching an EC2 Instance",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-39.png"
+          ]
+        },
+        {
+          "text": "Under the Name and tags section : Name – MyEC2server"
+        },
+        {
+          "text": "Choose an Amazon Machine Image (AMI): Search for Amazon Linux 2023 kernel-6.1 AMI.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-40.png"
+          ]
+        },
+        {
+          "text": "Choose an Instance Type: select t2.micro."
+        },
+        {
+          "text": "Task 6: Launching an EC2 Instance",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-41.png"
+          ]
+        },
+        {
+          "text": "Keypair Details: No need to generate Keypair for this instance, you can proceed without a keypair."
+        },
+        {
+          "text": "Under the Network Settings section :"
+        },
+        {
+          "text": "Click on Edit button."
+        },
+        {
+          "text": "Leave the default VPC as it is."
+        },
+        {
+          "text": "Subnet: default subnet"
+        },
+        {
+          "text": "Auto-assign public IP: select Enable"
+        },
+        {
+          "text": "Firewall (security groups) : Select Create security group"
+        },
+        {
+          "text": "Security group name : MyEC2Server_SG"
+        },
+        {
+          "text": "Description : Security Group to allow traffic to EC2"
+        },
+        {
+          "text": "For HTTP: Choose Type: Select HTTP Source: Select Anywhere"
+        },
+        {
+          "text": "For HTTP:"
+        },
+        {
+          "text": "Choose Type: Select HTTP"
+        },
+        {
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "Task 6: Launching an EC2 Instance",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-42.png"
+          ]
+        },
+        {
+          "text": "Click on Advanced Details : Scroll to the end and paste the below script in the user data section."
+        },
+        {
+          "text": "Keep everything else as default and click on the Launch instances button."
+        },
+        {
+          "text": "After 1–2 minutes, the Instance State will change to running."
+        },
+        {
+          "text": "Note down the sample Public IPv4 DNS Address of the EC2 instance."
+        },
+        {
+          "text": "Task 6: Launching an EC2 Instance",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-43.png"
+          ]
+        },
+        {
+          "text": "Try accessing the Public IPv4 DNS address by pasting in the browser and adding /index.html at the end, you will see the response as present below."
+        },
+        {
+          "text": "Task 6: Launching an EC2 Instance",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-44.png"
+          ]
+        },
+        {
+          "text": "Now update the URL by modifying /index.html to /index2.html"
+        },
+        {
+          "text": "Task 6: Launching an EC2 Instance",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-45.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Add EC2 as the Origin and create Origin Group",
+      "steps": [
+        {
+          "text": "In this task, we are going to add the EC2 instance as an additional origin to the CloudFront distribution and create an origin group. This allows CloudFront to distribute the content from both the S3 bucket and the EC2 instance, providing redundancy and failover capabilities."
+        },
+        {
+          "text": "Before adding EC2 Instance as Origin, make sure CloudFront distribution is having Enabled status"
+        },
+        {
+          "text": "Once the CloudFront distribution is having Enabled status, click on the ID to add the origin.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-46.png"
+          ]
+        },
+        {
+          "text": "Switch to the Origins tab and click on the Create origin button.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-47.png"
+          ]
+        },
+        {
+          "text": "In the first option Origin domain, paste the copied Public IPv4 DNS of EC2 Instance."
+        },
+        {
+          "text": "Once pasted, all the details of the Origin domain will be listed below."
+        },
+        {
+          "text": "Protocol : Select HTTP Only"
+        },
+        {
+          "text": "Keep all the options as default and click on the Create origin button."
+        },
+        {
+          "text": "Now there are two origins present.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-48.png"
+          ]
+        },
+        {
+          "text": "Task 7: Add EC2 as the Origin and create Origin Group",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-49.png"
+          ]
+        },
+        {
           "text": "Go back to the General tab, you will see these changes are getting deployed."
         },
         {
           "text": "Wait for 5-10 minutes until you see the Deploying status changes and the Last modified time is present."
+        },
+        {
+          "text": "Task 7: Add EC2 as the Origin and create Origin Group",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-50.png"
+          ]
+        },
+        {
+          "text": "Switch to Origins tab and scroll below and click on the Create origin group button."
+        },
+        {
+          "text": "Select the Public IPv4 DNS of EC2 Instance and click on the Add button."
+        },
+        {
+          "text": "Similarly, select the S3 Bucket endpoint and click on the Add button."
+        },
+        {
+          "text": "Once both the Origins are added, give a name as Whiz-Origin-Group in the next field."
+        },
+        {
+          "text": "For the failover criteria, Select 404 Not found error code present."
+        },
+        {
+          "text": "Once done, click on the Create origin group button."
+        },
+        {
+          "text": "Origin group is now created."
+        },
+        {
+          "text": "Go back to the General tab, you will see these changes are getting deployed."
+        },
+        {
+          "text": "Wait for 5-10 minutes until you see the Deploying status changes and the Last modified time is present."
+        },
+        {
+          "text": "Task 7: Add EC2 as the Origin and create Origin Group",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-51.png"
+          ]
+        },
+        {
+          "text": "Now Switch to the Behaviors tab."
+        },
+        {
+          "text": "Select the present behavior and click on the Edit button."
+        },
+        {
+          "text": "On the Edit behavior page, for the Origin and origin groups option, select the present Origin Group i.e. Whiz-Origin-Group from the dropdown."
+        },
+        {
+          "text": "In Cache key and origin requests, select CachingOptimized"
+        },
+        {
+          "text": "Task 7: Add EC2 as the Origin and create Origin Group",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-52.png"
+          ]
+        },
+        {
+          "text": "Scroll to the end of the page and click on the Save changes button."
+        },
+        {
+          "text": "The default cache behavior is now updated to the Origin group."
+        },
+        {
+          "text": "Go back to the General tab, you will see these changes are getting deployed.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-53.png"
+          ]
+        },
+        {
+          "text": "Wait for 5-10 minutes until you see the Deploying status changes and the Last modified time is present.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-54.png"
+          ]
         },
         {
           "text": "Now you can test the origin group."
@@ -461,16 +980,22 @@
           "text": "Copy the Distribution domain name and paste it into the new tab of your browser."
         },
         {
-          "text": "This should now display the index.html page from EC2 Instance as it has the Private IP DNS name."
+          "text": "This should now display the index.html page from EC2 Instance as it has the Private IP DNS name.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-55.png"
+          ]
         },
         {
-          "text": "Now add /index.html into the URL. This displays the contents of the index.html file present in the S3 Bucket."
+          "text": "Now add /index.html into the URL. This displays the contents of the index.html file present in the S3 Bucket.",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-56.png"
+          ]
         },
         {
-          "text": "Now update the URL by changing /index.html to /index2.html"
-        },
-        {
-          "text": "Do You Know?"
+          "text": "Now update the URL by changing /index.html to /index2.html",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-57.png"
+          ]
         },
         {
           "text": "Amazon CloudFront has a massive global presence, with edge locations located in over 200 cities across more than 90 countries. This extensive network allows CloudFront to deliver content with low latency and high data transfer speeds to users around the world, ensuring a fast and responsive experience for accessing websites, streaming videos, downloading files, and more."
@@ -481,34 +1006,37 @@
       "title": "Task 9: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-58.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 9: Validation Test",
+          "images": [
+            "/labs/understanding-cloudfront-origin-groups/step-59.gif"
+          ]
         },
         {
           "text": "You have successfully created an S3 Bucket, uploaded index.html, and made the bucket publicly accessible using bucket policy."
         },
         {
-          "text": "You have successfully created an Amazon CloudFront distribution and published the S3 bucket's index.html file through CloudFront."
+          "text": "You have successfully created an Amazon CloudFront distribution and published the S3 bucket's index.html file through CloudFront."
         },
         {
           "text": "You have successfully launched the EC2 Instance and tested the Public IPv4 DNS of the instance."
         },
         {
-          "text": "You have successfully created the origin and origin groups in CloudFront."
+          "text": "You have successfully created the origin and origin groups in CloudFront."
         },
         {
           "text": "You have successfully tested the failover using the distribution domain name."
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign out of AWS Account."
@@ -517,7 +1045,7 @@
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you completed the task, click on End Lab from the lab console."
+          "text": "Once you completed the task, click on End Lab from the lab console."
         }
       ]
     }

@@ -36,9 +36,6 @@
           "text": "IPv4 CIDR block: 10.0.0.0/16"
         },
         {
-          "text": "IPv4 CIDR block: 10.0.0.0/16"
-        },
-        {
           "text": "Create Public and Private Subnets for VPC."
         },
         {

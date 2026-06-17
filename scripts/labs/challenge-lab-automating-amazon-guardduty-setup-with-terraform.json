@@ -1,0 +1,136 @@
+{
+  "slug": "challenge-lab-automating-amazon-guardduty-setup-with-terraform",
+  "title": "Challenge Lab : Introduction to Amazon GuardDuty using Terraform",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:15:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Portal",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Portal"
+        },
+        {
+          "text": "XYZ Corp wants to enhance its security posture by enabling Amazon GuardDuty using Infrastructure as Code (IaC). As a cloud engineer, you have been tasked to automate the provisioning of GuardDuty in the us-east-1 region using Terraform. Your goal is to configure provider authentication, enable GuardDuty, and output the Detector ID for validation. Later, you'll review findings and explore features from the AWS Console."
+        },
+        {
+          "text": "Setup Visual Studio Code."
+        },
+        {
+          "text": "Create variables.tf and terraform.tfvars: Declare necessary variables for AWS access keys, secret keys, and region in the variables.tf file. Define values for these variables in terraform.tfvars."
+        },
+        {
+          "text": "Declare necessary variables for AWS access keys, secret keys, and region in the variables.tf file."
+        },
+        {
+          "text": "Define values for these variables in terraform.tfvars."
+        },
+        {
+          "text": "Create main.tf and Enable GuardDuty Add a provider block using the variables for AWS credentials. Define a resource block to enable aws_guardduty_detector."
+        },
+        {
+          "text": "Add a provider block using the variables for AWS credentials."
+        },
+        {
+          "text": "Define a resource block to enable aws_guardduty_detector."
+        },
+        {
+          "text": "Create Output File Define an output for guardduty_detector_id."
+        },
+        {
+          "text": "Define an output for guardduty_detector_id."
+        },
+        {
+          "text": "Confirm the installation of Terraform by checking the version."
+        },
+        {
+          "text": "Deploy Infrastructure Initialize Terraform. Run plan to preview resources. Apply and confirm with \"yes\". Note the guardduty_detector_id in the output."
+        },
+        {
+          "text": "Initialize Terraform."
+        },
+        {
+          "text": "Run plan to preview resources."
+        },
+        {
+          "text": "Apply and confirm with \"yes\"."
+        },
+        {
+          "text": "Note the guardduty_detector_id in the output."
+        },
+        {
+          "text": "Validate in AWS Console Log in to AWS and switch to us-east-1 region. Open GuardDuty service from the console. Confirm it is enabled and matches the Terraform output."
+        },
+        {
+          "text": "Log in to AWS and switch to us-east-1 region."
+        },
+        {
+          "text": "Open GuardDuty service from the console."
+        },
+        {
+          "text": "Confirm it is enabled and matches the Terraform output."
+        },
+        {
+          "text": "Explore GuardDuty Settings Review Detector ID, Service Roles, and Export Options. Understand Suspend vs Disable behavior."
+        },
+        {
+          "text": "Review Detector ID, Service Roles, and Export Options."
+        },
+        {
+          "text": "Understand Suspend vs Disable behavior."
+        },
+        {
+          "text": "Review Lists and Accounts Explore Trusted IP and Threat IP Lists under Lists. Review member/master relationships under Accounts."
+        },
+        {
+          "text": "Explore Trusted IP and Threat IP Lists under Lists."
+        },
+        {
+          "text": "Review member/master relationships under Accounts."
+        },
+        {
+          "text": "Generate Sample Findings Use “Generate sample findings” in settings. In Findings, examine attributes using filters and severity levels."
+        },
+        {
+          "text": "Use “Generate sample findings” in settings."
+        },
+        {
+          "text": "In Findings, examine attributes using filters and severity levels."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

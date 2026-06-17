@@ -1,0 +1,94 @@
+{
+  "slug": "challenge-lab-analyzing-expense-data-with-amazon-athena",
+  "title": "Challenge Lab: Analyzing Expense Data with Amazon Athena",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge, you will work as a Data Analyst to analyze employee expense data stored in an S3 bucket using Amazon Athena. The task involves setting up Athena, creating a metadata catalog in AWS Glue, and running SQL queries to gain insights from the expense reports."
+        },
+        {
+          "text": "You are working as a Data Analyst for a company that tracks employee expenses. The company stores its expense reports as CSV files in an S3 bucket. Your task is to analyze these reports using Amazon Athena."
+        },
+        {
+          "text": "Set Up an Athena Workgroup Go to Athena and create a new workgroup. Choose an S3 bucket for query results starting with lab. Set up the workgroup to use Athena SQL and configure it for automatic query engine upgrades."
+        },
+        {
+          "text": "Go to Athena and create a new workgroup."
+        },
+        {
+          "text": "Choose an S3 bucket for query results starting with lab."
+        },
+        {
+          "text": "Set up the workgroup to use Athena SQL and configure it for automatic query engine upgrades."
+        },
+        {
+          "text": "Create a Glue Database Create a new Database."
+        },
+        {
+          "text": "Create a new Database."
+        },
+        {
+          "text": "Create a Glue Table Choose the S3 bucket starting with lab and set the format to CSV with commas. Define two columns: Expense_Type and Expense_Category."
+        },
+        {
+          "text": "Choose the S3 bucket starting with lab and set the format to CSV with commas."
+        },
+        {
+          "text": "Define two columns: Expense_Type and Expense_Category."
+        },
+        {
+          "text": "Query the Data in Athena Open Athena and ensure you're using the correct workgroup and database. Write a query to filter data where the expense_category is Food or Transportation."
+        },
+        {
+          "text": "Open Athena and ensure you're using the correct workgroup and database."
+        },
+        {
+          "text": "Write a query to filter data where the expense_category is Food or Transportation."
+        },
+        {
+          "text": "Click Validate after setting up."
+        },
+        {
+          "text": "Delete resources once validation is complete."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

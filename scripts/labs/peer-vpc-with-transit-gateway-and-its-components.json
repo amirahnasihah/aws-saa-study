@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -41,7 +44,13 @@
           "text": "Navigate to VPC by clicking on the Services menu in the top, then click on VPC in the Networking & Content Delivery section."
         },
         {
-          "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button."
+          "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button. Select VPC only Name tag : Enter First_VPC IPv4 CIDR block : Enter 10.0.0.0/24",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-01.png"
+          ]
+        },
+        {
+          "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button."
         },
         {
           "text": "Select VPC only"
@@ -50,19 +59,43 @@
           "text": "Name tag : Enter First_VPC"
         },
         {
-          "text": "IPv4 CIDR block : Enter 10.0.0.0/24"
+          "text": "IPv4 CIDR block : Enter 10.0.0.0/24",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-02.png"
+          ]
         },
         {
-          "text": "Leave everything else as default and click on the Create VPC button."
+          "text": "Task 2: Create the first VPC",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-03.png"
+          ]
+        },
+        {
+          "text": "Leave everything else as default and click on the Create VPC button."
         },
         {
           "text": "You have successfully created the VPC. Note the VPC ID for later use."
         },
         {
-          "text": "Now select the First_VPC from the list and click on the Actions dropdown and select Edit VPC Settings"
+          "text": "Task 2: Create the first VPC",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-04.png"
+          ]
         },
         {
-          "text": "Check the Enable DNS resolution and Enable DNS hostnames checkbox under DNS settings, and then click on the Save button."
+          "text": "Now select the First_VPC from the list and click on the Actions dropdown and select Edit VPC Settings"
+        },
+        {
+          "text": "Check the Enable DNS resolution and Enable DNS hostnames checkbox under DNS settings, and then click on the Save button.",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-05.gif"
+          ]
+        },
+        {
+          "text": "Task 2: Create the first VPC",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-06.gif"
+          ]
         }
       ]
     },
@@ -73,7 +106,10 @@
           "text": "In this task, we are going to create a public subnet within the first VPC. The public subnet will be used for launching an EC2 instance that will be accessible over the internet."
         },
         {
-          "text": "Navigate to Subnet from the left side menu and click on Create subnet button."
+          "text": "Navigate to Subnet from the left side menu and click on Create subnet button. VPC ID : Select the First_VPC VPC from the list. Subnet name : Enter Public_subnet_first_VPC Availability Zone : Leave as No Preference IPv4 CIDR block : Enter 10.0.0.0/25"
+        },
+        {
+          "text": "Navigate to Subnet from the left side menu and click on Create subnet button."
         },
         {
           "text": "VPC ID : Select the First_VPC VPC from the list."
@@ -99,22 +135,34 @@
           "text": "In this task, we are going to create an internet gateway and attach it to the first VPC. The internet gateway allows the EC2 instance in the public subnet to communicate with the internet."
         },
         {
-          "text": "Navigate to the Internet gateways from the left side menu and click on the Create Internet gateway button."
+          "text": "Navigate to the Internet gateways from the left side menu and click on the Create Internet gateway button. Name tag : Enter IGW"
+        },
+        {
+          "text": "Navigate to the Internet gateways from the left side menu and click on the Create Internet gateway button."
         },
         {
           "text": "Name tag : Enter IGW"
         },
         {
-          "text": "Click on the Create Internet gateway button"
+          "text": "Click on the Create Internet gateway button"
         },
         {
-          "text": "Now click on the Actions dropdown and select Attach to VPC."
+          "text": "Now click on the Actions dropdown and select Attach to VPC. Available VPCs : select First_VPC from the list."
+        },
+        {
+          "text": "Now click on the Actions dropdown and select Attach to VPC."
         },
         {
           "text": "Available VPCs : select First_VPC from the list."
         },
         {
           "text": "Now click on the Attach Internet gateway."
+        },
+        {
+          "text": "Task 4: Create and attach an Internet Gateway",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-07.png"
+          ]
         }
       ]
     },
@@ -123,6 +171,9 @@
       "steps": [
         {
           "text": "In this task, we are going to create a public route table and associate it with the public subnet. The route table controls the traffic between the subnet and the internet gateway."
+        },
+        {
+          "text": "Navigate to Route tables on the left side panel and click on the Create route table. Name : Enter PublicRT VPC* : Select the First_VPC from the list."
         },
         {
           "text": "Navigate to Route tables on the left side panel and click on the Create route table."
@@ -144,6 +195,12 @@
         },
         {
           "text": "Now select the subnet with name Public_subnet_first_VPC and click on the Save associations button."
+        },
+        {
+          "text": "Task 5: Create a Public Route Table and associate it with the subnet",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-08.gif"
+          ]
         }
       ]
     },
@@ -154,13 +211,16 @@
           "text": "In this task, we are going to add a public route in the route table to allow traffic from the public subnet to the internet. This enables the EC2 instance in the public subnet to communicate with resources outside the VPC."
         },
         {
-          "text": "Navigate to Route tables on the left side panel and select the PublicRT from the list."
+          "text": "Navigate to Route tables on the left side panel and select the PublicRT from the list."
         },
         {
-          "text": "Switch to the Routes tab in below and click on the Edit routes."
+          "text": "Switch to the Routes tab in below and click on the Edit routes."
         },
         {
-          "text": "Now click on the Add route"
+          "text": "Now click on the Add route Destination : Enter 0.0.0.0/0 Target : select Internet Gateway and then select the Internet Gateway id present."
+        },
+        {
+          "text": "Now click on the Add route"
         },
         {
           "text": "Destination : Enter 0.0.0.0/0"
@@ -170,6 +230,12 @@
         },
         {
           "text": "Click on the Save changes."
+        },
+        {
+          "text": "Task 6: Add public Route in the Route table",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-09.gif"
+          ]
         }
       ]
     },
@@ -189,6 +255,15 @@
           "text": "Navigate to Instances from the left side menu and click on Launch Instances button."
         },
         {
+          "text": "Task 7: Launch an EC2 instance in the First VPC",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-10.png"
+          ]
+        },
+        {
+          "text": "Under the Name and tags section : Name : First_VPCs_EC2"
+        },
+        {
           "text": "Under the Name and tags section :"
         },
         {
@@ -198,13 +273,19 @@
           "text": "Under the Application and OS Images (Amazon Machine Image) section :"
         },
         {
-          "text": "Select Quick Start tab and Amazon Linux 2023 kernel-6.1 AMI under it"
+          "text": "Select Quick Start tab and Amazon Linux 2023 kernel-6.1 AMI under it",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-11.png"
+          ]
         },
         {
           "text": "Under the Instance Type section :"
         },
         {
-          "text": "Instance Type : Select t2.micro"
+          "text": "Instance Type : Select t2.micro",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-12.png"
+          ]
         },
         {
           "text": "Under the Key Pair (login) section :"
@@ -249,6 +330,9 @@
           "text": "Description : Enter Security group for public EC2"
         },
         {
+          "text": "To add SSH: Choose Type: SSH Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
           "text": "To add SSH:"
         },
         {
@@ -256,6 +340,9 @@
         },
         {
           "text": "Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
+          "text": "For HTTP, click on Add security group rule, Choose Type: HTTP Source: Anywhere (From ALL IP addresses accessible)."
         },
         {
           "text": "For HTTP, click on Add security group rule,"
@@ -267,6 +354,9 @@
           "text": "Source: Anywhere (From ALL IP addresses accessible)."
         },
         {
+          "text": "For HTTPS, click on Add security group rule, Choose Type: HTTPS Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
           "text": "For HTTPS, click on Add security group rule,"
         },
         {
@@ -276,31 +366,16 @@
           "text": "Source: Anywhere (From ALL IP addresses accessible)."
         },
         {
+          "text": "Under the Advanced details section : Under the IAM instance profile: Select task232_profile_... role. Under the User data: copy and paste the following script to create an HTML page served by an Apache httpd web server. Make sure you remove the extra space after pasting the comment."
+        },
+        {
           "text": "Under the Advanced details section :"
         },
         {
-          "text": "Under the IAM instance profile: Select task232_profile_... role."
+          "text": "Under the IAM instance profile: Select task232_profile_... role."
         },
         {
           "text": "Under the User data: copy and paste the following script to create an HTML page served by an Apache httpd web server. Make sure you remove the extra space after pasting the comment."
-        },
-        {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "sudo dnf update -y"
-        },
-        {
-          "text": "sudo dnf install httpd -y"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable httpd"
-        },
-        {
-          "text": "echo \"<html><h1> Welcome to lab Public Server</h1><html>\" > /var/www/html/index.html"
         },
         {
           "text": "Keep everything else as default and click on the Launch instance button."
@@ -309,10 +384,28 @@
           "text": "Launch Status: Your instance is now launching, Navigate to Instances page from the left menu and wait until the status of the EC2 Instance changes to running."
         },
         {
+          "text": "Task 7: Launch an EC2 instance in the First VPC",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-13.png"
+          ]
+        },
+        {
           "text": "Note down the sample IPv4 Public IP Address of the EC2 instance. A sample is shown in the screenshot below."
         },
         {
+          "text": "Task 7: Launch an EC2 instance in the First VPC",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-14.png"
+          ]
+        },
+        {
           "text": "If you paste the IPv4 Public IP in your browser and hit [enter]. You will be able to the below webpage."
+        },
+        {
+          "text": "Task 7: Launch an EC2 instance in the First VPC",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-15.png"
+          ]
         }
       ]
     },
@@ -326,7 +419,13 @@
           "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking & Content Delivery section."
         },
         {
-          "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button."
+          "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button. Select VPC only Name tag : Enter Second_VPC IPv4 CIDR block : Enter 20.0.0.0/24",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-16.png"
+          ]
+        },
+        {
+          "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button."
         },
         {
           "text": "Select VPC only"
@@ -335,7 +434,16 @@
           "text": "Name tag : Enter Second_VPC"
         },
         {
-          "text": "IPv4 CIDR block : Enter 20.0.0.0/24"
+          "text": "IPv4 CIDR block : Enter 20.0.0.0/24",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-17.png"
+          ]
+        },
+        {
+          "text": "Task 8: Create a Second VPC",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-18.png"
+          ]
         },
         {
           "text": "Leave everything else as default and click on the Create VPC button."
@@ -344,10 +452,16 @@
           "text": "You have successfully created the VPC. Note the VPC ID for later use."
         },
         {
-          "text": "Now select the Second_VPC from the list and click on the Actions and select Edit VPC settings"
+          "text": "Task 8: Create a Second VPC",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-19.png"
+          ]
         },
         {
-          "text": "Check the Enable DNS resolution and Enable DNS hostnames checkbox under DNS settings and then click on the Save button"
+          "text": "Now select the Second_VPC from the list and click on the Actions and select Edit VPC settings"
+        },
+        {
+          "text": "Check the Enable DNS resolution and Enable DNS hostnames checkbox under DNS settings and then click on the Save button"
         }
       ]
     },
@@ -358,7 +472,7 @@
           "text": "In this task, we are going to create a private subnet within the second VPC. The private subnet will be used for launching an EC2 instance that will not have direct internet connectivity."
         },
         {
-          "text": "Navigate to Subnets from the left side menu and click on Create Subnet button."
+          "text": "Navigate to Subnets from the left side menu and click on Create Subnet button."
         },
         {
           "text": "VPC ID : Select the Second_VPC VPC from the list."
@@ -373,7 +487,7 @@
           "text": "IPv4 CIDR block : Enter 20.0.0.0/25"
         },
         {
-          "text": "Now click on the Create subnet button"
+          "text": "Now click on the Create subnet button"
         }
       ]
     },
@@ -396,13 +510,25 @@
           "text": "Under the Application and OS Images (Amazon Machine Image) section :"
         },
         {
-          "text": "Select Quick Start tab and Amazon Linux 2023 kernel-6.1 AMI under it"
+          "text": "Select Quick Start tab and Amazon Linux 2023 kernel-6.1 AMI under it",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-20.png"
+          ]
+        },
+        {
+          "text": "Under the Instance Type section : Instance Type : Select t2.micro",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-21.png"
+          ]
         },
         {
           "text": "Under the Instance Type section :"
         },
         {
-          "text": "Instance Type : Select t2.micro"
+          "text": "Instance Type : Select t2.micro",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-22.png"
+          ]
         },
         {
           "text": "Under the Key Pair (login) section :"
@@ -435,6 +561,9 @@
           "text": "Description : Enter Security group for private EC2"
         },
         {
+          "text": "To add SSH: Choose Type: SSH Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
           "text": "To add SSH:"
         },
         {
@@ -450,7 +579,19 @@
           "text": "Your instances are now launching. Navigate to the EC2 instance page and wait until the status changes to the Running. It will usually take 1-2 minutes."
         },
         {
+          "text": "Task 10: Launch an EC2 instance in Second VPC",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-23.png"
+          ]
+        },
+        {
           "text": "Since this EC2 is created in a private subnet, the machine will only have Private IP so, note down the sample IPv4 Private IP Address of the EC2 instance. A sample is shown in the screenshot below."
+        },
+        {
+          "text": "Task 10: Launch an EC2 instance in Second VPC",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-24.png"
+          ]
         }
       ]
     },
@@ -464,22 +605,37 @@
           "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking & Content Delivery section."
         },
         {
-          "text": "Click on the Transit Gateways present under Transit Gateways section on the left sidebar."
+          "text": "Click on the Transit Gateways present under Transit Gateways section on the left sidebar."
         },
         {
-          "text": "Click on the Create Transit gateway button to create a Transit gateway."
+          "text": "Click on the Create Transit gateway button to create a Transit gateway."
         },
         {
-          "text": "Name tag: Enter DemoTG"
+          "text": "Task 11: Create a Transit gateway",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-25.png"
+          ]
         },
         {
-          "text": "Description: Enter TG for peering two VPCs"
+          "text": "Name tag: Enter DemoTG"
         },
         {
-          "text": "Keep all the options as default and click on Create transit gateway button."
+          "text": "Description: Enter TG for peering two VPCs"
         },
         {
-          "text": "Currently, the status of the Transit gateway is in a pending state. It takes up to 5 minutes for it to become available."
+          "text": "Keep all the options as default and click on Create transit gateway button."
+        },
+        {
+          "text": "Currently, the status of the Transit gateway is in a pending state. It takes up to 5 minutes for it to become available.",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-26.png"
+          ]
+        },
+        {
+          "text": "Task 11: Create a Transit gateway",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-27.png"
+          ]
         }
       ]
     },
@@ -490,10 +646,13 @@
           "text": "In this task, we are going to create two Transit Gateway attachments, one for each of the VPCs created. These attachments establish the peering between the VPCs and the Transit Gateway."
         },
         {
-          "text": "Navigate to the Transit gateways attachments present under Transit Gateways section on the left side bar."
+          "text": "Navigate to the Transit gateways attachments present under Transit Gateways section on the left side bar."
         },
         {
-          "text": "Click on the Create transit gateway attachment button"
+          "text": "Click on the Create transit gateway attachment button Name tag : First_VPC_TGA Transit Gateway ID: Select transit gateway present with Name tag DemoTG. Attachment type: Select VPC DNS support: Checked (default) IPv6 support: Unchecked VPC ID: Select VPC with the Name First_VPC Subnet IDs: Default"
+        },
+        {
+          "text": "Click on the Create transit gateway attachment button"
         },
         {
           "text": "Name tag : First_VPC_TGA"
@@ -511,13 +670,13 @@
           "text": "IPv6 support: Unchecked"
         },
         {
-          "text": "VPC ID: Select VPC with the Name First_VPC"
+          "text": "VPC ID: Select VPC with the Name First_VPC"
         },
         {
           "text": "Subnet IDs: Default"
         },
         {
-          "text": "Click on the Create transit gateway attachment."
+          "text": "Click on the Create transit gateway attachment."
         },
         {
           "text": "Creation will be in-progress for the Transit gateway attachment."
@@ -526,10 +685,13 @@
           "text": "It takes upto 5 minutes for it to come in available state."
         },
         {
-          "text": "To create the Transit gateway attachment for the second VPC, Click on the Create transit gateway attachment"
+          "text": "To create the Transit gateway attachment for the second VPC, Click on the Create transit gateway attachment Name tag: Second_VPCs_TGA Transit Gateway ID: Select transit gateway present with Name tag DemoTG. Attachment type: Select VPC DNS support: Checked (default) IPv6 support: Unchecked VPC ID: Select VPC with the Name Second_VPC Subnet IDs: Default"
         },
         {
-          "text": "Name tag: Second_VPCs_TGA"
+          "text": "To create the Transit gateway attachment for the second VPC, Click on the Create transit gateway attachment"
+        },
+        {
+          "text": "Name tag: Second_VPCs_TGA"
         },
         {
           "text": "Transit Gateway ID: Select transit gateway present with Name tag DemoTG."
@@ -553,7 +715,16 @@
           "text": "Creation will be in-progress for the Transit gateway attachment."
         },
         {
-          "text": "Once created both the Transit gateway attachment will be present."
+          "text": "Once created both the Transit gateway attachment will be present.",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-28.png"
+          ]
+        },
+        {
+          "text": "Task 12: Create two Transit gateway attachment for the VPCs created",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-29.png"
+          ]
         }
       ]
     },
@@ -564,7 +735,7 @@
           "text": "In this task, we are going to add a route in the first VPC's route table that directs traffic destined for the second VPC's CIDR range to the Transit Gateway. This enables communication between the VPCs through the Transit Gateway."
         },
         {
-          "text": "Navigate to Route tables on the left side panel."
+          "text": "Navigate to Route tables on the left side panel."
         },
         {
           "text": "There will be 4 route tables present, and to avoid confusion put the entry in the correct route table. Let's filter the route table present using the VPC filter."
@@ -576,7 +747,7 @@
           "text": "Click on the Route table ID to see the routes present."
         },
         {
-          "text": "Click on the Routes tab below and click on the Edit routes."
+          "text": "Click on the Routes tab below and click on the Edit routes."
         },
         {
           "text": "For this Route table, there are two entries present, First the local entry i.e. CIDR block of the First VPC, the second entry is about the route to the internet with Destination as 0.0.0.0/0 having target as the Internet gateway."
@@ -585,19 +756,25 @@
           "text": "Let’s add the third route which has destination as 20.0.0.0/24 i.e. CIDR range of second VPC and Target as Transit gateway."
         },
         {
+          "text": "To add the third route, Click on the Add route. Destination: Enter 20.0.0.0/24 Target: Enter Transit Gateway"
+        },
+        {
           "text": "To add the third route, Click on the Add route."
         },
         {
-          "text": "Destination: Enter 20.0.0.0/24"
+          "text": "Destination: Enter 20.0.0.0/24"
         },
         {
-          "text": "Target: Enter Transit Gateway"
+          "text": "Target: Enter Transit Gateway"
         },
         {
           "text": "Click on the Save changes button."
         },
         {
-          "text": "Make sure Routes have Destination as 20.0.0.0/24"
+          "text": "Make sure Routes have Destination as 20.0.0.0/24",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-30.gif"
+          ]
         },
         {
           "text": "Note: Sometimes it does not show the destination as 20.0.0.0/24, in that case, please add the following from Step 6 of this task."
@@ -611,7 +788,7 @@
           "text": "In this task, we are going to add a route in the second VPC's route table that directs traffic destined for the first VPC's CIDR range to the Transit Gateway. This allows communication between the VPCs through the Transit Gateway."
         },
         {
-          "text": "Navigate to Route tables on the left side panel."
+          "text": "Navigate to Route tables on the left side panel."
         },
         {
           "text": "Filter the VPC’s by using the ID of the second VPC."
@@ -623,28 +800,40 @@
           "text": "Let's filter the route table present using the VPC filter."
         },
         {
-          "text": "To get the filter using the VPC option, simply click on the search bar and it will show the different options for the filter. Select VPC from that list and choose the ID of Second VPC."
+          "text": "To get the filter using the VPC option, simply click on the search bar and it will show the different options for the filter. Select VPC from that list and choose the ID of Second VPC."
         },
         {
           "text": "Click on the Route table ID to see the routes present."
         },
         {
-          "text": "Click on the Routes tab in below and click on the Edit routes."
+          "text": "Click on the Routes tab in below and click on the Edit routes."
         },
         {
           "text": "There will be only one entry to local, as we have not created an internet gateway because this is a private route table."
         },
         {
+          "text": "Task 14: Add the routes in the Second VPC’s route table",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-31.gif"
+          ]
+        },
+        {
           "text": "Let’s add the entry to 10.0.0.0/24 i.e. CIDR of the first VPC as a destination and Transit gateway as a target."
         },
         {
-          "text": "To get the Transit gateway ID, click on the search button and select Transit Gateway from the list of options present."
+          "text": "To get the Transit gateway ID, click on the search button and select Transit Gateway from the list of options present.",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-32.png"
+          ]
         },
         {
-          "text": "Click on the Save changes button."
+          "text": "Click on the Save changes button."
         },
         {
-          "text": "Make sure Routes have Destination as 10.0.0.0/24"
+          "text": "Make sure Routes have Destination as 10.0.0.0/24",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-33.png"
+          ]
         },
         {
           "text": "Note: Sometimes it does not show the destination as 10.0.0.0/24, in that case, please add the following from Step 5 of this task."
@@ -655,46 +844,68 @@
       "title": "Task 15: Test the connectivity between two VPCs",
       "steps": [
         {
-          "text": "In this task, we are going to test the connectivity between the EC2 instances in both VPCs. This step confirms that the VPCs have been successfully peered using the Transit Gateway, and the EC2 instances can communicate with each other."
+          "text": "In this task, we are going to test the connectivity between the EC2 instances in both VPCs. This step confirms that the VPCs have been successfully peered using the Transit Gateway, and the EC2 instances can communicate with each other."
         },
         {
           "text": "You have copied the IPv4 Public IP of the EC2 instance created in the First VPC."
         },
         {
-          "text": "Please follow the steps for the Session Manager to connect to First_VPCs_EC2"
+          "text": "Please follow the steps for the Session Manager to connect to First_VPCs_EC2Select First_VPCs_EC2 and click on the Connect button.Go to SSM Session Manager and click Connect",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-34.png",
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-35.png"
+          ]
         },
         {
-          "text": "Select First_VPCs_EC2 and click on the Connect button."
+          "text": "Please follow the steps for the Session Manager to connect to First_VPCs_EC2"
         },
         {
-          "text": "Go to SSM Session Manager and click Connect"
+          "text": "Select First_VPCs_EC2 and click on the Connect button.",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-36.png"
+          ]
+        },
+        {
+          "text": "Go to SSM Session Manager and click Connect",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-37.png"
+          ]
         },
         {
           "text": "Once you have successfully connected in to EC2, run the following commands :"
         },
         {
+          "text": "Switch to root user :sudo su"
+        },
+        {
           "text": "Switch to root user :"
         },
         {
-          "text": "sudo su"
+          "text": "Update server repository :sudo dnf update -y"
         },
         {
           "text": "Update server repository :"
         },
         {
-          "text": "sudo dnf update -y"
+          "text": "Now we need to copy the .pem key of the EC2 instance created."
         },
         {
-          "text": "Now we need to copy the .pem key of the EC2 instance created."
+          "text": "Create a file :nano ec2_ssh_key.pem"
         },
         {
           "text": "Create a file :"
         },
         {
-          "text": "nano ec2_ssh_key.pem"
+          "text": "Task 15: Test the connectivity between two VPCs",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-38.png"
+          ]
         },
         {
-          "text": "Open the .pem key of EC2 ec2_ssh_key in your local editor and paste it in the terminal file."
+          "text": "Open the .pem key of EC2 ec2_ssh_key in your local editor and paste it in the terminal file.",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-39.png"
+          ]
         },
         {
           "text": "Press [ctrl] + x / [control] + x"
@@ -706,16 +917,16 @@
           "text": "File Name : No changes, press [Enter] key in your keyboard"
         },
         {
+          "text": "Change the .pem key permissionchmod 400 ec2_ssh_key.pem"
+        },
+        {
           "text": "Change the .pem key permission"
         },
         {
-          "text": "chmod 400 ec2_ssh_key.pem"
+          "text": "SSH into the Private EC2 ec2_ssh_keyssh ec2-user@<IPv4 private Ip> -i ec2_ssh_key.pem"
         },
         {
           "text": "SSH into the Private EC2 ec2_ssh_key"
-        },
-        {
-          "text": "ssh ec2-user@<IPv4 private Ip> -i ec2_ssh_key.pem"
         },
         {
           "text": "Copy the Private IP of Second_VPCs_EC2"
@@ -727,13 +938,22 @@
           "text": "If the connection prompts a message to confirm connect enter yes"
         },
         {
+          "text": "Task 15: Test the connectivity between two VPCs",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-40.png"
+          ]
+        },
+        {
           "text": "As you can see the IP address is changed to private ec2 private IP 30.0.1.154"
         },
         {
-          "text": "Now you have connected two VPCs using the Transit gateway."
+          "text": "Task 15: Test the connectivity between two VPCs",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-41.png"
+          ]
         },
         {
-          "text": "Do You Know?"
+          "text": "Now you have connected two VPCs using the Transit gateway."
         },
         {
           "text": "With Transit Gateway, you can easily add or remove VPC connections as your network grows or changes, without impacting existing connections. It provides a flexible and scalable solution for interconnecting VPCs and simplifies network administration, routing, and security."
@@ -744,13 +964,22 @@
       "title": "Task 16: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
           "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-42.gif"
+          ]
+        },
+        {
+          "text": "Task 16: Validation Test",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-43.gif"
+          ]
         }
       ]
     },
@@ -758,22 +987,22 @@
       "title": "Task 17: Delete AWS Resources",
       "steps": [
         {
-          "text": "Deleting EC2 Instances"
-        },
-        {
           "text": "Make sure you are in the US East (N. Virginia) Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top left, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top left, then click on EC2 in the Compute section."
         },
         {
           "text": "Now select both the EC2 instances that you have created, click on Instance State and click on the Terminate instance option."
         },
         {
-          "text": "Click on the Terminate button and your EC2 will start terminating."
+          "text": "Task 17: Delete AWS Resources",
+          "images": [
+            "/labs/peer-vpc-with-transit-gateway-and-its-components/step-44.jpg"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Click on the Terminate button and your EC2 will start terminating."
         },
         {
           "text": "You have successfully created a VPC with a public subnet & internet gateway and Launched an EC2 instance."
@@ -791,16 +1020,13 @@
           "text": "You have successfully tested the connectivity of VPC after peering using the Transit gateway."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }
