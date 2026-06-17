@@ -13,6 +13,8 @@
     "deploy": "next build && bunx next-on-pages && bunx wrangler pages deploy --commit-dirty=true",
     "scrape:quiz": "bun run scripts/scrape-quiz.ts",
     "scrape:lab": "bun run scripts/scrape-course-lab.ts",
+    "scrape:lab:checklist": "bun run scripts/scrape-checklist-labs.ts",
+    "scrape:lab:checklist:import": "bun run scripts/scrape-checklist-labs.ts -- --compile --cdp-endpoint chrome",
     "scrape:lab:images": "bun run scripts/scrape-course-lab.ts -- --batch --missing-images --cdp-endpoint chrome",
     "scrape:videos": "bun run scripts/scrape-course-videos.ts",
     "seed:labs": "bun run scripts/seed-labs.ts",

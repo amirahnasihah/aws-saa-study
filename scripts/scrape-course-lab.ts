@@ -132,7 +132,7 @@ const waitForLogin = async (page: Page, returnUrl: string): Promise<void> => {
 const isOnLoginPage = (url: string): boolean =>
   url.includes('/login') || url.includes('/signin')
 
-const ensureAuth = async (page: Page, targetUrl: string, headless: boolean): Promise<void> => {
+export const ensureAuth = async (page: Page, targetUrl: string, headless: boolean): Promise<void> => {
   await page.goto(targetUrl, { waitUntil: 'domcontentloaded', timeout: 60_000 })
   if (!isOnLoginPage(page.url())) return
   if (headless) {
@@ -521,7 +521,7 @@ const scrapeMetadata = async (page: Page): Promise<{
   return { title, level, duration, services: services.length ? services : ['AWS'] }
 }
 
-const scrapeLab = async (page: Page, url: string, slug: string, imageDir: string): Promise<Lab> => {
+export const scrapeLab = async (page: Page, url: string, slug: string, imageDir: string): Promise<Lab> => {
   console.log(`\n[${slug}] ${url}`)
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60_000 })
   await page.waitForSelector('h1, [class*="lab"]', { timeout: 20_000 }).catch(() => undefined)
@@ -594,7 +594,7 @@ const scrapeLab = async (page: Page, url: string, slug: string, imageDir: string
   }
 }
 
-const labJsonHasImages = (slug: string): boolean => {
+export const labJsonHasImages = (slug: string): boolean => {
   const jsonPath = join(LABS_DIR, `${slug}.json`)
   if (!existsSync(jsonPath)) return false
   const lab = JSON.parse(readFileSync(jsonPath, 'utf8')) as Lab
@@ -603,7 +603,7 @@ const labJsonHasImages = (slug: string): boolean => {
   ) ?? false
 }
 
-const persistLab = (lab: Lab, seed: boolean): void => {
+export const persistLab = (lab: Lab, seed: boolean): void => {
   const clean = sanitizeLab(lab)
   const imageDir = resolve(`public/labs/${clean.slug}`)
   const jsonPath = join(LABS_DIR, `${clean.slug}.json`)
@@ -622,7 +622,7 @@ const persistLab = (lab: Lab, seed: boolean): void => {
   }
 }
 
-const launchBrowser = async (
+export const launchBrowser = async (
   headless: boolean,
   cdpEndpoint?: string,
 ): Promise<{ context: BrowserContext; close: () => Promise<void> }> => {
@@ -741,4 +741,6 @@ const main = async (): Promise<void> => {
   await close()
 }
 
-main().catch((err: unknown) => { console.error(err); process.exit(1) })
+if (import.meta.main) {
+  main().catch((err: unknown) => { console.error(err); process.exit(1) })
+}
