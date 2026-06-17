@@ -62,7 +62,17 @@ const main = async (): Promise<void> => {
     if (code !== 0) process.exit(code)
   }
 
-  const cdp = process.env.PLAYWRIGHT_CDP_ENDPOINT ? [] : ['--cdp-endpoint', 'chrome']
+  const cdpReachable = await fetch('http://127.0.0.1:9222/json/version')
+    .then((res) => res.ok)
+    .catch(() => false)
+  const cdp = process.env.PLAYWRIGHT_CDP_ENDPOINT
+    ? []
+    : cdpReachable
+      ? ['--cdp-endpoint', 'chrome']
+      : []
+  if (!cdpReachable && !process.env.PLAYWRIGHT_CDP_ENDPOINT) {
+    console.log('CDP not on :9222 — using Playwright storage state')
+  }
 
   await withScrapeLock(async () => {
     const scrapeTarget = args.checklistOnly

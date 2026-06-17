@@ -13,6 +13,7 @@ import { join, resolve } from 'path'
 import type { Page } from 'playwright'
 import {
   CORE_PRACTICE_SETS,
+  COURSE_ID,
   COURSE_SLUG,
   screenshotPublicPath,
   type PracticeTestSet,

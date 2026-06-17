@@ -49,31 +49,99 @@ const inferKind = (title: string): PracticeTestKind | 'unknown' => {
   return 'unknown'
 }
 
+const practiceTestNumber = (title: string): number | null => {
+  const match = title.match(/practice test\s*(\d+)/i)
+  return match ? Number(match[1]) : null
+}
+
 const matchSetId = (rows: DiscoveredRow[]): DiscoveredRow[] => {
   const ptCatalog = CORE_PRACTICE_SETS.filter((s) => s.kind === 'pt')
   const sectionCatalog = CORE_PRACTICE_SETS.filter((s) => s.kind === 'section')
+  const ptByNumber = new Map(
+    ptCatalog.map((s) => [Number(s.setId.replace('wz', '')), s.setId]),
+  )
+  const sectionByTitle = new Map(sectionCatalog.map((s) => [s.title.toLowerCase(), s.setId]))
 
-  const ptRows = rows.filter((r) => r.kind === 'pt')
   const sectionRows = rows.filter((r) => r.kind === 'section')
-
-  const ptByCount = new Map(ptCatalog.map((s) => [s.total, s.setId]))
-  const sectionByCount = new Map(sectionCatalog.map((s) => [s.total, s.setId]))
 
   return rows.map((row) => {
     if (row.kind === 'pt') {
-      const idx = ptRows.indexOf(row)
-      const byOrder = ptCatalog[idx]?.setId ?? null
-      const byCount = ptByCount.get(row.questionCount) ?? null
-      return { ...row, setId: byOrder ?? byCount }
+      const num = practiceTestNumber(row.title)
+      if (num && num >= 2 && num <= 6) {
+        return { ...row, setId: ptByNumber.get(num) ?? null }
+      }
+      return { ...row, setId: null }
     }
     if (row.kind === 'section') {
+      const byTitle = sectionByTitle.get(row.title.toLowerCase()) ?? null
       const idx = sectionRows.indexOf(row)
       const byOrder = sectionCatalog[idx]?.setId ?? null
-      const byCount = sectionByCount.get(row.questionCount) ?? null
-      return { ...row, setId: byOrder ?? byCount }
+      return { ...row, setId: byTitle ?? byOrder }
     }
     return row
   })
+}
+
+type PracticeApiRow = {
+  section_heading?: string | null
+  quiz_id?: number | null
+  quiz_name?: string | null
+  questions_count?: number | null
+}
+
+const capturePracticeTests = async (
+  page: Awaited<ReturnType<Awaited<ReturnType<typeof launchBrowser>>['context']['newPage']>>,
+): Promise<DiscoveredRow[]> => {
+  let apiRows: PracticeApiRow[] = []
+
+  page.on('response', async (response) => {
+    if (!response.url().includes('getpraticetestinfo') || apiRows.length > 0) return
+    try {
+      const payload = (await response.json()) as { data?: PracticeApiRow[] }
+      apiRows = payload.data ?? []
+    } catch {
+      // ignore parse errors
+    }
+  })
+
+  await page.goto(COURSE_URL, { waitUntil: 'domcontentloaded', timeout: 90_000 })
+  await page.waitForTimeout(6_000)
+
+  if (apiRows.length === 0) {
+    throw new Error('Could not capture getpraticetestinfo — sign in and retry')
+  }
+
+  let section = ''
+  const discovered: DiscoveredRow[] = []
+
+  apiRows.forEach((row) => {
+    if (row.section_heading) section = row.section_heading
+    if (!row.quiz_id || !row.quiz_name) return
+
+    const quizId = String(row.quiz_id)
+    const questionCount = Number(row.questions_count ?? 0)
+    const title = row.quiz_name
+    const examUrl = `https://business.whizlabs.com/learn/course/${COURSE_SLUG}/${COURSE_ID}/quiz/${quizId}/exam/start`
+    const kindFromSection = section.toLowerCase().includes('section')
+      ? 'section'
+      : section.toLowerCase().includes('final')
+        ? 'final'
+        : section.toLowerCase().includes('practice')
+          ? 'pt'
+          : inferKind(title)
+
+    discovered.push({
+      index: discovered.length + 1,
+      title,
+      questionCount,
+      quizId,
+      examUrl,
+      kind: kindFromSection,
+      setId: null,
+    })
+  })
+
+  return discovered
 }
 
 const main = async (): Promise<void> => {
@@ -82,65 +150,7 @@ const main = async (): Promise<void> => {
   const page = await context.newPage()
 
   await ensureAuth(page, COURSE_URL, args.headless)
-
-  await page.goto(COURSE_URL, { waitUntil: 'domcontentloaded', timeout: 90_000 })
-  await page.waitForTimeout(4_000)
-
-  const practiceTab = page.locator('button:has-text("Practice Test"), [role="tab"]:has-text("Practice Test")').first()
-  if (await practiceTab.isVisible({ timeout: 3000 }).catch(() => false)) {
-    await practiceTab.click()
-    await page.waitForTimeout(2_000)
-  }
-
-  const rows = await page.evaluate((): Array<{ title: string; questionCount: number; href: string | null }> => {
-    const result: Array<{ title: string; questionCount: number; href: string | null }> = []
-    const trs = Array.from(document.querySelectorAll('table tbody tr, [class*="quiz"] tr, [class*="practice"] tr'))
-    trs.forEach((tr) => {
-      const text = (tr.textContent ?? '').replace(/\s+/g, ' ').trim()
-      if (!text) return
-      const qMatch = text.match(/(\d+)\s*Questions?/i)
-      const questionCount = qMatch ? Number(qMatch[1]) : 0
-      const link = tr.querySelector('a[href*="/quiz/"], button[data-href*="/quiz/"]') as HTMLAnchorElement | null
-      const href = link?.getAttribute('href') ?? link?.getAttribute('data-href') ?? null
-      const titleCell = tr.querySelector('td:first-child, [class*="title"]')?.textContent?.trim() ?? text.slice(0, 80)
-      if (questionCount > 0) {
-        result.push({ title: titleCell, questionCount, href })
-      }
-    })
-
-    if (result.length === 0) {
-      document.querySelectorAll('a[href*="/quiz/"]').forEach((a) => {
-        const href = a.getAttribute('href')
-        const block = a.closest('tr, li, [class*="card"], [class*="row"]')
-        const text = (block?.textContent ?? a.textContent ?? '').replace(/\s+/g, ' ').trim()
-        const qMatch = text.match(/(\d+)\s*Questions?/i)
-        const questionCount = qMatch ? Number(qMatch[1]) : 0
-        if (href && questionCount > 0) {
-          result.push({ title: text.slice(0, 100), questionCount, href })
-        }
-      })
-    }
-
-    return result
-  })
-
-  const discovered: DiscoveredRow[] = rows.map((row, index) => {
-    const quizMatch = row.href?.match(/\/quiz\/(\d+)/)
-    const quizId = quizMatch?.[1] ?? null
-    const examUrl = quizId
-      ? `https://business.whizlabs.com/learn/course/${COURSE_SLUG}/${COURSE_ID}/quiz/${quizId}/exam/start`
-      : null
-    const kind = inferKind(row.title)
-    return {
-      index: index + 1,
-      title: row.title,
-      questionCount: row.questionCount,
-      quizId,
-      examUrl,
-      kind,
-      setId: null,
-    }
-  })
+  const discovered = await capturePracticeTests(page)
 
   const matched = matchSetId(discovered)
   const payload = {
