@@ -55,10 +55,10 @@ const labTopics: Array<{ id: TopicId; label: string }> = [
 ]
 
 const videoCourseLabs: Array<{ title: string; duration: string; topicId: TopicId; slug?: string }> = [
-  { title: 'Creating an application load balancer from AWS CLI', duration: '1h', topicId: 'compute' },
-  { title: 'Creating an Application Load Balancer and Auto Scaling Group in AWS', duration: '1h 30m', topicId: 'compute' },
-  { title: 'Creating and configuring a network load balancer in AWS', duration: '1h', topicId: 'compute' },
-  { title: 'Creating S3 Lifecycle Policy', duration: '30m', topicId: 'storage' },
+  { title: 'Creating an application load balancer from AWS CLI', duration: '1h', topicId: 'compute', slug: 'creating-an-application-load-balancer-from-aws-cli' },
+  { title: 'Creating an Application Load Balancer and Auto Scaling Group in AWS', duration: '1h 30m', topicId: 'compute', slug: 'creating-an-application-load-balancer-and-auto-scaling-group-in-aws' },
+  { title: 'Creating and configuring a network load balancer in AWS', duration: '1h', topicId: 'compute', slug: 'creating-and-configuring-a-network-load-balancer-in-aws' },
+  { title: 'Creating S3 Lifecycle Policy', duration: '30m', topicId: 'storage', slug: 'creating-s3-lifecycle-policy' },
   { title: 'Create Redis cluster using ElastiCache', duration: '1h', topicId: 'database' },
   {
     title: 'Using CloudWatch for Resource Monitoring, Create CloudWatch Alarms and Dashboards',
@@ -66,11 +66,11 @@ const videoCourseLabs: Array<{ title: string; duration: string; topicId: TopicId
     topicId: 'management',
     slug: 'using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards',
   },
-  { title: 'Check Compliance status of S3 Bucket using AWS Config', duration: '1h 30m', topicId: 'management' },
+  { title: 'Check Compliance status of S3 Bucket using AWS Config', duration: '1h 30m', topicId: 'management', slug: 'check-compliance-status-of-s3-bucket-using-aws-config' },
   { title: 'Auditing Resource Compliance with AWS config', duration: '45m', topicId: 'management' },
-  { title: 'Creating AWS VPC Flow Logs and Generating Traffic', duration: '1h', topicId: 'networking' },
-  { title: 'Perform ETL operation in Glue with S3', duration: '45m', topicId: 'analytics' },
-  { title: 'Create a Docker container using Dockerfile and store the image in ECR', duration: '1h', topicId: 'containers' },
+  { title: 'Creating AWS VPC Flow Logs and Generating Traffic', duration: '1h', topicId: 'networking', slug: 'creating-aws-vpc-flow-logs-and-generating-traffic' },
+  { title: 'Perform ETL operation in Glue with S3', duration: '45m', topicId: 'analytics', slug: 'perform-etl-operation-in-glue-with-s3' },
+  { title: 'Create a Docker container using Dockerfile and store the image in ECR', duration: '1h', topicId: 'containers', slug: 'create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr' },
 ]
 
 const assignTopic = (entry: CourseLabEntry): TopicId => {

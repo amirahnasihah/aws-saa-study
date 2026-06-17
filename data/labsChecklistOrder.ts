@@ -63,39 +63,39 @@ export const labsChecklistOrder: ChecklistLabEntry[] = [
     "slug": "introduction-to-amazon-elastic-compute-cloud-ec2",
     "duration": "30m",
     "sectionId": "compute",
-    "externalUrl": null
+    "externalUrl": "https://business.whizlabs.com/labs/introduction-to-amazon-elastic-compute-cloud-ec2"
   },
   {
     "index": 2,
     "title": "Creating an application load balancer from AWS CLI",
-    "slug": null,
+    "slug": "creating-an-application-load-balancer-from-aws-cli",
     "duration": "1h",
     "sectionId": "compute",
-    "externalUrl": null
+    "externalUrl": "https://business.whizlabs.com/labs/creating-an-application-load-balancer-from-aws-cli"
   },
   {
     "index": 3,
     "title": "Creating an Application Load Balancer and Auto Scaling Group in AWS",
-    "slug": null,
+    "slug": "creating-an-application-load-balancer-and-auto-scaling-group-in-aws",
     "duration": "1h 30m",
     "sectionId": "compute",
-    "externalUrl": null
+    "externalUrl": "https://business.whizlabs.com/labs/creating-an-application-load-balancer-and-auto-scaling-group-in-aws"
   },
   {
     "index": 4,
     "title": "Creating and configuring a network load balancer in AWS",
-    "slug": null,
+    "slug": "creating-and-configuring-a-network-load-balancer-in-aws",
     "duration": "1h",
     "sectionId": "compute",
-    "externalUrl": null
+    "externalUrl": "https://business.whizlabs.com/labs/creating-and-configuring-a-network-load-balancer-in-aws"
   },
   {
     "index": 5,
     "title": "Creating S3 Lifecycle Policy",
-    "slug": null,
+    "slug": "creating-s3-lifecycle-policy",
     "duration": "30m",
     "sectionId": "storage",
-    "externalUrl": null
+    "externalUrl": "https://business.whizlabs.com/labs/creating-s3-lifecycle-policy"
   },
   {
     "index": 6,
@@ -132,18 +132,18 @@ export const labsChecklistOrder: ChecklistLabEntry[] = [
   {
     "index": 10,
     "title": "Using CloudWatch for Resource Monitoring, Create CloudWatch Alarms and Dashboards",
-    "slug": null,
+    "slug": "using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards",
     "duration": "1h 30m",
     "sectionId": "management",
-    "externalUrl": null
+    "externalUrl": "https://business.whizlabs.com/labs/using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards"
   },
   {
     "index": 11,
     "title": "Check Compliance status of S3 Bucket using AWS Config",
-    "slug": null,
+    "slug": "check-compliance-status-of-s3-bucket-using-aws-config",
     "duration": "1h 30m",
     "sectionId": "management",
-    "externalUrl": null
+    "externalUrl": "https://business.whizlabs.com/labs/check-compliance-status-of-s3-bucket-using-aws-config"
   },
   {
     "index": 12,
@@ -172,10 +172,10 @@ export const labsChecklistOrder: ChecklistLabEntry[] = [
   {
     "index": 15,
     "title": "Creating AWS VPC Flow Logs and Generating Traffic",
-    "slug": null,
+    "slug": "creating-aws-vpc-flow-logs-and-generating-traffic",
     "duration": "1h",
     "sectionId": "networking",
-    "externalUrl": null
+    "externalUrl": "https://business.whizlabs.com/labs/creating-aws-vpc-flow-logs-and-generating-traffic"
   },
   {
     "index": 16,
@@ -212,10 +212,10 @@ export const labsChecklistOrder: ChecklistLabEntry[] = [
   {
     "index": 20,
     "title": "Perform ETL operation in Glue with S3",
-    "slug": null,
+    "slug": "perform-etl-operation-in-glue-with-s3",
     "duration": "45m",
     "sectionId": "analytics",
-    "externalUrl": null
+    "externalUrl": "https://business.whizlabs.com/labs/perform-etl-operation-in-glue-with-s3"
   },
   {
     "index": 21,
@@ -228,9 +228,9 @@ export const labsChecklistOrder: ChecklistLabEntry[] = [
   {
     "index": 22,
     "title": "Create a Docker container using Dockerfile and store the image in ECR",
-    "slug": null,
+    "slug": "create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr",
     "duration": "1h",
     "sectionId": "containers",
-    "externalUrl": null
+    "externalUrl": "https://business.whizlabs.com/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr"
   }
 ]
