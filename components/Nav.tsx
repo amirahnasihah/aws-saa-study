@@ -49,11 +49,11 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
 
         <PageLink pathname={pathname} href="/" label="Cheat Sheet" active={activePage === 'cheatsheet'} />
         <PageLink pathname={pathname} href="/learn" label="Deep Notes" active={activePage === 'learn'} />
-        <PageLink pathname={pathname} href="/practice" label="Practice" active={activePage === 'practice'} />
-        <PageLink pathname={pathname} href="/scenarios" label="Scenarios" active={activePage === 'scenarios'} />
+        {userEmail && <PageLink pathname={pathname} href="/practice" label="Practice" active={activePage === 'practice'} />}
+        {userEmail && <PageLink pathname={pathname} href="/scenarios" label="Scenarios" active={activePage === 'scenarios'} />}
         <PageLink pathname={pathname} href="/visual" label="Visual" active={activePage === 'visual'} />
         <PageLink pathname={pathname} href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
-        <PageLink pathname={pathname} href="/labs" label="Labs" active={activePage === 'labs'} />
+        {userEmail && <PageLink pathname={pathname} href="/labs" label="Labs" active={activePage === 'labs'} />}
         {userEmail ? (
           <button
             onClick={handleSignOut}
@@ -64,7 +64,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
         ) : (
           <PageLink pathname={pathname} href="/auth/login" label="Sign in" active={false} />
         )}
-        <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="icon" />
+        {userEmail && <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="icon" />}
 
         <span className="text-aws-border text-sm shrink-0">·</span>
 
@@ -93,7 +93,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
           AWS SAA-C03
         </Link>
         <div className="flex items-center gap-1">
-          <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="pill" />
+          {userEmail && <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="pill" />}
           <button onClick={() => setMenuOpen(true)} className="text-aws-muted hover:text-aws-text transition-colors p-2" aria-label="Open menu">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
               <rect y="3" width="20" height="2" rx="1" />
@@ -127,15 +127,23 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
               {[
                 { href: '/',          label: 'Cheat Sheet', icon: '📋', active: activePage === 'cheatsheet' },
                 { href: '/learn',     label: 'Deep Notes',  icon: '📖', active: activePage === 'learn' },
-                { href: '/practice',  label: 'Practice',    icon: '✏️', active: activePage === 'practice' },
-                { href: '/scenarios', label: 'Scenarios',   icon: '🏗️', active: activePage === 'scenarios' },
+                ...(userEmail
+                  ? [
+                      { href: '/practice',  label: 'Practice',    icon: '✏️', active: activePage === 'practice' },
+                      { href: '/scenarios', label: 'Scenarios',   icon: '🏗️', active: activePage === 'scenarios' },
+                    ]
+                  : []),
                 { href: '/visual',    label: 'Visual',      icon: '🗺️', active: activePage === 'visual' },
                 { href: '/vpc',       label: 'VPC Guide',   icon: '🏘️', active: activePage === 'vpc' },
-                { href: '/labs',      label: 'Labs',        icon: '🧪', active: activePage === 'labs' },
+                ...(userEmail
+                  ? [{ href: '/labs', label: 'Labs', icon: '🧪', active: activePage === 'labs' }]
+                  : []),
                 ...(userEmail
                   ? []
                   : [{ href: '/auth/login', label: 'Sign in', icon: '🔐', active: false }]),
-                { href: '/ai',        label: 'Ask AI',      icon: '✦',  active: activePage === 'ai' },
+                ...(userEmail
+                  ? [{ href: '/ai', label: 'Ask AI', icon: '✦', active: activePage === 'ai' }]
+                  : []),
               ].map((p) => (
                 <Link
                   key={p.href}
