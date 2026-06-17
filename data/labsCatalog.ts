@@ -21263,7 +21263,10 @@ export const labsCatalog: Lab[] = [
             "text": "To create a new key pair, click on the Create Key pair button."
           },
           {
-            "text": "Task 2: Create a Key Pair for the EC2 instances, inside the ECS Cluster"
+            "text": "Task 2: Create a Key Pair for the EC2 instances, inside the ECS Cluster",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-01.png"
+            ]
           },
           {
             "text": "Fill in the details below:"
@@ -21284,7 +21287,10 @@ export const labsCatalog: Lab[] = [
             "text": "Click on the Create Key pair."
           },
           {
-            "text": "Task 2: Create a Key Pair for the EC2 instances, inside the ECS Cluster"
+            "text": "Task 2: Create a Key Pair for the EC2 instances, inside the ECS Cluster",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-02.png"
+            ]
           },
           {
             "text": "Key pair will be created."
@@ -21298,28 +21304,48 @@ export const labsCatalog: Lab[] = [
             "text": "Make sure you are in the N.Virginia Region. Navigate to Elastic Container Service by clicking on the Services menu in the top, then click on Elastic Container Service in the Containers section."
           },
           {
-            "text": "On the left sidebar, click on the Clusters option present under the Amazon ECS section, then Click on the Create cluster button."
+            "text": "On the left sidebar, click on the Clusters option present under the Amazon ECS section, then Click on the Create cluster button.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-03.png"
+            ]
           },
           {
-            "text": "Task 3: Launching an ECS Cluster"
+            "text": "Task 3: Launching an ECS Cluster",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-04.png"
+            ]
           },
           {
             "text": "In Cluster configuration :"
           },
           {
-            "text": "Cluster name : Leave the name as default."
+            "text": "Cluster name : Leave the name as default.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-05.png"
+            ]
           },
           {
-            "text": "Task 3: Launching an ECS Cluster"
+            "text": "Task 3: Launching an ECS Cluster",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-06.png"
+            ]
           },
           {
-            "text": "In Infrastructure Section : Choose Fargate and Self-managed instances option Auto Scaling group (ASG) : Select Create a new Auto Scaling group - advancedProvisioning model: On-demand Operating System/Architecture : Select Amazon Linux 2 (Make sure you have selected the mentioned AMI)EC2 instance type : Select t2.microEC2 instance role : Select role name start with Ecs_role_random_numbers"
+            "text": "In Infrastructure Section : Choose Fargate and Self-managed instances option Auto Scaling group (ASG) : Select Create a new Auto Scaling group - advancedProvisioning model: On-demand Operating System/Architecture : Select Amazon Linux 2 (Make sure you have selected the mentioned AMI)EC2 instance type : Select t2.microEC2 instance role : Select role name start with Ecs_role_random_numbers",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-07.png",
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-08.png"
+            ]
           },
           {
             "text": "In Infrastructure Section :"
           },
           {
-            "text": "Choose Fargate and Self-managed instances option Auto Scaling group (ASG) : Select Create a new Auto Scaling group - advancedProvisioning model: On-demand Operating System/Architecture : Select Amazon Linux 2 (Make sure you have selected the mentioned AMI)EC2 instance type : Select t2.microEC2 instance role : Select role name start with Ecs_role_random_numbers"
+            "text": "Choose Fargate and Self-managed instances option Auto Scaling group (ASG) : Select Create a new Auto Scaling group - advancedProvisioning model: On-demand Operating System/Architecture : Select Amazon Linux 2 (Make sure you have selected the mentioned AMI)EC2 instance type : Select t2.microEC2 instance role : Select role name start with Ecs_role_random_numbers",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-09.png",
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-10.png"
+            ]
           },
           {
             "text": "Choose Fargate and Self-managed instances option"
@@ -21340,7 +21366,10 @@ export const labsCatalog: Lab[] = [
             "text": "EC2 instance type : Select t2.micro"
           },
           {
-            "text": "EC2 instance role : Select role name start with Ecs_role_random_numbers"
+            "text": "EC2 instance role : Select role name start with Ecs_role_random_numbers",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-11.png"
+            ]
           },
           {
             "text": "Desired capacity :"
@@ -21355,7 +21384,10 @@ export const labsCatalog: Lab[] = [
             "text": "SSH Key pair: Select WhizKeyPair"
           },
           {
-            "text": "Task 3: Launching an ECS Cluster"
+            "text": "Task 3: Launching an ECS Cluster",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-12.png"
+            ]
           },
           {
             "text": "In Network settings:"
@@ -21379,7 +21411,10 @@ export const labsCatalog: Lab[] = [
             "text": "Source : Select Anywhere"
           },
           {
-            "text": "Task 3: Launching an ECS Cluster"
+            "text": "Task 3: Launching an ECS Cluster",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-13.png"
+            ]
           },
           {
             "text": "Keep rest things as default and click on the Create button"
@@ -21391,7 +21426,10 @@ export const labsCatalog: Lab[] = [
             "text": "It will take few minutes to provision the ECS Instance."
           },
           {
-            "text": "Task 3: Launching an ECS Cluster"
+            "text": "Task 3: Launching an ECS Cluster",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-14.png"
+            ]
           }
         ]
       },
@@ -21405,10 +21443,16 @@ export const labsCatalog: Lab[] = [
             "text": "On the left sidebar, click on the Task Definitions option present under the Amazon ECS section."
           },
           {
-            "text": "Click on the Create new task definition button."
+            "text": "Click on the Create new task definition button.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-15.png"
+            ]
           },
           {
-            "text": "Task 4: Create Task Definitions"
+            "text": "Task 4: Create Task Definitions",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-16.png"
+            ]
           },
           {
             "text": "In Task definition configuration:"
@@ -21417,22 +21461,38 @@ export const labsCatalog: Lab[] = [
             "text": "Task definition family: Enter ecs-demo"
           },
           {
-            "text": "Task 4: Create Task Definitions"
+            "text": "Task 4: Create Task Definitions",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-17.png"
+            ]
           },
           {
-            "text": "For Environment: App Environment : Remove AWS Fargate And Select Amazon EC2 Instances. Task Size : CPU : Enter .25 VCPU Memory : Enter .5 GBTask role: select NoneTask Execution role: select None For Container Details : Enter httpd\nImage URL: Enter httpd:2.4\nFor Port mappings: Container Port: Enter 80\nProtocol: Select TCP\nApp protocol: Select HTTP"
+            "text": "For Environment: App Environment : Remove AWS Fargate And Select Amazon EC2 Instances. Task Size : CPU : Enter .25 VCPU Memory : Enter .5 GBTask role: select NoneTask Execution role: select None For Container Details : Enter httpd\nImage URL: Enter httpd:2.4\nFor Port mappings: Container Port: Enter 80\nProtocol: Select TCP\nApp protocol: Select HTTP",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-18.png",
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-19.png"
+            ]
           },
           {
             "text": "For Environment:"
           },
           {
-            "text": "App Environment : Remove AWS Fargate And Select Amazon EC2 Instances."
+            "text": "App Environment : Remove AWS Fargate And Select Amazon EC2 Instances.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-20.png"
+            ]
           },
           {
-            "text": "Task 4: Create Task Definitions"
+            "text": "Task 4: Create Task Definitions",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-21.png"
+            ]
           },
           {
-            "text": "Task Size : CPU : Enter .25 VCPU Memory : Enter .5 GBTask role: select NoneTask Execution role: select None"
+            "text": "Task Size : CPU : Enter .25 VCPU Memory : Enter .5 GBTask role: select NoneTask Execution role: select None",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-22.png"
+            ]
           },
           {
             "text": "Task Size :"
@@ -21441,7 +21501,10 @@ export const labsCatalog: Lab[] = [
             "text": "CPU : Enter .25 VCPU"
           },
           {
-            "text": "Memory : Enter .5 GBTask role: select NoneTask Execution role: select None"
+            "text": "Memory : Enter .5 GBTask role: select NoneTask Execution role: select None",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-23.png"
+            ]
           },
           {
             "text": "Memory : Enter .5 GB"
@@ -21450,7 +21513,10 @@ export const labsCatalog: Lab[] = [
             "text": "Task role: select None"
           },
           {
-            "text": "Task Execution role: select None"
+            "text": "Task Execution role: select None",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-24.png"
+            ]
           },
           {
             "text": "For Container Details : Enter httpd\nImage URL: Enter httpd:2.4\nFor Port mappings: Container Port: Enter 80\nProtocol: Select TCP\nApp protocol: Select HTTP"
@@ -21477,13 +21543,22 @@ export const labsCatalog: Lab[] = [
             "text": "App protocol: Select HTTP"
           },
           {
-            "text": "Task 4: Create Task Definitions"
+            "text": "Task 4: Create Task Definitions",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-25.png"
+            ]
           },
           {
-            "text": "Uncheck use log collection box."
+            "text": "Uncheck use log collection box.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-26.png"
+            ]
           },
           {
-            "text": "Task 4: Create Task Definitions"
+            "text": "Task 4: Create Task Definitions",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-27.png"
+            ]
           },
           {
             "text": "Keep rest things as default and click on the Create button."
@@ -21503,10 +21578,16 @@ export const labsCatalog: Lab[] = [
             "text": "On the left sidebar, click on the Task definitions option present under the Amazon ECS section."
           },
           {
-            "text": "Select ecs-demo and click on Deploy and click Create service button."
+            "text": "Select ecs-demo and click on Deploy and click Create service button.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-28.png"
+            ]
           },
           {
-            "text": "Task 5: Create a service and start HTTPD container in ECS"
+            "text": "Task 5: Create a service and start HTTPD container in ECS",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-29.png"
+            ]
           },
           {
             "text": "Select Task definition revision as 1(latest revision)"
@@ -21515,7 +21596,10 @@ export const labsCatalog: Lab[] = [
             "text": "Service name: Enter ecs-demo-service"
           },
           {
-            "text": "Task 5: Create a service and start HTTPD container in ECS"
+            "text": "Task 5: Create a service and start HTTPD container in ECS",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-30.png"
+            ]
           },
           {
             "text": "Existing cluster : Select the created Cluster."
@@ -21524,7 +21608,10 @@ export const labsCatalog: Lab[] = [
             "text": "Compute options : Select Launch Type"
           },
           {
-            "text": "Launch type: Select EC2"
+            "text": "Launch type: Select EC2",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-31.png"
+            ]
           },
           {
             "text": "7?. In Deployment configurations :"
@@ -21533,10 +21620,16 @@ export const labsCatalog: Lab[] = [
             "text": "Service type: Select REPLICA"
           },
           {
-            "text": "Desired tasks : Enter 1"
+            "text": "Desired tasks : Enter 1",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-32.png"
+            ]
           },
           {
-            "text": "Task 5: Create a service and start HTTPD container in ECS"
+            "text": "Task 5: Create a service and start HTTPD container in ECS",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-33.png"
+            ]
           },
           {
             "text": "?14. Under Networking section,"
@@ -21548,7 +21641,10 @@ export const labsCatalog: Lab[] = [
             "text": "Security group name: select mysg"
           },
           {
-            "text": "Task 5: Create a service and start HTTPD container in ECS"
+            "text": "Task 5: Create a service and start HTTPD container in ECS",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-34.png"
+            ]
           },
           {
             "text": "Keep other options as default, and click on the Create button, the service will be created within few minutes."
@@ -21568,16 +21664,25 @@ export const labsCatalog: Lab[] = [
             "text": "To view the ECS Instance, switch to the Infrastructure tab and scroll down to Container instances"
           },
           {
-            "text": "Click on the EC2 instance ID."
+            "text": "Click on the EC2 instance ID.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-35.png"
+            ]
           },
           {
-            "text": "Task 6: Test the HTTPD container in ECS Cluster"
+            "text": "Task 6: Test the HTTPD container in ECS Cluster",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-36.png"
+            ]
           },
           {
             "text": "You will be redirected to see the running EC2 instance."
           },
           {
-            "text": "Task 6: Test the HTTPD container in ECS Cluster"
+            "text": "Task 6: Test the HTTPD container in ECS Cluster",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-37.png"
+            ]
           }
         ]
       },
@@ -21632,7 +21737,10 @@ export const labsCatalog: Lab[] = [
             "text": "Paste the below code in Dockerfile after pressing i or insert mode"
           },
           {
-            "text": "While pasting the above script in Dockerfile's vi editor, you may get issue with formatting. Please follow the below instructions. If not leave as it is."
+            "text": "While pasting the above script in Dockerfile's vi editor, you may get issue with formatting. Please follow the below instructions. If not leave as it is.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-38.png"
+            ]
           },
           {
             "text": "Save the file by pressing esc and enter: wq to close the vi editor."
@@ -21658,10 +21766,16 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate to Elastic Container Registry by clicking on the Services menu at the top, then click on Elastic Container Registry."
           },
           {
-            "text": "Click on Create under Create a Repository."
+            "text": "Click on Create under Create a Repository.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-39.png"
+            ]
           },
           {
-            "text": "Fill in the below details to create an ECR repository. Repository name: Enter whiz Keep other options as default."
+            "text": "Fill in the below details to create an ECR repository. Repository name: Enter whiz Keep other options as default.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-40.png"
+            ]
           },
           {
             "text": "Fill in the below details to create an ECR repository."
@@ -21670,31 +21784,52 @@ export const labsCatalog: Lab[] = [
             "text": "Repository name: Enter whiz"
           },
           {
-            "text": "Keep other options as default."
+            "text": "Keep other options as default.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-41.png"
+            ]
           },
           {
             "text": "Finally, click on the Create Repository to create an ECR Repository."
           },
           {
-            "text": "The repository is now created, select the repository and click on the View push commands button to upload the created custom image in the ECR Repository."
+            "text": "The repository is now created, select the repository and click on the View push commands button to upload the created custom image in the ECR Repository.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-42.png"
+            ]
           },
           {
-            "text": "Task 9: Create a repository in ECR and run the push commands"
+            "text": "Task 9: Create a repository in ECR and run the push commands",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-43.png"
+            ]
           },
           {
             "text": "Copy the commands one by one and paste the same on the terminal to execute."
           },
           {
-            "text": "Since we have already built the Dockerfile to the docker image. We can skip copying and pasting the 2nd command. You can copy the commands according to your System OS."
+            "text": "Since we have already built the Dockerfile to the docker image. We can skip copying and pasting the 2nd command. You can copy the commands according to your System OS.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-44.png"
+            ]
           },
           {
-            "text": "Task 9: Create a repository in ECR and run the push commands"
+            "text": "Task 9: Create a repository in ECR and run the push commands",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-45.png"
+            ]
           },
           {
-            "text": "After running all the 3 commands, can click on the repository name to check the created image."
+            "text": "After running all the 3 commands, can click on the repository name to check the created image.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-47.png"
+            ]
           },
           {
-            "text": "Task 9: Create a repository in ECR and run the push commands"
+            "text": "Task 9: Create a repository in ECR and run the push commands",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-48.png"
+            ]
           },
           {
             "text": "Image is now pushed to ECR repository, it can now be used in task definition to create services and tasks."
@@ -21714,10 +21849,16 @@ export const labsCatalog: Lab[] = [
             "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
           },
           {
-            "text": "Sample output :"
+            "text": "Sample output :",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-49.gif"
+            ]
           },
           {
-            "text": "Task 10: Validation Test"
+            "text": "Task 10: Validation Test",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-50.gif"
+            ]
           }
         ]
       },
@@ -21734,7 +21875,10 @@ export const labsCatalog: Lab[] = [
             "text": "whiz ECS repository will be listed here."
           },
           {
-            "text": "To delete the service, do the following task: Select the present repository, Click on the Delete button."
+            "text": "To delete the service, do the following task: Select the present repository, Click on the Delete button.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-51.png"
+            ]
           },
           {
             "text": "To delete the service, do the following task:"
@@ -21743,31 +21887,55 @@ export const labsCatalog: Lab[] = [
             "text": "Select the present repository,"
           },
           {
-            "text": "Click on the Delete button."
+            "text": "Click on the Delete button.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-52.png"
+            ]
           },
           {
-            "text": "Task 11: Delete AWS Resources"
+            "text": "Task 11: Delete AWS Resources",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-53.png"
+            ]
           },
           {
-            "text": "Confirm the deletion by click on the Delete button."
+            "text": "Confirm the deletion by click on the Delete button.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-54.png"
+            ]
           },
           {
-            "text": "Task 11: Delete AWS Resources"
+            "text": "Task 11: Delete AWS Resources",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-55.png"
+            ]
           },
           {
             "text": "It will be deleted automatically."
           },
           {
-            "text": "Navigate to Clusters from the left navigation panel. Select the cluster and Click on the Delete Cluster button."
+            "text": "Navigate to Clusters from the left navigation panel. Select the cluster and Click on the Delete Cluster button.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-56.png"
+            ]
           },
           {
-            "text": "Task 11: Delete AWS Resources"
+            "text": "Task 11: Delete AWS Resources",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-57.png"
+            ]
           },
           {
-            "text": "Confirm the deletion by entering the phrase delete whizcluster and click on the Delete button."
+            "text": "Confirm the deletion by entering the phrase delete whizcluster and click on the Delete button.",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-58.png"
+            ]
           },
           {
-            "text": "Task 11: Delete AWS Resources"
+            "text": "Task 11: Delete AWS Resources",
+            "images": [
+              "/labs/create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr/step-59.png"
+            ]
           },
           {
             "text": "Deletion will take up to 3-5 minutes."

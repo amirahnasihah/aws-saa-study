@@ -523,8 +523,13 @@ const scrapeMetadata = async (page: Page): Promise<{
 
 export const scrapeLab = async (page: Page, url: string, slug: string, imageDir: string): Promise<Lab> => {
   console.log(`\n[${slug}] ${url}`)
-  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60_000 })
+  await page.goto(url, { waitUntil: 'networkidle', timeout: 90_000 })
   await page.waitForSelector('h1, [class*="lab"]', { timeout: 20_000 }).catch(() => undefined)
+  await page
+    .locator('[role="tab"]:has-text("Lab Steps"), button:has-text("Lab Steps")')
+    .first()
+    .waitFor({ state: 'visible', timeout: 30_000 })
+    .catch(() => undefined)
   await page.waitForTimeout(1500)
 
   const meta = await scrapeMetadata(page)
