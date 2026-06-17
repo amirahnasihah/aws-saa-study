@@ -3,7 +3,8 @@
 import { FormEvent, Suspense, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
-import Nav from '@/components/Nav'
+import { AnimatePresence, motion } from 'motion/react'
+import AuthShell from '@/components/auth/AuthShell'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 
 const messageFromError = (error: string | null): string => {
@@ -82,103 +83,113 @@ function LoginForm() {
   }
 
   return (
-    <>
-      <Nav />
-      <main className="max-w-[640px] mx-auto px-4 pt-[calc(3.5rem+2rem)] pb-16">
-        <div className="rounded-2xl border border-aws-border bg-aws-card p-6 sm:p-8">
-          <p className="font-space-mono text-[0.62rem] uppercase tracking-[0.2em] text-c1 mb-2">
-            Passwordless sign in
-          </p>
-          <h1 className="text-xl sm:text-2xl font-semibold text-aws-text mb-2">
-            {step === 'email' ? 'Sign In' : 'Enter Code'}
-          </h1>
-          <p className="text-sm text-aws-muted mb-6">
-            {step === 'email'
-              ? 'Enter your email and we will send a 6-digit code.'
-              : `We sent a code to ${email}`}
-          </p>
+    <AuthShell
+      eyebrow="Passwordless sign in"
+      title={step === 'email' ? 'Sign In' : 'Enter Code'}
+      subtitle={
+        step === 'email'
+          ? 'Enter your email and we will send a 6-digit code.'
+          : `We sent a code to ${email}`
+      }
+      footer={
+        <p className="text-xs text-aws-muted">
+          Need to go back?{' '}
+          <Link href="/" className="text-c1 underline underline-offset-2 hover:text-aws-text">
+            Return to home
+          </Link>
+        </p>
+      }
+    >
+      {initialError && step === 'email' ? (
+        <p className="mb-4 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
+          {initialError}
+        </p>
+      ) : null}
 
-          {initialError && step === 'email' ? (
-            <p className="mb-4 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
-              {initialError}
-            </p>
-          ) : null}
-
-          {step === 'email' ? (
-            <form onSubmit={onSendCode} className="space-y-4">
-              <label htmlFor="email" className="block text-[0.72rem] font-space-mono uppercase tracking-widest text-aws-muted">
-                Email
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-                placeholder="you@example.com"
-                className="w-full rounded-lg border border-aws-border bg-aws-bg px-3 py-2.5 text-base sm:text-[0.8rem] text-aws-text placeholder:text-aws-muted/70 outline-none focus:border-c1"
-              />
+      <AnimatePresence mode="wait" initial={false}>
+        {step === 'email' ? (
+          <motion.form
+            key="email"
+            onSubmit={onSendCode}
+            className="space-y-4"
+            initial={{ opacity: 0, x: -16 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -16 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          >
+            <label htmlFor="email" className="block font-space-mono text-[0.72rem] uppercase tracking-widest text-aws-muted">
+              Email
+            </label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autoComplete="email"
+              required
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              placeholder="you@example.com"
+              className="w-full rounded-lg border border-aws-border bg-aws-bg/60 px-3 py-2.5 text-base text-aws-text outline-none transition-colors placeholder:text-aws-muted/70 focus:border-c1 sm:text-[0.8rem]"
+            />
+            <button
+              type="submit"
+              disabled={status === 'sending'}
+              className="signin-btn inline-flex items-center justify-center rounded-lg border border-c1/40 bg-c1/10 px-4 py-2 font-space-mono text-[0.72rem] uppercase tracking-widest text-c1 transition-all hover:bg-c1/20 disabled:opacity-60"
+            >
+              {status === 'sending' ? 'Sending...' : 'Send code'}
+            </button>
+          </motion.form>
+        ) : (
+          <motion.form
+            key="code"
+            onSubmit={onVerifyCode}
+            className="space-y-4"
+            initial={{ opacity: 0, x: 16 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 16 }}
+            transition={{ duration: 0.25, ease: 'easeOut' }}
+          >
+            <label htmlFor="otp" className="block font-space-mono text-[0.72rem] uppercase tracking-widest text-aws-muted">
+              6-digit code
+            </label>
+            <input
+              id="otp"
+              name="otp"
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              required
+              maxLength={6}
+              value={otp}
+              onChange={(event) => setOtp(event.target.value.replace(/\D/g, ''))}
+              placeholder="000000"
+              className="w-full rounded-lg border border-aws-border bg-aws-bg/60 px-3 py-2.5 text-center font-space-mono text-base tracking-[0.5em] text-aws-text outline-none transition-colors placeholder:text-aws-muted/70 focus:border-c1 sm:text-[0.8rem]"
+            />
+            <div className="flex items-center gap-3">
               <button
                 type="submit"
-                disabled={status === 'sending'}
-                className="inline-flex items-center justify-center rounded-lg border border-c1/40 bg-c1/10 px-4 py-2 text-[0.72rem] font-space-mono uppercase tracking-widest text-c1 hover:bg-c1/20 disabled:opacity-60"
+                disabled={status === 'verifying' || otp.length < 6}
+                className="inline-flex items-center justify-center rounded-lg border border-c1/40 bg-c1/10 px-4 py-2 font-space-mono text-[0.72rem] uppercase tracking-widest text-c1 transition-all hover:bg-c1/20 disabled:opacity-60"
               >
-                {status === 'sending' ? 'Sending...' : 'Send code'}
+                {status === 'verifying' ? 'Verifying...' : 'Verify'}
               </button>
-            </form>
-          ) : (
-            <form onSubmit={onVerifyCode} className="space-y-4">
-              <label htmlFor="otp" className="block text-[0.72rem] font-space-mono uppercase tracking-widest text-aws-muted">
-                6-digit code
-              </label>
-              <input
-                id="otp"
-                name="otp"
-                type="text"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                required
-                maxLength={6}
-                value={otp}
-                onChange={(event) => setOtp(event.target.value.replace(/\D/g, ''))}
-                placeholder="000000"
-                className="w-full rounded-lg border border-aws-border bg-aws-bg px-3 py-2.5 text-base sm:text-[0.8rem] font-space-mono tracking-[0.5em] text-center text-aws-text placeholder:text-aws-muted/70 outline-none focus:border-c1"
-              />
-              <div className="flex items-center gap-3">
-                <button
-                  type="submit"
-                  disabled={status === 'verifying' || otp.length < 6}
-                  className="inline-flex items-center justify-center rounded-lg border border-c1/40 bg-c1/10 px-4 py-2 text-[0.72rem] font-space-mono uppercase tracking-widest text-c1 hover:bg-c1/20 disabled:opacity-60"
-                >
-                  {status === 'verifying' ? 'Verifying...' : 'Verify'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setStep('email'); setOtp(''); setStatus('idle'); setErrorMessage('') }}
-                  className="text-[0.72rem] font-space-mono uppercase tracking-widest text-aws-muted hover:text-aws-text transition-colors"
-                >
-                  Back
-                </button>
-              </div>
-            </form>
-          )}
+              <button
+                type="button"
+                onClick={() => { setStep('email'); setOtp(''); setStatus('idle'); setErrorMessage('') }}
+                className="font-space-mono text-[0.72rem] uppercase tracking-widest text-aws-muted transition-colors hover:text-aws-text"
+              >
+                Back
+              </button>
+            </div>
+          </motion.form>
+        )}
+      </AnimatePresence>
 
-          {status === 'error' ? (
-            <p className="mt-4 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
-              {errorMessage || 'Something went wrong. Please try again.'}
-            </p>
-          ) : null}
-
-          <p className="mt-6 text-xs text-aws-muted">
-            Need to go back?{' '}
-            <Link href="/" className="text-c1 hover:text-aws-text underline underline-offset-2">
-              Return to home
-            </Link>
-          </p>
-        </div>
-      </main>
-    </>
+      {status === 'error' ? (
+        <p className="mt-4 rounded-lg border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-sm text-rose-200">
+          {errorMessage || 'Something went wrong. Please try again.'}
+        </p>
+      ) : null}
+    </AuthShell>
   )
 }
