@@ -19,12 +19,10 @@ import {
   type PracticeTestSet,
 } from './lib/practice-test-catalog'
 import {
-  clickFirstVisible,
   downloadInlineDiagrams,
-  NEXT_BTN,
+  enterExam,
+  goToQuestion,
   questionPanelLocator,
-  RESUME_BTN,
-  START_BTN,
   waitForQuestion,
 } from './lib/quiz-page'
 import { launchBrowser, ensureAuth } from './scrape-course-lab'
@@ -78,11 +76,6 @@ const resolveExamUrl = (set: PracticeTestSet): string | null => {
   return row?.examUrl ?? null
 }
 
-const enterExam = async (page: Page): Promise<void> => {
-  if (await clickFirstVisible(page, RESUME_BTN)) return
-  await clickFirstVisible(page, START_BTN)
-}
-
 const captureQuestionImage = async (
   page: Page,
   setId: string,
@@ -129,21 +122,15 @@ const scrapeSet = async (
       const acc = await prev
       const qNum = i + 1
       if (missingOnly && hasImage(set.setId, qNum)) {
-        if (qNum < set.total) await clickFirstVisible(page, NEXT_BTN)
         return { ...acc, skipped: acc.skipped + 1 }
       }
 
       console.log(`  Q${qNum}/${set.total}`)
+      await goToQuestion(page, qNum)
+      await waitForQuestion(page)
       await captureQuestionImage(page, set.setId, qNum, outputDir)
       acc.saved += 1
 
-      if (qNum < set.total) {
-        const moved = await clickFirstVisible(page, NEXT_BTN)
-        if (!moved) {
-          console.warn(`    ⚠ Could not advance past Q${qNum}`)
-          return acc
-        }
-      }
       return acc
     },
     Promise.resolve({ saved: 0, skipped: 0 }),
