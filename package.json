@@ -41,7 +41,7 @@
   "dependencies": {
     "@xyflow/react": "^12.10.2",
     "mermaid": "^11.15.0",
-    "next": "16.2.4",
+    "next": "16.2.9",
     "postcss": "^8.5.13",
     "react": "19.3.0-canary-43bcbf80-20260603",
     "react-dom": "19.3.0-canary-43bcbf80-20260603",
