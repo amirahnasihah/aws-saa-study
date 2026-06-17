@@ -12,7 +12,6 @@ import { labsChecklistTotal } from '@/data/labsChecklistOrder'
 import {
   buildLabDomainSection,
   countDomainLabsWithLocalPage,
-  countVisibleLabs,
   labDomainTabs,
 } from '@/lib/labs-course'
 import { labsCourseTotal } from '@/data/labsCourseOrder'
@@ -86,15 +85,30 @@ export default function LabsPageClient() {
     [labs, query],
   )
 
-  const activeSection = view === 'domain' ? domainSection : checklistSection
-  const activeItems = activeSection?.items ?? []
-  const visibleCount = view === 'domain'
-    ? countVisibleLabs(domainSection)
-    : activeItems.length
+  // When a query is active, search across ALL tabs so the user doesn't have
+  // to switch tabs to find a lab that lives in a different category.
+  const allDomainSearchResults = useMemo(() => {
+    if (!trimmedQuery) return null
+    return labDomainTabs.flatMap((tab) => buildLabDomainSection(labs, query, tab.id)?.items ?? [])
+  }, [labs, query, trimmedQuery])
 
-  const sectionTitle = view === 'domain'
-    ? labDomainTabs.find((tab) => tab.id === activeDomainCategory)?.label ?? 'Domain'
-    : checklistSections.find((section) => section.id === activeChecklistSection)?.label ?? 'Checklist'
+  const allChecklistSearchResults = useMemo(() => {
+    if (!trimmedQuery) return null
+    return checklistSections.flatMap((section) => buildChecklistLabSection(labs, query, section.id)?.items ?? [])
+  }, [labs, query, trimmedQuery])
+
+  const activeSection = view === 'domain' ? domainSection : checklistSection
+  const activeItems = trimmedQuery
+    ? (view === 'domain' ? allDomainSearchResults : allChecklistSearchResults) ?? []
+    : activeSection?.items ?? []
+
+  const visibleCount = activeItems.length
+
+  const sectionTitle = trimmedQuery
+    ? `Search results`
+    : view === 'domain'
+      ? labDomainTabs.find((tab) => tab.id === activeDomainCategory)?.label ?? 'Domain'
+      : checklistSections.find((section) => section.id === activeChecklistSection)?.label ?? 'Checklist'
 
   const subTabs = view === 'domain' ? domainTabsWithCounts : checklistTabsWithCounts
 
