@@ -1,0 +1,226 @@
+{
+  "slug": "challenge-lab-ec2-vpc-and-load-balancer-integration-and-debugging",
+  "title": "Challenge Lab - Resolve Connectivity Issues Between VPC, EC2 Instances, and Load Balancer",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Portal",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Portal"
+        },
+        {
+          "text": "XYZ Company wants to deploy a publicly accessible web application. As a cloud engineer, your objective is to manually set up a VPC with public subnets, launch an EC2 instance with Apache installed, configure internet access using an Internet Gateway and route table, and create an Application Load Balancer to distribute traffic. You will validate access using the ALB DNS and EC2 IP, and perform basic troubleshooting if needed."
+        },
+        {
+          "text": "Create a VPC Region: us-east-1 Create VPC Name: MyVPC IPv4 CIDR: 10.0.0.0/16 IPv6: No IPv6 CIDR block Tenancy: Default"
+        },
+        {
+          "text": "Region: us-east-1"
+        },
+        {
+          "text": "Create VPC Name: MyVPC IPv4 CIDR: 10.0.0.0/16 IPv6: No IPv6 CIDR block Tenancy: Default"
+        },
+        {
+          "text": "Name: MyVPC"
+        },
+        {
+          "text": "IPv4 CIDR: 10.0.0.0/16"
+        },
+        {
+          "text": "IPv6: No IPv6 CIDR block"
+        },
+        {
+          "text": "Tenancy: Default"
+        },
+        {
+          "text": "Create Public Subnets Subnet 1 AZ: us-east-1a CIDR: 10.0.1.0/24 Subnet 2 AZ: us-east-1b CIDR: 10.0.2.0/24"
+        },
+        {
+          "text": "Subnet 1 AZ: us-east-1a CIDR: 10.0.1.0/24"
+        },
+        {
+          "text": "AZ: us-east-1a"
+        },
+        {
+          "text": "CIDR: 10.0.1.0/24"
+        },
+        {
+          "text": "Subnet 2 AZ: us-east-1b CIDR: 10.0.2.0/24"
+        },
+        {
+          "text": "AZ: us-east-1b"
+        },
+        {
+          "text": "CIDR: 10.0.2.0/24"
+        },
+        {
+          "text": "Create and Attach Internet Gateway"
+        },
+        {
+          "text": "Create Public Route Table Create Add Route: Destination: 0.0.0.0/0 Target: MyInternetGateway Associate both public subnets with this route table"
+        },
+        {
+          "text": "Create"
+        },
+        {
+          "text": "Add Route: Destination: 0.0.0.0/0 Target: MyInternetGateway"
+        },
+        {
+          "text": "Destination: 0.0.0.0/0"
+        },
+        {
+          "text": "Target: MyInternetGateway"
+        },
+        {
+          "text": "Associate both public subnets with this route table"
+        },
+        {
+          "text": "Launch EC2 Instance Name: EC2server AMI: Amazon Linux 2023 kernel Instance Type: t2.micro Network: MyVPC, Subnet: MyPublicSubnet1 Auto-assign Public IP: Enabled Security Group: EC2server-SG Inbound rules: Allow HTTP and optionally SSH User data : Install Apache and create index.html with response message"
+        },
+        {
+          "text": "Name: EC2server"
+        },
+        {
+          "text": "AMI: Amazon Linux 2023 kernel"
+        },
+        {
+          "text": "Instance Type: t2.micro"
+        },
+        {
+          "text": "Network: MyVPC, Subnet: MyPublicSubnet1"
+        },
+        {
+          "text": "Auto-assign Public IP: Enabled"
+        },
+        {
+          "text": "Security Group: EC2server-SG Inbound rules: Allow HTTP and optionally SSH"
+        },
+        {
+          "text": "Inbound rules: Allow HTTP and optionally SSH"
+        },
+        {
+          "text": "User data : Install Apache and create index.html with response message"
+        },
+        {
+          "text": "Create Application Load Balancer Name: Myapplication-LB Scheme: Internet-facing IP Type: IPv4 VPC: MyVPC Subnets: Select both public subnets Security Group: EC2server-SG Listener: HTTP on port 80 Target Group: Name: Apache-TG Type: Instance Add EC2server to targets"
+        },
+        {
+          "text": "Name: Myapplication-LB"
+        },
+        {
+          "text": "Scheme: Internet-facing"
+        },
+        {
+          "text": "IP Type: IPv4"
+        },
+        {
+          "text": "VPC: MyVPC"
+        },
+        {
+          "text": "Subnets: Select both public subnets"
+        },
+        {
+          "text": "Security Group: EC2server-SG"
+        },
+        {
+          "text": "Listener: HTTP on port 80"
+        },
+        {
+          "text": "Target Group: Name: Apache-TG Type: Instance Add EC2server to targets"
+        },
+        {
+          "text": "Name: Apache-TG"
+        },
+        {
+          "text": "Type: Instance"
+        },
+        {
+          "text": "Add EC2server to targets"
+        },
+        {
+          "text": "Test Load Balancer Copy DNS name from ALB and open it in browser."
+        },
+        {
+          "text": "Copy DNS name from ALB and open it in browser."
+        },
+        {
+          "text": "Troubleshooting (if needed) Attach Internet Gateway to VPC Associate public subnets with route table Allow HTTP (port 80) in security group Ensure EC2 has a public IP assigned"
+        },
+        {
+          "text": "Attach Internet Gateway to VPC"
+        },
+        {
+          "text": "Associate public subnets with route table"
+        },
+        {
+          "text": "Allow HTTP (port 80) in security group"
+        },
+        {
+          "text": "Ensure EC2 has a public IP assigned"
+        },
+        {
+          "text": "Reboot EC2 Go to EC2 > Select instance > Actions > Reboot"
+        },
+        {
+          "text": "Go to EC2 > Select instance > Actions > Reboot"
+        },
+        {
+          "text": "Test EC2 Public IP Copy public IPv4 address of EC2 and open in browser"
+        },
+        {
+          "text": "Copy public IPv4 address of EC2 and open in browser"
+        },
+        {
+          "text": "SSH into EC2 (optional) Use EC2 Instance Connect from AWS Console"
+        },
+        {
+          "text": "Use EC2 Instance Connect from AWS Console"
+        },
+        {
+          "text": "Reinstall Apache (Optional Troubleshooting) Switch to root, update system, install & start Apache, enable service, check status. Add content to index.html, restart Apache, verify via public IP or Load Balancer DNS."
+        },
+        {
+          "text": "Switch to root, update system, install & start Apache, enable service, check status."
+        },
+        {
+          "text": "Add content to index.html, restart Apache, verify via public IP or Load Balancer DNS."
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

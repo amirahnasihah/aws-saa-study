@@ -16,12 +16,14 @@ const phraseReplacements: ReadonlyArray<readonly [RegExp, string]> = [
   [/business\.whizlabs\.com/gi, ''],
 ]
 
-export const sanitizeLabText = (text: string): string =>
-  phraseReplacements
-    .reduce((acc, [pattern, replacement]) => acc.replace(pattern, replacement), text)
+export const sanitizeLabText = (text: string | undefined): string => {
+  const value = text ?? ''
+  return phraseReplacements
+    .reduce((acc, [pattern, replacement]) => acc.replace(pattern, replacement), value)
     .replace(/whizlabs?/gi, 'lab')
     .replace(/\s{2,}/g, ' ')
     .trim()
+}
 
 const sanitizeStep = (step: LabStepContent): LabStepContent => ({
   ...step,
@@ -38,9 +40,9 @@ export const sanitizeLab = (lab: Lab): Lab => ({
   ...lab,
   title: sanitizeLabText(lab.title),
   summary: sanitizeLabText(lab.summary),
-  services: lab.services.map((s) => sanitizeLabText(s)),
-  takeaways: lab.takeaways.map((t) => sanitizeLabText(t)),
-  tasks: lab.tasks.map(sanitizeTask),
+  services: (lab.services ?? []).map((s) => sanitizeLabText(s)),
+  takeaways: (lab.takeaways ?? []).map((t) => sanitizeLabText(t)),
+  tasks: (lab.tasks ?? []).map(sanitizeTask),
   source: lab.source === 'whizlabs' ? 'course' : lab.source,
   sourceUrl: undefined,
 })

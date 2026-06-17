@@ -1,0 +1,100 @@
+{
+  "slug": "challenge-apigatewaylambdaintegration-serverless-api-setup",
+  "title": "Challenge Lab - Build API Gateway with Lambda Integration",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign into the AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to access the AWS Console in a new tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default, copy your Username and Password from the Lab Console, and sign in."
+        },
+        {
+          "text": "Set the AWS Region to US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign into the AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to build a serverless API using Amazon API Gateway with AWS Lambda integration to process requests. Your job is to create a Lambda function, set up an API with a resource and method, integrate it with Lambda, deploy the API, and validate the setup. Here’s how to proceed:"
+        },
+        {
+          "text": "Choose Author from scratch."
+        },
+        {
+          "text": "Select runtime as Python 3.12."
+        },
+        {
+          "text": "Select create new role from aws policy templates"
+        },
+        {
+          "text": "Choose Basic Lambda @ Edge Permission (For CloudFront Trigger)"
+        },
+        {
+          "text": "Select REST API"
+        },
+        {
+          "text": "Create a Get Method"
+        },
+        {
+          "text": "Configure the method: Integration type: Lambda Function. Enable Use Lambda Proxy integration. Lambda Region: us-east-1. Lambda Function: Select LambdaFunction."
+        },
+        {
+          "text": "Integration type: Lambda Function."
+        },
+        {
+          "text": "Enable Use Lambda Proxy integration."
+        },
+        {
+          "text": "Lambda Region: us-east-1."
+        },
+        {
+          "text": "Lambda Function: Select LambdaFunction."
+        },
+        {
+          "text": "Grant API Gateway permission to invoke the Lambda function if prompted."
+        },
+        {
+          "text": "Test the method:"
+        },
+        {
+          "text": "Create a new stage (e.g., prod)."
+        },
+        {
+          "text": "Note the Invoke URL for the deployed API (e.g., https://<api-id>.execute-api.us-east-1.amazonaws.com/prod/greet)."
+        },
+        {
+          "text": "Access the URL in a browser or a tool like curl to verify the Lambda response"
+        },
+        {
+          "text": "Confirm the Lambda function and API are created."
+        },
+        {
+          "text": "Verify the API resource /greet with the GET method is integrated with the Lambda function."
+        },
+        {
+          "text": "Ensure the API is deployed to the prod stage and the invoke URL returns the expected Lambda response."
+        },
+        {
+          "text": "Click Validate in the lab console to check the setup."
+        },
+        {
+          "text": "Sign out of AWS by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "Click End Lab in the lab console to complete the lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

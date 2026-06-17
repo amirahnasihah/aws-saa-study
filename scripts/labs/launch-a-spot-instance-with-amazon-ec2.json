@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,51 +24,216 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
-        }
-      ]
-    },
-    {
-      "title": "Task 2: Launching an EC2 Instance In this task, we will launch and manage an EC2 Spot Instance, while also gaining an understanding of how spot pricing works and learning how to set a maximum price for instances in order to save costs Make sure you are in US East (N. Virginia) us-east-1 Region. Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section. Navigate to Instances on the left panel and click on Launch instances button. Enter name as MySpotInstance Choose an Amazon Machine Image (AMI): Choose Amazon Linux 2023 kernel-6.1 AMI. Choose an Instance Type: Select t2.micro For Key pair : Choose Proceed without a key pair. Under Network Settings, Click on Edit button Auto-assign public IP : Select Enable Choose Create security group. Security group name: Enter MyEC2Server_SG Description: Enter Security Group to allow traffic to EC2 To add SSH, Choose Type: SSH Source: Select Anywhere For HTTP, Select Add Security rule Button Choose Type: HTTP Source: Select Anywhere Under Advanced Details, Purchasing option: Check the Spot instance option Click on Customize Spot instance options. Maximum price : Choose Set your maximum price(per instance/hour) Set $ 0.003 as the price. Request Type : Choose One-time Valid to : Choose No request expiry date. Persistent request: we will not choose the option, but you should know what that means. Below is the explanation A persistent Spot Instance request remains active until it expires, or you cancel it, even if the request is fulfilled. If capacity is not available, your Spot Instance is interrupted. After your instance is interrupted, when capacity becomes available again, the Spot Instance is started if stopped or resumed if hibernated. You can stop a Spot Instance and start it again if capacity is available. If the Spot Instance is terminated (irrespective of whether the Spot Instance is in a stopped or running state), the Spot Instance request is opened again and Amazon EC2 launches a new Spot Instance. Under the User data section, enter the following script, (which creates an HTML page served by Apache) #!/bin/bash dnf update -y dnf install httpd -y echo \"<html><h1>Welcome to Lab Server</h1></html>\" > /var/www/html/index.html systemctl start httpd systemctl enable httpd",
-      "steps": [
-        {
-          "text": "Keep rest thing Default and Click on Launch Instance Button."
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
-          "text": "If you get an error message stating that your Maximum price is less than the current price shown in the Availability zone and Current Price table, click on \"Edit instance config\" and set the Maximum price to $0.01, then click on \"Launch Instances.\""
+          "text": "In this task, we will launch and manage an EC2 Spot Instance, while also gaining an understanding of how spot pricing works and learning how to set a maximum price for instances in order to save costs"
+        },
+        {
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Navigate to Instances on the left panel and click on Launch instances button."
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-01.png"
+          ]
+        },
+        {
+          "text": "Enter name as MySpotInstance"
+        },
+        {
+          "text": "Choose an Amazon Machine Image (AMI): Choose Amazon Linux 2023 kernel-6.1 AMI.",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-02.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-03.png"
+          ]
+        },
+        {
+          "text": "Choose an Instance Type: Select t2.micro"
+        },
+        {
+          "text": "For Key pair : Choose Proceed without a key pair.",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-04.png"
+          ]
+        },
+        {
+          "text": "Under Network Settings, Click on Edit button"
+        },
+        {
+          "text": "Auto-assign public IP : Select Enable"
+        },
+        {
+          "text": "Choose Create security group."
+        },
+        {
+          "text": "Security group name: Enter MyEC2Server_SG"
+        },
+        {
+          "text": "Description: Enter Security Group to allow traffic to EC2",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-05.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-06.png"
+          ]
+        },
+        {
+          "text": "To add SSH, Choose Type: SSH Source: Select Anywhere"
+        },
+        {
+          "text": "To add SSH,"
+        },
+        {
+          "text": "Choose Type: SSH"
+        },
+        {
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "For HTTP, Select Add Security rule Button Choose Type: HTTP Source: Select Anywhere",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-07.png"
+          ]
+        },
+        {
+          "text": "For HTTP, Select Add Security rule Button"
+        },
+        {
+          "text": "Choose Type: HTTP"
+        },
+        {
+          "text": "Source: Select Anywhere",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-08.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-09.png"
+          ]
+        },
+        {
+          "text": "Under Advanced Details,"
+        },
+        {
+          "text": "Purchasing option: Check the Spot instance option"
+        },
+        {
+          "text": "Click on Customize Spot instance options.",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-10.png"
+          ]
+        },
+        {
+          "text": "Maximum price : Choose Set your maximum price(per instance/hour)"
+        },
+        {
+          "text": "Set $ 0.003 as the price."
+        },
+        {
+          "text": "Request Type : Choose One-time"
+        },
+        {
+          "text": "Valid to : Choose No request expiry date.",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-11.png"
+          ]
+        },
+        {
+          "text": "Persistent request: we will not choose the option, but you should know what that means. Below is the explanation A persistent Spot Instance request remains active until it expires, or you cancel it, even if the request is fulfilled. If capacity is not available, your Spot Instance is interrupted. After your instance is interrupted, when capacity becomes available again, the Spot Instance is started if stopped or resumed if hibernated. You can stop a Spot Instance and start it again if capacity is available. If the Spot Instance is terminated (irrespective of whether the Spot Instance is in a stopped or running state), the Spot Instance request is opened again and Amazon EC2 launches a new Spot Instance."
+        },
+        {
+          "text": "Persistent request: we will not choose the option, but you should know what that means. Below is the explanation"
+        },
+        {
+          "text": "A persistent Spot Instance request remains active until it expires, or you cancel it, even if the request is fulfilled. If capacity is not available, your Spot Instance is interrupted. After your instance is interrupted, when capacity becomes available again, the Spot Instance is started if stopped or resumed if hibernated. You can stop a Spot Instance and start it again if capacity is available. If the Spot Instance is terminated (irrespective of whether the Spot Instance is in a stopped or running state), the Spot Instance request is opened again and Amazon EC2 launches a new Spot Instance."
+        },
+        {
+          "text": "Under the User data section, enter the following script, (which creates an HTML page served by Apache)"
+        },
+        {
+          "text": "Keep rest thing Default and Click on Launch Instance Button."
+        },
+        {
+          "text": "If you get an error message stating that your Maximum price is less than the current price shown in the Availability zone and Current Price table, click on \"Edit instance config\" and set the Maximum price to $0.01, then click on \"Launch Instances.\"",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-12.png",
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-13.png"
+          ]
+        },
+        {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-14.png",
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-15.png"
+          ]
         },
         {
           "text": "Wait for the instances to launch. Navigate to the Instances page from the left menu and wait for the status of the EC2 Instance to change to \"running\" and the health check status to change to “2/2 checks passed.”"
         },
         {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-16.png"
+          ]
+        },
+        {
           "text": "To test if the HTML page is published, copy the Public IPv4 Address of your EC2 Instance and run it on the browser. Make sure the URL Protocol is http and not https."
         },
         {
-          "text": "Task 3: View the Spot Request"
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-17.png"
+          ]
         },
         {
           "text": "Click on Spot Requests in the left sidebar, you will see the Spot requests."
         },
         {
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-18.png"
+          ]
+        },
+        {
           "text": "Click on the Request ID, to see more details about your spot request."
         },
         {
-          "text": "Max price: The maximum price you are willing to pay per hour for the Spot instance. Spot instances are available at variable prices, and your request will be fulfilled as long as the current price is below your specified maximum price."
+          "text": "Max price: The maximum price you are willing to pay per hour for the Spot instance. Spot instances are available at variable prices, and your request will be fulfilled as long as the current price is below your specified maximum price."
         },
         {
-          "text": "Instance ID: This is the unique identifier for the specific instance you are requesting. It can be specified if you have a preference for a particular instance type or configuration."
+          "text": "Instance ID: This is the unique identifier for the specific instance you are requesting. It can be specified if you have a preference for a particular instance type or configuration."
         },
         {
-          "text": "Interruption: Interruptions occur when the Spot price goes above your specified maximum price or when Amazon EC2 needs the capacity back for On-Demand instances. When an interruption occurs, your Spot instance will be terminated, and you will receive a notification before it happens."
+          "text": "Interruption: Interruptions occur when the Spot price goes above your specified maximum price or when Amazon EC2 needs the capacity back for On-Demand instances. When an interruption occurs, your Spot instance will be terminated, and you will receive a notification before it happens."
         },
         {
-          "text": "Availability Zone: Current Price of the Spot instance varies by Availability Zone, There might be a possibility that in other AZ you can get the same instance at a lower price."
+          "text": "Availability Zone: Current Price of the Spot instance varies by Availability Zone, There might be a possibility that in other AZ you can get the same instance at a lower price."
         },
         {
-          "text": "Task 4: Explore the Saving Summary and Pricing history"
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-19.png"
+          ]
         },
         {
           "text": "In this task, we are going to explore the different cost-saving options available when using EC2 Spot Instances"
@@ -74,52 +242,61 @@
           "text": "Click on the Spot Requests in the Left sidebar and you will see the Spot requests."
         },
         {
-          "text": "Let’s explore two options named Spot saving summary and Pricing history."
+          "text": "Let’s explore two options named Spot saving summary and Pricing history."
         },
         {
-          "text": "Below the Spot Request you'll be able to see the Spot Saving Summary. You will save a total of 75% as compared to on-demand instances. Details are also available."
+          "text": "Below the Spot Request you'll be able to see the Spot Saving Summary. You will save a total of 75% as compared to on-demand instances. Details are also available."
         },
         {
-          "text": "Note : It's important to note that Spot prices are dynamic and can vary significantly over time. Therefore, savings percentages may continue to fluctuate based on market conditions and the utilization of your Spot instance."
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-20.png"
+          ]
         },
         {
-          "text": "Now click on the Pricing history option on the top right."
+          "text": "Now click on the Pricing history option on the top right."
         },
         {
-          "text": "Here you will see the pricing history, but wait a minute, it’s showing for some other Instance size, let’s modify the options."
+          "text": "Here you will see the pricing history, but wait a minute, it’s showing for some other Instance size, let’s modify the options."
         },
         {
           "text": "Graph: Availability Zones"
         },
         {
-          "text": "Instance type: Enter t2.micro"
+          "text": "Instance type: Enter t2.micro"
         },
         {
           "text": "Platform: Linux/UNIX"
         },
         {
-          "text": "Date Range: Select 3 months"
+          "text": "Date Range: Select 3 months"
         },
         {
-          "text": "Do you know?"
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-21.png"
+          ]
         },
         {
           "text": "Amazon announced a new feature called \"AWS Spot Instance Draining\" that helps customers manage stateful workloads running on Spot Instances. This feature enables customers to configure their instances to gradually wind down workloads instead of being abruptly terminated, giving applications time to complete important tasks and minimize disruption. This can be especially useful for applications that store data on local instance storage or perform other stateful operations."
         },
         {
-          "text": "Task 5: Validation Test"
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "Sample output :",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-22.gif"
+          ]
         },
         {
-          "text": "Sample output :"
-        },
-        {
-          "text": "Completion and Conclusion"
+          "text": "Task 1: Sign in to AWS Management Console",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-23.gif"
+          ]
         },
         {
           "text": "You have successfully created and launched Amazon EC2 Spot Instance."
@@ -128,16 +305,13 @@
           "text": "You have successfully created a webpage and published it."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     },
@@ -148,28 +322,46 @@
           "text": "In this task, we will launch and manage an EC2 Spot Instance, while also gaining an understanding of how spot pricing works and learning how to set a maximum price for instances in order to save costs"
         },
         {
-          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Navigate to Instances on the left panel and click on Launch instances button."
+          "text": "Navigate to Instances on the left panel and click on Launch instances button."
         },
         {
-          "text": "Enter name as MySpotInstance"
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-24.png"
+          ]
         },
         {
-          "text": "Choose an Amazon Machine Image (AMI): Choose Amazon Linux 2023 kernel-6.1 AMI."
+          "text": "Enter name as MySpotInstance"
         },
         {
-          "text": "Choose an Instance Type: Select t2.micro"
+          "text": "Choose an Amazon Machine Image (AMI): Choose Amazon Linux 2023 kernel-6.1 AMI.",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-25.png"
+          ]
         },
         {
-          "text": "For Key pair : Choose Proceed without a key pair."
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-26.png"
+          ]
         },
         {
-          "text": "Under Network Settings, Click on Edit button"
+          "text": "Choose an Instance Type: Select t2.micro"
+        },
+        {
+          "text": "For Key pair : Choose Proceed without a key pair.",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-27.png"
+          ]
+        },
+        {
+          "text": "Under Network Settings, Click on Edit button"
         },
         {
           "text": "Auto-assign public IP : Select Enable"
@@ -178,49 +370,85 @@
           "text": "Choose Create security group."
         },
         {
-          "text": "Security group name: Enter MyEC2Server_SG"
+          "text": "Security group name: Enter MyEC2Server_SG"
         },
         {
-          "text": "Description: Enter Security Group to allow traffic to EC2"
+          "text": "Description: Enter Security Group to allow traffic to EC2",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-28.png"
+          ]
         },
         {
-          "text": "To add SSH,"
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-29.png"
+          ]
+        },
+        {
+          "text": "To add SSH, Choose Type: SSH Source: Select Anywhere"
+        },
+        {
+          "text": "To add SSH,"
         },
         {
           "text": "Choose Type: SSH"
         },
         {
-          "text": "Source: Select Anywhere"
-        },
-        {
-          "text": "For HTTP, Select Add Security rule Button"
-        },
-        {
-          "text": "Choose Type: HTTP"
-        },
-        {
           "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "For HTTP, Select Add Security rule Button Choose Type: HTTP Source: Select Anywhere",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-30.png"
+          ]
+        },
+        {
+          "text": "For HTTP, Select Add Security rule Button"
+        },
+        {
+          "text": "Choose Type: HTTP"
+        },
+        {
+          "text": "Source: Select Anywhere",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-31.png"
+          ]
+        },
+        {
+          "text": "Task 2: Launching an EC2 Instance",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-32.png"
+          ]
         },
         {
           "text": "Under Advanced Details,"
         },
         {
-          "text": "Purchasing option: Check the Spot instance option"
+          "text": "Purchasing option: Check the Spot instance option"
         },
         {
-          "text": "Click on Customize Spot instance options."
+          "text": "Click on Customize Spot instance options.",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-33.png"
+          ]
         },
         {
-          "text": "Maximum price : Choose Set your maximum price(per instance/hour)"
+          "text": "Maximum price : Choose Set your maximum price(per instance/hour)"
         },
         {
           "text": "Set $ 0.003 as the price."
         },
         {
-          "text": "Request Type : Choose One-time"
+          "text": "Request Type : Choose One-time"
         },
         {
-          "text": "Valid to : Choose No request expiry date."
+          "text": "Valid to : Choose No request expiry date.",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-34.png"
+          ]
+        },
+        {
+          "text": "Persistent request: we will not choose the option, but you should know what that means. Below is the explanation A persistent Spot Instance request remains active until it expires, or you cancel it, even if the request is fulfilled. If capacity is not available, your Spot Instance is interrupted. After your instance is interrupted, when capacity becomes available again, the Spot Instance is started if stopped or resumed if hibernated. You can stop a Spot Instance and start it again if capacity is available. If the Spot Instance is terminated (irrespective of whether the Spot Instance is in a stopped or running state), the Spot Instance request is opened again and Amazon EC2 launches a new Spot Instance."
         },
         {
           "text": "Persistent request: we will not choose the option, but you should know what that means. Below is the explanation"
@@ -229,25 +457,7 @@
           "text": "A persistent Spot Instance request remains active until it expires, or you cancel it, even if the request is fulfilled. If capacity is not available, your Spot Instance is interrupted. After your instance is interrupted, when capacity becomes available again, the Spot Instance is started if stopped or resumed if hibernated. You can stop a Spot Instance and start it again if capacity is available. If the Spot Instance is terminated (irrespective of whether the Spot Instance is in a stopped or running state), the Spot Instance request is opened again and Amazon EC2 launches a new Spot Instance."
         },
         {
-          "text": "Under the User data section, enter the following script, (which creates an HTML page served by Apache)"
-        },
-        {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "dnf update -y"
-        },
-        {
-          "text": "dnf install httpd -y"
-        },
-        {
-          "text": "echo \"<html><h1>Welcome to Lab Server</h1></html>\" > /var/www/html/index.html"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable httpd"
+          "text": "Under the User data section, enter the following script, (which creates an HTML page served by Apache)"
         }
       ]
     },
@@ -258,19 +468,31 @@
           "text": "Click on Spot Requests in the left sidebar, you will see the Spot requests."
         },
         {
+          "text": "Task 3: View the Spot Request",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-35.png"
+          ]
+        },
+        {
           "text": "Click on the Request ID, to see more details about your spot request."
         },
         {
-          "text": "Max price: The maximum price you are willing to pay per hour for the Spot instance. Spot instances are available at variable prices, and your request will be fulfilled as long as the current price is below your specified maximum price."
+          "text": "Max price: The maximum price you are willing to pay per hour for the Spot instance. Spot instances are available at variable prices, and your request will be fulfilled as long as the current price is below your specified maximum price."
         },
         {
-          "text": "Instance ID: This is the unique identifier for the specific instance you are requesting. It can be specified if you have a preference for a particular instance type or configuration."
+          "text": "Instance ID: This is the unique identifier for the specific instance you are requesting. It can be specified if you have a preference for a particular instance type or configuration."
         },
         {
-          "text": "Interruption: Interruptions occur when the Spot price goes above your specified maximum price or when Amazon EC2 needs the capacity back for On-Demand instances. When an interruption occurs, your Spot instance will be terminated, and you will receive a notification before it happens."
+          "text": "Interruption: Interruptions occur when the Spot price goes above your specified maximum price or when Amazon EC2 needs the capacity back for On-Demand instances. When an interruption occurs, your Spot instance will be terminated, and you will receive a notification before it happens."
         },
         {
-          "text": "Availability Zone: Current Price of the Spot instance varies by Availability Zone, There might be a possibility that in other AZ you can get the same instance at a lower price."
+          "text": "Availability Zone: Current Price of the Spot instance varies by Availability Zone, There might be a possibility that in other AZ you can get the same instance at a lower price."
+        },
+        {
+          "text": "Task 3: View the Spot Request",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-36.png"
+          ]
         }
       ]
     },
@@ -284,34 +506,40 @@
           "text": "Click on the Spot Requests in the Left sidebar and you will see the Spot requests."
         },
         {
-          "text": "Let’s explore two options named Spot saving summary and Pricing history."
+          "text": "Let’s explore two options named Spot saving summary and Pricing history."
         },
         {
-          "text": "Below the Spot Request you'll be able to see the Spot Saving Summary. You will save a total of 75% as compared to on-demand instances. Details are also available."
+          "text": "Below the Spot Request you'll be able to see the Spot Saving Summary. You will save a total of 75% as compared to on-demand instances. Details are also available."
         },
         {
-          "text": "Note : It's important to note that Spot prices are dynamic and can vary significantly over time. Therefore, savings percentages may continue to fluctuate based on market conditions and the utilization of your Spot instance."
+          "text": "Task 4: Explore the Saving Summary and Pricing history",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-37.png"
+          ]
         },
         {
-          "text": "Now click on the Pricing history option on the top right."
+          "text": "Now click on the Pricing history option on the top right."
         },
         {
-          "text": "Here you will see the pricing history, but wait a minute, it’s showing for some other Instance size, let’s modify the options."
+          "text": "Here you will see the pricing history, but wait a minute, it’s showing for some other Instance size, let’s modify the options."
         },
         {
           "text": "Graph: Availability Zones"
         },
         {
-          "text": "Instance type: Enter t2.micro"
+          "text": "Instance type: Enter t2.micro"
         },
         {
           "text": "Platform: Linux/UNIX"
         },
         {
-          "text": "Date Range: Select 3 months"
+          "text": "Date Range: Select 3 months"
         },
         {
-          "text": "Do you know?"
+          "text": "Task 4: Explore the Saving Summary and Pricing history",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-38.png"
+          ]
         },
         {
           "text": "Amazon announced a new feature called \"AWS Spot Instance Draining\" that helps customers manage stateful workloads running on Spot Instances. This feature enables customers to configure their instances to gradually wind down workloads instead of being abruptly terminated, giving applications time to complete important tasks and minimize disruption. This can be especially useful for applications that store data on local instance storage or perform other stateful operations."
@@ -322,16 +550,22 @@
       "title": "Task 5: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-39.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 5: Validation Test",
+          "images": [
+            "/labs/launch-a-spot-instance-with-amazon-ec2/step-40.gif"
+          ]
         },
         {
           "text": "You have successfully created and launched Amazon EC2 Spot Instance."
@@ -340,16 +574,13 @@
           "text": "You have successfully created a webpage and published it."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

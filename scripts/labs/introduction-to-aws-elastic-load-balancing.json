@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -24,7 +27,7 @@
           "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,37 +35,60 @@
       "title": "Task 2: Provision Default VPC",
       "steps": [
         {
-          "text": "Navigate to VPC by clicking on the Services menu in the top, then click on VPC or Open the Amazon VPC console via https://console.aws.amazon.com/vpc/."
+          "text": "Navigate to VPC by clicking on the Services menu in the top, then click on VPC or Open the Amazon VPC console via https://console.aws.amazon.com/vpc/."
         },
         {
-          "text": "Delete the default VPC by following the below steps:"
+          "text": "Delete the default VPC by following the below steps:In the navigation pane, choose Your VPCs.Select the VPC with value as yes in default VPC column.Go to Actions button and click on delete VPC buttonCheck I acknowledge that I want to delete my default VPC option.Type delete default VPC and click on Delete button",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-01.png",
+            "/labs/introduction-to-aws-elastic-load-balancing/step-02.png",
+            "/labs/introduction-to-aws-elastic-load-balancing/step-03.png"
+          ]
         },
         {
-          "text": "In the navigation pane, choose Your VPCs."
+          "text": "In the navigation pane, choose Your VPCs."
         },
         {
-          "text": "Select the VPC with value as yes in default VPC column."
+          "text": "Select the VPC with value as yes in default VPC column.",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-04.png"
+          ]
         },
         {
-          "text": "Go to Actions button and click on delete VPC button"
+          "text": "Go to Actions button and click on delete VPC button",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-05.png"
+          ]
         },
         {
-          "text": "Check I acknowledge that I want to delete my default VPC option."
+          "text": "Check I acknowledge that I want to delete my default VPC option."
         },
         {
-          "text": "Type delete default VPC and click on Delete button"
+          "text": "Type delete default VPC and click on Delete button",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-06.png"
+          ]
         },
         {
-          "text": "Now to provision Default VPC again"
+          "text": "Now to provision Default VPC againRefresh your console go to Actions and click Create default VPCClick Create default VPC button and your default VPC will get created",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-07.png",
+            "/labs/introduction-to-aws-elastic-load-balancing/step-08.png",
+            "/labs/introduction-to-aws-elastic-load-balancing/step-09.png"
+          ]
         },
         {
-          "text": "Refresh your console go to Actions and click Create default VPC"
+          "text": "Refresh your console go to Actions and click Create default VPC",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-10.png"
+          ]
         },
         {
-          "text": "Click Create default VPC button and your default VPC will get created"
-        },
-        {
-          "text": "Note: If you are unable to delete the default VPC, please visit our Lab FAQ page for step-by-step instructions."
+          "text": "Click Create default VPC button and your default VPC will get created",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-11.png",
+            "/labs/introduction-to-aws-elastic-load-balancing/step-12.png"
+          ]
         }
       ]
     },
@@ -73,7 +99,7 @@
           "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
         },
         {
           "text": "Navigate to Instances on the left panel and click on Launch Instances button."
@@ -82,13 +108,31 @@
           "text": "Name: Enter MyEC2Server"
         },
         {
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-13.png"
+          ]
+        },
+        {
           "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the Select button."
+        },
+        {
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-14.png"
+          ]
         },
         {
           "text": "Note: if there are two AMI's present for Amazon Linux 2023 AMI, choose kernel-6.1."
         },
         {
-          "text": "For Instance Type: Select t2.micro"
+          "text": "For Instance Type: Select t2.micro"
+        },
+        {
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-15.png"
+          ]
         },
         {
           "text": "For Key pair: Select Create a new key pair Button"
@@ -106,7 +150,13 @@
           "text": "Select Create key pair Button."
         },
         {
-          "text": "In Network Settings Click on Edit button:"
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-16.png"
+          ]
+        },
+        {
+          "text": "In Network Settings Click on Edit button:"
         },
         {
           "text": "Auto-assign public IP: Enable"
@@ -121,136 +171,145 @@
           "text": "Description : Enter Security Group to allow traffic to EC2"
         },
         {
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-17.png"
+          ]
+        },
+        {
           "text": "Check Allow SSH from and Select Anywhere from dropdown"
+        },
+        {
+          "text": "To add SSH, Choose Type: SSH Source: Select Anywhere"
         },
         {
           "text": "To add SSH,"
         },
         {
-          "text": "Choose Type: SSH"
+          "text": "Choose Type: SSH"
         },
         {
-          "text": "Source: Select Anywhere"
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "For HTTP, Click on Add security group rule Choose Type: HTTP Source: Select Anywhere"
         },
         {
           "text": "For HTTP, Click on Add security group rule"
         },
         {
-          "text": "Choose Type: HTTP"
+          "text": "Choose Type: HTTP"
         },
         {
-          "text": "Source: Select Anywhere"
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "For HTTPS, Click on Add security group rule Choose Type: HTTPs Source: Select Anywhere"
         },
         {
           "text": "For HTTPS, Click on Add security group rule"
         },
         {
-          "text": "Choose Type: HTTPs"
+          "text": "Choose Type: HTTPs"
         },
         {
-          "text": "Source: Select Anywhere"
+          "text": "Source: Select Anywhere"
         },
         {
-          "text": "Click on Advanced details and under the User data: section, Enter the following script to create an HTML page served by an Apache httpd web server."
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-18.gif"
+          ]
         },
         {
-          "text": "#!/bin/bash"
+          "text": "Click on Advanced details and under the User data: section, Enter the following script to create an HTML page served by an Apache httpd web server."
         },
         {
-          "text": "sudo su"
+          "text": "Keep Rest thing Default and Click on Launch Instance Button.\n14. Select View all Instances to View Instance you Created. 15. Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running."
         },
         {
-          "text": "dnf update -y"
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "dnf install httpd -y"
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "echo \"<html><h1> Welcome to Lab Server 1 </h1></html>\" > /var/www/html/index.html"
+          "text": "Navigate to Instances on the left panel and click on Launch Instances button."
         },
         {
-          "text": "systemctl start httpd"
+          "text": "Name : Enter MyEC2Server2"
         },
         {
-          "text": "systemctl enable httpd"
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-19.png"
+          ]
         },
         {
-          "text": "Keep Rest thing Default and Click on Launch Instance Button."
+          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the Select button."
         },
         {
-          "text": "Select View all Instances to View Instance you Created."
-        },
-        {
-          "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of the instance till status changes to Running."
-        },
-        {
-          "text": "Task 4 : Launching Second EC2 Instance"
-        },
-        {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
-        },
-        {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
-        },
-        {
-          "text": "Navigate to Instances on the left panel and click on Launch Instances button."
-        },
-        {
-          "text": "Name : Enter MyEC2Server2"
-        },
-        {
-          "text": "For Amazon Machine Image (AMI): Search for Amazon Linux 2023 AMI in the search box and click on the Select button."
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-20.png"
+          ]
         },
         {
           "text": "Note: if there are two AMI's present for Amazon Linux 2023 AMI, choose kernel-6.1 AMI."
         },
         {
-          "text": "For Instance Type: select t2.micro"
+          "text": "For Instance Type: select t2.micro"
         },
         {
-          "text": "For Key pair: Select the key you created previously."
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-21.png"
+          ]
         },
         {
-          "text": "In Network Settings Click on Edit:"
+          "text": "For Key pair: Select the key you created previously."
         },
         {
-          "text": "Auto-assign public IP: Enable"
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-22.png"
+          ]
+        },
+        {
+          "text": "In Network Settings Click on Edit:"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
         },
         {
           "text": "Select Select existing security group and Select the group created earlier."
         },
         {
-          "text": "Click on Advanced details and under the User data: section, Enter the following script to create an HTML page served by Apache httpd web server:"
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-23.png"
+          ]
         },
         {
-          "text": "#!/bin/bash"
+          "text": "Click on Advanced details and under the User data: section, Enter the following script to create an HTML page served by Apache httpd web server:#!/bin/bashsudo sudnf update -ydnf install httpd -yecho \"<html><h1> Welcome to Lab Server 2 </h1><html>\" > /var/www/html/index.htmlsystemctl start httpdsystemctl enable httpd"
         },
         {
-          "text": "sudo su"
+          "text": "Click on Advanced details and under the User data: section, Enter the following script to create an HTML page served by Apache httpd web server:"
         },
         {
-          "text": "dnf update -y"
+          "text": "Keep Rest thing Default and Click on Launch Instance Button."
         },
         {
-          "text": "dnf install httpd -y"
-        },
-        {
-          "text": "echo \"<html><h1> Welcome to Lab Server 2 </h1><html>\" > /var/www/html/index.html"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable httpd"
-        },
-        {
-          "text": "Keep Rest thing Default and Click on Launch Instance Button."
-        },
-        {
-          "text": "Select View all Instances to View Instance you Created"
+          "text": "Select View all Instances to View Instance you Created"
         },
         {
           "text": "Launch Status: Your instance is now launching. Click on View Instances. In the dashboard find your instance and wait for complete initialization of the instance until the instance state changes to running."
+        },
+        {
+          "text": "Task 3: Launching First EC2 Instance",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-24.jpg"
+          ]
         }
       ]
     },
@@ -258,100 +317,154 @@
       "title": "Task 5: Creating the Target Group and Load Balancer",
       "steps": [
         {
-          "text": "In the EC2 Console, Navigate to Target Groups, present in the left panel under Load Balancing."
+          "text": "In the EC2 Console, Navigate to Target Groups, present in the left panel under Load Balancing."
         },
         {
-          "text": "Click on the Create target group button."
+          "text": "Click on the Create target group button.",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-25.png"
+          ]
         },
         {
-          "text": "For Step 1, Specify group details"
+          "text": "For Step 1, Specify group details Under Basic configurations, Choose a target group: Choose Instances Target group name: Enter MyTargetGroup Keep all the settings as default. Scroll to the end of the page and click on the Next button."
+        },
+        {
+          "text": "For Step 1, Specify group details"
+        },
+        {
+          "text": "Under Basic configurations, Choose a target group: Choose Instances Target group name: Enter MyTargetGroup"
         },
         {
           "text": "Under Basic configurations,"
         },
         {
-          "text": "Choose a target group: Choose Instances"
+          "text": "Choose a target group: Choose Instances"
         },
         {
-          "text": "Target group name: Enter MyTargetGroup"
+          "text": "Target group name: Enter MyTargetGroup"
         },
         {
           "text": "Keep all the settings as default."
         },
         {
-          "text": "Scroll to the end of the page and click on the Next button."
+          "text": "Scroll to the end of the page and click on the Next button."
         },
         {
-          "text": "For Step 2, Register targets"
+          "text": "For Step 2, Register targets Select both instances and click on the Include as pending below button."
+        },
+        {
+          "text": "For Step 2, Register targets"
         },
         {
           "text": "Select both instances and click on the Include as pending below button."
         },
         {
+          "text": "Task 5: Creating the Target Group and Load Balancer",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-26.png"
+          ]
+        },
+        {
           "text": "Instances will be present in the Review targets part, having health status as Pending."
         },
         {
-          "text": "Click on the Create target group button."
+          "text": "Click on the Create target group button."
         },
         {
           "text": "The Target group is now created."
         },
         {
-          "text": "In the EC2 console, navigate to Load balancers in the left-side panel."
+          "text": "In the EC2 console, navigate to Load balancers in the left-side panel."
         },
         {
-          "text": "Click on Create Load Balancer button at the top-left to create a new load balancer for our web servers."
+          "text": "Click on Create Load Balancer button at the top-left to create a new load balancer for our web servers."
         },
         {
           "text": "Select Load Balancer Type: Under the Application load balancer, click on the Create button"
         },
         {
-          "text": "To create an Application load balancer, configuring the load balancer as below"
+          "text": "To create an Application load balancer, configuring the load balancer as below"
         },
         {
-          "text": "For the Basic configuration section,"
+          "text": "For the Basic configuration section, Name: Enter MyLoadBalancer Scheme: Select Internet-facing IP address type: Choose IPv4"
         },
         {
-          "text": "Name: Enter MyLoadBalancer"
+          "text": "For the Basic configuration section,"
         },
         {
-          "text": "Scheme: Select Internet-facing"
+          "text": "Name: Enter MyLoadBalancer"
         },
         {
-          "text": "IP address type: Choose IPv4"
+          "text": "Scheme: Select Internet-facing"
         },
         {
-          "text": "For the Network mapping section:"
+          "text": "IP address type: Choose IPv4"
         },
         {
-          "text": "VPC: Select Default"
+          "text": "For the Network mapping section: VPC: Select Default Mappings: Select all the Availability zone present"
         },
         {
-          "text": "Mappings: Select all the Availability zone present"
+          "text": "For the Network mapping section:"
+        },
+        {
+          "text": "VPC: Select Default"
+        },
+        {
+          "text": "Mappings: Select all the Availability zone present"
+        },
+        {
+          "text": "For the Security groups section, Select the MyEC2Server_SG Security group from the dropdown and remove the default security group."
         },
         {
           "text": "For the Security groups section,"
         },
         {
-          "text": "Select the MyEC2Server_SG Security group from the dropdown and remove the default security group."
+          "text": "Select the MyEC2Server_SG Security group from the dropdown and remove the default security group."
         },
         {
-          "text": "For the Listeners and routing section,"
+          "text": "Task 5: Creating the Target Group and Load Balancer",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-27.gif"
+          ]
+        },
+        {
+          "text": "For the Listeners and routing section, The listener is already present with Protocol HTTP and Port 80. Select the target group MyTargetGroup for the Default action forwards to option.",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-28.png"
+          ]
+        },
+        {
+          "text": "For the Listeners and routing section,"
+        },
+        {
+          "text": "The listener is already present with Protocol HTTP and Port 80. Select the target group MyTargetGroup for the Default action forwards to option.",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-29.png"
+          ]
         },
         {
           "text": "The listener is already present with Protocol HTTP and Port 80."
         },
         {
-          "text": "Select the target group MyTargetGroup for the Default action forwards to option."
+          "text": "Select the target group MyTargetGroup for the Default action forwards to option.",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-30.png"
+          ]
         },
         {
-          "text": "Keep the tags as default and click on the Create load balancer button."
+          "text": "Keep the tags as default and click on the Create load balancer button."
         },
         {
-          "text": "You have successfully created the Application Load Balancer. Click on the View load balancers button."
+          "text": "You have successfully created the Application Load Balancer. Click on the View load balancers button."
         },
         {
-          "text": "Wait for 2 to 3 minutes for the load balancer to become Active."
+          "text": "Wait for 2 to 3 minutes for the load balancer to become Active."
+        },
+        {
+          "text": "Task 5: Creating the Target Group and Load Balancer",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-31.png"
+          ]
         }
       ]
     },
@@ -359,52 +472,82 @@
       "title": "Task 6: Testing the Elastic Load Balancer",
       "steps": [
         {
-          "text": "Click on Target groups from the left menu section."
+          "text": "Click on Target groups from the left menu section."
         },
         {
-          "text": "Select MyTargetGroup and navigate to the Targets tab below."
+          "text": "Select MyTargetGroup and navigate to the Targets tab below."
         },
         {
-          "text": "Wait until the status column of the instances changes to healthy (this means both web servers have passed ELB health check)"
+          "text": "Wait until the status column of the instances changes to healthy (this means both web servers have passed ELB health check)"
         },
         {
-          "text": "Next, navigate to Load Balancers and notice the state of ELB is active."
+          "text": "Task 6: Testing the Elastic Load Balancer",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-32.jpg"
+          ]
         },
         {
-          "text": "Copy the DNS name of the ELB and enter the address in the browser."
+          "text": "Next, navigate to Load Balancers and notice the state of ELB is active."
         },
         {
-          "text": "DNS Example: MyLoadBalancer-882185258.us-east-1.elb.amazonaws.com"
+          "text": "Copy the DNS name of the ELB and enter the address in the browser. DNS Example: MyLoadBalancer-882185258.us-east-1.elb.amazonaws.com"
         },
         {
-          "text": "You should see the index.html page content of Web Server 1 or Web Server 2"
+          "text": "Copy the DNS name of the ELB and enter the address in the browser."
         },
         {
-          "text": "Now Refresh the page a few times. You will observe that the index pages change each time you refresh."
+          "text": "DNS Example: MyLoadBalancer-882185258.us-east-1.elb.amazonaws.com"
         },
         {
-          "text": "Note: The ELB is equally dividing the incoming traffic to both servers in a Round Robin manner."
+          "text": "You should see the index.html page content of Web Server 1 or Web Server 2"
+        },
+        {
+          "text": "Task 6: Testing the Elastic Load Balancer",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-33.png"
+          ]
+        },
+        {
+          "text": "Now Refresh the page a few times. You will observe that the index pages change each time you refresh."
+        },
+        {
+          "text": "Note: The ELB is equally dividing the incoming traffic to both servers in a Round Robin manner."
         },
         {
           "text": "For testing, if ELB is working properly,"
         },
         {
-          "text": "In the left side menu, scroll up and navigate back to the Instances page."
+          "text": "In the left side menu, scroll up and navigate back to the Instances page."
         },
         {
-          "text": "Select MyEC2Server1, click on Instance State and click on Stop instance to stop the EC2 instance."
+          "text": "Select MyEC2Server1, click on Instance State and click on Stop instance to stop the EC2 instance."
         },
         {
-          "text": "Once MyEC2Server1 is stopped, navigate to Target Groups. Select the MyTargetGroup, Click on the Targets."
+          "text": "Task 6: Testing the Elastic Load Balancer",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-34.jpg"
+          ]
         },
         {
-          "text": "It will say that the stopped instance MyEC2Server1 is unused."
+          "text": "Once MyEC2Server1 is stopped, navigate to Target Groups. Select the MyTargetGroup, Click on the Targets."
         },
         {
-          "text": "Refresh the ELB domain name URL in Browser, and notice the HTML webpage remains visible. The ELB is only rendering the HTML page from the MyEC2Server2 instance."
+          "text": "It will say that the stopped instance MyEC2Server1 is unused."
         },
         {
-          "text": "Do you know ?"
+          "text": "Task 6: Testing the Elastic Load Balancer",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-35.png"
+          ]
+        },
+        {
+          "text": "Refresh the ELB domain name URL in Browser, and notice the HTML webpage remains visible. The ELB is only rendering the HTML page from the MyEC2Server2 instance."
+        },
+        {
+          "text": "Task 6: Testing the Elastic Load Balancer",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-36.png"
+          ]
         },
         {
           "text": "ELB supports multiple protocols, including HTTP, HTTPS, TCP, and SSL, and it can route traffic to targets based on different criteria such as IP addresses, ports, and protocols. ELB supports sticky sessions, which allows clients to maintain their connection to the same target across multiple requests, improving the user experience for stateful applications."
@@ -415,13 +558,22 @@
       "title": "Task 7: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-37.gif"
+          ]
+        },
+        {
+          "text": "Task 7: Validation Test",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-38.gif"
+          ]
         }
       ]
     },
@@ -429,94 +581,130 @@
       "title": "Task 8: Delete AWS Resources",
       "steps": [
         {
-          "text": "Deleting Load balancer"
-        },
-        {
           "text": "In the EC2 console, navigate to Load Balancers in the left-side panel."
         },
         {
-          "text": "MyLoadBalancer will be listed here."
+          "text": "MyLoadBalancer will be listed here."
         },
         {
-          "text": "To delete the load balancer, you need to perform the following actions:"
+          "text": "To delete the load balancer, you need to perform the following actions:"
         },
         {
-          "text": "Select the load balancer,"
+          "text": "Select the load balancer,"
         },
         {
-          "text": "Click on the Actions button,"
+          "text": "Click on the Actions button,"
         },
         {
-          "text": "Select the Delete option."
+          "text": "Select the Delete option."
         },
         {
-          "text": "Confirm by typing confirm when a pop-up is shown. Click on Delete button."
+          "text": "Task 8: Delete AWS Resources",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-39.png"
+          ]
+        },
+        {
+          "text": "Confirm by typing confirm when a pop-up is shown. Click on Delete button."
+        },
+        {
+          "text": "Task 8: Delete AWS Resources",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-40.png"
+          ]
         },
         {
           "text": "Web-server-LG will be deleted immediately."
         },
         {
-          "text": "Deleting Target groups"
+          "text": "In the EC2 console, navigate to Target groups in the left-side panel."
         },
         {
-          "text": "In the EC2 console, navigate to Target groups in the left-side panel."
+          "text": "MyTargetGroup will be listed here."
         },
         {
-          "text": "MyTargetGroup will be listed here."
+          "text": "Task 8: Delete AWS Resources",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-41.png"
+          ]
         },
         {
-          "text": "To delete the target group,you need to perform the following actions:"
+          "text": "To delete the target group,you need to perform the following actions:"
         },
         {
-          "text": "Select the target group"
+          "text": "Select the target group"
         },
         {
-          "text": "Click on the Actions button,"
+          "text": "Click on the Actions button,"
         },
         {
-          "text": "Select the Delete option."
+          "text": "Select the Delete option."
         },
         {
-          "text": "Confirm by clicking on the Yes, delete button when a pop-up is shown."
+          "text": "Task 8: Delete AWS Resources",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-42.png"
+          ]
         },
         {
-          "text": "MyTargetGroup will be deleted immediately."
+          "text": "Confirm by clicking on the Yes, delete button when a pop-up is shown."
         },
         {
-          "text": "Deleting EC2 Instances"
+          "text": "Task 8: Delete AWS Resources",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-43.png"
+          ]
         },
         {
-          "text": "In the EC2 console, navigate to Instances in the left-side panel."
+          "text": "MyTargetGroup will be deleted immediately."
         },
         {
-          "text": "Two EC2 Instances MyEC2Server1 and MyEC2Server2 will be listed here."
+          "text": "In the EC2 console, navigate to Instances in the left-side panel."
         },
         {
-          "text": "To terminate the EC2 Instances, need to perform the following actions:"
+          "text": "Two EC2 Instances MyEC2Server1 and MyEC2Server2 will be listed here."
         },
         {
-          "text": "Select the EC2 instance"
+          "text": "Task 8: Delete AWS Resources",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-44.png"
+          ]
         },
         {
-          "text": "Click on the Instance state button,"
+          "text": "To terminate the EC2 Instances, need to perform the following actions:"
         },
         {
-          "text": "Select the Terminate instance option"
+          "text": "Select the EC2 instance"
         },
         {
-          "text": "Confirm by clicking on the Terminate button when a pop-up is shown."
+          "text": "Click on the Instance state button,"
         },
         {
-          "text": "EC2 Instances will be terminated immediately."
+          "text": "Select the Terminate instance option"
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 8: Delete AWS Resources",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-45.png"
+          ]
+        },
+        {
+          "text": "Confirm by clicking on the Terminate button when a pop-up is shown."
+        },
+        {
+          "text": "Task 8: Delete AWS Resources",
+          "images": [
+            "/labs/introduction-to-aws-elastic-load-balancing/step-46.png"
+          ]
+        },
+        {
+          "text": "EC2 Instances will be terminated immediately."
         },
         {
           "text": "You have created two EC2 instances with a bash script that installed Apache servers and created sample HTML pages and published them."
         },
         {
-          "text": "You created a Load Balancer and Target group."
+          "text": "You created a Load Balancer and Target group."
         },
         {
           "text": "You added both EC2 instances in the load balancer Target group."
@@ -525,16 +713,13 @@
           "text": "You have tested the Elastic Load Balancer by refreshing and simulating a shutdown of an EC2 Instance."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of the AWS Account"
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

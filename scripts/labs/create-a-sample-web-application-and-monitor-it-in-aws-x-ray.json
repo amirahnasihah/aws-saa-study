@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -35,28 +38,49 @@
           "text": "In this task, we are going to create an S3 bucket by providing the required configurations and uploading the zip file as an object."
         },
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
+          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
         },
         {
-          "text": "On the S3 Page, click on Create bucket button and fill in the bucket details."
+          "text": "On the S3 Page, click on Create bucket button and fill in the bucket details.Bucket type: General purpose Bucket name: Enter mys3bucket<Random_Numbers> Note: S3 bucket name is globally unique, choose a name which is available.",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-01.png"
+          ]
+        },
+        {
+          "text": "On the S3 Page, click on Create bucket button and fill in the bucket details."
         },
         {
           "text": "Bucket type: General purpose"
         },
         {
-          "text": "Bucket name: Enter mys3bucket<Random_Numbers>"
+          "text": "Bucket name: Enter mys3bucket<Random_Numbers> Note: S3 bucket name is globally unique, choose a name which is available.",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-02.png"
+          ]
         },
         {
-          "text": "Note: S3 bucket name is globally unique, choose a name which is available."
+          "text": "Bucket name: Enter mys3bucket<Random_Numbers>"
+        },
+        {
+          "text": "Note: S3 bucket name is globally unique, choose a name which is available.",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-03.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create an S3 bucket",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-04.png"
+          ]
         },
         {
           "text": "Leave other settings as default."
         },
         {
-          "text": "Click on Create bucket button."
+          "text": "Click on Create bucket button."
         },
         {
           "text": "Open the CloudShell from the main menu right to the search bar"
@@ -65,16 +89,22 @@
           "text": "Run this command to download the code files"
         },
         {
-          "text": "wget --header=\"User-Agent: Mozilla/5.0\" https://labresources.lab.com/f75f897b06660829dcdb8e4e50568c6c/lab-aws-xray-node-sample-app.zip"
-        },
-        {
           "text": "Run this command and replace [path] with your bucket name"
         },
         {
-          "text": "aws s3 cp lab-aws-xray-node-sample-app.zip s3://[path]"
+          "text": "Task 2: Create an S3 bucket",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-05.png"
+          ]
         },
         {
           "text": "Copy the Bucket name and Object name for later use."
+        },
+        {
+          "text": "Task 2: Create an S3 bucket",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-06.png"
+          ]
         }
       ]
     },
@@ -82,10 +112,10 @@
       "title": "Task 3: Deploy a sample X-Ray application using CloudFormation",
       "steps": [
         {
-          "text": "Navigate to CloudFormation by clicking on Services, and click on CloudFormation under the Management and Governance section."
+          "text": "Navigate to CloudFormation by clicking on Services, and click on CloudFormation under the Management and Governance section."
         },
         {
-          "text": "Before creating CloudFormation Stack, download this template.yaml and save it on your local machine."
+          "text": "Before creating CloudFormation Stack, download this template.yaml and save it on your local machine."
         },
         {
           "text": "The CloudFormation template will create below resources:"
@@ -106,7 +136,7 @@
           "text": "SQS and SQS: decouple the application."
         },
         {
-          "text": "On the CloudFormation dashboard, click on Create stack button."
+          "text": "On the CloudFormation dashboard, click on Create stack button."
         },
         {
           "text": "Prepare Template: Select Choose an existing template"
@@ -115,10 +145,16 @@
           "text": "Specify template: Select Upload a template file"
         },
         {
-          "text": "Click on Choose file and choose the template.yml from your local machine"
+          "text": "Click on Choose file and choose the template.yml from your local machine"
         },
         {
           "text": "Click on the Next button."
+        },
+        {
+          "text": "Task 3: Deploy a sample X-Ray application using CloudFormation",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-07.png"
+          ]
         },
         {
           "text": "On the Specify stack details page, provide the following details:"
@@ -142,10 +178,16 @@
           "text": "Click on the Next button."
         },
         {
-          "text": "On the Configure Stack options page, leave it as default and click on Next button in the bottom right corner."
+          "text": "Task 3: Deploy a sample X-Ray application using CloudFormation",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-08.png"
+          ]
         },
         {
-          "text": "Review the Stack and then click on Submit button."
+          "text": "On the Configure Stack options page, leave it as default and click on Next button in the bottom right corner."
+        },
+        {
+          "text": "Review the Stack and then click on Submit button."
         },
         {
           "text": "Once you click on Create Stack, your stack (template.yml) will start deploying the sample application."
@@ -154,10 +196,19 @@
           "text": "Initially, the stack status will be CREATE_IN_PROGRESS and it will create all the resources."
         },
         {
+          "text": "Wait for 10 minutes till the stack status changes to CREATE_COMPLETE. Note: It will create an additional nested stack.",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-09.png"
+          ]
+        },
+        {
           "text": "Wait for 10 minutes till the stack status changes to CREATE_COMPLETE."
         },
         {
-          "text": "Note: It will create an additional nested stack."
+          "text": "Note: It will create an additional nested stack.",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-10.png"
+          ]
         }
       ]
     },
@@ -165,13 +216,13 @@
       "title": "Task 4: Test the Application",
       "steps": [
         {
-          "text": "Go to EC2 Console by searching EC2 in the Services, and click on the Instances from the left side."
+          "text": "Go to EC2 Console by searching EC2 in the Services, and click on the Instances from the left side."
         },
         {
-          "text": "Select the lab-xray-stack instance and Copy the Elastic IP Address ( it will be the application Public IPv4 that you will use to access the application)."
+          "text": "Select the lab-xray-stack instance and Copy the Elastic IP Address ( it will be the application Public IPv4 that you will use to access the application)."
         },
         {
-          "text": "Open the IP in the new tab. It will open the sample X-ray application."
+          "text": "Open the IP in the new tab. It will open the sample X-ray application."
         },
         {
           "text": "Let’s generate some traffic by signing up for the application."
@@ -180,7 +231,13 @@
           "text": "For this step, you can manually signup into the application. But you will automate the process by clicking on the Start button."
         },
         {
-          "text": "You should wait for three minutes and then click on the Stop button."
+          "text": "You should wait for three minutes and then click on the Stop button."
+        },
+        {
+          "text": "Task 4: Test the Application",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-11.png"
+          ]
         },
         {
           "text": "Hence, you have successfully created a few signup accounts in the sample application."
@@ -189,10 +246,16 @@
           "text": "To view the signup details, navigate to DynamoDB by clicking on the Services menu at the top and search for DynamoDB in the search bar."
         },
         {
-          "text": "Click on the Explore table items button from the left navigation panel and Select the table created."
+          "text": "Click on the Explore table items button from the left navigation panel and Select the table created."
         },
         {
           "text": "You can view the signup details."
+        },
+        {
+          "text": "Task 4: Test the Application",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-12.png"
+          ]
         }
       ]
     },
@@ -200,16 +263,37 @@
       "title": "Task 5: Monitor the traffic in AWS X-Ray",
       "steps": [
         {
-          "text": "Go to the CloudWatch by clicking the Services menu at the top and search for CloudWatch in the search bar."
+          "text": "Go to the CloudWatch by clicking the Services menu at the top and search for CloudWatch in the search bar."
         },
         {
-          "text": "Now click on Trace map from left navigation menu under the Application Signals (APM)"
+          "text": "Now click on Trace map from left navigation menu under the Application Signals (APM)",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-13.png"
+          ]
+        },
+        {
+          "text": "Task 5: Monitor the traffic in AWS X-Ray",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-14.png"
+          ]
         },
         {
           "text": "In the service map, you will get insight into the traffic that flows through our application."
         },
         {
+          "text": "Task 5: Monitor the traffic in AWS X-Ray",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-15.png"
+          ]
+        },
+        {
           "text": "Note: If you got a warning as Data not found, then click on 5 minutes at the top right corner and select 1 hour."
+        },
+        {
+          "text": "Task 5: Monitor the traffic in AWS X-Ray",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-16.png"
+          ]
         },
         {
           "text": "Now click on any of the components to view the response distribution."
@@ -218,7 +302,19 @@
           "text": "It will show the traffic response status along with the graph."
         },
         {
-          "text": "Click on the Analyze Traces to view detailed information."
+          "text": "Task 5: Monitor the traffic in AWS X-Ray",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-17.png"
+          ]
+        },
+        {
+          "text": "Click on the Analyze Traces to view detailed information."
+        },
+        {
+          "text": "Task 5: Monitor the traffic in AWS X-Ray",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-18.png"
+          ]
         },
         {
           "text": "It will show detailed information about HTTP Method, URL, User-Agent, HTTP Method, Trace List, etc."
@@ -227,7 +323,7 @@
           "text": "You can click on any of the Trace List to view the traces."
         },
         {
-          "text": "You can also filter the traces by clicking on Question mark(?) at the top right corner."
+          "text": "You can also filter the traces by clicking on Question mark(?) at the top right corner."
         }
       ]
     },
@@ -235,22 +331,25 @@
       "title": "Task 6 : Validation of the Lab",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
           "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
+        },
+        {
+          "text": "Task 6 : Validation of the Lab",
+          "images": [
+            "/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray/step-19.gif"
+          ]
         }
       ]
     },
     {
       "title": "Task 7: Clean up AWS Resources",
       "steps": [
-        {
-          "text": "Delete CloudFormation Stack"
-        },
         {
           "text": "Make sure you are in the N.Virginia Region."
         },
@@ -265,9 +364,6 @@
         },
         {
           "text": "Now, wait till your stack deletion is completed. It will also delete the nested stack."
-        },
-        {
-          "text": "Completion and Conclusion"
         },
         {
           "text": "You have successfully navigated to the X-Ray application."
@@ -288,16 +384,13 @@
           "text": "You have successfully deleted the AWS Resources."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
         }
       ]
     }

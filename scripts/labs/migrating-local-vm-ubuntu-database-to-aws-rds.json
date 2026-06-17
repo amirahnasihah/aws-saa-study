@@ -1,0 +1,394 @@
+{
+  "slug": "migrating-local-vm-ubuntu-database-to-aws-rds",
+  "title": "Migrating Local VM Ubuntu Database to AWS RDS",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Install Xampp on local Ubuntu Machine",
+      "steps": [
+        {
+          "text": "In this task, we download Xampp on a local Ubuntu machine."
+        },
+        {
+          "text": "Open a terminal.Update the package index to ensure you have the latest package information."
+        },
+        {
+          "text": "Download the Xampp Server on Ubuntu"
+        },
+        {
+          "text": "Open a Firefox web browser.Go to the official XAMPP website ."
+        },
+        {
+          "text": "Download the xampp using this website https://www.apachefriends.org"
+        },
+        {
+          "text": "Click on the Download button for Linux under the latest XAMPP version."
+        },
+        {
+          "text": "Save the file, typically named something like:"
+        },
+        {
+          "text": "http://xampp-linux-x64-8.2.12-0-installer.run/"
+        },
+        {
+          "text": "Task 2: Install Xampp on local Ubuntu Machine"
+        },
+        {
+          "text": "Make the Installer Executable."
+        },
+        {
+          "text": "Open Terminal.Navigate to your Downloads folder (or wherever the file is saved)"
+        },
+        {
+          "text": "Task 2: Install Xampp on local Ubuntu Machine"
+        },
+        {
+          "text": "Make the installer executable"
+        },
+        {
+          "text": "Note: Replace 8.2.12 with the version you downloaded."
+        },
+        {
+          "text": "Run the XAMPP Installer"
+        },
+        {
+          "text": "This will launch the XAMPP Setup Wizard (GUI)"
+        },
+        {
+          "text": "The installation process takes 5 to 10 minutes, depending on your VM configuration."
+        },
+        {
+          "text": "Task 2: Install Xampp on local Ubuntu Machine"
+        },
+        {
+          "text": "Click Forward don't change anything to click finish"
+        },
+        {
+          "text": "Task 2: Install Xampp on local Ubuntu Machine"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create database on XAMPP",
+      "steps": [
+        {
+          "text": "Click on Manage Servers in the XAMPP Application"
+        },
+        {
+          "text": "Task 3: Create database on XAMPP"
+        },
+        {
+          "text": "Then, select MySQL Database and click the Start button to start the service."
+        },
+        {
+          "text": "Task 3: Create database on XAMPP"
+        },
+        {
+          "text": "Open the Firefox browser and navigate to"
+        },
+        {
+          "text": "You should now see the phpMyAdmin interface."
+        },
+        {
+          "text": "Task 3: Create database on XAMPP"
+        },
+        {
+          "text": "Navigate to the \"SQL\" tab, then paste the SQL query to create the sample database and insert sample data. Once pasted, scroll down and click the \"Go\" button to execute the query."
+        },
+        {
+          "text": "Create the database"
+        },
+        {
+          "text": "Use the database"
+        },
+        {
+          "text": "Create the users table"
+        },
+        {
+          "text": "Insert sample data"
+        },
+        {
+          "text": "Task 3: Create database on XAMPP"
+        },
+        {
+          "text": "In the left sidebar panel, you will now see the sample_db database listed. Click on it to expand, then select the users table to view the inserted data."
+        },
+        {
+          "text": "Task 3: Create database on XAMPP"
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Export the Database",
+      "steps": [
+        {
+          "text": "Click on the sample_db database from the left sidebar. Then, on the top right side of the phpMyAdmin interface, click the \"Export\" tab to begin exporting the database. Then click Export Button."
+        },
+        {
+          "text": "Task 4: Export the Database"
+        },
+        {
+          "text": "Now, open the Terminal. Navigate to the Downloads directory to verify the exported SQL file is saved"
+        },
+        {
+          "text": "Task 4: Export the Database"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create an Amazon RDS Database",
+      "steps": [
+        {
+          "text": "In this task, we are going to create a new security group and Amazon RDS database"
+        },
+        {
+          "text": "Go to the EC2 portal, click \"Security Groups\" in the left-hand panel, then click \"Create Security Group\". Enter the name \"Migration_sg\" and description \"Migration_sg\", and select the default VPC."
+        },
+        {
+          "text": "Under Inbound rules, add a rule for MySQL/Aurora, set the source to Anywhere, leave other settings as default, and click \"Create security group\"."
+        },
+        {
+          "text": "Task 5: Create an Amazon RDS Database"
+        },
+        {
+          "text": "Click on the Services and select the RDS under the Database section. In the left navigation pane, click on Databases."
+        },
+        {
+          "text": "Make sure you are in N.Virginia Region."
+        },
+        {
+          "text": "Click on Databases from the left navigation menu and then click Create database."
+        },
+        {
+          "text": "Task 5: Create an Amazon RDS Database"
+        },
+        {
+          "text": "Specify DB details:"
+        },
+        {
+          "text": "Instance specifications Database creation method : Standard create Engine options : Select MySQL Version : Default"
+        },
+        {
+          "text": "Database creation method : Standard create"
+        },
+        {
+          "text": "Engine options : Select MySQL"
+        },
+        {
+          "text": "Version : Default"
+        },
+        {
+          "text": "Template : Select Free tier or sandbox"
+        },
+        {
+          "text": "Task 5: Create an Amazon RDS Database"
+        },
+        {
+          "text": "DB instance identifier : Enter mydbinstance"
+        },
+        {
+          "text": "Master username. : Enter admin"
+        },
+        {
+          "text": "Master password and Confirm password: Enter lab123"
+        },
+        {
+          "text": "DB instance class : Select Burstable classes db.t3.micro — 2 vCPUs, 1 GiB RAM"
+        },
+        {
+          "text": "Storage type : Select General Purpose SSD (gp2)"
+        },
+        {
+          "text": "Allocated storage : Select 20 (default)"
+        },
+        {
+          "text": "(Expand Additional Storage Configuration)Enable storage autoscaling : Uncheck"
+        },
+        {
+          "text": "Task 5: Create an Amazon RDS Database"
+        },
+        {
+          "text": "Virtual Private Cloud(VPC) : Select Default VPC"
+        },
+        {
+          "text": "Subnet group : Select Default"
+        },
+        {
+          "text": "Public Access : Select yes"
+        },
+        {
+          "text": "VPC Security groups : Select Choose existing"
+        },
+        {
+          "text": "Existing VPC security group name : Remove the default security group and select Migration-SG from the dropdown list"
+        },
+        {
+          "text": "Task 5: Create an Amazon RDS Database"
+        },
+        {
+          "text": "Scroll down to Additional Configuration options Initial database name: Enter myrdsdatabase DB parameter group: Select default Option group: Select default Enable automated backups: uncheck Enable auto minor version upgrade: uncheck Maintenance window: Select No preference Enable deletion protection: uncheck"
+        },
+        {
+          "text": "Initial database name: Enter myrdsdatabase"
+        },
+        {
+          "text": "DB parameter group: Select default"
+        },
+        {
+          "text": "Option group: Select default"
+        },
+        {
+          "text": "Enable automated backups: uncheck"
+        },
+        {
+          "text": "Enable auto minor version upgrade: uncheck"
+        },
+        {
+          "text": "Maintenance window: Select No preference"
+        },
+        {
+          "text": "Enable deletion protection: uncheck"
+        },
+        {
+          "text": "Leave other parameters as default. Scroll to the bottom of the page, Click Create database."
+        },
+        {
+          "text": "It will take around 5 minutes for the database to become available. Once the status changes from creating to available, the database is ready."
+        },
+        {
+          "text": "Open mydbinstance and note down the Endpoint of RDS under Connectivity and security"
+        },
+        {
+          "text": "Example: mydbinstance.c81x4bxxayay.us-east-1.rds.amazonaws.com"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Connect an RDS database to a local Ubuntu VM",
+      "steps": [
+        {
+          "text": "Install the MySQL client on Ubuntu"
+        },
+        {
+          "text": "Use the MySQL client to connect to the RDS instance"
+        },
+        {
+          "text": "To replace your RDS Endpoint"
+        },
+        {
+          "text": "Enter password : lab123"
+        },
+        {
+          "text": "Task 6: Connect an RDS database to a local Ubuntu VM"
+        },
+        {
+          "text": "Create the database on RDS"
+        },
+        {
+          "text": "Task 6: Connect an RDS database to a local Ubuntu VM"
+        },
+        {
+          "text": "Verify the database was created"
+        },
+        {
+          "text": "Task 6: Connect an RDS database to a local Ubuntu VM"
+        },
+        {
+          "text": "Exit the mysql. click (Ctrl+z)"
+        },
+        {
+          "text": "Task 7: Migrate the database using Terminal"
+        },
+        {
+          "text": "In this task, we will migrate the database using (Terminal)"
+        },
+        {
+          "text": "use the MySQL client to import the database dump using the following command"
+        },
+        {
+          "text": "Enter password : lab123"
+        },
+        {
+          "text": "Task 6: Connect an RDS database to a local Ubuntu VM"
+        },
+        {
+          "text": "Verify Data in RDS ,Once the import is done, connect to the RDS instance and verify that the data has been transferred successfully"
+        },
+        {
+          "text": "Login to rds db"
+        },
+        {
+          "text": "Now To view the tables"
+        },
+        {
+          "text": "Task 6: Connect an RDS database to a local Ubuntu VM"
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Task 8: Validation of the Lab"
+        },
+        {
+          "text": "You have successfully installed Xampp on your local Ubuntu machine."
+        },
+        {
+          "text": "You have successfully installed the Mysql client on your local Ubuntu machine."
+        },
+        {
+          "text": "You have migrated the local sample_db.sql dump file to the RDS instance using the MySQL client."
+        },
+        {
+          "text": "You have verified that the data was correctly imported and is accessible in the RDS database."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

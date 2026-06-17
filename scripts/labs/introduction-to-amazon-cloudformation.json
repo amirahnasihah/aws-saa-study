@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the open console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the open console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,22 +32,31 @@
       "title": "Task 2 : Exploring templates in an S3 Bucket",
       "steps": [
         {
-          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
         {
-          "text": "Navigate to the services menu in the top, click on S3 in the Storage section."
+          "text": "Navigate to the services menu in the top, click on S3 in the Storage section."
         },
         {
           "text": "You can see the bucket present with a name similar to lab.1400.54051021. In your case, the name of the bucket might be different numerics."
         },
         {
-          "text": "Open that bucket and you will see LAMP_template.json file."
+          "text": "Open that bucket and you will see LAMP_template.json file."
         },
         {
-          "text": "Now copy the Object URL and save it in notepad."
+          "text": "Now copy the Object URL and save it in notepad.",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-01.png"
+          ]
         },
         {
-          "text": "This given LAMP_template.json contains the JSON code for launching the LAMP Server using Cloudformation."
+          "text": "Task 2 : Exploring templates in an S3 Bucket",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-02.png"
+          ]
+        },
+        {
+          "text": "This given LAMP_template.json contains the JSON code for launching the LAMP Server using Cloudformation."
         }
       ]
     },
@@ -58,22 +67,41 @@
           "text": "Navigate to CloudFormation. Click services, click on CloudFormation in the Management and Governance section."
         },
         {
+          "text": "On the CloudFormation dashboard, click on create stack. Prerequisite - Prepare template : Select Choose an existing template Specify Template : Template source: Select Amazon S3 URL Amazon S3 URL: Paste the URL copied from earlier steps."
+        },
+        {
           "text": "On the CloudFormation dashboard, click on create stack."
         },
         {
           "text": "Prerequisite - Prepare template : Select Choose an existing template"
         },
         {
+          "text": "Specify Template : Template source: Select Amazon S3 URL Amazon S3 URL: Paste the URL copied from earlier steps."
+        },
+        {
           "text": "Specify Template :"
         },
         {
-          "text": "Template source: Select Amazon S3 URL"
+          "text": "Template source: Select Amazon S3 URL"
         },
         {
-          "text": "Amazon S3 URL: Paste the URL copied from earlier steps."
+          "text": "Amazon S3 URL: Paste the URL copied from earlier steps."
+        },
+        {
+          "text": "Task 3 : Create Cloudformation Stack",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-03.png"
+          ]
         },
         {
           "text": "Click on Next."
+        },
+        {
+          "text": "Specify stack Details Stack name: Enter a unique stack name - MyFirstCFStack Parameters DB Name : Enter a database name - MyDatabase DB Password : Enter a database password - labdb123 DB Root Password : Enter database root password - labdbroot123 DB User : Enter the database username - labDBUser Instance Type : Select t2.micro Key Name : Select the key from the list name lab-key SSH Location : Enter 0.0.0.0/0 Click on Next.",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-04.png",
+            "/labs/introduction-to-amazon-cloudformation/step-05.png"
+          ]
         },
         {
           "text": "Specify stack Details"
@@ -82,19 +110,26 @@
           "text": "Stack name: Enter a unique stack name - MyFirstCFStack"
         },
         {
+          "text": "Parameters DB Name : Enter a database name - MyDatabase DB Password : Enter a database password - labdb123 DB Root Password : Enter database root password - labdbroot123 DB User : Enter the database username - labDBUser Instance Type : Select t2.micro Key Name : Select the key from the list name lab-key SSH Location : Enter 0.0.0.0/0 Click on Next.",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-06.png",
+            "/labs/introduction-to-amazon-cloudformation/step-07.png"
+          ]
+        },
+        {
           "text": "Parameters"
         },
         {
-          "text": "DB Name : Enter a database name - MyDatabase"
+          "text": "DB Name : Enter a database name - MyDatabase"
         },
         {
           "text": "DB Password : Enter a database password - labdb123"
         },
         {
-          "text": "DB Root Password : Enter database root password - labdbroot123"
+          "text": "DB Root Password : Enter database root password - labdbroot123"
         },
         {
-          "text": "DB User : Enter the database username - labDBUser"
+          "text": "DB User : Enter the database username - labDBUser"
         },
         {
           "text": "Instance Type : Select t2.micro"
@@ -106,19 +141,50 @@
           "text": "SSH Location : Enter 0.0.0.0/0"
         },
         {
-          "text": "Click on Next."
+          "text": "Click on Next.",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-08.png",
+            "/labs/introduction-to-amazon-cloudformation/step-09.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Create Cloudformation Stack",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-10.png"
+          ]
+        },
+        {
+          "text": "Configure stack options : Tags: Click on add new tag Key : Enter Name Value : Enter MyCF Permissions: No need to select for this lab, leave it blank. Leave all other configuration fields as default. Click on Next.",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-12.png"
+          ]
         },
         {
           "text": "Configure stack options :"
         },
         {
-          "text": "Tags: Click on add new tag"
+          "text": "Tags: Click on add new tag Key : Enter Name Value : Enter MyCF",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-13.png"
+          ]
         },
         {
-          "text": "Key : Enter Name"
+          "text": "Tags: Click on add new tag"
         },
         {
-          "text": "Value : Enter MyCF"
+          "text": "Key : Enter Name"
+        },
+        {
+          "text": "Value : Enter MyCF",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-14.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Create Cloudformation Stack",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-15.png"
+          ]
         },
         {
           "text": "Permissions: No need to select for this lab, leave it blank."
@@ -133,19 +199,34 @@
           "text": "Review: Review your stack details and click on Submit."
         },
         {
-          "text": "Once you have clicked the create button, you will be redirected to the CloudFormation stack list. A sample screenshot is provided below."
+          "text": "Once you have clicked the create button, you will be redirected to the CloudFormation stack list. A sample screenshot is provided below.",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-16.png"
+          ]
         },
         {
-          "text": "Status: You will see the status CREATE_IN_PROGRESS."
+          "text": "Task 3 : Create Cloudformation Stack",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-17.png"
+          ]
+        },
+        {
+          "text": "Status: You will see the status CREATE_IN_PROGRESS."
         },
         {
           "text": "You need to wait around 1-5 minutes to complete the stack resource creation."
         },
         {
-          "text": "Click on the refresh button to see the updates."
+          "text": "Click on the refresh button to see the updates."
         },
         {
-          "text": "Once your stack status changes to Create Complete."
+          "text": "Once your stack status changes to Create Complete."
+        },
+        {
+          "text": "Task 3 : Create Cloudformation Stack",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-18.png"
+          ]
         }
       ]
     },
@@ -153,16 +234,34 @@
       "title": "Task 4 : Testing",
       "steps": [
         {
-          "text": "Navigate to the outputs tab and you will be able to see an URL similar to below. Click on the URL. This will take you to your server's home page."
+          "text": "Navigate to the outputs tab and you will be able to see an URL similar to below. Click on the URL. This will take you to your server's home page. http://ec2-3-89-73-251.compute-1.amazonaws.com",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-19.png"
+          ]
+        },
+        {
+          "text": "Navigate to the outputs tab and you will be able to see an URL similar to below. Click on the URL. This will take you to your server's home page."
+        },
+        {
+          "text": "Task 4 : Testing",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-20.png"
+          ]
         },
         {
           "text": "http://ec2-3-89-73-251.compute-1.amazonaws.com"
         },
         {
-          "text": "If you see the PHP info and your database connection, it means you have completed a LAMP server setup with AWS CloudFormation. Sample screenshot provided below:"
+          "text": "If you see the PHP info and your database connection, it means you have completed a LAMP server setup with AWS CloudFormation. Sample screenshot provided below:",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-21.png"
+          ]
         },
         {
-          "text": "Do you know?"
+          "text": "Task 4 : Testing",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-22.png"
+          ]
         },
         {
           "text": "By using CloudFormation, you can manage your infrastructure more efficiently, reduce manual effort, ensure consistency, and achieve faster and more reliable deployments. It provides a scalable and flexible approach to infrastructure provisioning and management, making it a valuable tool for both small and large-scale AWS deployments."
@@ -173,31 +272,34 @@
       "title": "Task 5 : Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-23.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 5 : Validation Test",
+          "images": [
+            "/labs/introduction-to-amazon-cloudformation/step-24.gif"
+          ]
         },
         {
-          "text": "You have successfully created a Lamp server setup using a new Cloudformation Stack with the help of the JSON template provided in the S3 bucket."
+          "text": "You have successfully created a Lamp server setup using a new Cloudformation Stack with the help of the JSON template provided in the S3 bucket."
         },
         {
           "text": "You have successfully tested the new lamp server created by CloudFormation."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out from the AWS Management Console."
         },
         {
-          "text": "Click on End Lab button from the lab console and wait till the process gets completed."
+          "text": "Click on End Lab button from the lab console and wait till the process gets completed."
         }
       ]
     }

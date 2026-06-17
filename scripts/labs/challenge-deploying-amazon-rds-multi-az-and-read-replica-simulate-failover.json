@@ -12,19 +12,25 @@
       "title": "Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click On The Open Console Button, And You Will Get Redirected To AWS Console In A New Browser Tab."
+          "text": "Click On The Open Console Button, And You Will Get Redirected To AWS Console In A New Browser Tab."
         },
         {
           "text": "On The AWS Sign-In Page, Leave The Account ID As Default. Never Edit/Remove The 12 Digit Account ID Present In The AWS Console. Otherwise, You Cannot Proceed With The Challenge."
         },
         {
-          "text": "Now Copy Your User Name and Password In The Lab Console To The IAM Username and Password In AWS Console And Click On The Sign In Button."
+          "text": "Now Copy Your User Name and Password In The Lab Console To The IAM Username and Password In AWS Console And Click On The Sign In Button."
         },
         {
-          "text": "Once Signed In To The AWS Management Console, Make The Default AWS Region As US East (N. Virginia) Us-East-1."
+          "text": "Once Signed In To The AWS Management Console, Make The Default AWS Region As US East (N. Virginia) Us-East-1."
         },
         {
           "text": "In This Challenge, Your AWS Compute Skills Are Put To The Test. You'll Be Given A Requirement And You Have To Reach It Using Your Knowledge Of RDS, EC2 instances and databases. Which Will Be Used In This Challenge. This Challenge Will Help You Understand The Real-Time Scenarios."
+        },
+        {
+          "text": "Sign in to AWS Management Console",
+          "images": [
+            "/labs/challenge-deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-01.png"
+          ]
         },
         {
           "text": "A XYZ company is expanding its infrastructure on the cloud to enhance reliability and scalability. They aim to deploy a robust database solution capable of handling high volumes of user data with minimal downtime. After evaluating various options, they decided to leverage Amazon Aurora with Multi-AZ deployment on AWS for its superior performance, availability, and durability. Your task is to architect and implement an Amazon Aurora with Multi-AZ deployment on AWS to meet these demands efficiently."
@@ -54,43 +60,10 @@
           "text": "SSH into the EC2 instance and use MySQL client to interact with the Aurora database."
         },
         {
-          "text": "Perform database operations such as creating a database named labrds, table named lab, with fields mentioned below and insert the data."
+          "text": "Perform database operations such as creating a database named labrds, table named lab, with fields mentioned below and insert the data. Fields: subject_id (INT, AUTO_INCREMENT) subject_name (VARCHAR(255), NOT NULL) teacher (VARCHAR(255)) start_date (DATE) lesson (TEXT)"
         },
         {
-          "text": "Fields:"
-        },
-        {
-          "text": "subject_id (INT, AUTO_INCREMENT)"
-        },
-        {
-          "text": "subject_name (VARCHAR(255), NOT NULL)"
-        },
-        {
-          "text": "teacher (VARCHAR(255))"
-        },
-        {
-          "text": "start_date (DATE)"
-        },
-        {
-          "text": "lesson (TEXT)"
-        },
-        {
-          "text": "Fields:"
-        },
-        {
-          "text": "subject_id (INT, AUTO_INCREMENT)"
-        },
-        {
-          "text": "subject_name (VARCHAR(255), NOT NULL)"
-        },
-        {
-          "text": "teacher (VARCHAR(255))"
-        },
-        {
-          "text": "start_date (DATE)"
-        },
-        {
-          "text": "lesson (TEXT)"
+          "text": "Fields: subject_id (INT, AUTO_INCREMENT) subject_name (VARCHAR(255), NOT NULL) teacher (VARCHAR(255)) start_date (DATE) lesson (TEXT)"
         },
         {
           "text": "subject_id (INT, AUTO_INCREMENT)"
@@ -114,7 +87,7 @@
           "text": "Connect to the new master instance and verify the presence of the database, table, and data."
         },
         {
-          "text": "Click On The Validate To Complete The Challenge."
+          "text": "Click On The Validate To Complete The Challenge."
         },
         {
           "text": "Sign Out Of The AWS Account."
@@ -123,7 +96,7 @@
           "text": "You Have Successfully Completed The Challenge."
         },
         {
-          "text": "Click On End Challenge Button from the lab console And Wait Till The Process Gets Completed."
+          "text": "Click On End Challenge Button from the lab console And Wait Till The Process Gets Completed."
         }
       ]
     }

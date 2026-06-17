@@ -9,16 +9,10 @@
   "duration": "01:00:00",
   "tasks": [
     {
-      "title": "Project Steps",
+      "title": "Task 1: Sign in to the AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
-        },
-        {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
-        },
-        {
-          "text": "On the AWS sign-in page,"
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -27,23 +21,16 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
-        },
-        {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button."
-        },
-        {
           "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button."
         },
         {
           "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
-        },
-        {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
-        },
-        {
-          "text": "Make sure you are in the N. Virginia region."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create two VPCs’ in N. Virginia region",
+      "steps": [
         {
           "text": "Make sure you are in the N. Virginia region."
         },
@@ -51,7 +38,10 @@
           "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Network and Content Delivery section."
         },
         {
-          "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Network and Content Delivery section."
+          "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button. Resources to create: Select VPC only Name tag: Enter lab_VPC1 IPv4 CIDR block: Enter 10.0.0.0/16",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-01.png"
+          ]
         },
         {
           "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button."
@@ -63,31 +53,25 @@
           "text": "Name tag: Enter lab_VPC1"
         },
         {
-          "text": "IPv4 CIDR block: Enter 10.0.0.0/16"
+          "text": "IPv4 CIDR block: Enter 10.0.0.0/16",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-02.png"
+          ]
         },
         {
-          "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button."
+          "text": "Task 2: Create two VPCs’ in N. Virginia region",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-03.png"
+          ]
         },
         {
-          "text": "Resources to create: Select VPC only"
+          "text": "Click on Create VPC. To create the 2nd VPC, click on the Create VPC at the top right. Resources to create: Select VPC only Name tag: Enter lab_VPC2 IPv4 CIDR block: Enter 192.168.0.0/16 Click on the Create VPC button.",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-04.png"
+          ]
         },
         {
-          "text": "Resources to create: Select VPC only"
-        },
-        {
-          "text": "Name tag: Enter lab_VPC1"
-        },
-        {
-          "text": "Name tag: Enter lab_VPC1"
-        },
-        {
-          "text": "IPv4 CIDR block: Enter 10.0.0.0/16"
-        },
-        {
-          "text": "IPv4 CIDR block: Enter 10.0.0.0/16"
-        },
-        {
-          "text": "Click on Create VPC. To create the 2nd VPC, click on the Create VPC at the top right."
+          "text": "Click on Create VPC. To create the 2nd VPC, click on the Create VPC at the top right."
         },
         {
           "text": "Resources to create: Select VPC only"
@@ -96,88 +80,68 @@
           "text": "Name tag: Enter lab_VPC2"
         },
         {
-          "text": "IPv4 CIDR block: Enter 192.168.0.0/16"
-        },
-        {
-          "text": "Click on the Create VPC button."
-        },
-        {
-          "text": "Click on Create VPC. To create the 2nd VPC, click on the Create VPC at the top right."
-        },
-        {
-          "text": "Resources to create: Select VPC only"
-        },
-        {
-          "text": "Resources to create: Select VPC only"
-        },
-        {
-          "text": "Name tag: Enter lab_VPC2"
-        },
-        {
-          "text": "Name tag: Enter lab_VPC2"
+          "text": "IPv4 CIDR block: Enter 192.168.0.0/16 Click on the Create VPC button.",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-05.png"
+          ]
         },
         {
           "text": "IPv4 CIDR block: Enter 192.168.0.0/16"
         },
         {
-          "text": "Click on the Create VPC button."
+          "text": "Click on the Create VPC button."
         },
         {
-          "text": "IPv4 CIDR block: Enter 192.168.0.0/16"
-        },
-        {
-          "text": "Click on the Create VPC button."
+          "text": "Task 2: Create two VPCs’ in N. Virginia region",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-06.png"
+          ]
         },
         {
           "text": "Note: Kindly note that there will be a Default VPC and don't edit or delete the default VPC."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Create and attach an Internet gateway",
+      "steps": [
+        {
+          "text": "Navigate to the Internet Gateways from the left side menu and click on the Create internet gateway button. Name tag: Enter lab_IGW"
         },
         {
-          "text": "Navigate to the Internet Gateways from the left side menu and click on the Create internet gateway button."
+          "text": "Navigate to the Internet Gateways from the left side menu and click on the Create internet gateway button."
         },
         {
           "text": "Name tag: Enter lab_IGW"
         },
         {
-          "text": "Navigate to the Internet Gateways from the left side menu and click on the Create internet gateway button."
+          "text": "Click on the Create internet gateway"
         },
         {
-          "text": "Name tag: Enter lab_IGW"
+          "text": "Now click on the Action button and select Attach to VPC. Available VPCs: Select lab_VPC1 from the list."
         },
         {
-          "text": "Name tag: Enter lab_IGW"
-        },
-        {
-          "text": "Click on the Create internet gateway"
-        },
-        {
-          "text": "Click on the Create internet gateway"
-        },
-        {
-          "text": "Now click on the Action button and select Attach to VPC."
+          "text": "Now click on the Action button and select Attach to VPC."
         },
         {
           "text": "Available VPCs: Select lab_VPC1 from the list."
         },
         {
-          "text": "Now click on the Action button and select Attach to VPC."
-        },
-        {
-          "text": "Available VPCs: Select lab_VPC1 from the list."
-        },
-        {
-          "text": "Available VPCs: Select lab_VPC1 from the list."
+          "text": "Task 3: Create and attach an Internet gateway",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-07.png"
+          ]
         },
         {
           "text": "Now click on the Attach internet gateway."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Creating subnets for both the VPCs",
+      "steps": [
         {
-          "text": "Now click on the Attach internet gateway."
-        },
-        {
-          "text": "Navigate to Subnets from the left side menu and click on Create Subnet."
-        },
-        {
-          "text": "Navigate to Subnets from the left side menu and click on Create Subnet."
+          "text": "Navigate to Subnets from the left side menu and click on Create Subnet."
         },
         {
           "text": "VPC ID: Select the lab_VPC1 VPC from the list."
@@ -192,10 +156,13 @@
           "text": "IPv4 CIDR block: Enter 10.0.1.0/26"
         },
         {
-          "text": "Click on Add new subnet again to create one more subnet"
+          "text": "Task 4: Creating subnets for both the VPCs",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-08.png"
+          ]
         },
         {
-          "text": "Click on Add new subnet again to create one more subnet"
+          "text": "Click on Add new subnet again to create one more subnet"
         },
         {
           "text": "VPC ID: Select the lab_VPC1 VPC from the list."
@@ -210,13 +177,13 @@
           "text": "IPv4 CIDR block: Enter 10.0.2.0/26"
         },
         {
-          "text": "Now click on the Create subnet button."
+          "text": "Task 4: Creating subnets for both the VPCs",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-09.png"
+          ]
         },
         {
-          "text": "Now click on the Create subnet button."
-        },
-        {
-          "text": "Similarly, Create 2 Subnets in the VPC named lab_VPC2 which can be used either for public or private resources."
+          "text": "Now click on the Create subnet button."
         },
         {
           "text": "Similarly, Create 2 Subnets in the VPC named lab_VPC2 which can be used either for public or private resources."
@@ -225,16 +192,7 @@
           "text": "For Subnet 1:"
         },
         {
-          "text": "For Subnet 1:"
-        },
-        {
           "text": "VPC ID: Select the lab_VPC2 VPC from the list."
-        },
-        {
-          "text": "VPC ID: Select the lab_VPC2 VPC from the list."
-        },
-        {
-          "text": "Subnet name: Enter Subnet 3"
         },
         {
           "text": "Subnet name: Enter Subnet 3"
@@ -243,19 +201,19 @@
           "text": "Availability Zone: Select us-east-1a"
         },
         {
-          "text": "Availability Zone: Select us-east-1a"
+          "text": "IPv4 CIDR block: Enter 192.168.1.0/26",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-10.png"
+          ]
         },
         {
-          "text": "IPv4 CIDR block: Enter 192.168.1.0/26"
+          "text": "Task 4: Creating subnets for both the VPCs",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-11.png"
+          ]
         },
         {
-          "text": "IPv4 CIDR block: Enter 192.168.1.0/26"
-        },
-        {
-          "text": "Click on Add new subnet to create one more subnet"
-        },
-        {
-          "text": "Click on Add new subnet to create one more subnet"
+          "text": "Click on Add new subnet to create one more subnet"
         },
         {
           "text": "VPC ID: Select the lab_VPC2 VPC from the list."
@@ -270,19 +228,18 @@
           "text": "IPv4 CIDR block: Enter 192.168.2.0/26"
         },
         {
-          "text": "Click on the Create Subnet button."
+          "text": "Click on the Create Subnet button."
         },
         {
           "text": "Note: There will be 6 default subnets available in the N.Virginia region don’t delete or edit the subnets."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Creating Route tables and configuring routes and associating subnets",
+      "steps": [
         {
           "text": "Create 2 route tables one for the Public route and another for the private route in different VPCs"
-        },
-        {
-          "text": "Create 2 route tables one for the Public route and another for the private route in different VPCs"
-        },
-        {
-          "text": "Navigate to Route Tables on the left side panel and click on the Create route table button."
         },
         {
           "text": "Navigate to Route Tables on the left side panel and click on the Create route table button."
@@ -294,7 +251,10 @@
           "text": "VPC: Select the lab_VPC1 from the list."
         },
         {
-          "text": "Now click on the Create route table button."
+          "text": "Task 5: Creating Route tables and configuring routes and associating subnets",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-12.png"
+          ]
         },
         {
           "text": "Now click on the Create route table button."
@@ -303,22 +263,19 @@
           "text": "Select the public_route from the list and go to the Subnet Associations tab in below."
         },
         {
-          "text": "Select the public_route from the list and go to the Subnet Associations tab in below."
+          "text": "Click on the Edit subnet associations tab."
         },
         {
-          "text": "Click on the Edit subnet associations tab."
+          "text": "Now Select the subnet Subnet 1 and Subnet 2 and click on the Save associations button.",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-13.png"
+          ]
         },
         {
-          "text": "Click on the Edit subnet associations tab."
-        },
-        {
-          "text": "Now Select the subnet Subnet 1 and Subnet 2 and click on the Save associations button."
-        },
-        {
-          "text": "Now Select the subnet Subnet 1 and Subnet 2 and click on the Save associations button."
-        },
-        {
-          "text": "Click on the Create route table button again."
+          "text": "Task 5: Creating Route tables and configuring routes and associating subnets",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-14.png"
+          ]
         },
         {
           "text": "Click on the Create route table button again."
@@ -330,7 +287,10 @@
           "text": "VPC: Select the lab_VPC2 from the list."
         },
         {
-          "text": "Now click on the Create route table button."
+          "text": "Task 5: Creating Route tables and configuring routes and associating subnets",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-15.png"
+          ]
         },
         {
           "text": "Now click on the Create route table button."
@@ -339,28 +299,25 @@
           "text": "Select the private_route from the list and go to the Subnet Associations tab in below."
         },
         {
-          "text": "Select the private_route from the list and go to the Subnet Associations tab in below."
-        },
-        {
           "text": "Click on the Edit subnet associations button."
         },
         {
-          "text": "Click on the Edit subnet associations button."
+          "text": "Now select Subnet 3 and Subnet 4 and click on the Save associations button."
         },
         {
-          "text": "Now select Subnet 3 and Subnet 4 and click on the Save associations button."
-        },
-        {
-          "text": "Now select Subnet 3 and Subnet 4 and click on the Save associations button."
+          "text": "Task 5: Creating Route tables and configuring routes and associating subnets",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-16.png"
+          ]
         },
         {
           "text": "Select the public_route table. Go to the Routes tab below and click on the Edit Routes button."
         },
         {
-          "text": "Select the public_route table. Go to the Routes tab below and click on the Edit Routes button."
-        },
-        {
-          "text": "Now click on the Add route button."
+          "text": "Task 5: Creating Route tables and configuring routes and associating subnets",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-17.png"
+          ]
         },
         {
           "text": "Now click on the Add route button."
@@ -372,25 +329,27 @@
           "text": "Target: Select Internet Gateway lab_IGW and then select the Internet Gateway id."
         },
         {
-          "text": "Click on the Save changes button."
+          "text": "Task 5: Creating Route tables and configuring routes and associating subnets",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-18.png"
+          ]
         },
         {
-          "text": "Note: Here we haven’t created any routes for the private_route table. Don’t edit or delete the default Route table."
-        },
-        {
-          "text": "Click on the Save changes button."
-        },
-        {
-          "text": "Note: Here we haven’t created any routes for the private_route table. Don’t edit or delete the default Route table."
-        },
+          "text": "Click on the Save changes button.\nNote: Here we haven’t created any routes for the private_route table. Don’t edit or delete the default Route table."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Creating VPC Peering Connection",
+      "steps": [
         {
           "text": "Now Navigate to your N.Virginia region VPC page."
         },
         {
-          "text": "Now Navigate to your N.Virginia region VPC page."
+          "text": "On the left side menu, select Peering Connections and click on Create Peering connection Peering connection name tag: Enter lab_peer VPC ID (Requester): Select lab_VPC1 Account leave as default Region: Select This region (us-east-1) VPC ID (Accepter): lab_VPC2"
         },
         {
-          "text": "On the left side menu, select Peering Connections and click on Create Peering connection"
+          "text": "On the left side menu, select Peering Connections and click on Create Peering connection"
         },
         {
           "text": "Peering connection name tag: Enter lab_peer"
@@ -408,86 +367,58 @@
           "text": "VPC ID (Accepter): lab_VPC2"
         },
         {
-          "text": "On the left side menu, select Peering Connections and click on Create Peering connection"
+          "text": "Task 6: Creating VPC Peering Connection",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-19.png"
+          ]
         },
         {
-          "text": "Peering connection name tag: Enter lab_peer"
-        },
-        {
-          "text": "Peering connection name tag: Enter lab_peer"
-        },
-        {
-          "text": "VPC ID (Requester): Select lab_VPC1"
-        },
-        {
-          "text": "VPC ID (Requester): Select lab_VPC1"
-        },
-        {
-          "text": "Account leave as default"
-        },
-        {
-          "text": "Account leave as default"
-        },
-        {
-          "text": "Region: Select This region (us-east-1)"
-        },
-        {
-          "text": "Region: Select This region (us-east-1)"
-        },
-        {
-          "text": "VPC ID (Accepter): lab_VPC2"
-        },
-        {
-          "text": "VPC ID (Accepter): lab_VPC2"
-        },
-        {
-          "text": "Click on the Create peering connection button."
-        },
-        {
-          "text": "Click on the Create peering connection button."
+          "text": "Click on the Create peering connection button."
         },
         {
           "text": "Now the status of the peering will be in Pending Acceptance."
         },
         {
-          "text": "Now the status of the peering will be in Pending Acceptance."
+          "text": "Task 6: Creating VPC Peering Connection",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-20.png"
+          ]
         },
         {
           "text": "Select the peering connection and click on Action and then click on Accept Request."
         },
         {
-          "text": "Select the peering connection and click on Action and then click on Accept Request."
+          "text": "Click on the Accept request in the popup message."
         },
         {
-          "text": "Click on the Accept request in the popup message."
-        },
-        {
-          "text": "Click on the Accept request in the popup message."
-        },
-        {
-          "text": "Once this is done, the Status changes to Active. If not please refresh the page."
+          "text": "Task 6: Creating VPC Peering Connection",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-21.png"
+          ]
         },
         {
           "text": "Once this is done, the Status changes to Active. If not please refresh the page."
         },
         {
-          "text": "Now you need to add peering rules in route tables in both the VPC’s."
+          "text": "Task 6: Creating VPC Peering Connection",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-22.png"
+          ]
         },
         {
           "text": "Now you need to add peering rules in route tables in both the VPC’s."
-        },
-        {
-          "text": "This is because, without this route, the traffic will not pass the route table and reach the EC2s."
         },
         {
           "text": "This is because, without this route, the traffic will not pass the route table and reach the EC2s."
         },
         {
           "text": "Note: We can also establish a peering connection between different AWS accounts in that case you need to Choose Another account and have to provide another accounts Account ID. Peering connections can be established between Cross Region for this you need to select Another Region and have to Choose a region from the dropdown menu."
-        },
-        {
-          "text": "Once the peering connection is established you need to edit the route tables that you have created earlier to include the route of CIDR block of other VPC."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Editing routes in the Route table",
+      "steps": [
         {
           "text": "Once the peering connection is established you need to edit the route tables that you have created earlier to include the route of CIDR block of other VPC."
         },
@@ -495,22 +426,10 @@
           "text": "You need to add routes to the route table that you have created to include the VPC CIDR range of the other VPC you need to peer."
         },
         {
-          "text": "You need to add routes to the route table that you have created to include the VPC CIDR range of the other VPC you need to peer."
-        },
-        {
-          "text": "Go to Services, and click on VPC. Choose Route Tables and select public_route table."
-        },
-        {
-          "text": "Go to Services, and click on VPC. Choose Route Tables and select public_route table."
+          "text": "Go to Services, and click on VPC. Choose Route Tables and select public_route table."
         },
         {
           "text": "Select the public_route table. Go to the Routes tab below and click on the Edit routes button."
-        },
-        {
-          "text": "Select the public_route table. Go to the Routes tab below and click on the Edit routes button."
-        },
-        {
-          "text": "Now click on the Add route button."
         },
         {
           "text": "Now click on the Add route button."
@@ -522,19 +441,16 @@
           "text": "Target: Select Peering Connection and then select the lab_peer."
         },
         {
-          "text": "Click on the Save changes button."
+          "text": "Task 7: Editing routes in the Route table",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-23.png"
+          ]
         },
         {
           "text": "Click on the Save changes button."
         },
         {
           "text": "Now Select the private_route table. Go to the Routes tab below and click on the Edit routes button."
-        },
-        {
-          "text": "Now Select the private_route table. Go to the Routes tab below and click on the Edit routes button."
-        },
-        {
-          "text": "Click on the Add route button."
         },
         {
           "text": "Click on the Add route button."
@@ -546,8 +462,16 @@
           "text": "Target: Select Peering Connection and then select the lab_peer."
         },
         {
-          "text": "Make sure you are in the N.Virginia Region."
-        },
+          "text": "Task 7: Editing routes in the Route table",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-24.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Creating an EC2 Instance",
+      "steps": [
         {
           "text": "Make sure you are in the N.Virginia Region."
         },
@@ -555,16 +479,7 @@
           "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu at the top, then click on EC2 in the Compute section."
-        },
-        {
-          "text": "Navigate to Instances from the left side menu and click on the Launch Instance button."
-        },
-        {
-          "text": "Navigate to Instances from the left side menu and click on the Launch Instance button."
-        },
-        {
-          "text": "Enter Name as VPC_peering_EC2."
+          "text": "Navigate to Instances from the left side menu and click on the Launch Instance button."
         },
         {
           "text": "Enter Name as VPC_peering_EC2."
@@ -573,70 +488,61 @@
           "text": "Choose an Amazon Machine Image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI in the drop-down."
         },
         {
-          "text": "Choose an Amazon Machine Image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI in the drop-down."
+          "text": "Choose architecture as 64-bit(x86)",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-25.png"
+          ]
         },
         {
-          "text": "Choose architecture as 64-bit(x86)"
+          "text": "Task 8: Creating an EC2 Instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-26.png"
+          ]
         },
         {
-          "text": "Choose architecture as 64-bit(x86)"
+          "text": "Choose an Instance Type: Select t2.micro.",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-27.png"
+          ]
         },
         {
-          "text": "Choose an Instance Type: Select t2.micro."
+          "text": "Task 8: Creating an EC2 Instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-28.png"
+          ]
         },
         {
-          "text": "Choose an Instance Type: Select t2.micro."
+          "text": "For Key pair: Select Create a new key pair Button Key pair name: Enter WhizKey Key pair type: Select RSA Private key file format: Select .pem"
         },
         {
           "text": "For Key pair: Select Create a new key pair Button"
         },
         {
-          "text": "Key pair name: Enter WhizKey"
+          "text": "Key pair name: Enter WhizKey"
         },
         {
-          "text": "Key pair type: Select RSA"
+          "text": "Key pair type: Select RSA"
         },
         {
-          "text": "Private key file format: Select .pem"
+          "text": "Private key file format: Select .pem"
         },
         {
-          "text": "For Key pair: Select Create a new key pair Button"
+          "text": "Select the Create key pair Button.",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-29.png"
+          ]
         },
         {
-          "text": "Key pair name: Enter WhizKey"
-        },
-        {
-          "text": "Key pair name: Enter WhizKey"
-        },
-        {
-          "text": "Key pair type: Select RSA"
-        },
-        {
-          "text": "Key pair type: Select RSA"
-        },
-        {
-          "text": "Private key file format: Select .pem"
-        },
-        {
-          "text": "Private key file format: Select .pem"
-        },
-        {
-          "text": "Select the Create key pair Button."
-        },
-        {
-          "text": "Select the Create key pair Button."
+          "text": "Task 8: Creating an EC2 Instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-30.png"
+          ]
         },
         {
           "text": "In Network Settings Click on Edit Button:"
         },
         {
-          "text": "VPC - required: Select lab_VPC1"
-        },
-        {
-          "text": "VPC - required: Select lab_VPC1"
-        },
-        {
-          "text": "Subnet name: Select any Subnet"
+          "text": "VPC - required: Select lab_VPC1"
         },
         {
           "text": "Subnet name: Select any Subnet"
@@ -645,82 +551,72 @@
           "text": "Auto-assign public IP: Enable"
         },
         {
-          "text": "Auto-assign public IP: Enable"
-        },
-        {
-          "text": "Select Create new Security group"
-        },
-        {
           "text": "Select Create new Security group"
         },
         {
           "text": "Security group name: Enter MyEC2Server_SG"
         },
         {
-          "text": "Security group name: Enter MyEC2Server_SG"
+          "text": "Description: Enter Security Group to allow traffic to EC2",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-31.png"
+          ]
         },
         {
-          "text": "Description: Enter Security Group to allow traffic to EC2"
+          "text": "Task 8: Creating an EC2 Instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-32.png"
+          ]
         },
         {
-          "text": "Description: Enter Security Group to allow traffic to EC2"
-        },
-        {
-          "text": "To add SSH,"
-        },
-        {
-          "text": "Choose Type: SSH"
-        },
-        {
-          "text": "Source: Select Anywhere"
+          "text": "To add SSH, Choose Type: SSH Source: Select Anywhere"
         },
         {
           "text": "To add SSH,"
         },
         {
-          "text": "Choose Type: SSH"
-        },
-        {
-          "text": "Choose Type: SSH"
+          "text": "Choose Type: SSH"
         },
         {
           "text": "Source: Select Anywhere"
         },
         {
-          "text": "Source: Select Anywhere"
+          "text": "Now under Advanced Details, scroll down to User Data, and copy and paste the script:"
         },
         {
-          "text": "Now under Advanced Details, scroll down to User Data, and copy and paste the script:"
-        },
-        {
-          "text": "Keep the Rest thing Default and Click on the Launch Instance Button."
+          "text": "Keep the Rest thing Default and Click on the Launch Instance Button."
         },
         {
           "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for the complete initialization of the instance till the status changes to running."
         },
         {
+          "text": "Task 8: Creating an EC2 Instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-33.png"
+          ]
+        },
+        {
           "text": "Note down the sample IPv4 Public IP Address of the EC2 instance. A sample is shown in the screenshot below."
         },
         {
-          "text": "Create a security group for the RDS instance which will provide access for the EC2 instance to connect with the RDS."
-        },
+          "text": "Task 8: Creating an EC2 Instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-34.jpg"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Creating a Security Group for the RDS instance",
+      "steps": [
         {
           "text": "Create a security group for the RDS instance which will provide access for the EC2 instance to connect with the RDS."
         },
         {
-          "text": "Navigate to VPC by clicking Services on the top menu. Click on Security Groups in the left navigation panel. Click on the Create Security Group button and then provide the following details"
+          "text": "Navigate to VPC by clicking Services on the top menu. Click on Security Groups in the left navigation panel. Click on the Create Security Group button and then provide the following details"
         },
         {
-          "text": "Navigate to VPC by clicking Services on the top menu. Click on Security Groups in the left navigation panel. Click on the Create Security Group button and then provide the following details"
-        },
-        {
-          "text": "Security group name: Enter rdssecurity"
-        },
-        {
-          "text": "Security group name: Enter rdssecurity"
-        },
-        {
-          "text": "Description: Security group for RDS instance"
+          "text": "Security group name: Enter rdssecurity"
         },
         {
           "text": "Description: Security group for RDS instance"
@@ -729,16 +625,7 @@
           "text": "VPC: lab_VPC2 (select from the dropdown)"
         },
         {
-          "text": "VPC: lab_VPC2 (select from the dropdown)"
-        },
-        {
           "text": "Now you need to add Inbound rules to the Security group that you have created, Click on Add rule under Inbound Rules"
-        },
-        {
-          "text": "Now you need to add Inbound rules to the Security group that you have created, Click on Add rule under Inbound Rules"
-        },
-        {
-          "text": "Type: MYSQL/Aurora (select from the drop-down)"
         },
         {
           "text": "Type: MYSQL/Aurora (select from the drop-down)"
@@ -747,22 +634,24 @@
           "text": "Source: Custom: Copy and paste the EC2 instance’s private IP from the instance description page along with a CIDR block range /32 at the end (in my case it is 10.0.1.61/32 )"
         },
         {
-          "text": "Source: Custom: Copy and paste the EC2 instance’s private IP from the instance description page along with a CIDR block range /32 at the end (in my case it is 10.0.1.61/32 )"
+          "text": "Click on the Create Security Group button.",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-35.png"
+          ]
         },
         {
-          "text": "Click on the Create Security Group button."
-        },
-        {
-          "text": "Click on the Create Security Group button."
-        },
+          "text": "Task 9: Creating a Security Group for the RDS instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-36.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Create a RDS Instance",
+      "steps": [
         {
           "text": "Navigate to RDS available under the database section of the Services menu."
-        },
-        {
-          "text": "Navigate to RDS available under the database section of the Services menu."
-        },
-        {
-          "text": "Make sure you are in the N.Virginia Region."
         },
         {
           "text": "Make sure you are in the N.Virginia Region."
@@ -771,46 +660,52 @@
           "text": "Click on Databases in the left panel."
         },
         {
-          "text": "Click on Databases in the left panel."
-        },
-        {
           "text": "Click on Create Database."
         },
         {
-          "text": "Click on Create Database."
+          "text": "Let’s configure the database in the Create Database Page"
         },
         {
-          "text": "Let’s configure the database in the Create Database Page"
+          "text": "In Choose a Database Creation Method: Select Full Configuration",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-37.png"
+          ]
         },
         {
-          "text": "Let’s configure the database in the Create Database Page"
+          "text": "Task 10: Create a RDS Instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-38.png"
+          ]
         },
         {
-          "text": "In Choose a Database Creation Method: Select Full Configuration"
-        },
-        {
-          "text": "In Choose a Database Creation Method: Select Full Configuration"
+          "text": "In Engine options Engine type: Choose MySQL",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-39.png"
+          ]
         },
         {
           "text": "In Engine options"
         },
         {
-          "text": "Engine type: Choose MySQL"
+          "text": "Engine type: Choose MySQL",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-40.png"
+          ]
         },
         {
-          "text": "In Engine options"
+          "text": "Task 10: Create a RDS Instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-41.png"
+          ]
         },
         {
-          "text": "Engine type: Choose MySQL"
+          "text": "In Templates: Choose Dev/Test and Single-AZ DB Instance deployment as Availability and durability.",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-42.png"
+          ]
         },
         {
-          "text": "Engine type: Choose MySQL"
-        },
-        {
-          "text": "In Templates: Choose Dev/Test and Single-AZ DB Instance deployment as Availability and durability."
-        },
-        {
-          "text": "In Templates: Choose Dev/Test and Single-AZ DB Instance deployment as Availability and durability."
+          "text": "In Settings DB cluster identifier: Specify cluster identifier name as lab-identifier"
         },
         {
           "text": "In Settings"
@@ -819,52 +714,19 @@
           "text": "DB cluster identifier: Specify cluster identifier name as lab-identifier"
         },
         {
-          "text": "In Settings"
-        },
-        {
-          "text": "DB cluster identifier: Specify cluster identifier name as lab-identifier"
-        },
-        {
-          "text": "DB cluster identifier: Specify cluster identifier name as lab-identifier"
+          "text": "In credential settings Master Username: Enter lab_admin Master password: Enter lab123 Confirm password: Enter lab123 Note: These are the username and password used to log on to your database. Please make note of them."
         },
         {
           "text": "In credential settings"
         },
         {
-          "text": "Master Username: Enter lab_admin"
+          "text": "Master Username: Enter lab_admin"
         },
         {
-          "text": "Master password: Enter lab123"
+          "text": "Master password: Enter lab123"
         },
         {
-          "text": "Confirm password: Enter lab123"
-        },
-        {
-          "text": "Note: These are the username and password used to log on to your database. Please make note of them."
-        },
-        {
-          "text": "In credential settings"
-        },
-        {
-          "text": "Master Username: Enter lab_admin"
-        },
-        {
-          "text": "Master Username: Enter lab_admin"
-        },
-        {
-          "text": "Master password: Enter lab123"
-        },
-        {
-          "text": "Master password: Enter lab123"
-        },
-        {
-          "text": "Confirm password: Enter lab123"
-        },
-        {
-          "text": "Confirm password: Enter lab123"
-        },
-        {
-          "text": "Note: These are the username and password used to log on to your database. Please make note of them."
+          "text": "Confirm password: Enter lab123"
         },
         {
           "text": "Note: These are the username and password used to log on to your database. Please make note of them."
@@ -873,22 +735,13 @@
           "text": "In DB instance size:"
         },
         {
-          "text": "In DB instance size:"
-        },
-        {
           "text": "DB instance class: Choose Burstable classes (includes t classes)"
         },
         {
-          "text": "DB instance class: Choose Burstable classes (includes t classes)"
-        },
-        {
-          "text": "Select db.t3.micro from the available list"
-        },
-        {
-          "text": "Select db.t3.micro from the available list"
-        },
-        {
-          "text": "Uncheck the Enable storage autoscaling checkbox."
+          "text": "Select db.t3.micro from the available list",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-43.png"
+          ]
         },
         {
           "text": "Uncheck the Enable storage autoscaling checkbox."
@@ -897,34 +750,25 @@
           "text": "Connectivity"
         },
         {
-          "text": "Connectivity"
-        },
-        {
-          "text": "Virtual Private Cloud: Choose lab_VPC2"
-        },
-        {
-          "text": "Virtual Private Cloud: Choose lab_VPC2"
+          "text": "Virtual Private Cloud: Choose lab_VPC2"
         },
         {
           "text": "Subnet group: Create New subnet group"
         },
         {
-          "text": "Subnet group: Create New subnet group"
+          "text": "Publicly accessible: No",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-44.png"
+          ]
         },
         {
-          "text": "Publicly accessible: No"
+          "text": "Task 10: Create a RDS Instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-45.png"
+          ]
         },
         {
-          "text": "Publicly accessible: No"
-        },
-        {
-          "text": "VPC security group: Select Choose existing"
-        },
-        {
-          "text": "VPC security group: Select Choose existing"
-        },
-        {
-          "text": "Existing VPC Security group: rdssecuritygroup (remove the default and select it from the drop-down)"
+          "text": "VPC security group: Select Choose existing"
         },
         {
           "text": "Existing VPC Security group: rdssecuritygroup (remove the default and select it from the drop-down)"
@@ -933,19 +777,13 @@
           "text": "Availability Zone: No preference"
         },
         {
-          "text": "Availability Zone: No preference"
-        },
-        {
-          "text": "Database port: 3306"
-        },
-        {
           "text": "Database port: 3306"
         },
         {
           "text": "Click on Additional Configuration."
         },
         {
-          "text": "Click on Additional Configuration."
+          "text": "Database options Initial database name: Enter labdb"
         },
         {
           "text": "Database options"
@@ -954,34 +792,22 @@
           "text": "Initial database name: Enter labdb"
         },
         {
-          "text": "Database options"
-        },
-        {
-          "text": "Initial database name: Enter labdb"
-        },
-        {
-          "text": "Initial database name: Enter labdb"
-        },
-        {
           "text": "Uncheck the Enable automated backups checkbox."
         },
         {
-          "text": "Uncheck the Enable automated backups checkbox."
+          "text": "Uncheck the Enable auto minor version upgrade checkbox",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-46.png"
+          ]
         },
         {
-          "text": "Uncheck the Enable auto minor version upgrade checkbox"
+          "text": "Task 10: Create a RDS Instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-47.png"
+          ]
         },
         {
-          "text": "Uncheck the Enable auto minor version upgrade checkbox"
-        },
-        {
-          "text": "Once filled in all the necessary then click on Create database."
-        },
-        {
-          "text": "Once filled in all the necessary then click on Create database."
-        },
-        {
-          "text": "It will take around 10-15 minutes for the database to be created. Please wait until the database status changes from creating to available."
+          "text": "Once filled in all the necessary then click on Create database."
         },
         {
           "text": "It will take around 10-15 minutes for the database to be created. Please wait until the database status changes from creating to available."
@@ -990,31 +816,27 @@
           "text": "Once the database is created, you can see the Status as Available."
         },
         {
-          "text": "Once the database is created, you can see the Status as Available."
-        },
-        {
-          "text": "To connect the RDS instance we need the Endpoint (DNS name for RDS instance)."
-        },
-        {
           "text": "To connect the RDS instance we need the Endpoint (DNS name for RDS instance)."
         },
         {
           "text": "Click on the RDS instance created and then navigate to Connectivity & security to find the endpoint of your RDS instances with which you can connect to your DB instance."
         },
         {
-          "text": "Click on the RDS instance created and then navigate to Connectivity & security to find the endpoint of your RDS instances with which you can connect to your DB instance."
+          "text": "Task 10: Create a RDS Instance",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-48.png"
+          ]
         },
         {
           "text": "My RDS endpoint: lab-cluster.cdegnvsebaim.us-east-1.rds.amazonaws.com"
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 11: SSH into EC2 and Connect to Your Database",
+      "steps": [
         {
           "text": "SSH into the EC2 instance using the following steps in SSH into EC2 Instance."
-        },
-        {
-          "text": "SSH into the EC2 instance using the following steps in SSH into EC2 Instance."
-        },
-        {
-          "text": "Switch to root user using the command:"
         },
         {
           "text": "Switch to root user using the command:"
@@ -1029,16 +851,7 @@
           "text": "User name: lab_admin"
         },
         {
-          "text": "User name: lab_admin"
-        },
-        {
           "text": "Enter the Password: lab123"
-        },
-        {
-          "text": "Enter the Password: lab123"
-        },
-        {
-          "text": "Database name: labrds"
         },
         {
           "text": "Database name: labrds"
@@ -1047,37 +860,39 @@
           "text": "You can now able to log in to the database as shown below:"
         },
         {
-          "text": "You can now able to log in to the database as shown below:"
+          "text": "Task 11: SSH into EC2 and Connect to Your Database",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-49.png"
+          ]
         },
         {
-          "text": "EC2 instance can able to establish a connection with the RDS instance if it is in the same VPC but in our case, we can able to connect the RDS instance from the EC2 instance even though they are in different VPCs. This can only be possible if a peering connection is established between the VPC's."
-        },
-        {
-          "text": "EC2 instance can able to establish a connection with the RDS instance if it is in the same VPC but in our case, we can able to connect the RDS instance from the EC2 instance even though they are in different VPCs. This can only be possible if a peering connection is established between the VPC's."
+          "text": "EC2 instance can able to establish a connection with the RDS instance if it is in the same VPC but in our case, we can able to connect the RDS instance from the EC2 instance even though they are in different VPCs. This can only be possible if a peering connection is established between the VPC's."
         },
         {
           "text": "It's important to note that VPC peering is limited to specific scenarios. For example, it's only possible to peer VPCs within the same AWS region, and you cannot peer VPCs that have overlapping IP address ranges. Additionally, some advanced networking features may not work across peered VPCs."
+        }
+      ]
+    },
+    {
+      "title": "Task 12: Validation Test",
+      "steps": [
+        {
+          "text": "Once the project steps are completed, please click on the Validation button on the Right side panel."
         },
         {
-          "text": "Once the project steps are completed, please click on the Validation button on the Right side panel."
+          "text": "This will validate the resources in the AWS account and display whether you have completed this project successfully or not."
         },
         {
-          "text": "Once the project steps are completed, please click on the Validation button on the Right side panel."
+          "text": "Sample output :",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-50.gif"
+          ]
         },
         {
-          "text": "This will validate the resources in the AWS account and display whether you have completed this project successfully or not."
-        },
-        {
-          "text": "This will validate the resources in the AWS account and display whether you have completed this project successfully or not."
-        },
-        {
-          "text": "Sample output :"
-        },
-        {
-          "text": "Sample output :"
-        },
-        {
-          "text": "In this lab, you have successfully created 2 VPCs with non-overlapping CIDR blocks."
+          "text": "Task 12: Validation Test",
+          "images": [
+            "/labs/implementing-vpc-peering-on-aws/step-51.gif"
+          ]
         },
         {
           "text": "In this lab, you have successfully created 2 VPCs with non-overlapping CIDR blocks."
@@ -1086,16 +901,7 @@
           "text": "You have successfully created an Internet gateway and associated it with any of the created VPC."
         },
         {
-          "text": "You have successfully created an Internet gateway and associated it with any of the created VPC."
-        },
-        {
           "text": "You have successfully created 4 subnets, 2 subnets per VPC."
-        },
-        {
-          "text": "You have successfully created 4 subnets, 2 subnets per VPC."
-        },
-        {
-          "text": "You have successfully created 2 Route tables each in a separate VPC."
         },
         {
           "text": "You have successfully created 2 Route tables each in a separate VPC."
@@ -1104,22 +910,10 @@
           "text": "You have successfully created Associate the subnets with the route tables."
         },
         {
-          "text": "You have successfully created Associate the subnets with the route tables."
+          "text": "You have successfully created the Initiate VPC Peering connection from VPC1 to VPC2 and accepted the connection."
         },
         {
-          "text": "You have successfully created the Initiate VPC Peering connection from VPC1 to VPC2 and accepted the connection."
-        },
-        {
-          "text": "You have successfully created the Initiate VPC Peering connection from VPC1 to VPC2 and accepted the connection."
-        },
-        {
-          "text": "You have successfully edited route tables to have access to the other VPC CIDR blocks in the routes."
-        },
-        {
-          "text": "You have successfully edited route tables to have access to the other VPC CIDR blocks in the routes."
-        },
-        {
-          "text": "You have successfully created a Security group to allow SSH access from anywhere in the inbound rule."
+          "text": "You have successfully edited route tables to have access to the other VPC CIDR blocks in the routes."
         },
         {
           "text": "You have successfully created a Security group to allow SSH access from anywhere in the inbound rule."
@@ -1128,16 +922,7 @@
           "text": "You have successfully launched an EC2 instance in a VPC with auto-assigned IP"
         },
         {
-          "text": "You have successfully launched an EC2 instance in a VPC with auto-assigned IP"
-        },
-        {
           "text": "You have successfully created another security group with port 3306 open only for the private IP of the EC2 instance."
-        },
-        {
-          "text": "You have successfully created another security group with port 3306 open only for the private IP of the EC2 instance."
-        },
-        {
-          "text": "You have successfully launched an RDS instance in another VPC."
         },
         {
           "text": "You have successfully launched an RDS instance in another VPC."
@@ -1146,16 +931,7 @@
           "text": "You have successfully SSH into the EC2 instance."
         },
         {
-          "text": "You have successfully SSH into the EC2 instance."
-        },
-        {
           "text": "You have successfully logged into the RDS instance from the EC2 instance."
-        },
-        {
-          "text": "You have successfully logged into the RDS instance from the EC2 instance."
-        },
-        {
-          "text": "Sign out of the AWS Account"
         },
         {
           "text": "Sign out of the AWS Account"
@@ -1164,13 +940,7 @@
           "text": "You have successfully completed the project."
         },
         {
-          "text": "You have successfully completed the project."
-        },
-        {
-          "text": "Click on the End Project button from the lab console and wait till the process gets completed."
-        },
-        {
-          "text": "Click on the End Project button from the lab console and wait till the process gets completed."
+          "text": "Click on the End Project button from the lab console and wait till the process gets completed."
         }
       ]
     }

@@ -1,0 +1,91 @@
+{
+  "slug": "challenge-amazonguarddutyintroduction-threat-detection-basics",
+  "title": "Challenge Lab: Introduction to Amazon GuardDuty",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign into the AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to access the AWS Console in a new tab."
+        },
+        {
+          "text": "On the AWS sign-in page, leave the Account ID as default, copy your Username and Password from the Lab Console, and sign in."
+        },
+        {
+          "text": "Set the AWS Region to US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign into the AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to explore Amazon GuardDuty to monitor their AWS environment for potential security threats. Your job is to enable GuardDuty, explore its features, generate sample findings, analyze them, and then disable the service to conclude the lab. Here’s how to proceed:"
+        },
+        {
+          "text": "Verify that GuardDuty is enabled by checking the dashboard, which should now show monitoring activity."
+        },
+        {
+          "text": "Explore the following sections: Findings: Check for any existing findings (initially, there may be none). Data Sources: Review the data sources GuardDuty monitors (e.g., VPC Flow Logs, CloudTrail, DNS logs). Settings: Go to Settings to view configuration options like data sources and frequency of updates. Integrations: Explore integrations with services like Amazon EventBridge for automated responses."
+        },
+        {
+          "text": "Findings: Check for any existing findings (initially, there may be none)."
+        },
+        {
+          "text": "Data Sources: Review the data sources GuardDuty monitors (e.g., VPC Flow Logs, CloudTrail, DNS logs)."
+        },
+        {
+          "text": "Settings: Go to Settings to view configuration options like data sources and frequency of updates."
+        },
+        {
+          "text": "Integrations: Explore integrations with services like Amazon EventBridge for automated responses."
+        },
+        {
+          "text": "Select Generate sample findings to create mock findings for testing purposes."
+        },
+        {
+          "text": "Go to the Findings section in the GuardDuty console."
+        },
+        {
+          "text": "Review the sample findings: Look for findings like Recon:EC2/PortProbeUnprotectedPort or UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration. Click on a finding to view details such as severity, resource affected, and recommended actions."
+        },
+        {
+          "text": "Look for findings like Recon:EC2/PortProbeUnprotectedPort or UnauthorizedAccess:IAMUser/InstanceCredentialExfiltration."
+        },
+        {
+          "text": "Click on a finding to view details such as severity, resource affected, and recommended actions."
+        },
+        {
+          "text": "Explore the Recommended actions for a few findings to understand how to mitigate such issues in a real scenario."
+        },
+        {
+          "text": "Disable Amazon GuardDuty"
+        },
+        {
+          "text": "Confirm that GuardDuty was successfully enabled."
+        },
+        {
+          "text": "Verify that sample findings were generated and reviewed in the GuardDuty console."
+        },
+        {
+          "text": "Ensure GuardDuty was disabled at the end of the lab."
+        },
+        {
+          "text": "Click Validate in the lab console to check the setup."
+        },
+        {
+          "text": "Sign out of AWS by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "Click End Lab in the lab console to complete the lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

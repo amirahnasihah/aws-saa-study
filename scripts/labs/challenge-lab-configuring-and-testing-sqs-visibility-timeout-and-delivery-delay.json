@@ -1,0 +1,121 @@
+{
+  "slug": "challenge-lab-configuring-and-testing-sqs-visibility-timeout-and-delivery-delay",
+  "title": "Challenge Lab - Testing SQS Visibility Timeout and Message Delay in Action",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge lab, you will explore the behavior of Amazon SQS queues by configuring and testing the effects of Visibility Timeout and Delay Queue. You'll use an AWS Lambda function to interact with the queue and observe message behavior in different scenarios. This hands-on task will enhance your understanding of SQS message delivery mechanics in real-time applications."
+        },
+        {
+          "text": "You are working as a cloud engineer at an e-commerce company that handles order processing through Amazon SQS. To optimize the flow of order messages, you need to configure an SQS queue with Visibility Timeout and Delivery Delay settings."
+        },
+        {
+          "text": "Create an SQS Queue Create a Standard Queue . Set the Visibility Timeout to 1 minute. Keep other settings as default. Save the Queue URL for later use."
+        },
+        {
+          "text": "Create a Standard Queue ."
+        },
+        {
+          "text": "Set the Visibility Timeout to 1 minute."
+        },
+        {
+          "text": "Keep other settings as default."
+        },
+        {
+          "text": "Save the Queue URL for later use."
+        },
+        {
+          "text": "Create a Lambda Function Create a Lambda function using Python 3.8. Use an existing IAM role provided. Replace the function code to receive messages from the SQS Queue. Deploy the function and create a test event."
+        },
+        {
+          "text": "Create a Lambda function using Python 3.8."
+        },
+        {
+          "text": "Use an existing IAM role provided."
+        },
+        {
+          "text": "Replace the function code to receive messages from the SQS Queue."
+        },
+        {
+          "text": "Deploy the function and create a test event."
+        },
+        {
+          "text": "Test Visibility Timeout Send a message to the SQS queue. Invoke Lambda and observe the response. Immediately re-invoke Lambda – what happens? Try again after 1 minute – what changes?"
+        },
+        {
+          "text": "Send a message to the SQS queue."
+        },
+        {
+          "text": "Invoke Lambda and observe the response."
+        },
+        {
+          "text": "Immediately re-invoke Lambda – what happens?"
+        },
+        {
+          "text": "Try again after 1 minute – what changes?"
+        },
+        {
+          "text": "Purge the Queue Clear all messages from the queue using the Purge option."
+        },
+        {
+          "text": "Clear all messages from the queue using the Purge option."
+        },
+        {
+          "text": "Test Delivery Delay Send a new message with a Delivery Delay of 30 seconds. Invoke Lambda immediately – do you receive the message? Wait 30 seconds and try again."
+        },
+        {
+          "text": "Send a new message with a Delivery Delay of 30 seconds."
+        },
+        {
+          "text": "Invoke Lambda immediately – do you receive the message?"
+        },
+        {
+          "text": "Wait 30 seconds and try again."
+        },
+        {
+          "text": "Cleanup Delete the SQS Queue and Lambda function to avoid ongoing charges."
+        },
+        {
+          "text": "Delete the SQS Queue and Lambda function to avoid ongoing charges."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

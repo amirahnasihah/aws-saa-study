@@ -1,0 +1,488 @@
+{
+  "slug": "perform-etl-operation-in-glue-with-s3",
+  "title": "Perform ETL operation in Glue with S3",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2 : Copy S3 Bucket's Sample data URI",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+        },
+        {
+          "text": "Navigate to S3 by clicking on the Services menu at the top, then click on S3 in the Storage section."
+        },
+        {
+          "text": "Click on the bucket name starting with lab followed by a random number."
+        },
+        {
+          "text": "Task 2 : Copy S3 Bucket's Sample data URI"
+        },
+        {
+          "text": "Here, you will see two files, First, glue_code.py we will use this in upcoming steps. Second, sample_data.csv we need this data to perform ETL operations, let's copy the path (URI)"
+        },
+        {
+          "text": "Here, you will see two files,"
+        },
+        {
+          "text": "First, glue_code.py we will use this in upcoming steps."
+        },
+        {
+          "text": "Second, sample_data.csv we need this data to perform ETL operations, let's copy the path (URI)"
+        },
+        {
+          "text": "Task 2 : Copy S3 Bucket's Sample data URI"
+        },
+        {
+          "text": "Click on the sample_data.csv, to check the properties of this file."
+        },
+        {
+          "text": "Click on either of the copy buttons to copy the path (URI) of the sample_data.csv file."
+        },
+        {
+          "text": "Task 2 : Copy S3 Bucket's Sample data URI"
+        },
+        {
+          "text": "Save this URI in a notepad, we'll need this during the creation of the Glue crawler."
+        },
+        {
+          "text": "And, save the S3 bucket name, we need this one, when working with glue script."
+        }
+      ]
+    },
+    {
+      "title": "Task 3 : Download the glue code",
+      "steps": [
+        {
+          "text": "Click on the bucket name."
+        },
+        {
+          "text": "To download the glue_code, Select the file glue_code.py Click on the Download button."
+        },
+        {
+          "text": "To download the glue_code,"
+        },
+        {
+          "text": "Select the file glue_code.py"
+        },
+        {
+          "text": "Click on the Download button."
+        },
+        {
+          "text": "Task 3 : Download the glue code"
+        },
+        {
+          "text": "Save this file as .py"
+        }
+      ]
+    },
+    {
+      "title": "Task 4 : Create a Glue crawler",
+      "steps": [
+        {
+          "text": "Navigate to AWS Glue by clicking on the Services menu in the top, then click on AWS Glue in the Analytics section."
+        },
+        {
+          "text": "Click on Crawlers under the Data catalog section."
+        },
+        {
+          "text": "Task 4 : Create a Glue crawler"
+        },
+        {
+          "text": "To create a Crawler, click on the Create Crawler button. Section 1: Set Crawler properties Crawler name: Enter WhizCrawler Click on the Next button. Section 2: Choose Data Sources and classifiers Is your data already mapped to Glue tables: Select Not yet Data Sources: Select Add a data source. Section 3: Add a data store Choose a data store: Select S3 Location of S3 data : Select In this account S3 path: paste the copied S3 URI i.e. s3://lab38281856/sample_data.csv Subsequent crawler runs : Select Crawl all sub-folders Click on Add an S3 data source button. Click on Next button."
+        },
+        {
+          "text": "To create a Crawler, click on the Create Crawler button."
+        },
+        {
+          "text": "Section 1: Set Crawler properties Crawler name: Enter WhizCrawler Click on the Next button."
+        },
+        {
+          "text": "Section 1: Set Crawler properties"
+        },
+        {
+          "text": "Crawler name: Enter WhizCrawler"
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Task 4 : Create a Glue crawler"
+        },
+        {
+          "text": "Section 2: Choose Data Sources and classifiers Is your data already mapped to Glue tables: Select Not yet Data Sources: Select Add a data source."
+        },
+        {
+          "text": "Section 2: Choose Data Sources and classifiers"
+        },
+        {
+          "text": "Is your data already mapped to Glue tables: Select Not yet"
+        },
+        {
+          "text": "Data Sources: Select Add a data source."
+        },
+        {
+          "text": "Task 4 : Create a Glue crawler"
+        },
+        {
+          "text": "Section 3: Add a data store Choose a data store: Select S3 Location of S3 data : Select In this account S3 path: paste the copied S3 URI i.e. s3://lab38281856/sample_data.csv Subsequent crawler runs : Select Crawl all sub-folders Click on Add an S3 data source button. Click on Next button."
+        },
+        {
+          "text": "Section 3: Add a data store"
+        },
+        {
+          "text": "Choose a data store: Select S3"
+        },
+        {
+          "text": "Location of S3 data : Select In this account"
+        },
+        {
+          "text": "S3 path: paste the copied S3 URI i.e. s3://lab38281856/sample_data.csv"
+        },
+        {
+          "text": "Subsequent crawler runs : Select Crawl all sub-folders"
+        },
+        {
+          "text": "Click on Add an S3 data source button."
+        },
+        {
+          "text": "Task 4 : Create a Glue crawler"
+        },
+        {
+          "text": "Click on Next button."
+        },
+        {
+          "text": "Section 4: Configure security settings IAM role : Open drop-down of Existing IAM Role IAM role: Select Glue_Role_*** Click on the Next button:"
+        },
+        {
+          "text": "Section 4: Configure security settings"
+        },
+        {
+          "text": "IAM role : Open drop-down of Existing IAM Role"
+        },
+        {
+          "text": "IAM role: Select Glue_Role_***"
+        },
+        {
+          "text": "Click on the Next button:"
+        },
+        {
+          "text": "Section 5: Set output and scheduling Click on the Add database button. This will navigate you to the new tab. Database name: enter demo Keep other options as default. Click on the Create database button. Go back to the previous tab. Click on the Refresh icon and choose the database created. Under Crawler Schedule, Set Frequency as On demand Click on the Next button. Under Review and Create, Click on Create button."
+        },
+        {
+          "text": "Section 5: Set output and scheduling"
+        },
+        {
+          "text": "Click on the Add database button. This will navigate you to the new tab."
+        },
+        {
+          "text": "Database name: enter demo"
+        },
+        {
+          "text": "Keep other options as default."
+        },
+        {
+          "text": "Click on the Create database button."
+        },
+        {
+          "text": "Go back to the previous tab."
+        },
+        {
+          "text": "Click on the Refresh icon and choose the database created."
+        },
+        {
+          "text": "Under Crawler Schedule, Set Frequency as On demand"
+        },
+        {
+          "text": "Task 4 : Create a Glue crawler"
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Under Review and Create, Click on Create button."
+        },
+        {
+          "text": "A crawler is now created."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Run the crawler, to create a table",
+      "steps": [
+        {
+          "text": "Select the crawler and click on the Run crawler button."
+        },
+        {
+          "text": "Task 5: Run the crawler, to create a table"
+        },
+        {
+          "text": "The crawler will now attempt to run."
+        },
+        {
+          "text": "It will start."
+        },
+        {
+          "text": "Task 5: Run the crawler, to create a table"
+        },
+        {
+          "text": "The crawler has completed, one table is now created."
+        },
+        {
+          "text": "Task 5: Run the crawler, to create a table"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Create a Glue Job",
+      "steps": [
+        {
+          "text": "Click on ETL jobs under the Data Integration and ETL section in the left navigation panel."
+        },
+        {
+          "text": "Task 6: Create a Glue Job"
+        },
+        {
+          "text": "Click on Create job from a blank graph button."
+        },
+        {
+          "text": "Task 6: Create a Glue Job"
+        },
+        {
+          "text": "Navigate to Script tab and click on Edit script button and click on confirm button."
+        },
+        {
+          "text": "Now, update the existing script with the downloaded code (glue_code). Upload and edit an existing script."
+        },
+        {
+          "text": "Few modifications in the glue script, On line 15, make sure your database name is correct, i.e. demo On line 16, make sure your glue table name is correct i.e. sample_data_csv On line 18, replace the s3 bucket name with the bucket name present in this account, starting with lab. Note: The output will not be sent to the S3 bucket if you miss replacing the bucket name on line 18."
+        },
+        {
+          "text": "Few modifications in the glue script,"
+        },
+        {
+          "text": "On line 15, make sure your database name is correct, i.e. demo"
+        },
+        {
+          "text": "On line 16, make sure your glue table name is correct i.e. sample_data_csv"
+        },
+        {
+          "text": "On line 18, replace the s3 bucket name with the bucket name present in this account, starting with lab."
+        },
+        {
+          "text": "Note: The output will not be sent to the S3 bucket if you miss replacing the bucket name on line 18."
+        },
+        {
+          "text": "Navigate to the Job Details tab Name: enter WhizJob IAM role: select Glue_Role_*** Type: Select SparkGlue version: select Glue 4.0 - Supports spark 3.3, Scala 2, Python 3 Worker type: Select G 1X Check the Automatically scale the number of workers box Maximum number of workers: Enter 5 Expand the Advanced properties and Scroll down. Max concurrency: Enter 1 Delay notification threshold (minutes): Enter 10"
+        },
+        {
+          "text": "Navigate to the Job Details tab"
+        },
+        {
+          "text": "Name: enter WhizJob"
+        },
+        {
+          "text": "IAM role: select Glue_Role_***"
+        },
+        {
+          "text": "Type: Select SparkGlue version: select Glue 4.0 - Supports spark 3.3, Scala 2, Python 3 Worker type: Select G 1X Check the Automatically scale the number of workers box Maximum number of workers: Enter 5 Expand the Advanced properties and Scroll down. Max concurrency: Enter 1 Delay notification threshold (minutes): Enter 10"
+        },
+        {
+          "text": "Type: Select SparkGlue version: select Glue 4.0 - Supports spark 3.3, Scala 2, Python 3"
+        },
+        {
+          "text": "Worker type: Select G 1X"
+        },
+        {
+          "text": "Check the Automatically scale the number of workers box"
+        },
+        {
+          "text": "Maximum number of workers: Enter 5"
+        },
+        {
+          "text": "Expand the Advanced properties and Scroll down. Max concurrency: Enter 1 Delay notification threshold (minutes): Enter 10"
+        },
+        {
+          "text": "Expand the Advanced properties and Scroll down."
+        },
+        {
+          "text": "Max concurrency: Enter 1"
+        },
+        {
+          "text": "Delay notification threshold (minutes): Enter 10"
+        },
+        {
+          "text": "Task 6: Create a Glue Job"
+        },
+        {
+          "text": "Leave other options as default"
+        },
+        {
+          "text": "Click on the Save button on the top right."
+        },
+        {
+          "text": "Click on Run button."
+        },
+        {
+          "text": "Navigate to Runs tab, Job is currently in Running state."
+        },
+        {
+          "text": "Task 6: Create a Glue Job"
+        },
+        {
+          "text": "The glue job will be shown as succeeded with-in 10 minutes."
+        },
+        {
+          "text": "Task 6: Create a Glue Job"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Check the output of Glue Job",
+      "steps": [
+        {
+          "text": "Navigate to S3 by clicking on the Services menu at the top, then click on S3 in the Storage section."
+        },
+        {
+          "text": "Open the S3 Bucket, starting with the name lab."
+        },
+        {
+          "text": "Here, you will see some additional files."
+        },
+        {
+          "text": "Download the output file, named as run-1610354854518-part-r-00000, and save this file as CSV."
+        },
+        {
+          "text": "Task 7: Check the output of Glue Job"
+        },
+        {
+          "text": "You'll get the below Output in the downloaded file."
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Task 8: Validation Test"
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "Navigate to AWS Glue by clicking on the Services menu in the top, then click on AWS Glue in the Analytics section."
+        },
+        {
+          "text": "Click on Jobs under the Data Integration and ETL section."
+        },
+        {
+          "text": "WhizJob will be listed here."
+        },
+        {
+          "text": "To delete the present Job, perform the following actions: Select the WhizJob, In the menu, click on the Action button. Choose the Delete option."
+        },
+        {
+          "text": "To delete the present Job, perform the following actions:"
+        },
+        {
+          "text": "Select the WhizJob,"
+        },
+        {
+          "text": "In the menu, click on the Action button."
+        },
+        {
+          "text": "Choose the Delete option."
+        },
+        {
+          "text": "Confirm the deletion by clicking on the Delete button."
+        },
+        {
+          "text": "Glue job WhizJob will be deleted immediately."
+        },
+        {
+          "text": "Click on Crawlers under the Data catalog section."
+        },
+        {
+          "text": "The crawler will be listed here."
+        },
+        {
+          "text": "To delete the crawler, perform the following task: Select the crawler, WhizCrawler In the menu, click on the Actions button. Choose the Delete Crawler option."
+        },
+        {
+          "text": "To delete the crawler, perform the following task:"
+        },
+        {
+          "text": "Select the crawler, WhizCrawler"
+        },
+        {
+          "text": "In the menu, click on the Actions button."
+        },
+        {
+          "text": "Choose the Delete Crawler option."
+        },
+        {
+          "text": "Confirm the deletion by clicking on the Delete button."
+        },
+        {
+          "text": "The crawler will be deleted immediately."
+        },
+        {
+          "text": "You have successfully created a Glue crawler and Glue Job."
+        },
+        {
+          "text": "You have successfully performed ETL operations on the sample data file."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

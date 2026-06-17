@@ -1,0 +1,154 @@
+{
+  "slug": "challenge-lab-data-protection-using-aws-key-management-service",
+  "title": "Challenge Lab: Data Protection Using AWS Key Management Service",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge lab, you will work with AWS Key Management Service (KMS) to protect sensitive data using encryption. You'll create a KMS key, set permissions for two IAM users, and use an EC2 instance to test encryption and decryption using the AWS CLI."
+        },
+        {
+          "text": "Your company wants to protect sensitive data using encryption in AWS. You are assigned the task of using AWS Key Management Service (KMS) to encrypt and decrypt data securely."
+        },
+        {
+          "text": "You need to create a KMS key, manage permissions for two IAM users, and use an EC2 instance to run encryption and decryption commands using the AWS CLI. One user will control the key, while the other will use the key to protect data. You should also enable key rotation to follow security best practices."
+        },
+        {
+          "text": "This task will help you understand how to manage and use encryption keys in AWS."
+        },
+        {
+          "text": "Create IAM Group and Users Create an IAM group. Attach the pre-created KMS_Policy to the group. Create two IAM users. Add both users to the IAM group. Download the access keys for the user who will perform encryption and decryption."
+        },
+        {
+          "text": "Create an IAM group."
+        },
+        {
+          "text": "Attach the pre-created KMS_Policy to the group."
+        },
+        {
+          "text": "Create two IAM users."
+        },
+        {
+          "text": "Add both users to the IAM group."
+        },
+        {
+          "text": "Download the access keys for the user who will perform encryption and decryption."
+        },
+        {
+          "text": "Create a Symmetric KMS Key Create a symmetric KMS key with a custom alias. Assign one user as the key administrator. Assign the other user permissions to encrypt and decrypt using this key."
+        },
+        {
+          "text": "Create a symmetric KMS key with a custom alias."
+        },
+        {
+          "text": "Assign one user as the key administrator."
+        },
+        {
+          "text": "Assign the other user permissions to encrypt and decrypt using this key."
+        },
+        {
+          "text": "Launch and Connect to EC2 Launch an EC2 instance with the following specs: Amazon Linux AMI t2.micro instance type Create a new SSH key pair for access SSH into the EC2 instance using your created key pair."
+        },
+        {
+          "text": "Launch an EC2 instance with the following specs: Amazon Linux AMI t2.micro instance type Create a new SSH key pair for access"
+        },
+        {
+          "text": "Amazon Linux AMI"
+        },
+        {
+          "text": "t2.micro instance type"
+        },
+        {
+          "text": "Create a new SSH key pair for access"
+        },
+        {
+          "text": "SSH into the EC2 instance using your created key pair."
+        },
+        {
+          "text": "Configure AWS CLI on EC2 Configure AWS CLI using the encryption user's access key and secret access key. Set the default region to us-east-1."
+        },
+        {
+          "text": "Configure AWS CLI using the encryption user's access key and secret access key."
+        },
+        {
+          "text": "Set the default region to us-east-1."
+        },
+        {
+          "text": "Encrypt and Decrypt Data Using KMS Create a text file with any content on the EC2 instance. Encrypt the file using your KMS key via AWS CLI. View the encrypted content. Decrypt the file back to plaintext. Re-encrypt the decrypted file and verify the process. Hints: Use aws kms encrypt and aws kms decrypt commands. Specify the KMS key ID for encryption/decryption. Use the fileb:// prefix to pass files as input. Use base64 encode/decode commands as needed (base64 and base64 --decode)."
+        },
+        {
+          "text": "Create a text file with any content on the EC2 instance."
+        },
+        {
+          "text": "Encrypt the file using your KMS key via AWS CLI."
+        },
+        {
+          "text": "View the encrypted content."
+        },
+        {
+          "text": "Decrypt the file back to plaintext."
+        },
+        {
+          "text": "Re-encrypt the decrypted file and verify the process."
+        },
+        {
+          "text": "Hints: Use aws kms encrypt and aws kms decrypt commands. Specify the KMS key ID for encryption/decryption. Use the fileb:// prefix to pass files as input. Use base64 encode/decode commands as needed (base64 and base64 --decode)."
+        },
+        {
+          "text": "Use aws kms encrypt and aws kms decrypt commands."
+        },
+        {
+          "text": "Specify the KMS key ID for encryption/decryption."
+        },
+        {
+          "text": "Use the fileb:// prefix to pass files as input."
+        },
+        {
+          "text": "Use base64 encode/decode commands as needed (base64 and base64 --decode)."
+        },
+        {
+          "text": "Enable Automatic Key Rotation Enable automatic rotation on your KMS key to follow security best practices."
+        },
+        {
+          "text": "Enable automatic rotation on your KMS key to follow security best practices."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

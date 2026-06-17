@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -35,10 +38,16 @@
           "text": "Navigate to the Services menu at the top. Click on S3 under the Storage section."
         },
         {
-          "text": "On the S3 Page, click on Create bucket and fill in the bucket details."
+          "text": "On the S3 Page, click on Create bucket and fill in the bucket details. Bucket type : General purpose Bucket name: Enter export-snapshot-demo Note: S3 bucket name is globally unique, choose a name that is available."
+        },
+        {
+          "text": "On the S3 Page, click on Create bucket and fill in the bucket details."
         },
         {
           "text": "Bucket type : General purpose"
+        },
+        {
+          "text": "Bucket name: Enter export-snapshot-demo Note: S3 bucket name is globally unique, choose a name that is available."
         },
         {
           "text": "Bucket name: Enter export-snapshot-demo"
@@ -47,7 +56,16 @@
           "text": "Note: S3 bucket name is globally unique, choose a name that is available."
         },
         {
-          "text": "Object ownership: Select ACLs disabled (recommended) option."
+          "text": "Object ownership: Select ACLs disabled (recommended) option.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-01.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create an Amazon S3 Bucket",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-02.png"
+          ]
         },
         {
           "text": "Leave all the other settings as default."
@@ -73,19 +91,28 @@
           "text": "Select the Key Type as Symmetric and click on Next."
         },
         {
+          "text": "Under the Add Labels, give the following details: Alias: Enter kmskey_1 (Change the name, if there is a key present with the same name) Description: Enter Used for RDS Snapshot exports to S3 of the \"database-demo\" DB Instance Click on Next.Note : Ignore if any error message appear like below.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-03.png"
+          ]
+        },
+        {
           "text": "Under the Add Labels, give the following details:"
         },
         {
-          "text": "Alias: Enter kmskey_1 (Change the name, if there is a key present with the same name)"
+          "text": "Alias: Enter kmskey_1 (Change the name, if there is a key present with the same name)"
         },
         {
-          "text": "Description: Enter Used for RDS Snapshot exports to S3 of the \"database-demo\" DB Instance"
+          "text": "Description: Enter Used for RDS Snapshot exports to S3 of the \"database-demo\" DB Instance"
+        },
+        {
+          "text": "Click on Next.Note : Ignore if any error message appear like below.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-04.png"
+          ]
         },
         {
           "text": "Click on Next."
-        },
-        {
-          "text": "Note : Ignore if any error message appear like below."
         },
         {
           "text": "Leave Define key administrative permissions as default and click on Next."
@@ -97,10 +124,21 @@
           "text": "Leave Edit key policy as default and click on Next."
         },
         {
-          "text": "Click on the Finish button."
+          "text": "Click on the Finish button.Note : Ignore if any error message appear like below.Click on the created KMS key. Copy the ARN and keep it for future reference.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-05.png",
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-06.png",
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-07.png"
+          ]
         },
         {
-          "text": "Note : Ignore if any error message appear like below."
+          "text": "Click on the Finish button."
+        },
+        {
+          "text": "Task 3: Create an KMS Key",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-08.png"
+          ]
         },
         {
           "text": "Click on the created KMS key. Copy the ARN and keep it for future reference."
@@ -123,6 +161,9 @@
           "text": "Click on the Create Security group button."
         },
         {
+          "text": "In the security group page, Security group name: Enter RDS_sg Description: Enter Security group for RDS VPC: Select Default VPC"
+        },
+        {
           "text": "In the security group page,"
         },
         {
@@ -133,6 +174,15 @@
         },
         {
           "text": "VPC: Select Default VPC"
+        },
+        {
+          "text": "Task 4: Create a Security group for RDS DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-09.png"
+          ]
+        },
+        {
+          "text": "Click on the Add Rule button under Inbound rules. Type: Select MYSQL/Aurora Source: Select Anywhere-IPv4 In the textbox add 0.0.0.0/0"
         },
         {
           "text": "Click on the Add Rule button under Inbound rules."
@@ -150,7 +200,19 @@
           "text": "Leave the outbound rules as it is."
         },
         {
-          "text": "Leave everything as default and click on the Create security group button."
+          "text": "Task 4: Create a Security group for RDS DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-10.png"
+          ]
+        },
+        {
+          "text": "Leave everything as default and click on the Create security group button."
+        },
+        {
+          "text": "Task 4: Create a Security group for RDS DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-11.png"
+          ]
         }
       ]
     },
@@ -158,25 +220,43 @@
       "title": "Task 5: Create an Amazon RDS DB Instance",
       "steps": [
         {
-          "text": "Navigate to the Services menu at the top left corner and click on Aurora and RDS present under the Database section."
+          "text": "Navigate to the Services menu at the top left corner and click on Aurora and RDS present under the Database section."
         },
         {
           "text": "RDS dashboard is displayed."
         },
         {
-          "text": "Click on the Create database button then choose Full Configuration. You are navigated to the page where you will provide all the required details to create a MySQL database."
+          "text": "Click on the Create database button then choose Full Configuration. You are navigated to the page where you will provide all the required details to create a MySQL database."
         },
         {
-          "text": "On the page, click on the option Standard create a method for our lab requirement."
+          "text": "On the page, click on the option Standard create a method for our lab requirement."
         },
         {
-          "text": "In the Engine options, select MySQL engine type."
+          "text": "In the Engine options, select MySQL engine type.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-12.png"
+          ]
+        },
+        {
+          "text": "Task 5: Create an Amazon RDS DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-13.png"
+          ]
         },
         {
           "text": "Edition: Leave it as default"
         },
         {
-          "text": "Under Templates, select Dev/test and choose Single-AZ DB Instance deployment (1 Instance) option."
+          "text": "Under Templates, select Dev/test and choose Single-AZ DB Instance deployment (1 Instance) option.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-14.png"
+          ]
+        },
+        {
+          "text": "Task 5: Create an Amazon RDS DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-15.png"
+          ]
         },
         {
           "text": "Under Settings, provide the following details."
@@ -194,28 +274,58 @@
           "text": "Confirm password: Enter lab123"
         },
         {
-          "text": "Note - Make sure the master and confirm passwords should be the same. Make a note of the username and password for later use."
+          "text": "Note - Make sure the master and confirm passwords should be the same. Make a note of the username and password for later use."
         },
         {
-          "text": "Under DB instance class, select Burstable classes (including t classes) and select db.t3.micro"
+          "text": "Task 5: Create an Amazon RDS DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-16.png"
+          ]
+        },
+        {
+          "text": "Under DB instance class, select Burstable classes (including t classes) and select db.t3.micro",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-17.png"
+          ]
+        },
+        {
+          "text": "Task 5: Create an Amazon RDS DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-18.png"
+          ]
+        },
+        {
+          "text": "Under Storage, Storage type: General Purpose (SSD) (gp2) Allocated storage: 20 Uncheck Enable storage autoscaling.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-19.png"
+          ]
         },
         {
           "text": "Under Storage,"
         },
         {
-          "text": "Storage type: General Purpose (SSD) (gp2)"
+          "text": "Storage type: General Purpose (SSD) (gp2)"
         },
         {
-          "text": "Allocated storage: 20"
+          "text": "Allocated storage: 20"
         },
         {
-          "text": "Uncheck Enable storage autoscaling."
+          "text": "Uncheck Enable storage autoscaling.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-20.png"
+          ]
         },
         {
           "text": "Leave the Availability and durability as default."
         },
         {
+          "text": "Under Connectivity: Network & Security Virtual Private Cloud (VPC): default VPC Subnet group: default Public accessibility: Choose Yes (Important) VPC security groups: Select Choose existing\nRemove the default one and select RDS_sg instead."
+        },
+        {
           "text": "Under Connectivity:"
+        },
+        {
+          "text": "Network & Security Virtual Private Cloud (VPC): default VPC Subnet group: default Public accessibility: Choose Yes (Important) VPC security groups: Select Choose existing\nRemove the default one and select RDS_sg instead."
         },
         {
           "text": "Network & Security"
@@ -230,19 +340,31 @@
           "text": "Public accessibility: Choose Yes (Important)"
         },
         {
-          "text": "VPC security groups: Select Choose existing"
+          "text": "VPC security groups: Select Choose existing\nRemove the default one and select RDS_sg instead."
         },
         {
-          "text": "Remove the default one and select RDS_sg instead."
+          "text": "Availability zone: default No Preference.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-21.png"
+          ]
         },
         {
-          "text": "Availability zone: default No Preference."
+          "text": "Task 5: Create an Amazon RDS DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-22.png"
+          ]
         },
         {
           "text": "Leave Database Authentication as default."
         },
         {
           "text": "Expand the Additional configuration."
+        },
+        {
+          "text": "Task 5: Create an Amazon RDS DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-23.png"
+          ]
         },
         {
           "text": "In the displayed layout provide the following values under Database options."
@@ -263,10 +385,13 @@
           "text": "Uncheck Deletion protection."
         },
         {
-          "text": "Click on Create database button to create the database. This process does take time between 5-10 minutes."
+          "text": "Click on Create database button to create the database. This process does take time between 5-10 minutes."
         },
         {
-          "text": "Once the database is created the status changes to Available."
+          "text": "Once the database is created the status changes to Available.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-24.png"
+          ]
         },
         {
           "text": "Click on the database identifier demo-db and copy the database endpoint."
@@ -280,10 +405,16 @@
           "text": "In this example, we will connect to a database on a MySQL DB instance using MySQL monitor commands. One GUI-based application you can use to connect is MySQL workbench, which you have already downloaded and installed based on instructions in the prerequisite section."
         },
         {
+          "text": "To connect to a database on a DB instance using MySQL monitor, find the endpoint (DNS name) and port number for your DB Instance. Navigate to Databases and click on the created demo-db. Under Connectivity & security section, click on Endpoints option to copy endpoint and port. Endpoint: demo-db.c7owzvjtjkvz.us-east-1.rds.amazonaws.com Port: 3306 You need both the endpoint and the port number to connect to the DB instance."
+        },
+        {
           "text": "To connect to a database on a DB instance using MySQL monitor, find the endpoint (DNS name) and port number for your DB Instance."
         },
         {
           "text": "Navigate to Databases and click on the created demo-db."
+        },
+        {
+          "text": "Under Connectivity & security section, click on Endpoints option to copy endpoint and port. Endpoint: demo-db.c7owzvjtjkvz.us-east-1.rds.amazonaws.com Port: 3306 You need both the endpoint and the port number to connect to the DB instance."
         },
         {
           "text": "Under Connectivity & security section, click on Endpoints option to copy endpoint and port."
@@ -298,25 +429,40 @@
           "text": "You need both the endpoint and the port number to connect to the DB instance."
         },
         {
+          "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon. Connection Name : Enter a sample name MyDBConnection. Host Name: Enter the endpoint: demo-db.c03iqoooef9u.us-east-1.rds.amazonaws.comPort: 3306 Username: Enter lab Password: Click on Store in Vault option and enter a password - lab123. Click on Ok."
+        },
+        {
           "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon."
         },
         {
           "text": "Connection Name : Enter a sample name MyDBConnection."
         },
         {
-          "text": "Host Name: Enter the endpoint: demo-db.c03iqoooef9u.us-east-1.rds.amazonaws.com"
+          "text": "Host Name: Enter the endpoint: demo-db.c03iqoooef9u.us-east-1.rds.amazonaws.com"
         },
         {
           "text": "Port: 3306"
         },
         {
-          "text": "Username: Enter lab"
+          "text": "Username: Enter lab"
         },
         {
           "text": "Password: Click on Store in Vault option and enter a password - lab123. Click on Ok."
         },
         {
+          "text": "Task 6: Connect to RDS Database using the MySQL Workbench",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-25.png"
+          ]
+        },
+        {
           "text": "Click on Test Connection to make sure that you are able to connect to the database properly."
+        },
+        {
+          "text": "Task 6: Connect to RDS Database using the MySQL Workbench",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-26.png"
+          ]
         },
         {
           "text": "Click on OK and OK again to save the connection."
@@ -325,10 +471,22 @@
           "text": "A database connection will be created in MySQL Workbench."
         },
         {
+          "text": "Task 6: Connect to RDS Database using the MySQL Workbench",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-27.png"
+          ]
+        },
+        {
           "text": "Double-click on it to open the database. Enter the database password if prompted."
         },
         {
           "text": "After successfully connecting and opening the database, you can create tables and perform various queries over the connected database."
+        },
+        {
+          "text": "Task 6: Connect to RDS Database using the MySQL Workbench",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-28.png"
+          ]
         },
         {
           "text": "Navigate to the Schemas tab to see databases available to start doing database operations."
@@ -342,64 +500,52 @@
           "text": "In the SQL Editor, let us create a sample database and a table for demo purposes."
         },
         {
-          "text": "Note: After executing every command, it is necessary to clear the editor and proceed to the next command."
+          "text": "For executing the command press the icon as shown below in the image."
         },
         {
-          "text": "For executing the command press the icon as shown below in the image."
+          "text": "Task 7: Create a sample database and a table",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-29.png"
+          ]
+        },
+        {
+          "text": "To see the changes after every execution, click on the Refresh button, right to the SCHEMAS.Note: Please copy-paste the SQL queries carefully, double-check, and remove extra whitespaces."
         },
         {
           "text": "To see the changes after every execution, click on the Refresh button, right to the SCHEMAS."
         },
         {
-          "text": "Note: Please copy-paste the SQL queries carefully, double-check, and remove extra whitespaces."
-        },
-        {
           "text": "Create a database:"
         },
         {
-          "text": "CREATE DATABASE SchoolDB;"
+          "text": "Task 7: Create a sample database and a table",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-30.png"
+          ]
         },
         {
           "text": "You can see the created database with the following command:"
         },
         {
-          "text": "show databases;"
+          "text": "Task 7: Create a sample database and a table",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-31.png"
+          ]
         },
         {
           "text": "Switch to the database named SchoolDB."
         },
         {
-          "text": "use SchoolDB;"
-        },
-        {
           "text": "Create a sample table consisting of Subjects."
         },
         {
-          "text": "CREATE TABLE IF NOT EXISTS subjects ("
-        },
-        {
-          "text": "subject_id INT AUTO_INCREMENT,"
-        },
-        {
-          "text": "subject_name VARCHAR(255) NOT NULL,"
-        },
-        {
-          "text": "teacher VARCHAR(255),"
-        },
-        {
-          "text": "lesson TEXT,"
-        },
-        {
-          "text": "PRIMARY KEY (subject_id)"
-        },
-        {
-          "text": ") ENGINE=INNODB;"
+          "text": "Task 7: Create a sample database and a table",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-32.png"
+          ]
         },
         {
           "text": "Enter"
-        },
-        {
-          "text": "show tables;"
         },
         {
           "text": "to see the table you just created."
@@ -408,22 +554,19 @@
           "text": "Insert some details into the table executing one after the other:"
         },
         {
-          "text": "INSERT INTO subjects(subject_name, teacher, lesson) VALUES ('English', 'John Taylor', 'Chapter one');"
-        },
-        {
-          "text": "INSERT INTO subjects(subject_name, teacher, lesson) VALUES ('Science', 'Mary Smith', 'Chapter four');"
-        },
-        {
-          "text": "INSERT INTO subjects(subject_name, teacher, lesson) VALUES ('Maths', 'Ted Miller', 'Chapter ten');"
-        },
-        {
-          "text": "INSERT INTO subjects(subject_name, teacher, lesson) VALUES ('Arts', 'Suzan Carpenter', 'Chapter seven');"
+          "text": "Task 7: Create a sample database and a table",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-33.png"
+          ]
         },
         {
           "text": "Let's check the items we added to the table:"
         },
         {
-          "text": "select * from subjects;"
+          "text": "Task 7: Create a sample database and a table",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-34.png"
+          ]
         },
         {
           "text": "We have created a sample database and table."
@@ -446,10 +589,34 @@
           "text": "Click Take snapshot from the options."
         },
         {
-          "text": "Give a name to the snapshot, demo-db-snapshot (give a unique name for validation report purposes) and click on the Take snapshot button."
+          "text": "Task 8: Take a Snapshot from the existing DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-35.png"
+          ]
         },
         {
-          "text": "The snapshot creation takes 3-5 minutes. Refresh after some time, the snapshot creation status will be Available."
+          "text": "Give a name to the snapshot, demo-db-snapshot (give a unique name for validation report purposes) and click on the Take snapshot button.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-36.png"
+          ]
+        },
+        {
+          "text": "Task 8: Take a Snapshot from the existing DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-37.png"
+          ]
+        },
+        {
+          "text": "The snapshot creation takes 3-5 minutes. Refresh after some time, the snapshot creation status will be Available.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-38.png"
+          ]
+        },
+        {
+          "text": "Task 8: Take a Snapshot from the existing DB Instance",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-39.png"
+          ]
         }
       ]
     },
@@ -463,7 +630,19 @@
           "text": "Select the created snapshot and click on the Actions."
         },
         {
-          "text": "Click on Export to Amazon S3 from the options."
+          "text": "Click on Export to Amazon S3 from the options.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-40.png"
+          ]
+        },
+        {
+          "text": "Task 9: Export the DB snapshot to S3",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-41.png"
+          ]
+        },
+        {
+          "text": "Under Settings, give a name to identify the export: Export Identifier: Enter snap-export-s3 Leave the Exported data as default. Under the S3 destination, select the created S3 from the drop-down. Under IAM Role, choose to Select an existing role from the drop-down named as WhizRole.Note: Do not select any other IAM role present instead of WhizRole."
         },
         {
           "text": "Under Settings, give a name to identify the export:"
@@ -475,28 +654,37 @@
           "text": "Leave the Exported data as default."
         },
         {
-          "text": "Under the S3 destination, select the created S3 from the drop-down."
+          "text": "Under the S3 destination, select the created S3 from the drop-down."
         },
         {
-          "text": "Under IAM Role, choose to Select an existing role from the drop-down named as WhizRole."
+          "text": "Under IAM Role, choose to Select an existing role from the drop-down named as WhizRole.Note: Do not select any other IAM role present instead of WhizRole."
         },
         {
-          "text": "Note: Do not select any other IAM role present instead of WhizRole."
+          "text": "Under IAM Role, choose to Select an existing role from the drop-down named as WhizRole."
+        },
+        {
+          "text": "Task 9: Export the DB snapshot to S3",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-42.png"
+          ]
         },
         {
           "text": "Select the created KMS key from the drop-down or enter the ARN that we noted while creating the key."
         },
         {
-          "text": "Note: There may be other keys present, select the one you created in previous steps."
-        },
-        {
           "text": "Review all the settings and click on Export to Amazon S3."
         },
         {
-          "text": "This may take upto 20-25 minutes as it is exporting the whole database. You can see a Complete status once the export is done."
+          "text": "This may take upto 20-25 minutes as it is exporting the whole database. You can see a Complete status once the export is done.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-43.png"
+          ]
         },
         {
-          "text": "Note: You will be seeing other exports also in the Export to Amazon S3 tab. The reason is, we cannot delete them. Ignore the other exports done, if you see them."
+          "text": "Task 9: Export the DB snapshot to S3",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-44.png"
+          ]
         }
       ]
     },
@@ -510,6 +698,9 @@
           "text": "You will be able to see a folder with the name of the export identifier."
         },
         {
+          "text": "When clicked on that, you can see 2 JSON files. The First JSON file is the final report of the export task. The Second JSON file gives us information about the individual table including overall size and the data type mappings."
+        },
+        {
           "text": "When clicked on that, you can see 2 JSON files."
         },
         {
@@ -519,13 +710,19 @@
           "text": "The Second JSON file gives us information about the individual table including overall size and the data type mappings."
         },
         {
-          "text": "You can see the SchoolDB database we created earlier."
+          "text": "You can see the SchoolDB database we created earlier.",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-45.png"
+          ]
+        },
+        {
+          "text": "Task 10: Check the exported data in Amazon S3",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-46.png"
+          ]
         },
         {
           "text": "In this way, we can export the snapshots to S3."
-        },
-        {
-          "text": "Do you know?"
         },
         {
           "text": "Cross-Region Snapshot Exports: By default, you can export an RDS DB snapshot to an S3 bucket in the same AWS Region. However, if you need to export the snapshot to an S3 bucket in a different AWS Region, you can leverage the AWS Data Pipeline service. It allows you to create a pipeline that copies the snapshot to a different region."
@@ -536,22 +733,25 @@
       "title": "Task 11: Validation test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel and re-click validate my lab button."
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel and re-click validate my lab button."
         },
         {
           "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
+        },
+        {
+          "text": "Task 11: Validation test",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-47.gif"
+          ]
         }
       ]
     },
     {
       "title": "Task 12: Delete AWS Resources",
       "steps": [
-        {
-          "text": "Deleting the DB Instance"
-        },
         {
           "text": "Click on Databases present to the left of the screen."
         },
@@ -571,13 +771,16 @@
           "text": "Confirm the deletion by entering delete me and click on delete."
         },
         {
-          "text": "The status changes to deleting and the DB Instance gets deleted."
+          "text": "Task 12: Delete AWS Resources",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-48.png"
+          ]
+        },
+        {
+          "text": "The status changes to deleting and the DB Instance gets deleted."
         },
         {
           "text": "You can proceed to further steps even if it is in a deleting state."
-        },
-        {
-          "text": "Deleting the Snapshot"
         },
         {
           "text": "Click on the Snapshots on the left of your screen. Under Manual snapshots, select the unencrypted snapshot and click on Actions."
@@ -589,7 +792,10 @@
           "text": "Confirm by clicking on the Delete button."
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 12: Delete AWS Resources",
+          "images": [
+            "/labs/export-amazon-rds-db-snapshot-to-s3/step-49.png"
+          ]
         },
         {
           "text": "You have created an S3 Bucket to store the backup of exports."
@@ -610,16 +816,13 @@
           "text": "You have checked the exported data in the S3 Bucket."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Management Console."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
         }
       ]
     }

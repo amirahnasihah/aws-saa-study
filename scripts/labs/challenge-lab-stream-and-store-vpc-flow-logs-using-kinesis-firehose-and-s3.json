@@ -1,0 +1,136 @@
+{
+  "slug": "challenge-lab-stream-and-store-vpc-flow-logs-using-kinesis-firehose-and-s3",
+  "title": "Challenge Lab: Transfer data to S3 using Amazon Kinesis Firehose",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge, set up a VPC flow log delivery pipeline using Kinesis Firehose and S3. Test your skills in networking and real-time data streaming—no step-by-step guidance provided."
+        },
+        {
+          "text": "You are working as a Cloud Engineer for a company that wants to analyze network traffic within their cloud environment for security and performance monitoring. Your task is to set up an end-to-end pipeline that captures VPC traffic logs, sends them to CloudWatch Logs, and then transfers them to an Amazon S3 bucket using Amazon Kinesis Data Firehose for long-term storage and future analysis."
+        },
+        {
+          "text": "Create an S3 bucket Create a new Public S3 bucket in the us-east-1 region. Use a unique name and default settings."
+        },
+        {
+          "text": "Create a new Public S3 bucket in the us-east-1 region. Use a unique name and default settings."
+        },
+        {
+          "text": "Create a Kinesis Firehose delivery stream Use \"Direct PUT\" as the source. Set the destination to the S3 bucket created above. Adjust buffer size and interval as needed. Use an Pre-configured IAM role."
+        },
+        {
+          "text": "Use \"Direct PUT\" as the source."
+        },
+        {
+          "text": "Set the destination to the S3 bucket created above."
+        },
+        {
+          "text": "Adjust buffer size and interval as needed."
+        },
+        {
+          "text": "Use an Pre-configured IAM role."
+        },
+        {
+          "text": "Create a CloudWatch Log Group Create a log group to store VPC Flow Logs."
+        },
+        {
+          "text": "Create a log group to store VPC Flow Logs."
+        },
+        {
+          "text": "Set up VPC networking Create a new VPC with custom CIDR. Add a public subnet. Create and attach an Internet Gateway. Update the main route table to allow internet access."
+        },
+        {
+          "text": "Create a new VPC with custom CIDR."
+        },
+        {
+          "text": "Add a public subnet."
+        },
+        {
+          "text": "Create and attach an Internet Gateway."
+        },
+        {
+          "text": "Update the main route table to allow internet access."
+        },
+        {
+          "text": "Enable VPC Flow Logs Create flow logs for the VPC. Send logs to the CloudWatch Log Group created earlier. Use a role with appropriate permissions."
+        },
+        {
+          "text": "Create flow logs for the VPC."
+        },
+        {
+          "text": "Send logs to the CloudWatch Log Group created earlier."
+        },
+        {
+          "text": "Use a role with appropriate permissions."
+        },
+        {
+          "text": "Launch an EC2 instance Use Amazon Linux 2023 kernel-6.1 AMI and instance type: t2.micro Place it in the custom VPC and public subnet. Ensure it has a public IP. Allow inbound SSH, HTTP and HTTPS traffic via a security group. Connect via SSH and install a basic web server."
+        },
+        {
+          "text": "Use Amazon Linux 2023 kernel-6.1 AMI and instance type: t2.micro"
+        },
+        {
+          "text": "Place it in the custom VPC and public subnet."
+        },
+        {
+          "text": "Ensure it has a public IP."
+        },
+        {
+          "text": "Allow inbound SSH, HTTP and HTTPS traffic via a security group."
+        },
+        {
+          "text": "Connect via SSH and install a basic web server."
+        },
+        {
+          "text": "Verify traffic Access the EC2 public IP in a browser to verify traffic. Check CloudWatch logs to see flow log entries. Confirm logs are delivered to S3 via Firehose."
+        },
+        {
+          "text": "Access the EC2 public IP in a browser to verify traffic."
+        },
+        {
+          "text": "Check CloudWatch logs to see flow log entries."
+        },
+        {
+          "text": "Confirm logs are delivered to S3 via Firehose."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

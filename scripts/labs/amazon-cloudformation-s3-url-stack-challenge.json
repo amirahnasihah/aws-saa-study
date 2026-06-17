@@ -12,37 +12,28 @@
       "title": "Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
-        },
-        {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page, leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
         },
         {
-          "text": "On the AWS sign-in page, leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the challenge."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
-        },
-        {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
-        },
-        {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
-        },
-        {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
           "text": "In this challenge, your CloudFormation Stack skills are put to the test. You'll be given a requirement and you have to reach it using your knowledge of S3 bucket, Stack and LAMP Server which will be used in this challenge. This Challenge will help you understand the real-time scenarios."
         },
         {
-          "text": "A company XYZ wants to deploy a simple LAMP server using AWS CloudFormation. They want to do this by using a CloudFormation stack with an S3 Object URL. The below are the tasks that need to be performed by you in order to create the stack."
+          "text": "Sign in to AWS Management Console",
+          "images": [
+            "/labs/amazon-cloudformation-s3-url-stack-challenge/step-01.png"
+          ]
         },
         {
-          "text": "Create CloudFormation Stack:"
+          "text": "A company XYZ wants to deploy a simple LAMP server using AWS CloudFormation. They want to do this by using a CloudFormation stack with an S3 Object URL. The below are the tasks that need to be performed by you in order to create the stack."
         },
         {
           "text": "Create CloudFormation Stack:"
@@ -51,16 +42,7 @@
           "text": "Launch EC2 with CloudFormation"
         },
         {
-          "text": "Launch EC2 with CloudFormation"
-        },
-        {
           "text": "Install LAMP/ MySQL"
-        },
-        {
-          "text": "Install LAMP/ MySQL"
-        },
-        {
-          "text": "Configure the Database with CloudFormation."
         },
         {
           "text": "Configure the Database with CloudFormation."
@@ -69,16 +51,7 @@
           "text": "Access the PHP page in browser."
         },
         {
-          "text": "Access the PHP page in browser."
-        },
-        {
-          "text": "Click on the Validate to complete the challenge."
-        },
-        {
-          "text": "Click on the Validate to complete the challenge."
-        },
-        {
-          "text": "Delete the resources after Validation."
+          "text": "Click on the Validate to complete the challenge."
         },
         {
           "text": "Delete the resources after Validation."
@@ -87,19 +60,10 @@
           "text": "Sign out of the AWS Account."
         },
         {
-          "text": "Sign out of the AWS Account."
-        },
-        {
           "text": "You have successfully completed the challenge."
         },
         {
-          "text": "You have successfully completed the challenge."
-        },
-        {
-          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
-        },
-        {
-          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
         }
       ]
     }

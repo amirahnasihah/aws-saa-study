@@ -34,21 +34,21 @@ function isRateLimitedOrDown(r: FreeResult): boolean {
   return 'error' in r && (r.status === 429 || r.status === 503 || r.status === 408)
 }
 
-/** ILMU → NVIDIA → Gemini fallback chain */
+/** NVIDIA → ILMU → Gemini fallback chain */
 async function completeFree(
   systemPrompt: string,
   messages: Array<{ role: 'user' | 'assistant'; content: string }>,
   maxTokens: number
 ): Promise<FreeResult> {
-  const ilmuKey = readIlmuApiKey()
-  if (ilmuKey) {
-    const r = await callIlmu(systemPrompt, messages, ilmuKey, maxTokens)
-    if (!isRateLimitedOrDown(r)) return r
-  }
-
   const nvidiaKey = readNvidiaApiKey()
   if (nvidiaKey) {
     const r = await callNvidia(nvidiaKey, systemPrompt, messages, maxTokens)
+    if (!isRateLimitedOrDown(r)) return r
+  }
+
+  const ilmuKey = readIlmuApiKey()
+  if (ilmuKey) {
+    const r = await callIlmu(systemPrompt, messages, ilmuKey, maxTokens)
     if (!isRateLimitedOrDown(r)) return r
   }
 

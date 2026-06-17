@@ -1,0 +1,67 @@
+{
+  "slug": "ec2-challenge-cloud-core-compute-quest",
+  "title": "EC2 Challenge-Cloud-Core Compute Quest",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company is establishing its AWS infrastructure and needs a secure EC2 instance to support a web application. Your role is to deploy an EC2 instance and configure a security group to permit SSH access, ensuring compliance with AWS security best practices."
+        },
+        {
+          "text": "Create a Security Group:"
+        },
+        {
+          "text": "Create a security group with the SSH port (22) enabled"
+        },
+        {
+          "text": "Launch an instance with"
+        },
+        {
+          "text": "Amazon Linux 2023 kernel AMI with t2-micro and the keypair with enabling auto-assigning IP"
+        },
+        {
+          "text": "Use the Default VPC"
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

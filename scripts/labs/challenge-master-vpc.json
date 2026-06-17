@@ -1,0 +1,76 @@
+{
+  "slug": "challenge-master-vpc",
+  "title": "Challenge Lab - Build Amazon VPC with Public and Private Subnets (from Scratch)",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click Open Console to launch the AWS Management Console in a new browser tab."
+        },
+        {
+          "text": "On the login page: Retain the default Account ID (12-digit number; do not edit). Input the provided IAM Username and Password. Click Sign In."
+        },
+        {
+          "text": "Retain the default Account ID (12-digit number; do not edit)."
+        },
+        {
+          "text": "Input the provided IAM Username and Password."
+        },
+        {
+          "text": "Click Sign In."
+        },
+        {
+          "text": "In the Console, select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "XYZ Company needs a secure network to host its website and database in the cloud. Your job is to create a VPC from scratch, add public and private subnets, connect the public subnet to the internet, set up traffic rules, and test it all. Here’s how to do each step in the simplest way:"
+        },
+        {
+          "text": "Create a VPC:"
+        },
+        {
+          "text": "Create an Internet Gateway and attach to VPC:"
+        },
+        {
+          "text": "Create private and public subnets for the VPC:"
+        },
+        {
+          "text": "Create and Configure Route Tables: Create two Route tables 1.public 2.private Route IG to public Route-table Do subnet associates(Attach Public sunet to your public route table)"
+        },
+        {
+          "text": "Create two Route tables 1.public 2.private"
+        },
+        {
+          "text": "Route IG to public Route-table"
+        },
+        {
+          "text": "Do subnet associates(Attach Public sunet to your public route table)"
+        },
+        {
+          "text": "Check if everything works. In the lab console, click Validate to make sure the VPC, subnets, internet gateway, and route tables are set up correctly."
+        },
+        {
+          "text": "Sign out of the AWS Management Console."
+        },
+        {
+          "text": "In the lab console, click End Challenge and wait for it to finish."
+        },
+        {
+          "text": "You’ve completed the VPC challenge!"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

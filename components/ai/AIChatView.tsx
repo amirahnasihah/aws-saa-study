@@ -8,6 +8,7 @@ import { byokProviderLabel, isByokProvider, needsByokKey } from '@/lib/ai/provid
 import AISourceLinks from '@/components/ai/AISourceLinks'
 import CopyButton from '@/components/ai/CopyButton'
 import BookmarkAnswerButton from '@/components/ai/BookmarkAnswerButton'
+import ChatMarkdown from '@/components/ai/ChatMarkdown'
 import { chatToMarkdown, downloadTextFile, exportFilenames } from '@/lib/export'
 import type { ChatResponse } from '@/lib/ai/types'
 
@@ -45,16 +46,7 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
     el.style.height = `${Math.min(el.scrollHeight, 140)}px`
   }, [input])
 
-  const sendMessage = async (text?: string) => {
-    const content = (text ?? input).trim()
-    if (!content || uiState === 'loading') return
-    if (needsByokKey(provider) && !byokKey) return
-
-    const userMsg = { role: 'user' as const, content }
-    const historyForApi = messages.map(({ role, content: c }) => ({ role, content: c }))
-
-    setMessages((prev) => [...prev, userMsg])
-    setInput('')
+  const requestReply = async (content: string, historyForApi: { role: string; content: string }[]) => {
     setUiState('loading')
     setErrorMsg(null)
 
@@ -94,6 +86,27 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
       setErrorMsg('Could not reach the AI service. Check your connection.')
       setUiState('error')
     }
+  }
+
+  const sendMessage = async (text?: string) => {
+    const content = (text ?? input).trim()
+    if (!content || uiState === 'loading') return
+    if (needsByokKey(provider) && !byokKey) return
+
+    const historyForApi = messages.map(({ role, content: c }) => ({ role, content: c }))
+
+    setMessages((prev) => [...prev, { role: 'user', content }])
+    setInput('')
+    await requestReply(content, historyForApi)
+  }
+
+  const retryLastMessage = () => {
+    if (uiState === 'loading') return
+    const lastUserMsg = messages[messages.length - 1]
+    if (!lastUserMsg || lastUserMsg.role !== 'user') return
+
+    const historyForApi = messages.slice(0, -1).map(({ role, content: c }) => ({ role, content: c }))
+    void requestReply(lastUserMsg.content, historyForApi)
   }
 
   const needsKey = needsByokKey(provider) && !byokKey
@@ -150,8 +163,8 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
               </div>
             ) : (
               <div className="max-w-[92%] space-y-2">
-                <div className="px-3.5 py-2.5 rounded-2xl rounded-tl-sm bg-aws-card border border-aws-border/60 text-[0.82rem] text-aws-text leading-[1.8]">
-                  {msg.content}
+                <div className="px-3.5 py-2.5 rounded-2xl rounded-tl-sm bg-aws-card border border-aws-border/60">
+                  <ChatMarkdown content={msg.content} />
                 </div>
                 {msg.awsDocsUrl && msg.youtubeQuery && (
                   <AISourceLinks
@@ -185,7 +198,16 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
         )}
 
         {uiState === 'error' && errorMsg && (
-          <p className="font-space-mono text-[0.6rem] text-red-400/80 pl-1">{errorMsg}</p>
+          <div className="flex items-center gap-2 pl-1">
+            <p className="font-space-mono text-[0.6rem] text-red-400/80">{errorMsg}</p>
+            <button
+              type="button"
+              onClick={retryLastMessage}
+              className="font-space-mono text-[0.6rem] text-aws-muted/60 hover:text-c1 underline transition-colors"
+            >
+              Retry
+            </button>
+          </div>
         )}
 
         <div ref={bottomRef} />

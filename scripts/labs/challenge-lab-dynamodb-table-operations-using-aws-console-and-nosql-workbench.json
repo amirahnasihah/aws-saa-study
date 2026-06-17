@@ -1,0 +1,184 @@
+{
+  "slug": "challenge-lab-dynamodb-table-operations-using-aws-console-and-nosql-workbench",
+  "title": "Challenge Lab: Create a DynamoDB table and perform various table operations using NoSQL Workbench",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:15:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge, you will create and manage DynamoDB tables using the AWS Console and NoSQL Workbench. You will design the tables, add data, make updates, and sync changes. The steps are not fully given — you will plan and complete the tasks on your own."
+        },
+        {
+          "text": "You are a Cloud Developer tasked with creating and managing data in a DynamoDB table for a university’s student and movie databases."
+        },
+        {
+          "text": "You will create tables, add, update, and delete items, and sync changes between NoSQL Workbench and AWS DynamoDB."
+        },
+        {
+          "text": "Create the First DynamoDB Table in AWS Console Create a new table by choosing a partition key (a unique identifier for your items, like UserID) and optionally a sort key (to organize data within a partition, like OrderDate). After creating the table, manually add at least three items (records) directly using the AWS Console’s interface."
+        },
+        {
+          "text": "Create a new table by choosing a partition key (a unique identifier for your items, like UserID) and optionally a sort key (to organize data within a partition, like OrderDate)."
+        },
+        {
+          "text": "After creating the table, manually add at least three items (records) directly using the AWS Console’s interface."
+        },
+        {
+          "text": "Connect NoSQL Workbench to Your AWS Account Open NoSQL Workbench Launch the tool installed earlier. Under Amazon DynamoDB, choose to launch the local setup. Create a New Connection Go to the Operation builder section and click Add connection. You’ll be asked to provide region and credentials. Configure AWS Credentials on Your Local Machine You need to update two files (config and credentials) inside the hidden .aws directory in your user folder. For Windows: Navigate to %USERPROFILE%\\.aws For macOS/Linux: Use ~/.aws directory through Terminal Open both files using a text editor and update them with your lab’s Access Key ID, Secret Access Key, and region. Make sure the structure follows standard AWS CLI formatting. Save the Files After updating the values, save and close both files. These act as your identity when making connections from local tools like NoSQL Workbench. Complete the Connection in NoSQL Workbench In the connection screen, fill in a name, region (us-east-1), and the credentials you configured. Enable persistence if you want to reuse the connection later. Click Connect. Access Your Table Once connected, choose Open under your connection. Your existing DynamoDB table (e.g., Student_Info) will appear in the interface."
+        },
+        {
+          "text": "Open NoSQL Workbench Launch the tool installed earlier. Under Amazon DynamoDB, choose to launch the local setup."
+        },
+        {
+          "text": "Launch the tool installed earlier. Under Amazon DynamoDB, choose to launch the local setup."
+        },
+        {
+          "text": "Create a New Connection Go to the Operation builder section and click Add connection. You’ll be asked to provide region and credentials."
+        },
+        {
+          "text": "Go to the Operation builder section and click Add connection. You’ll be asked to provide region and credentials."
+        },
+        {
+          "text": "Configure AWS Credentials on Your Local Machine You need to update two files (config and credentials) inside the hidden .aws directory in your user folder. For Windows: Navigate to %USERPROFILE%\\.aws For macOS/Linux: Use ~/.aws directory through Terminal Open both files using a text editor and update them with your lab’s Access Key ID, Secret Access Key, and region. Make sure the structure follows standard AWS CLI formatting."
+        },
+        {
+          "text": "You need to update two files (config and credentials) inside the hidden .aws directory in your user folder. For Windows: Navigate to %USERPROFILE%\\.aws For macOS/Linux: Use ~/.aws directory through Terminal"
+        },
+        {
+          "text": "For Windows: Navigate to %USERPROFILE%\\.aws"
+        },
+        {
+          "text": "For macOS/Linux: Use ~/.aws directory through Terminal"
+        },
+        {
+          "text": "Open both files using a text editor and update them with your lab’s Access Key ID, Secret Access Key, and region. Make sure the structure follows standard AWS CLI formatting."
+        },
+        {
+          "text": "Save the Files After updating the values, save and close both files. These act as your identity when making connections from local tools like NoSQL Workbench."
+        },
+        {
+          "text": "After updating the values, save and close both files. These act as your identity when making connections from local tools like NoSQL Workbench."
+        },
+        {
+          "text": "Complete the Connection in NoSQL Workbench In the connection screen, fill in a name, region (us-east-1), and the credentials you configured. Enable persistence if you want to reuse the connection later. Click Connect."
+        },
+        {
+          "text": "In the connection screen, fill in a name, region (us-east-1), and the credentials you configured."
+        },
+        {
+          "text": "Enable persistence if you want to reuse the connection later."
+        },
+        {
+          "text": "Click Connect."
+        },
+        {
+          "text": "Access Your Table Once connected, choose Open under your connection. Your existing DynamoDB table (e.g., Student_Info) will appear in the interface."
+        },
+        {
+          "text": "Once connected, choose Open under your connection. Your existing DynamoDB table (e.g., Student_Info) will appear in the interface."
+        },
+        {
+          "text": "Modify the First Table Using NoSQL Workbench Insert two more items into the first table using NoSQL Workbench. Perform an UpdateItem operation to change some attributes of an existing item (e.g., update a user's email or order status). Perform a DeleteItem operation to remove one of the items from the table."
+        },
+        {
+          "text": "Insert two more items into the first table using NoSQL Workbench."
+        },
+        {
+          "text": "Perform an UpdateItem operation to change some attributes of an existing item (e.g., update a user's email or order status)."
+        },
+        {
+          "text": "Perform a DeleteItem operation to remove one of the items from the table."
+        },
+        {
+          "text": "Design the Second Table in NoSQL Workbench Create a new table design in NoSQL Workbench with a different structure than the first table. For example, use a different partition key and sort key (e.g., ProductID and Category). This allows you to practice table design and key selection based on different use cases."
+        },
+        {
+          "text": "Create a new table design in NoSQL Workbench with a different structure than the first table. For example, use a different partition key and sort key (e.g., ProductID and Category)."
+        },
+        {
+          "text": "For example, use a different partition key and sort key (e.g., ProductID and Category)."
+        },
+        {
+          "text": "This allows you to practice table design and key selection based on different use cases."
+        },
+        {
+          "text": "Insert Data into the Second Table Add at least three items into the new second table using NoSQL Workbench."
+        },
+        {
+          "text": "Add at least three items into the new second table using NoSQL Workbench."
+        },
+        {
+          "text": "Deploy the Second Table to AWS Use NoSQL Workbench’s commit feature to deploy this newly designed second table directly to your AWS account. This means the table and its data are created live in DynamoDB without needing to switch to the AWS Console."
+        },
+        {
+          "text": "Use NoSQL Workbench’s commit feature to deploy this newly designed second table directly to your AWS account."
+        },
+        {
+          "text": "This means the table and its data are created live in DynamoDB without needing to switch to the AWS Console."
+        },
+        {
+          "text": "Verify the Tables in AWS Console Go back to the AWS Management Console and check both DynamoDB tables. Verify that: Both tables exist. The first table has the expected number of items after your updates and deletes. The second table has the three inserted items."
+        },
+        {
+          "text": "Go back to the AWS Management Console and check both DynamoDB tables."
+        },
+        {
+          "text": "Verify that: Both tables exist. The first table has the expected number of items after your updates and deletes. The second table has the three inserted items."
+        },
+        {
+          "text": "Both tables exist."
+        },
+        {
+          "text": "The first table has the expected number of items after your updates and deletes."
+        },
+        {
+          "text": "The second table has the three inserted items."
+        },
+        {
+          "text": "Validation and Cleanup Click Validate to confirm that all steps were done correctly. After validation, delete the tables and any other resources you created to avoid extra charges."
+        },
+        {
+          "text": "Click Validate to confirm that all steps were done correctly."
+        },
+        {
+          "text": "After validation, delete the tables and any other resources you created to avoid extra charges."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

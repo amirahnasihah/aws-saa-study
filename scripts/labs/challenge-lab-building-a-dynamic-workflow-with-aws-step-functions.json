@@ -1,0 +1,169 @@
+{
+  "slug": "challenge-lab-building-a-dynamic-workflow-with-aws-step-functions",
+  "title": "Challenge Lab: Creating a workflow using different States with AWS Step Functions",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge lab, you’ll learn to create a serverless workflow using AWS Step Functions and Lambda. You’ll set up a process that adds two numbers, checks if their sum is correct, and either prints the result or adjusts the numbers. This lab helps you understand how to connect AWS Lambda functions with Step Functions for building scalable workflows."
+        },
+        {
+          "text": "Design a state machine using AWS Step Functions that processes two numbers through conditional logic. Utilize AWS Lambda for computation, formatting, and control decisions."
+        },
+        {
+          "text": "You are tasked with building a workflow that:"
+        },
+        {
+          "text": "Takes two numbers as input."
+        },
+        {
+          "text": "Adds them."
+        },
+        {
+          "text": "If the sum is greater than or equal to 10, prints the result."
+        },
+        {
+          "text": "If the sum is less than 10, it increments both numbers, waits 10 seconds, and repeats the process."
+        },
+        {
+          "text": "Create five Lambda functions:"
+        },
+        {
+          "text": "Format Inputs: Takes a list and returns a dictionary with A and B."
+        },
+        {
+          "text": "Add Numbers: Adds A and B, returns the sum."
+        },
+        {
+          "text": "Increment A: Increments A by 1."
+        },
+        {
+          "text": "Increment B: Increments B by 1."
+        },
+        {
+          "text": "Print Sum: Logs the sum of A and B. All Lambda functions must use Python 3.9 and the existing IAM role"
+        },
+        {
+          "text": "All Lambda functions must use Python 3.9 and the existing IAM role"
+        },
+        {
+          "text": "Note down the ARN for each Lambda function. You’ll need them for the Step Function."
+        },
+        {
+          "text": "Providing one starter Lambda function (for summing A and B) and want to follow the same format for the other four functions—offering each as a challenge with hints"
+        },
+        {
+          "text": "Create a State Machine"
+        },
+        {
+          "text": "Using AWS Step Functions, create a state machine that implements the following: Start with adding_A_and_B. Use a Choice state to check if sumAB >= 10: If true ? invoke print_sum and end. If false ? use a Parallel state to increment both A and B. Then call format_inputs, wait for 10 seconds, and repeat the loop. Use your own Lambda ARNs in the definition. Use an existing IAM role for execution."
+        },
+        {
+          "text": "Start with adding_A_and_B."
+        },
+        {
+          "text": "Use a Choice state to check if sumAB >= 10: If true ? invoke print_sum and end. If false ? use a Parallel state to increment both A and B."
+        },
+        {
+          "text": "If true ? invoke print_sum and end."
+        },
+        {
+          "text": "If false ? use a Parallel state to increment both A and B."
+        },
+        {
+          "text": "Then call format_inputs, wait for 10 seconds, and repeat the loop."
+        },
+        {
+          "text": "Use your own Lambda ARNs in the definition."
+        },
+        {
+          "text": "Use an existing IAM role for execution."
+        },
+        {
+          "text": "Ensure the Lambda function names are exactly what you created."
+        },
+        {
+          "text": "Copy the ARN from the Lambda Console and paste it correctly in the \"Resource\" fields."
+        },
+        {
+          "text": "Save the updated definition to deploy your state machine in AWS Step Functions."
+        },
+        {
+          "text": "Define the following states:"
+        },
+        {
+          "text": "Task: Add Numbers (uses the Add Numbers Lambda ARN)."
+        },
+        {
+          "text": "Choice: Check if sum >= 10. If True: Print Sum (End). If False: Run Parallel (Increment A and Increment B)."
+        },
+        {
+          "text": "If True: Print Sum (End)."
+        },
+        {
+          "text": "If False: Run Parallel (Increment A and Increment B)."
+        },
+        {
+          "text": "Format Inputs: Format A and B for the next step."
+        },
+        {
+          "text": "Wait: Wait for 10 seconds."
+        },
+        {
+          "text": "Loop: Go back to Add Numbers."
+        },
+        {
+          "text": "Use the Lambda ARNs you collected to replace the placeholders in the Step Function."
+        },
+        {
+          "text": "Execute the Step Function with the input: { \"A\": 1, \"B\": 1 }."
+        },
+        {
+          "text": "Observe the workflow and verify if it loops until the sum of A and B exceeds 10."
+        },
+        {
+          "text": "Click Validate after setting up."
+        },
+        {
+          "text": "Delete resources once validation is complete."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -1,0 +1,115 @@
+{
+  "slug": "challenge-lab-enable-developer-controlled-encryption-with-aws-kms-cmks",
+  "title": "Challenge Lab: Encrypt S3 bucket, EBS Volume and AMI using AWS KMS",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:30:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge lab, you will enable developers in your organization to create and manage their own AWS KMS customer-managed keys (CMKs). You’ll configure IAM policies, key policies, and usage permissions to ensure secure encryption of AWS services like S3 and Lambda. This lab tests your understanding of AWS Key Management Service, access control, and encryption best practices."
+        },
+        {
+          "text": "You are part of a cloud security team at a startup where each developer is allowed to create their own customer-managed AWS KMS keys. Your task is to configure permissions and policies that let users create and manage their own named KMS keys while ensuring secure encryption of resources like S3 and Lambda. You must enforce proper access control, key rotation, and auditing for compliance."
+        },
+        {
+          "text": "Create a Customer Managed KMS Key Use symmetric key type Assign key administrators and key users"
+        },
+        {
+          "text": "Use symmetric key type"
+        },
+        {
+          "text": "Assign key administrators and key users"
+        },
+        {
+          "text": "Create an S3 Bucket with Default Encryption Create bucket in the same region as your KMS key Enable default encryption using SSE-KMS with your custom KMS key"
+        },
+        {
+          "text": "Create bucket in the same region as your KMS key"
+        },
+        {
+          "text": "Enable default encryption using SSE-KMS with your custom KMS key"
+        },
+        {
+          "text": "(Optional) Set Up Cross-Region Replication (CRR) Create a second bucket in another region with versioning enabled Configure replication from source to destination bucket Use appropriate IAM roles and encryption settings"
+        },
+        {
+          "text": "Create a second bucket in another region with versioning enabled"
+        },
+        {
+          "text": "Configure replication from source to destination bucket"
+        },
+        {
+          "text": "Use appropriate IAM roles and encryption settings"
+        },
+        {
+          "text": "Test KMS Key Disable/Enable Disable your KMS key in KMS console Verify access to encrypted S3 objects is denied Re-enable the key and confirm access restoration"
+        },
+        {
+          "text": "Disable your KMS key in KMS console"
+        },
+        {
+          "text": "Verify access to encrypted S3 objects is denied"
+        },
+        {
+          "text": "Re-enable the key and confirm access restoration"
+        },
+        {
+          "text": "Create Encrypted EBS Volume Create EC2 volume with encryption enabled using your custom KMS key Attach volume as needed"
+        },
+        {
+          "text": "Create EC2 volume with encryption enabled using your custom KMS key"
+        },
+        {
+          "text": "Attach volume as needed"
+        },
+        {
+          "text": "Create and Encrypt an AMI Create an unencrypted AMI from an EC2 instance Copy the AMI with encryption enabled using your custom KMS key Verify the AMI snapshot is encrypted"
+        },
+        {
+          "text": "Create an unencrypted AMI from an EC2 instance"
+        },
+        {
+          "text": "Copy the AMI with encryption enabled using your custom KMS key"
+        },
+        {
+          "text": "Verify the AMI snapshot is encrypted"
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

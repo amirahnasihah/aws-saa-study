@@ -25,9 +25,6 @@
         },
         {
           "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
-        },
-        {
-          "text": "Note: If you face any issues, please go through FAQs and Troubleshooting for Labs."
         }
       ]
     },
@@ -47,10 +44,22 @@
           "text": "Click on Create table button"
         },
         {
+          "text": "Task 2: Create DynamoDB Table",
+          "images": [
+            "/labs/query-items-in-dynamodb-with-partiql-statements/step-01.png"
+          ]
+        },
+        {
           "text": "Table Name: Enter mytable"
         },
         {
           "text": "Primary key: Enter id and select String"
+        },
+        {
+          "text": "Task 2: Create DynamoDB Table",
+          "images": [
+            "/labs/query-items-in-dynamodb-with-partiql-statements/step-02.png"
+          ]
         },
         {
           "text": "Leave all the other settings as default and then click on Create table."
@@ -76,37 +85,34 @@
           "text": "You can see mytable listed and a Query editor"
         },
         {
-          "text": "Now, to insert items in DynamoDB table copy paste below command in query editor."
+          "text": "Task 3 : Inserting Data into DynamoDB Table",
+          "images": [
+            "/labs/query-items-in-dynamodb-with-partiql-statements/step-03.png"
+          ]
         },
         {
-          "text": "INSERT INTO mytable value {'id': '1', 'name': 'John Doe'};"
+          "text": "Now, to insert items in DynamoDB table copy paste below command in query editor."
         },
         {
           "text": "Now, click on Run button to run the query"
         },
         {
+          "text": "Task 3 : Inserting Data into DynamoDB Table",
+          "images": [
+            "/labs/query-items-in-dynamodb-with-partiql-statements/step-04.png"
+          ]
+        },
+        {
           "text": "Similarly, for testing purposes, add 4–5 items more using below commands."
-        },
-        {
-          "text": "INSERT INTO mytable value {'id': '2', 'name': 'Kane'};"
-        },
-        {
-          "text": "INSERT INTO mytable value {'id': '3', 'name': 'Sarah'};"
-        },
-        {
-          "text": "INSERT INTO mytable value {'id': '4', 'name': 'Will'};"
-        },
-        {
-          "text": "INSERT INTO mytable value {'id': '5', 'name': 'Kyle'};"
         },
         {
           "text": "Use below command to verify the inserted data."
         },
         {
-          "text": "SELECT * FROM \"mytable\""
-        },
-        {
-          "text": "Optional step:"
+          "text": "Task 3 : Inserting Data into DynamoDB Table",
+          "images": [
+            "/labs/query-items-in-dynamodb-with-partiql-statements/step-05.png"
+          ]
         },
         {
           "text": "You can also use CLI to access PartiQL for DynamoDB."
@@ -115,7 +121,10 @@
           "text": "Copy paste the below command in cloudshell to view items in dynamodb using cli method."
         },
         {
-          "text": "aws dynamodb execute-statement --statement \"select * from \\\"mytable\\\"\""
+          "text": "Task 3 : Inserting Data into DynamoDB Table",
+          "images": [
+            "/labs/query-items-in-dynamodb-with-partiql-statements/step-06.png"
+          ]
         }
       ]
     },
@@ -129,13 +138,19 @@
           "text": "Copy paste below command in editor to modify item name of data with id = 4."
         },
         {
-          "text": "UPDATE \"mytable\" SET \"name\" = 'Rome' WHERE \"id\" = '4'"
+          "text": "Task 4 : Modify data in the Table",
+          "images": [
+            "/labs/query-items-in-dynamodb-with-partiql-statements/step-07.png"
+          ]
         },
         {
           "text": "Now, run below command to verify the updated name"
         },
         {
-          "text": "SELECT * FROM \"mytable\" WHERE \"id\" = '4'"
+          "text": "Task 4 : Modify data in the Table",
+          "images": [
+            "/labs/query-items-in-dynamodb-with-partiql-statements/step-08.png"
+          ]
         },
         {
           "text": "Here you can see the modified name of id = 4."
@@ -152,25 +167,25 @@
           "text": "Now, to delete an item in DynamoDB table copy paste below command in query editor. This command will delete the item with id = 5"
         },
         {
-          "text": "DELETE FROM \"mytable\" WHERE \"id\" = '5'"
+          "text": "Now, click on Run button to run the query"
         },
         {
-          "text": "Now, click on Run button to run the query"
+          "text": "Task 5 : Delete Data in DynamoDB Table",
+          "images": [
+            "/labs/query-items-in-dynamodb-with-partiql-statements/step-09.png"
+          ]
         },
         {
           "text": "Use below command to verify the deleted data."
         },
         {
-          "text": "SELECT * FROM \"mytable\""
+          "text": "Task 5 : Delete Data in DynamoDB Table",
+          "images": [
+            "/labs/query-items-in-dynamodb-with-partiql-statements/step-10.png"
+          ]
         },
         {
           "text": "Here you can verify, the item deleted with id = 5."
-        },
-        {
-          "text": "Do You Know?"
-        },
-        {
-          "text": "PartiQL is a SQL-compatible query language supported by DynamoDB, enabling developers to query, insert, update, and delete data in DynamoDB tables using familiar SQL syntax, thus simplifying data manipulation tasks for those accustomed to SQL-based systems"
         }
       ]
     },
@@ -187,7 +202,10 @@
           "text": "Sample output:"
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 6 : Validation Test",
+          "images": [
+            "/labs/query-items-in-dynamodb-with-partiql-statements/step-11.gif"
+          ]
         },
         {
           "text": "You have successfully created an Amazon DynamoDB table."
@@ -200,9 +218,6 @@
         },
         {
           "text": "You have deleted an item in the table using PartiQL."
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign out from the AWS Management Console."

@@ -1,0 +1,223 @@
+{
+  "slug": "challenge-lab-data-integration-and-transformation-with-aws-glue",
+  "title": "Challenge Lab : Data Integration and Transformation with AWS Glue",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "02:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Portal",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Portal"
+        },
+        {
+          "text": "XYZ Company wants to leverage AWS services for efficient data processing and transformation. The lab will guide users through creating an S3 bucket for storing customer data, configuring an AWS Glue Crawler to catalog and organize the data, and running various AWS Glue ETL jobs to transform the data based on different criteria. The final outputs will be stored back into the S3 bucket for further analysis or use in downstream applications. This hands-on approach will help users understand the end-to-end data pipeline workflow within AWS."
+        },
+        {
+          "text": "Create S3 Bucket Region: us-east-1 Enter a unique bucket name Keep default settings"
+        },
+        {
+          "text": "Region: us-east-1"
+        },
+        {
+          "text": "Enter a unique bucket name"
+        },
+        {
+          "text": "Keep default settings"
+        },
+        {
+          "text": "Upload Objects Create input and output folders in S3. Inside output, create output_1, output_2, output_3 subfolders. Upload customer.csv to the input folder."
+        },
+        {
+          "text": "Create input and output folders in S3."
+        },
+        {
+          "text": "Inside output, create output_1, output_2, output_3 subfolders."
+        },
+        {
+          "text": "Upload customer.csv to the input folder."
+        },
+        {
+          "text": "Configure AWS Glue Crawler Database: Name: whiztest Crawler: Name: whiztest-crawler Source: input/customer.csv (S3) IAM Role: glue-studio-delete Target Database: whiztest Table Prefix: input_ Action: Create & Run Validation: Table appears under Tables"
+        },
+        {
+          "text": "Database: Name: whiztest"
+        },
+        {
+          "text": "Name: whiztest"
+        },
+        {
+          "text": "Crawler: Name: whiztest-crawler Source: input/customer.csv (S3) IAM Role: glue-studio-delete Target Database: whiztest Table Prefix: input_ Action: Create & Run Validation: Table appears under Tables"
+        },
+        {
+          "text": "Name: whiztest-crawler"
+        },
+        {
+          "text": "Source: input/customer.csv (S3)"
+        },
+        {
+          "text": "IAM Role: glue-studio-delete"
+        },
+        {
+          "text": "Target Database: whiztest"
+        },
+        {
+          "text": "Table Prefix: input_"
+        },
+        {
+          "text": "Action: Create & Run"
+        },
+        {
+          "text": "Validation: Table appears under Tables"
+        },
+        {
+          "text": "Create Visual ETL Job Source: S3 Data Catalog → input_customers_csv Transform: Change Schema Rename: Customerid → customer_id Namestyle → name_style Title → title_customer Firstname → first_name Target: S3 (JSON), folder output/output_1 Job: WhizTest-1, Role: glue-studio-delete, Workers: 2 Number of retries: 1 After successful execution go to the S3 bucket > output/output_1 folder to validate the modified output file"
+        },
+        {
+          "text": "Source: S3 Data Catalog → input_customers_csv"
+        },
+        {
+          "text": "Transform: Change Schema"
+        },
+        {
+          "text": "Rename:"
+        },
+        {
+          "text": "Customerid → customer_id"
+        },
+        {
+          "text": "Namestyle → name_style"
+        },
+        {
+          "text": "Title → title_customer"
+        },
+        {
+          "text": "Firstname → first_name"
+        },
+        {
+          "text": "Target: S3 (JSON), folder output/output_1"
+        },
+        {
+          "text": "Job: WhizTest-1, Role: glue-studio-delete, Workers: 2"
+        },
+        {
+          "text": "Number of retries: 1"
+        },
+        {
+          "text": "After successful execution go to the S3 bucket > output/output_1 folder to validate the modified output file"
+        },
+        {
+          "text": "Create Custom Join Job Open AWS Glue Studio → ETL jobs → Visual ETL. Add source node: Source: AWS Glue Data Catalog Name: source_one Database: whiztest Table: input_customers_csv Add second source node similarly: Name: source_two Database: whiztest Table: input_customers_csv Transform: For source_one, add Change Schema apply_one (parent: source_one), drop fields after lastname, append _1 to keys. For source_two, add Change Schema apply_two (parent: source_two), drop fields after lastname, append _2 to keys. Join: customerid_1 = customerid_2 Target: S3 (JSON), folder output/output_2 Job: WhizTest-2, Role: glue-studio-delete, Workers: 2, Retries:1 Verify output in S3 under output_two folder."
+        },
+        {
+          "text": "Open AWS Glue Studio → ETL jobs → Visual ETL."
+        },
+        {
+          "text": "Add source node: Source: AWS Glue Data Catalog Name: source_one Database: whiztest Table: input_customers_csv"
+        },
+        {
+          "text": "Source: AWS Glue Data Catalog"
+        },
+        {
+          "text": "Name: source_one"
+        },
+        {
+          "text": "Database: whiztest"
+        },
+        {
+          "text": "Table: input_customers_csv"
+        },
+        {
+          "text": "Add second source node similarly: Name: source_two Database: whiztest Table: input_customers_csv"
+        },
+        {
+          "text": "Name: source_two"
+        },
+        {
+          "text": "Database: whiztest"
+        },
+        {
+          "text": "Table: input_customers_csv"
+        },
+        {
+          "text": "Transform: For source_one, add Change Schema apply_one (parent: source_one), drop fields after lastname, append _1 to keys. For source_two, add Change Schema apply_two (parent: source_two), drop fields after lastname, append _2 to keys."
+        },
+        {
+          "text": "For source_one, add Change Schema apply_one (parent: source_one), drop fields after lastname, append _1 to keys."
+        },
+        {
+          "text": "For source_two, add Change Schema apply_two (parent: source_two), drop fields after lastname, append _2 to keys."
+        },
+        {
+          "text": "Join: customerid_1 = customerid_2"
+        },
+        {
+          "text": "Target: S3 (JSON), folder output/output_2"
+        },
+        {
+          "text": "Job: WhizTest-2, Role: glue-studio-delete, Workers: 2, Retries:1"
+        },
+        {
+          "text": "Verify output in S3 under output_two folder."
+        },
+        {
+          "text": "Create SQL Transformation Job Source: input_customers_csv Transform: SQL Query Alias: customer Query: SELECT firstname, lastname FROM customer Target: S3 (JSON), folder output/output_3 Job: WhizTest-3, Role: glue-studio-delete, Workers: 2, Retries: 1 Verify output in S3 under output_three folder"
+        },
+        {
+          "text": "Source: input_customers_csv"
+        },
+        {
+          "text": "Transform: SQL Query"
+        },
+        {
+          "text": "Alias: customer"
+        },
+        {
+          "text": "Query: SELECT firstname, lastname FROM customer"
+        },
+        {
+          "text": "Target: S3 (JSON), folder output/output_3"
+        },
+        {
+          "text": "Job: WhizTest-3, Role: glue-studio-delete, Workers: 2, Retries: 1"
+        },
+        {
+          "text": "Verify output in S3 under output_three folder"
+        },
+        {
+          "text": "Click on the Validate to complete the challenge."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

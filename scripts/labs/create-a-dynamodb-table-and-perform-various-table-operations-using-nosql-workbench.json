@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,13 +21,13 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         },
         {
-          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+          "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
         }
       ]
     },
@@ -38,28 +38,31 @@
           "text": "In this task, you will create a DynamoDB table that is used to add items and visualize the data in the NoSQL Workbench."
         },
         {
-          "text": "Make sure you are in the N.Virginia Region."
+          "text": "Make sure you are in the N.Virginia Region."
         },
         {
-          "text": "Navigate to DynamoDB by clicking on the Services menu at the top and selecting DynamoDB under the Database section."
+          "text": "Navigate to DynamoDB by clicking on the Services menu at the top and selecting DynamoDB under the Database section."
         },
         {
-          "text": "Click on Create Table on the right side."
+          "text": "Click on Create Table on the right side."
+        },
+        {
+          "text": "Table details: Table name : Enter Student_Info Partition key : Enter StudentId Sort Key : Enter StudentName"
         },
         {
           "text": "Table details:"
         },
         {
-          "text": "Table name : Enter Student_Info"
+          "text": "Table name : Enter Student_Info"
         },
         {
-          "text": "Partition key : Enter StudentId"
+          "text": "Partition key : Enter StudentId"
         },
         {
-          "text": "Sort Key : Enter StudentName"
+          "text": "Sort Key : Enter StudentName"
         },
         {
-          "text": "Leave everything as default and click on Create table button."
+          "text": "Leave everything as default and click on Create table button."
         }
       ]
     },
@@ -67,52 +70,70 @@
       "title": "Task 3: Connect to DynamoDB using NoSQL Workbench",
       "steps": [
         {
-          "text": "In this task, you will configure files and pass access credentials to connect to DynamoDB using NoSQL Workbench and view the DynamoDB table after successful connection. And the credentials you are going to use for making a connection are the Access Key ID and Secret Access Key present on the left side of the lab interface under IAM username and Password."
+          "text": "In this task, you will configure files and pass access credentials to connect to DynamoDB using NoSQL Workbench and view the DynamoDB table after successful connection. And the credentials you are going to use for making a connection are the Access Key ID and Secret Access Key present on the left side of the lab interface under IAM username and Password."
         },
         {
           "text": "Open the NoSQL Workbench you have downloaded and installed during the prerequisites step."
         },
         {
-          "text": "Click on the Launch button next to Amazon DynamoDB."
+          "text": "Click on the Launch button next to Amazon DynamoDB."
         },
         {
-          "text": "In the left side panel, click on Operation builder and click on Add connection on the right side."
+          "text": "Task 3: Connect to DynamoDB using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-01.png"
+          ]
         },
         {
-          "text": "Now we need to configure two files in our local PC to successfully connect to our DynamoDB using NoSQL Workbench."
+          "text": "In the left side panel, click on Operation builder and click on Add connection on the right side."
+        },
+        {
+          "text": "Task 3: Connect to DynamoDB using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-02.png"
+          ]
+        },
+        {
+          "text": "Now we need to configure two files in our local PC to successfully connect to our DynamoDB using NoSQL Workbench."
         },
         {
           "text": "For Windows Users:"
         },
         {
-          "text": "Go to the destination %USERPROFILE%\\.aws in your local Pc."
+          "text": "Go to the destination %USERPROFILE%\\.aws in your local Pc."
         },
         {
-          "text": "You will be able to find config and credentials files, which we need to edit using notepad."
+          "text": "You will be able to find config and credentials files, which we need to edit using notepad."
         },
         {
-          "text": "Open the config file using notepad and replace the existing content with the one given below."
+          "text": "Task 3: Connect to DynamoDB using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-03.png"
+          ]
         },
         {
-          "text": "[default]"
-        },
-        {
-          "text": "region=us-east-1"
-        },
-        {
-          "text": "output=json"
-        },
-        {
-          "text": "AWS_SDK_LOAD_CONFIG=1"
+          "text": "Open the config file using notepad and replace the existing content with the one given below."
         },
         {
           "text": "Save the file using Ctrl+S."
         },
         {
-          "text": "Now open the credentials file using notepad and replace the default aws_access_key_id and aws_secret_access_key with the Access Key ID and Secret Access Key present on the right side of the lab interface below the Lab Credentials."
+          "text": "Now open the credentials file using notepad and replace the default aws_access_key_id and aws_secret_access_key with the Access Key ID and Secret Access Key present on the right side of the lab interface below the Lab Credentials."
+        },
+        {
+          "text": "Task 3: Connect to DynamoDB using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-04.png"
+          ]
         },
         {
           "text": "The file after replacing your credentials looks something like this. (I have masked my secret access key as a security protocol)"
+        },
+        {
+          "text": "Task 3: Connect to DynamoDB using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-05.png"
+          ]
         },
         {
           "text": "Save the file using Ctrl+S."
@@ -121,19 +142,16 @@
           "text": "For Mac and Linux Users:"
         },
         {
-          "text": "[default]"
-        },
-        {
-          "text": "aws_access_key_id = <Access Key ID>"
-        },
-        {
-          "text": "aws_secret_access_key = <Secret Access Key>"
+          "text": "Task 3: Connect to DynamoDB using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-06.png"
+          ]
         },
         {
           "text": "Copy and paste your scret key and access key from the lab document"
         },
         {
-          "text": "Save the file by pressing Esc button, and type :wq [If you are using Vi editor]"
+          "text": "Save the file by pressing Esc button, and type :wq [If you are using Vi editor]"
         },
         {
           "text": "Open your Mac Terminal or Linux Command Line."
@@ -145,10 +163,19 @@
           "text": "Enter in your mac terminal."
         },
         {
-          "text": "nano ~/.aws/config"
+          "text": "Task 3: Connect to DynamoDB using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-07.png"
+          ]
         },
         {
-          "text": "Now paste the content which is tabulated in the Step-7 inside this ~/.aws/config file."
+          "text": "Now paste the content which is tabulated in the Step-7 inside this ~/.aws/config file."
+        },
+        {
+          "text": "Task 3: Connect to DynamoDB using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-08.png"
+          ]
         },
         {
           "text": "Press Ctrl+X and Press Enter to save the file."
@@ -157,40 +184,58 @@
           "text": "Now enter"
         },
         {
-          "text": "nano ~/.aws/credentials"
+          "text": "Task 3: Connect to DynamoDB using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-09.png"
+          ]
         },
         {
-          "text": "Now replace the default aws_access_key_id and aws_secret_access_key with the Access Key ID and Secret Access Key present on the right side of the lab interface under IAM username and Password. [Refer Step 9&10 to understand]"
+          "text": "Now replace the default aws_access_key_id and aws_secret_access_key with the Access Key ID and Secret Access Key present on the right side of the lab interface under IAM username and Password. [Refer Step 9&10 to understand]"
         },
         {
-          "text": "Press Ctrl+X and Press Enter to save the file."
+          "text": "Press Ctrl+X and Press Enter to save the file."
         },
         {
           "text": "Now get back to the NoSQL Workbench and fill the following details:"
         },
         {
-          "text": "Connection name : Enter Connection 3 ( You can give any name of your choice)"
+          "text": "Connection name : Enter Connection 3 ( You can give any name of your choice)"
         },
         {
-          "text": "Default AWS Region : Select us-east-1"
+          "text": "Default AWS Region : Select us-east-1"
         },
         {
-          "text": "Access Key ID : Paste your Access Key ID of the lab. (The same way you did in the Step 9)"
+          "text": "Access Key ID : Paste your Access Key ID of the lab. (The same way you did in the Step 9)"
         },
         {
-          "text": "Secret access key : Paste your Secret Access Key of the lab. (The same way you did in the Step 9)"
+          "text": "Secret access key : Paste your Secret Access Key of the lab. (The same way you did in the Step 9)"
         },
         {
-          "text": "Persist connection : Check the box"
+          "text": "Persist connection : Check the box"
         },
         {
-          "text": "Click on the Connect button."
+          "text": "Click on the Connect button.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-10.png"
+          ]
         },
         {
-          "text": "In the next screen, click on Open under your respective connection."
+          "text": "In the next screen, click on Open under your respective connection."
+        },
+        {
+          "text": "Task 3: Connect to DynamoDB using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-11.png"
+          ]
         },
         {
           "text": "Now you will be able to see the table(Student_Info) we have created using AWS Console here in NoSQL Workbench."
+        },
+        {
+          "text": "Task 3: Connect to DynamoDB using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-12.png"
+          ]
         }
       ]
     },
@@ -198,52 +243,73 @@
       "title": "Task 4: Creating items using the console",
       "steps": [
         {
-          "text": "In this task, you will create a few items in the DynamoDB table through the console and try to see these items in the NoSQL Workbench."
+          "text": "In this task, you will create a few items in the DynamoDB table through the console and try to see these items in the NoSQL Workbench."
         },
         {
-          "text": "Make sure you are in the N.Virginia Region."
+          "text": "Make sure you are in the N.Virginia Region."
         },
         {
-          "text": "Navigate to DynamoDB by clicking on the Services menu at the top and selecting DynamoDB under the Database section."
+          "text": "Navigate to DynamoDB by clicking on the Services menu at the top and selecting DynamoDB under the Database section."
         },
         {
-          "text": "On the left side panel, click on Explore Items and select your table i.e Student_Info"
+          "text": "On the left side panel, click on Explore Items and select your table i.e Student_Info"
         },
         {
-          "text": "Click on the Create item button on the right side."
+          "text": "Click on the Create item button on the right side."
+        },
+        {
+          "text": "Attributes: StudentId : Enter 1 StudentName : Enter Jay Click on Add new attribute and select String Give Attribute name as FavoriteSport and Value as Cricket Click on Create item button."
         },
         {
           "text": "Attributes:"
         },
         {
-          "text": "StudentId : Enter 1"
+          "text": "StudentId : Enter 1"
         },
         {
-          "text": "StudentName : Enter Jay"
+          "text": "StudentName : Enter Jay"
         },
         {
-          "text": "Click on Add new attribute and select String"
+          "text": "Click on Add new attribute and select String"
         },
         {
-          "text": "Give Attribute name as FavoriteSport and Value as Cricket"
+          "text": "Give Attribute name as FavoriteSport and Value as Cricket"
         },
         {
-          "text": "Click on Create item button."
+          "text": "Click on Create item button."
         },
         {
-          "text": "Similarly create the following items shown below with their respective Attribute names and Values by following the above steps."
+          "text": "Task 4: Creating items using the console",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-13.png"
+          ]
         },
         {
-          "text": "Now you will be able to see three items returned in the Student_Info table in the console."
+          "text": "Similarly create the following items shown below with their respective Attribute names and Values by following the above steps."
         },
         {
-          "text": "Now open the NoSQL Workbench window from your taskbar to see if these newly created items in the console are present in the NoSQL Workbench."
+          "text": "Task 4: Creating items using the console",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-14.png"
+          ]
         },
         {
-          "text": "Go to Operation builder > Tables > Student_Info and click on the Scan button on the right side."
+          "text": "Now you will be able to see three items returned in the Student_Info table in the console."
         },
         {
-          "text": "Now you will be able to see three items in the Student_info table in the Workbench."
+          "text": "Now open the NoSQL Workbench window from your taskbar to see if these newly created items in the console are present in the NoSQL Workbench."
+        },
+        {
+          "text": "Go to Operation builder > Tables > Student_Info and click on the Scan button on the right side."
+        },
+        {
+          "text": "Now you will be able to see three items in the Student_info table in the Workbench."
+        },
+        {
+          "text": "Task 4: Creating items using the console",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-15.png"
+          ]
         }
       ]
     },
@@ -254,67 +320,103 @@
           "text": "In this task, you will add two new items to the existing table from NoSQL Workbench and see the reflections in the DynamoDB console."
         },
         {
-          "text": "Now on the top right corner click on Action operation and click on Create Item."
+          "text": "Now on the top right corner click on Action operation and click on Create Item.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-16.png"
+          ]
+        },
+        {
+          "text": "Task 5: Adding new items to the table using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-17.png"
+          ]
+        },
+        {
+          "text": "Build Operations: Table : Select Student_Info Partition key : Enter 4 Sort key : Enter Harsh Click on + sign next to Other attributes Attribute name : Enter FavoriteSport Attribute type : Select String from the drop down menu Attribute value : Enter Volleyball"
         },
         {
           "text": "Build Operations:"
         },
         {
-          "text": "Table : Select Student_Info"
+          "text": "Table : Select Student_Info"
         },
         {
-          "text": "Partition key : Enter 4"
+          "text": "Partition key : Enter 4"
         },
         {
-          "text": "Sort key : Enter Harsh"
+          "text": "Sort key : Enter Harsh"
         },
         {
-          "text": "Click on + sign next to Other attributes"
+          "text": "Click on + sign next to Other attributes"
         },
         {
-          "text": "Attribute name : Enter FavoriteSport"
+          "text": "Attribute name : Enter FavoriteSport"
         },
         {
-          "text": "Attribute type : Select String from the drop down menu"
+          "text": "Attribute type : Select String from the drop down menu"
         },
         {
-          "text": "Attribute value : Enter Volleyball"
+          "text": "Attribute value : Enter Volleyball"
         },
         {
-          "text": "Now click on the Save operation button."
+          "text": "Now click on the Save operation button.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-18.png"
+          ]
         },
         {
-          "text": "Scroll down a little and give the Name under Save operation as test1 and click on the Save button."
+          "text": "Task 5: Adding new items to the table using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-19.png"
+          ]
         },
         {
-          "text": "You can give a name of your choice for Save operation as well, it does not matter."
+          "text": "Scroll down a little and give the Name under Save operation as test1 and click on the Save button."
         },
         {
-          "text": "Now click on the Run button which is next to Save operation."
+          "text": "You can give a name of your choice for Save operation as well, it does not matter.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-20.png"
+          ]
         },
         {
-          "text": "Expand the table by clicking on it to see the result."
+          "text": "Now click on the Run button which is next to Save operation."
         },
         {
-          "text": "Click on the Scan button on the right side if you do not see any item."
+          "text": "Expand the table by clicking on it to see the result.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-21.png"
+          ]
         },
         {
-          "text": "Similarly add one more item from the NoSQL Workbench using Create Item operation:"
+          "text": "Click on the Scan button on the right side if you do not see any item."
         },
         {
-          "text": "StudentId as 5"
+          "text": "Similarly add one more item from the NoSQL Workbench using Create Item operation: StudentId as 5 StudentName as Virat FavoriteSport as Rugby"
         },
         {
-          "text": "StudentName as Virat"
+          "text": "Similarly add one more item from the NoSQL Workbench using Create Item operation:"
         },
         {
-          "text": "FavoriteSport as Rugby"
+          "text": "StudentId as 5"
         },
         {
-          "text": "The table looks something like this in the Workbench. Click on the Scan button on the right side if you do not see any items."
+          "text": "StudentName as Virat"
         },
         {
-          "text": "Now head back to the DynamoDB console and refresh the page to see these newly added items there."
+          "text": "FavoriteSport as Rugby"
+        },
+        {
+          "text": "The table looks something like this in the Workbench. Click on the Scan button on the right side if you do not see any items.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-22.png"
+          ]
+        },
+        {
+          "text": "Now head back to the DynamoDB console and refresh the page to see these newly added items there.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-23.png"
+          ]
         }
       ]
     },
@@ -328,34 +430,58 @@
           "text": "Now get back to the NoSQL Workbench."
         },
         {
-          "text": "Scroll to the top and click on Expand Action operation and choose Delete item."
+          "text": "Scroll to the top and click on Expand Action operation and choose Delete item."
+        },
+        {
+          "text": "Build Operations: Data plane operations : Select DeleteItem from the drop down menu Table : Select Student_Info Partition key : Enter 1 Sort key : Enter Jay"
         },
         {
           "text": "Build Operations:"
         },
         {
-          "text": "Data plane operations : Select DeleteItem from the drop down menu"
+          "text": "Data plane operations : Select DeleteItem from the drop down menu"
         },
         {
-          "text": "Table : Select Student_Info"
+          "text": "Table : Select Student_Info"
         },
         {
-          "text": "Partition key : Enter 1"
+          "text": "Partition key : Enter 1"
         },
         {
-          "text": "Sort key : Enter Jay"
+          "text": "Sort key : Enter Jay"
         },
         {
-          "text": "Now click on the Save operation button."
+          "text": "Now click on the Save operation button.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-24.png"
+          ]
+        },
+        {
+          "text": "Task 6: Deleting an item using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-25.png"
+          ]
         },
         {
           "text": "One pop-up will appear to confirm to deletion."
         },
         {
-          "text": "Click on the table on the left side to expand it and see the result. Click on the Scan button on the right side if you do not see the result."
+          "text": "Click on the table on the left side to expand it and see the result. Click on the Scan button on the right side if you do not see the result."
         },
         {
-          "text": "Now head back to the DynamoDB console and refresh the page to see if the item has been deleted here as well or not."
+          "text": "Task 6: Deleting an item using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-26.png"
+          ]
+        },
+        {
+          "text": "Now head back to the DynamoDB console and refresh the page to see if the item has been deleted here as well or not."
+        },
+        {
+          "text": "Task 6: Deleting an item using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-27.png"
+          ]
         }
       ]
     },
@@ -363,52 +489,92 @@
       "title": "Task 7: Updating an item using NoSQL Workbench",
       "steps": [
         {
-          "text": "In this task, you will update an existing item through NoSQL Workbench and see if it is reflected in the DynamoDB console as well."
+          "text": "In this task, you will update an existing item through NoSQL Workbench and see if it is reflected in the DynamoDB console as well."
         },
         {
           "text": "Now get back to the NoSQL Workbench."
         },
         {
-          "text": "Click on the StudentId where it is 2"
+          "text": "Click on the StudentId where it is 2"
+        },
+        {
+          "text": "Build Operations:Update expression : Select Set from the drop down menu. Click on + sign next to it. Set: Attribute name : Enter FavoriteSport Operators : Select = sign from the drop down menu. Attribute type : Select String from the drop down menu. Value : Enter Football in the <empty> box.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-28.png",
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-29.png"
+          ]
         },
         {
           "text": "Build Operations:"
         },
         {
-          "text": "Update expression : Select Set from the drop down menu."
+          "text": "Task 7: Updating an item using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-30.png"
+          ]
         },
         {
-          "text": "Click on + sign next to it."
+          "text": "Update expression : Select Set from the drop down menu."
+        },
+        {
+          "text": "Click on + sign next to it.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-31.png"
+          ]
+        },
+        {
+          "text": "Task 7: Updating an item using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-32.png"
+          ]
+        },
+        {
+          "text": "Set: Attribute name : Enter FavoriteSport Operators : Select = sign from the drop down menu. Attribute type : Select String from the drop down menu. Value : Enter Football in the <empty> box."
         },
         {
           "text": "Set:"
         },
         {
-          "text": "Attribute name : Enter FavoriteSport"
+          "text": "Attribute name : Enter FavoriteSport"
         },
         {
-          "text": "Operators : Select = sign from the drop down menu."
+          "text": "Operators : Select = sign from the drop down menu."
         },
         {
-          "text": "Attribute type : Select String from the drop down menu."
+          "text": "Attribute type : Select String from the drop down menu."
         },
         {
-          "text": "Value : Enter Football in the <empty> box."
+          "text": "Value : Enter Football in the <empty> box."
         },
         {
-          "text": "Now click on the Save operation button."
+          "text": "Now click on the Save operation button."
         },
         {
-          "text": "Scroll down a little and give the name under Save operation as test3 and click on Save button."
+          "text": "Scroll down a little and give the name under Save operation as test3 and click on Save button.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-33.png"
+          ]
         },
         {
-          "text": "Now click on the Run button which is next to Clear form."
+          "text": "Now click on the Run button which is next to Clear form."
         },
         {
-          "text": "Click on the table on the left side to expand it and see the result. Click on the Scan button on the right side if you do not see the update"
+          "text": "Click on the table on the left side to expand it and see the result. Click on the Scan button on the right side if you do not see the update"
         },
         {
-          "text": "Now head back to the DynamoDB console and refresh the page to see if the item has been updated here as well or not."
+          "text": "Task 7: Updating an item using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-34.png"
+          ]
+        },
+        {
+          "text": "Now head back to the DynamoDB console and refresh the page to see if the item has been updated here as well or not."
+        },
+        {
+          "text": "Task 7: Updating an item using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-35.png"
+          ]
         }
       ]
     },
@@ -416,58 +582,82 @@
       "title": "Task 8: Creating a new table using NoSQL Workbench",
       "steps": [
         {
-          "text": "In this task, you will create a new table with Movies as its name using NoSQL Workbench to add a few items and see if it has been updated in the dynamoDB console as well."
+          "text": "In this task, you will create a new table with Movies as its name using NoSQL Workbench to add a few items and see if it has been updated in the dynamoDB console as well."
         },
         {
           "text": "Now get back to the NoSQL Workbench."
         },
         {
-          "text": "In the NoSQL workbench, click on the Data modeler below the Amazon DynamoDB section."
+          "text": "In the NoSQL workbench, click on the Data modeler below the Amazon DynamoDB section."
         },
         {
-          "text": "Click on + sign below Data model to create a new data model."
+          "text": "Click on + sign below Data model to create a new data model."
+        },
+        {
+          "text": "Create data model for Amazon DynamoDB select Make Model from scratch: Name : Enter Movies Name Author : Enter <Your Name>"
         },
         {
           "text": "Create data model for Amazon DynamoDB select Make Model from scratch:"
         },
         {
-          "text": "Name : Enter Movies Name"
+          "text": "Name : Enter Movies Name"
         },
         {
-          "text": "Author : Enter <Your Name>"
+          "text": "Author : Enter <Your Name>"
         },
         {
-          "text": "Click on the Create button."
+          "text": "Click on the Create button.",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-36.png"
+          ]
         },
         {
-          "text": "Click on + sign next to Tables which is below Data model to create a new table (or) click on + Create new table option present on the right side."
+          "text": "Click on + sign next to Tables which is below Data model to create a new table (or) click on + Create new table option present on the right side."
+        },
+        {
+          "text": "Add DynamoDB table: Table name : Enter Movies Partition key : Enter Id and select Number from the drop down menu. Add sort key : Check Sort key : Enter Name and select String from the drop down menu. Other attributes : Click on + Add other attribute",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-37.png"
+          ]
         },
         {
           "text": "Add DynamoDB table:"
         },
         {
-          "text": "Table name : Enter Movies"
+          "text": "Table name : Enter Movies"
         },
         {
-          "text": "Partition key : Enter Id and select Number from the drop down menu."
+          "text": "Partition key : Enter Id and select Number from the drop down menu."
         },
         {
-          "text": "Add sort key : Check"
+          "text": "Add sort key : Check"
         },
         {
-          "text": "Sort key : Enter Name and select String from the drop down menu."
+          "text": "Sort key : Enter Name and select String from the drop down menu."
         },
         {
-          "text": "Other attributes : Click on + Add other attribute"
+          "text": "Other attributes : Click on + Add other attribute"
         },
         {
-          "text": "Attribute name : Enter FavoriteMovie and select String from the drop down menu."
+          "text": "Attribute name : Enter FavoriteMovie and select String from the drop down menu."
         },
         {
-          "text": "Leave the other settings as default and click on Add table definition button."
+          "text": "Leave the other settings as default and click on Add table definition button."
+        },
+        {
+          "text": "Task 8: Creating a new table using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-38.png"
+          ]
         },
         {
           "text": "The next screen you see will be something like this."
+        },
+        {
+          "text": "Task 8: Creating a new table using NoSQL Workbench",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-39.png"
+          ]
         }
       ]
     },
@@ -478,10 +668,16 @@
           "text": "In this task, you will add a few new items into the newly created Movies table through NoSQL Workbench."
         },
         {
-          "text": "Click on the Visualizer option on the left side panel ."
+          "text": "Click on the Visualizer option on the left side panel ."
         },
         {
-          "text": "Click on the Update button next to the Movies table and click on Actions from the drop down choose Edit data."
+          "text": "Click on the Update button next to the Movies table and click on Actions from the drop down choose Edit data."
+        },
+        {
+          "text": "Task 9: Adding items into the new table",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-40.png"
+          ]
         },
         {
           "text": "Adding data:"
@@ -493,13 +689,31 @@
           "text": "Under Name : Enter Sherley"
         },
         {
-          "text": "Under FavoriteMovie : Enter Harry Potter"
+          "text": "Under FavoriteMovie : Enter Harry Potter"
+        },
+        {
+          "text": "Task 9: Adding items into the new table",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-41.png"
+          ]
         },
         {
           "text": "Click on + Add new row to add two other items as shown below. And once done, click on Save Changes button."
         },
         {
+          "text": "Task 9: Adding items into the new table",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-42.png"
+          ]
+        },
+        {
           "text": "Now click on Aggregate view to see data stored in the table in aggregated form."
+        },
+        {
+          "text": "Task 9: Adding items into the new table",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-43.png"
+          ]
         }
       ]
     },
@@ -507,46 +721,85 @@
       "title": "Task 10: Commiting the table and its data to Amazon DynamoDB",
       "steps": [
         {
-          "text": "In this task, you will commit the table and its items to the DynamoDB database in the console from NoSQL Workbench and see if it has been added to the DynamoDB console."
+          "text": "In this task, you will commit the table and its items to the DynamoDB database in the console from NoSQL Workbench and see if it has been added to the DynamoDB console."
         },
         {
           "text": "Click on Commit to Amazon DynamoDB button under Aggregate view."
         },
         {
+          "text": "Task 10: Commiting the table and its data to Amazon DynamoDB",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-44.png"
+          ]
+        },
+        {
           "text": "In the next screen, select your connection name from the Saved connections drop down menu. [ In my case - Connection 3 ]"
         },
         {
-          "text": "Now click on the Commit button. It will take a few seconds to process."
+          "text": "Now click on the Commit button. It will take a few seconds to process."
         },
         {
-          "text": "Now in the next screen, under Active connections, click on Open under your connection name. [ In my case - Connection 3 ]"
+          "text": "Task 10: Commiting the table and its data to Amazon DynamoDB",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-45.png"
+          ]
         },
         {
-          "text": "Now you will be able to find the Movies table under Tables section just above your Student_Info table."
+          "text": "Now in the next screen, under Active connections, click on Open under your connection name. [ In my case - Connection 3 ]"
         },
         {
-          "text": "Now click on the Movies table to expand it and see the items you have created earlier inside this table."
+          "text": "Task 10: Commiting the table and its data to Amazon DynamoDB",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-46.png"
+          ]
+        },
+        {
+          "text": "Now you will be able to find the Movies table under Tables section just above your Student_Info table."
+        },
+        {
+          "text": "Task 10: Commiting the table and its data to Amazon DynamoDB",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-47.png"
+          ]
+        },
+        {
+          "text": "Now click on the Movies table to expand it and see the items you have created earlier inside this table."
+        },
+        {
+          "text": "Task 10: Commiting the table and its data to Amazon DynamoDB",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-48.png"
+          ]
         },
         {
           "text": "Now head back to the DynamoDB console, refresh the page and click on Tables on the left side panel."
         },
         {
-          "text": "You will see the Movies table present here in the DynamoDB console."
+          "text": "You will see the Movies table present here in the DynamoDB console."
         },
         {
-          "text": "Click on the Items section beneath the Tables on the left side panel and select Movies table."
+          "text": "Task 10: Commiting the table and its data to Amazon DynamoDB",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-49.png"
+          ]
+        },
+        {
+          "text": "Click on the Items section beneath the Tables on the left side panel and select Movies table."
         },
         {
           "text": "You will be able to find the three items you have created through NoSQL Workbench, here in the console."
         },
         {
+          "text": "Task 10: Commiting the table and its data to Amazon DynamoDB",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-50.png"
+          ]
+        },
+        {
           "text": "You can play around by updating and deleting items in the new table i.e Movies."
         },
         {
-          "text": "Do you know?"
-        },
-        {
-          "text": "NoSQL Workbench allows multiple team members to collaborate on the data modeling process. You can share your data models with others, making it easier to work together and gather feedback. It is user for Collaboration and sharing."
+          "text": "NoSQL Workbench allows multiple team members to collaborate on the data modeling process. You can share your data models with others, making it easier to work together and gather feedback. It is user for Collaboration and sharing."
         }
       ]
     },
@@ -554,13 +807,22 @@
       "title": "Task 11: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validate button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validate button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-51.gif"
+          ]
+        },
+        {
+          "text": "Task 11: Validation Test",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-52.gif"
+          ]
         }
       ]
     },
@@ -568,13 +830,19 @@
       "title": "Task 11: Delete AWS Resources Deleting DyanamoDB Tables",
       "steps": [
         {
-          "text": "Navigate to DynamoDB by clicking on the Services menu at the top and selecting DynamoDB under the Database section."
+          "text": "Navigate to DynamoDB by clicking on the Services menu at the top and selecting DynamoDB under the Database section."
         },
         {
           "text": "Click on Tables on the left side panel."
         },
         {
-          "text": "Select the tables you have created and click on the Delete button on the right side."
+          "text": "Select the tables you have created and click on the Delete button on the right side."
+        },
+        {
+          "text": "Task 11: Delete AWS Resources Deleting DyanamoDB Tables",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-53.png"
+          ]
         },
         {
           "text": "In the next screen,"
@@ -592,10 +860,13 @@
           "text": "Click on the Delete tables button to delete the tables."
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 11: Delete AWS Resources Deleting DyanamoDB Tables",
+          "images": [
+            "/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench/step-54.png"
+          ]
         },
         {
-          "text": "You have successfully created a DynamoDB table through the DynamoDB console."
+          "text": "You have successfully created a DynamoDB table through the DynamoDB console."
         },
         {
           "text": "You have successfully connected to DynamoDB using NoSQL Workbench."
@@ -604,10 +875,7 @@
           "text": "You have successfully performed CRUD methods through NoSQL Workbench and seen the reflections in the DynamoDB console."
         },
         {
-          "text": "You have successfully created a table through NoSQL Workbench and committed to Amazon DynamoDB."
-        },
-        {
-          "text": "End Lab"
+          "text": "You have successfully created a table through NoSQL Workbench and committed to Amazon DynamoDB."
         },
         {
           "text": "Sign out of the AWS Account."
@@ -616,7 +884,7 @@
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab button from the lab console."
+          "text": "Once you have completed the steps, click on End Lab button from the lab console."
         }
       ]
     },

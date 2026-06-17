@@ -1,16 +1,17 @@
-import { ServiceCard, ColorCategory, categoryStyles } from '@/data/awsServices'
+import { ServiceCard, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
 import GlossaryText from './GlossaryText'
 
 interface LearnCardProps {
   service: ServiceCard
   category: ColorCategory
+  sectionId: string
 }
 
-export default function LearnCard({ service, category }: LearnCardProps) {
+export default function LearnCard({ service, category, sectionId }: LearnCardProps) {
   const styles = categoryStyles[category]
 
   return (
-    <article className="relative bg-aws-card border border-aws-border rounded-xl mb-4 transition-all duration-200 hover:border-white/12">
+    <article id={serviceSlug(sectionId, service.shortName)} className="relative bg-aws-card border border-aws-border rounded-xl mb-4 scroll-mt-20 transition-all duration-200 hover:border-white/12 target:ring-2 target:ring-c1/50">
       {/* left accent bar — rounded corners match card, no overflow-hidden needed */}
       <div className={`absolute top-0 left-0 w-[3px] h-full rounded-l-xl ${styles.accent}`} />
 

@@ -1,0 +1,76 @@
+{
+  "slug": "challenge-amazonecsfargate-container-deployment-basics",
+  "title": "Challenge Lab - Amazon Elastic Container Service using Fargate",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Sign into AWS Management Console",
+      "steps": [
+        {
+          "text": "Open the AWS Management Console in a new browser tab via Open Console."
+        },
+        {
+          "text": "Retain the default Account ID, enter the provided IAM Username and Password, and sign in."
+        },
+        {
+          "text": "Select us-east-1 (N. Virginia) from the top-right region dropdown."
+        },
+        {
+          "text": "Sign into AWS Management Console"
+        },
+        {
+          "text": "XYZ Company wants to deploy a simple containerized web application using Amazon ECS with AWS Fargate to avoid managing infrastructure. Your job is to set up an ECS cluster, define a container and task, create a service, test the deployment, and validate the setup. Here’s how to proceed:"
+        },
+        {
+          "text": "Ensure you’re in us-east-1."
+        },
+        {
+          "text": "Navigate to Elastic Container Service via the Services menu under Containers with fargate type."
+        },
+        {
+          "text": "Create Cluster."
+        },
+        {
+          "text": "Go to Task Definitions and Create new task definition twice."
+        },
+        {
+          "text": "Configure task definition: CPU: Choose .25 vCPU. Memory: Choose 1 GB."
+        },
+        {
+          "text": "CPU: Choose .25 vCPU."
+        },
+        {
+          "text": "Memory: Choose 1 GB."
+        },
+        {
+          "text": "Create Service."
+        },
+        {
+          "text": "Copy the ip from networking and paste it in browser."
+        },
+        {
+          "text": "Confirm the cluster , task definition , and service are running."
+        },
+        {
+          "text": "Verify the web app shows \"It works\" at the public IP."
+        },
+        {
+          "text": "Click Validate in the lab console to check the setup."
+        },
+        {
+          "text": "Sign out of AWS by clicking your username (top-right) and selecting Sign out."
+        },
+        {
+          "text": "Click End Lab in the lab console to complete the lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

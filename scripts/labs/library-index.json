@@ -1,0 +1,1443 @@
+{
+  "source": "https://business.whizlabs.com/labs/library",
+  "filters": {
+    "certification": "AWS Certified Solutions Architect - Associate",
+    "certificationId": 3
+  },
+  "discoveredAt": "2026-06-17T04:42:19.114Z",
+  "total": 179,
+  "labs": [
+    {
+      "index": 1,
+      "title": "AWS EFS Shared Storage Lab: Mounting EFS on AWS EC2 and Local VMware Ubuntu Desktop GUI Access",
+      "slug": "aws-efs-shared-storage-lab-mounting-efs-on-aws-ec2-and-local-vmware-ubuntu-desktop-gui-access",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/aws-efs-shared-storage-lab-mounting-efs-on-aws-ec2-and-local-vmware-ubuntu-desktop-gui-access"
+    },
+    {
+      "index": 2,
+      "title": "Challenge : Introduction to Amazon CloudFront",
+      "slug": "amazon-cloudfront-challenge-secure-cdn",
+      "labType": 1,
+      "duration": 6300,
+      "url": "https://business.whizlabs.com/labs/amazon-cloudfront-challenge-secure-cdn"
+    },
+    {
+      "index": 3,
+      "title": "Challenge Lab - AWS DynamoDB NOSQL Setup",
+      "slug": "dynamodb-challenge-nosql-setup-with-aws",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/dynamodb-challenge-nosql-setup-with-aws"
+    },
+    {
+      "index": 4,
+      "title": "Challenge Lab - Build Amazon VPC with Public and Private Subnets (from Scratch)",
+      "slug": "challenge-master-vpc",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-master-vpc"
+    },
+    {
+      "index": 5,
+      "title": "Challenge : Creating New EC2 Instance using Snapshot",
+      "slug": "ami-backup-challenge-relaunch-the-backup",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/ami-backup-challenge-relaunch-the-backup"
+    },
+    {
+      "index": 6,
+      "title": "Challenge Lab - Introduction to Amazon Lambda",
+      "slug": "aws-lamada-challenge-serverless-flow",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/aws-lamada-challenge-serverless-flow"
+    },
+    {
+      "index": 7,
+      "title": "Challenge Lab - Create Virtual Private Cloud (VPC) with AWS CloudFormation",
+      "slug": "challenge-vpc-cloudforge-infrastructure-blueprint",
+      "labType": 1,
+      "duration": 4500,
+      "url": "https://business.whizlabs.com/labs/challenge-vpc-cloudforge-infrastructure-blueprint"
+    },
+    {
+      "index": 8,
+      "title": "Challenge: Connecting RDS from EC2 Instance",
+      "slug": "connect-rds-from-instance-challenge-mysql-access",
+      "labType": 1,
+      "duration": 4200,
+      "url": "https://business.whizlabs.com/labs/connect-rds-from-instance-challenge-mysql-access"
+    },
+    {
+      "index": 9,
+      "title": "Challenge- IAM- Access Control to Users Services",
+      "slug": "iam-challenge-access-control-to-usersservices",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/iam-challenge-access-control-to-usersservices"
+    },
+    {
+      "index": 10,
+      "title": "Introduction to Amazon Aurora Connect - Challenge Lab",
+      "slug": "introduction-to-amazon-aurora-challenge-aurora-connect",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-aurora-challenge-aurora-connect"
+    },
+    {
+      "index": 11,
+      "title": "Resizing Amazon EBS Volume Challege - Disk Scaling",
+      "slug": "resizing-amazon-ebs-volume-challege-disk-scaling",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/resizing-amazon-ebs-volume-challege-disk-scaling"
+    },
+    {
+      "index": 12,
+      "title": "Challenge : DynamoDB & Global Secondary Index",
+      "slug": "dynamodb-global-secondary-index-table-indexing",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/dynamodb-global-secondary-index-table-indexing"
+    },
+    {
+      "index": 13,
+      "title": "Deploying a Highly Available Web Application and Bastion Host in AWS Challenge - Bastion Setup",
+      "slug": "deploying-a-highly-available-web-application-and-bastion-host-in-aws-challenge-bastion-setup",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws-challenge-bastion-setup"
+    },
+    {
+      "index": 14,
+      "title": "Introduction to Simple Queuing Service (SQS) Challenge - Queue Configuration",
+      "slug": "introduction-to-simple-queuing-service-sqs-challenge-queue-configuration",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/introduction-to-simple-queuing-service-sqs-challenge-queue-configuration"
+    },
+    {
+      "index": 15,
+      "title": "Challenge Lab - Configuring Layered Security in an AWS VPC",
+      "slug": "challenge-vpcfortress-security-citadel",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-vpcfortress-security-citadel"
+    },
+    {
+      "index": 16,
+      "title": "Challenge: WAFFirewall - Web Traffic Shield",
+      "slug": "challenge-waffirewall-web-traffic-shield",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-waffirewall-web-traffic-shield"
+    },
+    {
+      "index": 17,
+      "title": "Challenge Lab -  Mount EFS on EC2",
+      "slug": "challenge-efsmount-shared-storage-sync",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-efsmount-shared-storage-sync"
+    },
+    {
+      "index": 18,
+      "title": "Challenge Lab - AWS Step Functions",
+      "slug": "challenge-stepfunctions-workflow-basics",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-stepfunctions-workflow-basics"
+    },
+    {
+      "index": 19,
+      "title": "Challenge Lab - Amazon Elastic Container Service using Fargate",
+      "slug": "challenge-amazonecsfargate-container-deployment-basics",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-amazonecsfargate-container-deployment-basics"
+    },
+    {
+      "index": 20,
+      "title": "Challenge Lab: Create a cluster in Amazon EKS and install kubectl",
+      "slug": "challenge-amazoneksclustersetup-eks-basics",
+      "labType": 1,
+      "duration": 4500,
+      "url": "https://business.whizlabs.com/labs/challenge-amazoneksclustersetup-eks-basics"
+    },
+    {
+      "index": 21,
+      "title": "Challenge Lab: API Gateway - Creating Resources and Methods",
+      "slug": "challenge-apigatewayresourcesmethods-api-setup-basics",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/challenge-apigatewayresourcesmethods-api-setup-basics"
+    },
+    {
+      "index": 22,
+      "title": "Challenge: Introduction to Amazon API Gateway",
+      "slug": "challenge-apigatewayintroduction-api-basics",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/challenge-apigatewayintroduction-api-basics"
+    },
+    {
+      "index": 23,
+      "title": "Challenge Lab: Enabling CloudWatch Logs in API Gateway\t",
+      "slug": "challenge-apigatewaycloudwatchlogs-logging-setup",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-apigatewaycloudwatchlogs-logging-setup"
+    },
+    {
+      "index": 24,
+      "title": "Challenge Lab - Build API Gateway with Lambda Integration",
+      "slug": "challenge-apigatewaylambdaintegration-serverless-api-setup",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-apigatewaylambdaintegration-serverless-api-setup"
+    },
+    {
+      "index": 25,
+      "title": "Challenge: AWS_VPC_NACL_Lab - Case Study on VPC, NACL Configuration, and Compliance Auditing",
+      "slug": "challenge-awsvpcnacllab-case-study-on-vpc-nacl-configuration-and-compliance-auditing",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-awsvpcnacllab-case-study-on-vpc-nacl-configuration-and-compliance-auditing"
+    },
+    {
+      "index": 26,
+      "title": "Challenge: Comparing Data Transfer Speeds with S3 Transfer Acceleration",
+      "slug": "challenge-s3transferacceleration-comparing-data-transfer-speeds",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-s3transferacceleration-comparing-data-transfer-speeds"
+    },
+    {
+      "index": 27,
+      "title": "Challenge Lab: Introduction to Amazon GuardDuty",
+      "slug": "challenge-amazonguarddutyintroduction-threat-detection-basics",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-amazonguarddutyintroduction-threat-detection-basics"
+    },
+    {
+      "index": 28,
+      "title": "Challenge: Amazon_SES_Introduction - Sending Emails with SES",
+      "slug": "challenge-amazonsesintroduction-sending-emails-with-ses",
+      "labType": 1,
+      "duration": 1500,
+      "url": "https://business.whizlabs.com/labs/challenge-amazonsesintroduction-sending-emails-with-ses"
+    },
+    {
+      "index": 29,
+      "title": "Challenge Lab: Access Amazon SQS using Amazon VPC Interface Endpoint",
+      "slug": "challenge-lab-access-amazon-sqs-using-amazon-vpc-interface-endpoint",
+      "labType": 1,
+      "duration": 4500,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-access-amazon-sqs-using-amazon-vpc-interface-endpoint"
+    },
+    {
+      "index": 30,
+      "title": "Challenge Lab: CloudFront Distribution with EC2 & S3 Integration",
+      "slug": "challenge-lab-cloudfront-distribution-with-ec2-s3-integration",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-cloudfront-distribution-with-ec2-s3-integration"
+    },
+    {
+      "index": 31,
+      "title": "Challenge Lab - EC2 Instance Hibernation",
+      "slug": "challenge-lab-hands-on-with-ec2-instance-hibernation",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-hands-on-with-ec2-instance-hibernation"
+    },
+    {
+      "index": 32,
+      "title": "Challenge Lab: Migrating EBS volumes from gp2 to gp3",
+      "slug": "challenge-lab-migrating-ebs-volumes-from-gp2-to-gp3",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-migrating-ebs-volumes-from-gp2-to-gp3"
+    },
+    {
+      "index": 33,
+      "title": "Challenge Lab : Understanding and Configuring Layered Security in an AWS VPC Using Terraform",
+      "slug": "challenge-lab-understanding-and-configuring-layered-security-in-an-aws-vpc-using-terraform",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-understanding-and-configuring-layered-security-in-an-aws-vpc-using-terraform"
+    },
+    {
+      "index": 34,
+      "title": "Challenge Lab : Introduction to Amazon GuardDuty using Terraform",
+      "slug": "challenge-lab-automating-amazon-guardduty-setup-with-terraform",
+      "labType": 1,
+      "duration": 4500,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-automating-amazon-guardduty-setup-with-terraform"
+    },
+    {
+      "index": 35,
+      "title": "Challenge Lab : Introduction SQS DeadLetter Queue",
+      "slug": "challenge-lab-introduction-sqs-deadletter-queue",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-introduction-sqs-deadletter-queue"
+    },
+    {
+      "index": 36,
+      "title": "Challenge Lab : Data Integration and Transformation with AWS Glue",
+      "slug": "challenge-lab-data-integration-and-transformation-with-aws-glue",
+      "labType": 1,
+      "duration": 7200,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-data-integration-and-transformation-with-aws-glue"
+    },
+    {
+      "index": 37,
+      "title": "Challenge Lab : Setting up the VPC environment, launching EC2 instances, and testing reachability using the AWS Reachability Analyzer",
+      "slug": "challenge-lab-setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer",
+      "labType": 1,
+      "duration": 4500,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer"
+    },
+    {
+      "index": 38,
+      "title": "Challenge Lab : Find vulnerabilities on Inspector2 using Lambda scanning",
+      "slug": "challenge-lab-find-vulnerabilities-on-inspector2-using-lambda-scanning",
+      "labType": 1,
+      "duration": 4500,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-find-vulnerabilities-on-inspector2-using-lambda-scanning"
+    },
+    {
+      "index": 39,
+      "title": "Challenge Lab - Resolve Connectivity Issues Between VPC, EC2 Instances, and Load Balancer",
+      "slug": "challenge-lab-ec2-vpc-and-load-balancer-integration-and-debugging",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-ec2-vpc-and-load-balancer-integration-and-debugging"
+    },
+    {
+      "index": 40,
+      "title": "Challenge Lab - Configuring EBS Volume to ECS task",
+      "slug": "challenge-lab-configuring-ebs-volume-to-ecs-task",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-configuring-ebs-volume-to-ecs-task"
+    },
+    {
+      "index": 41,
+      "title": "Challenge Lab: Building a Dynamic API with Path and Query String Parameters",
+      "slug": "challenge-lab-building-a-dynamic-api-with-path-and-query-string-parameters",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-building-a-dynamic-api-with-path-and-query-string-parameters"
+    },
+    {
+      "index": 42,
+      "title": "Challenge Lab: Creating a workflow using different States with AWS Step Functions",
+      "slug": "challenge-lab-building-a-dynamic-workflow-with-aws-step-functions",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-building-a-dynamic-workflow-with-aws-step-functions"
+    },
+    {
+      "index": 43,
+      "title": "Challenge Lab - Implementing AWS WAF with ALB to block SQL Injection, Geo Location and Query string",
+      "slug": "challenge-lab-protect-your-website-with-aws-waf",
+      "labType": 1,
+      "duration": 7200,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-protect-your-website-with-aws-waf"
+    },
+    {
+      "index": 44,
+      "title": "Challenge Lab: Launch & Manage a Spot EC2 Web Server",
+      "slug": "challenge-lab-launch-manage-a-spot-ec2-web-server",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-launch-manage-a-spot-ec2-web-server"
+    },
+    {
+      "index": 45,
+      "title": "Challenge Lab - Testing SQS Visibility Timeout and Message Delay in Action",
+      "slug": "challenge-lab-configuring-and-testing-sqs-visibility-timeout-and-delivery-delay",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-configuring-and-testing-sqs-visibility-timeout-and-delivery-delay"
+    },
+    {
+      "index": 46,
+      "title": "Challenge Lab: Transfer data to S3 using Amazon Kinesis Firehose",
+      "slug": "challenge-lab-stream-and-store-vpc-flow-logs-using-kinesis-firehose-and-s3",
+      "labType": 1,
+      "duration": 6300,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-stream-and-store-vpc-flow-logs-using-kinesis-firehose-and-s3"
+    },
+    {
+      "index": 47,
+      "title": "Challenge Lab: Data Protection Using AWS Key Management Service",
+      "slug": "challenge-lab-data-protection-using-aws-key-management-service",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-data-protection-using-aws-key-management-service"
+    },
+    {
+      "index": 48,
+      "title": "Migrating Local VM Ubuntu Database to AWS RDS",
+      "slug": "migrating-local-vm-ubuntu-database-to-aws-rds",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/migrating-local-vm-ubuntu-database-to-aws-rds"
+    },
+    {
+      "index": 49,
+      "title": "Creating and Subscribing to SNS Topics, Adding SNS event for S3 bucket Challenge -  Bucket Monitor",
+      "slug": "creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket-challenge-bucket-monitor",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket-challenge-bucket-monitor"
+    },
+    {
+      "index": 50,
+      "title": "Challenge Lab: Create and Configure Amazon EC2 Auto Scaling with Launch Templates",
+      "slug": "challenge-lab-deploying-scalable-ec2-instances-using-launch-templates",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-deploying-scalable-ec2-instances-using-launch-templates"
+    },
+    {
+      "index": 51,
+      "title": "EC2  Challenge-Cloud-Core Compute Quest",
+      "slug": "ec2-challenge-cloud-core-compute-quest",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/ec2-challenge-cloud-core-compute-quest"
+    },
+    {
+      "index": 52,
+      "title": "Challenge Lab: Deploy and Connect to a Redis Cluster using Amazon ElastiCache",
+      "slug": "challenge-lab-deploy-and-connect-to-a-redis-cluster-using-amazon-elasticache",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-deploy-and-connect-to-a-redis-cluster-using-amazon-elasticache"
+    },
+    {
+      "index": 53,
+      "title": "Challenge Lab: Set Up a Free VPN Server Using OpenVPN on AWS",
+      "slug": "challenge-lab-set-up-a-free-vpn-server-using-openvpn-on-aws",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-set-up-a-free-vpn-server-using-openvpn-on-aws"
+    },
+    {
+      "index": 54,
+      "title": "Challenge Lab: Create Elastic Network Interface - Multiple IPs on an EC2",
+      "slug": "challenge-lab-multi-ip-ec2-deployment-with-elastic-network-interfaces",
+      "labType": 1,
+      "duration": 4500,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-multi-ip-ec2-deployment-with-elastic-network-interfaces"
+    },
+    {
+      "index": 55,
+      "title": "Create VPC Environment challenge",
+      "slug": "create-vpc-environment-challenge",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/create-vpc-environment-challenge"
+    },
+    {
+      "index": 56,
+      "title": "Introduction SQS DeadLetter Queue",
+      "slug": "introduction-sqs-deadletter-queue",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/introduction-sqs-deadletter-queue"
+    },
+    {
+      "index": 57,
+      "title": "Challenge Lab - Build API Gateway with different stages using stage variables",
+      "slug": "challenge-lab-api-gateway-stage-variables-for-seamless-environment-management",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-api-gateway-stage-variables-for-seamless-environment-management"
+    },
+    {
+      "index": 58,
+      "title": "Setting up the VPC environment, launching EC2 instances, and testing reachability using the AWS  Reachability Analyzer",
+      "slug": "setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer"
+    },
+    {
+      "index": 59,
+      "title": "Challenge Lab: Analyzing Expense Data with Amazon Athena",
+      "slug": "challenge-lab-analyzing-expense-data-with-amazon-athena",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-analyzing-expense-data-with-amazon-athena"
+    },
+    {
+      "index": 60,
+      "title": "Configure WordPress Website Using AWS Console Challenge",
+      "slug": "configure-wordpress-website-using-aws-console-challenge",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/configure-wordpress-website-using-aws-console-challenge"
+    },
+    {
+      "index": 61,
+      "title": "Creating Events in CloudWatch Challenge",
+      "slug": "creating-events-in-cloudwatch-challenge",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/creating-events-in-cloudwatch-challenge"
+    },
+    {
+      "index": 62,
+      "title": "Challenge Lab : Access S3 from Private EC2 instance using VPC Endpoint",
+      "slug": "challenge-lab-accessing-s3-from-a-private-ec2-instance-without-internet-access",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-accessing-s3-from-a-private-ec2-instance-without-internet-access"
+    },
+    {
+      "index": 63,
+      "title": "Creating a User Pool in AWS Cognito Using Terraform",
+      "slug": "creating-a-user-pool-in-aws-cognito-using-terraform",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/creating-a-user-pool-in-aws-cognito-using-terraform"
+    },
+    {
+      "index": 64,
+      "title": "Challenge Lab: Create a DynamoDB table and perform various table operations using NoSQL Workbench",
+      "slug": "challenge-lab-dynamodb-table-operations-using-aws-console-and-nosql-workbench",
+      "labType": 1,
+      "duration": 4500,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-dynamodb-table-operations-using-aws-console-and-nosql-workbench"
+    },
+    {
+      "index": 65,
+      "title": "Understanding and Configuring Layered Security in an AWS VPC Using Terraform",
+      "slug": "understanding-and-configuring-layered-security-in-an-aws-vpc-using-terraform",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/understanding-and-configuring-layered-security-in-an-aws-vpc-using-terraform"
+    },
+    {
+      "index": 66,
+      "title": "Configure Email Notification on S3 Bucket Event - Amazon SNS Challenge",
+      "slug": "configure-email-notification-on-s3-bucket-event-amazon-sns-challenge",
+      "labType": 1,
+      "duration": 2400,
+      "url": "https://business.whizlabs.com/labs/configure-email-notification-on-s3-bucket-event-amazon-sns-challenge"
+    },
+    {
+      "index": 67,
+      "title": "Find vulnerabilities on Inspector2 using Lambda scanning",
+      "slug": "find-vulnerabilities-on-inspector2-using-lambda-scanning",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/find-vulnerabilities-on-inspector2-using-lambda-scanning"
+    },
+    {
+      "index": 68,
+      "title": "Challenge Lab: How to Encrypt an Unencrypted RDS DB Instance",
+      "slug": "challenge-lab-encrypt-an-amazon-rds-instance-using-snapshot-migration-and-kms",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-encrypt-an-amazon-rds-instance-using-snapshot-migration-and-kms"
+    },
+    {
+      "index": 69,
+      "title": "Challenge Lab - Exporting Amazon RDS Snapshot to S3 for Secure Backup",
+      "slug": "challenge-lab-exporting-amazon-rds-snapshot-to-s3-for-secure-backup",
+      "labType": 1,
+      "duration": 7200,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-exporting-amazon-rds-snapshot-to-s3-for-secure-backup"
+    },
+    {
+      "index": 70,
+      "title": "NAT gateway - AWS VPC Challenge",
+      "slug": "nat-gateway-aws-vpc-challenge",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/nat-gateway-aws-vpc-challenge"
+    },
+    {
+      "index": 71,
+      "title": "Create a sample Web Application and monitor it in AWS X-Ray",
+      "slug": "create-a-sample-web-application-and-monitor-it-in-aws-x-ray",
+      "labType": 1,
+      "duration": 2400,
+      "url": "https://business.whizlabs.com/labs/create-a-sample-web-application-and-monitor-it-in-aws-x-ray"
+    },
+    {
+      "index": 72,
+      "title": "Creating Serverless Contact Forms with AWS",
+      "slug": "creating-serverless-contact-forms-with-aws",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/creating-serverless-contact-forms-with-aws"
+    },
+    {
+      "index": 73,
+      "title": "Troubleshooting Connectivity Issues Between VPC, EC2, and Load Balancer",
+      "slug": "troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/troubleshooting-connectivity-issues-between-vpc-ec2-and-load-balancer"
+    },
+    {
+      "index": 74,
+      "title": "Amazon RDS-CloudSQL Catalyst-Challenge",
+      "slug": "amazon-rds-challenge-cloudsql-catalyst",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/amazon-rds-challenge-cloudsql-catalyst"
+    },
+    {
+      "index": 75,
+      "title": "Amazon CloudFormation S3 URL Stack Challenge",
+      "slug": "amazon-cloudformation-s3-url-stack-challenge",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/amazon-cloudformation-s3-url-stack-challenge"
+    },
+    {
+      "index": 76,
+      "title": "How to Encrypt an S3 bucket using AWS KMS and monitor the activities with CloudTrail",
+      "slug": "how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail",
+      "labType": 1,
+      "duration": 3000,
+      "url": "https://business.whizlabs.com/labs/how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail"
+    },
+    {
+      "index": 77,
+      "title": "Create a DynamoDB table and perform various table operations using NoSQL Workbench",
+      "slug": "create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/create-a-dynamodb-table-and-perform-various-table-operations-using-nosql-workbench"
+    },
+    {
+      "index": 78,
+      "title": "Enable VPC Peering through Transit Gateway Challenge",
+      "slug": "enable-vpc-peering-through-transit-gateway-challenge",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/enable-vpc-peering-through-transit-gateway-challenge"
+    },
+    {
+      "index": 79,
+      "title": "Challenge Connecting an EC2 instance and a DB instance Automatically",
+      "slug": "challenge-connecting-an-ec2-instance-and-a-db-instance-automatically",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-connecting-an-ec2-instance-and-a-db-instance-automatically"
+    },
+    {
+      "index": 80,
+      "title": "Introduction to Amazon GuardDuty using Terraform",
+      "slug": "introduction-to-amazon-guardduty-using-terraform",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-guardduty-using-terraform"
+    },
+    {
+      "index": 81,
+      "title": "Integrating API Gateway with Lambda Function Challenge",
+      "slug": "integrating-api-gateway-with-lambda-function-challenge",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/integrating-api-gateway-with-lambda-function-challenge"
+    },
+    {
+      "index": 82,
+      "title": "Configuring EBS Volume to ECS task",
+      "slug": "configuring-ebs-volume-to-ecs-task",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/configuring-ebs-volume-to-ecs-task"
+    },
+    {
+      "index": 83,
+      "title": "EBS Multi- Attach",
+      "slug": "ebs-multi-attach",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/ebs-multi-attach"
+    },
+    {
+      "index": 84,
+      "title": "Enable sticky sessions in Application Load balancer",
+      "slug": "enable-sticky-sessions-in-application-load-balancer",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/enable-sticky-sessions-in-application-load-balancer"
+    },
+    {
+      "index": 85,
+      "title": "Amazon VPC Endpoint challenge",
+      "slug": "amazon-vpc-endpoint-challenge",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/amazon-vpc-endpoint-challenge"
+    },
+    {
+      "index": 86,
+      "title": "Challenge Lab – Enable Sticky sessions in Application Load balancer",
+      "slug": "challenge-lab-enable-sticky-sessions-in-application-load-balancer",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-enable-sticky-sessions-in-application-load-balancer"
+    },
+    {
+      "index": 87,
+      "title": "Access Amazon SQS using Amazon VPC Interface Endpoint",
+      "slug": "access-amazon-sqs-using-amazon-vpc-interface-endpoint",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/access-amazon-sqs-using-amazon-vpc-interface-endpoint"
+    },
+    {
+      "index": 88,
+      "title": "Wokwi IoT Device Simulation with AWS IoT Core Real-Time Dashboard",
+      "slug": "wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard",
+      "labType": 1,
+      "duration": 7200,
+      "url": "https://business.whizlabs.com/labs/wokwi-iot-device-simulation-with-aws-iot-core-real-time-dashboard"
+    },
+    {
+      "index": 89,
+      "title": "Understanding CloudFront Origin Groups",
+      "slug": "understanding-cloudfront-origin-groups",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/understanding-cloudfront-origin-groups"
+    },
+    {
+      "index": 90,
+      "title": "Serverless Email Sender with Amazon Simple-Email-Service",
+      "slug": "serverless-email-sender-with-amazon-simple-email-service",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/serverless-email-sender-with-amazon-simple-email-service"
+    },
+    {
+      "index": 91,
+      "title": "Challenge Lab: Encrypt S3 bucket, EBS Volume and AMI using AWS KMS",
+      "slug": "challenge-lab-enable-developer-controlled-encryption-with-aws-kms-cmks",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-enable-developer-controlled-encryption-with-aws-kms-cmks"
+    },
+    {
+      "index": 92,
+      "title": "Use AWS Secrets Manager secret with Amazon ECS",
+      "slug": "use-aws-secrets-manager-secret-with-amazon-ecs",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/use-aws-secrets-manager-secret-with-amazon-ecs"
+    },
+    {
+      "index": 93,
+      "title": "Configure NAT Instance and Stream Web Logs to CloudWatch Using CloudWatch Agent",
+      "slug": "configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/configure-nat-instance-and-stream-web-logs-to-cloudwatch-using-cloudwatch-agent"
+    },
+    {
+      "index": 94,
+      "title": "Hibernating an EC2 Instance",
+      "slug": "hibernating-an-ec2-instance",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/hibernating-an-ec2-instance"
+    },
+    {
+      "index": 95,
+      "title": "Deploy Container using AWS App Runner",
+      "slug": "deploy-container-using-aws-app-runner",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/deploy-container-using-aws-app-runner"
+    },
+    {
+      "index": 96,
+      "title": "Configuring Amazon FSx for Lustre with EC2 Instances for Shared High-Performance Storage Access",
+      "slug": "configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access"
+    },
+    {
+      "index": 97,
+      "title": "Hybrid Monitoring System Deployment using Prometheus with Grafana on AWS and VMware",
+      "slug": "hybrid-monitoring-system-deploymentusing-prometheus-with-grafana-on-awsand-vmware",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/hybrid-monitoring-system-deploymentusing-prometheus-with-grafana-on-awsand-vmware"
+    },
+    {
+      "index": 98,
+      "title": "Introduction to Amazon Elastic Compute Cloud (EC2)",
+      "slug": "introduction-to-amazon-elastic-compute-cloud-ec2",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-elastic-compute-cloud-ec2"
+    },
+    {
+      "index": 99,
+      "title": "Introduction to AWS Identity Access Management (IAM)",
+      "slug": "introduction-to-aws-identity-access-management-iam",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/introduction-to-aws-identity-access-management-iam"
+    },
+    {
+      "index": 100,
+      "title": "Deploying AWS File Gateway on VMware  ESXi to enable hybrid cloud storage with enterprise-grade security and scalability",
+      "slug": "deploying-aws-file-gateway-on-vmware-esxi-to-enable-hybrid-cloud-storage-with-enterprise-grade-security-and-scalability",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/deploying-aws-file-gateway-on-vmware-esxi-to-enable-hybrid-cloud-storage-with-enterprise-grade-security-and-scalability"
+    },
+    {
+      "index": 101,
+      "title": "Introduction to Amazon CloudFront",
+      "slug": "introduction-to-amazon-cloudfront",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-cloudfront"
+    },
+    {
+      "index": 102,
+      "title": "Introduction to AWS Elastic Load Balancing",
+      "slug": "introduction-to-aws-elastic-load-balancing",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/introduction-to-aws-elastic-load-balancing"
+    },
+    {
+      "index": 103,
+      "title": "Deploying Amazon RDS Multi-AZ and Read Replica, Simulate Failover",
+      "slug": "deploying-amazon-rds-multi-az-and-read-replica-simulate-failover",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover"
+    },
+    {
+      "index": 104,
+      "title": "Introduction to Amazon CloudFormation",
+      "slug": "introduction-to-amazon-cloudformation",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-cloudformation"
+    },
+    {
+      "index": 105,
+      "title": "Introduction to AWS Elastic Beanstalk",
+      "slug": "introduction-to-aws-elastic-beanstalk",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/introduction-to-aws-elastic-beanstalk"
+    },
+    {
+      "index": 106,
+      "title": "Challenge Lab: Secure Secret Management with AWS Secrets Manager and ECS",
+      "slug": "challenge-lab-secure-secret-management-with-aws-secrets-manager-and-ecs",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-secure-secret-management-with-aws-secrets-manager-and-ecs"
+    },
+    {
+      "index": 107,
+      "title": "Creating and Subscribing to SNS Topics, Adding SNS event for S3 bucket",
+      "slug": "creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket"
+    },
+    {
+      "index": 108,
+      "title": "S3 Batch Operation",
+      "slug": "s3-batch-operation",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/s3-batch-operation"
+    },
+    {
+      "index": 109,
+      "title": "Build a real time data streaming system with Amazon Kinesis Data Stream and Kinesis Agent",
+      "slug": "build-a-real-time-data-streaming-system-with-amazon-kinesis-data-stream-and-kinesis-agent",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/build-a-real-time-data-streaming-system-with-amazon-kinesis-data-stream-and-kinesis-agent"
+    },
+    {
+      "index": 110,
+      "title": "Block and Unblock access to CloudFront distribution using AWS WAF",
+      "slug": "block-and-unblock-access-to-cloudfront-distribution-using-aws-waf",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/block-and-unblock-access-to-cloudfront-distribution-using-aws-waf"
+    },
+    {
+      "index": 111,
+      "title": "Challenge - Introduction to AWS Elastic Load Balancing",
+      "slug": "challenge-lab-introduction-to-aws-elastic-load-balancing-challenge",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-introduction-to-aws-elastic-load-balancing-challenge"
+    },
+    {
+      "index": 112,
+      "title": "Query VPC Flow log using Amazon Athena",
+      "slug": "query-vpc-flow-log-using-amazon-athena",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/query-vpc-flow-log-using-amazon-athena"
+    },
+    {
+      "index": 113,
+      "title": "Implement Data Backup on Ubuntu VMware to Amazon S3",
+      "slug": "implement-data-backup-on-ubuntu-vmware-to-amazon-s3",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/implement-data-backup-on-ubuntu-vmware-to-amazon-s3"
+    },
+    {
+      "index": 114,
+      "title": "Challenge Lab- Allocating Elastic IP and Associating it to EC2 Instance",
+      "slug": "challenge-lab-allocating-elastic-ip-and-associating-it-to-ec2-instance",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/challenge-lab-allocating-elastic-ip-and-associating-it-to-ec2-instance"
+    },
+    {
+      "index": 115,
+      "title": "Encrypt S3 bucket, EBS Volume and AMI using AWS KMS",
+      "slug": "encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/encrypt-s3-bucket-ebs-volume-and-ami-using-aws-kms"
+    },
+    {
+      "index": 116,
+      "title": "Query items in DynamoDB with PartiQL Statements",
+      "slug": "query-items-in-dynamodb-with-partiql-statements",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/query-items-in-dynamodb-with-partiql-statements"
+    },
+    {
+      "index": 117,
+      "title": "Hybrid web app using VMware Ubuntu and AWS RDS",
+      "slug": "hybrid-web-app-using-vmware-ubuntu-and-aws-rds",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/hybrid-web-app-using-vmware-ubuntu-and-aws-rds"
+    },
+    {
+      "index": 118,
+      "title": "Challenge - Deploying Amazon RDS Multi-AZ and Read Replica, Simulate Failover",
+      "slug": "challenge-deploying-amazon-rds-multi-az-and-read-replica-simulate-failover",
+      "labType": 1,
+      "duration": 7200,
+      "url": "https://business.whizlabs.com/labs/challenge-deploying-amazon-rds-multi-az-and-read-replica-simulate-failover"
+    },
+    {
+      "index": 119,
+      "title": "Challenge - How to Encrypt an S3 bucket using AWS KMS and monitor the activities with CloudTrail",
+      "slug": "challenge-how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/challenge-how-to-encrypt-an-s3-bucket-using-aws-kms-and-monitor-the-activities-with-cloudtrail"
+    },
+    {
+      "index": 120,
+      "title": "Allocating Elastic IP and Associating it to EC2 Instance",
+      "slug": "allocating-elastic-ip-and-associating-it-to-ec2-instance",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/allocating-elastic-ip-and-associating-it-to-ec2-instance"
+    },
+    {
+      "index": 121,
+      "title": "Launch a Spot Instance with Amazon EC2",
+      "slug": "launch-a-spot-instance-with-amazon-ec2",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/launch-a-spot-instance-with-amazon-ec2"
+    },
+    {
+      "index": 122,
+      "title": "Introduction to Amazon Simple Storage Service (S3)",
+      "slug": "introduction-to-amazon-simple-storage-service-s3",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-simple-storage-service-s3"
+    },
+    {
+      "index": 123,
+      "title": "Creating an S3 Lifecycle Policy",
+      "slug": "creating-an-s3-lifecycle-policy",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/creating-an-s3-lifecycle-policy"
+    },
+    {
+      "index": 124,
+      "title": "Setup Cross Region Replication and Versioning in S3",
+      "slug": "setup-cross-region-replication-and-versioning-in-s3",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/setup-cross-region-replication-and-versioning-in-s3"
+    },
+    {
+      "index": 125,
+      "title": "Comparing Data Transfer Speeds with S3 Transfer Acceleration",
+      "slug": "comparing-data-transfer-speeds-with-s3-transfer-acceleration",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/comparing-data-transfer-speeds-with-s3-transfer-acceleration"
+    },
+    {
+      "index": 126,
+      "title": "Create Redis cluster using ElastiCache",
+      "slug": "create-redis-cluster-using-elasticache",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/create-redis-cluster-using-elasticache"
+    },
+    {
+      "index": 127,
+      "title": "Introduction to AWS Relational Database Service",
+      "slug": "introduction-to-aws-relational-database-service",
+      "labType": 1,
+      "duration": 3000,
+      "url": "https://business.whizlabs.com/labs/introduction-to-aws-relational-database-service"
+    },
+    {
+      "index": 128,
+      "title": "How to Query into RDS MySQL Using AWS Lambda",
+      "slug": "how-to-query-into-rds-mysql-using-aws-lambda",
+      "labType": 1,
+      "duration": 4500,
+      "url": "https://business.whizlabs.com/labs/how-to-query-into-rds-mysql-using-aws-lambda"
+    },
+    {
+      "index": 129,
+      "title": "Challenge - Build a real time data streaming system with Amazon Kinesis Data Stream and Kinesis Agent",
+      "slug": "challenge-build-a-real-time-data-streaming-system-with-amazon-kinesis-data-stream-and-kinesis-agent",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/challenge-build-a-real-time-data-streaming-system-with-amazon-kinesis-data-stream-and-kinesis-agent"
+    },
+    {
+      "index": 130,
+      "title": "Introduction to Amazon Auto Scaling",
+      "slug": "introduction-to-amazon-auto-scaling",
+      "labType": 1,
+      "duration": 3300,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-auto-scaling"
+    },
+    {
+      "index": 131,
+      "title": "Challenge - Discover sensitive data present in S3 bucket using Amazon Macie",
+      "slug": "challenge-discover-sensitive-data-present-in-s3-bucket-using-amazon-macie",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/challenge-discover-sensitive-data-present-in-s3-bucket-using-amazon-macie"
+    },
+    {
+      "index": 132,
+      "title": "Create and Configure Amazon EC2 Auto Scaling with Launch Templates",
+      "slug": "create-and-configure-amazon-ec2-auto-scaling-with-launch-templates",
+      "labType": 1,
+      "duration": 3300,
+      "url": "https://business.whizlabs.com/labs/create-and-configure-amazon-ec2-auto-scaling-with-launch-templates"
+    },
+    {
+      "index": 133,
+      "title": "How to Encrypt an Unencrypted RDS DB Instance",
+      "slug": "how-to-encrypt-an-unencrypted-rds-db-instance",
+      "labType": 1,
+      "duration": 4800,
+      "url": "https://business.whizlabs.com/labs/how-to-encrypt-an-unencrypted-rds-db-instance"
+    },
+    {
+      "index": 134,
+      "title": "Export Amazon RDS DB Snapshot to S3",
+      "slug": "export-amazon-rds-db-snapshot-to-s3",
+      "labType": 1,
+      "duration": 7200,
+      "url": "https://business.whizlabs.com/labs/export-amazon-rds-db-snapshot-to-s3"
+    },
+    {
+      "index": 135,
+      "title": "Introduction to AWS DynamoDB",
+      "slug": "introduction-to-aws-dynamodb",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/introduction-to-aws-dynamodb"
+    },
+    {
+      "index": 136,
+      "title": "DynamoDB & Global Secondary Index",
+      "slug": "dynamodb-global-secondary-index",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/dynamodb-global-secondary-index"
+    },
+    {
+      "index": 137,
+      "title": "Launch ECS Container Challenge",
+      "slug": "launch-ecs-container-challenge",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/launch-ecs-container-challenge"
+    },
+    {
+      "index": 138,
+      "title": "Build Amazon VPC with Public and Private Subnets (from Scratch)",
+      "slug": "build-amazon-vpc-with-public-and-private-subnets-from-scratch",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch"
+    },
+    {
+      "index": 139,
+      "title": "Creating NAT Gateways in AWS",
+      "slug": "creating-nat-gateways-in-aws",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/creating-nat-gateways-in-aws"
+    },
+    {
+      "index": 140,
+      "title": "Create Elastic Network Interface - Multiple IPs on an EC2",
+      "slug": "create-elastic-network-interface-multiple-ips-on-an-ec2",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/create-elastic-network-interface-multiple-ips-on-an-ec2"
+    },
+    {
+      "index": 141,
+      "title": "Deploying a Highly Available Web Application and Bastion Host in AWS",
+      "slug": "deploying-a-highly-available-web-application-and-bastion-host-in-aws",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/deploying-a-highly-available-web-application-and-bastion-host-in-aws"
+    },
+    {
+      "index": 142,
+      "title": "Blocking web traffic with WAF in AWS",
+      "slug": "blocking-web-traffic-with-waf-in-aws",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/blocking-web-traffic-with-waf-in-aws"
+    },
+    {
+      "index": 143,
+      "title": "Implementing AWS WAF with ALB to block SQL Injection, Geo Location and Query string",
+      "slug": "implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string",
+      "labType": 1,
+      "duration": 7200,
+      "url": "https://business.whizlabs.com/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string"
+    },
+    {
+      "index": 144,
+      "title": "Migrating EBS volumes from gp2 to gp3",
+      "slug": "migrating-ebs-volumes-from-gp2-to-gp3",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/migrating-ebs-volumes-from-gp2-to-gp3"
+    },
+    {
+      "index": 145,
+      "title": "Connecting RDS from EC2 Instance",
+      "slug": "launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance",
+      "labType": 1,
+      "duration": 3300,
+      "url": "https://business.whizlabs.com/labs/launch-amazon-ec2-instance-launch-amazon-rds-instance-connecting-rds-from-ec2-instance"
+    },
+    {
+      "index": 146,
+      "title": "Introduction to Amazon Lambda",
+      "slug": "introduction-to-amazon-lambda",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-lambda"
+    },
+    {
+      "index": 147,
+      "title": "How to Create Virtual Private Cloud (VPC) with AWS CloudFormation",
+      "slug": "how-to-create-virtual-private-cloud-vpc-with-aws-cloudformation",
+      "labType": 1,
+      "duration": 3300,
+      "url": "https://business.whizlabs.com/labs/how-to-create-virtual-private-cloud-vpc-with-aws-cloudformation"
+    },
+    {
+      "index": 148,
+      "title": "Understanding and Configuring Layered Security in an AWS VPC",
+      "slug": "understanding-and-configuring-layered-security-in-an-aws-vpc",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/understanding-and-configuring-layered-security-in-an-aws-vpc"
+    },
+    {
+      "index": 149,
+      "title": "Introduction to Creating AWS VPC Flow Logs",
+      "slug": "introduction-to-creating-aws-vpc-flow-logs",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/introduction-to-creating-aws-vpc-flow-logs"
+    },
+    {
+      "index": 150,
+      "title": "AWS VPC NACL Lab - Case study",
+      "slug": "aws-vpc-nacl-lab-case-study",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/aws-vpc-nacl-lab-case-study"
+    },
+    {
+      "index": 151,
+      "title": "How to setup a free VPN server in AWS",
+      "slug": "how-to-setup-a-free-vpn-server-in-aws",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/how-to-setup-a-free-vpn-server-in-aws"
+    },
+    {
+      "index": 152,
+      "title": "Peer VPC with Transit Gateway and its components",
+      "slug": "peer-vpc-with-transit-gateway-and-its-components",
+      "labType": 1,
+      "duration": 4500,
+      "url": "https://business.whizlabs.com/labs/peer-vpc-with-transit-gateway-and-its-components"
+    },
+    {
+      "index": 153,
+      "title": "Implementing VPC peering on AWS",
+      "slug": "implementing-vpc-peering-on-aws",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/implementing-vpc-peering-on-aws"
+    },
+    {
+      "index": 154,
+      "title": "Access S3 from Private EC2 instance using VPC Endpoint",
+      "slug": "access-s3-from-private-ec2-instance-using-vpc-endpoint",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/access-s3-from-private-ec2-instance-using-vpc-endpoint"
+    },
+    {
+      "index": 155,
+      "title": "Creating New EC2 Instance using Snapshot",
+      "slug": "creating-new-ec2-instance-using-snapshot",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/creating-new-ec2-instance-using-snapshot"
+    },
+    {
+      "index": 156,
+      "title": "Resizing Amazon EBS Volume",
+      "slug": "resizing-amazon-ebs-volume",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/resizing-amazon-ebs-volume"
+    },
+    {
+      "index": 157,
+      "title": "Introduction to Simple Queuing Service (SQS)",
+      "slug": "introduction-to-simple-queuing-service-sqs",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/introduction-to-simple-queuing-service-sqs"
+    },
+    {
+      "index": 158,
+      "title": "Difference between SQS Visibility Timeout and Delay Queue",
+      "slug": "difference-between-sqs-visibility-timeout-and-delay-queue",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/difference-between-sqs-visibility-timeout-and-delay-queue"
+    },
+    {
+      "index": 159,
+      "title": "Creating a User Pool in AWS Cognito",
+      "slug": "creating-a-user-pool-in-aws-cognito",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/creating-a-user-pool-in-aws-cognito"
+    },
+    {
+      "index": 160,
+      "title": "Enabling CloudWatch Logs in API Gateway",
+      "slug": "enabling-cloudwatch-logs-in-api-gateway",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/enabling-cloudwatch-logs-in-api-gateway"
+    },
+    {
+      "index": 161,
+      "title": "Introduction to Amazon API Gateway",
+      "slug": "introduction-to-amazon-api-gateway",
+      "labType": 1,
+      "duration": 900,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-api-gateway"
+    },
+    {
+      "index": 162,
+      "title": "Data Integration and Transformation with AWS Glue",
+      "slug": "data-integration-and-transformation-with-aws-glue",
+      "labType": 1,
+      "duration": 7200,
+      "url": "https://business.whizlabs.com/labs/data-integration-and-transformation-with-aws-glue"
+    },
+    {
+      "index": 163,
+      "title": "API Gateway - Creating Resources and Methods",
+      "slug": "api-gateway-creating-resources-and-methods",
+      "labType": 1,
+      "duration": 1200,
+      "url": "https://business.whizlabs.com/labs/api-gateway-creating-resources-and-methods"
+    },
+    {
+      "index": 164,
+      "title": "Build API Gateway with Lambda Integration",
+      "slug": "build-api-gateway-with-lambda-integration",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/build-api-gateway-with-lambda-integration"
+    },
+    {
+      "index": 165,
+      "title": "Build API Gateway with different stages using stage variables",
+      "slug": "build-api-gateway-with-different-stages-using-stage-variables",
+      "labType": 1,
+      "duration": 4500,
+      "url": "https://business.whizlabs.com/labs/build-api-gateway-with-different-stages-using-stage-variables"
+    },
+    {
+      "index": 166,
+      "title": "Build API Gateway with path parameter and Query string parameter",
+      "slug": "build-api-gateway-with-path-parameter-and-query-string-parameter",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/build-api-gateway-with-path-parameter-and-query-string-parameter"
+    },
+    {
+      "index": 167,
+      "title": "Mount Elastic File System (EFS) on EC2",
+      "slug": "mount-elastic-file-system-efs-on-ec2",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/mount-elastic-file-system-efs-on-ec2"
+    },
+    {
+      "index": 168,
+      "title": "Encryption and Decryption Using KMS",
+      "slug": "encryption-and-decryption-using-kms",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/encryption-and-decryption-using-kms"
+    },
+    {
+      "index": 169,
+      "title": "Transfer data to S3 using Amazon Kinesis Firehose",
+      "slug": "transfer-data-to-s3-using-amazon-kinesis-firehose",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/transfer-data-to-s3-using-amazon-kinesis-firehose"
+    },
+    {
+      "index": 170,
+      "title": "Introduction to Amazon GuardDuty",
+      "slug": "introduction-to-amazon-guardduty",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-guardduty"
+    },
+    {
+      "index": 171,
+      "title": "Discover sensitive data present in S3 bucket using Amazon Macie",
+      "slug": "discover-sensitive-data-present-in-s3-bucket-using-amazon-macie",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie"
+    },
+    {
+      "index": 172,
+      "title": "Introduction to Amazon Simple Email Service SES",
+      "slug": "introduction-to-amazon-simple-email-service-ses",
+      "labType": 1,
+      "duration": 900,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-simple-email-service-ses"
+    },
+    {
+      "index": 173,
+      "title": "Getting Started with Amazon Elastic Container Service using Fargate",
+      "slug": "getting-started-with-amazon-elastic-container-service-using-fargate",
+      "labType": 1,
+      "duration": 2700,
+      "url": "https://business.whizlabs.com/labs/getting-started-with-amazon-elastic-container-service-using-fargate"
+    },
+    {
+      "index": 174,
+      "title": "Introduction to Amazon Elastic Container Service (ECS)",
+      "slug": "introduction-to-amazon-elastic-container-service-ecs",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/introduction-to-amazon-elastic-container-service-ecs"
+    },
+    {
+      "index": 175,
+      "title": "Balance load across containers through Application Load Balancer in ECS",
+      "slug": "balance-load-across-containers-through-application-load-balancer-in-ecs",
+      "labType": 1,
+      "duration": 5400,
+      "url": "https://business.whizlabs.com/labs/balance-load-across-containers-through-application-load-balancer-in-ecs"
+    },
+    {
+      "index": 176,
+      "title": "Create a cluster in Amazon EKS and install kubectl",
+      "slug": "create-a-cluster-in-amazon-eks-and-install-kubectl",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/create-a-cluster-in-amazon-eks-and-install-kubectl"
+    },
+    {
+      "index": 177,
+      "title": "Introduction to AWS Step Functions",
+      "slug": "introduction-to-aws-step-functions",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/introduction-to-aws-step-functions"
+    },
+    {
+      "index": 178,
+      "title": "Creating a workflow using different States with AWS Step Functions",
+      "slug": "creating-a-workflow-using-different-states-with-aws-step-functions",
+      "labType": 1,
+      "duration": 1800,
+      "url": "https://business.whizlabs.com/labs/creating-a-workflow-using-different-states-with-aws-step-functions"
+    },
+    {
+      "index": 179,
+      "title": "Querying Data in S3 with Amazon Athena",
+      "slug": "querying-data-in-s3-with-amazon-athena",
+      "labType": 1,
+      "duration": 3600,
+      "url": "https://business.whizlabs.com/labs/querying-data-in-s3-with-amazon-athena"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "slug": "challenge-lab-deploying-scalable-ec2-instances-using-launch-templates",
+  "title": "Challenge Lab: Create and Configure Amazon EC2 Auto Scaling with Launch Templates",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:00:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this lab, you will learn how to set up Auto Scaling for EC2 instances using Launch Templates. You will create a security group, key pair, and launch template, and then configure an Auto Scaling group to automatically manage the number of instances based on demand. This will help you ensure your applications can handle changes in traffic smoothly and stay available."
+        },
+        {
+          "text": "You are a Cloud Engineer or an e-commerce company. As traffic to the website grows, you need to make sure the site stays up without any downtime."
+        },
+        {
+          "text": "Your task is to set up an Auto Scaling Group that automatically adds or removes EC2 instances based on traffic. Each EC2 instance should run a simple web page showing a welcome message to visitors."
+        },
+        {
+          "text": "Create a Security Group: Allow HTTP (port 80) inbound from Anywhere (0.0.0.0/0)."
+        },
+        {
+          "text": "Allow HTTP (port 80) inbound from Anywhere (0.0.0.0/0)."
+        },
+        {
+          "text": "Create a Key Pair: Download the private key file."
+        },
+        {
+          "text": "Download the private key file."
+        },
+        {
+          "text": "Create a Launch Template: AMI: Amazon Linux 2 Instance Type: t2.micro Security Group: use the one you created Install and start Apache, enable it to run on boot, and add a simple HTML page to test if the server is responding."
+        },
+        {
+          "text": "AMI: Amazon Linux 2"
+        },
+        {
+          "text": "Instance Type: t2.micro"
+        },
+        {
+          "text": "Security Group: use the one you created"
+        },
+        {
+          "text": "Install and start Apache, enable it to run on boot, and add a simple HTML page to test if the server is responding."
+        },
+        {
+          "text": "Create an Auto Scaling Group: Set desired, minimum, and maximum instance count to 2. Attach the launch template and use a suitable VPC/subnet."
+        },
+        {
+          "text": "Set desired, minimum, and maximum instance count to 2."
+        },
+        {
+          "text": "Attach the launch template and use a suitable VPC/subnet."
+        },
+        {
+          "text": "Click Validate to ensure configuration is correct."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

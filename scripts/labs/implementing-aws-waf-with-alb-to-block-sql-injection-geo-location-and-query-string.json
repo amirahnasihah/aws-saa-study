@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -44,10 +47,22 @@
           "text": "Navigate to Instances from the left side menu and click on Launch Instances button."
         },
         {
+          "text": "Under the Name and tags section : Name : Enter MyEC2Server1"
+        },
+        {
           "text": "Under the Name and tags section :"
         },
         {
-          "text": "Name : Enter MyEC2Server1"
+          "text": "Name : Enter MyEC2Server1"
+        },
+        {
+          "text": "Task 2: Launch First EC2 Instance",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-01.png"
+          ]
+        },
+        {
+          "text": "Under the Application and OS Images (Amazon Machine Image) section : Select Quick Start tab and Amazon Linux under it Amazon Machine Image (AMI) : select Amazon Linux 2023 kernel 6.1 AMI"
         },
         {
           "text": "Under the Application and OS Images (Amazon Machine Image) section :"
@@ -59,10 +74,28 @@
           "text": "Amazon Machine Image (AMI) : select Amazon Linux 2023 kernel 6.1 AMI"
         },
         {
+          "text": "Task 2: Launch First EC2 Instance",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-02.png"
+          ]
+        },
+        {
+          "text": "Under the Instance Type section : Instance Type : Select t2.micro"
+        },
+        {
           "text": "Under the Instance Type section :"
         },
         {
           "text": "Instance Type : Select t2.micro"
+        },
+        {
+          "text": "Task 2: Launch First EC2 Instance",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-03.png"
+          ]
+        },
+        {
+          "text": "Under the Key Pair (login) section : Click on Create new key pair hyperlink Key pair name: MyWebserverKey Key pair type: RSA Private key file format: .pem or .ppk Click on Create key pair and then select the created key pair from the drop-down."
         },
         {
           "text": "Under the Key Pair (login) section :"
@@ -83,6 +116,15 @@
           "text": "Click on Create key pair and then select the created key pair from the drop-down."
         },
         {
+          "text": "Task 2: Launch First EC2 Instance",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-04.png"
+          ]
+        },
+        {
+          "text": "Under the Network Settings section : Click on Edit button Auto-assign public IP: select Enable Firewall (security groups) : Select Create a new security group Security group name : Enter MyWebserverSG Description : Enter My EC2 Security Group To add SSH: Choose Type: SSH Source: Anywhere (From ALL IP addresses accessible). For HTTP, click on Add security group rule, Choose Type: HTTP Source: Anywhere (From ALL IP addresses accessible). For HTTPS, click on Add security group rule, Choose Type: HTTPS Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
           "text": "Under the Network Settings section :"
         },
         {
@@ -101,6 +143,9 @@
           "text": "Description : Enter My EC2 Security Group"
         },
         {
+          "text": "To add SSH: Choose Type: SSH Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
           "text": "To add SSH:"
         },
         {
@@ -108,6 +153,9 @@
         },
         {
           "text": "Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
+          "text": "For HTTP, click on Add security group rule, Choose Type: HTTP Source: Anywhere (From ALL IP addresses accessible)."
         },
         {
           "text": "For HTTP, click on Add security group rule,"
@@ -119,6 +167,9 @@
           "text": "Source: Anywhere (From ALL IP addresses accessible)."
         },
         {
+          "text": "For HTTPS, click on Add security group rule, Choose Type: HTTPS Source: Anywhere (From ALL IP addresses accessible)."
+        },
+        {
           "text": "For HTTPS, click on Add security group rule,"
         },
         {
@@ -128,34 +179,34 @@
           "text": "Source: Anywhere (From ALL IP addresses accessible)."
         },
         {
+          "text": "Task 2: Launch First EC2 Instance",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-05.png"
+          ]
+        },
+        {
+          "text": "Under the Advanced details section : Under the User data: copy and paste the following script to create an HTML page served by an Apache HTTPD web server.#!/bin/bashdnf update -ydnf install -y httpdsystemctl start httpdsystemctl enable httpdecho \"<html><h1> Welcome to Lab Server 1 </h1></html>\" > /var/www/html/index.html"
+        },
+        {
           "text": "Under the Advanced details section :"
         },
         {
+          "text": "Under the User data: copy and paste the following script to create an HTML page served by an Apache HTTPD web server.#!/bin/bashdnf update -ydnf install -y httpdsystemctl start httpdsystemctl enable httpdecho \"<html><h1> Welcome to Lab Server 1 </h1></html>\" > /var/www/html/index.html"
+        },
+        {
           "text": "Under the User data: copy and paste the following script to create an HTML page served by an Apache HTTPD web server."
-        },
-        {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "dnf update -y"
-        },
-        {
-          "text": "dnf install -y httpd"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable httpd"
-        },
-        {
-          "text": "echo \"<html><h1> Welcome to Lab Server 1 </h1></html>\" > /var/www/html/index.html"
         },
         {
           "text": "Keep everything else as default and click on the Launch instance button."
         },
         {
           "text": "Launch Status: Your instance is now launching, Navigate to Instances page from the left menu and wait until the status of the EC2 Instance changes to running."
+        },
+        {
+          "text": "Task 2: Launch First EC2 Instance",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-07.png"
+          ]
         }
       ]
     },
@@ -163,7 +214,7 @@
       "title": "Task 3: Launch Second EC2 Instances",
       "steps": [
         {
-          "text": "In this task, we are going to launch the second EC2 instance by providing the required configurations like name, AMI selection, security group , instance type and other settings. Furthermore, we will provide the user data as well."
+          "text": "In this task, we are going to launch the second EC2 instance by providing the required configurations like name, AMI selection, security group , instance type and other settings. Furthermore, we will provide the user data as well."
         },
         {
           "text": "Now again click on Launch Instances button."
@@ -172,7 +223,13 @@
           "text": "Under the Name and tags section :"
         },
         {
-          "text": "Name : Enter MyEC2Server2"
+          "text": "Name : Enter MyEC2Server2"
+        },
+        {
+          "text": "Task 3: Launch Second EC2 Instances",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-08.png"
+          ]
         },
         {
           "text": "Under the Application and OS Images (Amazon Machine Image) section :"
@@ -184,10 +241,28 @@
           "text": "Amazon Machine Image (AMI) : select Amazon Linux 2023 kernel 6.1 AMI"
         },
         {
+          "text": "Task 3: Launch Second EC2 Instances",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-09.png"
+          ]
+        },
+        {
+          "text": "Under the Instance Type section : Instance Type : Select t2.micro"
+        },
+        {
           "text": "Under the Instance Type section :"
         },
         {
           "text": "Instance Type : Select t2.micro"
+        },
+        {
+          "text": "Task 3: Launch Second EC2 Instances",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-10.png"
+          ]
+        },
+        {
+          "text": "Under the Key Pair (login) section :Select MyWebserverKey from the list."
         },
         {
           "text": "Under the Key Pair (login) section :"
@@ -205,40 +280,40 @@
           "text": "Auto-assign public IP: select Enable"
         },
         {
-          "text": "Firewall (security groups) : Select existing security group"
+          "text": "Firewall (security groups) : Select existing security group"
         },
         {
-          "text": "Security group name : Enter MyWebserverSG"
+          "text": "Security group name : Enter MyWebserverSG"
+        },
+        {
+          "text": "Task 3: Launch Second EC2 Instances",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-11.png"
+          ]
+        },
+        {
+          "text": "Under the Advanced details section : Under the User data: copy and paste the following script to create an HTML page served by Apache httpd web server:#!/bin/bashdnf update -ydnf install -y httpdsystemctl start httpdsystemctl enable httpdecho \"<html><h1> Welcome to Lab Server 2 </h1></html>\" > /var/www/html/index.html"
         },
         {
           "text": "Under the Advanced details section :"
         },
         {
+          "text": "Under the User data: copy and paste the following script to create an HTML page served by Apache httpd web server:#!/bin/bashdnf update -ydnf install -y httpdsystemctl start httpdsystemctl enable httpdecho \"<html><h1> Welcome to Lab Server 2 </h1></html>\" > /var/www/html/index.html"
+        },
+        {
           "text": "Under the User data: copy and paste the following script to create an HTML page served by Apache httpd web server:"
-        },
-        {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "dnf update -y"
-        },
-        {
-          "text": "dnf install -y httpd"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable httpd"
-        },
-        {
-          "text": "echo \"<html><h1> Welcome to Lab Server 2 </h1></html>\" > /var/www/html/index.html"
         },
         {
           "text": "Keep everything else as default and then click on the Launch Instance button."
         },
         {
           "text": "Your instances are now launching. Navigate to the EC2 instance page and wait until the status changes to the Running. It will usually take 1-2 minutes."
+        },
+        {
+          "text": "Task 3: Launch Second EC2 Instances",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-12.png"
+          ]
         }
       ]
     },
@@ -249,31 +324,37 @@
           "text": "In this task, we are going to create a target group for the load balancer and will add the target instances so that the load balancer can distribute the traffic among these instances."
         },
         {
-          "text": "In the EC2 console, navigate to Target Groups in the left-side panel under Load Balancer in the Load Balancing section."
+          "text": "In the EC2 console, navigate to Target Groups in the left-side panel under Load Balancer in the Load Balancing section."
         },
         {
-          "text": "Click on Create target group button on the top right corner."
+          "text": "Click on Create target group button on the top right corner."
+        },
+        {
+          "text": "Task 4: Create a Target Group",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-13.png"
+          ]
         },
         {
           "text": "Basic configuration:"
         },
         {
-          "text": "Choose a target type : Select Instances"
+          "text": "Choose a target type : Select Instances"
         },
         {
-          "text": "Target group name : Enter MyWAFTargetGroup"
+          "text": "Target group name : Enter MyWAFTargetGroup"
         },
         {
-          "text": "Protocol : Select HTTP"
+          "text": "Protocol : Select HTTP"
         },
         {
-          "text": "Port : Enter 80"
+          "text": "Port : Enter 80"
         },
         {
           "text": "Health Checks:"
         },
         {
-          "text": "Health check protocol : Select HTTP"
+          "text": "Health check protocol : Select HTTP"
         },
         {
           "text": "Under Advanced Health Check Settings :"
@@ -291,25 +372,49 @@
           "text": "Choose Interval : 6 seconds"
         },
         {
-          "text": "Leave everything as default and click on Next button."
+          "text": "Task 4: Create a Target Group",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-14.png"
+          ]
+        },
+        {
+          "text": "Leave everything as default and click on Next button."
         },
         {
           "text": "Register targets:"
         },
         {
-          "text": "Select the two instances we have created i.e MyEC2Server1 and MyEC2Server2."
+          "text": "Select the two instances we have created i.e MyEC2Server1 and MyEC2Server2."
         },
         {
-          "text": "Click on Include as pending below and scroll down."
+          "text": "Click on Include as pending below and scroll down."
+        },
+        {
+          "text": "Task 4: Create a Target Group",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-15.png"
+          ]
         },
         {
           "text": "Review targets:"
         },
         {
-          "text": "Review the targets and click on Create target group button."
+          "text": "Review the targets and click on Create target group button."
+        },
+        {
+          "text": "Task 4: Create a Target Group",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-16.png"
+          ]
         },
         {
           "text": "Your Target group has been successfully created."
+        },
+        {
+          "text": "Task 4: Create a Target Group",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-17.png"
+          ]
         }
       ]
     },
@@ -320,58 +425,79 @@
           "text": "In this task, we are going to create an Application Load balancer by providing the required configurations like name, target group etc."
         },
         {
-          "text": "In the EC2 console, navigate to Load Balancers in the left-side panel under Load Balancing."
+          "text": "In the EC2 console, navigate to Load Balancers in the left-side panel under Load Balancing."
         },
         {
-          "text": "Click on Create Load Balancer at the top-left to create a new load balancer for our web servers."
+          "text": "Click on Create Load Balancer at the top-left to create a new load balancer for our web servers."
         },
         {
-          "text": "On the next screen, choose Application Load Balancer since we are testing the high availability of the web application and click on Create button."
+          "text": "On the next screen, choose Application Load Balancer since we are testing the high availability of the web application and click on Create button."
+        },
+        {
+          "text": "Basic configuration: Load balancer name: Enter MyWAFLoadBalancer Scheme: Select Internet-facing IP address type: Choose IPv4"
         },
         {
           "text": "Basic configuration:"
         },
         {
-          "text": "Load balancer name: Enter MyWAFLoadBalancer"
+          "text": "Load balancer name: Enter MyWAFLoadBalancer"
         },
         {
-          "text": "Scheme: Select Internet-facing"
+          "text": "Scheme: Select Internet-facing"
         },
         {
           "text": "IP address type: Choose IPv4"
         },
         {
+          "text": "Task 5: Create an Application Load Balancer",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-18.png"
+          ]
+        },
+        {
           "text": "Network mapping:"
         },
         {
-          "text": "VPC : Select Default"
+          "text": "VPC : Select Default"
         },
         {
-          "text": "Mappings : Check All Availability Zones"
+          "text": "Mappings : Check All Availability Zones"
         },
         {
           "text": "Security groups:"
         },
         {
-          "text": "Security groups : Select an existing security group i.e MyWebserverSG from the drop down menu."
+          "text": "Security groups : Select an existing security group i.e MyWebserverSG from the drop down menu."
+        },
+        {
+          "text": "Task 5: Create an Application Load Balancer",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-19.gif"
+          ]
         },
         {
           "text": "Listeners and routing:"
         },
         {
-          "text": "Protocol : Select HTTP"
+          "text": "Protocol : Select HTTP"
         },
         {
-          "text": "Port : Enter 80"
+          "text": "Port : Enter 80"
         },
         {
-          "text": "Default action : Select MyWAFTargetGroup from the drop down menu"
+          "text": "Default action : Select MyWAFTargetGroup from the drop down menu"
         },
         {
-          "text": "Leave everything as default and click on Create load balancer button."
+          "text": "Task 5: Create an Application Load Balancer",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-20.png"
+          ]
         },
         {
-          "text": "You have successfully created Application Load Balancer."
+          "text": "Leave everything as default and click on Create load balancer button."
+        },
+        {
+          "text": "You have successfully created Application Load Balancer."
         }
       ]
     },
@@ -382,19 +508,34 @@
           "text": "In this task, we will test the working of load balancer by copying the DNS to the browser and find out whether it is able to distribute the traffic or not."
         },
         {
-          "text": "Now navigate to the Target Groups from the left side menu under Load balancing."
+          "text": "Now navigate to the Target Groups from the left side menu under Load balancing."
         },
         {
           "text": "Click on the MyWAFTargetGroup Target group name."
         },
         {
-          "text": "Now select the Targets tab and wait till both the targets become healthy (Important)."
+          "text": "Now select the Targets tab and wait till both the targets become healthy (Important)."
         },
         {
-          "text": "Now again navigate to Load Balancers from the left side menu under Load balancing."
+          "text": "Task 6: Test Load Balancer DNS",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-21.png"
+          ]
         },
         {
-          "text": "Select the MyWAFLoadBalancer Load Balancer and copy the DNS name under Description tab."
+          "text": "Now again navigate to Load Balancers from the left side menu under Load balancing."
+        },
+        {
+          "text": "Select the MyWAFLoadBalancer Load Balancer and copy the DNS name under Description tab."
+        },
+        {
+          "text": "Task 6: Test Load Balancer DNS",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-22.png"
+          ]
+        },
+        {
+          "text": "Copy the DNS name of the ELB and enter the address in the browser. DNS Example: MyWAFLoadBalancer-2020171322.us-east-1.elb.amazonaws.com"
         },
         {
           "text": "Copy the DNS name of the ELB and enter the address in the browser."
@@ -406,16 +547,19 @@
           "text": "You should see the index.html page content of Web Server 1 or Web Server 2"
         },
         {
-          "text": "Now Refresh the page a few times. You will observe that the index pages change each time you refresh."
+          "text": "Task 6: Test Load Balancer DNS",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-23.png"
+          ]
         },
         {
-          "text": "Note: The ELB will equally divide the incoming traffic to both servers in a Round Robin manner."
+          "text": "Now Refresh the page a few times. You will observe that the index pages change each time you refresh."
         },
         {
           "text": "Test SQL Injection :"
         },
         {
-          "text": "Along with the ELB DNS add the following URL parameter: /product?item=securitynumber'+OR+1=1--"
+          "text": "Along with the ELB DNS add the following URL parameter: /product?item=securitynumber'+OR+1=1--"
         },
         {
           "text": "Syntax : http://<ELB DNS>/product?item=securitynumber'+OR+1=1--"
@@ -427,13 +571,19 @@
           "text": "You will be able to see the below output."
         },
         {
+          "text": "Task 6: Test Load Balancer DNS",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-25.png"
+          ]
+        },
+        {
           "text": "Here the SQL Injection went inside the server and since we only have an index page, the server doesn't know how to solve the URL that is why you got Not Found page."
         },
         {
           "text": "Test Query String Parameter :"
         },
         {
-          "text": "Along with the ELB DNS add the following URL parameter: /?admin=123456"
+          "text": "Along with the ELB DNS add the following URL parameter: /?admin=123456"
         },
         {
           "text": "Syntax : http://<ELB DNS>/?admin=123456"
@@ -445,7 +595,13 @@
           "text": "You will be able to see the below output."
         },
         {
-          "text": "Here also the Query string went inside the server and the server always passes the query string inside and it is resolved by the code that you write. Here the query string is passed and there is no code to resolve the this but it wont throw any error it just becames an unused value. so you got a response back."
+          "text": "Task 6: Test Load Balancer DNS",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-26.png"
+          ]
+        },
+        {
+          "text": "Here also the Query string went inside the server and the server always passes the query string inside and it is resolved by the code that you write. Here the query string is passed and there is no code to resolve the this but it wont throw any error it just becames an unused value. so you got a response back."
         }
       ]
     },
@@ -456,31 +612,40 @@
           "text": "In this task , we are going to create an AWS WAF Web ACL where we will add some customized rules for location restriction, query strings and"
         },
         {
-          "text": "Navigate to WAF by clicking on the Services menu in the top, then click on WAF & Shield in the Security, Identity & Compliance section."
+          "text": "Navigate to WAF by clicking on the Services menu in the top, then click on WAF & Shield in the Security, Identity & Compliance section.Click on Switch to the Old WAF Console option at the Bottom.",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-27.png"
+          ]
+        },
+        {
+          "text": "Navigate to WAF by clicking on the Services menu in the top, then click on WAF & Shield in the Security, Identity & Compliance section."
         },
         {
           "text": "Click on Switch to the Old WAF Console option at the Bottom."
         },
         {
-          "text": "Click on Create web ACL button."
+          "text": "Click on Create web ACL button."
+        },
+        {
+          "text": "Task 7: Create AWS WAF Web ACL",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-28.png"
+          ]
         },
         {
           "text": "Describe web ACL and associate it to AWS resources :"
         },
         {
-          "text": "Resource type : Select Regional resources"
+          "text": "Resource type : Select Regional resources"
         },
         {
-          "text": "Region : Select US East (N.Virginia) from the dropdown."
+          "text": "Region : Select US East (N.Virginia) from the dropdown."
         },
         {
-          "text": "Name : Enter MyWAFWebAcl"
+          "text": "Name : Enter MyWAFWebAcl"
         },
         {
-          "text": "Description : Enter"
-        },
-        {
-          "text": "WAF for SQL Injection, Geo location and Query String parameters."
+          "text": "Description : Enter WAF for SQL Injection, Geo location and Query String parameters."
         },
         {
           "text": "CloudWatch metric name : Automatically selects the WAF name, so no changes required."
@@ -498,16 +663,28 @@
           "text": "Select MyWAFLoadBalancer Load Balancer from the list."
         },
         {
-          "text": "Now click on the Add button."
+          "text": "Task 7: Create AWS WAF Web ACL",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-29.png"
+          ]
         },
         {
-          "text": "Click on the Next button."
+          "text": "Now click on the Add button."
+        },
+        {
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Add rules and rule groups : Under Rules, click on Add rules and then select Add my own rules and rule groups. Rule type : Select Rule builder Name : Enter GeoLocationRestriction Type : Select Regular rule If a request : Select doesn't match the statement (NOT) Inspect : Select Originates from a country in Country codes : Select <Your Country> In this example we select India-INNote : You can also select multiple countries also. IP address to use to determine the country of origin : Select Source IP address"
         },
         {
           "text": "Add rules and rule groups :"
         },
         {
-          "text": "Under Rules, click on Add rules and then select Add my own rules and rule groups."
+          "text": "Under Rules, click on Add rules and then select Add my own rules and rule groups. Rule type : Select Rule builder Name : Enter GeoLocationRestriction Type : Select Regular rule If a request : Select doesn't match the statement (NOT) Inspect : Select Originates from a country in Country codes : Select <Your Country> In this example we select India-INNote : You can also select multiple countries also. IP address to use to determine the country of origin : Select Source IP address"
+        },
+        {
+          "text": "Under Rules, click on Add rules and then select Add my own rules and rule groups."
         },
         {
           "text": "Rule type : Select Rule builder"
@@ -525,13 +702,19 @@
           "text": "Inspect : Select Originates from a country in"
         },
         {
+          "text": "Country codes : Select <Your Country> In this example we select India-INNote : You can also select multiple countries also."
+        },
+        {
           "text": "Country codes : Select <Your Country> In this example we select India-IN"
         },
         {
-          "text": "Note : You can also select multiple countries also."
+          "text": "IP address to use to determine the country of origin : Select Source IP address"
         },
         {
-          "text": "IP address to use to determine the country of origin : Select Source IP address"
+          "text": "Task 7: Create AWS WAF Web ACL",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-30.png"
+          ]
         },
         {
           "text": "Under Then : Action Select Block."
@@ -543,7 +726,10 @@
           "text": "Here we are only allowing requests to come from India and all the requests that come from other countries will be blocked."
         },
         {
-          "text": "Under Rules, click on Add rules and then select Add my own rules and rule groups."
+          "text": "Under Rules, click on Add rules and then select Add my own rules and rule groups. Rule type : Select Rule builder Name : Enter QueryStringRestriction Type : Select Regular rule If a request : Select matches the statement Inspect : Select Query string Match type : Select Contains string String to match : Enter admin Text transformation : Leave as default. Under Then : Action Select Block. Click on Add rules."
+        },
+        {
+          "text": "Under Rules, click on Add rules and then select Add my own rules and rule groups."
         },
         {
           "text": "Rule type : Select Rule builder"
@@ -579,7 +765,10 @@
           "text": "Anytime in the request URL contains a query string as admin WAF will block that request."
         },
         {
-          "text": "Under Rules, click on Add rules and then select Add managed rule groups."
+          "text": "Under Rules, click on Add rules and then select Add managed rule groups. It will take a few minutes to load the page. It lists all the rules which are managed by AWS. Click on AWS managed rule groups. Scroll down to SQL database and enable the corresponding Add to web ACL button."
+        },
+        {
+          "text": "Under Rules, click on Add rules and then select Add managed rule groups."
         },
         {
           "text": "It will take a few minutes to load the page. It lists all the rules which are managed by AWS."
@@ -591,16 +780,31 @@
           "text": "Scroll down to SQL database and enable the corresponding Add to web ACL button."
         },
         {
-          "text": "Scroll down to the end and click on Add rules button."
+          "text": "Task 7: Create AWS WAF Web ACL",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-31.png"
+          ]
+        },
+        {
+          "text": "Scroll down to the end and click on Add rules button."
         },
         {
           "text": "Now you have 3 rules added."
         },
         {
+          "text": "Task 7: Create AWS WAF Web ACL",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-32.png"
+          ]
+        },
+        {
           "text": "Under Default web ACL action for requests that don't match any rules, Default action Select Allow."
         },
         {
-          "text": "Click on the Next button."
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Set rule priority : No changes required, leave as default. You can move the rules based on your priority. Click on the Next button."
         },
         {
           "text": "Set rule priority :"
@@ -612,7 +816,10 @@
           "text": "You can move the rules based on your priority."
         },
         {
-          "text": "Click on the Next button."
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Configure metrics : Leave it as default. Click on the Next button."
         },
         {
           "text": "Configure metrics :"
@@ -621,13 +828,16 @@
           "text": "Leave it as default."
         },
         {
-          "text": "Click on the Next button."
+          "text": "Click on the Next button."
+        },
+        {
+          "text": "Review and create web ACL : Review the configuration done, scroll to the end and click on Create web ACL button."
         },
         {
           "text": "Review and create web ACL :"
         },
         {
-          "text": "Review the configuration done, scroll to the end and click on Create web ACL button."
+          "text": "Review the configuration done, scroll to the end and click on Create web ACL button."
         },
         {
           "text": "It will take a few seconds to create the Web ACL, so wait till its completed."
@@ -638,10 +848,13 @@
       "title": "Task 8: Test Load Balancer DNS",
       "steps": [
         {
-          "text": "Now again navigate to Load Balancers from the left side menu under Load balancing."
+          "text": "Now again navigate to Load Balancers from the left side menu under Load balancing."
         },
         {
-          "text": "Select the MyWAFLoadBalancer Load Balancer and copy the DNS name under Description tab."
+          "text": "Select the MyWAFLoadBalancer Load Balancer and copy the DNS name under Description tab."
+        },
+        {
+          "text": "Copy the DNS name of the ELB and enter the address in the browser. DNS Example: MyWAFLoadBalancer-2020171322.us-east-1.elb.amazonaws.com"
         },
         {
           "text": "Copy the DNS name of the ELB and enter the address in the browser."
@@ -653,16 +866,25 @@
           "text": "You should see the index.html page content of Web Server 1 or Web Server 2."
         },
         {
+          "text": "Task 8: Test Load Balancer DNS",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-33.png"
+          ]
+        },
+        {
+          "text": "Now Refresh the page a few times.You will observe that the index pages change each time you refresh.Note: The ELB will equally divide the incoming traffic to both servers in a Round Robin manner."
+        },
+        {
           "text": "Now Refresh the page a few times.You will observe that the index pages change each time you refresh."
         },
         {
-          "text": "Note: The ELB will equally divide the incoming traffic to both servers in a Round Robin manner."
+          "text": "Test SQL Injection : Along with the ELB DNS add the following URL parameter: /product?item=securitynumber'+OR+1=1-- Syntax : http://<ELB DNS>/product?item=securitynumber'+OR+1=1-- Example : MyWAFLoadBalancer-2020171322.us-east-1.elb.amazonaws.com/product?item=securitynumber'+OR+1=1-- You will be able to see the below output."
         },
         {
           "text": "Test SQL Injection :"
         },
         {
-          "text": "Along with the ELB DNS add the following URL parameter: /product?item=securitynumber'+OR+1=1--"
+          "text": "Along with the ELB DNS add the following URL parameter: /product?item=securitynumber'+OR+1=1--"
         },
         {
           "text": "Syntax : http://<ELB DNS>/product?item=securitynumber'+OR+1=1--"
@@ -674,13 +896,22 @@
           "text": "You will be able to see the below output."
         },
         {
+          "text": "Task 8: Test Load Balancer DNS",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-34.png"
+          ]
+        },
+        {
           "text": "Here the SQL Injection is blocked by WAF before it goes inside the server."
+        },
+        {
+          "text": "Test Query String Parameter : Along with the ELB DNS add the following URL parameter: /?admin=123456 Syntax : http://<ELB DNS>/?admin=123456 Example : MyWAFLoadBalancer-2020171322.us-east-1.elb.amazonaws.com/?admin=123456 You will be able to see the below output."
         },
         {
           "text": "Test Query String Parameter :"
         },
         {
-          "text": "Along with the ELB DNS add the following URL parameter: /?admin=123456"
+          "text": "Along with the ELB DNS add the following URL parameter: /?admin=123456"
         },
         {
           "text": "Syntax : http://<ELB DNS>/?admin=123456"
@@ -692,10 +923,13 @@
           "text": "You will be able to see the below output."
         },
         {
-          "text": "Here also the Query string which contains admin is blocked by WAF before it could go inside the server."
+          "text": "Task 8: Test Load Balancer DNS",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-35.png"
+          ]
         },
         {
-          "text": "Do you know?"
+          "text": "Here also the Query string which contains admin is blocked by WAF before it could go inside the server."
         },
         {
           "text": "WAF can offer protection against Distributed Denial of Service (DDoS) attacks by analyzing traffic patterns, detecting abnormal behavior, and mitigating the impact of such attacks."
@@ -706,13 +940,19 @@
       "title": "Task 9: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
           "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
+        },
+        {
+          "text": "Task 9: Validation Test",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-36.gif"
+          ]
         }
       ]
     },
@@ -720,28 +960,34 @@
       "title": "Task 10: Delete AWS Resources",
       "steps": [
         {
-          "text": "1 Deleting an EC2 Instance"
+          "text": "1 Deleting an EC2 Instance"
         },
         {
-          "text": "Make sure you are in the US East (N. Virginia) us east-1 Region."
+          "text": "Make sure you are in the US East (N. Virginia) us east-1 Region."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 under Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 under Compute section."
         },
         {
-          "text": "Now select the EC2 instance that you have created, click on the Instance State and click on the Terminate option."
+          "text": "Now select the EC2 instance that you have created, click on the Instance State and click on the Terminate option."
         },
         {
-          "text": "Click on Yes,Terminate button and your EC2 will start terminating."
+          "text": "Click on Yes,Terminate button and your EC2 will start terminating."
         },
         {
-          "text": "2 Deleting Elastic LoadBalancer and Target Group"
+          "text": "2 Deleting Elastic LoadBalancer and Target Group"
         },
         {
-          "text": "In the EC2 console, navigate to Load Balancer in the left-side paneol."
+          "text": "In the EC2 console, navigate to Load Balancer in the left-side paneol."
         },
         {
-          "text": "MyWAFLoadBalancer will be listed here."
+          "text": "MyWAFLoadBalancer will be listed here."
+        },
+        {
+          "text": "To delete the load balancer, need to perform the following actions: Select the load balancer, Click on the Actions button, Select the Delete option.",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-37.png"
+          ]
         },
         {
           "text": "To delete the load balancer, need to perform the following actions:"
@@ -753,19 +999,43 @@
           "text": "Click on the Actions button,"
         },
         {
-          "text": "Select the Delete option."
+          "text": "Select the Delete option.",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-38.png"
+          ]
         },
         {
-          "text": "Confirm by typing confirm and then click on Delete button when a pop-up is shown."
+          "text": "Task 10: Delete AWS Resources",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-39.png"
+          ]
+        },
+        {
+          "text": "Confirm by typing confirm and then click on Delete button when a pop-up is shown.",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-40.png"
+          ]
+        },
+        {
+          "text": "Task 10: Delete AWS Resources",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-41.png"
+          ]
         },
         {
           "text": "MyWAFLoadBalancer be deleted immediately."
         },
         {
-          "text": "In the EC2 console, navigate to Target Groups in the left-side panel."
+          "text": "In the EC2 console, navigate to Target Groups in the left-side panel."
         },
         {
-          "text": "MyWAFTargetGroup will be listed here."
+          "text": "MyWAFTargetGroup will be listed here."
+        },
+        {
+          "text": "To delete the target group, need to perform the following actions: Select the target group, Click on the Actions button, Select the Delete option.",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-42.png"
+          ]
         },
         {
           "text": "To delete the target group, need to perform the following actions:"
@@ -777,40 +1047,46 @@
           "text": "Click on the Actions button,"
         },
         {
-          "text": "Select the Delete option."
+          "text": "Select the Delete option.",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-43.png"
+          ]
         },
         {
-          "text": "Now click on the Yes, delete button to confirm deletion."
+          "text": "Task 10: Delete AWS Resources",
+          "images": [
+            "/labs/implementing-aws-waf-with-alb-to-block-sql-injection-geo-location-and-query-string/step-44.png"
+          ]
         },
         {
-          "text": "MyWAFTargetGroup will be deleted immediately."
+          "text": "Now click on the Yes, delete button to confirm deletion."
         },
         {
-          "text": "3 Deleting Web ACL"
+          "text": "MyWAFTargetGroup will be deleted immediately."
         },
         {
-          "text": "Navigate to WAF by clicking on the Services menu in the top, then click on WAF & Shield in the Security, Identity & Compliance section."
+          "text": "3 Deleting Web ACL"
         },
         {
-          "text": "On the left side menu, select Web ACLs and then click on the Web ACL name that you created, MyWAFWebAcl."
+          "text": "Navigate to WAF by clicking on the Services menu in the top, then click on WAF & Shield in the Security, Identity & Compliance section."
         },
         {
-          "text": "Select Associated AWS resources tab, select the application load balancer and click on Diassociate button."
+          "text": "On the left side menu, select Web ACLs and then click on the Web ACL name that you created, MyWAFWebAcl."
         },
         {
-          "text": "In the textbox enter remove and click on Diassociate button."
+          "text": "Select Associated AWS resources tab, select the application load balancer and click on Diassociate button."
         },
         {
-          "text": "On the left side menu, select Web ACLs and then select the radio button of the Web ACL that you created, MyWAFWebAcl."
+          "text": "In the textbox enter remove and click on Diassociate button."
         },
         {
-          "text": "Click on the Delete button, In the textbox enter delete and click on Delete button."
+          "text": "On the left side menu, select Web ACLs and then select the radio button of the Web ACL that you created, MyWAFWebAcl."
+        },
+        {
+          "text": "Click on the Delete button, In the textbox enter delete and click on Delete button."
         },
         {
           "text": "Now the WAF will be successfully deleted."
-        },
-        {
-          "text": "Completion and Conclusion"
         },
         {
           "text": "You have successfully launched First EC2 Instance."
@@ -831,16 +1107,13 @@
           "text": "You have successfully tested Load Balancer DNS."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of the AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
         }
       ]
     }

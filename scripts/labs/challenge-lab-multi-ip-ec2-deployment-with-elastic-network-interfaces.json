@@ -1,0 +1,130 @@
+{
+  "slug": "challenge-lab-multi-ip-ec2-deployment-with-elastic-network-interfaces",
+  "title": "Challenge Lab: Create Elastic Network Interface - Multiple IPs on an EC2",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:15:00",
+  "tasks": [
+    {
+      "title": "Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Sign in to AWS Management Console"
+        },
+        {
+          "text": "In this challenge lab, you’ll step into the role of a Cloud Network Engineer responsible for deploying a cost-effective solution to host multiple websites on a single EC2 instance. To achieve this, you’ll use multiple network interfaces (ENIs) and assign multiple IP addresses to a single EC2 instance."
+        },
+        {
+          "text": "You are a Cloud Network Engineer at a startup named WebNova Inc. Your team wants to host two separate client websites on a single EC2 instance to reduce costs. However, both clients require: Independent public IPs Isolated network access using separate ENIs A simple web server running to test reachability"
+        },
+        {
+          "text": "Independent public IPs"
+        },
+        {
+          "text": "Isolated network access using separate ENIs"
+        },
+        {
+          "text": "A simple web server running to test reachability"
+        },
+        {
+          "text": "You are tasked with setting up a solution using Amazon EC2 and Elastic Network Interfaces (ENIs)."
+        },
+        {
+          "text": "Create Required Security Groups One security group for the EC2 instance. One security group for the ENI. Inbound rules must allow HTTP and SSH access from anywhere."
+        },
+        {
+          "text": "One security group for the EC2 instance."
+        },
+        {
+          "text": "One security group for the ENI."
+        },
+        {
+          "text": "Inbound rules must allow HTTP and SSH access from anywhere."
+        },
+        {
+          "text": "Launch an EC2 Instance Use Amazon Linux 2023 AMI. Choose t2.micro instance type. Use default VPC and any available subnet in us-east-1. Enable auto-assign public IP. Use the created EC2 security group. Include user-data script to install and run Apache server, and serve an HTML page with some custom message (e.g., “Response from primary IP”)."
+        },
+        {
+          "text": "Use Amazon Linux 2023 AMI."
+        },
+        {
+          "text": "Choose t2.micro instance type."
+        },
+        {
+          "text": "Use default VPC and any available subnet in us-east-1."
+        },
+        {
+          "text": "Enable auto-assign public IP."
+        },
+        {
+          "text": "Use the created EC2 security group."
+        },
+        {
+          "text": "Include user-data script to install and run Apache server, and serve an HTML page with some custom message (e.g., “Response from primary IP”)."
+        },
+        {
+          "text": "Create and Attach a Secondary Network Interface (ENI) Use the same subnet and availability zone as the instance. Attach the ENI to the running EC2 instance. Use the ENI security group created earlier."
+        },
+        {
+          "text": "Use the same subnet and availability zone as the instance."
+        },
+        {
+          "text": "Attach the ENI to the running EC2 instance."
+        },
+        {
+          "text": "Use the ENI security group created earlier."
+        },
+        {
+          "text": "Allocate and Associate Elastic IP Allocate a new Elastic IP. Associate the Elastic IP to the secondary ENI."
+        },
+        {
+          "text": "Allocate a new Elastic IP."
+        },
+        {
+          "text": "Associate the Elastic IP to the secondary ENI."
+        },
+        {
+          "text": "Validation Open a browser and test both public IPs. You must see the HTML page in both cases (confirming Apache is reachable via both IPs). Confirm the instance has two private IPs and two public IPs."
+        },
+        {
+          "text": "Open a browser and test both public IPs."
+        },
+        {
+          "text": "You must see the HTML page in both cases (confirming Apache is reachable via both IPs)."
+        },
+        {
+          "text": "Confirm the instance has two private IPs and two public IPs."
+        },
+        {
+          "text": "Sign out of the AWS Account"
+        },
+        {
+          "text": "You have successfully completed the challenge."
+        },
+        {
+          "text": "Click on End Challenge button from the lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

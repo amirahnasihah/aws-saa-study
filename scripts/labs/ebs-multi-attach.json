@@ -15,7 +15,7 @@
           "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
-          "text": "On the AWS sign-in page,"
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
@@ -44,16 +44,31 @@
           "text": "Name : Enter EC2Server"
         },
         {
+          "text": "Task 2: Launch an EC2 Instances",
+          "images": [
+            "/labs/ebs-multi-attach/step-01.png"
+          ]
+        },
+        {
           "text": "Select Amazon Linux 2023 AMI from the dropdown."
         },
         {
-          "text": "Note: If there are two AMI's present for Amazon Linux 2o23 kernel-6.1 AMI."
+          "text": "Task 2: Launch an EC2 Instances",
+          "images": [
+            "/labs/ebs-multi-attach/step-02.png"
+          ]
         },
         {
           "text": "An instance type in AWS refers to a virtual server configuration that determines the computing resources, such as CPU, memory, and storage, available to an instance. It is the basic building block for creating an EC2 instance in the AWS cloud."
         },
         {
           "text": "For Instance Type: Select t3.micro"
+        },
+        {
+          "text": "Task 2: Launch an EC2 Instances",
+          "images": [
+            "/labs/ebs-multi-attach/step-03.png"
+          ]
         },
         {
           "text": "t3.micro is an instance type in AWS that comes with 2 vCPU, and 1GB memory and is suitable for low-traffic web servers, small development environments, and other lightweight applications."
@@ -74,16 +89,46 @@
           "text": "Private key file format: .pem"
         },
         {
+          "text": "Task 2: Launch an EC2 Instances",
+          "images": [
+            "/labs/ebs-multi-attach/step-04.png"
+          ]
+        },
+        {
           "text": "Click the Edit button in the network settings."
+        },
+        {
+          "text": "Task 2: Launch an EC2 Instances",
+          "images": [
+            "/labs/ebs-multi-attach/step-05.png"
+          ]
         },
         {
           "text": "Select the default VPC and a subnet in the us-east-1 region. Enable Auto-assign public IP, choose Create security group, and give name as SSH_SG and description as Security Group for SSH. And leave everything as default."
         },
         {
+          "text": "Task 2: Launch an EC2 Instances",
+          "images": [
+            "/labs/ebs-multi-attach/step-06.png"
+          ]
+        },
+        {
           "text": "At the top right, set the Number of instances to 2, then click Launch instance."
         },
         {
+          "text": "Task 2: Launch an EC2 Instances",
+          "images": [
+            "/labs/ebs-multi-attach/step-07.png"
+          ]
+        },
+        {
           "text": "After creating the EC2 instances, rename the first instance from EC2server to ‘EC2server-1' and the second instance from 'EC2server' to 'EC2server-2'."
+        },
+        {
+          "text": "Task 2: Launch an EC2 Instances",
+          "images": [
+            "/labs/ebs-multi-attach/step-08.png"
+          ]
         }
       ]
     },
@@ -92,6 +137,12 @@
       "steps": [
         {
           "text": "In the EC2 sidebar panel, click Volumes to create a new volume."
+        },
+        {
+          "text": "Task 3 : Create New EBS Volume",
+          "images": [
+            "/labs/ebs-multi-attach/step-09.png"
+          ]
         },
         {
           "text": "Set the following values in the Create volume form:"
@@ -115,6 +166,12 @@
           "text": "Leave other settings as default, then click Create Volume."
         },
         {
+          "text": "Task 3 : Create New EBS Volume",
+          "images": [
+            "/labs/ebs-multi-attach/step-10.png"
+          ]
+        },
+        {
           "text": "After creating the volume and EC2 instances:"
         },
         {
@@ -124,6 +181,12 @@
           "text": "Click Actions and then choose Attach volume."
         },
         {
+          "text": "Task 3 : Create New EBS Volume",
+          "images": [
+            "/labs/ebs-multi-attach/step-11.png"
+          ]
+        },
+        {
           "text": "In the Instance field, choose EC2server-1, choose Device name “ /dev/sdf ” then click Attach."
         },
         {
@@ -131,6 +194,12 @@
         },
         {
           "text": "Make sure the volume is in the same Availability Zone (us-east-1a) as both instances."
+        },
+        {
+          "text": "Task 3 : Create New EBS Volume",
+          "images": [
+            "/labs/ebs-multi-attach/step-12.png"
+          ]
         }
       ]
     },
@@ -141,73 +210,40 @@
           "text": "Now, Navigate to EC2 Instance, Use EC2 Instance Connect to access and establish a connection between EC2Server-1 and EC2Server-2 via the browser."
         },
         {
-          "text": "On Both EC2s, Check and Identify the EBS Volume :"
+          "text": "Task 4 : Mounting an EBS Volume in Linux",
+          "images": [
+            "/labs/ebs-multi-attach/step-14.png"
+          ]
         },
         {
-          "text": "lsblk"
+          "text": "On Both EC2s, Check and Identify the EBS Volume :"
         },
         {
           "text": "Look for the EBS volume. It should show up as follow,"
         },
         {
-          "text": "On EC2Server-1 (Writer) — Format, Mount, Write paste and run the following command:"
+          "text": "Task 4 : Mounting an EBS Volume in Linux",
+          "images": [
+            "/labs/ebs-multi-attach/step-16.png"
+          ]
         },
         {
-          "text": "# Format the volume (only on one instance, only once!)"
+          "text": "On EC2Server-1 (Writer) — Format, Mount, Write paste and run the following command:"
         },
         {
-          "text": "sudo mkfs.ext4 /dev/nvme1n1"
+          "text": "Task 4 : Mounting an EBS Volume in Linux",
+          "images": [
+            "/labs/ebs-multi-attach/step-17.png"
+          ]
         },
         {
-          "text": "# Create mount point"
+          "text": "On EC2server-2 (Reader) — Mount as Read-Only paste and run the following command:"
         },
         {
-          "text": "sudo mkdir -p /mnt/shared"
-        },
-        {
-          "text": "# Mount the volume"
-        },
-        {
-          "text": "sudo mount /dev/nvme1n1 /mnt/shared"
-        },
-        {
-          "text": "# Create a test file"
-        },
-        {
-          "text": "echo \"Hello from Instance A\" | sudo tee /mnt/shared/test.txt"
-        },
-        {
-          "text": "# Confirm it was written"
-        },
-        {
-          "text": "cat /mnt/shared/test.txt"
-        },
-        {
-          "text": "On EC2server-2 (Reader) — Mount as Read-Only paste and run the following command:"
-        },
-        {
-          "text": "# Create mount point"
-        },
-        {
-          "text": "sudo mkdir -p /mnt/shared"
-        },
-        {
-          "text": "# Mount the volume read-only to prevent corruption"
-        },
-        {
-          "text": "sudo mount -o ro /dev/nvme1n1 /mnt/shared"
-        },
-        {
-          "text": "# Try to read the file"
-        },
-        {
-          "text": "cat /mnt/shared/test.txt"
-        },
-        {
-          "text": "# You should see:"
-        },
-        {
-          "text": "# “Hello from Instance A”"
+          "text": "Task 4 : Mounting an EBS Volume in Linux",
+          "images": [
+            "/labs/ebs-multi-attach/step-18.png"
+          ]
         }
       ]
     },
@@ -221,13 +257,10 @@
           "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
         },
         {
-          "text": "Do You Know?"
-        },
-        {
-          "text": "EBS Multi-Attach is a feature that allows a single Amazon EBS volume to be attached to multiple EC2 instances at the same time within the same Availability Zone. This is useful when you want several instances to access the same data — like for high availability or shared storage systems."
-        },
-        {
-          "text": "Completion & Conclusion"
+          "text": "Task 5: Validation of the Lab",
+          "images": [
+            "/labs/ebs-multi-attach/step-19.gif"
+          ]
         },
         {
           "text": "You have successfully launched two EC2 Instances"
@@ -243,9 +276,6 @@
         },
         {
           "text": "You have verified that Instance B can read the file created by Instance A."
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign out of AWS Account."

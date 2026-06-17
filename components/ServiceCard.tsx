@@ -1,21 +1,22 @@
 'use client'
 
-import { ServiceCard as ServiceCardData, ColorCategory, categoryStyles } from '@/data/awsServices'
+import { ServiceCard as ServiceCardData, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
 import Link from 'next/link'
 import { useBookmarksCtx } from './BookmarksContext'
 
 interface ServiceCardProps {
   service: ServiceCardData
   category: ColorCategory
+  sectionId: string
 }
 
-export default function ServiceCard({ service, category }: ServiceCardProps) {
+export default function ServiceCard({ service, category, sectionId }: ServiceCardProps) {
   const styles = categoryStyles[category]
   const { isBookmarked, toggle } = useBookmarksCtx()
   const bookmarked = isBookmarked(service.shortName)
 
   return (
-    <div className="relative overflow-hidden bg-aws-card border border-aws-border rounded-xl px-5 py-4 mb-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/15 group">
+    <div id={serviceSlug(sectionId, service.shortName)} className="relative overflow-hidden bg-aws-card border border-aws-border rounded-xl px-5 py-4 mb-2.5 scroll-mt-20 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/15 group target:ring-2 target:ring-c1/50">
       {/* left accent bar */}
       <div className={`absolute top-0 left-0 w-[3px] h-full ${styles.accent}`} />
 

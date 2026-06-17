@@ -1,0 +1,168 @@
+/**
+ * Map course-index labs + video-course labs → topic order (STUDY-CHECKLIST sections).
+ *
+ * Usage: bun run scripts/generate-labs-topics.ts
+ */
+
+import { readFileSync, writeFileSync } from 'fs'
+import { join, resolve } from 'path'
+
+type CourseLabEntry = {
+  index: number
+  title: string
+  slug: string
+  category: string
+  duration: string
+}
+
+type TopicId =
+  | 'compute'
+  | 'storage'
+  | 'security'
+  | 'database'
+  | 'management'
+  | 'networking'
+  | 'analytics'
+  | 'integration'
+  | 'containers'
+  | 'challenges'
+  | 'projects'
+
+type TopicLabEntry = {
+  index: number
+  title: string
+  slug: string | null
+  duration: string
+  topicId: TopicId
+  source: 'course' | 'video'
+}
+
+const COURSE_INDEX = resolve('scripts/labs/course-index.json')
+const OUT = resolve('data/labsTopicOrder.ts')
+
+const labTopics: Array<{ id: TopicId; label: string }> = [
+  { id: 'compute', label: 'Compute' },
+  { id: 'storage', label: 'Storage' },
+  { id: 'security', label: 'Security & Compliance' },
+  { id: 'database', label: 'Database' },
+  { id: 'management', label: 'Management & Governance' },
+  { id: 'networking', label: 'Networking & CDN' },
+  { id: 'analytics', label: 'Analytics' },
+  { id: 'integration', label: 'Application Integration' },
+  { id: 'containers', label: 'Containers' },
+  { id: 'challenges', label: 'Challenges' },
+  { id: 'projects', label: 'Projects' },
+]
+
+const videoCourseLabs: Array<{ title: string; duration: string; topicId: TopicId; slug?: string }> = [
+  { title: 'Creating an application load balancer from AWS CLI', duration: '1h', topicId: 'compute', slug: 'creating-an-application-load-balancer-from-aws-cli' },
+  { title: 'Creating an Application Load Balancer and Auto Scaling Group in AWS', duration: '1h 30m', topicId: 'compute', slug: 'creating-an-application-load-balancer-and-auto-scaling-group-in-aws' },
+  { title: 'Creating and configuring a network load balancer in AWS', duration: '1h', topicId: 'compute', slug: 'creating-and-configuring-a-network-load-balancer-in-aws' },
+  { title: 'Creating S3 Lifecycle Policy', duration: '30m', topicId: 'storage', slug: 'creating-an-s3-lifecycle-policy' },
+  { title: 'Create Redis cluster using ElastiCache', duration: '1h', topicId: 'database' },
+  {
+    title: 'Using CloudWatch for Resource Monitoring, Create CloudWatch Alarms and Dashboards',
+    duration: '1h 30m',
+    topicId: 'management',
+    slug: 'using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards',
+  },
+  { title: 'Check Compliance status of S3 Bucket using AWS Config', duration: '1h 30m', topicId: 'management', slug: 'check-compliance-status-of-s3-bucket-using-aws-config' },
+  { title: 'Auditing Resource Compliance with AWS config', duration: '45m', topicId: 'management' },
+  { title: 'Creating AWS VPC Flow Logs and Generating Traffic', duration: '1h', topicId: 'networking', slug: 'creating-aws-vpc-flow-logs-and-generating-traffic' },
+  { title: 'Perform ETL operation in Glue with S3', duration: '45m', topicId: 'analytics', slug: 'perform-etl-operation-in-glue-with-s3' },
+  { title: 'Create a Docker container using Dockerfile and store the image in ECR', duration: '1h', topicId: 'containers', slug: 'create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr' },
+]
+
+const assignTopic = (entry: CourseLabEntry): TopicId => {
+  if (entry.category.includes('Challenges')) return 'challenges'
+  if (entry.category.includes('Projects')) return 'projects'
+
+  const s = entry.slug
+  const t = entry.title.toLowerCase()
+  const has = (re: RegExp) => re.test(s) || re.test(t)
+
+  if (has(/\b(ecs|eks|ecr|fargate|container|docker)\b/)) return 'containers'
+  if (has(/\b(sqs|sns|step-function|api-gateway|deadletter|dead-letter)\b/)) return 'integration'
+  if (has(/\b(athena|kinesis|glue|firehose|emr)\b/)) return 'analytics'
+  if (has(/\b(rds|dynamodb|elasticache|aurora|redis|nosql)\b/)) return 'database'
+  if (has(/\b(s3|ebs|efs|glacier|storage-gateway|backup|snapshot|fsx)\b/)) return 'storage'
+  if (has(/\b(ec2|lambda|elastic-beanstalk|auto-scaling|load-balancer|spot|hibernate|scaling)\b/)) return 'compute'
+  if (has(/\b(cloudwatch|cloudtrail|config|cloudformation|organizations|x-ray|inspector2)\b/)) return 'management'
+
+  if (entry.category.includes('Domain 1')) return 'security'
+  if (entry.category.includes('Domain 2')) return 'database'
+  if (entry.category.includes('Domain 4')) return 'management'
+  return 'networking'
+}
+
+const courseIndex = JSON.parse(readFileSync(COURSE_INDEX, 'utf8')) as {
+  total: number
+  labs: CourseLabEntry[]
+}
+
+const courseSlugs = new Set(courseIndex.labs.map((l) => l.slug))
+
+const courseEntries: TopicLabEntry[] = courseIndex.labs.map((entry) => ({
+  index: entry.index,
+  title: entry.title,
+  slug: entry.slug,
+  duration: entry.duration,
+  topicId: assignTopic(entry),
+  source: 'course' as const,
+}))
+
+const videoEntries: TopicLabEntry[] = videoCourseLabs
+  .filter((v) => !v.slug || !courseSlugs.has(v.slug))
+  .map((v, i) => ({
+    index: courseIndex.total + i + 1,
+    title: v.title,
+    slug: v.slug ?? null,
+    duration: v.duration,
+    topicId: v.topicId,
+    source: 'video' as const,
+  }))
+
+const labsTopicOrder: TopicLabEntry[] = [...courseEntries, ...videoEntries]
+
+const topicCounts = labTopics.map((topic) => ({
+  id: topic.id,
+  count: labsTopicOrder.filter((e) => e.topicId === topic.id).length,
+}))
+
+const body = `// Auto-generated by scripts/generate-labs-topics.ts — do not edit
+export type LabTopicId =
+  | 'compute'
+  | 'storage'
+  | 'security'
+  | 'database'
+  | 'management'
+  | 'networking'
+  | 'analytics'
+  | 'integration'
+  | 'containers'
+  | 'challenges'
+  | 'projects'
+
+export type TopicLabEntry = {
+  index: number
+  title: string
+  slug: string | null
+  duration: string
+  topicId: LabTopicId
+  source: 'course' | 'video'
+}
+
+export const labTopics: Array<{ id: LabTopicId; label: string }> = ${JSON.stringify(labTopics, null, 2)}
+
+/** Whizlabs hands-on library (course tab) */
+export const labsCourseTotal = ${courseIndex.total}
+
+/** Course library + video-embedded labs from the lecture outline */
+export const labsTopicTotal = ${labsTopicOrder.length}
+
+export const labsTopicOrder: TopicLabEntry[] = ${JSON.stringify(labsTopicOrder, null, 2)}
+`
+
+writeFileSync(OUT, body)
+console.log(`Generated ${labsTopicOrder.length} topic entries → ${OUT}`)
+console.log('Per topic:', topicCounts.filter((t) => t.count > 0).map((t) => `${t.id}: ${t.count}`).join(', '))

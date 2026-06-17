@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button"
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button"
         },
         {
-          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,31 +32,46 @@
       "title": "Task 2: Create a Key Pair for the EC2 instances, inside the ECS Cluster",
       "steps": [
         {
-          "text": "Make sure you are in the N.Virginia Region. Navigate to EC2 Service by clicking on the Services menu in the top, then click on EC2 Service in the Compute section."
+          "text": "Make sure you are in the N.Virginia Region. Navigate to EC2 Service by clicking on the Services menu in the top, then click on EC2 Service in the Compute section."
         },
         {
-          "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key pairs"
+          "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key pairs"
         },
         {
-          "text": "To create a new key pair, click on the Create key pair button."
+          "text": "To create a new key pair, click on the Create key pair button."
+        },
+        {
+          "text": "Fill in the details below: Name: Enter WhizKeyPair Key pair type : RSA File format: pem (Linux & Mac Users) or ppk (Windows users) Leave other options as default. Click on the Create key pair button.",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-01.png"
+          ]
         },
         {
           "text": "Fill in the details below:"
         },
         {
-          "text": "Name: Enter WhizKeyPair"
+          "text": "Name: Enter WhizKeyPair"
         },
         {
           "text": "Key pair type : RSA"
         },
         {
-          "text": "File format: pem (Linux & Mac Users) or ppk (Windows users)"
+          "text": "File format: pem (Linux & Mac Users) or ppk (Windows users)"
         },
         {
           "text": "Leave other options as default."
         },
         {
-          "text": "Click on the Create key pair button."
+          "text": "Click on the Create key pair button.",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-02.png"
+          ]
+        },
+        {
+          "text": "Task 2: Create a Key Pair for the EC2 instances, inside the ECS Cluster",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-03.png"
+          ]
         }
       ]
     },
@@ -64,19 +79,45 @@
       "title": "Task 3: Launching an ECS Cluster",
       "steps": [
         {
-          "text": "Make sure you are in the N.Virginia Region. Navigate to Elastic Container Service by clicking on the Services menu in the top, then click on Elastic Container Service in the Containers section."
+          "text": "Make sure you are in the N.Virginia Region. Navigate to Elastic Container Service by clicking on the Services menu in the top, then click on Elastic Container Service in the Containers section."
         },
         {
-          "text": "On the left sidebar, click on the Clusters option present under the Amazon ECS section, then Click on the Create cluster button."
+          "text": "On the left sidebar, click on the Clusters option present under the Amazon ECS section, then Click on the Create cluster button.",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-04.png"
+          ]
+        },
+        {
+          "text": "Task 3: Launching an ECS Cluster",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-05.png"
+          ]
         },
         {
           "text": "In Cluster configuration :"
         },
         {
-          "text": "Cluster name: enter whizcluster"
+          "text": "Cluster name: enter whizcluster",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-06.png"
+          ]
+        },
+        {
+          "text": "In Infrastructure Section : Select Fargate and Self-managed instances. Auto Scaling group (ASG): Select Create new Auto Scaling Group Provisioning model: select On-demandContainer instance AMI : Select Amazon Linux 2023 EC2 instance type : Select t2.micro EC2 instance role: Choose the existing IAM role ECS_Role.Desired capacity : Minimum : Enter 1 Maximum : Enter 2 SSH Key pair: Select WhizKeyPair",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-07.png",
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-08.png"
+          ]
         },
         {
           "text": "In Infrastructure Section :"
+        },
+        {
+          "text": "Select Fargate and Self-managed instances. Auto Scaling group (ASG): Select Create new Auto Scaling Group Provisioning model: select On-demandContainer instance AMI : Select Amazon Linux 2023 EC2 instance type : Select t2.micro EC2 instance role: Choose the existing IAM role ECS_Role.Desired capacity : Minimum : Enter 1 Maximum : Enter 2 SSH Key pair: Select WhizKeyPair",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-09.png",
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-10.png"
+          ]
         },
         {
           "text": "Select Fargate and Self-managed instances."
@@ -85,13 +126,28 @@
           "text": "Auto Scaling group (ASG): Select Create new Auto Scaling Group"
         },
         {
+          "text": "Provisioning model: select On-demandContainer instance AMI : Select Amazon Linux 2023",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-11.png"
+          ]
+        },
+        {
           "text": "Provisioning model: select On-demand"
         },
         {
-          "text": "Container instance AMI : Select Amazon Linux 2023"
+          "text": "Container instance AMI : Select Amazon Linux 2023"
         },
         {
-          "text": "EC2 instance type : Select t2.micro"
+          "text": "Task 3: Launching an ECS Cluster",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-12.png"
+          ]
+        },
+        {
+          "text": "EC2 instance type : Select t2.micro"
+        },
+        {
+          "text": "EC2 instance role: Choose the existing IAM role ECS_Role.Desired capacity : Minimum : Enter 1 Maximum : Enter 2"
         },
         {
           "text": "EC2 instance role: Choose the existing IAM role ECS_Role."
@@ -100,28 +156,46 @@
           "text": "Desired capacity :"
         },
         {
-          "text": "Minimum : Enter 1"
+          "text": "Minimum : Enter 1"
         },
         {
           "text": "Maximum : Enter 2"
         },
         {
-          "text": "SSH Key pair: Select WhizKeyPair"
+          "text": "SSH Key pair: Select WhizKeyPair",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-13.png"
+          ]
+        },
+        {
+          "text": "Task 3: Launching an ECS Cluster",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-14.png"
+          ]
+        },
+        {
+          "text": "In Networking Section : VPC: Select Default VPC Subnets: Leave it as default."
         },
         {
           "text": "In Networking Section :"
         },
         {
-          "text": "VPC: Select Default VPC"
+          "text": "VPC: Select Default VPC"
         },
         {
           "text": "Subnets: Leave it as default."
         },
         {
+          "text": "Security group :Select create new security groupSecurity group name : Enter MySGSecurity group description : Enter MySGInbound rules for security groups:Type : Select SSHSource : Select Anywhere",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-15.png"
+          ]
+        },
+        {
           "text": "Security group :"
         },
         {
-          "text": "Select create new security group"
+          "text": "Select create new security groupSecurity group name : Enter MySGSecurity group description : Enter MySG"
         },
         {
           "text": "Security group name : Enter MySG"
@@ -130,22 +204,34 @@
           "text": "Security group description : Enter MySG"
         },
         {
-          "text": "Inbound rules for security groups:"
+          "text": "Inbound rules for security groups:Type : Select SSHSource : Select Anywhere",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-16.png"
+          ]
         },
         {
           "text": "Type : Select SSH"
         },
         {
-          "text": "Source : Select Anywhere"
+          "text": "Source : Select Anywhere",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-17.png"
+          ]
         },
         {
-          "text": "Keep rest things as default and click on Create button"
+          "text": "Keep rest things as default and click on Create button"
         },
         {
           "text": "ECS Cluster will be created"
         },
         {
           "text": "It will take few minutes to provision the ECS Instance."
+        },
+        {
+          "text": "Task 3: Launching an ECS Cluster",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-18.png"
+          ]
         }
       ]
     },
@@ -153,34 +239,55 @@
       "title": "Task 4: Create Task Definitions",
       "steps": [
         {
-          "text": "In this task, we are going to create a task definition for the cluster. A task definition provides a blueprint for creating tasks, which are the basic unit of work in ECS. Each task definition can define one or more containers that are run together on the same underlying EC2 instances or Fargate tasks."
+          "text": "In this task, we are going to create a task definition for the cluster. A task definition provides a blueprint for creating tasks, which are the basic unit of work in ECS. Each task definition can define one or more containers that are run together on the same underlying EC2 instances or Fargate tasks."
         },
         {
-          "text": "On the left sidebar, click on the Task Definitions option present under the Amazon ECS section."
+          "text": "On the left sidebar, click on the Task Definitions option present under the Amazon ECS section."
         },
         {
-          "text": "Click on the Create new task definition button."
+          "text": "Click on the Create new task definition button."
+        },
+        {
+          "text": "Task 4: Create Task Definitions",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-19.png"
+          ]
         },
         {
           "text": "In Task definition configuration:"
         },
         {
-          "text": "Task definition family: Enter ecs-demo"
+          "text": "Task definition family: Enter ecs-demo"
         },
         {
-          "text": "For Infrastructure requirements :"
+          "text": "Task 4: Create Task Definitions",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-20.png"
+          ]
         },
         {
-          "text": "Launch Type : select Amazon EC2 Instances"
+          "text": "For Infrastructure requirements : Launch Type : select Amazon EC2 InstancesTask size :CPU : Enter .25 vCPUMemory : Enter .5 GBIn Task Role: Choose noneIn task execution role: Choose none"
+        },
+        {
+          "text": "For Infrastructure requirements :"
+        },
+        {
+          "text": "Launch Type : select Amazon EC2 Instances"
+        },
+        {
+          "text": "Task size :CPU : Enter .25 vCPUMemory : Enter .5 GBIn Task Role: Choose noneIn task execution role: Choose none"
         },
         {
           "text": "Task size :"
         },
         {
-          "text": "CPU : Enter .25 vCPU"
+          "text": "CPU : Enter .25 vCPU"
         },
         {
-          "text": "Memory : Enter .5 GB"
+          "text": "Memory : Enter .5 GBIn Task Role: Choose noneIn task execution role: Choose none"
+        },
+        {
+          "text": "Memory : Enter .5 GB"
         },
         {
           "text": "In Task Role: Choose none"
@@ -189,13 +296,25 @@
           "text": "In task execution role: Choose none"
         },
         {
+          "text": "Task 4: Create Task Definitions",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-21.png"
+          ]
+        },
+        {
+          "text": "Under Container - 1: Name: Enter httpd Image URL: Enter httpd:2.4"
+        },
+        {
           "text": "Under Container - 1:"
         },
         {
-          "text": "Name: Enter httpd"
+          "text": "Name: Enter httpd"
         },
         {
-          "text": "Image URL: Enter httpd:2.4"
+          "text": "Image URL: Enter httpd:2.4"
+        },
+        {
+          "text": "Under Port mappings : Container port : Enter 80 Protocol : Select TCP App protocol : Select HTTP"
         },
         {
           "text": "Under Port mappings :"
@@ -204,16 +323,22 @@
           "text": "Container port : Enter 80"
         },
         {
-          "text": "Protocol : Select TCP"
+          "text": "Protocol : Select TCP"
         },
         {
-          "text": "App protocol : Select HTTP"
+          "text": "App protocol : Select HTTP"
         },
         {
-          "text": "Keep rest things as default and click on the Create button"
+          "text": "Task 4: Create Task Definitions",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-22.png"
+          ]
         },
         {
-          "text": "Task Definition ecs-demo is now created."
+          "text": "Keep rest things as default and click on the Create button"
+        },
+        {
+          "text": "Task Definition ecs-demo is now created."
         }
       ]
     },
@@ -221,19 +346,31 @@
       "title": "Task 5: Create a service and start HTTPD container in ECS",
       "steps": [
         {
-          "text": "In this task, we are going to create a service and start the HTTPD container. In AWS ECS (Elastic Container Service), a service is a long-running task that ensures that a specified number of instances of a task definition are running and maintained in an ECS cluster. Services allow you to define the desired state of your tasks and automatically handle task placement, scaling, and recovery."
+          "text": "In this task, we are going to create a service and start the HTTPD container. In AWS ECS (Elastic Container Service), a service is a long-running task that ensures that a specified number of instances of a task definition are running and maintained in an ECS cluster. Services allow you to define the desired state of your tasks and automatically handle task placement, scaling, and recovery."
         },
         {
-          "text": "On the left sidebar, click on the Task definitions option present under the Amazon ECS section."
+          "text": "On the left sidebar, click on the Task definitions option present under the Amazon ECS section."
         },
         {
-          "text": "Select ecs-demo and click on Deploy and click Create service button."
+          "text": "Select ecs-demo and click on Deploy and click Create service button."
+        },
+        {
+          "text": "Task 5: Create a service and start HTTPD container in ECS",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-23.png"
+          ]
         },
         {
           "text": "In Service details: Choose Task definition revision: select the latest revision."
         },
         {
-          "text": "Service name: Enter httpd"
+          "text": "Service name: Enter httpd"
+        },
+        {
+          "text": "Task 5: Create a service and start HTTPD container in ECS",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-24.png"
+          ]
         },
         {
           "text": "Cluster will get selected by default."
@@ -242,13 +379,25 @@
           "text": "In Compute configuration:"
         },
         {
-          "text": "Choose Compute option as Launch type and select the Launch type as EC2"
+          "text": "Choose Compute option as Launch type and select the Launch type as EC2",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-25.png"
+          ]
         },
         {
-          "text": "In Deployment configuration, Scheduling strategy: Select REPLICA."
+          "text": "Task 5: Create a service and start HTTPD container in ECS",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-26.png"
+          ]
         },
         {
-          "text": "Desired tasks : Enter 1"
+          "text": "In Deployment configuration, Scheduling strategy: Select REPLICA."
+        },
+        {
+          "text": "Desired tasks : Enter 1",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-27.png"
+          ]
         },
         {
           "text": "In Networking section:"
@@ -263,16 +412,34 @@
           "text": "Security Group: click on Use an existing security group and select MySG."
         },
         {
-          "text": "Keep other options as default, and click on the Create button."
+          "text": "Task 5: Create a service and start HTTPD container in ECS",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-28.png"
+          ]
+        },
+        {
+          "text": "Keep other options as default, and click on the Create button."
         },
         {
           "text": "The service will be created, wait till the Deployments and tasks changes to 1/1 tasks running"
+        },
+        {
+          "text": "Task 5: Create a service and start HTTPD container in ECS",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-29.png"
+          ]
         },
         {
           "text": "Now navigate to Infrastructure tab, and scroll down to the Container Instances"
         },
         {
           "text": "Click on the EC2 Instance ID, and you will be redirected to the running EC2 instance."
+        },
+        {
+          "text": "Task 5: Create a service and start HTTPD container in ECS",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-30.png"
+          ]
         }
       ]
     },
@@ -280,43 +447,70 @@
       "title": "Task 6: SSH into the underlying EC2 instance and run Docker commands",
       "steps": [
         {
-          "text": "Please follow the steps in SSH into EC2 Instance"
+          "text": "Please follow the steps in SSH into EC2 Instance"
         },
         {
           "text": "Please note that the Ec2 instance connect will not work for the ECS instance, so please try other SSH methods."
         },
         {
+          "text": "Get the root access using the following command:sudo su"
+        },
+        {
           "text": "Get the root access using the following command:"
         },
         {
-          "text": "sudo su"
+          "text": "Now run the updates using the following command: sudo dnf update -y"
         },
         {
           "text": "Now run the updates using the following command:"
         },
         {
-          "text": "sudo dnf update -y"
+          "text": "Check the Docker version by running the following command:docker version"
         },
         {
           "text": "Check the Docker version by running the following command:"
         },
         {
-          "text": "docker version"
+          "text": "Check all the docker processes running in the ECS Clusterdocker ps"
         },
         {
           "text": "Check all the docker processes running in the ECS Cluster"
         },
         {
-          "text": "docker ps"
-        },
-        {
           "text": "Default ECS agent and httpd container is running in the underlying EC2 instance"
         },
         {
-          "text": "Do you know ?"
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "One unique fact about AWS ECS is its support for the FireLens container logging system. FireLens allows you to route logs from containers running on ECS to various AWS services, such as Amazon CloudWatch Logs, Amazon Kinesis Data Firehose, or even third-party log aggregators."
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-31.gif"
+          ]
+        },
+        {
+          "text": "Task 6: SSH into the underlying EC2 instance and run Docker commands",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-container-service-ecs/step-32.gif"
+          ]
+        },
+        {
+          "text": "You have successfully created and launched ECS Cluster"
+        },
+        {
+          "text": "You have successfully created an HTTPD Container"
+        },
+        {
+          "text": "Sign out of AWS Account"
+        },
+        {
+          "text": "You have successfully completed the lab"
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console"
         }
       ]
     }

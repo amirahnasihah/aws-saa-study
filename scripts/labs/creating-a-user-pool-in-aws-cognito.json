@@ -1,0 +1,195 @@
+{
+  "slug": "creating-a-user-pool-in-aws-cognito",
+  "title": "Creating a User Pool in AWS Cognito",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:30:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+        },
+        {
+          "text": "Select Maybe later in New AWS Console Home page pop-up"
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Define your Application",
+      "steps": [
+        {
+          "text": "In this task, we are going to first choose the type of application you are building. The application type affects how authentication is handled."
+        },
+        {
+          "text": "Navigate to Cognito by clicking on the Services menu at the top, click on Cognito under the Security, Identity, and Compliance section."
+        },
+        {
+          "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region. Click on User pools from left menu and click on Create user pool button."
+        },
+        {
+          "text": "Task 2: Define your Application"
+        },
+        {
+          "text": "Add details in the set-up resources for your application :"
+        },
+        {
+          "text": "Types of Applications that are supported: Traditional Web Application – For applications with a backend server (e.g., Django, Node.js, Flask, or PHP). The authentication process happens on the backend. Single Page Application (SPA) – For front-end applications built with React, Angular, or Vue.js. These rely on JavaScript authentication libraries. Mobile Application – For mobile apps (iOS and Android) that need authentication via Cognito SDKs. Machine-to-Machine (M2M) Authentication – For backend services requiring token-based authentication."
+        },
+        {
+          "text": "Types of Applications that are supported:"
+        },
+        {
+          "text": "Traditional Web Application – For applications with a backend server (e.g., Django, Node.js, Flask, or PHP). The authentication process happens on the backend."
+        },
+        {
+          "text": "Single Page Application (SPA) – For front-end applications built with React, Angular, or Vue.js. These rely on JavaScript authentication libraries."
+        },
+        {
+          "text": "Mobile Application – For mobile apps (iOS and Android) that need authentication via Cognito SDKs."
+        },
+        {
+          "text": "Machine-to-Machine (M2M) Authentication – For backend services requiring token-based authentication."
+        },
+        {
+          "text": "In our case for Application type : Select Traditional web application"
+        },
+        {
+          "text": "Name your application: Enter Whizapp"
+        },
+        {
+          "text": "Task 2: Define your Application"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Configure Sign-in Requirements",
+      "steps": [
+        {
+          "text": "Amazon Cognito allows users to sign in using different identifiers"
+        },
+        {
+          "text": "Configure Options for sign-in identifiers: Select Email"
+        },
+        {
+          "text": "When users sign up, they need to provide required information. These are called Required Attributes"
+        },
+        {
+          "text": "Required Options for sign-in identifiers: Select name, preferred_username, phone_number"
+        },
+        {
+          "text": "Task 3: Configure Sign-in Requirements"
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Configure Redirect URL",
+      "steps": [
+        {
+          "text": "When users authenticate successfully, they must be redirected back to your application."
+        },
+        {
+          "text": "In the Add a return URL field, enter the URL where users should be redirected after login (e.g: https://whizapp.com/login-success.)"
+        },
+        {
+          "text": "Click on Create user directory button."
+        },
+        {
+          "text": "Task 4: Configure Redirect URL"
+        },
+        {
+          "text": "Now, On the Set-up page, scroll down and Click on Go to overview button."
+        },
+        {
+          "text": "Once the application is created, you will see a confirmation screen with details about your User Pool ID"
+        },
+        {
+          "text": "Task 4: Configure Redirect URL"
+        },
+        {
+          "text": "By leveraging social sign-in with AWS Cognito, developers can streamline the registration and sign-in process for their users. It eliminates the need for users to create new usernames and passwords specifically for the app, as they can simply use their existing social media accounts to authenticate. This not only enhances user convenience but also reduces friction during the onboarding process."
+        },
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Task 4: Configure Redirect URL"
+        },
+        {
+          "text": "You have successfully used AWS management console to create a User Pool."
+        },
+        {
+          "text": "You learned how to use each setting in a detailed manner."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Task 5: Validation Test"
+        },
+        {
+          "text": "You have successfully used AWS management console to create a User Pool."
+        },
+        {
+          "text": "You learned how to use each setting in a detailed manner."
+        },
+        {
+          "text": "Sign out of the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

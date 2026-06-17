@@ -9,19 +9,13 @@
   "duration": "01:00:00",
   "tasks": [
     {
-      "title": "Project Steps",
+      "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
           "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
-          "text": "On the AWS sign-in page,"
-        },
-        {
-          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project."
-        },
-        {
-          "text": "Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project. Now copy your User Name and Password in the Project Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the project."
@@ -31,7 +25,12 @@
         },
         {
           "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
-        },
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an Email Identity using SES",
+      "steps": [
         {
           "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
         },
@@ -43,6 +42,12 @@
         },
         {
           "text": "Click on Create Identity button."
+        },
+        {
+          "text": "Task 2: Create an Email Identity using SES",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-01.png"
+          ]
         },
         {
           "text": "Enter following details:"
@@ -58,6 +63,12 @@
         },
         {
           "text": "Click on Create Identity button."
+        },
+        {
+          "text": "Task 2: Create an Email Identity using SES",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-02.png"
+          ]
         },
         {
           "text": "Similarly create another identity for receiver email"
@@ -84,13 +95,36 @@
           "text": "Now you will be able to see that the Identity Status on the Email will be Verification Pending."
         },
         {
+          "text": "Task 2: Create an Email Identity using SES",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-03.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Verify the Email Address",
+      "steps": [
+        {
           "text": "AWS will send a confirmation email to the email that you provided in the above step."
         },
         {
           "text": "Log in to your Sender mailbox and you will be able to see a mail from Amazon Web Services."
         },
         {
+          "text": "Task 3: Verify the Email Address",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-04.png"
+          ]
+        },
+        {
           "text": "Once you click on the link, you will be routed to the success page."
+        },
+        {
+          "text": "Task 3: Verify the Email Address",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-05.png"
+          ]
         },
         {
           "text": "Similarly Verify the Receiver’s mail also."
@@ -98,6 +132,17 @@
         {
           "text": "Now go to the SES Email Address page and refresh the page. You will be able to see the Verification status as Active."
         },
+        {
+          "text": "Task 3: Verify the Email Address",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-06.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Create a Lambda Function",
+      "steps": [
         {
           "text": "Navigate to the services menu at the top, then click on Lambda under the Compute section."
         },
@@ -117,13 +162,16 @@
           "text": "Role: In the permissions section, click on Change default execution role and then select Use an existing role."
         },
         {
-          "text": "Existing role: Select lambda_role from the list."
+          "text": "Existing role: Select lambda_role from the list.",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-07.png"
+          ]
         },
         {
-          "text": "Click on Create function button."
+          "text": "Click on Create function button."
         },
         {
-          "text": "Download the Zip file using this Link and extract the zip file locally. You will see one node.js file and one html file for contact form."
+          "text": "Download the Zip file using this Link and extract the zip file locally. You will see one node.js file and one html file for contact form."
         },
         {
           "text": "If you scroll down a little bit, you can see the Code source section. Here we need to copy paste the NodeJs code that uses the AWS SDK to send an email via Amazon SES (Simple Email Service)."
@@ -141,14 +189,42 @@
           "text": "Save the function by clicking on Deploy button."
         },
         {
+          "text": "Task 4: Create a Lambda Function",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-08.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create an API",
+      "steps": [
+        {
           "text": "Navigate to the services menu at the top, then click on API Gateway in the Network and Content Delivery section."
         },
         {
           "text": "Click on Build in REST API."
         },
         {
+          "text": "Task 5: Create an API",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-09.png"
+          ]
+        },
+        {
           "text": "Choose to create a new API as New API. Under settings, choose the API name labAPI. Leave other options as default and click on Create API"
         },
+        {
+          "text": "Task 5: Create an API",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-10.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Creating a Resource",
+      "steps": [
         {
           "text": "Once the API is created, select the API."
         },
@@ -165,7 +241,24 @@
           "text": "Enter the resource name and click on Create Resource button"
         },
         {
+          "text": "Task 6: Creating a Resource",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-11.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Creating a Method",
+      "steps": [
+        {
           "text": "Once you create a resource, click on Create Method."
+        },
+        {
+          "text": "Task 7: Creating a Method",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-12.png"
+          ]
         },
         {
           "text": "Select POST in the drop-down list of Method Type."
@@ -179,6 +272,17 @@
         {
           "text": "Enter the Lambda Function as WhizFunction. Click on Create Method"
         },
+        {
+          "text": "Task 7: Creating a Method",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-13.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Deploy the API",
+      "steps": [
         {
           "text": "Once the resource and the method have been created successfully, you can deploy the API."
         },
@@ -195,7 +299,19 @@
           "text": "Click on Deploy."
         },
         {
+          "text": "Task 8: Deploy the API",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-14.png"
+          ]
+        },
+        {
           "text": "Once the API has been deployed, navigate to Stages. You will be able to see the following"
+        },
+        {
+          "text": "Task 8: Deploy the API",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-15.gif"
+          ]
         },
         {
           "text": "Copy the Invoke URL as mentiond in GIF and save it to any text editor to be used in contact form page which will look similar to : https://kvzhh540yd.execute-api.us-east-1.amazonaws.com/TestingAPI/lab"
@@ -204,8 +320,25 @@
           "text": "Now, to Enable the cors click on Resources in the left menu and click on lab resource, Now click on Enable CORS button"
         },
         {
+          "text": "Task 8: Deploy the API",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-16.png"
+          ]
+        },
+        {
           "text": "Select POST method in Access-Control-Allow-Methods checkbox and click on Save button."
         },
+        {
+          "text": "Task 8: Deploy the API",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-17.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Test Contact form",
+      "steps": [
         {
           "text": "Open the contactform.html file in any text editor in your local."
         },
@@ -213,7 +346,13 @@
           "text": "This page includes a form for users to input their name, email, and message. When the form is submitted, the submitToAPI JavaScript function sends the input data as a JSON object to a specified API endpoint using an AJAX POST request. Upon successful submission, the user is alerted, the form is reset, and the page reloads. If there's an error, an alert displays the error details."
         },
         {
-          "text": "Now update the invoke url in line number 92 with the invoke url you copied"
+          "text": "Now update the invoke url in line number 92 with the invoke url you copied"
+        },
+        {
+          "text": "Task 9: Test Contact form",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-18.png"
+          ]
         },
         {
           "text": "Save the file and open the html document in browser. This will display the created contact form."
@@ -234,11 +373,34 @@
           "text": "Click on Send Message button."
         },
         {
+          "text": "Task 9: Test Contact form",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-19.png"
+          ]
+        },
+        {
           "text": "It will return the success message."
+        },
+        {
+          "text": "Task 9: Test Contact form",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-20.png"
+          ]
         },
         {
           "text": "You can verify the mail in your receiver mail ID."
         },
+        {
+          "text": "Task 9: Test Contact form",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-21.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Validation of the Project",
+      "steps": [
         {
           "text": "Once the project steps are completed, please click on the Validation button on the left side panel."
         },
@@ -247,6 +409,12 @@
         },
         {
           "text": "Sample output :"
+        },
+        {
+          "text": "Task 10: Validation of the Project",
+          "images": [
+            "/labs/creating-serverless-contact-forms-with-aws/step-22.gif"
+          ]
         },
         {
           "text": "You have successfully created and verified Email Identity."

@@ -1,0 +1,639 @@
+{
+  "slug": "data-integration-and-transformation-with-aws-glue",
+  "title": "Data Integration and Transformation with AWS Glue",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "02:00:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed in to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create an AWS S3 Bucket",
+      "steps": [
+        {
+          "text": "Ensure you are in the US East (N. Virginia) us-east-1 Region to begin creating an S3 bucket in the Amazon cloud."
+        },
+        {
+          "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
+        },
+        {
+          "text": "On the S3 Page, click on Create bucket and fill in the bucket details."
+        },
+        {
+          "text": "Bucket name: Enter your own bucket name Note: S3 bucket name is globally unique, you can enter any name of your choice."
+        },
+        {
+          "text": "Note: S3 bucket name is globally unique, you can enter any name of your choice."
+        },
+        {
+          "text": "Leave other settings as default."
+        },
+        {
+          "text": "Task 2: Create an AWS S3 Bucket"
+        },
+        {
+          "text": "Click on Create bucket button."
+        },
+        {
+          "text": "The S3 bucket will be created successfully."
+        },
+        {
+          "text": "Task 2: Create an AWS S3 Bucket"
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Upload an object to S3 bucket",
+      "steps": [
+        {
+          "text": "Click on your bucket name."
+        },
+        {
+          "text": "To create a folder to our S3 bucket,"
+        },
+        {
+          "text": "Click on the Create Folder button."
+        },
+        {
+          "text": "Folder Name: input"
+        },
+        {
+          "text": "Leave as it is server-side encryption"
+        },
+        {
+          "text": "Click on Create folder"
+        },
+        {
+          "text": "Create another folder named as output in the same way we created input."
+        },
+        {
+          "text": "Task 3: Upload an object to S3 bucket"
+        },
+        {
+          "text": "Create Folders in the inside the \"output\" folder, create three sub-folders named \"output_1\", \"output_2\", and \"output_3\"."
+        },
+        {
+          "text": "Task 3: Upload an object to S3 bucket"
+        },
+        {
+          "text": "Download the customer data file customer.csv and upload the customer.csv file to the input folder in the S3 bucket."
+        },
+        {
+          "text": "Task 3: Upload an object to S3 bucket"
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Configure an AWS Glue Crawler",
+      "steps": [
+        {
+          "text": "Go to the AWS Glue service in the AWS Management Console."
+        },
+        {
+          "text": "Navigate to \"Databases\" under Data Catalog from the left hand panel."
+        },
+        {
+          "text": "Task 4: Configure an AWS Glue Crawler"
+        },
+        {
+          "text": "Click on Add database"
+        },
+        {
+          "text": "Crawler Name: whiztest"
+        },
+        {
+          "text": "Click on Create Database."
+        },
+        {
+          "text": "Navigate to the Crawlers from the left hand panel."
+        },
+        {
+          "text": "Click on the Create Crawler"
+        },
+        {
+          "text": "Name: whiztest-crawler"
+        },
+        {
+          "text": "Click on Next"
+        },
+        {
+          "text": "Click on Add a data source"
+        },
+        {
+          "text": "Click on the Browse S3"
+        },
+        {
+          "text": "Click the bucket earlier you created then click on the input/ choose customer.csv"
+        },
+        {
+          "text": "Click on the Add an S3 data source"
+        },
+        {
+          "text": "Click on the Next"
+        },
+        {
+          "text": "Choose the IAM role glue-studio-delete then click on Next"
+        },
+        {
+          "text": "Select the database you created whiztest."
+        },
+        {
+          "text": "Write Prefix add to the tables: input_. Click on Next."
+        },
+        {
+          "text": "Review and click on Create Crawler"
+        },
+        {
+          "text": "Select the crawler we just created and then click on Run Crawler"
+        },
+        {
+          "text": "Task 4: Configure an AWS Glue Crawler"
+        },
+        {
+          "text": "Navigate to the Tables from the left hand panel and confirm the table is there. Kindly wait for 3 to 5 mins."
+        },
+        {
+          "text": "Task 4: Configure an AWS Glue Crawler"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create Visual Job with Source and Target",
+      "steps": [
+        {
+          "text": "Navigate to ETL jobs in the AWS Management Console and click on the visual ETL."
+        },
+        {
+          "text": "Task 5: Create Visual Job with Source and Target"
+        },
+        {
+          "text": "To add the node, Click on the Amazon S3 under the Source"
+        },
+        {
+          "text": "Data source - S3 properties:"
+        },
+        {
+          "text": "Name: source"
+        },
+        {
+          "text": "S3 source type: Data Catalog table"
+        },
+        {
+          "text": "Choose Database : whiztest"
+        },
+        {
+          "text": "Table: input_customers_csv"
+        },
+        {
+          "text": "Task 5: Create Visual Job with Source and Target"
+        },
+        {
+          "text": "Click on the plus icon on the left side, under Transform click on Change Schema"
+        },
+        {
+          "text": "Task 5: Create Visual Job with Source and Target"
+        },
+        {
+          "text": "In the target key change the following:"
+        },
+        {
+          "text": "Customerid : customer_id"
+        },
+        {
+          "text": "Namestyle: name_style"
+        },
+        {
+          "text": "Title: title_customer"
+        },
+        {
+          "text": "Firstname: first_name"
+        },
+        {
+          "text": "Click on the plus icon and under targets choose Amazon S3"
+        },
+        {
+          "text": "Task 5: Create Visual Job with Source and Target"
+        },
+        {
+          "text": "Click on the Data target – S3 bucket"
+        },
+        {
+          "text": "Name: target"
+        },
+        {
+          "text": "Format: JSON"
+        },
+        {
+          "text": "Compression Type: None"
+        },
+        {
+          "text": "In S3 target location click on Browse S3"
+        },
+        {
+          "text": "Choose the bucket you created and then Choose Output folder inside the folder choose output_1"
+        },
+        {
+          "text": "After following all the earlier steps your job will look like this"
+        },
+        {
+          "text": "Task 5: Create Visual Job with Source and Target"
+        },
+        {
+          "text": "Click on the job details"
+        },
+        {
+          "text": "Under Basic Properties:"
+        },
+        {
+          "text": "Name: WhizTest-1"
+        },
+        {
+          "text": "Description: A visual glue job"
+        },
+        {
+          "text": "IAM Role: glue-studio-delete"
+        },
+        {
+          "text": "Requested number of workers: 2"
+        },
+        {
+          "text": "Number of retries: 1"
+        },
+        {
+          "text": "Leave rest everything as default"
+        },
+        {
+          "text": "Click on Save and Run the job"
+        },
+        {
+          "text": "Click on the Job run monitoring from the left hand panel and wait to 2-3 min to get success."
+        },
+        {
+          "text": "Once it succeeded, navigate to S3 bucket under output_one folder you will find the run file with the modifications done."
+        },
+        {
+          "text": "Task 5: Create Visual Job with Source and Target"
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Create Custom Join Job",
+      "steps": [
+        {
+          "text": "Navigate to ETL jobs in the AWS Management Console and click on the visual ETL from left hand panel."
+        },
+        {
+          "text": "To add the node, Click on the AWS Glue Data Catalog under the Source"
+        },
+        {
+          "text": "Data source – Data Catalog properties:"
+        },
+        {
+          "text": "Name: source_one"
+        },
+        {
+          "text": "Choose Database: whiztest"
+        },
+        {
+          "text": "Table: input_customers_csv"
+        },
+        {
+          "text": "Click on the plus icon under Sources choose AWS Glue Data Catalog"
+        },
+        {
+          "text": "Click on the Data source – Data Catalog properties"
+        },
+        {
+          "text": "Name: source_two"
+        },
+        {
+          "text": "Choose Database : whiztest"
+        },
+        {
+          "text": "Table: input_customers_csv"
+        },
+        {
+          "text": "Task 6: Create Custom Join Job"
+        },
+        {
+          "text": "Click on the plus icon, under Transforms and choose Change Schema"
+        },
+        {
+          "text": "Click on Transform-Change Schema"
+        },
+        {
+          "text": "Under the Transform:"
+        },
+        {
+          "text": "Name: apply_one"
+        },
+        {
+          "text": "Node Parents: source_one"
+        },
+        {
+          "text": "Click on Drop to all the fields after lastname"
+        },
+        {
+          "text": "Change the target key by adding _1 to all the fields to easily find that it’s coming from source_1."
+        },
+        {
+          "text": "Task 6: Create Custom Join Job"
+        },
+        {
+          "text": "Click on the plus icon, under Transforms and choose Change Schema"
+        },
+        {
+          "text": "Click on Transform-Change Schema"
+        },
+        {
+          "text": "Under the Transform:"
+        },
+        {
+          "text": "Name: apply_two"
+        },
+        {
+          "text": "Node Parents: source_two"
+        },
+        {
+          "text": "Click on Drop to all the fields after lastname"
+        },
+        {
+          "text": "Change the target key by adding _2 to all the fields to easily find that it’s coming from source_2."
+        },
+        {
+          "text": "Task 6: Create Custom Join Job"
+        },
+        {
+          "text": "Click on the plus icon, Transform and choose JOIN"
+        },
+        {
+          "text": "Click on Transform-Join"
+        },
+        {
+          "text": "Under the Transform:"
+        },
+        {
+          "text": "Node Parents: apply_one and apply_two"
+        },
+        {
+          "text": "Click on the Add condition, under apply_one choose customerid_1 and under apply two choose customerid_2."
+        },
+        {
+          "text": "Task 6: Create Custom Join Job"
+        },
+        {
+          "text": "Click on the plus icon and under targets choose Amazon S3"
+        },
+        {
+          "text": "Click on the Data target – S3 bucket"
+        },
+        {
+          "text": "Name: target"
+        },
+        {
+          "text": "Format: JSON"
+        },
+        {
+          "text": "Compression Type: None"
+        },
+        {
+          "text": "In S3 target location click on Browse S3"
+        },
+        {
+          "text": "Choose the bucket you created and then Choose Output folder inside the folder choose output_two"
+        },
+        {
+          "text": "Task 6: Create Custom Join Job"
+        },
+        {
+          "text": "After following all the earlier steps your job will look like this"
+        },
+        {
+          "text": "Task 6: Create Custom Join Job"
+        },
+        {
+          "text": "Click on the job details"
+        },
+        {
+          "text": "Under Basic Properties:"
+        },
+        {
+          "text": "Name: WhizTest-2"
+        },
+        {
+          "text": "Description: A visual glue job"
+        },
+        {
+          "text": "IAM Role: glue-studio-delete"
+        },
+        {
+          "text": "Requested number of workers: 2"
+        },
+        {
+          "text": "Number of retries: 1"
+        },
+        {
+          "text": "Leave rest everything as default"
+        },
+        {
+          "text": "Click on Save and Run the job"
+        },
+        {
+          "text": "Click on the Job run monitoring from the left hand panel and wait to 2-3 min to get success."
+        },
+        {
+          "text": "Once it succeeded, navigate to S3 bucket under output_two folder you will find the run file with the modifications done."
+        },
+        {
+          "text": "Task 6: Create Custom Join Job"
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Create Custom Transformation Job with SQL:",
+      "steps": [
+        {
+          "text": "Navigate to ETL jobs in the AWS Management Console and click on the visual ETL from left hand panel."
+        },
+        {
+          "text": "To add the node, Click on the AWS Glue Data Catalog under the Source"
+        },
+        {
+          "text": "Data source – Data Catalog properties:"
+        },
+        {
+          "text": "Name: source"
+        },
+        {
+          "text": "Choose Database: whiztest"
+        },
+        {
+          "text": "Table: input_customers_csv"
+        },
+        {
+          "text": "Task 7: Create Custom Transformation Job with SQL:"
+        },
+        {
+          "text": "Click on the plus icon, under Transforms and choose SQL Query"
+        },
+        {
+          "text": "Click on Transform-SQL Query"
+        },
+        {
+          "text": "Under the Transform:"
+        },
+        {
+          "text": "Name: custom"
+        },
+        {
+          "text": "Node Parents: source"
+        },
+        {
+          "text": "Spark SQL aliases: customer"
+        },
+        {
+          "text": "Enter the below code in the SQL Query box:"
+        },
+        {
+          "text": "Task 7: Create Custom Transformation Job with SQL:"
+        },
+        {
+          "text": "Click on the plus icon, under targets choose Amazon S3 from the menu"
+        },
+        {
+          "text": "Click on the Data target – S3 bucket"
+        },
+        {
+          "text": "Name: target"
+        },
+        {
+          "text": "Format: JSON"
+        },
+        {
+          "text": "Compression Type: None"
+        },
+        {
+          "text": "In S3 target location click on Browse S3"
+        },
+        {
+          "text": "Choose the bucket you created and then Choose Output folder inside the folder choose output_3"
+        },
+        {
+          "text": "Task 7: Create Custom Transformation Job with SQL:"
+        },
+        {
+          "text": "After following all the earlier steps your job will look like this"
+        },
+        {
+          "text": "Task 7: Create Custom Transformation Job with SQL:"
+        },
+        {
+          "text": "Click on the job details"
+        },
+        {
+          "text": "Under Basic Properties:"
+        },
+        {
+          "text": "Name: WhizTest-3"
+        },
+        {
+          "text": "Description: A visual glue job"
+        },
+        {
+          "text": "IAM Role: glue-studio-delete"
+        },
+        {
+          "text": "Number of workers: 2"
+        },
+        {
+          "text": "Number of retries: 1"
+        },
+        {
+          "text": "Leave rest everything as default"
+        },
+        {
+          "text": "Click on Save and Run the job"
+        },
+        {
+          "text": "Click on the Job run monitoring from the left hand panel and wait to 2-3 min to get success."
+        },
+        {
+          "text": "Once it succeeded, navigate to S3 bucket under output_three folder you will find the run file with the modifications done."
+        },
+        {
+          "text": "Task 7: Create Custom Transformation Job with SQL:"
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Task 8: Validation Test"
+        },
+        {
+          "text": "You have successfully created an S3 Bucket."
+        },
+        {
+          "text": "You have successfully uploaded the objects."
+        },
+        {
+          "text": "You have successfully configured an glue crawler."
+        },
+        {
+          "text": "You have successfully created a visual job with source and target."
+        },
+        {
+          "text": "You have successfully created a custom job."
+        },
+        {
+          "text": "You have successfully created a custom transformation job with sql."
+        },
+        {
+          "text": "You have successfully validated the lab."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

@@ -1,0 +1,757 @@
+{
+  "slug": "creating-an-application-load-balancer-from-aws-cli",
+  "title": "Creating an Application Load Balancer from AWS CLI",
+  "level": "Advanced",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "01:15:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Creating EC2 Instance",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) Region."
+        },
+        {
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+        },
+        {
+          "text": "Click on Instances from the left side bar and then click on Launch Instances"
+        },
+        {
+          "text": "While launching the instance, you will notice that one instance named lab_instance will already be present there. We will use that instance for CLI for creating ALB."
+        },
+        {
+          "text": "Name : Enter Instance1"
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Choose Amazon Linux 2023 kernel-6.1 AMI."
+        },
+        {
+          "text": "Task 2: Creating EC2 Instance",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-01.png"
+          ]
+        },
+        {
+          "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "Task 2: Creating EC2 Instance",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-02.png"
+          ]
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button Key pair name: MyEC2-key Key pair type: RSA Private key file format: .pem"
+        },
+        {
+          "text": "For Key pair: Select Create a new key pair Button"
+        },
+        {
+          "text": "Key pair name: MyEC2-key"
+        },
+        {
+          "text": "Key pair type: RSA"
+        },
+        {
+          "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Select Create key pair Button."
+        },
+        {
+          "text": "In Network Settings Click on Edit:"
+        },
+        {
+          "text": "VPC : Select Default VPC from the available VPCs"
+        },
+        {
+          "text": "Subnet: Select Default in us-east-1a"
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Click on Select an Existing Security Group"
+        },
+        {
+          "text": "Select the security group name loadbalancer_SG (which will have inbound port 22 and 80 open for all traffic)"
+        },
+        {
+          "text": "Click on Advanced Details when you scroll down."
+        },
+        {
+          "text": "In User data section, enter the following script to make the server a web server."
+        },
+        {
+          "text": "Click on Launch Instances."
+        },
+        {
+          "text": "After 1-2 minutes, the Instance State will change to running as shown below:"
+        },
+        {
+          "text": "Task 2: Creating EC2 Instance",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-03.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Creating another EC2 Instance",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) Region."
+        },
+        {
+          "text": "Click on Launch Instances"
+        },
+        {
+          "text": "Name : Enter Instance2"
+        },
+        {
+          "text": "For Amazon Machine Image (AMI): Choose Amazon Linux 2023 kernel-6.1 AMI."
+        },
+        {
+          "text": "Task 3: Creating another EC2 Instance",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-04.png"
+          ]
+        },
+        {
+          "text": "For Instance Type: select t2.micro"
+        },
+        {
+          "text": "Task 3: Creating another EC2 Instance",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-05.png"
+          ]
+        },
+        {
+          "text": "For Key pair: Select Existing Key pair"
+        },
+        {
+          "text": "In Network Settings Click on Edit:"
+        },
+        {
+          "text": "VPC : Select Default VPC from the available VPCs"
+        },
+        {
+          "text": "Subnet: Select Default in us-east-1b."
+        },
+        {
+          "text": "Auto-assign public IP: Enable"
+        },
+        {
+          "text": "Click on Select an Existing Security Group"
+        },
+        {
+          "text": "Select the security group name loadbalancer_SG (which will have inbound port 22 and 80 open for all traffic)"
+        },
+        {
+          "text": "Click on Adanved Details when you scroll down."
+        },
+        {
+          "text": "In User data section, enter the following script to make the server a web server."
+        },
+        {
+          "text": "Keep Rest thing Default and Click on Launch Instance Button."
+        },
+        {
+          "text": "Select View all Instances to View Instance you Created"
+        },
+        {
+          "text": "After 1-2 Mins Instance State will become running as shown below"
+        },
+        {
+          "text": "Task 3: Creating another EC2 Instance",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-06.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Creating an Application Load Balancer in AWS CLI",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) Region."
+        },
+        {
+          "text": "In the EC2 dashboard, apart from the 2 instances you have launched manually, there will be another instance named lab_instance. Select the instance and copy its Public IPv4 Address."
+        },
+        {
+          "text": "Task 4: Creating an Application Load Balancer in AWS CLI",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-07.png"
+          ]
+        },
+        {
+          "text": "SSH into that lab_instance.Please follow the steps in SSH into EC2 Instance for more options to SSH."
+        },
+        {
+          "text": "SSH into that lab_instance."
+        },
+        {
+          "text": "Please follow the steps in SSH into EC2 Instance for more options to SSH."
+        },
+        {
+          "text": "For Mac/Linux users, SSH into the lab_instance by opening the terminal in your local system and execute the command below:ssh lab_user@<Your IPv4 Public IP address> Password : Enter lab@321"
+        },
+        {
+          "text": "For Mac/Linux users, SSH into the lab_instance by opening the terminal in your local system and execute the command below:"
+        },
+        {
+          "text": "Password : Enter lab@321"
+        },
+        {
+          "text": "Task 4: Creating an Application Load Balancer in AWS CLI",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-08.png"
+          ]
+        },
+        {
+          "text": "For Windows users , SSH into the lab_instance by downloading putty from this link https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html and then enter the following command in the Host Name (or IP address) section:"
+        },
+        {
+          "text": "Host Name : lab_user@<Your IPv4 Public IP address>"
+        },
+        {
+          "text": "Click on Accept"
+        },
+        {
+          "text": "Enter password : lab@321"
+        },
+        {
+          "text": "Port : 22"
+        },
+        {
+          "text": "Task 4: Creating an Application Load Balancer in AWS CLI",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-09.png"
+          ]
+        },
+        {
+          "text": "Once you SSH into the lab_instance, configure your server by executing the below command to eliminate adding the region in each command:aws configure"
+        },
+        {
+          "text": "Once you SSH into the lab_instance, configure your server by executing the below command to eliminate adding the region in each command:"
+        },
+        {
+          "text": "Press enter for both the AWS Access key and AWS Secret key and enter us-east-1 in the Default Region field."
+        },
+        {
+          "text": "AWS Access key ID : Press Enter"
+        },
+        {
+          "text": "AWS Secret Key : Press Enter"
+        },
+        {
+          "text": "Default region name : Enter us-east-1"
+        },
+        {
+          "text": "Default output format : Press Enter"
+        },
+        {
+          "text": "Task 4: Creating an Application Load Balancer in AWS CLI",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-10.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Creating a Load Balancer",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) Region."
+        },
+        {
+          "text": "Go to the EC2 dashboard and select the instance named Instance1. Copy its Subnet ID from the description page to a text file.",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-11.png"
+          ]
+        },
+        {
+          "text": "Task 5: Creating a Load Balancer",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-12.png"
+          ]
+        },
+        {
+          "text": "Similarly, select Instance2 and copy its Subnet ID and store it into a text file.",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-13.png"
+          ]
+        },
+        {
+          "text": "Task 5: Creating a Load Balancer",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-14.png"
+          ]
+        },
+        {
+          "text": "Copy the Security Group ID of the Security Group named loadbalancer_SG and store it into a text file.",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-15.png"
+          ]
+        },
+        {
+          "text": "Task 5: Creating a Load Balancer",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-16.png"
+          ]
+        },
+        {
+          "text": "In the terminal, use the create-load-balancer command to create a load balancer named lab-LB (which includes two subnets in different availability zones, specifically us-east-1a and us-east-1b). Enter the following command into the terminal as shown below:aws elbv2 create-load-balancer --name lab-LB --subnets <Subnet Id of Instance 1> <Subnet Id of Instance 2> --security-groups <Security Group of loadbalancer_SG>"
+        },
+        {
+          "text": "In the terminal, use the create-load-balancer command to create a load balancer named lab-LB (which includes two subnets in different availability zones, specifically us-east-1a and us-east-1b). Enter the following command into the terminal as shown below:"
+        },
+        {
+          "text": "Example: aws elbv2 create-load-balancer --name lab-LB --subnets subnet-09dcfc9d353ee9c5c subnet-067e6abb9582e5805 --security-groups sg-0ef883fe5d7d2575c"
+        },
+        {
+          "text": "Note: Replace the Subnet Id of Instance 1, Subnet Id of Instance 2 and Security Group of loadbalancer_SG with yours."
+        },
+        {
+          "text": "Copy the Load Balancer’s ARN"
+        },
+        {
+          "text": "Task 5: Creating a Load Balancer",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-17.png"
+          ]
+        },
+        {
+          "text": "Go to the EC2 dashboard, click on the Load Balancer (on the left-hand side menu) and see whether the Load Balancer is created. Make sure that the state of the Load Balancer is Active. Wait 5 minutes for the state to change from Provisioning to Active.",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-18.png"
+          ]
+        },
+        {
+          "text": "Task 5: Creating a Load Balancer",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-19.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Creating 2 Target Groups",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) Region."
+        },
+        {
+          "text": "Go to Services and click on EC2. Select Load Balancers from the left-hand side menu."
+        },
+        {
+          "text": "Select lab-LB and copy the VPC-ID to a text file."
+        },
+        {
+          "text": "Task 6: Creating 2 Target Groups",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-20.png"
+          ]
+        },
+        {
+          "text": "Use the create-target-group command to create a target group named TG1, specify the load balancer's VPC ID.aws elbv2 create-target-group --name TG1 --protocol HTTP --port 80 --vpc-id <Load balancer VPC Id>"
+        },
+        {
+          "text": "Use the create-target-group command to create a target group named TG1, specify the load balancer's VPC ID."
+        },
+        {
+          "text": "Example: aws elbv2 create-target-group --name TG1 --protocol HTTP --port 80 --vpc-id vpc-0ec3696a4c41fed32"
+        },
+        {
+          "text": "Note: Replace the Load balancer VPC Id with your value."
+        },
+        {
+          "text": "Task 6: Creating 2 Target Groups",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-21.png"
+          ]
+        },
+        {
+          "text": "Similarly, use the create-target-group command to create another target group named TG2. Specify the same VPC ID as above.aws elbv2 create-target-group --name TG2 --protocol HTTP --port 80 --vpc-id <Load balancer VPC Id>"
+        },
+        {
+          "text": "Similarly, use the create-target-group command to create another target group named TG2. Specify the same VPC ID as above."
+        },
+        {
+          "text": "Example: aws elbv2 create-target-group --name TG2 --protocol HTTP --port 80 --vpc-id vpc-0ec3696a4c41fed32"
+        },
+        {
+          "text": "Note: Replace the Load balancer VPC Id with your value."
+        },
+        {
+          "text": "Task 6: Creating 2 Target Groups",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-22.png"
+          ]
+        },
+        {
+          "text": "From the AWS console, go to the EC2 dashboard, click on Target Groups (on the left-hand side menu). Once the Target Group is created, copy and paste the Target Group ARNs of the target groups TG1 and TG2 (separately) from the description page to a text file."
+        },
+        {
+          "text": "Task 6: Creating 2 Target Groups",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-23.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Register the Targets with their Respective Target groups",
+      "steps": [
+        {
+          "text": "Go to Services, click on EC2 and select the instances one by one and copy the instance ids of Instance1 and Instance2 from the Description Tab to a text file.",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-24.png"
+          ]
+        },
+        {
+          "text": "Task 7: Register the Targets with their Respective Target groups",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-25.png"
+          ]
+        },
+        {
+          "text": "Use register-targets command to register Instance1 with the Target Group TG1.aws elbv2 register-targets --target-group-arn <TG1 ARN> --targets Id=<Instance1 Id>"
+        },
+        {
+          "text": "Use register-targets command to register Instance1 with the Target Group TG1."
+        },
+        {
+          "text": "Example: aws elbv2 register-targets --target-group-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG1/f4619175d2877cd9 --targets Id=i-0d9d44b763709b07d"
+        },
+        {
+          "text": "Note: Replace the TG1 ARN and INSTANCE1 ID with your values for each."
+        },
+        {
+          "text": "Task 7: Register the Targets with their Respective Target groups",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-26.png"
+          ]
+        },
+        {
+          "text": "Similarly, use the register-targets command to register Instance2 with the Target Group TG2.aws elbv2 register-targets --target-group-arn <TG2 ARN> --targets Id=<Instance2 Id>"
+        },
+        {
+          "text": "Similarly, use the register-targets command to register Instance2 with the Target Group TG2."
+        },
+        {
+          "text": "Example: aws elbv2 register-targets --target-group-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG2/1dd2532226541d8c --targets Id=i-016edc45d166c9123"
+        },
+        {
+          "text": "Note: Replace the TG2 ARN and INSTANCE2 ID with your values for each."
+        },
+        {
+          "text": "Task 7: Register the Targets with their Respective Target groups",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-27.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Creating Listener Default Rules",
+      "steps": [
+        {
+          "text": "Use the create-listener command to create a listener default rule to forward the request to Target group TG1.aws elbv2 create-listener --load-balancer-arn <Load Balancer ARN> --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=<TG1 ARN>"
+        },
+        {
+          "text": "Use the create-listener command to create a listener default rule to forward the request to Target group TG1."
+        },
+        {
+          "text": "Example: aws elbv2 create-listener --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:loadbalancer/app/lab-LB/c70ba276f3e59d69 --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG1/f4619175d2877cd9"
+        },
+        {
+          "text": "Note: Replace the Load Balancer ARN and TG1 ARN with your values for each."
+        },
+        {
+          "text": "Task 8: Creating Listener Default Rules",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-28.png"
+          ]
+        },
+        {
+          "text": "Once you have created the listener default rule, navigate to the EC2 Dashboard and click on Load Balancers. Copy the Listeners ARN from the Listeners Tab by hovering over the arn and save it a text file.",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-29.png"
+          ]
+        },
+        {
+          "text": "Task 8: Creating Listener Default Rules",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-30.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Creating Listeners for other rules",
+      "steps": [
+        {
+          "text": "Use the create-listener command along with the Load Balancer listeners ARN to create a listener rule1 to forward the request to TG1 if its URL has images in its path.aws elbv2 create-rule --listener-arn <LB Listeners ARN> --priority 10 --conditions Field=path-pattern,Values='/images/*' --actions Type=forward,TargetGroupArn=<TG1 ARN>"
+        },
+        {
+          "text": "Use the create-listener command along with the Load Balancer listeners ARN to create a listener rule1 to forward the request to TG1 if its URL has images in its path."
+        },
+        {
+          "text": "Example: aws elbv2 create-rule --listener-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:listener/app/lab-LB/c70ba276f3e59d69/12d71a05863d10c1 --priority 10 --conditions Field=path-pattern,Values='/images/*' --actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG1/f4619175d2877cd9"
+        },
+        {
+          "text": "Note: Replace the LB Listeners ARN and TG1 ARN with your values for each."
+        },
+        {
+          "text": "Task 9: Creating Listeners for other rules",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-31.png"
+          ]
+        },
+        {
+          "text": "Use the Create-listener command along with the Load Balancer listener ARN to create a listener rule to forward the request to TG2 if its URL has work in its path. Also kindly make sure the priority for this rule is different from the previous rule we created. aws elbv2 create-rule --listener-arn <LB Listeners ARN> --priority 5 --conditions Field=path-pattern,Values='/work/*' --actions Type=forward,TargetGroupArn=<TG2 ARN>"
+        },
+        {
+          "text": "Use the Create-listener command along with the Load Balancer listener ARN to create a listener rule to forward the request to TG2 if its URL has work in its path. Also kindly make sure the priority for this rule is different from the previous rule we created."
+        },
+        {
+          "text": "Example: aws elbv2 create-rule --listener-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:listener/app/lab-LB/c70ba276f3e59d69/12d71a05863d10c1 --priority 5 --conditions Field=path-pattern,Values='/work/*' --actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG2/1dd2532226541d8c"
+        },
+        {
+          "text": "Note: Replace the LB Listeners ARN and TG2 ARN with your values for each."
+        },
+        {
+          "text": "Task 9: Creating Listeners for other rules",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-32.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 10: Verifying the health of the Target Groups",
+      "steps": [
+        {
+          "text": "Use the describe-target-health command to verify the health status of the Target Group TG1.aws elbv2 describe-target-health --target-group-arn <TG1 ARN>"
+        },
+        {
+          "text": "Use the describe-target-health command to verify the health status of the Target Group TG1."
+        },
+        {
+          "text": "Example: aws elbv2 describe-target-health --target-group-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG1/f4619175d2877cd9"
+        },
+        {
+          "text": "NOTE: Replace the TG1 ARN with your value."
+        },
+        {
+          "text": "Task 10: Verifying the health of the Target Groups",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-33.png"
+          ]
+        },
+        {
+          "text": "Similarly, use the describe-target-health command to verify the health status of the Target Group TG2.aws elbv2 describe-target-health --target-group-arn <TG2 ARN>"
+        },
+        {
+          "text": "Similarly, use the describe-target-health command to verify the health status of the Target Group TG2."
+        },
+        {
+          "text": "Example: aws elbv2 describe-target-health --target-group-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG2/1dd2532226541d8c"
+        },
+        {
+          "text": "NOTE: Replace the TG2 ARN with your value."
+        },
+        {
+          "text": "Task 10: Verifying the health of the Target Groups",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-34.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 11: Verifying the Load balancer rules by accessing the DNS",
+      "steps": [
+        {
+          "text": "Make sure you are in the US East (N. Virginia) Region."
+        },
+        {
+          "text": "Go to Services and select Load Balancer from the EC2 dashboard. Select lab-LB and copy the Load Balancer DNS Name.",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-35.png"
+          ]
+        },
+        {
+          "text": "Task 11: Verifying the Load balancer rules by accessing the DNS",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-36.png"
+          ]
+        },
+        {
+          "text": "Try to access the DNS Name from the Browser and verify that you can able to get the output of Instance1's html page ( i.e it has to serve the request from TG1 because the default listener rule should route the traffic to TG1)."
+        },
+        {
+          "text": "Task 11: Verifying the Load balancer rules by accessing the DNS",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-37.png"
+          ]
+        },
+        {
+          "text": "Now try to access the DNS Name along with the /images/test.html in its path (as given below) and verify that it has to serve the request from Instance1 (i.e if the DNS URL path contains the name \"images\" then it has to route the request to the target group TG1)."
+        },
+        {
+          "text": "Note: Use your Load Balancer DNS Name and append /images/test.html at the end."
+        },
+        {
+          "text": "Task 11: Verifying the Load balancer rules by accessing the DNS",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-38.png"
+          ]
+        },
+        {
+          "text": "Now try to access the DNS Name along with the /work/test.html in its path (as given below) and verify that it has to serve the request from instance2 (i.e if the DNS URL path contains the name \"work\" then it has to route the request to the target group TG2)."
+        },
+        {
+          "text": "Note: Use your Load Balancer DNS Name and append /work/test.html at the end."
+        },
+        {
+          "text": "Task 11: Verifying the Load balancer rules by accessing the DNS",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-39.png"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 12: Validation Test",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output :"
+        },
+        {
+          "text": "Task 12: Validation Test",
+          "images": [
+            "/labs/creating-an-application-load-balancer-from-aws-cli/step-40.gif"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Task 13: Delete AWS Resources",
+      "steps": [
+        {
+          "text": "To delete Application Load Balancer, copy the ARN and replace it in the command below:aws elbv2 delete-load-balancer --load-balancer-arn <Load Balancer ARN> Example: aws elbv2 delete-load-balancer --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:loadbalancer/app/lab-LB/5d9d010d070a48e1"
+        },
+        {
+          "text": "To delete Application Load Balancer, copy the ARN and replace it in the command below:"
+        },
+        {
+          "text": "Example: aws elbv2 delete-load-balancer --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:loadbalancer/app/lab-LB/5d9d010d070a48e1"
+        },
+        {
+          "text": "To delete first target group i.e. TG1, copy the ARN and replace it in the command below:aws elbv2 delete-target-group --target-group-arn <TG1 ARN> Example: aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:targetgroup/TG1/9e2d879c2b029051"
+        },
+        {
+          "text": "To delete first target group i.e. TG1, copy the ARN and replace it in the command below:"
+        },
+        {
+          "text": "Example: aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:targetgroup/TG1/9e2d879c2b029051"
+        },
+        {
+          "text": "To delete second target group i.e. TG copy the ARN and replace it in the command below:aws elbv2 delete-target-group --target-group-arn <TG2 ARN> Example: aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:targetgroup/TG2/04bf266a2aa4c7b9"
+        },
+        {
+          "text": "To delete second target group i.e. TG copy the ARN and replace it in the command below:"
+        },
+        {
+          "text": "Example: aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:targetgroup/TG2/04bf266a2aa4c7b9"
+        },
+        {
+          "text": "To terminate the EC2 Instances, you can terminate all at once:aws ec2 terminate-instances --instance-ids <instance id of Instance1> <instance id of Instance2> <instance id of lab_instance>"
+        },
+        {
+          "text": "To terminate the EC2 Instances, you can terminate all at once:"
+        },
+        {
+          "text": "Example: aws ec2 terminate-instances --instance-ids i-0e3190473a41c6e64 i-05ff676f71f0ed3bf i-08a139e67e9eebaf3"
+        },
+        {
+          "text": "You have successfully created 2 EC2 instances in the default VPC."
+        },
+        {
+          "text": "You have successfully SSH into the already-available lab_instance."
+        },
+        {
+          "text": "You have successfully configured the lab_instance in us-east-1 using AWS CLI commands."
+        },
+        {
+          "text": "You have successfully created an Application Load Balancer using AWS CLI command."
+        },
+        {
+          "text": "You have successfully created 2 Target Groups via AWS CLI command."
+        },
+        {
+          "text": "You have successfully registered EC2 instances with their Target Groups via AWS CLI command."
+        },
+        {
+          "text": "You have successfully created a default listener rule via AWS CLI command."
+        },
+        {
+          "text": "You have successfully created 2 rules to route the traffic to a separate Target Group based on a path using AWS CLI command."
+        },
+        {
+          "text": "You have successfully verified the health of the targets using AWS CLI command."
+        },
+        {
+          "text": "You have successfully accessed the DNS Name of the load balancer from a browser and verified that the routing is done according to the specified rules."
+        },
+        {
+          "text": "Sign out of AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

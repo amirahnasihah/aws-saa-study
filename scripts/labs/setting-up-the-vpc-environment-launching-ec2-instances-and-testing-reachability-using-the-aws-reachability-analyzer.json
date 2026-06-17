@@ -38,6 +38,12 @@
           "text": "Once you're in the VPC service dashboard, click on Your VPCs and then click on Create VPC."
         },
         {
+          "text": "Task 2: Setting Up Your Environment by creating VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-01.png"
+          ]
+        },
+        {
           "text": "Create a new VPC: Name: reachability-test-VPC."
         },
         {
@@ -47,13 +53,31 @@
           "text": "In this case, you're asked to use 10.0.0.0/16 as an example, but you can choose any valid CIDR block that doesn't conflict with your existing network."
         },
         {
-          "text": "Click on the Create VPC button."
+          "text": "Task 2: Setting Up Your Environment by creating VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-02.png"
+          ]
+        },
+        {
+          "text": "Click on the Create VPC button."
+        },
+        {
+          "text": "Task 2: Setting Up Your Environment by creating VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-03.png"
+          ]
         },
         {
           "text": "Within your newly created VPC, you'll need to create two subnets: one public and one private."
         },
         {
-          "text": "To create a subnet, go to the subnets section in the VPC service and click on the Create Subnet button."
+          "text": "To create a subnet, go to the subnets section in the VPC service and click on the Create Subnet button."
+        },
+        {
+          "text": "Task 2: Setting Up Your Environment by creating VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-04.png"
+          ]
         },
         {
           "text": "Specify the VPC you just created, the CIDR block for the subnet"
@@ -65,13 +89,25 @@
           "text": "IPv4 subnet CIDR block: 10.0.1.0/24"
         },
         {
+          "text": "Task 2: Setting Up Your Environment by creating VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-05.png"
+          ]
+        },
+        {
           "text": "Now we are going to create the same steps,"
         },
         {
-          "text": "Subnet name: private subnet"
+          "text": "Subnet name: private subnet"
         },
         {
-          "text": "subnet CIDR block: 10.0.2.0/24"
+          "text": "subnet CIDR block: 10.0.2.0/24"
+        },
+        {
+          "text": "Task 2: Setting Up Your Environment by creating VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-06.png"
+          ]
         },
         {
           "text": "Configure the route tables and internet gateway for the public subnet"
@@ -86,10 +122,22 @@
           "text": "Route Table Name: MY-RT"
         },
         {
+          "text": "Task 2: Setting Up Your Environment by creating VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-07.png"
+          ]
+        },
+        {
           "text": "Next, go to the Internet Gateways section and create a new internet gateway."
         },
         {
           "text": "Internet Gateway Name: My-Internet-Gateway"
+        },
+        {
+          "text": "Task 2: Setting Up Your Environment by creating VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-08.png"
+          ]
         },
         {
           "text": "Once Internet gateway is created Select Actions from the right side and select Attach to VPC."
@@ -99,6 +147,12 @@
         },
         {
           "text": "In the route table, click on Edit routes, then add your internet gateway. The destination should be (0.0.0.0/0), and the target should be the internet gateway."
+        },
+        {
+          "text": "Task 2: Setting Up Your Environment by creating VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-09.png"
+          ]
         }
       ]
     },
@@ -115,10 +169,28 @@
           "text": "Name: Enter MyEC2Server1"
         },
         {
-          "text": "You'll be asked to choose an Amazon Machine Image (AMI) for your instance. Search for Amazon Linux 2023 kernel-6.1 AMI in the search box and select it by clicking on the Select button."
+          "text": "Task 3: Launch two EC2 instances within this VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-10.png"
+          ]
+        },
+        {
+          "text": "You'll be asked to choose an Amazon Machine Image (AMI) for your instance. Search for Amazon Linux 2023 kernel-6.1 AMI in the search box and select it by clicking on the Select button."
+        },
+        {
+          "text": "Task 3: Launch two EC2 instances within this VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-11.png"
+          ]
         },
         {
           "text": "For Instance Type: Select t2.micro"
+        },
+        {
+          "text": "Task 3: Launch two EC2 instances within this VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-12.png"
+          ]
         },
         {
           "text": "You'll need to create a key pair to securely connect to your EC2 instances. Select the Create a new key pair option."
@@ -127,13 +199,19 @@
           "text": "For Key pair(login): Select Create a new key pair Button"
         },
         {
-          "text": "Key pair name: WhizKey"
+          "text": "Key pair name: WhizKey"
         },
         {
           "text": "Key pair type: RSA"
         },
         {
           "text": "Private key file format: .pem"
+        },
+        {
+          "text": "Task 3: Launch two EC2 instances within this VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-13.png"
+          ]
         },
         {
           "text": "In Network Settings Click on Edit Button:"
@@ -157,6 +235,12 @@
           "text": "Description: Enter Security Group to allow traffic to EC2"
         },
         {
+          "text": "Task 3: Launch two EC2 instances within this VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-14.png"
+          ]
+        },
+        {
           "text": "We will now add the security group rules. SSH will already be present there."
         },
         {
@@ -166,7 +250,19 @@
           "text": "Choose Type: Select HTTP Source: Select Anywhere"
         },
         {
+          "text": "Task 3: Launch two EC2 instances within this VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-15.png"
+          ]
+        },
+        {
           "text": "Click Launch Instance."
+        },
+        {
+          "text": "Task 3: Launch two EC2 instances within this VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-16.png"
+          ]
         },
         {
           "text": "Repeat the steps to launch another instance, ensuring it's in the same (reachability-test-VPC) VPC but in the private subnet."
@@ -179,6 +275,12 @@
         },
         {
           "text": "Create a new security group for this instance, allowing inbound traffic from the first instance's security group."
+        },
+        {
+          "text": "Task 3: Launch two EC2 instances within this VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-18.png"
+          ]
         },
         {
           "text": "Security Group for the second EC2 instance (Private):"
@@ -196,7 +298,19 @@
           "text": "Allow All Traffic (or specific ports/protocols) from the MyEC2Server_SG security group"
         },
         {
+          "text": "Task 3: Launch two EC2 instances within this VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-19.png"
+          ]
+        },
+        {
           "text": "Click Launch Instance."
+        },
+        {
+          "text": "Task 3: Launch two EC2 instances within this VPC",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-20.png"
+          ]
         }
       ]
     },
@@ -207,7 +321,19 @@
           "text": "Go to AWS Network Manager you'll see a left-hand side menu. Click on the Reachability Analyzer option and click on create and analyze path."
         },
         {
-          "text": "Name tag: ec2-to-ec2-reachability."
+          "text": "Task 4: Testing Connectivity",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-21.png"
+          ]
+        },
+        {
+          "text": "Name tag: ec2-to-ec2-reachability."
+        },
+        {
+          "text": "Task 4: Testing Connectivity",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-22.png"
+          ]
         },
         {
           "text": "In the source type, select instances and choose the first EC2 instance you created."
@@ -216,10 +342,22 @@
           "text": "In the destination type, select instances and choose the second EC2 instance."
         },
         {
+          "text": "Task 4: Testing Connectivity",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-23.png"
+          ]
+        },
+        {
           "text": "Leave everything as default."
         },
         {
-          "text": "After configuring the source and destination instances, click on the create and analyze path button to run the analysis test."
+          "text": "After configuring the source and destination instances, click on the create and analyze path button to run the analysis test."
+        },
+        {
+          "text": "Task 4: Testing Connectivity",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-24.png"
+          ]
         }
       ]
     },
@@ -227,7 +365,7 @@
       "title": "Task 5: Now We are going to analyze the path to both the source and destination",
       "steps": [
         {
-          "text": "Click on the Analyze path to reach the both source and destination path."
+          "text": "Click on the Analyze path to reach the both source and destination path."
         },
         {
           "text": "click on the confirm button"
@@ -245,12 +383,6 @@
         },
         {
           "text": "If the test result shows unreachable, the Reachability Analyzer will provide detailed information about the issue and potential reasons for the connectivity problem between the two instances."
-        },
-        {
-          "text": "Do you know?"
-        },
-        {
-          "text": "Introducing VPC Reachability Analyzer, a game-changer in AWS network troubleshooting. Unlike traditional methods, it dynamically maps network traffic, providing real-time insights across VPCs and subnets. This end-to-end visibility extends beyond boundaries, automating root cause analysis and integrating seamlessly with AWS services like CloudWatch. Not just troubleshooting, it ensures compliance and security, scaling effortlessly from small deployments to enterprise networks. With its speed, accuracy, and automation, VPC Reachability Analyzer revolutionizes network management in AWS environments."
         }
       ]
     },
@@ -264,10 +396,10 @@
           "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
-        },
-        {
-          "text": "Completion and Conclusion"
+          "text": "Sample output :",
+          "images": [
+            "/labs/setting-up-the-vpc-environment-launching-ec2-instances-and-testing-reachability-using-the-aws-reachability-analyzer/step-25.gif"
+          ]
         },
         {
           "text": "You Have Successfully logged into AWS console."
@@ -280,9 +412,6 @@
         },
         {
           "text": "You Have Successfully created Reachability analyzer"
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign Out Of AWS Account."

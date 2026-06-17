@@ -15,7 +15,7 @@
           "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
-          "text": "On the AWS sign-in page,"
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
@@ -32,49 +32,70 @@
       "title": "Task 2: Create a FSx File System",
       "steps": [
         {
-          "text": "Navigate to the EC2 portal, click Security Groups in the left-hand panel under Network & Security"
+          "text": "Navigate to the EC2 portal, click Security Groups in the left-hand panel under Network & Security"
         },
         {
-          "text": "Then click \"Create Security Group\"."
+          "text": "Task 2: Create a FSx File System",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-01.png"
+          ]
         },
         {
-          "text": "Enter the name as \"FSx_Sg\""
+          "text": "Then click \"Create Security Group\"."
         },
         {
-          "text": "Enter Description as \"Allow Ports to create FSx Security Group\""
+          "text": "Enter the name as \"FSx_Sg\""
+        },
+        {
+          "text": "Enter Description as \"Allow Ports to create FSx Security Group\""
         },
         {
           "text": "Select the default VPC ."
         },
         {
-          "text": "Under Inbound rules, add a rule for"
+          "text": "Task 2: Create a FSx File System",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-02.png"
+          ]
+        },
+        {
+          "text": "Under Inbound rules, add a rule for"
         },
         {
           "text": "SSH Rule:"
         },
         {
-          "text": "Type : SSH, Protocol : TCP, Port Range: 22, Source: Anywhere (0.0.0.0/0)"
+          "text": "Type : SSH, Protocol : TCP, Port Range: 22, Source: Anywhere (0.0.0.0/0)"
         },
         {
           "text": "Custom TCP Rule:"
         },
         {
-          "text": "Type : Custom TCP, Protocol : TCP, Port Range: 988, Source: Anywhere (0.0.0.0/0)"
+          "text": "Type : Custom TCP, Protocol : TCP, Port Range: 988, Source: Anywhere (0.0.0.0/0)"
         },
         {
           "text": "Leave other settings as default."
         },
         {
-          "text": "Note : Port 988 is opened to allow EC2 instances to connect with the Lustre file system."
-        },
-        {
           "text": "Click Create Security Group."
         },
         {
-          "text": "Navigate to FSx. Ensure, you are in the US East (N. Virginia) us-east-1 region to begin launching an EC2 instance in the Amazon cloud."
+          "text": "Task 2: Create a FSx File System",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-03.png"
+          ]
+        },
+        {
+          "text": "Navigate to FSx. Ensure, you are in the US East (N. Virginia) us-east-1 region to begin launching an EC2 instance in the Amazon cloud."
         },
         {
           "text": "Click Create file System."
+        },
+        {
+          "text": "Task 2: Create a FSx File System",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-04.png"
+          ]
         },
         {
           "text": "Step 1: Select File system type"
@@ -86,34 +107,55 @@
           "text": "Click \"Next\"."
         },
         {
+          "text": "Task 2: Create a FSx File System",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-05.png"
+          ]
+        },
+        {
           "text": "Step 2 : Specify File system details"
         },
         {
-          "text": "In the File system name field - Enter Whiz-fxs-File-system"
+          "text": "In the File system name field - Enter Whiz-fxs-File-system"
         },
         {
-          "text": "Choose a Deployment and Storage class as Scratch, SSD"
+          "text": "Choose a Deployment and Storage class as Scratch, SSD"
         },
         {
-          "text": "Select Throughput as 200MB/s/TiB"
+          "text": "Select Throughput as 200MB/s/TiB"
         },
         {
           "text": "Enter Storage capacity : 1.2 TB"
         },
         {
-          "text": "In the Network & Security section, choose the default VPC, and Remove the default Security Group and select the Fsx_sg , Select subnet of us-east-1a Availability Zone."
+          "text": "Task 2: Create a FSx File System",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-06.png"
+          ]
         },
         {
-          "text": "Uncheck the Logging Optional (Log errors ,Log warnings) and Click Next."
+          "text": "In the Network & Security section, choose the default VPC, and Remove the default Security Group and select the Fsx_sg , Select subnet of us-east-1a Availability Zone."
+        },
+        {
+          "text": "Task 2: Create a FSx File System",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-07.png"
+          ]
+        },
+        {
+          "text": "Uncheck the Logging Optional (Log errors ,Log warnings) and Click Next."
+        },
+        {
+          "text": "Task 2: Create a FSx File System",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-08.png"
+          ]
         },
         {
           "text": "Step 3 : Review and Create"
         },
         {
           "text": "Click to Create file system"
-        },
-        {
-          "text": "Note: The FSx for Lustre file system takes 10 to 15 minutes from creation to becoming available."
         }
       ]
     },
@@ -133,7 +175,19 @@
           "text": "Name: Enter EC2Server"
         },
         {
+          "text": "Task 3: Launch an EC2 Instances",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-09.png"
+          ]
+        },
+        {
           "text": "Select Amazon Linux 2023 AMI from the dropdown."
+        },
+        {
+          "text": "Task 3: Launch an EC2 Instances",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-10.png"
+          ]
         },
         {
           "text": "Note: if there are two AMI's present for Amazon Linux 2o23 kernel-6.1 AMI."
@@ -145,7 +199,10 @@
           "text": "For Instance Type: Select t3.micro"
         },
         {
-          "text": "Note: t3.micro is an instance type in AWS that comes with 2 vCPU, and 1GB memory and is suitable for low-traffic web servers, small development environments, and other lightweight applications."
+          "text": "Task 3: Launch an EC2 Instances",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-11.png"
+          ]
         },
         {
           "text": "AWS key pair is a secure pair of keys used for login and access to EC2 instances. It includes a public key placed on the instance and a private key kept on the user's local computer, used for authentication to prevent unauthorized access."
@@ -166,16 +223,40 @@
           "text": "Click the Edit button in the network settings."
         },
         {
+          "text": "Task 3: Launch an EC2 Instances",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-12.png"
+          ]
+        },
+        {
           "text": "Select the default VPC and a subnet in the us-east-1 region."
         },
         {
-          "text": "Enable 'Auto-assign Public IP', Select Existing Security Group, Select FSx_sg, and leave all other settings as default."
+          "text": "Enable 'Auto-assign Public IP', Select Existing Security Group, Select FSx_sg, and leave all other settings as default."
+        },
+        {
+          "text": "Task 3: Launch an EC2 Instances",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-13.png"
+          ]
         },
         {
           "text": "At the top right, set the Number of instances to 2, then click Launch instance."
         },
         {
+          "text": "Task 3: Launch an EC2 Instances",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-14.png"
+          ]
+        },
+        {
           "text": "After creating the EC2 instances, rename the first instance from EC2server to ‘EC2server-1' and the second instance from 'EC2server' to 'EC2server-2'."
+        },
+        {
+          "text": "Task 3: Launch an EC2 Instances",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-15.png"
+          ]
         }
       ]
     },
@@ -186,28 +267,55 @@
           "text": "Use EC2 Instance Connect to access and establish a connection between EC2Server-1 and EC2Server-2 via the browser."
         },
         {
-          "text": "Note : Make sure to connect both EC2Server-1 and EC2Server-2 in separate browser, as below we have shown screenshot for EC2Server-1 alone. Ignore the Error message which pops up!"
+          "text": "Task 4: Mount FSx for Lustre on EC2",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-16.png"
+          ]
         },
         {
           "text": "On Both EC2 instances, Run this commands."
         },
         {
-          "text": "sudo dnf install -y lustre-client"
+          "text": "Task 4: Mount FSx for Lustre on EC2",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-20.png"
+          ]
         },
         {
-          "text": "Go to the FSx file systems page, select the file system we recently created, then click Attach to copy the mount commands."
+          "text": "Go to the FSx file systems page, select the file system we recently created, then click Attach to copy the mount commands."
+        },
+        {
+          "text": "Task 4: Mount FSx for Lustre on EC2",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-21.png"
+          ]
         },
         {
           "text": "Run the mount commands on both EC2 instances."
         },
         {
+          "text": "Task 4: Mount FSx for Lustre on EC2",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-23.png"
+          ]
+        },
+        {
           "text": "Create a text file on EC2-Server-1"
         },
         {
-          "text": "sudo nano /fsx/test.txt"
+          "text": "Task 4: Mount FSx for Lustre on EC2",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-24.png"
+          ]
         },
         {
           "text": "Type “Hello from instance A”"
+        },
+        {
+          "text": "Task 4: Mount FSx for Lustre on EC2",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-25.png"
+          ]
         },
         {
           "text": "Save and exit the file ."
@@ -222,13 +330,10 @@
           "text": "Open EC2-Server-2, run the command, and you should see the message: 'Hello from Instance A'."
         },
         {
-          "text": "sudo cat /fsx/test.txt"
-        },
-        {
-          "text": "Do You Know ?"
-        },
-        {
-          "text": "Amazon FSx for Lustre can deliver sub-millisecond latencies and throughput of hundreds of gigabytes per second. It’s widely used in fields like genomics, financial modeling, and media rendering where fast data access is critical. FSx Lustre can also transparently link to Amazon S3, allowing seamless data transfer between cloud storage and high-performance compute workloads."
+          "text": "Task 4: Mount FSx for Lustre on EC2",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-26.png"
+          ]
         }
       ]
     },
@@ -243,6 +348,12 @@
         },
         {
           "text": "Sample Output:"
+        },
+        {
+          "text": "Task 5: Validation of the Lab",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-27.gif"
+          ]
         }
       ]
     },
@@ -253,10 +364,19 @@
           "text": "Go to the Amazon FSx console, select the 'Whiz-fxs-File-system', then click 'Actions' and choose 'Delete file system'."
         },
         {
+          "text": "Task 6: Delete Fxs file System",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-28.png"
+          ]
+        },
+        {
           "text": "Choose 'No' for creating a final backup, check the acknowledgment box, paste the file system ID into the field, and click 'Delete file system'."
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 6: Delete Fxs file System",
+          "images": [
+            "/labs/configuring-amazon-fsx-for-lustre-with-ec2-instances-for-shared-high-performance-storage-access/step-29.png"
+          ]
         },
         {
           "text": "You successfully created an Amazon FSx for Lustre file system with 1.2 TB capacity."
@@ -269,9 +389,6 @@
         },
         {
           "text": "You successfully created and read files on the EC2 instances using the shared FSx Lustre storage."
-        },
-        {
-          "text": "End Lab"
         },
         {
           "text": "Sign out of AWS Account."

@@ -58,6 +58,7 @@ scripts/debug-q*.html
 scripts/labs/*.sql
 scripts/labs/batch-seed.sql
 scripts/labs/debug-*.html
+scripts/course/video-raw.json
 
 # question capture (local URLs + auth state)
 scripts/question-pages.local.json

@@ -1,0 +1,355 @@
+{
+  "slug": "auditing-resource-compliance-with-aws-config",
+  "title": "Auditing Resource Compliance with AWS config",
+  "level": "Intermediate",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "On the AWS sign-in page,"
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create S3 and SNS",
+      "steps": [
+        {
+          "text": "Click on services and type config and navigate to AWS Config dashboard."
+        },
+        {
+          "text": "Make sure you are in the N.Virginia Region."
+        },
+        {
+          "text": "Click on Get Started."
+        },
+        {
+          "text": "Now complete the settings using below details"
+        },
+        {
+          "text": "Recording strategy: Select : All resource types with customizable overrides Keep rest things as default"
+        },
+        {
+          "text": "Recording strategy:"
+        },
+        {
+          "text": "Select : All resource types with customizable overrides"
+        },
+        {
+          "text": "Keep rest things as default"
+        },
+        {
+          "text": "Task 2: Create S3 and SNS"
+        },
+        {
+          "text": "Delivery Method: Select the Create a bucket and enter your bucket name. Bucket name : Enter Unique bucket name ( Ex: lab34567)"
+        },
+        {
+          "text": "Delivery Method:"
+        },
+        {
+          "text": "Select the Create a bucket and enter your bucket name."
+        },
+        {
+          "text": "Bucket name : Enter Unique bucket name ( Ex: lab34567)"
+        },
+        {
+          "text": "Amazon SNS topic: Check the box Stream configuration changes and then configure the SNS topic Select the Create a Topic Topic name : config_for_securitygroup_change"
+        },
+        {
+          "text": "Amazon SNS topic:"
+        },
+        {
+          "text": "Check the box Stream configuration changes and then configure the SNS topic"
+        },
+        {
+          "text": "Select the Create a Topic"
+        },
+        {
+          "text": "Topic name : config_for_securitygroup_change"
+        },
+        {
+          "text": "Task 2: Create S3 and SNS"
+        },
+        {
+          "text": "Click on Next button."
+        },
+        {
+          "text": "In the next screen, leave as default and then click on Next."
+        },
+        {
+          "text": "Finally, review your config setup and click on Confirm. It will take a few seconds to complete the config rule setup."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: Setting of AWS config Rules",
+      "steps": [
+        {
+          "text": "Go to AWS Config Dashboard in the left panel."
+        },
+        {
+          "text": "Click on Rules under conformance packs."
+        },
+        {
+          "text": "Then click on Add rule on the right top."
+        },
+        {
+          "text": "Task 3: Setting of AWS config Rules"
+        },
+        {
+          "text": "Configure Rule type using below details"
+        },
+        {
+          "text": "Select rule type: Select Add AWS managed rule"
+        },
+        {
+          "text": "Select rule type:"
+        },
+        {
+          "text": "Select Add AWS managed rule"
+        },
+        {
+          "text": "AWS Managed Rules: Type sg in the filter box and then select vpc-sg-open-only-to-authorized-ports as shown in the below screenshot."
+        },
+        {
+          "text": "AWS Managed Rules:"
+        },
+        {
+          "text": "Type sg in the filter box and then select vpc-sg-open-only-to-authorized-ports as shown in the below screenshot."
+        },
+        {
+          "text": "Task 3: Setting of AWS config Rules"
+        },
+        {
+          "text": "Once provided the above details click on Next."
+        },
+        {
+          "text": "In the next screen customize the rule with the below details"
+        },
+        {
+          "text": "Name : SgauthorizingRule"
+        },
+        {
+          "text": "Description : Leave default"
+        },
+        {
+          "text": "Trigger:"
+        },
+        {
+          "text": "Scope of changes: select Resources"
+        },
+        {
+          "text": "Resources: Leave the default AWS EC2 SecurityGroup."
+        },
+        {
+          "text": "Parameters: select the ports you need to add in the rule. In your existing security group you will be added with the ports 22 and 80."
+        },
+        {
+          "text": "Task 3: Setting of AWS config Rules"
+        },
+        {
+          "text": "In case of adding a new rule, you can click on Add another row."
+        },
+        {
+          "text": "After providing above details, click on Next."
+        },
+        {
+          "text": "Finally Click on Save."
+        },
+        {
+          "text": "It will take 4 to 5 minutes for the rule to become available."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Creating and subscribe SNS topic",
+      "steps": [
+        {
+          "text": "Click on services and navigate to Simple Notification Service."
+        },
+        {
+          "text": "Click on Topics in the left panel."
+        },
+        {
+          "text": "Click on the config rule i.e, config_for_securitygroup_change created in the earlier step."
+        },
+        {
+          "text": "Click on Create Subscription in the right bottom."
+        },
+        {
+          "text": "Complete the subscription using below details"
+        },
+        {
+          "text": "Topic ARN : Leave Default"
+        },
+        {
+          "text": "Protocol : Select Email in the drop down."
+        },
+        {
+          "text": "Endpoint : Enter the Email address for subscription ( ex: test@gmail.com)"
+        },
+        {
+          "text": "Finally click on Create Subscription ."
+        },
+        {
+          "text": "Now go to the Inbox of the email provided in the above step and click on confirm subscription to get the alerts as shown below"
+        },
+        {
+          "text": "Task 4: Creating and subscribe SNS topic"
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Checking the status of AWS config",
+      "steps": [
+        {
+          "text": "To check the status of your config rule navigate to AWS config dashboard."
+        },
+        {
+          "text": "Click on Rules under conformance packs and click on the rule create by you."
+        },
+        {
+          "text": "Now, scroll down to the Resources in scope and select Compliant in filter, and you will see one security group with Compliant status."
+        },
+        {
+          "text": "Task 5: Checking the status of AWS config"
+        },
+        {
+          "text": "Thus the above screenshot states that the ports opened in the Security group attached with our running instance satisfy the rule given in the config."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Testing the working of AWS config",
+      "steps": [
+        {
+          "text": "Now click on Services and then navigate to the EC2 dashboard."
+        },
+        {
+          "text": "Click on Security Groups and select the security group named Config_server_SG."
+        },
+        {
+          "text": "Click on Inbound rules and then Edit inbound rules to add some custom ports. ( Ex: 20-21)"
+        },
+        {
+          "text": "Task 6: Testing the working of AWS config"
+        },
+        {
+          "text": "Now add the new port with below details"
+        },
+        {
+          "text": "Type : Select Custom TCP"
+        },
+        {
+          "text": "Protocol : TCP"
+        },
+        {
+          "text": "Port Range : Enter 20-21"
+        },
+        {
+          "text": "Source : 0.0.0.0/0"
+        },
+        {
+          "text": "Click on Save rules."
+        },
+        {
+          "text": "Now navigate to AWS config dashboard and then click on Rules, wait for 1 or 2 minutes, and you could see the status of your rule as Noncompliant resource(s) as shown below"
+        },
+        {
+          "text": "Task 6: Testing the working of AWS config"
+        },
+        {
+          "text": "To check the detailed status, click on the SgauthorizingRule and scroll down a bit and then click on Resources in scope and then click on your security group ID of your noncompliant security group"
+        },
+        {
+          "text": "In the next step click Resource Timeline in the right corner."
+        },
+        {
+          "text": "Task 6: Testing the working of AWS config"
+        },
+        {
+          "text": "To confirm Alert via SNS topic, navigate to the inbox of the email provided at the time of creating SNS topic, and you could see the Alert email from AWS regarding change in your AWS config rule."
+        },
+        {
+          "text": "Task 6: Testing the working of AWS config"
+        },
+        {
+          "text": "Now click on Services and then navigate to the EC2 dashboard and click on Security Groups and select the security group named Config_server_SG and remove the port number 20-21 from the security group and save."
+        },
+        {
+          "text": "Once removed navigate to AWS config dashboard and then click on rule, and you could see the status as Compliant."
+        },
+        {
+          "text": "Now navigate to the Inbox of your email and you could see AWS have sent the email that the rules are under complaint"
+        },
+        {
+          "text": "Task 6: Testing the working of AWS config"
+        }
+      ]
+    },
+    {
+      "title": "Task 7 : Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once The Lab Steps Are Completed, Please Click On The Validation Button On The Left Side Panel."
+        },
+        {
+          "text": "This Will Validate The Resources In The AWS Account And Displays Whether You Have Completed This Lab Successfully Or Not."
+        },
+        {
+          "text": "Sample Output :"
+        },
+        {
+          "text": "Task 7 : Validation of the Lab"
+        },
+        {
+          "text": "You have successfully created the Config rule along with the SNS topic."
+        },
+        {
+          "text": "Modified the security group by adding custom port to get the alert from AWS regarding change in config rule."
+        },
+        {
+          "text": "Successfully tested the working of config rule."
+        },
+        {
+          "text": "Revert back the changes by removing the ports added to make the rule complaint."
+        },
+        {
+          "text": "Successfully received the email from AWS stating the AWS config rules with non compliant. resources."
+        },
+        {
+          "text": "Sign out from the AWS Account."
+        },
+        {
+          "text": "You have successfully completed the lab."
+        },
+        {
+          "text": "Once you have completed the steps click on End Lab from the lab console"
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}

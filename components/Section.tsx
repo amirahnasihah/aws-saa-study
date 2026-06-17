@@ -25,7 +25,7 @@ export default function Section({ section }: SectionProps) {
       </div>
 
       {section.services.map((service) => (
-        <ServiceCard key={service.shortName} service={service} category={section.category} />
+        <ServiceCard key={service.shortName} service={service} category={section.category} sectionId={section.id} />
       ))}
     </section>
   )

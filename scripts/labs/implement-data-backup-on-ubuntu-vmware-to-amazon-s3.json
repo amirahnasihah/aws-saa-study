@@ -1,0 +1,185 @@
+{
+  "slug": "implement-data-backup-on-ubuntu-vmware-to-amazon-s3",
+  "title": "Implement Data Backup on Ubuntu VMware to Amazon S3",
+  "level": "Fundamental",
+  "services": [
+    "AWS"
+  ],
+  "summary": "",
+  "duration": "00:45:00",
+  "tasks": [
+    {
+      "title": "Task 1: Sign in to AWS Management Console",
+      "steps": [
+        {
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+        },
+        {
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+        },
+        {
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+        }
+      ]
+    },
+    {
+      "title": "Task 2: Create a S3 Bucket in the AWS console",
+      "steps": [
+        {
+          "text": "Log into the AWS portal, Navigate to the S3 bucket creation."
+        },
+        {
+          "text": "Click Create Bucket."
+        },
+        {
+          "text": "Task 2: Create a S3 Bucket in the AWS console"
+        },
+        {
+          "text": "Bucket name: Enter any unique name of your choice(Bucket name needs to be globally unique)"
+        },
+        {
+          "text": "Task 2: Create a S3 Bucket in the AWS console"
+        },
+        {
+          "text": "Uncheck Block all public access and check the acknowledge button."
+        },
+        {
+          "text": "Scroll down to the bottom of the page, click “Create bucket” to complete the bucket creation."
+        }
+      ]
+    },
+    {
+      "title": "Task 3: View your file directory of VM before Migration",
+      "steps": [
+        {
+          "text": "Start your Ubuntu Virtual Machine."
+        },
+        {
+          "text": "Open the browser in the VM and type \"file:///\" in the search bar."
+        },
+        {
+          "text": "Click home directory in the list."
+        },
+        {
+          "text": "These directories are going to be migrated."
+        }
+      ]
+    },
+    {
+      "title": "Task 4: Install Python and AWS cli in the Local-Ubuntu Virtual Machine",
+      "steps": [
+        {
+          "text": "In this task, we install the Python and AWS cli in the VM."
+        },
+        {
+          "text": "Open a terminal in the Virtual Machine, Installs the Python Packages and AWS CLI by executing commands one-by-one:"
+        },
+        {
+          "text": "Configure the AWS CLI with Access key and secret Key ."
+        }
+      ]
+    },
+    {
+      "title": "Task 5: Create a virtual environment for python and Install Boto3",
+      "steps": [
+        {
+          "text": "Execute this command to create a virtual environement"
+        },
+        {
+          "text": "Activate the Virtual Environment."
+        },
+        {
+          "text": "Install the boto3 in Virtual Environment."
+        }
+      ]
+    },
+    {
+      "title": "Task 6: Create Python script with Boto3 for migration",
+      "steps": [
+        {
+          "text": "Execute this command in the terminal to create a Python file."
+        },
+        {
+          "text": "Which opens the new tab in the terminal itself, paste this code."
+        },
+        {
+          "text": "Press ctrl + O, then Enter, Press ctrl + X to save and exit file."
+        }
+      ]
+    },
+    {
+      "title": "Task 7: Execute the script to migrate the S3 bucket",
+      "steps": [
+        {
+          "text": "In this task, we execute the migration script of boto3 for uploading to S3 bucket"
+        },
+        {
+          "text": "Execute this command, this creates a list that preserves structure of directories, remember to replace your bucket name."
+        },
+        {
+          "text": "This command exactly upload the directories with files and folders to the bucket"
+        }
+      ]
+    },
+    {
+      "title": "Task 8: Verify the Migration in AWS console",
+      "steps": [
+        {
+          "text": "Navigate to the AWS S3 Bucket in the console."
+        },
+        {
+          "text": "Check your bucket you have the folder \"vm-home-backup\""
+        },
+        {
+          "text": "Click on the folder, there you have the directories been migrated to your S3 bucket."
+        }
+      ]
+    },
+    {
+      "title": "Task 9: Validation of the Lab",
+      "steps": [
+        {
+          "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+        },
+        {
+          "text": "This will validate the resources in the AWS account and show you whether you have completed this lab successfully or not."
+        },
+        {
+          "text": "Sample output:"
+        },
+        {
+          "text": "You have successfully logged into AWS portal"
+        },
+        {
+          "text": "You have successfully created a S3 bucket"
+        },
+        {
+          "text": "You have successfully installed the python and AWS CLI"
+        },
+        {
+          "text": "You have successfully written boto3 script"
+        },
+        {
+          "text": "You have successfully migrated the directories to S3 bucket"
+        },
+        {
+          "text": "Sign out of the AWS Console."
+        },
+        {
+          "text": "Confirm that resources are working as expected or clean them up if needed."
+        },
+        {
+          "text": "You have completed the Lab."
+        }
+      ]
+    }
+  ],
+  "takeaways": [],
+  "source": "course"
+}
