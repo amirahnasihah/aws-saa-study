@@ -433,11 +433,12 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Migration & Transfer (Quiz) (5Q) — target ≥80%
 
 ### Must be able to answer
-- [ ] Snow Family: Snowcone / Snowball Edge / Snowmobile — pick by data size; when vs network transfer
-- [ ] **DMS**: homogeneous vs heterogeneous (+ Schema Conversion Tool); continuous replication
-- [ ] **DataSync**: online on-prem (NFS/SMB) → S3/EFS/FSx, scheduled
-- [ ] Transfer Family: SFTP/FTPS/FTP into S3/EFS
-- [ ] Migration Hub — tracks migrations across tools
+- [ ] Snow Family: Snowcone (8-14TB) / Snowball Edge Storage (210TB) / Compute (28TB, 104 vCPUs) — pick by data size + compute need; >1 week via internet → Snow
+- [ ] **DMS**: homogeneous vs heterogeneous (+ Schema Conversion Tool); CDC for continuous replication; Multi-AZ replication instance
+- [ ] **DataSync**: online on-prem (NFS/SMB/HDFS) → S3/EFS/FSx; EFS cross-region replication via private network; scheduled + auto-verify
+- [ ] Transfer Family: managed SFTP/FTPS/FTP/AS2 endpoints → S3/EFS; legacy protocol support, no code change
+- [ ] Migration Hub: tracks migrations across tools (DMS, MGN, DataSync) — does NOT migrate; home region; Strategy Recommendations; Orchestrator
+- [ ] **MGN vs DMS vs DataSync**: MGN = server lift-and-shift; DMS = database; DataSync = file/object transfer
 
 ---
 
@@ -452,11 +453,13 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] 📄 AWS SAA-C03 Exam-Prep Cheat Sheet
 
 ### Must be able to answer
-- [ ] Cost Explorer (visualize/forecast) vs AWS Budgets (alert on cost/usage threshold)
-- [ ] Cost allocation tags
+- [ ] Cost Explorer (visualize/forecast up to 12 months, anomaly detection, RI/SP recommendations) vs AWS Budgets (ALERT on cost/usage threshold, Budget Actions)
+- [ ] Cost allocation tags (user-defined + AWS-generated, activate in billing console)
 - [ ] **On-Demand vs Reserved Instances vs Savings Plans vs Spot** — pick per workload
-- [ ] Consolidated billing (Organizations): volume discounts, shared RIs
+- [ ] Consolidated billing (Organizations): volume discounts, shared RIs across accounts
 - [ ] Storage cost levers: S3 lifecycle, Intelligent-Tiering (cross-ref Storage)
+- [ ] Cost and Usage Report (CUR): most detailed line-item billing data → S3 → Athena/QuickSight for deep analysis
+- [ ] Compute Optimizer (ML-based rightsizing) vs Trusted Advisor (broad checks: cost, security, perf, limits)
 
 ---
 
