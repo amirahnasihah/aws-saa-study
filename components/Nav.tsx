@@ -7,6 +7,10 @@ import { navDomains } from '@/data/awsServices'
 import { navTransitionTypes } from '@/lib/nav-transition'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import FloatingSearch from './FloatingSearch'
+import AccountMenu from './nav/AccountMenu'
+import BrowseServicesMenu from './nav/BrowseServicesMenu'
+import SignInButton from './nav/SignInButton'
+import { LogOutIcon } from './nav/icons'
 
 interface NavProps {
   activePage?: 'cheatsheet' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc' | 'labs' | 'ai'
@@ -35,53 +39,40 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
 
   return (
     <>
-      {/* ── Desktop nav ── */}
+      {/* ── Desktop nav: brand · primary nav · account ── */}
       <nav
         style={siteHeaderTransition}
-        className="nav-scroll hidden md:flex fixed top-0 left-0 right-0 h-14 z-50 items-center gap-2 px-4 overflow-x-auto bg-aws-bg/92 backdrop-blur-md border-b border-aws-border"
+        className="hidden md:flex fixed top-0 left-0 right-0 h-14 z-50 items-center gap-1 px-4 bg-aws-bg/92 backdrop-blur-md border-b border-aws-border"
       >
+        {/* Zone 1 — brand */}
         <Link
           href="/about"
-          className="font-space-mono text-[0.7rem] font-bold text-c1 whitespace-nowrap mr-2 pr-2 border-r border-aws-border shrink-0 hover:text-aws-text transition-colors"
+          className="font-space-mono text-[0.7rem] font-bold text-c1 whitespace-nowrap mr-2 pr-3 border-r border-aws-border shrink-0 hover:text-aws-text transition-colors"
         >
           AWS SAA-C03
         </Link>
 
-        <PageLink pathname={pathname} href="/" label="Cheat Sheet" active={activePage === 'cheatsheet'} />
-        <PageLink pathname={pathname} href="/learn" label="Deep Notes" active={activePage === 'learn'} />
-        {userEmail && <PageLink pathname={pathname} href="/practice" label="Practice" active={activePage === 'practice'} />}
-        {userEmail && <PageLink pathname={pathname} href="/scenarios" label="Scenarios" active={activePage === 'scenarios'} />}
-        <PageLink pathname={pathname} href="/visual" label="Visual" active={activePage === 'visual'} />
-        <PageLink pathname={pathname} href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
-        {userEmail && <PageLink pathname={pathname} href="/labs" label="Labs" active={activePage === 'labs'} />}
-        {userEmail ? (
-          <button
-            onClick={handleSignOut}
-            className="font-space-mono text-[0.6rem] uppercase tracking-widest px-2 py-1 rounded-md border border-transparent text-aws-muted hover:text-aws-text hover:bg-white/5 transition-all whitespace-nowrap"
-          >
-            Sign out
-          </button>
-        ) : (
-          <PageLink pathname={pathname} href="/auth/login" label="Sign in" active={false} />
-        )}
-        {userEmail && <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="icon" />}
+        {/* Zone 2 — primary nav */}
+        <div className="flex items-center gap-1 min-w-0">
+          <PageLink pathname={pathname} href="/" label="Cheat Sheet" active={activePage === 'cheatsheet'} />
+          <PageLink pathname={pathname} href="/learn" label="Deep Notes" active={activePage === 'learn'} />
+          <BrowseServicesMenu />
+          {userEmail && <PageLink pathname={pathname} href="/practice" label="Practice" active={activePage === 'practice'} />}
+          {userEmail && <PageLink pathname={pathname} href="/scenarios" label="Scenarios" active={activePage === 'scenarios'} />}
+          <PageLink pathname={pathname} href="/visual" label="Visual" active={activePage === 'visual'} />
+          <PageLink pathname={pathname} href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
+          {userEmail && <PageLink pathname={pathname} href="/labs" label="Labs" active={activePage === 'labs'} />}
+          {userEmail && <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="icon" />}
+        </div>
 
-        <span className="text-aws-border text-sm shrink-0">·</span>
-
-        {navDomains.map((domain, di) => (
-          <div key={domain.href} className="flex items-center gap-1.5 shrink-0">
-            {di > 0 && <span className="text-aws-border text-sm">·</span>}
-            <a href={domain.href} className={`font-space-mono text-[0.65rem] font-bold uppercase tracking-widest whitespace-nowrap px-2 py-1 rounded-md transition-all hover:bg-white/5 hover:text-aws-text border border-transparent ${domain.colorClass}`}>
-              {domain.label}
-            </a>
-            <span className="text-aws-border text-sm">|</span>
-            {domain.items.map((item) => (
-              <a key={item.href} href={item.href} className={`font-space-mono text-[0.6rem] whitespace-nowrap px-2 py-1 rounded-full transition-all hover:bg-white/6 border ${item.className}`}>
-                {item.label}
-              </a>
-            ))}
-          </div>
-        ))}
+        {/* Zone 3 — account */}
+        <div className="ml-auto flex items-center pl-2 shrink-0">
+          {userEmail ? (
+            <AccountMenu email={userEmail} onSignOut={handleSignOut} />
+          ) : (
+            <SignInButton />
+          )}
+        </div>
       </nav>
 
       {/* ── Mobile nav ── */}
@@ -122,6 +113,33 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                 </svg>
               </button>
             </div>
+
+            {/* account block */}
+            <div className="px-4 py-4 border-b border-aws-border/60">
+              {userEmail ? (
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-c1/40 bg-c1/15 font-space-mono text-[0.8rem] font-bold text-c1">
+                    {userEmail.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="font-space-mono text-[0.55rem] uppercase tracking-widest text-aws-muted">Signed in</p>
+                    <p className="truncate text-[0.8rem] text-aws-text" title={userEmail}>{userEmail}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={async () => { await handleSignOut(); setMenuOpen(false) }}
+                    className="signout-item ml-auto flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-aws-border text-aws-muted transition-all hover:bg-white/5 hover:text-aws-text"
+                    aria-label="Sign out"
+                    title="Sign out"
+                  >
+                    <LogOutIcon />
+                  </button>
+                </div>
+              ) : (
+                <SignInButton fullWidth />
+              )}
+            </div>
+
             {/* page links */}
             <div className="px-4 py-3 border-b border-aws-border/60 space-y-1">
               {[
@@ -138,9 +156,6 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                 ...(userEmail
                   ? [{ href: '/labs', label: 'Labs', icon: '🧪', active: activePage === 'labs' }]
                   : []),
-                ...(userEmail
-                  ? []
-                  : [{ href: '/auth/login', label: 'Sign in', icon: '🔐', active: false }]),
                 ...(userEmail
                   ? [{ href: '/ai', label: 'Ask AI', icon: '✦', active: activePage === 'ai' }]
                   : []),
@@ -165,18 +180,13 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                   {p.active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-c1" />}
                 </Link>
               ))}
-              {userEmail && (
-                <button
-                  onClick={async () => { await handleSignOut(); setMenuOpen(false) }}
-                  className="flex items-center gap-3 w-full px-3 py-2 rounded-lg transition-all text-aws-muted hover:bg-white/4 hover:text-aws-text"
-                >
-                  <span className="text-base leading-none">👋</span>
-                  <span className="font-space-mono text-[0.68rem] uppercase tracking-widest">Sign out</span>
-                </button>
-              )}
             </div>
 
+            {/* browse services */}
             <div className="p-4 space-y-5">
+              <p className="font-space-mono text-[0.6rem] uppercase tracking-[0.2em] text-aws-muted">
+                Browse Services
+              </p>
               {navDomains.map((domain) => (
                 <div key={domain.href}>
                   <a href={domain.href} onClick={() => setMenuOpen(false)} className={`block font-space-mono text-[0.7rem] font-bold uppercase tracking-widest mb-2 ${domain.colorClass}`}>
