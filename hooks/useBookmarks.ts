@@ -1,10 +1,13 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 
 const KEY = 'aws-bookmarks'
+const SCHEMA = 'aws_study_notes'
+const TABLE = 'service_bookmarks'
 
-function load(): Set<string> {
+function loadLocal(): Set<string> {
   if (typeof window === 'undefined') return new Set()
   try {
     const raw = localStorage.getItem(KEY)
@@ -14,23 +17,89 @@ function load(): Set<string> {
   }
 }
 
-function save(set: Set<string>) {
+function saveLocal(set: Set<string>) {
   localStorage.setItem(KEY, JSON.stringify([...set]))
 }
 
 export function useBookmarks() {
   const [bookmarks, setBookmarks] = useState<Set<string>>(() => new Set())
+  const userIdRef = useRef<string | null>(null)
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setBookmarks(load())
+    const supabase = createSupabaseBrowserClient()
+
+    const init = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) {
+        setBookmarks(loadLocal())
+        return
+      }
+
+      userIdRef.current = user.id
+
+      const { data } = await supabase
+        .schema(SCHEMA)
+        .from(TABLE)
+        .select('short_name')
+        .eq('user_id', user.id)
+
+      if (data && data.length > 0) {
+        const remote = new Set(data.map((r: { short_name: string }) => r.short_name))
+        const local = loadLocal()
+        const merged = new Set([...remote, ...local])
+
+        if (local.size > 0 && ![...local].every((s) => remote.has(s))) {
+          const toInsert = [...local]
+            .filter((s) => !remote.has(s))
+            .map((short_name) => ({ user_id: user.id, short_name }))
+          if (toInsert.length > 0) {
+            await supabase.schema(SCHEMA).from(TABLE).insert(toInsert)
+          }
+        }
+
+        saveLocal(merged)
+        setBookmarks(merged)
+      } else {
+        const local = loadLocal()
+        if (local.size > 0) {
+          const toInsert = [...local].map((short_name) => ({ user_id: user.id, short_name }))
+          await supabase.schema(SCHEMA).from(TABLE).insert(toInsert)
+        }
+        setBookmarks(local)
+      }
+    }
+
+    init()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const toggle = useCallback((shortName: string) => {
     setBookmarks((prev) => {
       const next = new Set(prev)
-      if (next.has(shortName)) { next.delete(shortName) } else { next.add(shortName) }
-      save(next)
+      const removing = next.has(shortName)
+      if (removing) { next.delete(shortName) } else { next.add(shortName) }
+      saveLocal(next)
+
+      if (userIdRef.current) {
+        const supabase = createSupabaseBrowserClient()
+        if (removing) {
+          supabase
+            .schema(SCHEMA)
+            .from(TABLE)
+            .delete()
+            .eq('user_id', userIdRef.current)
+            .eq('short_name', shortName)
+            .then()
+        } else {
+          supabase
+            .schema(SCHEMA)
+            .from(TABLE)
+            .insert({ user_id: userIdRef.current, short_name: shortName })
+            .then()
+        }
+      }
+
       return next
     })
   }, [])
