@@ -50,10 +50,10 @@
           ]
         },
         {
-          "text": "Bucket name: Enter lab1234567 Note: S3 Bucket names are globally unique, choose a name that is available."
+          "text": "Bucket name: Enter <example-password>4567 Note: S3 Bucket names are globally unique, choose a name that is available."
         },
         {
-          "text": "Bucket name: Enter lab1234567"
+          "text": "Bucket name: Enter <example-password>4567"
         },
         {
           "text": "Note: S3 Bucket names are globally unique, choose a name that is available."

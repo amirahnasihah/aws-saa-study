@@ -714,7 +714,7 @@
           "text": "DB cluster identifier: Specify cluster identifier name as lab-identifier"
         },
         {
-          "text": "In credential settings Master Username: Enter lab_admin Master password: Enter lab123 Confirm password: Enter lab123 Note: These are the username and password used to log on to your database. Please make note of them."
+          "text": "In credential settings Master Username: Enter lab_admin Master password: Enter <example-password> Confirm password: Enter <example-password> Note: These are the username and password used to log on to your database. Please make note of them."
         },
         {
           "text": "In credential settings"
@@ -723,10 +723,10 @@
           "text": "Master Username: Enter lab_admin"
         },
         {
-          "text": "Master password: Enter lab123"
+          "text": "Master password: Enter <example-password>"
         },
         {
-          "text": "Confirm password: Enter lab123"
+          "text": "Confirm password: Enter <example-password>"
         },
         {
           "text": "Note: These are the username and password used to log on to your database. Please make note of them."
@@ -851,7 +851,7 @@
           "text": "User name: lab_admin"
         },
         {
-          "text": "Enter the Password: lab123"
+          "text": "Enter the Password: <example-password>"
         },
         {
           "text": "Database name: labrds"

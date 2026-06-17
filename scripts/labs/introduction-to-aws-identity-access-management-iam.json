@@ -50,7 +50,7 @@
           "text": "Check the Provide user access to the AWS Management Console - optional checkbox"
         },
         {
-          "text": "Select Custom password under Console Password and Enter lab@123 (or the desired password for the user)"
+          "text": "Select Custom password under Console Password and Enter <example-password> (or the desired password for the user)"
         },
         {
           "text": "Uncheck the Users must create a new password at the next sign-in (recommended) checkbox."
@@ -86,7 +86,7 @@
           "text": "Repeat the steps to create IAM users by the name Ted and Rita with the following details,"
         },
         {
-          "text": "Custom password: lab@123"
+          "text": "Custom password: <example-password>"
         },
         {
           "text": "Key: HR-Team"

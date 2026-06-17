@@ -18328,7 +18328,7 @@ export const labsCatalog: Lab[] = [
             "text": "Bucket Type select : General purpose"
           },
           {
-            "text": "Bucket name: Enter lab123"
+            "text": "Bucket name: Enter <example-password>"
           },
           {
             "text": "Note: S3 Bucket names are globally unique, choose a name that is available. Maybe you can enter your name and create one."
@@ -20544,7 +20544,7 @@ export const labsCatalog: Lab[] = [
             "text": "Master username : Enter rdsuser"
           },
           {
-            "text": "Master password and Confirm password: Enter lab123"
+            "text": "Master password and Confirm password: Enter <example-password>"
           },
           {
             "text": "Note: This is the username/password combo used to log onto your database. Please make note of them somewhere safe."
@@ -20678,7 +20678,7 @@ export const labsCatalog: Lab[] = [
             "text": "Switch to the root user using the command:"
           },
           {
-            "text": "Connect to the MySQL RDS Instance with the following command: Syntax: mysql -h <mysql-instance-dns> -u <username> -p In our case: mysql -h mydbinstance.c1sh5a4j91dp.us-east-1.rds.amazonaws.com -u rdsuser -p Password : Enter lab123"
+            "text": "Connect to the MySQL RDS Instance with the following command: Syntax: mysql -h <mysql-instance-dns> -u <username> -p In our case: mysql -h mydbinstance.c1sh5a4j91dp.us-east-1.rds.amazonaws.com -u rdsuser -p Password : Enter <example-password>"
           },
           {
             "text": "Connect to the MySQL RDS Instance with the following command:"
@@ -20690,7 +20690,7 @@ export const labsCatalog: Lab[] = [
             "text": "In our case: mysql -h mydbinstance.c1sh5a4j91dp.us-east-1.rds.amazonaws.com -u rdsuser -p"
           },
           {
-            "text": "Password : Enter lab123"
+            "text": "Password : Enter <example-password>"
           },
           {
             "text": "You will enter the MYSQL command line."
@@ -33646,10 +33646,10 @@ export const labsCatalog: Lab[] = [
             "text": "Credentials management: Select Self managed"
           },
           {
-            "text": "Master password: Enter lab123"
+            "text": "Master password: Enter <example-password>"
           },
           {
-            "text": "Confirm password: Enter lab123"
+            "text": "Confirm password: Enter <example-password>"
           },
           {
             "text": "Note: This is the username and password used to log into your database. Please make note of them.",
@@ -33898,7 +33898,7 @@ export const labsCatalog: Lab[] = [
             "text": "Username : Enter labAdmin"
           },
           {
-            "text": "Password : Enter lab123 (Use yours incase you changed the password while creating RDS)"
+            "text": "Password : Enter <example-password> (Use yours incase you changed the password while creating RDS)"
           },
           {
             "text": "You should now be able to log into the database,"
@@ -34037,7 +34037,7 @@ export const labsCatalog: Lab[] = [
             "text": "mysql -h myauroracluster.cluster-ro-cjp5t9qppjnx.us-east-1.rds.amazonaws.com -u labAdmin -p"
           },
           {
-            "text": "Password: Enter lab123"
+            "text": "Password: Enter <example-password>"
           },
           {
             "text": "You will be able to Log into MySQL and check for the database and table created in the master DB instance before the failover."
@@ -34370,10 +34370,10 @@ export const labsCatalog: Lab[] = [
             "text": "UNIX Password: password"
           },
           {
-            "text": "New Password: lab@123"
+            "text": "New Password: <example-password>"
           },
           {
-            "text": "Retype New Password: lab@123"
+            "text": "Retype New Password: <example-password>"
           },
           {
             "text": "Task 3: Import the .ova file via VMware"
@@ -34473,7 +34473,7 @@ export const labsCatalog: Lab[] = [
             "text": "Task 5: Create an S3 bucket and configure it for file sharing"
           },
           {
-            "text": "In the User Authentication section, click Configure on the right side, set the password to lab@123, then click Save and Create file share."
+            "text": "In the User Authentication section, click Configure on the right side, set the password to <example-password>, then click Save and Create file share."
           },
           {
             "text": "Task 5: Create an S3 bucket and configure it for file sharing"
@@ -34527,7 +34527,7 @@ export const labsCatalog: Lab[] = [
             "text": "User name : smbguest"
           },
           {
-            "text": "Password : lab@123"
+            "text": "Password : <example-password>"
           },
           {
             "text": "Click Enter"
@@ -38046,7 +38046,7 @@ export const labsCatalog: Lab[] = [
             "text": "Click on the Custom password."
           },
           {
-            "text": "Give the following password: lab@123"
+            "text": "Give the following password: <example-password>"
           },
           {
             "text": "Uncheck the Users must create a new password at the next sign-in. Click on Next."
@@ -38091,7 +38091,7 @@ export const labsCatalog: Lab[] = [
             "text": "Click on the Custom password"
           },
           {
-            "text": "Give the following password: 123@lab"
+            "text": "Give the following password: <example-password>"
           },
           {
             "text": "Uncheck the Users must create a new password at the next sign-in. Click on Next."
@@ -38676,10 +38676,10 @@ export const labsCatalog: Lab[] = [
             "text": "Master username: Enter lab"
           },
           {
-            "text": "Master password: Enter lab123"
+            "text": "Master password: Enter <example-password>"
           },
           {
-            "text": "Confirm password: Enter lab123"
+            "text": "Confirm password: Enter <example-password>"
           },
           {
             "text": "Note - Make sure the master and confirm passwords should be the same. Make a note of the username and password for later use."
@@ -38837,7 +38837,7 @@ export const labsCatalog: Lab[] = [
             "text": "You need both the endpoint and the port number to connect to the DB instance."
           },
           {
-            "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon. Connection Name : Enter a sample name MyDBConnection. Host Name: Enter the endpoint: demo-db.c03iqoooef9u.us-east-1.rds.amazonaws.comPort: 3306 Username: Enter lab Password: Click on Store in Vault option and enter a password - lab123. Click on Ok."
+            "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon. Connection Name : Enter a sample name MyDBConnection. Host Name: Enter the endpoint: demo-db.c03iqoooef9u.us-east-1.rds.amazonaws.comPort: 3306 Username: Enter lab Password: Click on Store in Vault option and enter a password - <example-password>. Click on Ok."
           },
           {
             "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon."
@@ -38855,7 +38855,7 @@ export const labsCatalog: Lab[] = [
             "text": "Username: Enter lab"
           },
           {
-            "text": "Password: Click on Store in Vault option and enter a password - lab123. Click on Ok."
+            "text": "Password: Click on Store in Vault option and enter a password - <example-password>. Click on Ok."
           },
           {
             "text": "Task 6: Connect to RDS Database using the MySQL Workbench",
@@ -40385,7 +40385,7 @@ export const labsCatalog: Lab[] = [
             "text": "Select Bucket Type : General purpose"
           },
           {
-            "text": "Bucket name: Enter lab1230"
+            "text": "Bucket name: Enter <example-password>0"
           },
           {
             "text": "Note: S3 bucket name is globally unique, choose a name that is available."
@@ -40627,7 +40627,7 @@ export const labsCatalog: Lab[] = [
             "text": "In this task , we will be creating VPC stack using the pre-created cloudformation template in the S3 bucket."
           },
           {
-            "text": "Search for S3 by click on Services in the top menu, then click on S3 in the Storage section. You will see a bucket name starting with \"lab\" with numeric digits appended to the end, like lab1234564543. Open that bucket and click on the object named VPC_template.json. Next, copy the Object URL to the clipboard for use in the CloudFormation template.",
+            "text": "Search for S3 by click on Services in the top menu, then click on S3 in the Storage section. You will see a bucket name starting with \"lab\" with numeric digits appended to the end, like <example-password>4564543. Open that bucket and click on the object named VPC_template.json. Next, copy the Object URL to the clipboard for use in the CloudFormation template.",
             "images": [
               "/labs/how-to-create-virtual-private-cloud-vpc-with-aws-cloudformation/step-01.png"
             ]
@@ -40636,7 +40636,7 @@ export const labsCatalog: Lab[] = [
             "text": "Search for S3 by click on Services in the top menu, then click on S3 in the Storage section."
           },
           {
-            "text": "You will see a bucket name starting with \"lab\" with numeric digits appended to the end, like lab1234564543."
+            "text": "You will see a bucket name starting with \"lab\" with numeric digits appended to the end, like <example-password>4564543."
           },
           {
             "text": "Open that bucket and click on the object named VPC_template.json."
@@ -40731,7 +40731,7 @@ export const labsCatalog: Lab[] = [
         "title": "Task 3: Creating Subnets using the VPC II Template cloudformation stack",
         "steps": [
           {
-            "text": "Search for S3 by clicking on Services in the top menu, then click on S3 in the Storage section. You will see a bucket name starting with lab with numeric digits appended to the end, like lab1234564543. Open that bucket and click on the object named VPC_II_template.json. Now, copy the Object URL to the clipboard for use in CloudFormation template.",
+            "text": "Search for S3 by clicking on Services in the top menu, then click on S3 in the Storage section. You will see a bucket name starting with lab with numeric digits appended to the end, like <example-password>4564543. Open that bucket and click on the object named VPC_II_template.json. Now, copy the Object URL to the clipboard for use in CloudFormation template.",
             "images": [
               "/labs/how-to-create-virtual-private-cloud-vpc-with-aws-cloudformation/step-11.png"
             ]
@@ -40740,7 +40740,7 @@ export const labsCatalog: Lab[] = [
             "text": "Search for S3 by clicking on Services in the top menu, then click on S3 in the Storage section."
           },
           {
-            "text": "You will see a bucket name starting with lab with numeric digits appended to the end, like lab1234564543."
+            "text": "You will see a bucket name starting with lab with numeric digits appended to the end, like <example-password>4564543."
           },
           {
             "text": "Open that bucket and click on the object named VPC_II_template.json."
@@ -42638,7 +42638,7 @@ export const labsCatalog: Lab[] = [
             "text": "Credentials management: select Self managed"
           },
           {
-            "text": "Master password and Confirm master password: Enter lab123"
+            "text": "Master password and Confirm master password: Enter <example-password>"
           },
           {
             "text": "Task 2: Create an RDS DB Instance (without enabling the Encryption)",
@@ -43410,7 +43410,7 @@ export const labsCatalog: Lab[] = [
             "text": "Credentials management: Select Self managed"
           },
           {
-            "text": "Master password and Confirm password: mydatabasepassword"
+            "text": "Master password and Confirm password: <example-password>"
           },
           {
             "text": "Task 3: Create RDS Database Instance",
@@ -43541,7 +43541,7 @@ export const labsCatalog: Lab[] = [
             ]
           },
           {
-            "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon IN your left side. Connection Name: Enter a sample name MyDatabseConnection Connection Method: Select Standard (TCP/IP) Host Name: Enter your RDS endpoint : mydatabaseinstance.c81x4bxxayay.us-east-1.rds.amazonaws.com Port: 3306 Username: mydatabaseuser Password: Click on Store in Vault and enter password mydatabasepassword Click on the OK button.Now click on the test connection button. It shows success connection message.Now click on OK button and then click on the OK button in the main screen.",
+            "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon IN your left side. Connection Name: Enter a sample name MyDatabseConnection Connection Method: Select Standard (TCP/IP) Host Name: Enter your RDS endpoint : mydatabaseinstance.c81x4bxxayay.us-east-1.rds.amazonaws.com Port: 3306 Username: mydatabaseuser Password: Click on Store in Vault and enter password <example-password> Click on the OK button.Now click on the test connection button. It shows success connection message.Now click on OK button and then click on the OK button in the main screen.",
             "images": [
               "/labs/how-to-query-into-rds-mysql-using-aws-lambda/step-23.png",
               "/labs/how-to-query-into-rds-mysql-using-aws-lambda/step-24.png"
@@ -43566,7 +43566,7 @@ export const labsCatalog: Lab[] = [
             "text": "Username: mydatabaseuser"
           },
           {
-            "text": "Password: Click on Store in Vault and enter password mydatabasepassword Click on the OK button.",
+            "text": "Password: Click on Store in Vault and enter password <example-password> Click on the OK button.",
             "images": [
               "/labs/how-to-query-into-rds-mysql-using-aws-lambda/step-25.png"
             ]
@@ -43820,7 +43820,7 @@ export const labsCatalog: Lab[] = [
             ]
           },
           {
-            "text": "Go to Function code, inside the lambda_function.py replace the existing code with the below:import jsonimport pymysqlRDS_endpoint = \"myrdsinstance.cdegnvsebaim.us-east-1.rds.amazonaws.com\"UserName = \"mydatabaseuser\"Password = \"mydatabasepassword\"DatabaseName = \"StudentDB\"connectionString = pymysql.connect(RDS_endpoint, user=UserName, passwd=Password, db=DatabaseName)def lambda_handler(event, context): header = [] row_json = [] table_json = {} pointer = connectionString.cursor() pointer.execute(\"INSERT INTO students(studentName, Course, Semester) VALUES ('Elizabeth', 'Art', 'first')\") connectionString.commit() connectionString.close() return (\"Insertion Success\")"
+            "text": "Go to Function code, inside the lambda_function.py replace the existing code with the below:import jsonimport pymysqlRDS_endpoint = \"myrdsinstance.cdegnvsebaim.us-east-1.rds.amazonaws.com\"UserName = \"mydatabaseuser\"Password = \"<example-password>\"DatabaseName = \"StudentDB\"connectionString = pymysql.connect(RDS_endpoint, user=UserName, passwd=Password, db=DatabaseName)def lambda_handler(event, context): header = [] row_json = [] table_json = {} pointer = connectionString.cursor() pointer.execute(\"INSERT INTO students(studentName, Course, Semester) VALUES ('Elizabeth', 'Art', 'first')\") connectionString.commit() connectionString.close() return (\"Insertion Success\")"
           },
           {
             "text": "Go to Function code, inside the lambda_function.py replace the existing code with the below:"
@@ -44317,7 +44317,7 @@ export const labsCatalog: Lab[] = [
             "text": "Press ENTER for default [yes]: Click the [enter] button."
           },
           {
-            "text": "Do you wish to log in to the Admin UI as \"openvpn\"? Press ENTER for default [yes]: Click the [enter] button. Type a password for the 'openvpn' account: Enter Whizvpn123@ and press [enter] and then enter the same password to confirm the password."
+            "text": "Do you wish to log in to the Admin UI as \"openvpn\"? Press ENTER for default [yes]: Click the [enter] button. Type a password for the 'openvpn' account: Enter <example-password> and press [enter] and then enter the same password to confirm the password."
           },
           {
             "text": "Do you wish to log in to the Admin UI as \"openvpn\"?"
@@ -44326,7 +44326,7 @@ export const labsCatalog: Lab[] = [
             "text": "Press ENTER for default [yes]: Click the [enter] button."
           },
           {
-            "text": "Type a password for the 'openvpn' account: Enter Whizvpn123@ and press [enter] and then enter the same password to confirm the password."
+            "text": "Type a password for the 'openvpn' account: Enter <example-password> and press [enter] and then enter the same password to confirm the password."
           },
           {
             "text": "Please specify your Activation key (or leave blank to specify later): Click the [enter] button."
@@ -44383,7 +44383,7 @@ export const labsCatalog: Lab[] = [
             ]
           },
           {
-            "text": "Login to the VPN Admin page : Username: Enter openvpn Password: Enter Whizvpn123@ Now click on the Sign in button."
+            "text": "Login to the VPN Admin page : Username: Enter openvpn Password: Enter <example-password> Now click on the Sign in button."
           },
           {
             "text": "Login to the VPN Admin page :"
@@ -44392,7 +44392,7 @@ export const labsCatalog: Lab[] = [
             "text": "Username: Enter openvpn"
           },
           {
-            "text": "Password: Enter Whizvpn123@"
+            "text": "Password: Enter <example-password>"
           },
           {
             "text": "Now click on the Sign in button."
@@ -44436,7 +44436,7 @@ export const labsCatalog: Lab[] = [
             "text": "Paste the url https://<IPv4 Public IP>/ Example : https://100.26.97.202/"
           },
           {
-            "text": "Login to the VPN User Page : Username: Enter openvpn Password: Enter Whizvpn123@ Now click on the Sign in button."
+            "text": "Login to the VPN User Page : Username: Enter openvpn Password: Enter <example-password> Now click on the Sign in button."
           },
           {
             "text": "Login to the VPN User Page :"
@@ -44445,7 +44445,7 @@ export const labsCatalog: Lab[] = [
             "text": "Username: Enter openvpn"
           },
           {
-            "text": "Password: Enter Whizvpn123@"
+            "text": "Password: Enter <example-password>"
           },
           {
             "text": "Now click on the Sign in button."
@@ -44469,7 +44469,7 @@ export const labsCatalog: Lab[] = [
             ]
           },
           {
-            "text": "Now again enter the username and password. Username: Enter openvpn Password: Enter Whizvpn123@ Click on the OK button."
+            "text": "Now again enter the username and password. Username: Enter openvpn Password: Enter <example-password> Click on the OK button."
           },
           {
             "text": "Now again enter the username and password."
@@ -44478,7 +44478,7 @@ export const labsCatalog: Lab[] = [
             "text": "Username: Enter openvpn"
           },
           {
-            "text": "Password: Enter Whizvpn123@"
+            "text": "Password: Enter <example-password>"
           },
           {
             "text": "Click on the OK button."
@@ -47406,7 +47406,7 @@ export const labsCatalog: Lab[] = [
             "text": "DB cluster identifier: Specify cluster identifier name as lab-identifier"
           },
           {
-            "text": "In credential settings Master Username: Enter lab_admin Master password: Enter lab123 Confirm password: Enter lab123 Note: These are the username and password used to log on to your database. Please make note of them."
+            "text": "In credential settings Master Username: Enter lab_admin Master password: Enter <example-password> Confirm password: Enter <example-password> Note: These are the username and password used to log on to your database. Please make note of them."
           },
           {
             "text": "In credential settings"
@@ -47415,10 +47415,10 @@ export const labsCatalog: Lab[] = [
             "text": "Master Username: Enter lab_admin"
           },
           {
-            "text": "Master password: Enter lab123"
+            "text": "Master password: Enter <example-password>"
           },
           {
-            "text": "Confirm password: Enter lab123"
+            "text": "Confirm password: Enter <example-password>"
           },
           {
             "text": "Note: These are the username and password used to log on to your database. Please make note of them."
@@ -47543,7 +47543,7 @@ export const labsCatalog: Lab[] = [
             "text": "User name: lab_admin"
           },
           {
-            "text": "Enter the Password: lab123"
+            "text": "Enter the Password: <example-password>"
           },
           {
             "text": "Database name: labrds"
@@ -48764,7 +48764,7 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
           },
           {
-            "text": "In the S3 dashboard, click on the Create bucket and fill in the bucket details. Bucket name: Enter lab1234567 Note: S3 Bucket names are globally unique, choose a name that is available. Object Ownership: Select ACLs enabled option and choose Object writer as Object owner Scroll down to Block Public Access settings for this bucket and Uncheck the Block all Public Access and acknowledge the change.",
+            "text": "In the S3 dashboard, click on the Create bucket and fill in the bucket details. Bucket name: Enter <example-password>4567 Note: S3 Bucket names are globally unique, choose a name that is available. Object Ownership: Select ACLs enabled option and choose Object writer as Object owner Scroll down to Block Public Access settings for this bucket and Uncheck the Block all Public Access and acknowledge the change.",
             "images": [
               "/labs/introduction-to-amazon-cloudfront/step-01.png",
               "/labs/introduction-to-amazon-cloudfront/step-02.png"
@@ -48774,10 +48774,10 @@ export const labsCatalog: Lab[] = [
             "text": "In the S3 dashboard, click on the Create bucket and fill in the bucket details."
           },
           {
-            "text": "Bucket name: Enter lab1234567 Note: S3 Bucket names are globally unique, choose a name that is available."
+            "text": "Bucket name: Enter <example-password>4567 Note: S3 Bucket names are globally unique, choose a name that is available."
           },
           {
-            "text": "Bucket name: Enter lab1234567"
+            "text": "Bucket name: Enter <example-password>4567"
           },
           {
             "text": "Note: S3 Bucket names are globally unique, choose a name that is available."
@@ -49071,13 +49071,13 @@ export const labsCatalog: Lab[] = [
             "text": "Copy the Object URL and paste it into a new tab."
           },
           {
-            "text": "Example: https://lab1234567.s3.amazonaws.com/lab_logo_58_32.png You will see the AccessDenied message, meaning the object is not publicly accessible.lab_logo_58_32.png",
+            "text": "Example: https://<example-password>4567.s3.amazonaws.com/lab_logo_58_32.png You will see the AccessDenied message, meaning the object is not publicly accessible.lab_logo_58_32.png",
             "images": [
               "/labs/introduction-to-amazon-cloudfront/step-21.png"
             ]
           },
           {
-            "text": "Example: https://lab1234567.s3.amazonaws.com/lab_logo_58_32.png"
+            "text": "Example: https://<example-password>4567.s3.amazonaws.com/lab_logo_58_32.png"
           },
           {
             "text": "You will see the AccessDenied message, meaning the object is not publicly accessible.lab_logo_58_32.png",
@@ -53366,7 +53366,7 @@ export const labsCatalog: Lab[] = [
             "text": "Check the Provide user access to the AWS Management Console - optional checkbox"
           },
           {
-            "text": "Select Custom password under Console Password and Enter lab@123 (or the desired password for the user)"
+            "text": "Select Custom password under Console Password and Enter <example-password> (or the desired password for the user)"
           },
           {
             "text": "Uncheck the Users must create a new password at the next sign-in (recommended) checkbox."
@@ -53402,7 +53402,7 @@ export const labsCatalog: Lab[] = [
             "text": "Repeat the steps to create IAM users by the name Ted and Rita with the following details,"
           },
           {
-            "text": "Custom password: lab@123"
+            "text": "Custom password: <example-password>"
           },
           {
             "text": "Key: HR-Team"
@@ -53697,7 +53697,7 @@ export const labsCatalog: Lab[] = [
             "text": "Master username : mydatabaseuser"
           },
           {
-            "text": "Master password and Confirm password: mydatabasepassword Note: This is the username/password combo used to log onto your database. Please make note of them somewhere safe.",
+            "text": "Master password and Confirm password: <example-password> Note: This is the username/password combo used to log onto your database. Please make note of them somewhere safe.",
             "images": [
               "/labs/introduction-to-aws-relational-database-service/step-11.png"
             ]
@@ -53864,7 +53864,7 @@ export const labsCatalog: Lab[] = [
             "text": "You need both the endpoint and the port number to connect to the DB instance."
           },
           {
-            "text": "Open MySQL Workbench. Click on the plus icon aside on MySQL Connections Connection Name: Enter a sample name MyDatabseConnection Host Name: Past the Endpoint that you copied Port : 3306 Username : mydatabaseuser Password : Click on Store in keychain and enter password mydatabasepassword Click on ok."
+            "text": "Open MySQL Workbench. Click on the plus icon aside on MySQL Connections Connection Name: Enter a sample name MyDatabseConnection Host Name: Past the Endpoint that you copied Port : 3306 Username : mydatabaseuser Password : Click on Store in keychain and enter password <example-password> Click on ok."
           },
           {
             "text": "Open MySQL Workbench. Click on the plus icon aside on MySQL Connections"
@@ -53882,7 +53882,7 @@ export const labsCatalog: Lab[] = [
             "text": "Username : mydatabaseuser"
           },
           {
-            "text": "Password : Click on Store in keychain and enter password mydatabasepassword Click on ok."
+            "text": "Password : Click on Store in keychain and enter password <example-password> Click on ok."
           },
           {
             "text": "Task 4 : Connecting to RDS Database on a DB Instance using the MySQL Workbench",
@@ -56383,7 +56383,7 @@ export const labsCatalog: Lab[] = [
             "text": "Master username. : Enter admin"
           },
           {
-            "text": "Master password and Confirm password: Enter lab123"
+            "text": "Master password and Confirm password: Enter <example-password>"
           },
           {
             "text": "DB instance class : Select Burstable classes db.t3.micro — 2 vCPUs, 1 GiB RAM"
@@ -56469,7 +56469,7 @@ export const labsCatalog: Lab[] = [
             "text": "To replace your RDS Endpoint"
           },
           {
-            "text": "Enter password : lab123"
+            "text": "Enter password : <example-password>"
           },
           {
             "text": "Task 6: Connect an RDS database to a local Ubuntu VM"
@@ -56499,7 +56499,7 @@ export const labsCatalog: Lab[] = [
             "text": "use the MySQL client to import the database dump using the following command"
           },
           {
-            "text": "Enter password : lab123"
+            "text": "Enter password : <example-password>"
           },
           {
             "text": "Task 6: Connect an RDS database to a local Ubuntu VM"
@@ -66532,10 +66532,10 @@ export const labsCatalog: Lab[] = [
             ]
           },
           {
-            "text": "Bucket name: Enter lab1234567 Note: S3 Bucket names are globally unique, choose a name that is available."
+            "text": "Bucket name: Enter <example-password>4567 Note: S3 Bucket names are globally unique, choose a name that is available."
           },
           {
-            "text": "Bucket name: Enter lab1234567"
+            "text": "Bucket name: Enter <example-password>4567"
           },
           {
             "text": "Note: S3 Bucket names are globally unique, choose a name that is available."

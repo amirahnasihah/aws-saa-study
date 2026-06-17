@@ -91,7 +91,7 @@
           "text": "Click on the Custom password."
         },
         {
-          "text": "Give the following password: lab@123"
+          "text": "Give the following password: <example-password>"
         },
         {
           "text": "Uncheck the Users must create a new password at the next sign-in. Click on Next."
@@ -136,7 +136,7 @@
           "text": "Click on the Custom password"
         },
         {
-          "text": "Give the following password: 123@lab"
+          "text": "Give the following password: <example-password>"
         },
         {
           "text": "Uncheck the Users must create a new password at the next sign-in. Click on Next."

@@ -169,7 +169,7 @@
           "text": "Credentials management: Select Self managed"
         },
         {
-          "text": "Master password and Confirm password: mydatabasepassword"
+          "text": "Master password and Confirm password: <example-password>"
         },
         {
           "text": "Task 3: Create RDS Database Instance",
@@ -300,7 +300,7 @@
           ]
         },
         {
-          "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon IN your left side. Connection Name: Enter a sample name MyDatabseConnection Connection Method: Select Standard (TCP/IP) Host Name: Enter your RDS endpoint : mydatabaseinstance.c81x4bxxayay.us-east-1.rds.amazonaws.com Port: 3306 Username: mydatabaseuser Password: Click on Store in Vault and enter password mydatabasepassword Click on the OK button.Now click on the test connection button. It shows success connection message.Now click on OK button and then click on the OK button in the main screen.",
+          "text": "Open MySQL Workbench. Click on the MYSQL Connection plus icon IN your left side. Connection Name: Enter a sample name MyDatabseConnection Connection Method: Select Standard (TCP/IP) Host Name: Enter your RDS endpoint : mydatabaseinstance.c81x4bxxayay.us-east-1.rds.amazonaws.com Port: 3306 Username: mydatabaseuser Password: Click on Store in Vault and enter password <example-password> Click on the OK button.Now click on the test connection button. It shows success connection message.Now click on OK button and then click on the OK button in the main screen.",
           "images": [
             "/labs/how-to-query-into-rds-mysql-using-aws-lambda/step-23.png",
             "/labs/how-to-query-into-rds-mysql-using-aws-lambda/step-24.png"
@@ -325,7 +325,7 @@
           "text": "Username: mydatabaseuser"
         },
         {
-          "text": "Password: Click on Store in Vault and enter password mydatabasepassword Click on the OK button.",
+          "text": "Password: Click on Store in Vault and enter password <example-password> Click on the OK button.",
           "images": [
             "/labs/how-to-query-into-rds-mysql-using-aws-lambda/step-25.png"
           ]
@@ -579,7 +579,7 @@
           ]
         },
         {
-          "text": "Go to Function code, inside the lambda_function.py replace the existing code with the below:import jsonimport pymysqlRDS_endpoint = \"myrdsinstance.cdegnvsebaim.us-east-1.rds.amazonaws.com\"UserName = \"mydatabaseuser\"Password = \"mydatabasepassword\"DatabaseName = \"StudentDB\"connectionString = pymysql.connect(RDS_endpoint, user=UserName, passwd=Password, db=DatabaseName)def lambda_handler(event, context): header = [] row_json = [] table_json = {} pointer = connectionString.cursor() pointer.execute(\"INSERT INTO students(studentName, Course, Semester) VALUES ('Elizabeth', 'Art', 'first')\") connectionString.commit() connectionString.close() return (\"Insertion Success\")"
+          "text": "Go to Function code, inside the lambda_function.py replace the existing code with the below:import jsonimport pymysqlRDS_endpoint = \"myrdsinstance.cdegnvsebaim.us-east-1.rds.amazonaws.com\"UserName = \"mydatabaseuser\"Password = \"<example-password>\"DatabaseName = \"StudentDB\"connectionString = pymysql.connect(RDS_endpoint, user=UserName, passwd=Password, db=DatabaseName)def lambda_handler(event, context): header = [] row_json = [] table_json = {} pointer = connectionString.cursor() pointer.execute(\"INSERT INTO students(studentName, Course, Semester) VALUES ('Elizabeth', 'Art', 'first')\") connectionString.commit() connectionString.close() return (\"Insertion Success\")"
         },
         {
           "text": "Go to Function code, inside the lambda_function.py replace the existing code with the below:"

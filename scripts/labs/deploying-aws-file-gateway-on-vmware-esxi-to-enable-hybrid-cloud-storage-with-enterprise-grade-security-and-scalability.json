@@ -145,10 +145,10 @@
           "text": "UNIX Password: password"
         },
         {
-          "text": "New Password: lab@123"
+          "text": "New Password: <example-password>"
         },
         {
-          "text": "Retype New Password: lab@123"
+          "text": "Retype New Password: <example-password>"
         },
         {
           "text": "Task 3: Import the .ova file via VMware"
@@ -248,7 +248,7 @@
           "text": "Task 5: Create an S3 bucket and configure it for file sharing"
         },
         {
-          "text": "In the User Authentication section, click Configure on the right side, set the password to lab@123, then click Save and Create file share."
+          "text": "In the User Authentication section, click Configure on the right side, set the password to <example-password>, then click Save and Create file share."
         },
         {
           "text": "Task 5: Create an S3 bucket and configure it for file sharing"
@@ -302,7 +302,7 @@
           "text": "User name : smbguest"
         },
         {
-          "text": "Password : lab@123"
+          "text": "Password : <example-password>"
         },
         {
           "text": "Click Enter"

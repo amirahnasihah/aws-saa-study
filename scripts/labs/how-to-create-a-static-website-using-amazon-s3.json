@@ -47,7 +47,7 @@
           "text": "Select Bucket Type : General purpose"
         },
         {
-          "text": "Bucket name: Enter lab1230"
+          "text": "Bucket name: Enter <example-password>0"
         },
         {
           "text": "Note: S3 bucket name is globally unique, choose a name that is available."
