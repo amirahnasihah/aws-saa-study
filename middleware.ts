@@ -13,9 +13,14 @@ function isProtectedApi(pathname: string): boolean {
 }
 
 export async function middleware(request: NextRequest) {
+  const { pathname } = request.nextUrl
+
+  if (pathname.startsWith('/auth/')) {
+    return NextResponse.next()
+  }
+
   const { supabase, response } = createSupabaseMiddlewareClient(request)
   const { data: { user } } = await supabase.auth.getUser()
-  const { pathname } = request.nextUrl
 
   if (isProtectedApi(pathname) && !user) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
