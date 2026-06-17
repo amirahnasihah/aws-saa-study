@@ -68,7 +68,7 @@ const checklistLabOverrides = new Map<string, { slug: string }>([
   ['Creating an application load balancer from AWS CLI', { slug: 'creating-an-application-load-balancer-from-aws-cli' }],
   ['Creating an Application Load Balancer and Auto Scaling Group in AWS', { slug: 'creating-an-application-load-balancer-and-auto-scaling-group-in-aws' }],
   ['Creating and configuring a network load balancer in AWS', { slug: 'creating-and-configuring-a-network-load-balancer-in-aws' }],
-  ['Creating S3 Lifecycle Policy', { slug: 'creating-s3-lifecycle-policy' }],
+  ['Creating S3 Lifecycle Policy', { slug: 'creating-an-s3-lifecycle-policy' }],
   ['Using CloudWatch for Resource Monitoring, Create CloudWatch Alarms and Dashboards', { slug: 'using-cloudwatch-for-resource-monitoring-create-cloudwatch-alarms-and-dashboards' }],
   ['Check Compliance status of S3 Bucket using AWS Config', { slug: 'check-compliance-status-of-s3-bucket-using-aws-config' }],
   ['Creating AWS VPC Flow Logs and Generating Traffic', { slug: 'creating-aws-vpc-flow-logs-and-generating-traffic' }],
@@ -76,9 +76,11 @@ const checklistLabOverrides = new Map<string, { slug: string }>([
   ['Create a Docker container using Dockerfile and store the image in ECR', { slug: 'create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr' }],
 ])
 
+const INDEX_FILES = new Set(['course-index.json', 'checklist-index.json'])
+
 const scrapedLabsByTitle = new Map<string, { slug: string }>()
 readdirSync(resolve('scripts/labs'))
-  .filter((file) => file.endsWith('.json') && file !== 'course-index.json')
+  .filter((file) => file.endsWith('.json') && !INDEX_FILES.has(file))
   .forEach((file) => {
     const lab = JSON.parse(readFileSync(join(resolve('scripts/labs'), file), 'utf8')) as {
       title: string

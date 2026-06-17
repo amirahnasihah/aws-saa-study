@@ -14,7 +14,9 @@ const OUT_LABS = resolve('data/labsCatalog.ts')
 const OUT_ORDER = resolve('data/labsCourseOrder.ts')
 const COURSE_INDEX = join(LABS_DIR, 'course-index.json')
 
-const files = readdirSync(LABS_DIR).filter((f) => f.endsWith('.json') && f !== 'course-index.json')
+const INDEX_FILES = new Set(['course-index.json', 'checklist-index.json'])
+
+const files = readdirSync(LABS_DIR).filter((f) => f.endsWith('.json') && !INDEX_FILES.has(f))
 
 const labs = files
   .map((file) => {

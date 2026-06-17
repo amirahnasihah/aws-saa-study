@@ -58,7 +58,7 @@ const videoCourseLabs: Array<{ title: string; duration: string; topicId: TopicId
   { title: 'Creating an application load balancer from AWS CLI', duration: '1h', topicId: 'compute', slug: 'creating-an-application-load-balancer-from-aws-cli' },
   { title: 'Creating an Application Load Balancer and Auto Scaling Group in AWS', duration: '1h 30m', topicId: 'compute', slug: 'creating-an-application-load-balancer-and-auto-scaling-group-in-aws' },
   { title: 'Creating and configuring a network load balancer in AWS', duration: '1h', topicId: 'compute', slug: 'creating-and-configuring-a-network-load-balancer-in-aws' },
-  { title: 'Creating S3 Lifecycle Policy', duration: '30m', topicId: 'storage', slug: 'creating-s3-lifecycle-policy' },
+  { title: 'Creating S3 Lifecycle Policy', duration: '30m', topicId: 'storage', slug: 'creating-an-s3-lifecycle-policy' },
   { title: 'Create Redis cluster using ElastiCache', duration: '1h', topicId: 'database' },
   {
     title: 'Using CloudWatch for Resource Monitoring, Create CloudWatch Alarms and Dashboards',

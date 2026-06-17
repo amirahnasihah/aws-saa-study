@@ -92,10 +92,10 @@ export const labsChecklistOrder: ChecklistLabEntry[] = [
   {
     "index": 5,
     "title": "Creating S3 Lifecycle Policy",
-    "slug": "creating-s3-lifecycle-policy",
+    "slug": "creating-an-s3-lifecycle-policy",
     "duration": "30m",
     "sectionId": "storage",
-    "externalUrl": "https://business.whizlabs.com/labs/creating-s3-lifecycle-policy"
+    "externalUrl": "https://business.whizlabs.com/labs/creating-an-s3-lifecycle-policy"
   },
   {
     "index": 6,

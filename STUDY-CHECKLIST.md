@@ -89,7 +89,7 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 - [x] [S3 ACLs and Bucket Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=27619) (8m)
 - [x] [S3 Object Lifecycle Management](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=27621) (5m 28s)
 - [x] [S3 Object Lifecycle Management - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=27620) (7m 45s)
-- [x] 🧪 [Creating S3 Lifecycle Policy](https://business.whizlabs.com/labs/creating-s3-lifecycle-policy) (30m)
+- [x] 🧪 [Creating S3 Lifecycle Policy](https://business.whizlabs.com/labs/creating-an-s3-lifecycle-policy) (30m)
 - [x] [S3 Cross Region Replication](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=27622) (6m 35s)
 - [x] [S3 Cross Region Replication - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=27623) (7m 7s)
 - [x] [S3 Storage Classes](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=27624) (8m 34s)

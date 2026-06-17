@@ -958,7 +958,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
   {
     "index": 111,
     "title": "Creating an application load balancer from AWS CLI",
-    "slug": null,
+    "slug": "creating-an-application-load-balancer-from-aws-cli",
     "duration": "1h",
     "topicId": "compute",
     "source": "video"
@@ -966,7 +966,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
   {
     "index": 112,
     "title": "Creating an Application Load Balancer and Auto Scaling Group in AWS",
-    "slug": null,
+    "slug": "creating-an-application-load-balancer-and-auto-scaling-group-in-aws",
     "duration": "1h 30m",
     "topicId": "compute",
     "source": "video"
@@ -974,7 +974,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
   {
     "index": 113,
     "title": "Creating and configuring a network load balancer in AWS",
-    "slug": null,
+    "slug": "creating-and-configuring-a-network-load-balancer-in-aws",
     "duration": "1h",
     "topicId": "compute",
     "source": "video"
@@ -982,7 +982,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
   {
     "index": 114,
     "title": "Creating S3 Lifecycle Policy",
-    "slug": null,
+    "slug": "creating-an-s3-lifecycle-policy",
     "duration": "30m",
     "topicId": "storage",
     "source": "video"
@@ -1006,7 +1006,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
   {
     "index": 117,
     "title": "Check Compliance status of S3 Bucket using AWS Config",
-    "slug": null,
+    "slug": "check-compliance-status-of-s3-bucket-using-aws-config",
     "duration": "1h 30m",
     "topicId": "management",
     "source": "video"
@@ -1022,7 +1022,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
   {
     "index": 119,
     "title": "Creating AWS VPC Flow Logs and Generating Traffic",
-    "slug": null,
+    "slug": "creating-aws-vpc-flow-logs-and-generating-traffic",
     "duration": "1h",
     "topicId": "networking",
     "source": "video"
@@ -1030,7 +1030,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
   {
     "index": 120,
     "title": "Perform ETL operation in Glue with S3",
-    "slug": null,
+    "slug": "perform-etl-operation-in-glue-with-s3",
     "duration": "45m",
     "topicId": "analytics",
     "source": "video"
@@ -1038,7 +1038,7 @@ export const labsTopicOrder: TopicLabEntry[] = [
   {
     "index": 121,
     "title": "Create a Docker container using Dockerfile and store the image in ECR",
-    "slug": null,
+    "slug": "create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr",
     "duration": "1h",
     "topicId": "containers",
     "source": "video"

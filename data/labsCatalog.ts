@@ -2292,6 +2292,361 @@ export const labsCatalog: Lab[] = [
     "source": "course"
   },
   {
+    "slug": "auditing-resource-compliance-with-aws-config",
+    "title": "Auditing Resource Compliance with AWS config",
+    "level": "Intermediate",
+    "services": [
+      "AWS"
+    ],
+    "summary": "",
+    "duration": "00:45:00",
+    "tasks": [
+      {
+        "title": "Task 1: Sign in to AWS Management Console",
+        "steps": [
+          {
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          },
+          {
+            "text": "On the AWS sign-in page,"
+          },
+          {
+            "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+          },
+          {
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          },
+          {
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          }
+        ]
+      },
+      {
+        "title": "Task 2: Create S3 and SNS",
+        "steps": [
+          {
+            "text": "Click on services and type config and navigate to AWS Config dashboard."
+          },
+          {
+            "text": "Make sure you are in the N.Virginia Region."
+          },
+          {
+            "text": "Click on Get Started."
+          },
+          {
+            "text": "Now complete the settings using below details"
+          },
+          {
+            "text": "Recording strategy: Select : All resource types with customizable overrides Keep rest things as default"
+          },
+          {
+            "text": "Recording strategy:"
+          },
+          {
+            "text": "Select : All resource types with customizable overrides"
+          },
+          {
+            "text": "Keep rest things as default"
+          },
+          {
+            "text": "Task 2: Create S3 and SNS"
+          },
+          {
+            "text": "Delivery Method: Select the Create a bucket and enter your bucket name. Bucket name : Enter Unique bucket name ( Ex: lab34567)"
+          },
+          {
+            "text": "Delivery Method:"
+          },
+          {
+            "text": "Select the Create a bucket and enter your bucket name."
+          },
+          {
+            "text": "Bucket name : Enter Unique bucket name ( Ex: lab34567)"
+          },
+          {
+            "text": "Amazon SNS topic: Check the box Stream configuration changes and then configure the SNS topic Select the Create a Topic Topic name : config_for_securitygroup_change"
+          },
+          {
+            "text": "Amazon SNS topic:"
+          },
+          {
+            "text": "Check the box Stream configuration changes and then configure the SNS topic"
+          },
+          {
+            "text": "Select the Create a Topic"
+          },
+          {
+            "text": "Topic name : config_for_securitygroup_change"
+          },
+          {
+            "text": "Task 2: Create S3 and SNS"
+          },
+          {
+            "text": "Click on Next button."
+          },
+          {
+            "text": "In the next screen, leave as default and then click on Next."
+          },
+          {
+            "text": "Finally, review your config setup and click on Confirm. It will take a few seconds to complete the config rule setup."
+          }
+        ]
+      },
+      {
+        "title": "Task 3: Setting of AWS config Rules",
+        "steps": [
+          {
+            "text": "Go to AWS Config Dashboard in the left panel."
+          },
+          {
+            "text": "Click on Rules under conformance packs."
+          },
+          {
+            "text": "Then click on Add rule on the right top."
+          },
+          {
+            "text": "Task 3: Setting of AWS config Rules"
+          },
+          {
+            "text": "Configure Rule type using below details"
+          },
+          {
+            "text": "Select rule type: Select Add AWS managed rule"
+          },
+          {
+            "text": "Select rule type:"
+          },
+          {
+            "text": "Select Add AWS managed rule"
+          },
+          {
+            "text": "AWS Managed Rules: Type sg in the filter box and then select vpc-sg-open-only-to-authorized-ports as shown in the below screenshot."
+          },
+          {
+            "text": "AWS Managed Rules:"
+          },
+          {
+            "text": "Type sg in the filter box and then select vpc-sg-open-only-to-authorized-ports as shown in the below screenshot."
+          },
+          {
+            "text": "Task 3: Setting of AWS config Rules"
+          },
+          {
+            "text": "Once provided the above details click on Next."
+          },
+          {
+            "text": "In the next screen customize the rule with the below details"
+          },
+          {
+            "text": "Name : SgauthorizingRule"
+          },
+          {
+            "text": "Description : Leave default"
+          },
+          {
+            "text": "Trigger:"
+          },
+          {
+            "text": "Scope of changes: select Resources"
+          },
+          {
+            "text": "Resources: Leave the default AWS EC2 SecurityGroup."
+          },
+          {
+            "text": "Parameters: select the ports you need to add in the rule. In your existing security group you will be added with the ports 22 and 80."
+          },
+          {
+            "text": "Task 3: Setting of AWS config Rules"
+          },
+          {
+            "text": "In case of adding a new rule, you can click on Add another row."
+          },
+          {
+            "text": "After providing above details, click on Next."
+          },
+          {
+            "text": "Finally Click on Save."
+          },
+          {
+            "text": "It will take 4 to 5 minutes for the rule to become available."
+          }
+        ]
+      },
+      {
+        "title": "Task 4: Creating and subscribe SNS topic",
+        "steps": [
+          {
+            "text": "Click on services and navigate to Simple Notification Service."
+          },
+          {
+            "text": "Click on Topics in the left panel."
+          },
+          {
+            "text": "Click on the config rule i.e, config_for_securitygroup_change created in the earlier step."
+          },
+          {
+            "text": "Click on Create Subscription in the right bottom."
+          },
+          {
+            "text": "Complete the subscription using below details"
+          },
+          {
+            "text": "Topic ARN : Leave Default"
+          },
+          {
+            "text": "Protocol : Select Email in the drop down."
+          },
+          {
+            "text": "Endpoint : Enter the Email address for subscription ( ex: test@gmail.com)"
+          },
+          {
+            "text": "Finally click on Create Subscription ."
+          },
+          {
+            "text": "Now go to the Inbox of the email provided in the above step and click on confirm subscription to get the alerts as shown below"
+          },
+          {
+            "text": "Task 4: Creating and subscribe SNS topic"
+          }
+        ]
+      },
+      {
+        "title": "Task 5: Checking the status of AWS config",
+        "steps": [
+          {
+            "text": "To check the status of your config rule navigate to AWS config dashboard."
+          },
+          {
+            "text": "Click on Rules under conformance packs and click on the rule create by you."
+          },
+          {
+            "text": "Now, scroll down to the Resources in scope and select Compliant in filter, and you will see one security group with Compliant status."
+          },
+          {
+            "text": "Task 5: Checking the status of AWS config"
+          },
+          {
+            "text": "Thus the above screenshot states that the ports opened in the Security group attached with our running instance satisfy the rule given in the config."
+          }
+        ]
+      },
+      {
+        "title": "Task 6: Testing the working of AWS config",
+        "steps": [
+          {
+            "text": "Now click on Services and then navigate to the EC2 dashboard."
+          },
+          {
+            "text": "Click on Security Groups and select the security group named Config_server_SG."
+          },
+          {
+            "text": "Click on Inbound rules and then Edit inbound rules to add some custom ports. ( Ex: 20-21)"
+          },
+          {
+            "text": "Task 6: Testing the working of AWS config"
+          },
+          {
+            "text": "Now add the new port with below details"
+          },
+          {
+            "text": "Type : Select Custom TCP"
+          },
+          {
+            "text": "Protocol : TCP"
+          },
+          {
+            "text": "Port Range : Enter 20-21"
+          },
+          {
+            "text": "Source : 0.0.0.0/0"
+          },
+          {
+            "text": "Click on Save rules."
+          },
+          {
+            "text": "Now navigate to AWS config dashboard and then click on Rules, wait for 1 or 2 minutes, and you could see the status of your rule as Noncompliant resource(s) as shown below"
+          },
+          {
+            "text": "Task 6: Testing the working of AWS config"
+          },
+          {
+            "text": "To check the detailed status, click on the SgauthorizingRule and scroll down a bit and then click on Resources in scope and then click on your security group ID of your noncompliant security group"
+          },
+          {
+            "text": "In the next step click Resource Timeline in the right corner."
+          },
+          {
+            "text": "Task 6: Testing the working of AWS config"
+          },
+          {
+            "text": "To confirm Alert via SNS topic, navigate to the inbox of the email provided at the time of creating SNS topic, and you could see the Alert email from AWS regarding change in your AWS config rule."
+          },
+          {
+            "text": "Task 6: Testing the working of AWS config"
+          },
+          {
+            "text": "Now click on Services and then navigate to the EC2 dashboard and click on Security Groups and select the security group named Config_server_SG and remove the port number 20-21 from the security group and save."
+          },
+          {
+            "text": "Once removed navigate to AWS config dashboard and then click on rule, and you could see the status as Compliant."
+          },
+          {
+            "text": "Now navigate to the Inbox of your email and you could see AWS have sent the email that the rules are under complaint"
+          },
+          {
+            "text": "Task 6: Testing the working of AWS config"
+          }
+        ]
+      },
+      {
+        "title": "Task 7 : Validation of the Lab",
+        "steps": [
+          {
+            "text": "Once The Lab Steps Are Completed, Please Click On The Validation Button On The Left Side Panel."
+          },
+          {
+            "text": "This Will Validate The Resources In The AWS Account And Displays Whether You Have Completed This Lab Successfully Or Not."
+          },
+          {
+            "text": "Sample Output :"
+          },
+          {
+            "text": "Task 7 : Validation of the Lab"
+          },
+          {
+            "text": "You have successfully created the Config rule along with the SNS topic."
+          },
+          {
+            "text": "Modified the security group by adding custom port to get the alert from AWS regarding change in config rule."
+          },
+          {
+            "text": "Successfully tested the working of config rule."
+          },
+          {
+            "text": "Revert back the changes by removing the ports added to make the rule complaint."
+          },
+          {
+            "text": "Successfully received the email from AWS stating the AWS config rules with non compliant. resources."
+          },
+          {
+            "text": "Sign out from the AWS Account."
+          },
+          {
+            "text": "You have successfully completed the lab."
+          },
+          {
+            "text": "Once you have completed the steps click on End Lab from the lab console"
+          }
+        ]
+      }
+    ],
+    "takeaways": [],
+    "source": "course"
+  },
+  {
     "slug": "aws-vpc-nacl-lab-case-study",
     "title": "AWS VPC NACL Lab - Case study",
     "level": "Advanced",
@@ -5737,7 +6092,7 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -5746,10 +6101,10 @@ export const labsCatalog: Lab[] = [
             "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
           },
           {
-            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
-            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
           }
         ]
       },
@@ -5757,43 +6112,67 @@ export const labsCatalog: Lab[] = [
         "title": "Task 2 : Creating New VPC",
         "steps": [
           {
-            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
           },
           {
-            "text": "Navigate to VPC by clicking on Services on the top of AWS Console."
+            "text": "Navigate to VPC by clicking on Services on the top of AWS Console."
           },
           {
-            "text": "Click on VPC (under Networking & Content Delivery section) or you can also search for VPC."
+            "text": "Click on VPC (under Networking & Content Delivery section) or you can also search for VPC."
           },
           {
-            "text": "Click on Your VPCs from the left menu."
+            "text": "Click on Your VPCs from the left menu."
           },
           {
             "text": "Here you can see the list of all VPC, No need to do anything with the existing and default VPCs, we will create a new VPC for this lab."
           },
           {
-            "text": "Click on Create VPC button."
+            "text": "Click on Create VPC button. Select VPC Only Name tag: Enter a VPC name for identification to your VPC. Ex: MyVPC IPv4 CIDR block: Enter 10.0.0.0/16 IPv6 CIDR block: No need to change this, make sure No IPv6 CIDR Block is checked. Tenancy: No need to change this, make sure Default is selected. Now click on Create VPC button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-01.png"
+            ]
           },
           {
-            "text": "Select VPC Only"
+            "text": "Click on Create VPC button."
           },
           {
-            "text": "Name tag: Enter a VPC name for identification to your VPC. Ex: MyVPC"
+            "text": "Select VPC Only"
           },
           {
-            "text": "IPv4 CIDR block: Enter 10.0.0.0/16"
+            "text": "Name tag: Enter a VPC name for identification to your VPC. Ex: MyVPC"
           },
           {
-            "text": "IPv6 CIDR block: No need to change this, make sure No IPv6 CIDR Block is checked."
+            "text": "IPv4 CIDR block: Enter 10.0.0.0/16"
           },
           {
-            "text": "Tenancy: No need to change this, make sure Default is selected."
+            "text": "IPv6 CIDR block: No need to change this, make sure No IPv6 CIDR Block is checked."
           },
           {
-            "text": "Now click on Create VPC button."
+            "text": "Tenancy: No need to change this, make sure Default is selected."
           },
           {
-            "text": "Once VPC is created, it will appear with details as shown below:"
+            "text": "Now click on Create VPC button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-02.png"
+            ]
+          },
+          {
+            "text": "Task 2 : Creating New VPC",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-03.png"
+            ]
+          },
+          {
+            "text": "Once VPC is created, it will appear with details as shown below:",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-04.png"
+            ]
+          },
+          {
+            "text": "Task 2 : Creating New VPC",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-05.png"
+            ]
           }
         ]
       },
@@ -5804,57 +6183,129 @@ export const labsCatalog: Lab[] = [
             "text": "In this lab, we will create one public subnet and a private subnet in us-east-1a and us-east-1b Availability Zones respectively as follows:"
           },
           {
-            "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet button."
+            "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet button. VPC ID: Select MyVPC from the list you created earlier. Subnet Name: Enter Name MyPublicSubnet Availability Zone: Select us-east-1a IPv4 CIDR block: Enter the range 10.0.1.0/24 Click on Create subnet button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-06.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-07.png"
+            ]
           },
           {
-            "text": "VPC ID: Select MyVPC from the list you created earlier."
+            "text": "For the Public Subnet, click on Subnets from the left menu and click on Create subnet button."
           },
           {
-            "text": "Subnet Name: Enter Name MyPublicSubnet"
+            "text": "VPC ID: Select MyVPC from the list you created earlier.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-08.png"
+            ]
           },
           {
-            "text": "Availability Zone: Select us-east-1a"
+            "text": "Task 3 : Creating Subnets",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-09.png"
+            ]
           },
           {
-            "text": "IPv4 CIDR block: Enter the range 10.0.1.0/24"
+            "text": "Subnet Name: Enter Name MyPublicSubnet"
           },
           {
-            "text": "Click on Create subnet button."
+            "text": "Availability Zone: Select us-east-1a"
           },
           {
-            "text": "For the Private Subnet, click on Create subnet again."
+            "text": "IPv4 CIDR block: Enter the range 10.0.1.0/24"
           },
           {
-            "text": "VPC ID : Select MyVPC from the list you created earlier."
+            "text": "Click on Create subnet button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-10.png"
+            ]
           },
           {
-            "text": "Subnet Name : Enter Name MyPrivateSubnet"
+            "text": "Task 3 : Creating Subnets",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-11.png"
+            ]
           },
           {
-            "text": "Availability Zone : Select us-east-1b"
+            "text": "For the Private Subnet, click on Create subnet again. VPC ID : Select MyVPC from the list you created earlier. Subnet Name : Enter Name MyPrivateSubnet Availability Zone : Select us-east-1b IPv4 CIDR block : Enter the range 10.0.2.0/24 Click on Create subnet button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-12.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-13.png"
+            ]
           },
           {
-            "text": "IPv4 CIDR block : Enter the range 10.0.2.0/24"
+            "text": "For the Private Subnet, click on Create subnet again."
           },
           {
-            "text": "Click on Create subnet button."
+            "text": "VPC ID : Select MyVPC from the list you created earlier.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-14.png"
+            ]
+          },
+          {
+            "text": "Task 3 : Creating Subnets",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-15.png"
+            ]
+          },
+          {
+            "text": "Subnet Name : Enter Name MyPrivateSubnet"
+          },
+          {
+            "text": "Availability Zone : Select us-east-1b"
+          },
+          {
+            "text": "IPv4 CIDR block : Enter the range 10.0.2.0/24"
+          },
+          {
+            "text": "Click on Create subnet button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-16.png"
+            ]
+          },
+          {
+            "text": "Task 3 : Creating Subnets",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-17.png"
+            ]
           }
         ]
       },
       {
-        "title": "Task 4: Create and configure Internet Gateway",
+        "title": "Task 4: Create and configure Internet Gateway",
         "steps": [
           {
             "text": "In this task, we are going to create an internet gateway and configure it with the VPC."
           },
           {
-            "text": "Click on Internet Gateways from the left menu and click on Create internet gateway button."
+            "text": "Click on Internet Gateways from the left menu and click on Create internet gateway button. Name Tag: Enter MyInternetGateway Click on Create internet gateway button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-18.png"
+            ]
           },
           {
-            "text": "Name Tag: Enter MyInternetGateway"
+            "text": "Click on Internet Gateways from the left menu and click on Create internet gateway button."
           },
           {
-            "text": "Click on Create internet gateway button."
+            "text": "Name Tag: Enter MyInternetGateway"
+          },
+          {
+            "text": "Click on Create internet gateway button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-19.png"
+            ]
+          },
+          {
+            "text": "Task 4: Create and configure Internet Gateway",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-20.png"
+            ]
+          },
+          {
+            "text": "Select the Internet gateway you created from the list Click on Actions. Click on Attach to VPC. Select MyVPC which you created from the list and click on Attach internet gateway button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-21.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-22.png"
+            ]
           },
           {
             "text": "Select the Internet gateway you created from the list"
@@ -5863,105 +6314,230 @@ export const labsCatalog: Lab[] = [
             "text": "Click on Actions."
           },
           {
-            "text": "Click on Attach to VPC."
+            "text": "Click on Attach to VPC.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-23.png"
+            ]
           },
           {
-            "text": "Select MyVPC which you created from the list and click on Attach internet gateway button."
+            "text": "Task 4: Create and configure Internet Gateway",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-24.png"
+            ]
+          },
+          {
+            "text": "Select MyVPC which you created from the list and click on Attach internet gateway button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-25.png"
+            ]
+          },
+          {
+            "text": "Task 4: Create and configure Internet Gateway",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-26.png"
+            ]
           }
         ]
       },
       {
-        "title": "Task 5: Create Route Tables",
+        "title": "Task 5: Create Route Tables",
         "steps": [
           {
             "text": "In this task, we are going to create two route tables and associate them with their respective subnets."
           },
           {
-            "text": "Go to Route Tables from the left menu and click on Create route table button."
+            "text": "Go to Route Tables from the left menu and click on Create route table button. Name: Enter PublicRouteTable VPC: Select MyVPC from the list. Click on Create route table button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-27.png"
+            ]
           },
           {
-            "text": "Name: Enter PublicRouteTable"
+            "text": "Go to Route Tables from the left menu and click on Create route table button."
           },
           {
-            "text": "VPC: Select MyVPC from the list."
+            "text": "Name: Enter PublicRouteTable"
           },
           {
-            "text": "Click on Create route table button."
+            "text": "VPC: Select MyVPC from the list."
+          },
+          {
+            "text": "Click on Create route table button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-28.png"
+            ]
+          },
+          {
+            "text": "Task 5: Create Route Tables",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-29.png"
+            ]
+          },
+          {
+            "text": "Repeat the same steps to create a route table for the Private subnet. Name: Enter PrivateRouteTable VPC: Select MyVPC from the list. Click on Create route table button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-30.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-31.png"
+            ]
           },
           {
             "text": "Repeat the same steps to create a route table for the Private subnet."
           },
           {
-            "text": "Name: Enter PrivateRouteTable"
+            "text": "Name: Enter PrivateRouteTable"
           },
           {
-            "text": "VPC: Select MyVPC from the list."
+            "text": "VPC: Select MyVPC from the list."
           },
           {
-            "text": "Click on Create route table button."
+            "text": "Click on Create route table button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-32.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-33.png"
+            ]
           },
           {
-            "text": "Now we will associate the subnets to the route tables."
+            "text": "Task 5: Create Route Tables",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-34.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-35.png"
+            ]
           },
           {
-            "text": "Select the PublicRouteTable and go to the Subnet Associations tab."
+            "text": "Now we will associate the subnets to the route tables."
           },
           {
-            "text": "Click on Edit subnet associations."
+            "text": "Select the PublicRouteTable and go to the Subnet Associations tab. Click on Edit subnet associations. Select MyPublicSubnet from the list. Click on Save associations button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-36.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-37.png"
+            ]
           },
           {
-            "text": "Select MyPublicSubnet from the list."
+            "text": "Select the PublicRouteTable and go to the Subnet Associations tab."
           },
           {
-            "text": "Click on Save associations button."
+            "text": "Click on Edit subnet associations.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-38.png"
+            ]
           },
           {
-            "text": "Select the PrivateRouteTable and go to the Subnet Associations tab."
+            "text": "Task 5: Create Route Tables",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-39.png"
+            ]
           },
           {
-            "text": "Click on Edit subnet associations."
+            "text": "Select MyPublicSubnet from the list."
           },
           {
-            "text": "Select MyPrivateSubnet from the list."
+            "text": "Click on Save associations button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-40.png"
+            ]
           },
           {
-            "text": "Click on Save associations button."
+            "text": "Task 5: Create Route Tables",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-41.png"
+            ]
           },
           {
-            "text": "Make sure not to associate any subnets with the Main Route Table."
+            "text": "Select the PrivateRouteTable and go to the Subnet Associations tab. Click on Edit subnet associations. Select MyPrivateSubnet from the list. Click on Save associations button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-42.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-43.png"
+            ]
+          },
+          {
+            "text": "Select the PrivateRouteTable and go to the Subnet Associations tab."
+          },
+          {
+            "text": "Click on Edit subnet associations.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-44.png"
+            ]
+          },
+          {
+            "text": "Task 5: Create Route Tables",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-45.png"
+            ]
+          },
+          {
+            "text": "Select MyPrivateSubnet from the list."
+          },
+          {
+            "text": "Click on Save associations button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-46.png"
+            ]
+          },
+          {
+            "text": "Task 5: Create Route Tables",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-47.png"
+            ]
+          },
+          {
+            "text": "Make sure not to associate any subnets with the Main Route Table."
+          },
+          {
+            "text": "PublicRouteTable: Add a route to allow Internet traffic to the VPC. Select PublicRouteTable. Go to Routes tab, click on Edit routes. Click on Add route button, Specify the following values: Destination: Enter 0.0.0.0/0 Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway. Click on Save changes button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-48.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-49.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-50.png"
+            ]
           },
           {
             "text": "PublicRouteTable: Add a route to allow Internet traffic to the VPC."
           },
           {
-            "text": "Select PublicRouteTable."
+            "text": "Select PublicRouteTable."
           },
           {
-            "text": "Go to Routes tab, click on Edit routes."
+            "text": "Go to Routes tab, click on Edit routes.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-51.png"
+            ]
+          },
+          {
+            "text": "Task 5: Create Route Tables",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-52.png"
+            ]
+          },
+          {
+            "text": "Click on Add route button, Specify the following values: Destination: Enter 0.0.0.0/0 Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway. Click on Save changes button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-53.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-54.png"
+            ]
           },
           {
             "text": "Click on Add route button, Specify the following values:"
           },
           {
-            "text": "Destination: Enter 0.0.0.0/0"
+            "text": "Destination: Enter 0.0.0.0/0"
           },
           {
-            "text": "Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway."
+            "text": "Target: Select Internet Gateway from the dropdown menu to select MyInternetGateway."
           },
           {
-            "text": "Click on Save changes button."
+            "text": "Click on Save changes button.",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-55.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-56.png"
+            ]
           },
           {
-            "text": "Do you know ?"
+            "text": "Task 5: Create Route Tables",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-57.png",
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-58.png"
+            ]
           },
-          {
-            "text": "VPC Flow Logs capture information about the IP traffic flowing in and out of your VPC. It provides detailed insights into network traffic patterns, helping you analyze and troubleshoot connectivity issues, monitor security, and meet compliance requirements."
-          }
-        ]
-      },
-      {
-        "title": "Do you know ?",
-        "steps": [
           {
             "text": "VPC Flow Logs capture information about the IP traffic flowing in and out of your VPC. It provides detailed insights into network traffic patterns, helping you analyze and troubleshoot connectivity issues, monitor security, and meet compliance requirements."
           }
@@ -5971,16 +6547,19 @@ export const labsCatalog: Lab[] = [
         "title": "Task 6 : Validation Test",
         "steps": [
           {
-            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
           },
           {
-            "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+            "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
           },
           {
             "text": "Sample output :"
           },
           {
-            "text": "Completion and Conclusion"
+            "text": "Task 6 : Validation Test",
+            "images": [
+              "/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch/step-59.gif"
+            ]
           },
           {
             "text": "You have successfully completed and learned how to create public and private subnets."
@@ -5989,19 +6568,16 @@ export const labsCatalog: Lab[] = [
             "text": "You have learned how to create an Internet Gateway and associate it to VPC."
           },
           {
-            "text": "You now understand how public and private subnets are different (through associating Internet Gateway or not)."
+            "text": "You now understand how public and private subnets are different (through associating Internet Gateway or not)."
           },
           {
-            "text": "The instances launched inside the public subnet will be able to access the internet and instances launched inside the private subnet will not have access to the internet."
-          },
-          {
-            "text": "End Lab"
+            "text": "The instances launched inside the public subnet will be able to access the internet and instances launched inside the private subnet will not have access to the internet."
           },
           {
             "text": "Sign out from the AWS Management Console."
           },
           {
-            "text": "Click on End Lab button from the lab console and wait till the process gets completed"
+            "text": "Click on End Lab button from the lab console and wait till the process gets completed"
           }
         ]
       }
@@ -8425,6 +9001,730 @@ export const labsCatalog: Lab[] = [
     "source": "course"
   },
   {
+    "slug": "check-compliance-status-of-s3-bucket-using-aws-config",
+    "title": "Check Compliance status of S3 Bucket using AWS Config",
+    "level": "Advanced",
+    "services": [
+      "AWS"
+    ],
+    "summary": "",
+    "duration": "01:30:00",
+    "tasks": [
+      {
+        "title": "Task 1: Sign in to AWS Management Console",
+        "steps": [
+          {
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page,"
+          },
+          {
+            "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+          },
+          {
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          },
+          {
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          }
+        ]
+      },
+      {
+        "title": "Task 2: Creating SNS Topic",
+        "steps": [
+          {
+            "text": "In this task, we are going to create a SNS Topic by providing the required configurations like name, display name."
+          },
+          {
+            "text": "Make sure you are in the US East (N. Virginia) (us-east-1)"
+          },
+          {
+            "text": "Navigate to the Services menu and click on Simple Notification Service (SNS) under the Application Integration section."
+          },
+          {
+            "text": "Select Topics in the left panel and click on Create topic button."
+          },
+          {
+            "text": "Under Details Type: Select Standard Name: Enter mysnstopic Display name: Enter mysnsnotification"
+          },
+          {
+            "text": "Under Details"
+          },
+          {
+            "text": "Type: Select Standard"
+          },
+          {
+            "text": "Name: Enter mysnstopic"
+          },
+          {
+            "text": "Display name: Enter mysnsnotification"
+          },
+          {
+            "text": "Task 2: Creating SNS Topic"
+          },
+          {
+            "text": "Leave other options as default and click on Create topic button. An SNS topic will be created."
+          },
+          {
+            "text": "Copy the SNS topic ARN and save it to notepad."
+          }
+        ]
+      },
+      {
+        "title": "Task 3: Subscribing to the Topic",
+        "steps": [
+          {
+            "text": "In this task, we will subscribe to the topic created in the previous task."
+          },
+          {
+            "text": "Scroll down on the created topic page and you can see the Subscriptions there."
+          },
+          {
+            "text": "Task 3: Subscribing to the Topic"
+          },
+          {
+            "text": "Click on Create subscription button."
+          },
+          {
+            "text": "Under Details"
+          },
+          {
+            "text": "Protocol: Select Email"
+          },
+          {
+            "text": "Endpoint: Enter Your <Mail Id>"
+          },
+          {
+            "text": "Note: Make sure you give a valid mail address as you will receive an SNS notification to this mail address."
+          },
+          {
+            "text": "Click on Create Subscription button."
+          },
+          {
+            "text": "You will receive an email in your mailbox from SNS."
+          },
+          {
+            "text": "Click on Confirm subscription."
+          },
+          {
+            "text": "Task 3: Subscribing to the Topic"
+          },
+          {
+            "text": "Your email address is now subscribed to SNS Topic mysnstopic."
+          },
+          {
+            "text": "Task 3: Subscribing to the Topic"
+          }
+        ]
+      },
+      {
+        "title": "Task 4: Setup AWS Config and Create config rule",
+        "steps": [
+          {
+            "text": "In this task, we are going to setup AWS Config and create the required configuration rules like s3-bucket-public-write-prohibited etc."
+          },
+          {
+            "text": "Make sure you are in the US East (N. Virginia) (us-east-1)"
+          },
+          {
+            "text": "Navigate to AWS Config by clicking on the Services menu available under the Management and Governance section."
+          },
+          {
+            "text": "On the Home page of AWS Config, Click on the Get started option."
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "For the Step-1, Setting page performs the following tasks: For Recording method: Recording strategy: Select All resource types with customizable overrides Recording frequency : Continuous recording"
+          },
+          {
+            "text": "For the Step-1, Setting page performs the following tasks:"
+          },
+          {
+            "text": "For Recording method: Recording strategy: Select All resource types with customizable overrides Recording frequency : Continuous recording"
+          },
+          {
+            "text": "For Recording method:"
+          },
+          {
+            "text": "Recording strategy: Select All resource types with customizable overrides"
+          },
+          {
+            "text": "Recording frequency : Continuous recording"
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "Scroll down and For Delivery channel:"
+          },
+          {
+            "text": "Amazon S3 bucket: Select Create a bucket"
+          },
+          {
+            "text": "S3 bucket name: Keep it default"
+          },
+          {
+            "text": "Amazon SNS topic: Check the option of Stream configuration changes and notifications to an Amazon SNS topic."
+          },
+          {
+            "text": "Select the option of Choose a topic from your account"
+          },
+          {
+            "text": "SNS topic name: Select mysnstopic"
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "Click on the Next button to proceed further."
+          },
+          {
+            "text": "For Step-2, Rules, select the following rule: In the search box, enter s3-bucket-public-read-prohibited and select the displayed rule. Once checked the option, remove everything from the search box. And, enter s3-bucket-public-write-prohibited and select the displayed rule. Both the rules are selected now and Click on the Next button."
+          },
+          {
+            "text": "For Step-2, Rules, select the following rule:"
+          },
+          {
+            "text": "In the search box, enter s3-bucket-public-read-prohibited and select the displayed rule."
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "Once checked the option, remove everything from the search box."
+          },
+          {
+            "text": "And, enter s3-bucket-public-write-prohibited and select the displayed rule."
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "Both the rules are selected now and Click on the Next button."
+          },
+          {
+            "text": "For Step-3, Review everything and click on the Confirm button."
+          },
+          {
+            "text": "You will be redirected to the dashboard. Select the option of Rules from the left panel (Not the one under Aggregators)."
+          },
+          {
+            "text": "Both the rules present have a Compliance status as Non-Complaint."
+          },
+          {
+            "text": "Click on any of the rules and scroll down, and you can see the S3 bucket copy the s3 bucket name and navigate to S3 console."
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "Now navigate to S3 bucket page and select the created bucket. Navigate to the Permission tab."
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "Under Block public access (bucket settings) click on Edit button."
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "Check the check box and click on the Save Changes button, one pop-up will appear and confirm it and click on the confirm button."
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "Now, Navigate to the AWS config page, and Select the option of Rules from the left panel (Not the one under Aggregators). It may take 3 to 5mins."
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "Note: If the config rules are Non-compliant refresh the page and follow the below steps."
+          },
+          {
+            "text": "Click on the View dashboard button, to get started with setting up the AWS Config."
+          },
+          {
+            "text": "Select the Settings option present on the left panel."
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "Click on the Edit button."
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "On Edit settings page:"
+          },
+          {
+            "text": "For the Delivery method section, Amazon S3 Bucket: Select Choose a bucket from your account S3 Bucket name: Select the bucket which starts with lab.<random-numbers> Amazon SNS topic: Check Stream configuration changes and notifications to an Amazon SNS topic Select Choose a topic from your account and Select the SNS topic present."
+          },
+          {
+            "text": "For the Delivery method section,"
+          },
+          {
+            "text": "Amazon S3 Bucket: Select Choose a bucket from your account"
+          },
+          {
+            "text": "S3 Bucket name: Select the bucket which starts with lab.<random-numbers>"
+          },
+          {
+            "text": "Amazon SNS topic: Check Stream configuration changes and notifications to an Amazon SNS topic"
+          },
+          {
+            "text": "Select Choose a topic from your account and Select the SNS topic present."
+          },
+          {
+            "text": "Task 4: Setup AWS Config and Create config rule"
+          },
+          {
+            "text": "Click on the Save button."
+          },
+          {
+            "text": "Click on the Rules present on the left side panel (Not the one under Aggregators)."
+          },
+          {
+            "text": "You can see the status of Rules is Compliant now."
+          }
+        ]
+      },
+      {
+        "title": "Task 5: Create and configure CloudWatch event",
+        "steps": [
+          {
+            "text": "In this task, we are going to create and configure a Cloudwatch event for the configuration rules we just created."
+          },
+          {
+            "text": "Make sure you are in the US East (N. Virginia) (us-east-1)"
+          },
+          {
+            "text": "Navigate to EventBridge by clicking on the Services menu available under the Management and Governance section."
+          },
+          {
+            "text": "Select on the Rules present on the left panel inside Buses."
+          },
+          {
+            "text": "Task 5: Create and configure CloudWatch event"
+          },
+          {
+            "text": "Click on the Create rule button.Note: Disable the Visual rule builder opt in option."
+          },
+          {
+            "text": "Click on the Create rule button."
+          },
+          {
+            "text": "Task 5: Create and configure CloudWatch event"
+          },
+          {
+            "text": "Enter the Name as config_rule"
+          },
+          {
+            "text": "Click on the Next button."
+          },
+          {
+            "text": "Task 5: Create and configure CloudWatch event"
+          },
+          {
+            "text": "For Step 2, Build event pattern:"
+          },
+          {
+            "text": "To set up the Event Source as Others,"
+          },
+          {
+            "text": "Task 5: Create and configure CloudWatch event"
+          },
+          {
+            "text": "Scroll down and,Under Event Pattern paste the below rule in the editor window."
+          },
+          {
+            "text": "Task 5: Create and configure CloudWatch event"
+          },
+          {
+            "text": "Click on the Next button to create a custom event pattern."
+          },
+          {
+            "text": "For Targets, Choose Target Type as AWS Service"
+          },
+          {
+            "text": "Select an SNS topic and choose mysnstopic for the topic menu.Uncheck the Permission Check box (Use execution role (recommended))"
+          },
+          {
+            "text": "Select an SNS topic and choose mysnstopic for the topic menu."
+          },
+          {
+            "text": "Uncheck the Permission Check box (Use execution role (recommended))"
+          },
+          {
+            "text": "Click on the Next button to proceed with the next steps"
+          },
+          {
+            "text": "Under tags, No need to add anything and click on Next button."
+          },
+          {
+            "text": "Finally, click on the Create rule button."
+          },
+          {
+            "text": "Task 6: Create an S3 bucket"
+          },
+          {
+            "text": "In this task, we are going to create an S3 bucket by providing the required details like name , region, access etc."
+          },
+          {
+            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          },
+          {
+            "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
+          },
+          {
+            "text": "On the S3 Page, click on the Create bucket button and fill in the bucket details. Bucket name: Enter lab<RANDOM_NUMBER> Note: S3 bucket name is globally unique, choose a name which is available. Region: Select US East (N. Virginia) us-east-1 For Object ownership: Select ACLs disabled For Block Public Access settings for this bucket section, Uncheck the option, Block all public access, and check the acknowledge option."
+          },
+          {
+            "text": "On the S3 Page, click on the Create bucket button and fill in the bucket details."
+          },
+          {
+            "text": "Bucket name: Enter lab<RANDOM_NUMBER> Note: S3 bucket name is globally unique, choose a name which is available."
+          },
+          {
+            "text": "Bucket name: Enter lab<RANDOM_NUMBER>"
+          },
+          {
+            "text": "Note: S3 bucket name is globally unique, choose a name which is available."
+          },
+          {
+            "text": "Region: Select US East (N. Virginia) us-east-1"
+          },
+          {
+            "text": "For Object ownership: Select ACLs disabled"
+          },
+          {
+            "text": "For Block Public Access settings for this bucket section, Uncheck the option, Block all public access, and check the acknowledge option."
+          },
+          {
+            "text": "For Block Public Access settings for this bucket section,"
+          },
+          {
+            "text": "Uncheck the option, Block all public access, and check the acknowledge option."
+          },
+          {
+            "text": "Task 5: Create and configure CloudWatch event"
+          },
+          {
+            "text": "Leave other settings as default."
+          },
+          {
+            "text": "Click on Create bucket button."
+          },
+          {
+            "text": "The S3 bucket is created successfully. Click on your bucket name."
+          },
+          {
+            "text": "In the Overview, You can see the following message"
+          },
+          {
+            "text": "You don't have any objects in this bucket."
+          },
+          {
+            "text": "Task 5: Create and configure CloudWatch event"
+          },
+          {
+            "text": "To upload a file to our S3 bucket,"
+          },
+          {
+            "text": "Click on Upload button."
+          },
+          {
+            "text": "Click on Add files button."
+          },
+          {
+            "text": "Browse for your local image."
+          },
+          {
+            "text": "Click on the Upload button."
+          },
+          {
+            "text": "You can watch the progress of the upload from within the transfer panel at the top of the screen."
+          },
+          {
+            "text": "Once your file has been uploaded, it will be displayed in the bucket."
+          }
+        ]
+      },
+      {
+        "title": "Task 7: Create a Lambda function",
+        "steps": [
+          {
+            "text": "In this task, we are going to create a Lambda function by providing the required configurations like name, runtime, role , triggers etc."
+          },
+          {
+            "text": "Make sure you are in the US East (N. Virginia) us-east-1"
+          },
+          {
+            "text": "Navigate to Lambda by clicking on Services menu. Lambda is available under Compute section."
+          },
+          {
+            "text": "Click on the Create a function button. Choose Author from Scratch Function name: Enter config_lambda Runtime: Select Python 3.9"
+          },
+          {
+            "text": "Click on the Create a function button."
+          },
+          {
+            "text": "Choose Author from Scratch"
+          },
+          {
+            "text": "Function name: Enter config_lambda"
+          },
+          {
+            "text": "Runtime: Select Python 3.9"
+          },
+          {
+            "text": "Permissions: Click on Change default execution role and choose Use an existing role"
+          },
+          {
+            "text": "Existing role: Select IAM Role (task_257_role) from the list."
+          },
+          {
+            "text": "Note: This IAM Role is created during the lab creation."
+          },
+          {
+            "text": "Now leave everything as default."
+          },
+          {
+            "text": "Click on Create function button and it will take a few minutes to create the lambda function for you."
+          },
+          {
+            "text": "Click on the + Add trigger button in the function overview to integrate the CloudWatch rule with Lambda."
+          },
+          {
+            "text": "Task 7: Create a Lambda function"
+          },
+          {
+            "text": "For Trigger configuration, Search and Select the EventBridge (CloudWatch Events)"
+          },
+          {
+            "text": "Rule: Select Existing rules"
+          },
+          {
+            "text": "Existing rules: Select the CloudWatch rule config_rule."
+          },
+          {
+            "text": "Task 7: Create a Lambda function"
+          },
+          {
+            "text": "The event pattern will be shown. Click on the Add button."
+          },
+          {
+            "text": "The trigger is successfully added to the lambda function."
+          },
+          {
+            "text": "Add the environment variable for the Lambda function."
+          },
+          {
+            "text": "Switch to the Configuration tab and select the Environment variables."
+          },
+          {
+            "text": "Click on the Edit button to add the Environment variable on the left side as highlighted in the below picture."
+          },
+          {
+            "text": "Task 7: Create a Lambda function"
+          },
+          {
+            "text": "By default, there will be no Environment variable present, Click on the Add environment variable. Key : Enter TOPIC_ARN Value : Enter SNS topic ARN copied previously"
+          },
+          {
+            "text": "By default, there will be no Environment variable present, Click on the Add environment variable."
+          },
+          {
+            "text": "Key : Enter TOPIC_ARN"
+          },
+          {
+            "text": "Value : Enter SNS topic ARN copied previously"
+          },
+          {
+            "text": "Click on the Save button"
+          },
+          {
+            "text": "Paste the below code in the Code Window and complete the Setup."
+          },
+          {
+            "text": "Switch to the Code tab and double click on the lambda_function.py file inside the editor window."
+          },
+          {
+            "text": "Task 7: Create a Lambda function"
+          },
+          {
+            "text": "Make sure that the default code is visible to you. Now remove everything using Ctrl+A and Ctrl+X. And, paste the below code."
+          },
+          {
+            "text": "Once the code is pasted, click on the Deploy button to save the code."
+          },
+          {
+            "text": "Setup is completed for the lab, it's now time to test the working of the lab."
+          },
+          {
+            "text": "The next few steps include making changes in the S3 Bucket, refreshing the config rule, and checking mail for the changes."
+          }
+        ]
+      },
+      {
+        "title": "Task 8: Change permission and make the S3 Bucket public",
+        "steps": [
+          {
+            "text": "Navigate to the Services menu at the top and click on S3 in the Storage section."
+          },
+          {
+            "text": "Buckets will be listed there, click to Open the bucket name starting with lab. This bucket has been created by you in the Task 6."
+          },
+          {
+            "text": "Switch to the Permission tab and scroll to the Bucket policy window."
+          },
+          {
+            "text": "Click on the Edit button and paste the below policy."
+          },
+          {
+            "text": "And, replace the bucket ARN at both places."
+          },
+          {
+            "text": "Bucket ARN will be present on the top of the editor, click on the copy button and paste the ARN carefully."
+          },
+          {
+            "text": "Task 8: Change permission and make the S3 Bucket public"
+          },
+          {
+            "text": "Click on the Save changes button. The bucket is public, any object uploaded inside will be publicly accessible now."
+          }
+        ]
+      },
+      {
+        "title": "Task 8: Check email to see the updates",
+        "steps": [
+          {
+            "text": "Open your mail and look for the emails from no-reply@sns.amazonaws.com"
+          },
+          {
+            "text": "Click on the open this mail."
+          },
+          {
+            "text": "The email will have all the details about the violation."
+          },
+          {
+            "text": "Task 8: Check email to see the updates"
+          },
+          {
+            "text": "There are two other mail from the same sender having the Subject as AWS Notification Message."
+          }
+        ]
+      },
+      {
+        "title": "Task 9: Re-evaluate the Config rule to check the changes",
+        "steps": [
+          {
+            "text": "Make sure you are in the US East (N. Virginia) us-east-1"
+          },
+          {
+            "text": "Navigate to Config by clicking on the Services menu available under the Management and Governance section."
+          },
+          {
+            "text": "Click on the Rules present on the left panel (Not the one under Aggregators)."
+          },
+          {
+            "text": "One of the rules i.e. s3-bucket-public-read-prohibited is now showing as 1 Noncompliant resource(s)"
+          },
+          {
+            "text": "Task 9: Re-evaluate the Config rule to check the changes"
+          },
+          {
+            "text": "Click on the rule name, to see the non-compliance resource."
+          },
+          {
+            "text": "Resources in scope will show the noncompliant resource i.e. S3 Bucket."
+          },
+          {
+            "text": "Scroll to the left and check the Annotation."
+          },
+          {
+            "text": "Task 9: Re-evaluate the Config rule to check the changes"
+          },
+          {
+            "text": "Annotation: The S3 bucket ACL allows public read access. The S3 bucket policy allows public read access."
+          },
+          {
+            "text": "Click on the bucket name and select the Resource timeline option as shown below."
+          },
+          {
+            "text": "Task 9: Re-evaluate the Config rule to check the changes"
+          },
+          {
+            "text": "The events section will take some time and show the exact time when changes were made."
+          },
+          {
+            "text": "Task 9: Re-evaluate the Config rule to check the changes"
+          },
+          {
+            "text": "AWS Config allows you to track resource relationships and dependencies through the use of configuration item history and resource relationships graph. This helps you understand the impact of changes and identify potential compliance risks."
+          }
+        ]
+      },
+      {
+        "title": "Task 11 : Validation of the Lab",
+        "steps": [
+          {
+            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          },
+          {
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          },
+          {
+            "text": "Sample output :"
+          },
+          {
+            "text": "You have successfully created an SNS topic and Subscription."
+          },
+          {
+            "text": "You have successfully done the setup of AWS Config and have created Config rules."
+          },
+          {
+            "text": "You have successfully created and configured CloudWatch."
+          },
+          {
+            "text": "You have successfully created an S3 bucket and uploaded an image object in it."
+          },
+          {
+            "text": "You have successfully created a Lambda function and configured it."
+          },
+          {
+            "text": "You have successfully changed the Permission of the S3 Bucket and Made it public."
+          },
+          {
+            "text": "You have successfully received an email through SNS topic about the updates of the S3 Bucket."
+          },
+          {
+            "text": "You have successfully re-evaluated the Config rule and seen the events."
+          },
+          {
+            "text": "Sign out of AWS Account."
+          },
+          {
+            "text": "You have successfully completed the lab."
+          },
+          {
+            "text": "Once you have completed the steps click on End Lab from the lab console."
+          }
+        ]
+      }
+    ],
+    "takeaways": [],
+    "source": "course"
+  },
+  {
     "slug": "comparing-data-transfer-speeds-with-s3-transfer-acceleration",
     "title": "Comparing Data Transfer Speeds with S3 Transfer Acceleration",
     "level": "Intermediate",
@@ -10667,7 +11967,10 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -10682,7 +11985,7 @@ export const labsCatalog: Lab[] = [
             "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
           },
           {
-            "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+            "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
           }
         ]
       },
@@ -10690,25 +11993,50 @@ export const labsCatalog: Lab[] = [
         "title": "Task 2: Create an EKS Cluster",
         "steps": [
           {
-            "text": "Make sure you are in the N.Virginia Region."
+            "text": "Make sure you are in the N.Virginia Region."
           },
           {
-            "text": "Navigate to Elastic Kubernetes Service by clicking on the Services menu available under the Containers section."
+            "text": "Navigate to Elastic Kubernetes Service by clicking on the Services menu available under the Containers section."
           },
           {
-            "text": "Click on Create cluster button."
+            "text": "Click on Create cluster button.",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-01.png"
+            ]
+          },
+          {
+            "text": "Task 2: Create an EKS Cluster",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-02.png"
+            ]
           },
           {
             "text": "Enter the cluster name as a whiz"
           },
           {
+            "text": "Keep the Kubernetes version as defaultCluster IAM role: Choose the existing IAM roleNote : Ignore below notification messages, and follow further steps.Node IAM role: Choose the existing IAM role",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-03.png",
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-04.png"
+            ]
+          },
+          {
             "text": "Keep the Kubernetes version as default"
+          },
+          {
+            "text": "Task 2: Create an EKS Cluster",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-05.png"
+            ]
           },
           {
             "text": "Cluster IAM role: Choose the existing IAM role"
           },
           {
-            "text": "Note : Ignore below notification messages, and follow further steps."
+            "text": "Note : Ignore below notification messages, and follow further steps.",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-06.png"
+            ]
           },
           {
             "text": "Node IAM role: Choose the existing IAM role"
@@ -10717,16 +12045,25 @@ export const labsCatalog: Lab[] = [
             "text": "VPC: Select the Default VPC."
           },
           {
-            "text": "Subnets: Select the subnets for us-east-1a, us-east-1b, us-east-1c and us-east-1 and remove the subnets us-east-1e and us-east-1f."
+            "text": "Subnets: Select the subnets for us-east-1a, us-east-1b, us-east-1c and us-east-1 and remove the subnets us-east-1e and us-east-1f.",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-07.png"
+            ]
           },
           {
-            "text": "Click on the Create button."
+            "text": "Task 2: Create an EKS Cluster",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-08.png"
+            ]
           },
           {
-            "text": "Note: Cluster creation will take about 10-15 minutes."
+            "text": "Click on the Create button.\nNote: Cluster creation will take about 10-15 minutes."
           },
           {
-            "text": "Cluster is created now."
+            "text": "Cluster is created now.",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-09.png"
+            ]
           }
         ]
       },
@@ -10734,13 +12071,31 @@ export const labsCatalog: Lab[] = [
         "title": "Task 3 : Create an Environment in CloudShell",
         "steps": [
           {
-            "text": "Make sure you are in the N.Virginia Region."
+            "text": "Make sure you are in the N.Virginia Region."
           },
           {
-            "text": "Click on Arrow icon (Cloud Shell) on the top AWS menu bar."
+            "text": "Click on Arrow icon (Cloud Shell) on the top AWS menu bar.",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-10.png"
+            ]
           },
           {
-            "text": "Once the environment is created, you are ready to use the terminal."
+            "text": "Task 3 : Create an Environment in CloudShell",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-11.png"
+            ]
+          },
+          {
+            "text": "Once the environment is created, you are ready to use the terminal.",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-12.png"
+            ]
+          },
+          {
+            "text": "Task 3 : Create an Environment in CloudShell",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-13.png"
+            ]
           }
         ]
       },
@@ -10748,36 +12103,28 @@ export const labsCatalog: Lab[] = [
         "title": "Task 4 : Install kubectl on AWS CloudShell",
         "steps": [
           {
+            "text": "Once the environment is ready run all these commands the terminal, Download the Amazon EKS vended kubectl binary for your cluster's Kubernetes version from Amazon S3. To do so, un the following command:curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl"
+          },
+          {
             "text": "Once the environment is ready run all these commands the terminal, Download the Amazon EKS vended kubectl binary for your cluster's Kubernetes version from Amazon S3. To do so, un the following command:"
           },
           {
-            "text": "curl -o kubectl https://amazon-eks.s3.us-west-2.amazonaws.com/1.18.9/2020-11-02/bin/linux/amd64/kubectl"
+            "text": "Apply execute permissions to the binary.chmod +x ./kubectl"
           },
           {
             "text": "Apply execute permissions to the binary."
           },
           {
-            "text": "chmod +x ./kubectl"
+            "text": "Copy the binary to a folder in your PATH. If you have already installed a version of kubectl, then we recommend creating a $HOME/bin/kubectl and ensuring that $HOME/bin comes first in your $PATH.mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin"
           },
           {
             "text": "Copy the binary to a folder in your PATH. If you have already installed a version of kubectl, then we recommend creating a $HOME/bin/kubectl and ensuring that $HOME/bin comes first in your $PATH."
           },
           {
-            "text": "mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$PATH:$HOME/bin"
+            "text": "After you install kubectl, you can verify its version with the following command:kubectl version --short --client"
           },
           {
             "text": "After you install kubectl, you can verify its version with the following command:"
-          },
-          {
-            "text": "kubectl version --short --client"
-          }
-        ]
-      },
-      {
-        "title": "Task 4 :",
-        "steps": [
-          {
-            "text": "Install kubectl on AWS CloudShell"
           }
         ]
       },
@@ -10785,40 +12132,43 @@ export const labsCatalog: Lab[] = [
         "title": "Task 5 : Configure your AWS CloudShell to communicate with your cluster",
         "steps": [
           {
-            "text": "Once the environment is ready on CloudShell, you create a kubeconfig file for your cluster. The settings in this file enable the kubectl CLI to communicate with your cluster."
+            "text": "Once the environment is ready on CloudShell, you create a kubeconfig file for your cluster. The settings in this file enable the kubectl CLI to communicate with your cluster."
+          },
+          {
+            "text": "To create a kubeconfig file, run the following command:aws eks update-kubeconfig --region us-east-1 --name whiz\nNote: If your cluster name is not whiz, Update your cluster name in the above command."
           },
           {
             "text": "To create a kubeconfig file, run the following command:"
           },
           {
-            "text": "aws eks update-kubeconfig --region us-east-1 --name whiz"
+            "text": "Note: If your cluster name is not whiz, Update your cluster name in the above command."
           },
           {
-            "text": "Note: If your cluster name is not whiz, Update your cluster name in the above command."
+            "text": "Test your configuration, with the following command:kubectl get svc"
           },
           {
             "text": "Test your configuration, with the following command:"
           },
           {
-            "text": "kubectl get svc"
+            "text": "Task 5 : Configure your AWS CloudShell to communicate with your cluster",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-14.png"
+            ]
           },
           {
-            "text": "Do You Know ?"
+            "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
           },
           {
-            "text": "You can create an Amazon EKS cluster without specifying a VPC. This is because Amazon EKS can automatically create a VPC for your cluster. However, if you do specify a VPC, you will have more control over the networking configuration of your cluster."
-          },
-          {
-            "text": "Task 6: Validation Test"
-          },
-          {
-            "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
-          },
-          {
-            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
           },
           {
             "text": "Sample output :"
+          },
+          {
+            "text": "Task 5 : Configure your AWS CloudShell to communicate with your cluster",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-15.gif"
+            ]
           }
         ]
       },
@@ -10826,16 +12176,28 @@ export const labsCatalog: Lab[] = [
         "title": "Task 7: Delete AWS Resources",
         "steps": [
           {
-            "text": "Deleting EKS cluster"
+            "text": "Navigate to Elastic Kubernetes Service by clicking on the Services menu available under the Containers section.."
           },
           {
-            "text": "Navigate to Elastic Kubernetes Service by clicking on the Services menu available under the Containers section.."
+            "text": "On the left sidebar, click on the Clusters option in the left panel."
           },
           {
-            "text": "On the left sidebar, click on the Clusters option in the left panel."
+            "text": "whiz EKS cluster will be listed here.",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-16.png"
+            ]
           },
           {
-            "text": "whiz EKS cluster will be listed here."
+            "text": "Task 7: Delete AWS Resources",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-17.png"
+            ]
+          },
+          {
+            "text": "To delete the cluster, perform the following task: Select the present cluster, Click on the Delete button.",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-18.png"
+            ]
           },
           {
             "text": "To delete the cluster, perform the following task:"
@@ -10844,16 +12206,31 @@ export const labsCatalog: Lab[] = [
             "text": "Select the present cluster,"
           },
           {
-            "text": "Click on the Delete button."
+            "text": "Click on the Delete button.",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-19.png"
+            ]
           },
           {
-            "text": "Confirm the deletion by typing the cluster name whiz in the required field, and click on the Delete button."
+            "text": "Task 7: Delete AWS Resources",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-20.png"
+            ]
+          },
+          {
+            "text": "Confirm the deletion by typing the cluster name whiz in the required field, and click on the Delete button.",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-21.png"
+            ]
+          },
+          {
+            "text": "Task 7: Delete AWS Resources",
+            "images": [
+              "/labs/create-a-cluster-in-amazon-eks-and-install-kubectl/step-22.png"
+            ]
           },
           {
             "text": "The cluster will be deleted within 10-15 minutes."
-          },
-          {
-            "text": "Completion and Conclusion"
           },
           {
             "text": "You have successfully created and launched Amazon EKS Cluster."
@@ -10865,7 +12242,583 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully configured AWS Cloudshell to communicate with AWS EKS Cluster."
           },
           {
-            "text": "End Lab"
+            "text": "Sign out of AWS Account."
+          },
+          {
+            "text": "You have successfully completed the lab."
+          },
+          {
+            "text": "Once you have completed the steps, click on End Lab from the lab console."
+          }
+        ]
+      }
+    ],
+    "takeaways": [],
+    "source": "course"
+  },
+  {
+    "slug": "create-a-docker-container-using-dockerfile-and-store-the-image-in-ecr",
+    "title": "Create a Docker container using Dockerfile and store the image in ECR",
+    "level": "Advanced",
+    "services": [
+      "AWS"
+    ],
+    "summary": "",
+    "duration": "01:00:00",
+    "tasks": [
+      {
+        "title": "Task 1: Sign in to AWS Management Console",
+        "steps": [
+          {
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          },
+          {
+            "text": "On the AWS sign-in page,"
+          },
+          {
+            "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+          },
+          {
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          },
+          {
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          }
+        ]
+      },
+      {
+        "title": "Task 2: Create a Key Pair for the EC2 instances, inside the ECS Cluster",
+        "steps": [
+          {
+            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section"
+          },
+          {
+            "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key Pairs"
+          },
+          {
+            "text": "To create a new key pair, click on the Create Key pair button."
+          },
+          {
+            "text": "Task 2: Create a Key Pair for the EC2 instances, inside the ECS Cluster"
+          },
+          {
+            "text": "Fill in the details below:"
+          },
+          {
+            "text": "Name: Enter WhizKeyPair"
+          },
+          {
+            "text": "Key pair type: Select RSA"
+          },
+          {
+            "text": "Private key file format: Select pem (Linux & Mac Users) or ppk (Windows users)"
+          },
+          {
+            "text": "Leave other options as default."
+          },
+          {
+            "text": "Click on the Create Key pair."
+          },
+          {
+            "text": "Task 2: Create a Key Pair for the EC2 instances, inside the ECS Cluster"
+          },
+          {
+            "text": "Key pair will be created."
+          }
+        ]
+      },
+      {
+        "title": "Task 3: Launching an ECS Cluster",
+        "steps": [
+          {
+            "text": "Make sure you are in the N.Virginia Region. Navigate to Elastic Container Service by clicking on the Services menu in the top, then click on Elastic Container Service in the Containers section."
+          },
+          {
+            "text": "On the left sidebar, click on the Clusters option present under the Amazon ECS section, then Click on the Create cluster button."
+          },
+          {
+            "text": "Task 3: Launching an ECS Cluster"
+          },
+          {
+            "text": "In Cluster configuration :"
+          },
+          {
+            "text": "Cluster name : Leave the name as default."
+          },
+          {
+            "text": "Task 3: Launching an ECS Cluster"
+          },
+          {
+            "text": "In Infrastructure Section : Choose Fargate and Self-managed instances option Auto Scaling group (ASG) : Select Create a new Auto Scaling group - advancedProvisioning model: On-demand Operating System/Architecture : Select Amazon Linux 2 (Make sure you have selected the mentioned AMI)EC2 instance type : Select t2.microEC2 instance role : Select role name start with Ecs_role_random_numbers"
+          },
+          {
+            "text": "In Infrastructure Section :"
+          },
+          {
+            "text": "Choose Fargate and Self-managed instances option Auto Scaling group (ASG) : Select Create a new Auto Scaling group - advancedProvisioning model: On-demand Operating System/Architecture : Select Amazon Linux 2 (Make sure you have selected the mentioned AMI)EC2 instance type : Select t2.microEC2 instance role : Select role name start with Ecs_role_random_numbers"
+          },
+          {
+            "text": "Choose Fargate and Self-managed instances option"
+          },
+          {
+            "text": "Auto Scaling group (ASG) : Select Create a new Auto Scaling group - advancedProvisioning model: On-demand"
+          },
+          {
+            "text": "Auto Scaling group (ASG) : Select Create a new Auto Scaling group - advanced"
+          },
+          {
+            "text": "Provisioning model: On-demand"
+          },
+          {
+            "text": "Operating System/Architecture : Select Amazon Linux 2 (Make sure you have selected the mentioned AMI)"
+          },
+          {
+            "text": "EC2 instance type : Select t2.micro"
+          },
+          {
+            "text": "EC2 instance role : Select role name start with Ecs_role_random_numbers"
+          },
+          {
+            "text": "Desired capacity :"
+          },
+          {
+            "text": "Minimum : Enter 1"
+          },
+          {
+            "text": "Maximum : Enter 2"
+          },
+          {
+            "text": "SSH Key pair: Select WhizKeyPair"
+          },
+          {
+            "text": "Task 3: Launching an ECS Cluster"
+          },
+          {
+            "text": "In Network settings:"
+          },
+          {
+            "text": "Security group: Select Create new security group."
+          },
+          {
+            "text": "Security name : Enter mysg"
+          },
+          {
+            "text": "Security group description : Enter mysg"
+          },
+          {
+            "text": "Inbound rules for security groups:"
+          },
+          {
+            "text": "Type : Select SSH"
+          },
+          {
+            "text": "Source : Select Anywhere"
+          },
+          {
+            "text": "Task 3: Launching an ECS Cluster"
+          },
+          {
+            "text": "Keep rest things as default and click on the Create button"
+          },
+          {
+            "text": "ECS Cluster will be created"
+          },
+          {
+            "text": "It will take few minutes to provision the ECS Instance."
+          },
+          {
+            "text": "Task 3: Launching an ECS Cluster"
+          }
+        ]
+      },
+      {
+        "title": "Task 4: Create Task Definitions",
+        "steps": [
+          {
+            "text": "In this task, we are going to create a task definition for the cluster. A task definition provides a blueprint for creating tasks, which are the basic unit of work in ECS. Each task definition can define one or more containers that are run together on the same underlying EC2 instances or Fargate tasks."
+          },
+          {
+            "text": "On the left sidebar, click on the Task Definitions option present under the Amazon ECS section."
+          },
+          {
+            "text": "Click on the Create new task definition button."
+          },
+          {
+            "text": "Task 4: Create Task Definitions"
+          },
+          {
+            "text": "In Task definition configuration:"
+          },
+          {
+            "text": "Task definition family: Enter ecs-demo"
+          },
+          {
+            "text": "Task 4: Create Task Definitions"
+          },
+          {
+            "text": "For Environment: App Environment : Remove AWS Fargate And Select Amazon EC2 Instances. Task Size : CPU : Enter .25 VCPU Memory : Enter .5 GBTask role: select NoneTask Execution role: select None For Container Details : Enter httpd\nImage URL: Enter httpd:2.4\nFor Port mappings: Container Port: Enter 80\nProtocol: Select TCP\nApp protocol: Select HTTP"
+          },
+          {
+            "text": "For Environment:"
+          },
+          {
+            "text": "App Environment : Remove AWS Fargate And Select Amazon EC2 Instances."
+          },
+          {
+            "text": "Task 4: Create Task Definitions"
+          },
+          {
+            "text": "Task Size : CPU : Enter .25 VCPU Memory : Enter .5 GBTask role: select NoneTask Execution role: select None"
+          },
+          {
+            "text": "Task Size :"
+          },
+          {
+            "text": "CPU : Enter .25 VCPU"
+          },
+          {
+            "text": "Memory : Enter .5 GBTask role: select NoneTask Execution role: select None"
+          },
+          {
+            "text": "Memory : Enter .5 GB"
+          },
+          {
+            "text": "Task role: select None"
+          },
+          {
+            "text": "Task Execution role: select None"
+          },
+          {
+            "text": "For Container Details : Enter httpd\nImage URL: Enter httpd:2.4\nFor Port mappings: Container Port: Enter 80\nProtocol: Select TCP\nApp protocol: Select HTTP"
+          },
+          {
+            "text": "For Container Details :"
+          },
+          {
+            "text": "Enter httpd"
+          },
+          {
+            "text": "Image URL: Enter httpd:2.4"
+          },
+          {
+            "text": "For Port mappings: Container Port: Enter 80\nProtocol: Select TCP\nApp protocol: Select HTTP"
+          },
+          {
+            "text": "Container Port: Enter 80"
+          },
+          {
+            "text": "Protocol: Select TCP"
+          },
+          {
+            "text": "App protocol: Select HTTP"
+          },
+          {
+            "text": "Task 4: Create Task Definitions"
+          },
+          {
+            "text": "Uncheck use log collection box."
+          },
+          {
+            "text": "Task 4: Create Task Definitions"
+          },
+          {
+            "text": "Keep rest things as default and click on the Create button."
+          },
+          {
+            "text": "Task Definition ecs-demo is now created."
+          }
+        ]
+      },
+      {
+        "title": "Task 5: Create a service and start HTTPD container in ECS",
+        "steps": [
+          {
+            "text": "In this task, we are going to create a service and start the HTTPD container. In AWS ECS (Elastic Container Service), a service is a long-running task that ensures that a specified number of instances of a task definition are running and maintained in an ECS cluster. Services allow you to define the desired state of your tasks and automatically handle task placement, scaling, and recovery."
+          },
+          {
+            "text": "On the left sidebar, click on the Task definitions option present under the Amazon ECS section."
+          },
+          {
+            "text": "Select ecs-demo and click on Deploy and click Create service button."
+          },
+          {
+            "text": "Task 5: Create a service and start HTTPD container in ECS"
+          },
+          {
+            "text": "Select Task definition revision as 1(latest revision)"
+          },
+          {
+            "text": "Service name: Enter ecs-demo-service"
+          },
+          {
+            "text": "Task 5: Create a service and start HTTPD container in ECS"
+          },
+          {
+            "text": "Existing cluster : Select the created Cluster."
+          },
+          {
+            "text": "Compute options : Select Launch Type"
+          },
+          {
+            "text": "Launch type: Select EC2"
+          },
+          {
+            "text": "7?. In Deployment configurations :"
+          },
+          {
+            "text": "Service type: Select REPLICA"
+          },
+          {
+            "text": "Desired tasks : Enter 1"
+          },
+          {
+            "text": "Task 5: Create a service and start HTTPD container in ECS"
+          },
+          {
+            "text": "?14. Under Networking section,"
+          },
+          {
+            "text": "Security group: select Use an existing security group"
+          },
+          {
+            "text": "Security group name: select mysg"
+          },
+          {
+            "text": "Task 5: Create a service and start HTTPD container in ECS"
+          },
+          {
+            "text": "Keep other options as default, and click on the Create button, the service will be created within few minutes."
+          }
+        ]
+      },
+      {
+        "title": "Task 6: Test the HTTPD container in ECS Cluster",
+        "steps": [
+          {
+            "text": "On the left sidebar, click on the Clusters option present under the Amazon ECS section."
+          },
+          {
+            "text": "whiz ECS Cluster will be listed here, click on the whiz."
+          },
+          {
+            "text": "To view the ECS Instance, switch to the Infrastructure tab and scroll down to Container instances"
+          },
+          {
+            "text": "Click on the EC2 instance ID."
+          },
+          {
+            "text": "Task 6: Test the HTTPD container in ECS Cluster"
+          },
+          {
+            "text": "You will be redirected to see the running EC2 instance."
+          },
+          {
+            "text": "Task 6: Test the HTTPD container in ECS Cluster"
+          }
+        ]
+      },
+      {
+        "title": "Task 7: SSH into the underlying EC2 instance",
+        "steps": [
+          {
+            "text": "Please follow the steps in SSH into EC2 Instance."
+          }
+        ]
+      },
+      {
+        "title": "Task 8: Create a Dockerfile and build a docker image",
+        "steps": [
+          {
+            "text": "Get the root access using the following command:"
+          },
+          {
+            "text": "Now run the updates using the following command:yum -y update"
+          },
+          {
+            "text": "Now run the updates using the following command:"
+          },
+          {
+            "text": "Check the Docker version by running the following command:docker version"
+          },
+          {
+            "text": "Check the Docker version by running the following command:"
+          },
+          {
+            "text": "Check all the docker processes running in the ECS Cluster by running the following command:docker ps"
+          },
+          {
+            "text": "Check all the docker processes running in the ECS Cluster by running the following command:"
+          },
+          {
+            "text": "Install AWS CLI by running the following command:yum install awscli -y"
+          },
+          {
+            "text": "Install AWS CLI by running the following command:"
+          },
+          {
+            "text": "Create a Dockerfile by running the following command:"
+          },
+          {
+            "text": "Put the instructions in the Dockerfile by running the following command:vi Dockerfile"
+          },
+          {
+            "text": "Put the instructions in the Dockerfile by running the following command:"
+          },
+          {
+            "text": "Paste the below code in Dockerfile after pressing i or insert mode"
+          },
+          {
+            "text": "While pasting the above script in Dockerfile's vi editor, you may get issue with formatting. Please follow the below instructions. If not leave as it is."
+          },
+          {
+            "text": "Save the file by pressing esc and enter: wq to close the vi editor."
+          },
+          {
+            "text": "Run the Build command:docker build -t whiz ."
+          },
+          {
+            "text": "Run the Build command:"
+          },
+          {
+            "text": "Check the availability of a new image, by running the following command:docker images"
+          },
+          {
+            "text": "Check the availability of a new image, by running the following command:"
+          }
+        ]
+      },
+      {
+        "title": "Task 9: Create a repository in ECR and run the push commands",
+        "steps": [
+          {
+            "text": "Navigate to Elastic Container Registry by clicking on the Services menu at the top, then click on Elastic Container Registry."
+          },
+          {
+            "text": "Click on Create under Create a Repository."
+          },
+          {
+            "text": "Fill in the below details to create an ECR repository. Repository name: Enter whiz Keep other options as default."
+          },
+          {
+            "text": "Fill in the below details to create an ECR repository."
+          },
+          {
+            "text": "Repository name: Enter whiz"
+          },
+          {
+            "text": "Keep other options as default."
+          },
+          {
+            "text": "Finally, click on the Create Repository to create an ECR Repository."
+          },
+          {
+            "text": "The repository is now created, select the repository and click on the View push commands button to upload the created custom image in the ECR Repository."
+          },
+          {
+            "text": "Task 9: Create a repository in ECR and run the push commands"
+          },
+          {
+            "text": "Copy the commands one by one and paste the same on the terminal to execute."
+          },
+          {
+            "text": "Since we have already built the Dockerfile to the docker image. We can skip copying and pasting the 2nd command. You can copy the commands according to your System OS."
+          },
+          {
+            "text": "Task 9: Create a repository in ECR and run the push commands"
+          },
+          {
+            "text": "After running all the 3 commands, can click on the repository name to check the created image."
+          },
+          {
+            "text": "Task 9: Create a repository in ECR and run the push commands"
+          },
+          {
+            "text": "Image is now pushed to ECR repository, it can now be used in task definition to create services and tasks."
+          },
+          {
+            "text": "AWS ECS is often used in conjunction with other AWS services, such as Amazon ECR (Elastic Container Registry) to store and manage container images, AWS CloudFormation for infrastructure as code, AWS IAM for access management, and AWS CloudWatch for monitoring and logging."
+          }
+        ]
+      },
+      {
+        "title": "Task 10: Validation Test",
+        "steps": [
+          {
+            "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+          },
+          {
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          },
+          {
+            "text": "Sample output :"
+          },
+          {
+            "text": "Task 10: Validation Test"
+          }
+        ]
+      },
+      {
+        "title": "Task 11: Delete AWS Resources",
+        "steps": [
+          {
+            "text": "Navigate to Elastic Container Registry by clicking on the Services menu in the top, then click on Elastic Container Registry in the Containers section."
+          },
+          {
+            "text": "On the left sidebar, click on the Repositories option present under the Amazon ECR section."
+          },
+          {
+            "text": "whiz ECS repository will be listed here."
+          },
+          {
+            "text": "To delete the service, do the following task: Select the present repository, Click on the Delete button."
+          },
+          {
+            "text": "To delete the service, do the following task:"
+          },
+          {
+            "text": "Select the present repository,"
+          },
+          {
+            "text": "Click on the Delete button."
+          },
+          {
+            "text": "Task 11: Delete AWS Resources"
+          },
+          {
+            "text": "Confirm the deletion by click on the Delete button."
+          },
+          {
+            "text": "Task 11: Delete AWS Resources"
+          },
+          {
+            "text": "It will be deleted automatically."
+          },
+          {
+            "text": "Navigate to Clusters from the left navigation panel. Select the cluster and Click on the Delete Cluster button."
+          },
+          {
+            "text": "Task 11: Delete AWS Resources"
+          },
+          {
+            "text": "Confirm the deletion by entering the phrase delete whizcluster and click on the Delete button."
+          },
+          {
+            "text": "Task 11: Delete AWS Resources"
+          },
+          {
+            "text": "Deletion will take up to 3-5 minutes."
+          },
+          {
+            "text": "You have successfully created and launched Amazon ECS Cluster."
+          },
+          {
+            "text": "You have successfully created an ECR repository."
+          },
+          {
+            "text": "You have successfully pushed the custom image to the ECR repository."
           },
           {
             "text": "Sign out of AWS Account."
@@ -10874,7 +12827,7 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully completed the lab."
           },
           {
-            "text": "Once you have completed the steps, click on End Lab from the lab console."
+            "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
           }
         ]
       }
@@ -12631,6 +14584,449 @@ export const labsCatalog: Lab[] = [
     "source": "course"
   },
   {
+    "slug": "create-redis-cluster-using-elasticache",
+    "title": "Create Redis cluster using ElastiCache",
+    "level": "Advanced",
+    "services": [
+      "AWS"
+    ],
+    "summary": "",
+    "duration": "01:00:00",
+    "tasks": [
+      {
+        "title": "Task 1: Sign in to AWS Management Console",
+        "steps": [
+          {
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page,"
+          },
+          {
+            "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+          },
+          {
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          },
+          {
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          }
+        ]
+      },
+      {
+        "title": "Task 2 : Create a security group",
+        "steps": [
+          {
+            "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+          },
+          {
+            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          },
+          {
+            "text": "Navigate to Security group on the left panel and click on Create Security group."
+          },
+          {
+            "text": "Fill in the below details under Basic details Name: Enter ElastiCache-SG Description: Enter Security group for ElastiCache VPC: Select Default VPC"
+          },
+          {
+            "text": "Fill in the below details under Basic details"
+          },
+          {
+            "text": "Name: Enter ElastiCache-SG"
+          },
+          {
+            "text": "Description: Enter Security group for ElastiCache"
+          },
+          {
+            "text": "VPC: Select Default VPC"
+          },
+          {
+            "text": "In the Inbound rules, We will add the incoming traffic details: To add SSH, Click on: Add rule Choose Type: SSH Source: Select Anywhere-IPv4, enter 0.0.0.0/0 For HTTP, Click on: Add rule Choose Type: HTTP Source: Select Anywhere-IPv4, enter 0.0.0.0/0 For Redis, Click on: Add rule Choose Type: Custom TCP Port range: Enter 6379 Source: Select Anywhere-IPv4, enter 0.0.0.0/0 After that, click on Create security group"
+          },
+          {
+            "text": "In the Inbound rules, We will add the incoming traffic details:"
+          },
+          {
+            "text": "To add SSH, Click on: Add rule Choose Type: SSH Source: Select Anywhere-IPv4, enter 0.0.0.0/0"
+          },
+          {
+            "text": "To add SSH,"
+          },
+          {
+            "text": "Click on: Add rule"
+          },
+          {
+            "text": "Choose Type: SSH"
+          },
+          {
+            "text": "Source: Select Anywhere-IPv4, enter 0.0.0.0/0"
+          },
+          {
+            "text": "For HTTP, Click on: Add rule Choose Type: HTTP Source: Select Anywhere-IPv4, enter 0.0.0.0/0"
+          },
+          {
+            "text": "For HTTP,"
+          },
+          {
+            "text": "Click on: Add rule"
+          },
+          {
+            "text": "Choose Type: HTTP"
+          },
+          {
+            "text": "Source: Select Anywhere-IPv4, enter 0.0.0.0/0"
+          },
+          {
+            "text": "For Redis, Click on: Add rule Choose Type: Custom TCP Port range: Enter 6379 Source: Select Anywhere-IPv4, enter 0.0.0.0/0 After that, click on Create security group"
+          },
+          {
+            "text": "For Redis,"
+          },
+          {
+            "text": "Click on: Add rule"
+          },
+          {
+            "text": "Choose Type: Custom TCP"
+          },
+          {
+            "text": "Port range: Enter 6379"
+          },
+          {
+            "text": "Source: Select Anywhere-IPv4, enter 0.0.0.0/0"
+          },
+          {
+            "text": "After that, click on Create security group"
+          },
+          {
+            "text": "Security group is now created. We will use that for EC2 and Redis cluster."
+          }
+        ]
+      },
+      {
+        "title": "Task 3 : Create a Redis Cluster",
+        "steps": [
+          {
+            "text": "Navigate to ElastiCache by clicking on the Services menu in the top. Then click on Redis OSS caches under Resources and select Create cache button."
+          },
+          {
+            "text": "We will now create a Redis Cluster, Select Continue with Redis OSS Engine : Select Redis OSSDeployment option : Select Node-based cluster Creation method : Select Cluster cache Cluster Mode : Select Enabled"
+          },
+          {
+            "text": "We will now create a Redis Cluster, Select Continue with Redis OSS"
+          },
+          {
+            "text": "Task 3 : Create a Redis Cluster"
+          },
+          {
+            "text": "Engine : Select Redis OSS"
+          },
+          {
+            "text": "Deployment option : Select Node-based cluster"
+          },
+          {
+            "text": "Creation method : Select Cluster cache"
+          },
+          {
+            "text": "Cluster Mode : Select Enabled"
+          },
+          {
+            "text": "Task 3 : Create a Redis Cluster"
+          },
+          {
+            "text": "Cluster info: Name: Enter MyRedisCluster Description: Enter Redis Cluster for WhizProject"
+          },
+          {
+            "text": "Name: Enter MyRedisCluster"
+          },
+          {
+            "text": "Description: Enter Redis Cluster for WhizProject"
+          },
+          {
+            "text": "Location: Location : Choose AWS Cloud Check the Multi AZ Enabled checkbox"
+          },
+          {
+            "text": "Location:"
+          },
+          {
+            "text": "Location : Choose AWS Cloud"
+          },
+          {
+            "text": "Check the Multi AZ Enabled checkbox"
+          },
+          {
+            "text": "Task 3 : Create a Redis Cluster"
+          },
+          {
+            "text": "In Cluster settings section, fill the details as follows:"
+          },
+          {
+            "text": "Engine version: Leave it as default"
+          },
+          {
+            "text": "Port: 6379 (default)"
+          },
+          {
+            "text": "Parameter group: Leave it as default"
+          },
+          {
+            "text": "Node type: cache.t3.micro (0.5 GiB)"
+          },
+          {
+            "text": "Number of Shards: 1"
+          },
+          {
+            "text": "Replicas per Shard: 1"
+          },
+          {
+            "text": "Task 3 : Create a Redis Cluster"
+          },
+          {
+            "text": "Subnet group settings: Choose Create new subnet group Name: Enter elasticache-subnet-group Description: Enter Subnet group for ElastiCache VPC ID: Default VPC Click on Next button."
+          },
+          {
+            "text": "Subnet group settings: Choose Create new subnet group"
+          },
+          {
+            "text": "Name: Enter elasticache-subnet-group"
+          },
+          {
+            "text": "Description: Enter Subnet group for ElastiCache"
+          },
+          {
+            "text": "VPC ID: Default VPC"
+          },
+          {
+            "text": "Click on Next button."
+          },
+          {
+            "text": "For Advanced Settings"
+          },
+          {
+            "text": "In Selected security groups, click on Manage button."
+          },
+          {
+            "text": "Select ElastiCache-SG, and click on the Choose button."
+          },
+          {
+            "text": "In the Backup section: Enable automatic backups: Uncheck Leave other options as default Click on Next button."
+          },
+          {
+            "text": "In the Backup section:"
+          },
+          {
+            "text": "Enable automatic backups: Uncheck"
+          },
+          {
+            "text": "Leave other options as default"
+          },
+          {
+            "text": "Click on Next button."
+          },
+          {
+            "text": "Finally, Click on the Create button."
+          },
+          {
+            "text": "It will take up to 10 minutes for this cluster to go from creating state to available state."
+          },
+          {
+            "text": "Meanwhile, let's create an EC2 instance, which will be used for accessing the Redis cluster."
+          }
+        ]
+      },
+      {
+        "title": "Task 4 : Launching an EC2 Instance",
+        "steps": [
+          {
+            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          },
+          {
+            "text": "Navigate to Instances on the left panel and click on Launch Instance."
+          },
+          {
+            "text": "Enter Name as MyEC2Server"
+          },
+          {
+            "text": "Choose an Amazon Machine Image (AMI): Select Amazon Linux 2023 AMI in the drop-down."
+          },
+          {
+            "text": "Choose architecture as 64-bit(x86)"
+          },
+          {
+            "text": "Task 4 : Launching an EC2 Instance"
+          },
+          {
+            "text": "Choose an Instance Type: Select t2.micro."
+          },
+          {
+            "text": "Task 4 : Launching an EC2 Instance"
+          },
+          {
+            "text": "Key Pair: Select Create a new key pair"
+          },
+          {
+            "text": "Key Pair name : Enter MyWhizkey"
+          },
+          {
+            "text": "Key pair type: Choose RSA"
+          },
+          {
+            "text": "Private key file format: Choose .pem"
+          },
+          {
+            "text": "Click on Create Key Pair button."
+          },
+          {
+            "text": "Under Network Settings, choose Select existing security group."
+          },
+          {
+            "text": "Select ElastiCache-SG security group created in the Task 2"
+          },
+          {
+            "text": "Task 4 : Launching an EC2 Instance"
+          },
+          {
+            "text": "On the right side under the Summary section,"
+          },
+          {
+            "text": "Number of Instances: 1"
+          },
+          {
+            "text": "Leave the rest of the things as default."
+          },
+          {
+            "text": "Launch Status: Your instance is now launching, Click on the instance ID and wait for complete initialization of instance till status change to running."
+          }
+        ]
+      },
+      {
+        "title": "Task 5 : Copy the ElastiCache Endpoint",
+        "steps": [
+          {
+            "text": "To work with the ElastiCache cluster, we need the endpoint."
+          },
+          {
+            "text": "Navigate to ElastiCache by clicking on the Services menu in the top, then click on Elasticache in the Database section"
+          },
+          {
+            "text": "On the home page, click on Redis Clusters in the left navigation panel."
+          },
+          {
+            "text": "If the status of the ElastiCache cluster is available."
+          },
+          {
+            "text": "Task 5 : Copy the ElastiCache Endpoint"
+          },
+          {
+            "text": "Click on the cluster name and Copy the Configuration Endpoint, and save it in the notepad, we'll use it in the later steps."
+          },
+          {
+            "text": "Task 5 : Copy the ElastiCache Endpoint"
+          },
+          {
+            "text": "Make sure to remove the port number from the end. After removing the port number it will be:\nExample: myrediscluster.n62wo6.clustercfg.use1.cache.amazonaws.com"
+          }
+        ]
+      },
+      {
+        "title": "Task 6 : SSH into EC2 Instance",
+        "steps": [
+          {
+            "text": "Please follow the steps in SSH into EC2 Instance."
+          }
+        ]
+      },
+      {
+        "title": "Task 7: Install the required package and connect to the ElastiCache cluster",
+        "steps": [
+          {
+            "text": "Run the below code in the terminal."
+          },
+          {
+            "text": "Copy the below code, paste the script and save with CTRL+X, enter Y and then click the Enter button."
+          },
+          {
+            "text": "Run the below commands to execute the script."
+          },
+          {
+            "text": "Go to the directory"
+          },
+          {
+            "text": "Now, connect to your Redis clusterNote: Replace the Endpoint with the copied one. Make sure to paste the endpoint without colon(:) and port numberExample: src/redis-cli -c --tls -h clustercfg.myrediscluster.2klkvn.use1.cache.amazonaws.com -p 6379"
+          },
+          {
+            "text": "Task 7: Install the required package and connect to the ElastiCache cluster"
+          }
+        ]
+      },
+      {
+        "title": "Task 8 : Test the ElastiCache cluster by running sample commands",
+        "steps": [
+          {
+            "text": "Enter the first command as."
+          },
+          {
+            "text": "This command will set the value of a as \"hello\", a string value, with no expiry"
+          },
+          {
+            "text": "Print the value of a"
+          },
+          {
+            "text": "This command will set the value of b as \"Whiz\", a string value, with 10-second expiry"
+          },
+          {
+            "text": "If you execute this command with-in 10 seconds, you will be able to see the value of b."
+          },
+          {
+            "text": "Re-enter this command after 10 seconds, to see the value of b is visible or not."
+          },
+          {
+            "text": "Once completed, enter the below command to close the connection with the Redis cluster."
+          },
+          {
+            "text": "Creating a Redis cluster using Amazon ElastiCache allows you to set up a highly available and scalable Redis deployment in the AWS cloud. Amazon ElastiCache is a managed service that simplifies the deployment, management, and monitoring of Redis clusters, providing high performance, low-latency data storage for various applications."
+          }
+        ]
+      },
+      {
+        "title": "Task 9: Validation of the lab",
+        "steps": [
+          {
+            "text": "Once the lab steps are completed, please click on the Validation button on the right-side panel."
+          },
+          {
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          },
+          {
+            "text": "Sample output :"
+          },
+          {
+            "text": "Task 9: Validation of the lab"
+          },
+          {
+            "text": "You have successfully created a Redis cluster with ElastiCache."
+          },
+          {
+            "text": "You have successfully logged into the EC2 instance by SSH."
+          },
+          {
+            "text": "You have successfully tested the Redis cluster."
+          },
+          {
+            "text": "Sign out of AWS Account."
+          },
+          {
+            "text": "You have successfully completed the lab."
+          },
+          {
+            "text": "Once you have completed the steps, click on End Lab from the lab console."
+          }
+        ]
+      }
+    ],
+    "takeaways": [],
+    "source": "course"
+  },
+  {
     "slug": "create-vpc-environment-challenge",
     "title": "Create VPC Environment challenge",
     "level": "Intermediate",
@@ -13509,6 +15905,2076 @@ export const labsCatalog: Lab[] = [
     "source": "course"
   },
   {
+    "slug": "creating-an-application-load-balancer-and-auto-scaling-group-in-aws",
+    "title": "Creating an Application Load Balancer and Auto Scaling Group in AWS",
+    "level": "Intermediate",
+    "services": [
+      "AWS"
+    ],
+    "summary": "",
+    "duration": "01:30:00",
+    "tasks": [
+      {
+        "title": "Task 1: Sign in to AWS Management Console",
+        "steps": [
+          {
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page,"
+          },
+          {
+            "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+          },
+          {
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          },
+          {
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          }
+        ]
+      },
+      {
+        "title": "Task 2: Create a Security Group for the Load balancer",
+        "steps": [
+          {
+            "text": "Make sure you are in the N.Virginia Region."
+          },
+          {
+            "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
+          },
+          {
+            "text": "On the left panel menu, select the Security Groups under the Network & Security section."
+          },
+          {
+            "text": "Click on the Create security group button."
+          },
+          {
+            "text": "Task 2: Create a Security Group for the Load balancer"
+          },
+          {
+            "text": "We are going to create a Security group for the Launch template with port 80 number enabled."
+          },
+          {
+            "text": "Security group name: Enter Load-balancer-SG"
+          },
+          {
+            "text": "Description: Enter Security group for Load balancer"
+          },
+          {
+            "text": "VPC: Select Default VPC"
+          },
+          {
+            "text": "Task 2: Create a Security Group for the Load balancer"
+          },
+          {
+            "text": "Click on the Add rule button under Inbound rules. Type : Select HTTP Source : Select Anywhere-IPv4 In the textbox add 0.0.0.0/0"
+          },
+          {
+            "text": "Click on the Add rule button under Inbound rules."
+          },
+          {
+            "text": "Type : Select HTTP"
+          },
+          {
+            "text": "Source : Select Anywhere-IPv4"
+          },
+          {
+            "text": "In the textbox add 0.0.0.0/0"
+          },
+          {
+            "text": "Leave everything as default and click on the Create security group button."
+          }
+        ]
+      },
+      {
+        "title": "Task 3: Create a Security Group for Launch template",
+        "steps": [
+          {
+            "text": "Click on the Create security group button."
+          },
+          {
+            "text": "We are going to create a Security group for the Launch template with port 80 number enabled. Security group name: Enter Launch-template-SG Description: Enter Security group for Launch template VPC: Select Default VPC"
+          },
+          {
+            "text": "We are going to create a Security group for the Launch template with port 80 number enabled."
+          },
+          {
+            "text": "Security group name: Enter Launch-template-SG"
+          },
+          {
+            "text": "Description: Enter Security group for Launch template"
+          },
+          {
+            "text": "VPC: Select Default VPC"
+          },
+          {
+            "text": "Task 3: Create a Security Group for Launch template"
+          },
+          {
+            "text": "Click on the Add rule button under Inbound rules. Here we will add SSH from the open internet and HTTP from the security group of a Load Balancer. Type : Select SSH Source : Select Anywhere-IPv4 In the textbox add 0.0.0.0/0 Click on the Add rule button to add HTTP Type : Select HTTP Source : Select Custom In the textbox type, Load-balancer-SG, select it."
+          },
+          {
+            "text": "Click on the Add rule button under Inbound rules."
+          },
+          {
+            "text": "Here we will add SSH from the open internet and HTTP from the security group of a Load Balancer."
+          },
+          {
+            "text": "Type : Select SSH"
+          },
+          {
+            "text": "Source : Select Anywhere-IPv4"
+          },
+          {
+            "text": "In the textbox add 0.0.0.0/0"
+          },
+          {
+            "text": "Click on the Add rule button to add HTTP"
+          },
+          {
+            "text": "Type : Select HTTP"
+          },
+          {
+            "text": "Source : Select Custom"
+          },
+          {
+            "text": "In the textbox type, Load-balancer-SG, select it."
+          },
+          {
+            "text": "Task 3: Create a Security Group for Launch template"
+          },
+          {
+            "text": "Leave everything as default and click on the Create security group button."
+          },
+          {
+            "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key Pairs."
+          },
+          {
+            "text": "To create a new key pair, click on the Create key pair button."
+          },
+          {
+            "text": "Task 3: Create a Security Group for Launch template"
+          },
+          {
+            "text": "Fill in the details below:"
+          },
+          {
+            "text": "Name: Enter WhizKeyPair"
+          },
+          {
+            "text": "File format: pem (Linux & Mac Users) or ppk (Windows users)"
+          },
+          {
+            "text": "Leave other options as default."
+          },
+          {
+            "text": "Click on the Create key pair button."
+          },
+          {
+            "text": "Key pair will be created."
+          }
+        ]
+      },
+      {
+        "title": "Task 4: Create a Key Pair for the Launch template",
+        "steps": [
+          {
+            "text": "In the left navigation pane (scroll down) within Network & Security, click on the Key Pairs."
+          },
+          {
+            "text": "To create a new key pair, click on the Create key pair button."
+          },
+          {
+            "text": "Task 4: Create a Key Pair for the Launch template"
+          },
+          {
+            "text": "Fill in the details below:"
+          },
+          {
+            "text": "Name: Enter WhizKeyPair"
+          },
+          {
+            "text": "File format: pem (Linux & Mac Users) or ppk (Windows users)"
+          },
+          {
+            "text": "Leave other options as default."
+          },
+          {
+            "text": "Click on the Create key pair button."
+          },
+          {
+            "text": "Key pair will be created."
+          }
+        ]
+      },
+      {
+        "title": "Task 5: Creating a Launch template",
+        "steps": [
+          {
+            "text": "In the left navigation pane (scroll down) within Instances, click on the Launch templates"
+          },
+          {
+            "text": "Click on the Create launch template button."
+          },
+          {
+            "text": "Task 5: Creating a Launch template"
+          },
+          {
+            "text": "Under Launch template name and description section:"
+          },
+          {
+            "text": "Launch template name: Enter labLC"
+          },
+          {
+            "text": "Template version description: Enter Launch template for whizdemo"
+          },
+          {
+            "text": "Leave other options as default."
+          },
+          {
+            "text": "Under Launch template contents:"
+          },
+          {
+            "text": "Select Amazon Linux from the Quick Start"
+          },
+          {
+            "text": "Amazon machine image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI"
+          },
+          {
+            "text": "Task 5: Creating a Launch template"
+          },
+          {
+            "text": "Under Instance type: Select t2.micro from the below list."
+          },
+          {
+            "text": "Under Instance type:"
+          },
+          {
+            "text": "Select t2.micro from the below list."
+          },
+          {
+            "text": "Key pair (Login): Select WhizKeyPair"
+          },
+          {
+            "text": "Task 5: Creating a Launch template"
+          },
+          {
+            "text": "Subnet: Choose any subnet from the list."
+          },
+          {
+            "text": "Security groups: Select Launch-template-SG from the list."
+          },
+          {
+            "text": "Task 5: Creating a Launch template"
+          },
+          {
+            "text": "Leave all other options as default."
+          },
+          {
+            "text": "Expand the option of Advanced details, Go to the User data, and paste the below script."
+          },
+          {
+            "text": "To create, click on the Create launch template button. Upon successful creation, it will create a Launch template."
+          },
+          {
+            "text": "Task 5: Creating a Launch template"
+          }
+        ]
+      },
+      {
+        "title": "Task 6: Create Target group and The Load Balancer",
+        "steps": [
+          {
+            "text": "(I) Create Target group :"
+          },
+          {
+            "text": "In the EC2 console, navigate to Target Groups from the left navigation panel."
+          },
+          {
+            "text": "Click on Create Target Group button."
+          },
+          {
+            "text": "Target Type: Select Instances"
+          },
+          {
+            "text": "Name: Enter web-server-TG"
+          },
+          {
+            "text": "Protocol: Choose HTTP"
+          },
+          {
+            "text": "Port : Enter 80"
+          },
+          {
+            "text": "Note: The target group is used to route requests to one or more registered targets"
+          },
+          {
+            "text": "Health check:"
+          },
+          {
+            "text": "Protocol: Select HTTP"
+          },
+          {
+            "text": "Path: Enter /health.html"
+          },
+          {
+            "text": "Note: The load balancer periodically sends pings, attempts connections, or sends requests to test the EC2 instances. These tests are called health checks."
+          },
+          {
+            "text": "Click on the Next button."
+          },
+          {
+            "text": "Leave this page as default and click on Create target group button."
+          },
+          {
+            "text": "(II) Create Load Balancer :"
+          },
+          {
+            "text": "In the EC2 console, navigate to Load balancers in the left-side panel."
+          },
+          {
+            "text": "Click on Create load balancer button at the top-left to create a new load balancer for our web servers."
+          },
+          {
+            "text": "Task 6: Create Target group and The Load Balancer"
+          },
+          {
+            "text": "On the next screen, choose Create button under Application Load Balancer since we are testing the high availability of the web application."
+          },
+          {
+            "text": "In Basic configuration:"
+          },
+          {
+            "text": "Name: Enter Web-server-LB"
+          },
+          {
+            "text": "Scheme: Select Internet-facing"
+          },
+          {
+            "text": "IP address type: Choose IPv4"
+          },
+          {
+            "text": "Task 6: Create Target group and The Load Balancer"
+          },
+          {
+            "text": "Availability Zones VPC: Choose Default Availability Zones : Select us-east-1a and us-east-1b."
+          },
+          {
+            "text": "Availability Zones"
+          },
+          {
+            "text": "VPC: Choose Default"
+          },
+          {
+            "text": "Availability Zones : Select us-east-1a and us-east-1b."
+          },
+          {
+            "text": "Task 6: Create Target group and The Load Balancer"
+          },
+          {
+            "text": "Security Groups: Remove the default one and choose Load-balancer-SG"
+          },
+          {
+            "text": "Security Groups:"
+          },
+          {
+            "text": "Remove the default one and choose Load-balancer-SG"
+          },
+          {
+            "text": "In the listener part select the Target group that you have created earlier. if it is not visible click on refresh button."
+          },
+          {
+            "text": "Task 6: Create Target group and The Load Balancer"
+          },
+          {
+            "text": "Click on Create Load Balancer button."
+          },
+          {
+            "text": "You have successfully created the Application Load balancer."
+          },
+          {
+            "text": "Task 6: Create Target group and The Load Balancer"
+          },
+          {
+            "text": "Wait for 2 to 3 minutes for the load balancer to become Active."
+          }
+        ]
+      },
+      {
+        "title": "Task 7: Create an Auto Scaling Group",
+        "steps": [
+          {
+            "text": "An Auto Scaling group is a scalable collection of EC2 instances. When you create an Auto Scaling group, you include information such as the subnets for the instances and the number of instances the group must maintain at all times."
+          },
+          {
+            "text": "Go to the left menu under EC2 and choose Auto Scaling Groups under Auto Scaling."
+          },
+          {
+            "text": "Click on the Create Auto Scaling group button."
+          },
+          {
+            "text": "Task 7: Create an Auto Scaling Group"
+          },
+          {
+            "text": "Step 1 : Choose launch template"
+          },
+          {
+            "text": "Auto Scaling group name : Enter Whiz-ASG"
+          },
+          {
+            "text": "Select the Launch template labLC from the list and click on the Next button."
+          },
+          {
+            "text": "Step 2: Choose instance launch options"
+          },
+          {
+            "text": "VPC: Select the Default VPC from the list."
+          },
+          {
+            "text": "Subnet: Select Subnet of us-east-1a and us-east-1b"
+          },
+          {
+            "text": "Click on the Next button."
+          },
+          {
+            "text": "Step 3 : Integrate with other services Load balancing - optional: Attach to an existing load balancer Attach to an existing load balancer: Choose from your load balancer target groups Existing load balancer target groups: web-server-TG"
+          },
+          {
+            "text": "Step 3 : Integrate with other services"
+          },
+          {
+            "text": "Load balancing - optional: Attach to an existing load balancer"
+          },
+          {
+            "text": "Attach to an existing load balancer: Choose from your load balancer target groups"
+          },
+          {
+            "text": "Existing load balancer target groups: web-server-TG"
+          },
+          {
+            "text": "Task 7: Create an Auto Scaling Group"
+          },
+          {
+            "text": "Health check - optional: Health check type: EC2 (default) and Check the Turn on Elastic Load Balancing health checks checkbox. Health check grace period: 180 seconds"
+          },
+          {
+            "text": "Health check - optional:"
+          },
+          {
+            "text": "Health check type: EC2 (default) and Check the Turn on Elastic Load Balancing health checks checkbox."
+          },
+          {
+            "text": "Health check grace period: 180 seconds"
+          },
+          {
+            "text": "Task 7: Create an Auto Scaling Group"
+          },
+          {
+            "text": "Click on the Next button."
+          },
+          {
+            "text": "Step 4: Configure group size and scaling Under Group size Desired capacity : 2Under Scaling, set the following limits Minimum capacity : Enter 1 Maximum capacity : Enter 2 Automatic scaling Select Target tracking scaling policy Scaling policy name: Target tracking policy Metric value: Average CPU Utilization Target value:Enter 30 Instance need: 200 seconds warm up before including in metric Under Instance scale-in protection No changes are needed, click on the Next button."
+          },
+          {
+            "text": "Step 4: Configure group size and scaling"
+          },
+          {
+            "text": "Under Group size Desired capacity : 2Under Scaling, set the following limits Minimum capacity : Enter 1 Maximum capacity : Enter 2"
+          },
+          {
+            "text": "Under Group size"
+          },
+          {
+            "text": "Desired capacity : 2Under Scaling, set the following limits"
+          },
+          {
+            "text": "Desired capacity : 2"
+          },
+          {
+            "text": "Under Scaling, set the following limits"
+          },
+          {
+            "text": "Minimum capacity : Enter 1"
+          },
+          {
+            "text": "Maximum capacity : Enter 2"
+          },
+          {
+            "text": "Task 7: Create an Auto Scaling Group"
+          },
+          {
+            "text": "Automatic scaling Select Target tracking scaling policy Scaling policy name: Target tracking policy Metric value: Average CPU Utilization Target value:Enter 30 Instance need: 200 seconds warm up before including in metric"
+          },
+          {
+            "text": "Automatic scaling"
+          },
+          {
+            "text": "Select Target tracking scaling policy"
+          },
+          {
+            "text": "Scaling policy name: Target tracking policy"
+          },
+          {
+            "text": "Metric value: Average CPU Utilization"
+          },
+          {
+            "text": "Target value:Enter 30"
+          },
+          {
+            "text": "Instance need: 200 seconds warm up before including in metric"
+          },
+          {
+            "text": "Task 7: Create an Auto Scaling Group"
+          },
+          {
+            "text": "Under Instance scale-in protection No changes are needed, click on the Next button."
+          },
+          {
+            "text": "Under Instance scale-in protection"
+          },
+          {
+            "text": "No changes are needed, click on the Next button."
+          },
+          {
+            "text": "Step 5: Add notifications No changes are needed in this page, click on the Next button."
+          },
+          {
+            "text": "Step 5: Add notifications"
+          },
+          {
+            "text": "No changes are needed in this page, click on the Next button."
+          },
+          {
+            "text": "Step 6: Add tags Enter tags in key-value pairs to identify your auto scaling group instances. Key: Enter Name Value: Enter Whiz"
+          },
+          {
+            "text": "Step 6: Add tags"
+          },
+          {
+            "text": "Enter tags in key-value pairs to identify your auto scaling group instances. Key: Enter Name Value: Enter Whiz"
+          },
+          {
+            "text": "Enter tags in key-value pairs to identify your auto scaling group instances."
+          },
+          {
+            "text": "Key: Enter Name"
+          },
+          {
+            "text": "Value: Enter Whiz"
+          },
+          {
+            "text": "Task 7: Create an Auto Scaling Group"
+          },
+          {
+            "text": "Click on the Next button."
+          },
+          {
+            "text": "Now Review, scroll down and click on the Create Auto Scalling Group button."
+          },
+          {
+            "text": "You will be redirected to the autoscaling group page, you will be able to see that one instance is launched by the autoscaling group."
+          },
+          {
+            "text": "Now go to the EC2 instances list. You will see that there are two running instances (created by your Auto Scaling group), based on the desired capacity you configured. You can confirm this from their tag name, which you provided while creating the Auto Scaling group."
+          },
+          {
+            "text": "Task 7: Create an Auto Scaling Group"
+          },
+          {
+            "text": "You have successfully created an Auto Scaling group with a desired capacity of 2, a minimum capacity of 1, and a maximum capacity of 2 instances."
+          }
+        ]
+      },
+      {
+        "title": "Task 8: SSH into EC2 Instance",
+        "steps": [
+          {
+            "text": "Please follow the steps in SSH into EC2 Instance."
+          }
+        ]
+      },
+      {
+        "title": "Task 9: Install the stress",
+        "steps": [
+          {
+            "text": "Switch to root user:sudo su"
+          },
+          {
+            "text": "Switch to root user:"
+          },
+          {
+            "text": "Now run the updates using the following command:"
+          },
+          {
+            "text": "Once completed, let's install and run an stress Install the required packages and librariessudo dnf update -ysudo dnf install stress -ystress --cpu 2 --timeout 300s"
+          },
+          {
+            "text": "Once completed, let's install and run an stress"
+          },
+          {
+            "text": "Install the required packages and librariessudo dnf update -ysudo dnf install stress -ystress --cpu 2 --timeout 300s"
+          },
+          {
+            "text": "Install the required packages and libraries"
+          }
+        ]
+      },
+      {
+        "title": "Task 10: Test Auto Scaling Group and Elastic Load Balancer",
+        "steps": [
+          {
+            "text": "The Auto Scaling Group maintains the desired capacity of 2 instances. If an instance becomes unhealthy or is terminated, Auto Scaling automatically launches a replacement instance to maintain the desired capacity"
+          },
+          {
+            "text": "That we can see in Auto scaling page also. Capacity count will be increased. Note: It will take 10-15 min to launch all instances"
+          },
+          {
+            "text": "That we can see in Auto scaling page also. Capacity count will be increased."
+          },
+          {
+            "text": "Copy the DNS of your load balancer, and paste it into the browser."
+          },
+          {
+            "text": "Task 10: Test Auto Scaling Group and Elastic Load Balancer"
+          },
+          {
+            "text": "The load balancer will now try to route to a new instance every time."
+          },
+          {
+            "text": "Task 10: Test Auto Scaling Group and Elastic Load Balancer"
+          },
+          {
+            "text": "Autoscaling groups support rolling updates, which allow you to update your application without downtime. When updating the launch configuration or the Amazon Machine Image (AMI) used by the autoscaling group, it can gradually replace instances one-by-one, ensuring that your application remains available throughout the update process."
+          }
+        ]
+      },
+      {
+        "title": "Task 11: Validation of the Lab",
+        "steps": [
+          {
+            "text": "Once the lab steps are completed, please click on the Validation button on the right-side panel."
+          },
+          {
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          },
+          {
+            "text": "Sample output :"
+          },
+          {
+            "text": "Task 11: Validation of the Lab"
+          },
+          {
+            "text": "You have created a security group and key pair for the Launch template."
+          },
+          {
+            "text": "You have created a Launch template and Auto Scaling."
+          },
+          {
+            "text": "You have created an Application load balancer with Target group."
+          },
+          {
+            "text": "You have tested the autoscaling by stressing the load on the first EC2 instance."
+          },
+          {
+            "text": "Sign out of the AWS Account."
+          },
+          {
+            "text": "You have successfully completed the lab."
+          },
+          {
+            "text": "Once you have completed the steps, click on End Lab from the lab console."
+          }
+        ]
+      }
+    ],
+    "takeaways": [],
+    "source": "course"
+  },
+  {
+    "slug": "creating-an-application-load-balancer-from-aws-cli",
+    "title": "Creating an Application Load Balancer from AWS CLI",
+    "level": "Advanced",
+    "services": [
+      "AWS"
+    ],
+    "summary": "",
+    "duration": "01:15:00",
+    "tasks": [
+      {
+        "title": "Task 1: Sign in to AWS Management Console",
+        "steps": [
+          {
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          },
+          {
+            "text": "On the AWS sign-in page,"
+          },
+          {
+            "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+          },
+          {
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          },
+          {
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          }
+        ]
+      },
+      {
+        "title": "Task 2: Creating EC2 Instance",
+        "steps": [
+          {
+            "text": "Make sure you are in the US East (N. Virginia) Region."
+          },
+          {
+            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          },
+          {
+            "text": "Click on Instances from the left side bar and then click on Launch Instances"
+          },
+          {
+            "text": "While launching the instance, you will notice that one instance named lab_instance will already be present there. We will use that instance for CLI for creating ALB."
+          },
+          {
+            "text": "Name : Enter Instance1"
+          },
+          {
+            "text": "For Amazon Machine Image (AMI): Choose Amazon Linux 2023 kernel-6.1 AMI."
+          },
+          {
+            "text": "Task 2: Creating EC2 Instance",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-01.png"
+            ]
+          },
+          {
+            "text": "For Instance Type: select t2.micro"
+          },
+          {
+            "text": "Task 2: Creating EC2 Instance",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-02.png"
+            ]
+          },
+          {
+            "text": "For Key pair: Select Create a new key pair Button Key pair name: MyEC2-key Key pair type: RSA Private key file format: .pem"
+          },
+          {
+            "text": "For Key pair: Select Create a new key pair Button"
+          },
+          {
+            "text": "Key pair name: MyEC2-key"
+          },
+          {
+            "text": "Key pair type: RSA"
+          },
+          {
+            "text": "Private key file format: .pem"
+          },
+          {
+            "text": "Select Create key pair Button."
+          },
+          {
+            "text": "In Network Settings Click on Edit:"
+          },
+          {
+            "text": "VPC : Select Default VPC from the available VPCs"
+          },
+          {
+            "text": "Subnet: Select Default in us-east-1a"
+          },
+          {
+            "text": "Auto-assign public IP: Enable"
+          },
+          {
+            "text": "Click on Select an Existing Security Group"
+          },
+          {
+            "text": "Select the security group name loadbalancer_SG (which will have inbound port 22 and 80 open for all traffic)"
+          },
+          {
+            "text": "Click on Advanced Details when you scroll down."
+          },
+          {
+            "text": "In User data section, enter the following script to make the server a web server."
+          },
+          {
+            "text": "Click on Launch Instances."
+          },
+          {
+            "text": "After 1-2 minutes, the Instance State will change to running as shown below:"
+          },
+          {
+            "text": "Task 2: Creating EC2 Instance",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-03.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 3: Creating another EC2 Instance",
+        "steps": [
+          {
+            "text": "Make sure you are in the US East (N. Virginia) Region."
+          },
+          {
+            "text": "Click on Launch Instances"
+          },
+          {
+            "text": "Name : Enter Instance2"
+          },
+          {
+            "text": "For Amazon Machine Image (AMI): Choose Amazon Linux 2023 kernel-6.1 AMI."
+          },
+          {
+            "text": "Task 3: Creating another EC2 Instance",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-04.png"
+            ]
+          },
+          {
+            "text": "For Instance Type: select t2.micro"
+          },
+          {
+            "text": "Task 3: Creating another EC2 Instance",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-05.png"
+            ]
+          },
+          {
+            "text": "For Key pair: Select Existing Key pair"
+          },
+          {
+            "text": "In Network Settings Click on Edit:"
+          },
+          {
+            "text": "VPC : Select Default VPC from the available VPCs"
+          },
+          {
+            "text": "Subnet: Select Default in us-east-1b."
+          },
+          {
+            "text": "Auto-assign public IP: Enable"
+          },
+          {
+            "text": "Click on Select an Existing Security Group"
+          },
+          {
+            "text": "Select the security group name loadbalancer_SG (which will have inbound port 22 and 80 open for all traffic)"
+          },
+          {
+            "text": "Click on Adanved Details when you scroll down."
+          },
+          {
+            "text": "In User data section, enter the following script to make the server a web server."
+          },
+          {
+            "text": "Keep Rest thing Default and Click on Launch Instance Button."
+          },
+          {
+            "text": "Select View all Instances to View Instance you Created"
+          },
+          {
+            "text": "After 1-2 Mins Instance State will become running as shown below"
+          },
+          {
+            "text": "Task 3: Creating another EC2 Instance",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-06.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 4: Creating an Application Load Balancer in AWS CLI",
+        "steps": [
+          {
+            "text": "Make sure you are in the US East (N. Virginia) Region."
+          },
+          {
+            "text": "In the EC2 dashboard, apart from the 2 instances you have launched manually, there will be another instance named lab_instance. Select the instance and copy its Public IPv4 Address."
+          },
+          {
+            "text": "Task 4: Creating an Application Load Balancer in AWS CLI",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-07.png"
+            ]
+          },
+          {
+            "text": "SSH into that lab_instance.Please follow the steps in SSH into EC2 Instance for more options to SSH."
+          },
+          {
+            "text": "SSH into that lab_instance."
+          },
+          {
+            "text": "Please follow the steps in SSH into EC2 Instance for more options to SSH."
+          },
+          {
+            "text": "For Mac/Linux users, SSH into the lab_instance by opening the terminal in your local system and execute the command below:ssh lab_user@<Your IPv4 Public IP address> Password : Enter lab@321"
+          },
+          {
+            "text": "For Mac/Linux users, SSH into the lab_instance by opening the terminal in your local system and execute the command below:"
+          },
+          {
+            "text": "Password : Enter lab@321"
+          },
+          {
+            "text": "Task 4: Creating an Application Load Balancer in AWS CLI",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-08.png"
+            ]
+          },
+          {
+            "text": "For Windows users , SSH into the lab_instance by downloading putty from this link https://www.chiark.greenend.org.uk/~sgtatham/putty/latest.html and then enter the following command in the Host Name (or IP address) section:"
+          },
+          {
+            "text": "Host Name : lab_user@<Your IPv4 Public IP address>"
+          },
+          {
+            "text": "Click on Accept"
+          },
+          {
+            "text": "Enter password : lab@321"
+          },
+          {
+            "text": "Port : 22"
+          },
+          {
+            "text": "Task 4: Creating an Application Load Balancer in AWS CLI",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-09.png"
+            ]
+          },
+          {
+            "text": "Once you SSH into the lab_instance, configure your server by executing the below command to eliminate adding the region in each command:aws configure"
+          },
+          {
+            "text": "Once you SSH into the lab_instance, configure your server by executing the below command to eliminate adding the region in each command:"
+          },
+          {
+            "text": "Press enter for both the AWS Access key and AWS Secret key and enter us-east-1 in the Default Region field."
+          },
+          {
+            "text": "AWS Access key ID : Press Enter"
+          },
+          {
+            "text": "AWS Secret Key : Press Enter"
+          },
+          {
+            "text": "Default region name : Enter us-east-1"
+          },
+          {
+            "text": "Default output format : Press Enter"
+          },
+          {
+            "text": "Task 4: Creating an Application Load Balancer in AWS CLI",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-10.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 5: Creating a Load Balancer",
+        "steps": [
+          {
+            "text": "Make sure you are in the US East (N. Virginia) Region."
+          },
+          {
+            "text": "Go to the EC2 dashboard and select the instance named Instance1. Copy its Subnet ID from the description page to a text file.",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-11.png"
+            ]
+          },
+          {
+            "text": "Task 5: Creating a Load Balancer",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-12.png"
+            ]
+          },
+          {
+            "text": "Similarly, select Instance2 and copy its Subnet ID and store it into a text file.",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-13.png"
+            ]
+          },
+          {
+            "text": "Task 5: Creating a Load Balancer",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-14.png"
+            ]
+          },
+          {
+            "text": "Copy the Security Group ID of the Security Group named loadbalancer_SG and store it into a text file.",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-15.png"
+            ]
+          },
+          {
+            "text": "Task 5: Creating a Load Balancer",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-16.png"
+            ]
+          },
+          {
+            "text": "In the terminal, use the create-load-balancer command to create a load balancer named lab-LB (which includes two subnets in different availability zones, specifically us-east-1a and us-east-1b). Enter the following command into the terminal as shown below:aws elbv2 create-load-balancer --name lab-LB --subnets <Subnet Id of Instance 1> <Subnet Id of Instance 2> --security-groups <Security Group of loadbalancer_SG>"
+          },
+          {
+            "text": "In the terminal, use the create-load-balancer command to create a load balancer named lab-LB (which includes two subnets in different availability zones, specifically us-east-1a and us-east-1b). Enter the following command into the terminal as shown below:"
+          },
+          {
+            "text": "Example: aws elbv2 create-load-balancer --name lab-LB --subnets subnet-09dcfc9d353ee9c5c subnet-067e6abb9582e5805 --security-groups sg-0ef883fe5d7d2575c"
+          },
+          {
+            "text": "Note: Replace the Subnet Id of Instance 1, Subnet Id of Instance 2 and Security Group of loadbalancer_SG with yours."
+          },
+          {
+            "text": "Copy the Load Balancer’s ARN"
+          },
+          {
+            "text": "Task 5: Creating a Load Balancer",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-17.png"
+            ]
+          },
+          {
+            "text": "Go to the EC2 dashboard, click on the Load Balancer (on the left-hand side menu) and see whether the Load Balancer is created. Make sure that the state of the Load Balancer is Active. Wait 5 minutes for the state to change from Provisioning to Active.",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-18.png"
+            ]
+          },
+          {
+            "text": "Task 5: Creating a Load Balancer",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-19.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 6: Creating 2 Target Groups",
+        "steps": [
+          {
+            "text": "Make sure you are in the US East (N. Virginia) Region."
+          },
+          {
+            "text": "Go to Services and click on EC2. Select Load Balancers from the left-hand side menu."
+          },
+          {
+            "text": "Select lab-LB and copy the VPC-ID to a text file."
+          },
+          {
+            "text": "Task 6: Creating 2 Target Groups",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-20.png"
+            ]
+          },
+          {
+            "text": "Use the create-target-group command to create a target group named TG1, specify the load balancer's VPC ID.aws elbv2 create-target-group --name TG1 --protocol HTTP --port 80 --vpc-id <Load balancer VPC Id>"
+          },
+          {
+            "text": "Use the create-target-group command to create a target group named TG1, specify the load balancer's VPC ID."
+          },
+          {
+            "text": "Example: aws elbv2 create-target-group --name TG1 --protocol HTTP --port 80 --vpc-id vpc-0ec3696a4c41fed32"
+          },
+          {
+            "text": "Note: Replace the Load balancer VPC Id with your value."
+          },
+          {
+            "text": "Task 6: Creating 2 Target Groups",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-21.png"
+            ]
+          },
+          {
+            "text": "Similarly, use the create-target-group command to create another target group named TG2. Specify the same VPC ID as above.aws elbv2 create-target-group --name TG2 --protocol HTTP --port 80 --vpc-id <Load balancer VPC Id>"
+          },
+          {
+            "text": "Similarly, use the create-target-group command to create another target group named TG2. Specify the same VPC ID as above."
+          },
+          {
+            "text": "Example: aws elbv2 create-target-group --name TG2 --protocol HTTP --port 80 --vpc-id vpc-0ec3696a4c41fed32"
+          },
+          {
+            "text": "Note: Replace the Load balancer VPC Id with your value."
+          },
+          {
+            "text": "Task 6: Creating 2 Target Groups",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-22.png"
+            ]
+          },
+          {
+            "text": "From the AWS console, go to the EC2 dashboard, click on Target Groups (on the left-hand side menu). Once the Target Group is created, copy and paste the Target Group ARNs of the target groups TG1 and TG2 (separately) from the description page to a text file."
+          },
+          {
+            "text": "Task 6: Creating 2 Target Groups",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-23.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 7: Register the Targets with their Respective Target groups",
+        "steps": [
+          {
+            "text": "Go to Services, click on EC2 and select the instances one by one and copy the instance ids of Instance1 and Instance2 from the Description Tab to a text file.",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-24.png"
+            ]
+          },
+          {
+            "text": "Task 7: Register the Targets with their Respective Target groups",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-25.png"
+            ]
+          },
+          {
+            "text": "Use register-targets command to register Instance1 with the Target Group TG1.aws elbv2 register-targets --target-group-arn <TG1 ARN> --targets Id=<Instance1 Id>"
+          },
+          {
+            "text": "Use register-targets command to register Instance1 with the Target Group TG1."
+          },
+          {
+            "text": "Example: aws elbv2 register-targets --target-group-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG1/f4619175d2877cd9 --targets Id=i-0d9d44b763709b07d"
+          },
+          {
+            "text": "Note: Replace the TG1 ARN and INSTANCE1 ID with your values for each."
+          },
+          {
+            "text": "Task 7: Register the Targets with their Respective Target groups",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-26.png"
+            ]
+          },
+          {
+            "text": "Similarly, use the register-targets command to register Instance2 with the Target Group TG2.aws elbv2 register-targets --target-group-arn <TG2 ARN> --targets Id=<Instance2 Id>"
+          },
+          {
+            "text": "Similarly, use the register-targets command to register Instance2 with the Target Group TG2."
+          },
+          {
+            "text": "Example: aws elbv2 register-targets --target-group-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG2/1dd2532226541d8c --targets Id=i-016edc45d166c9123"
+          },
+          {
+            "text": "Note: Replace the TG2 ARN and INSTANCE2 ID with your values for each."
+          },
+          {
+            "text": "Task 7: Register the Targets with their Respective Target groups",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-27.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 8: Creating Listener Default Rules",
+        "steps": [
+          {
+            "text": "Use the create-listener command to create a listener default rule to forward the request to Target group TG1.aws elbv2 create-listener --load-balancer-arn <Load Balancer ARN> --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=<TG1 ARN>"
+          },
+          {
+            "text": "Use the create-listener command to create a listener default rule to forward the request to Target group TG1."
+          },
+          {
+            "text": "Example: aws elbv2 create-listener --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:loadbalancer/app/lab-LB/c70ba276f3e59d69 --protocol HTTP --port 80 --default-actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG1/f4619175d2877cd9"
+          },
+          {
+            "text": "Note: Replace the Load Balancer ARN and TG1 ARN with your values for each."
+          },
+          {
+            "text": "Task 8: Creating Listener Default Rules",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-28.png"
+            ]
+          },
+          {
+            "text": "Once you have created the listener default rule, navigate to the EC2 Dashboard and click on Load Balancers. Copy the Listeners ARN from the Listeners Tab by hovering over the arn and save it a text file.",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-29.png"
+            ]
+          },
+          {
+            "text": "Task 8: Creating Listener Default Rules",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-30.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 9: Creating Listeners for other rules",
+        "steps": [
+          {
+            "text": "Use the create-listener command along with the Load Balancer listeners ARN to create a listener rule1 to forward the request to TG1 if its URL has images in its path.aws elbv2 create-rule --listener-arn <LB Listeners ARN> --priority 10 --conditions Field=path-pattern,Values='/images/*' --actions Type=forward,TargetGroupArn=<TG1 ARN>"
+          },
+          {
+            "text": "Use the create-listener command along with the Load Balancer listeners ARN to create a listener rule1 to forward the request to TG1 if its URL has images in its path."
+          },
+          {
+            "text": "Example: aws elbv2 create-rule --listener-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:listener/app/lab-LB/c70ba276f3e59d69/12d71a05863d10c1 --priority 10 --conditions Field=path-pattern,Values='/images/*' --actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG1/f4619175d2877cd9"
+          },
+          {
+            "text": "Note: Replace the LB Listeners ARN and TG1 ARN with your values for each."
+          },
+          {
+            "text": "Task 9: Creating Listeners for other rules",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-31.png"
+            ]
+          },
+          {
+            "text": "Use the Create-listener command along with the Load Balancer listener ARN to create a listener rule to forward the request to TG2 if its URL has work in its path. Also kindly make sure the priority for this rule is different from the previous rule we created. aws elbv2 create-rule --listener-arn <LB Listeners ARN> --priority 5 --conditions Field=path-pattern,Values='/work/*' --actions Type=forward,TargetGroupArn=<TG2 ARN>"
+          },
+          {
+            "text": "Use the Create-listener command along with the Load Balancer listener ARN to create a listener rule to forward the request to TG2 if its URL has work in its path. Also kindly make sure the priority for this rule is different from the previous rule we created."
+          },
+          {
+            "text": "Example: aws elbv2 create-rule --listener-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:listener/app/lab-LB/c70ba276f3e59d69/12d71a05863d10c1 --priority 5 --conditions Field=path-pattern,Values='/work/*' --actions Type=forward,TargetGroupArn=arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG2/1dd2532226541d8c"
+          },
+          {
+            "text": "Note: Replace the LB Listeners ARN and TG2 ARN with your values for each."
+          },
+          {
+            "text": "Task 9: Creating Listeners for other rules",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-32.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 10: Verifying the health of the Target Groups",
+        "steps": [
+          {
+            "text": "Use the describe-target-health command to verify the health status of the Target Group TG1.aws elbv2 describe-target-health --target-group-arn <TG1 ARN>"
+          },
+          {
+            "text": "Use the describe-target-health command to verify the health status of the Target Group TG1."
+          },
+          {
+            "text": "Example: aws elbv2 describe-target-health --target-group-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG1/f4619175d2877cd9"
+          },
+          {
+            "text": "NOTE: Replace the TG1 ARN with your value."
+          },
+          {
+            "text": "Task 10: Verifying the health of the Target Groups",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-33.png"
+            ]
+          },
+          {
+            "text": "Similarly, use the describe-target-health command to verify the health status of the Target Group TG2.aws elbv2 describe-target-health --target-group-arn <TG2 ARN>"
+          },
+          {
+            "text": "Similarly, use the describe-target-health command to verify the health status of the Target Group TG2."
+          },
+          {
+            "text": "Example: aws elbv2 describe-target-health --target-group-arn arn:aws:elasticloadbalancing:us-east-1:757712384777:targetgroup/TG2/1dd2532226541d8c"
+          },
+          {
+            "text": "NOTE: Replace the TG2 ARN with your value."
+          },
+          {
+            "text": "Task 10: Verifying the health of the Target Groups",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-34.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 11: Verifying the Load balancer rules by accessing the DNS",
+        "steps": [
+          {
+            "text": "Make sure you are in the US East (N. Virginia) Region."
+          },
+          {
+            "text": "Go to Services and select Load Balancer from the EC2 dashboard. Select lab-LB and copy the Load Balancer DNS Name.",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-35.png"
+            ]
+          },
+          {
+            "text": "Task 11: Verifying the Load balancer rules by accessing the DNS",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-36.png"
+            ]
+          },
+          {
+            "text": "Try to access the DNS Name from the Browser and verify that you can able to get the output of Instance1's html page ( i.e it has to serve the request from TG1 because the default listener rule should route the traffic to TG1)."
+          },
+          {
+            "text": "Task 11: Verifying the Load balancer rules by accessing the DNS",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-37.png"
+            ]
+          },
+          {
+            "text": "Now try to access the DNS Name along with the /images/test.html in its path (as given below) and verify that it has to serve the request from Instance1 (i.e if the DNS URL path contains the name \"images\" then it has to route the request to the target group TG1)."
+          },
+          {
+            "text": "Note: Use your Load Balancer DNS Name and append /images/test.html at the end."
+          },
+          {
+            "text": "Task 11: Verifying the Load balancer rules by accessing the DNS",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-38.png"
+            ]
+          },
+          {
+            "text": "Now try to access the DNS Name along with the /work/test.html in its path (as given below) and verify that it has to serve the request from instance2 (i.e if the DNS URL path contains the name \"work\" then it has to route the request to the target group TG2)."
+          },
+          {
+            "text": "Note: Use your Load Balancer DNS Name and append /work/test.html at the end."
+          },
+          {
+            "text": "Task 11: Verifying the Load balancer rules by accessing the DNS",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-39.png"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 12: Validation Test",
+        "steps": [
+          {
+            "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+          },
+          {
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          },
+          {
+            "text": "Sample output :"
+          },
+          {
+            "text": "Task 12: Validation Test",
+            "images": [
+              "/labs/creating-an-application-load-balancer-from-aws-cli/step-40.gif"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Task 13: Delete AWS Resources",
+        "steps": [
+          {
+            "text": "To delete Application Load Balancer, copy the ARN and replace it in the command below:aws elbv2 delete-load-balancer --load-balancer-arn <Load Balancer ARN> Example: aws elbv2 delete-load-balancer --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:loadbalancer/app/lab-LB/5d9d010d070a48e1"
+          },
+          {
+            "text": "To delete Application Load Balancer, copy the ARN and replace it in the command below:"
+          },
+          {
+            "text": "Example: aws elbv2 delete-load-balancer --load-balancer-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:loadbalancer/app/lab-LB/5d9d010d070a48e1"
+          },
+          {
+            "text": "To delete first target group i.e. TG1, copy the ARN and replace it in the command below:aws elbv2 delete-target-group --target-group-arn <TG1 ARN> Example: aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:targetgroup/TG1/9e2d879c2b029051"
+          },
+          {
+            "text": "To delete first target group i.e. TG1, copy the ARN and replace it in the command below:"
+          },
+          {
+            "text": "Example: aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:targetgroup/TG1/9e2d879c2b029051"
+          },
+          {
+            "text": "To delete second target group i.e. TG copy the ARN and replace it in the command below:aws elbv2 delete-target-group --target-group-arn <TG2 ARN> Example: aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:targetgroup/TG2/04bf266a2aa4c7b9"
+          },
+          {
+            "text": "To delete second target group i.e. TG copy the ARN and replace it in the command below:"
+          },
+          {
+            "text": "Example: aws elbv2 delete-target-group --target-group-arn arn:aws:elasticloadbalancing:us-east-1:416177121910:targetgroup/TG2/04bf266a2aa4c7b9"
+          },
+          {
+            "text": "To terminate the EC2 Instances, you can terminate all at once:aws ec2 terminate-instances --instance-ids <instance id of Instance1> <instance id of Instance2> <instance id of lab_instance>"
+          },
+          {
+            "text": "To terminate the EC2 Instances, you can terminate all at once:"
+          },
+          {
+            "text": "Example: aws ec2 terminate-instances --instance-ids i-0e3190473a41c6e64 i-05ff676f71f0ed3bf i-08a139e67e9eebaf3"
+          },
+          {
+            "text": "You have successfully created 2 EC2 instances in the default VPC."
+          },
+          {
+            "text": "You have successfully SSH into the already-available lab_instance."
+          },
+          {
+            "text": "You have successfully configured the lab_instance in us-east-1 using AWS CLI commands."
+          },
+          {
+            "text": "You have successfully created an Application Load Balancer using AWS CLI command."
+          },
+          {
+            "text": "You have successfully created 2 Target Groups via AWS CLI command."
+          },
+          {
+            "text": "You have successfully registered EC2 instances with their Target Groups via AWS CLI command."
+          },
+          {
+            "text": "You have successfully created a default listener rule via AWS CLI command."
+          },
+          {
+            "text": "You have successfully created 2 rules to route the traffic to a separate Target Group based on a path using AWS CLI command."
+          },
+          {
+            "text": "You have successfully verified the health of the targets using AWS CLI command."
+          },
+          {
+            "text": "You have successfully accessed the DNS Name of the load balancer from a browser and verified that the routing is done according to the specified rules."
+          },
+          {
+            "text": "Sign out of AWS Account."
+          },
+          {
+            "text": "You have successfully completed the lab."
+          },
+          {
+            "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+          }
+        ]
+      }
+    ],
+    "takeaways": [],
+    "source": "course"
+  },
+  {
+    "slug": "creating-and-configuring-a-network-load-balancer-in-aws",
+    "title": "Creating and configuring a network load balancer in AWS",
+    "level": "Advanced",
+    "services": [
+      "AWS"
+    ],
+    "summary": "",
+    "duration": "01:00:00",
+    "tasks": [
+      {
+        "title": "Task 1: Sign in to AWS Management Console",
+        "steps": [
+          {
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+          },
+          {
+            "text": "On the AWS sign-in page,"
+          },
+          {
+            "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+          },
+          {
+            "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+          },
+          {
+            "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+          },
+          {
+            "text": "Select Maybe later in New Home Console page pop-up"
+          },
+          {
+            "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+          }
+        ]
+      },
+      {
+        "title": "Task 2: Launching an EC2 Instance",
+        "steps": [
+          {
+            "text": "In this task, we are going to create an EC2 instance, which will serve as one of the targets for the Network Load Balancer"
+          },
+          {
+            "text": "Make sure you are in US East (N. Virginia) us-east-1 Region."
+          },
+          {
+            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          },
+          {
+            "text": "Click on Instances from the left sidebar and then click on Launch instances button."
+          },
+          {
+            "text": "Task 2: Launching an EC2 Instance"
+          },
+          {
+            "text": "Name : Enter NLBEC2server"
+          },
+          {
+            "text": "Task 2: Launching an EC2 Instance"
+          },
+          {
+            "text": "For Amazon Machine Image (AMI): In the Quick Start menu, select Amazon Linux 2023 AMI"
+          },
+          {
+            "text": "For Instance Type: select t2.micro"
+          },
+          {
+            "text": "Task 2: Launching an EC2 Instance"
+          },
+          {
+            "text": "For Key pair: Select Create a new key pair Button Key pair name: WhizKey Key pair type: RSA Private key file format: .pem"
+          },
+          {
+            "text": "For Key pair: Select Create a new key pair Button"
+          },
+          {
+            "text": "Key pair name: WhizKey"
+          },
+          {
+            "text": "Key pair type: RSA"
+          },
+          {
+            "text": "Private key file format: .pem"
+          },
+          {
+            "text": "Select Create key pair Button."
+          },
+          {
+            "text": "In Network Settings, Click on Edit:"
+          },
+          {
+            "text": "Auto-assign public IP: Enable"
+          },
+          {
+            "text": "Select Create new Security group"
+          },
+          {
+            "text": "Security group name : Enter NLBserver-SG"
+          },
+          {
+            "text": "Description : Enter Security Group to allow traffic to EC2"
+          },
+          {
+            "text": "To add SSH Choose Type : Select SSH Source : Choose Anywhere"
+          },
+          {
+            "text": "To add SSH"
+          },
+          {
+            "text": "Choose Type : Select SSH"
+          },
+          {
+            "text": "Source : Choose Anywhere"
+          },
+          {
+            "text": "For HTTP, click on Add security group rule. Choose Type : Select HTTP Source : Choose Anywhere"
+          },
+          {
+            "text": "For HTTP, click on Add security group rule."
+          },
+          {
+            "text": "Choose Type : Select HTTP"
+          },
+          {
+            "text": "Source : Choose Anywhere"
+          },
+          {
+            "text": "For Nginx, Click on Add security group rule. Choose Type : Select Custom TCP Rule Port Range : Enter 8080 Source : Choose Anywhere"
+          },
+          {
+            "text": "For Nginx, Click on Add security group rule."
+          },
+          {
+            "text": "Choose Type : Select Custom TCP Rule"
+          },
+          {
+            "text": "Port Range : Enter 8080"
+          },
+          {
+            "text": "Source : Choose Anywhere"
+          },
+          {
+            "text": "Task 2: Launching an EC2 Instance"
+          },
+          {
+            "text": "Expand Advanced Details."
+          },
+          {
+            "text": "Under the User data section, copy and paste the below code. This code installs Apache Server and also creates a web page."
+          },
+          {
+            "text": "Keep rest thing Default and Click on Launch Instance Button."
+          },
+          {
+            "text": "Select View all Instances to View the Instance you Created"
+          },
+          {
+            "text": "Launch Status: Your instances are now launching, Navigate to Instances page from left menu and wait the status of the EC2 Instance changes to running."
+          },
+          {
+            "text": "Now in the EC2 dashboard, you can see the instance is running as shown below:"
+          },
+          {
+            "text": "Task 2: Launching an EC2 Instance"
+          }
+        ]
+      },
+      {
+        "title": "Task 3: Creating Network Load Balancer",
+        "steps": [
+          {
+            "text": "In this task, we are going to create a Network Load Balancer (NLB) in AWS. The NLB distributes incoming traffic across multiple targets (in this case, the EC2 instance created in the previous task)."
+          },
+          {
+            "text": "Navigate to Load Balancers from the EC2 left menu bar under the sub-heading Load Balancing."
+          },
+          {
+            "text": "Click on the Create Load Balancer button."
+          },
+          {
+            "text": "Task 3: Creating Network Load Balancer"
+          },
+          {
+            "text": "Select Load Balancer Type: Under the Network load balancer, click on Create button."
+          },
+          {
+            "text": "Task 3: Creating Network Load Balancer"
+          },
+          {
+            "text": "The next five screens will require configuration modification from the default values provided. If a field is not mentioned, leave it as default or empty."
+          },
+          {
+            "text": "Configure Load Balancer: Name : Enter MyNetwork-LB Scheme : Select internet-facing VPC : Select default VPC Mappings : Select all available zones using a checkbox."
+          },
+          {
+            "text": "Name : Enter MyNetwork-LB"
+          },
+          {
+            "text": "Scheme : Select internet-facing"
+          },
+          {
+            "text": "VPC : Select default VPC"
+          },
+          {
+            "text": "Mappings : Select all available zones using a checkbox."
+          },
+          {
+            "text": "Security groups:Select NLBserver-SG security group which we created while launcing EC2"
+          },
+          {
+            "text": "Select NLBserver-SG security group which we created while launcing EC2"
+          },
+          {
+            "text": "Listeners and routing:Load Balancer Protocol : Select TCPLoad Balancer Port : Choose 80Default action : Create target group"
+          },
+          {
+            "text": "Listeners and routing:"
+          },
+          {
+            "text": "Load Balancer Protocol : Select TCP"
+          },
+          {
+            "text": "Load Balancer Port : Choose 80"
+          },
+          {
+            "text": "Default action : Create target group"
+          },
+          {
+            "text": "Task 3: Creating Network Load Balancer"
+          },
+          {
+            "text": "Choose a target type: Instances Target group name: Enter Apache-TG Protocol: Choose TCP Port: 80 Click Next Select NLBEC2Server and select Include as pending below button Click Create target group button Ignore the warning message and click Continue Now we can see Apache-TG target group created."
+          },
+          {
+            "text": "Target group name: Enter Apache-TG"
+          },
+          {
+            "text": "Protocol: Choose TCP"
+          },
+          {
+            "text": "Port: 80"
+          },
+          {
+            "text": "Click Next"
+          },
+          {
+            "text": "Select NLBEC2Server and select Include as pending below button"
+          },
+          {
+            "text": "Click Create target group button"
+          },
+          {
+            "text": "Ignore the warning message and click Continue"
+          },
+          {
+            "text": "Now we can see Apache-TG target group created."
+          },
+          {
+            "text": "Now go back to the Load Balancers tab, and select Apache-TG in Default Action in Listeners and routing."
+          },
+          {
+            "text": "Click on Refresh button if target-group is not visible"
+          },
+          {
+            "text": "Click on Create load balancer button"
+          },
+          {
+            "text": "Click on View Load BalancersAfter 1–2 minutes, the state will change to active and is ready."
+          },
+          {
+            "text": "Click on View Load Balancers"
+          },
+          {
+            "text": "After 1–2 minutes, the state will change to active and is ready."
+          },
+          {
+            "text": "Task 3: Creating Network Load Balancer"
+          }
+        ]
+      },
+      {
+        "title": "Task 4: Create Target Group for Nginx",
+        "steps": [
+          {
+            "text": "In this task, we are going to create a target group specifically for the Nginx service running on the EC2 instance."
+          },
+          {
+            "text": "Navigate to Target Groups available in the left menu of EC2 Page. It will be available under the sub-heading Load Balancing."
+          },
+          {
+            "text": "Click on Create target group"
+          },
+          {
+            "text": "Task 4: Create Target Group for Nginx"
+          },
+          {
+            "text": "In the Create Target Group form Basic configuration:"
+          },
+          {
+            "text": "Choose a target type: Instances"
+          },
+          {
+            "text": "Target group name : Enter Nginx-TG"
+          },
+          {
+            "text": "Protocol : choose TCP"
+          },
+          {
+            "text": "Port : Enter 8080"
+          },
+          {
+            "text": "Task 4: Create Target Group for Nginx"
+          },
+          {
+            "text": "Leave other settings as default. Click on the Next button."
+          },
+          {
+            "text": "Select the NLBEC2server and select Include as pending below button"
+          },
+          {
+            "text": "Click Create target group button"
+          }
+        ]
+      },
+      {
+        "title": "Task 5: Creating a New Listener for Nginx on port 8080",
+        "steps": [
+          {
+            "text": "In this task, we are going to add a new listener to the load balancer, specifically for the Nginx service on port 8080. Listeners define how the load balancer handles incoming traffic and which target group to route the traffic to."
+          },
+          {
+            "text": "Now we need to add a new listener for Nginx to listen for traffic on port 8080."
+          },
+          {
+            "text": "Navigate to the Load Balancer console and select the MyNetwork-LB. Click on Add Listener as shown below:"
+          },
+          {
+            "text": "Task 5: Creating a New Listener for Nginx on port 8080"
+          },
+          {
+            "text": "Now add the new listener as follows:"
+          },
+          {
+            "text": "Protocol : Select TCP"
+          },
+          {
+            "text": "Port : Enter 8080"
+          },
+          {
+            "text": "Chose the Nginx-TG as shown below:"
+          },
+          {
+            "text": "Task 5: Creating a New Listener for Nginx on port 8080"
+          },
+          {
+            "text": "Both Listeners will be shown."
+          },
+          {
+            "text": "Task 5: Creating a New Listener for Nginx on port 8080"
+          }
+        ]
+      },
+      {
+        "title": "Task 6: Installing and configuring Nginx",
+        "steps": [
+          {
+            "text": "In this task, we are going to install and configure the Nginx service on the EC2 instance. This task ensures that the Nginx service is running on the specified port (8080) and ready to receive traffic from the load balancer."
+          },
+          {
+            "text": "SSH into the EC2 instance, following the steps in SSH into EC2 Instance."
+          },
+          {
+            "text": "Switch to the root user using the command:sudo su"
+          },
+          {
+            "text": "Switch to the root user using the command:"
+          },
+          {
+            "text": "You will see apache is already installed and listening on port 80. To do so, run the following commands:"
+          },
+          {
+            "text": "To find version: httpd -v"
+          },
+          {
+            "text": "To find version:"
+          },
+          {
+            "text": "To find HTTPD running: lsof -i tcp:80"
+          },
+          {
+            "text": "To find HTTPD running:"
+          },
+          {
+            "text": "Task 6: Installing and configuring Nginx"
+          },
+          {
+            "text": "Now install Nginx using below command:sudo dnf install nginx -y"
+          },
+          {
+            "text": "Now install Nginx using below command:"
+          },
+          {
+            "text": "Now we need to change the port number for Nginx service to 8080 because HTTPD service already running on port. To do so, type the following commands: cd /etc/nginxvi nginx.conf"
+          },
+          {
+            "text": "Now we need to change the port number for Nginx service to 8080 because HTTPD service already running on port. To do so, type the following commands:"
+          },
+          {
+            "text": "Task 6: Installing and configuring Nginx"
+          },
+          {
+            "text": "Scroll down and edit the 'listen' line to port number 8080."
+          },
+          {
+            "text": "Task 6: Installing and configuring Nginx"
+          },
+          {
+            "text": "To edit in vi, press i to insert. After editing, press esc and give command :wq which saves the file and quits from vi. Now change the default port number 80 to 8080 as shown below:"
+          },
+          {
+            "text": "Task 6: Installing and configuring Nginx"
+          },
+          {
+            "text": "Start the Nginx service using the below command: service nginx start"
+          },
+          {
+            "text": "Start the Nginx service using the below command:"
+          },
+          {
+            "text": "You can check the status of Nginx service using the below command: lsof -i tcp:8080"
+          },
+          {
+            "text": "You can check the status of Nginx service using the below command:"
+          },
+          {
+            "text": "Task 6: Installing and configuring Nginx"
+          }
+        ]
+      },
+      {
+        "title": "Task 7: Testing Network Load Balancer",
+        "steps": [
+          {
+            "text": "In this task, we are going to test the Network Load Balancer and verify that it properly distributes traffic to the target groups. By accessing the load balancer's DNS name with the appropriate port, users can check if the Apache and Nginx services respond correctly."
+          },
+          {
+            "text": "Wait 3 to 4 minutes until the target reaches healthy status and navigate to the Load balancer console and copy the DNS name. Enter the address in the browser."
+          },
+          {
+            "text": "MyNetwork-LB-0a4ff4cc035bae63.elb.us-east-1.amazonaws.com"
+          },
+          {
+            "text": "Task 7: Testing Network Load Balancer"
+          },
+          {
+            "text": "You will see the default apache page. By default network load balancer will route the traffic to port 80"
+          },
+          {
+            "text": "Task 7: Testing Network Load Balancer"
+          },
+          {
+            "text": "Now repeat the above step by appending port number 8080 at the end of load balancer endpoint (as shown below) and you will get the Nginx default page. MyNetwork-LB-0a4ff4cc035bae63.elb.us-east-1.amazonaws.com:8080"
+          },
+          {
+            "text": "Now repeat the above step by appending port number 8080 at the end of load balancer endpoint (as shown below) and you will get the Nginx default page."
+          },
+          {
+            "text": "MyNetwork-LB-0a4ff4cc035bae63.elb.us-east-1.amazonaws.com:8080"
+          },
+          {
+            "text": "Task 7: Testing Network Load Balancer"
+          },
+          {
+            "text": "From the above steps we have successfully created the Network load balancer and routed the traffic to two different services ( Apache and Nginx ) listening on two different ports (80 and 8080)."
+          },
+          {
+            "text": "We have also successfully created and tested the Network Load Balancer."
+          },
+          {
+            "text": "Network load balancers have an amazing capability to handle millions of concurrent connections. Operating at the transport layer, they efficiently distribute incoming network traffic across multiple backend servers or instances. With advanced algorithms, they ensure optimal resource utilization, high availability, and scalability for applications and services. This capability enables organizations to deliver seamless and responsive experiences to a large number of users."
+          }
+        ]
+      },
+      {
+        "title": "Task 8: Validation Test",
+        "steps": [
+          {
+            "text": "Once the lab steps are completed, please click on the Validation button on the Right side panel."
+          },
+          {
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          },
+          {
+            "text": "Sample output :"
+          },
+          {
+            "text": "Task 8: Validation Test"
+          }
+        ]
+      },
+      {
+        "title": "Task 9: Delete AWS Resources",
+        "steps": [
+          {
+            "text": "Deleting Load balancer"
+          },
+          {
+            "text": "In the EC2 console, navigate to Load balancers in the left-side panel."
+          },
+          {
+            "text": "MyNetwork-LB will be listed here."
+          },
+          {
+            "text": "To delete the load balancer, need to perform the following actions: Select the load balancer, Click on the Actions button, Select the Delete load balancer option."
+          },
+          {
+            "text": "To delete the load balancer, need to perform the following actions:"
+          },
+          {
+            "text": "Select the load balancer,"
+          },
+          {
+            "text": "Click on the Actions button,"
+          },
+          {
+            "text": "Select the Delete load balancer option."
+          },
+          {
+            "text": "Confirm by Entering on the Confirm and clicking on Delete button when a pop-up is shown."
+          },
+          {
+            "text": "MyNetwork-LB will be deleted immediately."
+          },
+          {
+            "text": "Deleting Target groups"
+          },
+          {
+            "text": "In the EC2 console, navigate to Target Groups in the left-side panel."
+          },
+          {
+            "text": "Apache-TG will be listed here."
+          },
+          {
+            "text": "To delete the target group, need to perform the following actions: Select the target group, Click on the Actions button, select the Delete option"
+          },
+          {
+            "text": "To delete the target group, need to perform the following actions:"
+          },
+          {
+            "text": "Select the target group,"
+          },
+          {
+            "text": "Click on the Actions button,"
+          },
+          {
+            "text": "select the Delete option"
+          },
+          {
+            "text": "Confirm by clicking on the Yes, Delete button when a pop-up is shown."
+          },
+          {
+            "text": "Web-server-TG will be deleted immediately."
+          },
+          {
+            "text": "Similarly delete Nginx-TG"
+          },
+          {
+            "text": "Terminate EC2 Instances"
+          },
+          {
+            "text": "In the EC2 console, navigate to Instances in the left-side panel."
+          },
+          {
+            "text": "EC2 Instance NLBEC2Server will be listed here."
+          },
+          {
+            "text": "To terminate the EC2 Instances, need to perform the following actions: Select the EC2 instances, Click on the Instance state button, select the Terminate instance option"
+          },
+          {
+            "text": "To terminate the EC2 Instances, need to perform the following actions:"
+          },
+          {
+            "text": "Select the EC2 instances,"
+          },
+          {
+            "text": "Click on the Instance state button,"
+          },
+          {
+            "text": "select the Terminate instance option"
+          },
+          {
+            "text": "Confirm by clicking on the Terminate button when a pop-up is shown."
+          },
+          {
+            "text": "EC2 Instances will be terminated immediately."
+          },
+          {
+            "text": "You have successfully used the AWS management console to create an Amazon EC2 instance."
+          },
+          {
+            "text": "You have created a Network Load Balancer with an Apache Target group."
+          },
+          {
+            "text": "You have created an Nginx Target group and attached the EC2 server to route traffic on port 8080."
+          },
+          {
+            "text": "You tested the Network Load Balancer."
+          },
+          {
+            "text": "Sign out of the AWS Account."
+          },
+          {
+            "text": "You have successfully completed the lab."
+          },
+          {
+            "text": "Once you have completed the steps click on End Lab from the lab console."
+          }
+        ]
+      }
+    ],
+    "takeaways": [],
+    "source": "course"
+  },
+  {
     "slug": "creating-and-subscribing-to-sns-topics-adding-sns-event-for-s3-bucket",
     "title": "Creating and Subscribing to SNS Topics, Adding SNS event for S3 bucket",
     "level": "Fundamental",
@@ -13897,6 +18363,490 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "Once you have completed the steps, click on End Lab from the lab console."
+          }
+        ]
+      }
+    ],
+    "takeaways": [],
+    "source": "course"
+  },
+  {
+    "slug": "creating-aws-vpc-flow-logs-and-generating-traffic",
+    "title": "Creating AWS VPC Flow Logs and Generating Traffic",
+    "level": "Intermediate",
+    "services": [
+      "AWS"
+    ],
+    "summary": "",
+    "duration": "01:00:00",
+    "tasks": [
+      {
+        "title": "Task 1: Sign in to AWS Management Console",
+        "steps": [
+          {
+            "text": "Click on the Open Console, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page,"
+          },
+          {
+            "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
+          },
+          {
+            "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign-in button."
+          },
+          {
+            "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+          }
+        ]
+      },
+      {
+        "title": "Task 2: Create CloudWatch Logs",
+        "steps": [
+          {
+            "text": "In this task, we are going to set up CloudWatch Logs, which are used to store and monitor log data."
+          },
+          {
+            "text": "Navigate to the Services menu at the top and choose CloudWatch under Management and Governance."
+          },
+          {
+            "text": "Click on Log Management on the left side panel under Logs and Click on Create log group button."
+          },
+          {
+            "text": "Enter the Log Group Name: whizvpclogs and click on Create. The log group will be created."
+          },
+          {
+            "text": "Task 2: Create CloudWatch Logs"
+          }
+        ]
+      },
+      {
+        "title": "Task 3: Create a VPC",
+        "steps": [
+          {
+            "text": "In this task, we are going to create an Amazon Virtual Private Cloud (VPC). A VPC provides a logically isolated section of the AWS Cloud where users can launch their resources."
+          },
+          {
+            "text": "Navigate to the Services menu at the top and select VPC under Networking and Content Delivery."
+          },
+          {
+            "text": "Click on Your VPC’s on the left side panel, then click on Create VPC and select VPC only."
+          },
+          {
+            "text": "VPC Settings:"
+          },
+          {
+            "text": "Name tag: Enter MyVPC"
+          },
+          {
+            "text": "IPv4 CIDR block: Enter 10.1.0.0/16"
+          },
+          {
+            "text": "Task 3: Create a VPC"
+          },
+          {
+            "text": "Then leave the other fields as default and click on Create VPC."
+          },
+          {
+            "text": "Click on Your VPC's on the left panel, and it will be shown like this."
+          },
+          {
+            "text": "Task 3: Create a VPC"
+          }
+        ]
+      },
+      {
+        "title": "Task 4: Creating an Internet Gateway",
+        "steps": [
+          {
+            "text": "In this task, we are going to create an internet gateway and attach it to the VPC."
+          },
+          {
+            "text": "Select Internet Gateways on the left side panel and click on the Create internet gateway"
+          },
+          {
+            "text": "Enter the name as MyInternetGateway. Leave everything else as default and click on the Create internet gateway."
+          },
+          {
+            "text": "Task 4: Creating an Internet Gateway"
+          },
+          {
+            "text": "Once created, attach it to MyVPC by clicking on Actions at the top and selecting Attach to VPC."
+          },
+          {
+            "text": "Task 4: Creating an Internet Gateway"
+          },
+          {
+            "text": "Under Available VPCs, select MyVPC and then click on Attach internet gateway button."
+          },
+          {
+            "text": "Click on the Route Tables on the left side panel and then select the main route table for your VPC, i.e., MyVPC. If the rout table does not appear, please click the Refresh button in the top right panel."
+          },
+          {
+            "text": "Now click on the Routes tab and then click on Edit routes."
+          },
+          {
+            "text": "Task 4: Creating an Internet Gateway"
+          },
+          {
+            "text": "Click on Add Route Destination: Enter 0.0.0.0/0 Target: Select Internet Gateway and choose MyInternetGateway from the drop-down list. Click on Save Changes button."
+          },
+          {
+            "text": "Click on Add Route"
+          },
+          {
+            "text": "Destination: Enter 0.0.0.0/0"
+          },
+          {
+            "text": "Target: Select Internet Gateway and choose MyInternetGateway from the drop-down list."
+          },
+          {
+            "text": "Click on Save Changes button."
+          },
+          {
+            "text": "Task 4: Creating an Internet Gateway"
+          }
+        ]
+      },
+      {
+        "title": "Task 5: Create a Subnet",
+        "steps": [
+          {
+            "text": "In this task, we are going to create a subnet within the VPC. Subnets are subdivisions of a VPC and allow users to organize and isolate resources within their network."
+          },
+          {
+            "text": "Click on Subnets on the left side panel and click on Create Subnet."
+          },
+          {
+            "text": "VPC:"
+          },
+          {
+            "text": "VPC ID: Select MyVPC"
+          },
+          {
+            "text": "Subnet settings:"
+          },
+          {
+            "text": "Subnet name: Enter whizsub"
+          },
+          {
+            "text": "Availability Zone: Select US East(N.Virginia)/us-east-1a"
+          },
+          {
+            "text": "IPv4 Subnet CIDR Block: Enter 10.1.1.0/24"
+          },
+          {
+            "text": "Click on Create subnet button."
+          },
+          {
+            "text": "Task 5: Create a Subnet"
+          }
+        ]
+      },
+      {
+        "title": "Task 6: Create VPC Flow Logs",
+        "steps": [
+          {
+            "text": "In this task, we are going to create VPC Flow Logs. VPC Flow Logs capture information about the IP traffic going to and from network interfaces within the VPC."
+          },
+          {
+            "text": "Click on Your VPC's on the left side panel and select MyVPC, click on Actions, then select Create Flow Log."
+          },
+          {
+            "text": "Create flow log:"
+          },
+          {
+            "text": "Name: Enter MyVPCFlowLog"
+          },
+          {
+            "text": "Filter: Select Accept"
+          },
+          {
+            "text": "Maximum Aggregation Interval: Select 1 minute"
+          },
+          {
+            "text": "Task 6: Create VPC Flow Logs"
+          },
+          {
+            "text": "Destination: Select Send to Cloudwatch Logs"
+          },
+          {
+            "text": "Destination Log Group: Select whizvpclogs."
+          },
+          {
+            "text": "Service access: select Use an existing service role. role:"
+          },
+          {
+            "text": "Service role: Select VPCFlowLog_Role_<RANDOM_NUMBER>. This role has already been created for you."
+          },
+          {
+            "text": "Leave the other options as default, then click on Create flow log."
+          },
+          {
+            "text": "Task 6: Create VPC Flow Logs"
+          },
+          {
+            "text": "Once the flow logs are created, In the My VPC's dashboard, select MyVPC, and click on Flow Logs tab below. The flow log will be available."
+          },
+          {
+            "text": "Now, you have successfully learned how to create the VPC Flow Logs."
+          }
+        ]
+      },
+      {
+        "title": "Task 7: Creating an EC2 Instance",
+        "steps": [
+          {
+            "text": "In this task, we are going to create an Amazon Elastic Compute Cloud (EC2) instance within the VPC."
+          },
+          {
+            "text": "Navigate to Services at the top and click on EC2 under Compute."
+          },
+          {
+            "text": "Make sure you are in the US-East (N.Virginia) us-east-1 region."
+          },
+          {
+            "text": "Select Instances on the left side panel and click on Launch instances."
+          },
+          {
+            "text": "Task 7: Creating an EC2 Instance"
+          },
+          {
+            "text": "Enter Name : labec2instance."
+          },
+          {
+            "text": "Choose an Amazon Machine Image (AMI): Select Amazon Linux 2023 kernel-6.1 AMI in the drop-down."
+          },
+          {
+            "text": "Choose an Instance Type: Select t2.micro."
+          },
+          {
+            "text": "Task 7: Creating an EC2 Instance"
+          },
+          {
+            "text": "For Key pair: Select Create a new key pair Button"
+          },
+          {
+            "text": "Key pair name: WhizKey"
+          },
+          {
+            "text": "Key pair type: RSA"
+          },
+          {
+            "text": "Private key file format: .pem"
+          },
+          {
+            "text": "Select Create key pair Button."
+          },
+          {
+            "text": "In Network Settings, Click on Edit Button:"
+          },
+          {
+            "text": "VPC : Select MyVPC"
+          },
+          {
+            "text": "Subnet: It automatically selects the Subnet we created(whizsub)"
+          },
+          {
+            "text": "Auto-assign public IP: Enable"
+          },
+          {
+            "text": "Select Create new Security group"
+          },
+          {
+            "text": "Security group name : Enter MyEC2Server_SG"
+          },
+          {
+            "text": "Description : Enter Security Group to allow traffic to EC2"
+          },
+          {
+            "text": "Task 7: Creating an EC2 Instance"
+          },
+          {
+            "text": "Check Allow SSH from and Select Anywhere from dropdown"
+          },
+          {
+            "text": "To add SSH, Choose Type: SSH Source: Select Anywhere"
+          },
+          {
+            "text": "To add SSH,"
+          },
+          {
+            "text": "Choose Type: SSH"
+          },
+          {
+            "text": "Source: Select Anywhere"
+          },
+          {
+            "text": "For HTTP, Select Add Security rule Button Choose Type: HTTP Source: Select Anywhere"
+          },
+          {
+            "text": "For HTTP, Select Add Security rule Button"
+          },
+          {
+            "text": "Choose Type: HTTP"
+          },
+          {
+            "text": "Source: Select Anywhere"
+          },
+          {
+            "text": "Task 7: Creating an EC2 Instance"
+          },
+          {
+            "text": "Under Advanced Details, scroll to IAM Instance Profile, and select VPCFlowLog_Role..."
+          },
+          {
+            "text": "Click on Launch Instances. The instance will be created within 1-2 minutes and the Instance State will change to running."
+          },
+          {
+            "text": "Task 7: Creating an EC2 Instance"
+          },
+          {
+            "text": "Copy the Public IP of the instance for future use."
+          },
+          {
+            "text": "Task 7: Creating an EC2 Instance"
+          }
+        ]
+      },
+      {
+        "title": "Task 8: Generating Traffic",
+        "steps": [
+          {
+            "text": "In this task, we are going to generate traffic to the EC2 instance by installing an Apache server."
+          },
+          {
+            "text": "We need to SSH into the instance to generate traffic. To do so, please follow the steps in SSH into EC2 Instance."
+          },
+          {
+            "text": "Once you SSH into the instance, install an Apache Server. To install it, follow the below steps. Run these commands one-by-one."
+          },
+          {
+            "text": "This command allows you to switch to the superuser or root user. sudo su"
+          },
+          {
+            "text": "This command allows you to switch to the superuser or root user."
+          },
+          {
+            "text": "This command updates the packages and software on the EC2 instance.dnf update -y"
+          },
+          {
+            "text": "This command updates the packages and software on the EC2 instance."
+          },
+          {
+            "text": "This command installs the Apache HTTP Server, commonly known as Apache. Apache is a widely used web server software that enables the hosting of websites and serves web content.dnf install httpd -y"
+          },
+          {
+            "text": "This command installs the Apache HTTP Server, commonly known as Apache. Apache is a widely used web server software that enables the hosting of websites and serves web content."
+          },
+          {
+            "text": "This command changes the current directory to the default location where web content is served by Apache.cd /var/www/html"
+          },
+          {
+            "text": "This command changes the current directory to the default location where web content is served by Apache."
+          },
+          {
+            "text": "This command creates a simple HTML file named “index.html” and sets its content as “Response coming from server”.echo \"Response coming from server\" > /var/www/html/index.html"
+          },
+          {
+            "text": "This command creates a simple HTML file named “index.html” and sets its content as “Response coming from server”."
+          },
+          {
+            "text": "This command starts the Apache web server service. Once the service is started, Apache is ready to serve web content.systemctl start httpd"
+          },
+          {
+            "text": "This command starts the Apache web server service. Once the service is started, Apache is ready to serve web content."
+          },
+          {
+            "text": "This command configures Apache to start automatically when the EC2 instance boots up.systemctl enable httpd"
+          },
+          {
+            "text": "This command configures Apache to start automatically when the EC2 instance boots up."
+          },
+          {
+            "text": "This command checks the status of the Apache web server service.systemctl status httpd"
+          },
+          {
+            "text": "This command checks the status of the Apache web server service."
+          },
+          {
+            "text": "Task 8: Generating Traffic"
+          },
+          {
+            "text": "Copy your instance's Public IP address and paste in the search bar of your browser tab and append /index.html after the IP address and hit enter."
+          },
+          {
+            "text": "Task 8: Generating Traffic"
+          }
+        ]
+      },
+      {
+        "title": "Task 9: Viewing log events in CloudWatch Log groups",
+        "steps": [
+          {
+            "text": "In this task, we are going to demonstrate how to view the log events captured by the VPC Flow Logs in CloudWatch Logs."
+          },
+          {
+            "text": "Navigate to the Services menu at the top and choose CloudWatch under Management and Governance."
+          },
+          {
+            "text": "Click on Log Management on the left side panel and click on whizvpclogs."
+          },
+          {
+            "text": "Go to Log streams section and click on the log stream that has been created."
+          },
+          {
+            "text": "Task 9: Viewing log events in CloudWatch Log groups"
+          },
+          {
+            "text": "You will be able to view all the log events i.e. the traffic that is being directed to our EC2 Instance."
+          },
+          {
+            "text": "Task 9: Viewing log events in CloudWatch Log groups"
+          },
+          {
+            "text": "VPC Flow Logs can be used not only for monitoring and troubleshooting purposes but also for security analysis and threat detection. By analyzing the flow log data, you can gain insights into network patterns, detect anomalies, and identify potential security threats or unauthorized access attempts. This can help enhance the security of your VPC infrastructure and protect your resources from malicious activities."
+          }
+        ]
+      },
+      {
+        "title": "Task 10 : Validation of the Lab",
+        "steps": [
+          {
+            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          },
+          {
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          },
+          {
+            "text": "Sample output :"
+          },
+          {
+            "text": "Task 10 : Validation of the Lab"
+          },
+          {
+            "text": "You have successfully created CloudWatch Logs."
+          },
+          {
+            "text": "You have successfully created the VPC."
+          },
+          {
+            "text": "You have successfully created the VPC Flow Logs."
+          },
+          {
+            "text": "You have successfully created an Instance."
+          },
+          {
+            "text": "You have successfully created Subnets that should be separate, then generated some site traffic."
+          },
+          {
+            "text": "Sign out of AWS Account."
+          },
+          {
+            "text": "You have successfully completed the lab."
+          },
+          {
+            "text": "Once you have completed the steps, click on End Lab from the lab console."
           }
         ]
       }
@@ -16606,7 +21556,10 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -16621,7 +21574,7 @@ export const labsCatalog: Lab[] = [
             "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
           },
           {
-            "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
+            "text": "Note : If you face any issues, please go through FAQs and Troubleshooting for Labs."
           }
         ]
       },
@@ -16632,19 +21585,49 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to launch an EC2 instance which will be used for connecting to the Amazon Aurora RDS DB instance later in the lab."
           },
           {
-            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
           },
           {
-            "text": "Click on Instances from the left sidebar and then click on Launch instances"
+            "text": "Click on Instances from the left sidebar and then click on Launch instances",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-01.jpg"
+            ]
+          },
+          {
+            "text": "Task 2: Launch an EC2 instance",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-02.jpg"
+            ]
           },
           {
             "text": "Name : Enter MyRdsEc2server."
           },
           {
-            "text": "For Amazon Machine Image (AMI): In Quick Start menu, select Amazon Linux 2023 kernel-6.1 AMI."
+            "text": "For Amazon Machine Image (AMI): In Quick Start menu, select Amazon Linux 2023 kernel-6.1 AMI.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-03.png"
+            ]
           },
           {
-            "text": "For Instance Type: select t2.micro"
+            "text": "Task 2: Launch an EC2 instance",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-04.png"
+            ]
+          },
+          {
+            "text": "For Instance Type: select t2.micro",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-05.png"
+            ]
+          },
+          {
+            "text": "Task 2: Launch an EC2 instance",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-06.png"
+            ]
+          },
+          {
+            "text": "For Key pair: Select Create a new key pair Key pair name: MySSHKey Key pair type: RSA Private key file format: .pem Note: If you are using putty, select the Private key file format as .ppk"
           },
           {
             "text": "For Key pair: Select Create a new key pair"
@@ -16656,10 +21639,13 @@ export const labsCatalog: Lab[] = [
             "text": "Key pair type: RSA"
           },
           {
+            "text": "Private key file format: .pem Note: If you are using putty, select the Private key file format as .ppk"
+          },
+          {
             "text": "Private key file format: .pem"
           },
           {
-            "text": "Note: If you are using putty, select the Private key file format as .ppk"
+            "text": "Note: If you are using putty, select the Private key file format as .ppk"
           },
           {
             "text": "Select Create key pair Button."
@@ -16677,46 +21663,22 @@ export const labsCatalog: Lab[] = [
             "text": "Security group name : Enter MyEC2Server_SG"
           },
           {
+            "text": "Description : Enter Security for ec2 server to connect with RDS To add SSH: Choose Type: SSH Source: select Anywhere"
+          },
+          {
             "text": "Description : Enter Security for ec2 server to connect with RDS"
           },
           {
-            "text": "To add SSH:"
+            "text": "To add SSH:"
           },
           {
-            "text": "Choose Type: SSH"
+            "text": "Choose Type: SSH"
           },
           {
-            "text": "Source: select Anywhere"
+            "text": "Source: select Anywhere"
           },
           {
-            "text": "Click on Advanced Details . Under the User data section, enter the following script, (which installs MySQL):"
-          },
-          {
-            "text": "#!/bin/bash"
-          },
-          {
-            "text": "# Download the MySQL repository package"
-          },
-          {
-            "text": "wget https://dev.mysql.com/get/mysql80-community-release-el9-5.noarch.rpm"
-          },
-          {
-            "text": "# Install the MySQL repository package"
-          },
-          {
-            "text": "sudo dnf install mysql80-community-release-el9-5.noarch.rpm -y"
-          },
-          {
-            "text": "# Enable the MySQL community repository"
-          },
-          {
-            "text": "sudo dnf repolist enabled | grep \"mysql.*-community.*\""
-          },
-          {
-            "text": "# Install MySQL"
-          },
-          {
-            "text": "sudo dnf install mysql -y"
+            "text": "Click on Advanced Details . Under the User data section, enter the following script, (which installs MySQL):"
           },
           {
             "text": "Note: After pasting the user data, make sure to remove extra spacing."
@@ -16728,10 +21690,28 @@ export const labsCatalog: Lab[] = [
             "text": "Select View all Instances to View the Instance you Created"
           },
           {
-            "text": "After 1-2 minutes, the Instance State will become running as shown below:"
+            "text": "After 1-2 minutes, the Instance State will become running as shown below:",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-07.jpg"
+            ]
           },
           {
-            "text": "Select the EC2 Instance and copy the Private IPv4 address. Note down IPv4 Private IP address in your text editor, navigate to the EC2 Dashboard and look in the instance details."
+            "text": "Task 2: Launch an EC2 instance",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-08.jpg"
+            ]
+          },
+          {
+            "text": "Select the EC2 Instance and copy the Private IPv4 address. Note down IPv4 Private IP address in your text editor, navigate to the EC2 Dashboard and look in the instance details.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-09.jpg"
+            ]
+          },
+          {
+            "text": "Task 2: Launch an EC2 instance",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-10.jpg"
+            ]
           }
         ]
       },
@@ -16742,40 +21722,67 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we will create a security group specifically for the Amazon Aurora RDS instance which ensures that the RDS instance has appropriate network security settings by allowing access only through the MySQL/Aurora port (3306) from any IP address (0.0.0.0/0)."
           },
           {
-            "text": "Make sure you are in the N.Virginia Region."
+            "text": "Make sure you are in the N.Virginia Region."
           },
           {
-            "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
+            "text": "Navigate to EC2 by clicking on the Services menu available under the Compute section."
           },
           {
-            "text": "On the left panel menu, select the security group under the Network & Security section."
+            "text": "On the left panel menu, select the security group under the Network & Security section."
           },
           {
-            "text": "Click on the Create security group button."
+            "text": "Click on the Create security group button.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-11.jpg"
+            ]
+          },
+          {
+            "text": "Task 3: Create a Security Group for RDS instance",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-12.jpg"
+            ]
+          },
+          {
+            "text": "We are going to create a Security group for RDS with 3306 port number enabled. Security group name : Enter rds-maz-SG Description : Enter Security group for RDS Aurora VPC : Select Default VPC",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-13.jpg"
+            ]
           },
           {
             "text": "We are going to create a Security group for RDS with 3306 port number enabled."
           },
           {
-            "text": "Security group name : Enter rds-maz-SG"
+            "text": "Security group name : Enter rds-maz-SG"
           },
           {
-            "text": "Description : Enter Security group for RDS Aurora"
+            "text": "Description : Enter Security group for RDS Aurora"
           },
           {
-            "text": "VPC : Select Default VPC"
+            "text": "VPC : Select Default VPC",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-14.jpg"
+            ]
           },
           {
-            "text": "Click on the Add rule button under Inbound rules."
+            "text": "Task 3: Create a Security Group for RDS instance",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-15.jpg"
+            ]
           },
           {
-            "text": "Type : Select MYSQL/Aurora"
+            "text": "Click on the Add rule button under Inbound rules. Type : Select MYSQL/Aurora Source : Select Anywhere IPv4"
           },
           {
-            "text": "Source : Select Anywhere IPv4"
+            "text": "Click on the Add rule button under Inbound rules."
           },
           {
-            "text": "Leave everything as default and click on the Create security group button."
+            "text": "Type : Select MYSQL/Aurora"
+          },
+          {
+            "text": "Source : Select Anywhere IPv4"
+          },
+          {
+            "text": "Leave everything as default and click on the Create security group button."
           }
         ]
       },
@@ -16783,76 +21790,121 @@ export const labsCatalog: Lab[] = [
         "title": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
         "steps": [
           {
-            "text": "In this task, we will create an aurora database using AWS RDS service. The database is configured with Multi-AZ deployment, which replicates data to a standby instance in a different availability zone, providing high availability and durability."
+            "text": "In this task, we will create an aurora database using AWS RDS service. The database is configured with Multi-AZ deployment, which replicates data to a standby instance in a different availability zone, providing high availability and durability."
           },
           {
-            "text": "Make sure you are in US East (N.Virginia) us-east-1 Region."
+            "text": "Make sure you are in US East (N.Virginia) us-east-1 Region."
           },
           {
-            "text": "Navigate to RDS under the database section of the Services menu."
+            "text": "Navigate to RDS under the database section of the Services menu."
           },
           {
-            "text": "Click on Databases in the left Panel."
+            "text": "Click on Databases in the left Panel."
           },
           {
-            "text": "Click on Created database button and choose Full configuration option."
+            "text": "Click on Created database button and choose Full configuration option.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-16.png"
+            ]
           },
           {
-            "text": "Next, we'll configure the database on the Create Database Page"
+            "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-17.png"
+            ]
+          },
+          {
+            "text": "Next, we'll configure the database on the Create Database Page In Engine option: Select Aurora (MySQL Compatible)"
+          },
+          {
+            "text": "Next, we'll configure the database on the Create Database Page"
+          },
+          {
+            "text": "In Engine option: Select Aurora (MySQL Compatible)"
           },
           {
             "text": "In Engine option:"
           },
           {
-            "text": "Select Aurora (MySQL Compatible)"
+            "text": "Select Aurora (MySQL Compatible)"
           },
           {
             "text": "Choose a Database Creation Method:"
           },
           {
-            "text": "Select Full Configuration"
+            "text": "Select Full Configuration",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-18.png"
+            ]
           },
           {
             "text": "Choose Template: Dev/Test"
           },
           {
-            "text": "Cluster scalability type: Choose Provisioned"
+            "text": "Cluster scalability type: Choose Provisioned"
           },
           {
             "text": "Choosing DB instance size"
           },
           {
-            "text": "DB instance class: Choose Burstable classes (includes t classes)"
+            "text": "DB instance class: Choose Burstable classes (includes t classes)Select db.t3.medium instance.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-19.png"
+            ]
           },
           {
-            "text": "Select db.t3.medium instance."
+            "text": "DB instance class: Choose Burstable classes (includes t classes)"
+          },
+          {
+            "text": "Select db.t3.medium instance."
+          },
+          {
+            "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-20.png"
+            ]
           },
           {
             "text": "Fill in the required details for the database (Aurora Cluster Settings)"
           },
           {
-            "text": "DB cluster identifier: Specify cluster name MyAuroraCluster"
+            "text": "DB cluster identifier: Specify cluster name MyAuroraCluster"
           },
           {
-            "text": "Give the following details in the credential settings"
+            "text": "Give the following details in the credential settings"
           },
           {
-            "text": "Master Username: Enter labAdmin"
+            "text": "Master Username: Enter labAdmin"
           },
           {
             "text": "Credentials management: Select Self managed"
           },
           {
-            "text": "Master password: Enter lab123"
+            "text": "Master password: Enter lab123"
           },
           {
-            "text": "Confirm password: Enter lab123"
+            "text": "Confirm password: Enter lab123"
           },
           {
-            "text": "Note: This is the username and password used to log into your database. Please make note of them."
+            "text": "Note: This is the username and password used to log into your database. Please make note of them.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-21.png"
+            ]
           },
           {
-            "text": "Availability and Durability: Choose Multi-AZ deployment: Create Aurora Replica or Reader node in a different AZ as shown below:"
+            "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-22.png"
+            ]
+          },
+          {
+            "text": "Availability and Durability: Choose Multi-AZ deployment: Create Aurora Replica or Reader node in a different AZ as shown below:",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-23.png"
+            ]
+          },
+          {
+            "text": "Connectivity Choose the Default VPC"
           },
           {
             "text": "Connectivity"
@@ -16861,13 +21913,31 @@ export const labsCatalog: Lab[] = [
             "text": "Choose the Default VPC"
           },
           {
+            "text": "Additional connectivity configuration Subnet group: Default Publicly accessible: Yes {IMPORTANT} Existing VPC security groups : Remove the Default security group, which is selected by default :",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-24.png"
+            ]
+          },
+          {
             "text": "Additional connectivity configuration"
           },
           {
-            "text": "Subnet group: Default"
+            "text": "Subnet group: Default"
           },
           {
-            "text": "Publicly accessible: Yes {IMPORTANT}"
+            "text": "Publicly accessible: Yes {IMPORTANT}",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-25.png"
+            ]
+          },
+          {
+            "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-26.png"
+            ]
+          },
+          {
+            "text": "Existing VPC security groups : Remove the Default security group, which is selected by default :"
           },
           {
             "text": "Existing VPC security groups :"
@@ -16876,13 +21946,25 @@ export const labsCatalog: Lab[] = [
             "text": "Remove the Default security group, which is selected by default :"
           },
           {
-            "text": "Select rds-maz-SG for the dropdown.(This is the security group which you have created in the beginning)"
+            "text": "Select rds-maz-SG for the dropdown.(This is the security group which you have created in the beginning)",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-27.png"
+            ]
           },
           {
-            "text": "Under Monitoring, uncheck monitoring option."
+            "text": "Under Monitoring, uncheck monitoring option."
           },
           {
-            "text": "Select the Additional configuration present at the bottom of the page and enter the following details:"
+            "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-28.png"
+            ]
+          },
+          {
+            "text": "Select the Additional configuration present at the bottom of the page and enter the following details: Database options Initial database name: Enter labrds"
+          },
+          {
+            "text": "Database options Initial database name: Enter labrds"
           },
           {
             "text": "Database options"
@@ -16891,19 +21973,28 @@ export const labsCatalog: Lab[] = [
             "text": "Initial database name: Enter labrds"
           },
           {
-            "text": "Leave other settings as default"
+            "text": "Leave other settings as default"
           },
           {
             "text": "Once the details above have been filled in, click on Create database button."
           },
           {
-            "text": "It will take around 10-15 minutes for the database to be created. Please wait until database status changes from creating to Available."
+            "text": "It will take around 10-15 minutes for the database to be created. Please wait until database status changes from creating to Available."
           },
           {
-            "text": "Once the database has been created, you should see the following page:"
+            "text": "Once the database has been created, you should see the following page:",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-29.jpg"
+            ]
           },
           {
-            "text": "Similar to the screenshot, you should be able to see that our database launched in multiple AZs, namely us-east-1c and us-east-1a"
+            "text": "Task 4: Create an Amazon Aurora database with Multi-AZ enabled",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-30.jpg"
+            ]
+          },
+          {
+            "text": "Similar to the screenshot, you should be able to see that our database launched in multiple AZs, namely us-east-1c and us-east-1a"
           }
         ]
       },
@@ -16911,22 +22002,28 @@ export const labsCatalog: Lab[] = [
         "title": "Task 5: Connecting to the Aurora (MySQL) database on RDS",
         "steps": [
           {
-            "text": "Now we have successfully launched Aurora RDS with Multi-AZ enabled. To connect to the new Aurora database, we need the endpoint."
+            "text": "Now we have successfully launched Aurora RDS with Multi-AZ enabled. To connect to the new Aurora database, we need the endpoint."
           },
           {
-            "text": "Click on the RDS cluster name and then navigate to Connectivity & security to find the endpoint of your Master (Writer) and Reader instances, with which you can connect to your DB instance."
+            "text": "Click on the RDS cluster name and then navigate to Connectivity & security to find the endpoint of your Master (Writer) and Reader instances, with which you can connect to your DB instance."
           },
           {
             "text": "The endpoints you see to be similar to these examples:"
           },
           {
-            "text": "Master (Writer): myauroracluster.cluster-c2tbqtanuaea.us-east-1.rds.amazonaws.com"
+            "text": "Master (Writer): myauroracluster.cluster-c2tbqtanuaea.us-east-1.rds.amazonaws.com"
           },
           {
-            "text": "Reader: myauroracluster.cluster-ro-c2tbqtanuaea.us-east-1.rds.amazonaws.com"
+            "text": "Reader: myauroracluster.cluster-ro-c2tbqtanuaea.us-east-1.rds.amazonaws.com"
           },
           {
-            "text": "Note: Please carefully look at the role of the DB instance (reader vs Master (Writer)) and their respective availability zones. (here us-east-1c and us-east-1a)"
+            "text": "Task 5: Connecting to the Aurora (MySQL) database on RDS",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-31.jpg"
+            ]
+          },
+          {
+            "text": "Note: Please carefully look at the role of the DB instance (reader vs Master (Writer)) and their respective availability zones. (here us-east-1c and us-east-1a)"
           }
         ]
       },
@@ -16943,13 +22040,28 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate to RDS available under the Database section of the Services menu."
           },
           {
-            "text": "Click on Master (writer) database. Choose a and click on the security group name in this example it is rds-maz-SG under VPC security groups as shown below:"
+            "text": "Click on Master (writer) database. Choose a and click on the security group name in this example it is rds-maz-SG under VPC security groups as shown below:",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-32.png"
+            ]
+          },
+          {
+            "text": "Task 6: Connecting the EC2 Server to RDS:",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-33.png"
+            ]
           },
           {
             "text": "It will open the Security Group page. Click on Inbound rules."
           },
           {
-            "text": "Click on Edit inbound rules. The MySQL rule will already exist."
+            "text": "Click on Edit inbound rules. The MySQL rule will already exist."
+          },
+          {
+            "text": "Click on Add rule button. Type: Select MYSQL/Aurora Source: Paste the Private IP address of your MyRdsEc2server EC2 instance. Delete the old rule and then Click on Save rules button.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-34.jpg"
+            ]
           },
           {
             "text": "Click on Add rule button."
@@ -16961,7 +22073,16 @@ export const labsCatalog: Lab[] = [
             "text": "Source: Paste the Private IP address of your MyRdsEc2server EC2 instance."
           },
           {
-            "text": "Delete the old rule and then Click on Save rules button."
+            "text": "Delete the old rule and then Click on Save rules button.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-35.jpg"
+            ]
+          },
+          {
+            "text": "Task 6: Connecting the EC2 Server to RDS:",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-36.jpg"
+            ]
           }
         ]
       },
@@ -16969,109 +22090,115 @@ export const labsCatalog: Lab[] = [
         "title": "Task 7: Execute Database Operations via SSH",
         "steps": [
           {
-            "text": "In this task, we are going to execute database operations on the Amazon Aurora RDS database. By SSHing into the EC2 instance and accessing the database using MySQL, they can create tables, insert data, and perform queries."
+            "text": "In this task, we are going to execute database operations on the Amazon Aurora RDS database. By SSHing into the EC2 instance and accessing the database using MySQL, they can create tables, insert data, and perform queries."
           },
           {
             "text": "Navigate to the EC2 Dashboard and select the instance created."
           },
           {
-            "text": "Once the instance is launched, Select EC2 Instance Connect option and click on Connect button."
+            "text": "Once the instance is launched, Select EC2 Instance Connect option and click on Connect button."
           },
           {
-            "text": "Please follow the steps in SSH into EC2 Instance for more option to SSH."
+            "text": "Task 7: Execute Database Operations via SSH",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-37.jpg"
+            ]
+          },
+          {
+            "text": "Please follow the steps in SSH into EC2 Instance for more option to SSH."
+          },
+          {
+            "text": "Switch to the root user using the command : sudo su"
           },
           {
             "text": "Switch to the root user using the command :"
           },
           {
-            "text": "sudo su"
-          },
-          {
             "text": "Log into the RDS instance using the below command:"
           },
           {
-            "text": "mysql -h myauroracluster.cluster-cjp5t9qppjnx.us-east-1.rds.amazonaws.com -u labAdmin -p"
+            "text": "mysql -h myauroracluster.cluster-cjp5t9qppjnx.us-east-1.rds.amazonaws.com -u labAdmin -p"
           },
           {
-            "text": "Syntax: mysql -h <Hostname> -u <username> -p"
+            "text": "Syntax: mysql -h <Hostname> -u <username> -p"
           },
           {
-            "text": "Note: Make sure to change the above Master (Writer)Cluster endpoint and Username with yours."
+            "text": "Note: Make sure to change the above Master (Writer)Cluster endpoint and Username with yours."
           },
           {
-            "text": "Host name : myauroracluster.cluster-cpoz6c7903cx.us-east-1.rds.amazonaws.com (Master(Writer)cluster endpoint)"
+            "text": "Host name : myauroracluster.cluster-cpoz6c7903cx.us-east-1.rds.amazonaws.com (Master(Writer)cluster endpoint)"
           },
           {
-            "text": "Username : Enter labAdmin"
+            "text": "Username : Enter labAdmin"
           },
           {
-            "text": "Password : Enter lab123 (Use yours incase you changed the password while creating RDS)"
+            "text": "Password : Enter lab123 (Use yours incase you changed the password while creating RDS)"
           },
           {
             "text": "You should now be able to log into the database,"
           },
           {
-            "text": "List all Databases using the below command. You will see the database labrds created while launching the RDS cluster."
+            "text": "List all Databases using the below command. You will see the database labrds created while launching the RDS cluster.show databases;"
           },
           {
-            "text": "show databases;"
+            "text": "List all Databases using the below command. You will see the database labrds created while launching the RDS cluster."
           },
           {
-            "text": "Now create the database in the Master(Writer) RDS as given in the screenshot. We'll create a demo database named auroro_db."
+            "text": "Task 7: Execute Database Operations via SSH",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-38.png"
+            ]
           },
           {
-            "text": "Create database auroro_db;"
+            "text": "Now create the database in the Master(Writer) RDS as given in the screenshot. We'll create a demo database named auroro_db.Create database auroro_db;"
+          },
+          {
+            "text": "Now create the database in the Master(Writer) RDS as given in the screenshot. We'll create a demo database named auroro_db."
           },
           {
             "text": "Select the newly-created database:"
           },
           {
-            "text": "use auroro_db;"
+            "text": "List all Databases:Show databases;"
           },
           {
             "text": "List all Databases:"
           },
           {
-            "text": "Show databases;"
+            "text": "Task 7: Execute Database Operations via SSH",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-39.png"
+            ]
           },
           {
-            "text": "Next we'll create a table named students and insert few rows of data using list of commands:"
+            "text": "Next we'll create a table named students and insert few rows of data using list of commands:"
           },
           {
-            "text": "CREATE TABLE students ( subject_id INT AUTO_INCREMENT, subject_name VARCHAR(255) NOT NULL, teacher VARCHAR(255),start_date DATE, lesson TEXT,PRIMARY KEY (subject_id));"
+            "text": "Task 7: Execute Database Operations via SSH",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-40.png"
+            ]
           },
           {
-            "text": "Select * from students;"
-          },
-          {
-            "text": "Show tables;"
+            "text": "Insert data into the table:INSERT INTO students(subject_name, teacher) VALUES ('English', 'John Taylor');INSERT INTO students(subject_name, teacher) VALUES ('Science', 'Mary Smith');INSERT INTO students(subject_name, teacher) VALUES ('Maths', 'Ted Miller');INSERT INTO students(subject_name, teacher) VALUES ('Arts', 'Suzan Carpenter');"
           },
           {
             "text": "Insert data into the table:"
           },
           {
-            "text": "INSERT INTO students(subject_name, teacher) VALUES ('English', 'John Taylor');"
-          },
-          {
-            "text": "INSERT INTO students(subject_name, teacher) VALUES ('Science', 'Mary Smith');"
-          },
-          {
-            "text": "INSERT INTO students(subject_name, teacher) VALUES ('Maths', 'Ted Miller');"
-          },
-          {
-            "text": "INSERT INTO students(subject_name, teacher) VALUES ('Arts', 'Suzan Carpenter');"
+            "text": "Now you can view the contents of the table student using the below command:select * from students;"
           },
           {
             "text": "Now you can view the contents of the table student using the below command:"
           },
           {
-            "text": "select * from students;"
+            "text": "Task 7: Execute Database Operations via SSH",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-41.png"
+            ]
           },
           {
             "text": "Exit from mysql console use the below command:"
-          },
-          {
-            "text": "exit;"
           }
         ]
       },
@@ -17085,16 +22212,40 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate to RDS Database and in Database section Select Master(Writer) Instance and in Actions dropdown, click on failover"
           },
           {
-            "text": "To test if Multi-AZ is working, we will create a situation where master fails and the read replica has to become the new Master(Writer)."
+            "text": "To test if Multi-AZ is working, we will create a situation where master fails and the read replica has to become the new Master(Writer).",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-42.jpg"
+            ]
           },
           {
-            "text": "On the next screen, confirm the Failover."
+            "text": "Task 8: Forcing a Failover to Test Multi-AZ",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-43.jpg"
+            ]
           },
           {
-            "text": "Wait for a few minutes for the RDS instances to failover."
+            "text": "On the next screen, confirm the Failover.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-44.jpg"
+            ]
+          },
+          {
+            "text": "Task 8: Forcing a Failover to Test Multi-AZ",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-45.jpg"
+            ]
+          },
+          {
+            "text": "Wait for a few minutes for the RDS instances to failover."
           },
           {
             "text": "(i.e Master (Writer) becomes Reader and Reader becomes Master (Writer) as shown below)"
+          },
+          {
+            "text": "Task 8: Forcing a Failover to Test Multi-AZ",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-46.jpg"
+            ]
           }
         ]
       },
@@ -17105,40 +22256,46 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to the new master instance and verify the presence of the database, table, and data created earlier. This step ensures that the failover was successful, and the new master instance is functioning as expected."
           },
           {
+            "text": "Now connect to RDS with new Master endpoint Copy the endpoint of the new Master(Writer)cluster and replace it with your endpoint link."
+          },
+          {
             "text": "Now connect to RDS with new Master endpoint"
           },
           {
-            "text": "Copy the endpoint of the new Master(Writer)cluster and replace it with your endpoint link."
+            "text": "Copy the endpoint of the new Master(Writer)cluster and replace it with your endpoint link."
           },
           {
-            "text": "Mysql -h <endpoint> -u <username> -p and press [Enter]"
+            "text": "Mysql -h <endpoint> -u <username> -p and press [Enter]"
           },
           {
-            "text": "mysql -h myauroracluster.cluster-ro-cjp5t9qppjnx.us-east-1.rds.amazonaws.com -u labAdmin -p"
+            "text": "mysql -h myauroracluster.cluster-ro-cjp5t9qppjnx.us-east-1.rds.amazonaws.com -u labAdmin -p"
           },
           {
-            "text": "Password: Enter lab123"
+            "text": "Password: Enter lab123"
           },
           {
-            "text": "You will be able to Log into MySQL and check for the database and table created in the master DB instance before the failover."
+            "text": "You will be able to Log into MySQL and check for the database and table created in the master DB instance before the failover."
           },
           {
             "text": "You can notice the resources created on the original master db are present, implying that the Failover worked successfully."
           },
           {
-            "text": "Show databases;"
+            "text": "Task 9: Testing the Failover Condition",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-47.png"
+            ]
           },
           {
-            "text": "Now check the existence of table named students and data (that we created earlier in the lab):"
+            "text": "Now check the existence of table named students and data (that we created earlier in the lab):use auroro_db;select * from students;"
           },
           {
-            "text": "use auroro_db;"
+            "text": "Now check the existence of table named students and data (that we created earlier in the lab):"
           },
           {
-            "text": "select * from students;"
-          },
-          {
-            "text": "Do you Know?"
+            "text": "Task 9: Testing the Failover Condition",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-48.png"
+            ]
           },
           {
             "text": "With Multi-AZ deployment, your database's transaction logs are synchronously replicated to the standby instance. This ensures that your data is durable and protected against potential data loss in the event of a primary instance failure."
@@ -17149,13 +22306,22 @@ export const labsCatalog: Lab[] = [
         "title": "Task 10: Validation Test",
         "steps": [
           {
-            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
           },
           {
-            "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+            "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
           },
           {
-            "text": "Sample output :"
+            "text": "Sample output :",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-49.gif"
+            ]
+          },
+          {
+            "text": "Task 10: Validation Test",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-50.gif"
+            ]
           }
         ]
       },
@@ -17163,16 +22329,22 @@ export const labsCatalog: Lab[] = [
         "title": "Task 11: Delete AWS Resources",
         "steps": [
           {
-            "text": "Terminate EC2 Instance"
-          },
-          {
-            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on the EC2 in the Compute section."
+            "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on the EC2 in the Compute section."
           },
           {
             "text": "All the EC2 Instances will be listed here,"
           },
           {
-            "text": "To terminate the EC2, perform the following task:"
+            "text": "Task 11: Delete AWS Resources",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-51.jpg"
+            ]
+          },
+          {
+            "text": "To terminate the EC2, perform the following task: Select MyRdsEc2server, Click on Instance state\nSelect Terminate instance",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-52.png"
+            ]
           },
           {
             "text": "Select MyRdsEc2server,"
@@ -17181,61 +22353,82 @@ export const labsCatalog: Lab[] = [
             "text": "Click on Instance state"
           },
           {
-            "text": "Select Terminate instance"
+            "text": "Select Terminate instance",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-53.png"
+            ]
           },
           {
-            "text": "Finally, Click on Terminate button."
+            "text": "Finally, Click on Terminate button."
           },
           {
             "text": "EC2 Instance will be terminated."
           },
           {
-            "text": "Delete RDS DB Instances"
-          },
-          {
-            "text": "Navigate to RDS by clicking on the Services menu available under the Database section."
+            "text": "Navigate to RDS by clicking on the Services menu available under the Database section."
           },
           {
             "text": "Click on Databaes"
           },
           {
-            "text": "It will list all the RDS databases"
+            "text": "It will list all the RDS databases",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-54.png"
+            ]
           },
           {
-            "text": "Let's delete the Reader first, Click on Actions, and select Delete"
+            "text": "Let's delete the Reader first, Click on Actions, and select Delete"
+          },
+          {
+            "text": "To delete we have to perform several tasks: Type delete me to confirm\nAnd finally, click on the Delete button below.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-55.jpg"
+            ]
+          },
+          {
+            "text": "Type delete me to confirm"
+          },
+          {
+            "text": "And finally, click on the Delete button below."
+          },
+          {
+            "text": "Task 11: Delete AWS Resources",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-56.jpg"
+            ]
+          },
+          {
+            "text": "Now it's time to delete Writer first, Click on Actions, and select Delete",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-57.png"
+            ]
+          },
+          {
+            "text": "To delete we have to perform several tasks: Uncheck the option of Create final snapshot Check the acknowledge option. Type delete me for confirmation And finally, click on the Delete button below.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-58.png"
+            ]
           },
           {
             "text": "To delete we have to perform several tasks:"
           },
           {
-            "text": "Type delete me to confirm"
+            "text": "Uncheck the option of Create final snapshot"
           },
           {
-            "text": "And finally, click on the Delete button below."
+            "text": "Check the acknowledge option."
           },
           {
-            "text": "Now it's time to delete Writer first, Click on Actions, and select Delete"
+            "text": "Type delete me for confirmation"
           },
           {
-            "text": "To delete we have to perform several tasks:"
+            "text": "And finally, click on the Delete button below.",
+            "images": [
+              "/labs/deploying-amazon-rds-multi-az-and-read-replica-simulate-failover/step-59.png"
+            ]
           },
           {
-            "text": "Uncheck the option of Create final snapshot"
-          },
-          {
-            "text": "Check the acknowledge option."
-          },
-          {
-            "text": "Type delete me for confirmation"
-          },
-          {
-            "text": "And finally, click on the Delete button below."
-          },
-          {
-            "text": "It will take around 4 minutes to delete the database instance, you can end the lab now."
-          },
-          {
-            "text": "Completion and Conclusion"
+            "text": "It will take around 4 minutes to delete the database instance, you can end the lab now."
           },
           {
             "text": "You have successfully used the AWS management console to create an Amazon Aurora MySQL database with Multi-Az enabled."
@@ -17244,13 +22437,10 @@ export const labsCatalog: Lab[] = [
             "text": "You have created an Amazon Aurora database on RDS."
           },
           {
-            "text": "You have successfully connected to the Amazon Aurora database and tested the failover condition with Multi-AZ enabled."
+            "text": "You have successfully connected to the Amazon Aurora database and tested the failover condition with Multi-AZ enabled."
           },
           {
             "text": "You have successfully validated the lab."
-          },
-          {
-            "text": "End Lab"
           },
           {
             "text": "Sign out of AWS Account."
@@ -17259,7 +22449,7 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully completed the lab."
           },
           {
-            "text": "Once you have completed the steps, click on End lab from the lab console."
+            "text": "Once you have completed the steps, click on End lab from the lab console."
           }
         ]
       }
@@ -17652,7 +22842,10 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -17661,10 +22854,10 @@ export const labsCatalog: Lab[] = [
             "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
           },
           {
-            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
-            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
           }
         ]
       },
@@ -17672,16 +22865,34 @@ export const labsCatalog: Lab[] = [
         "title": "Task 2: Enable Macie for the account",
         "steps": [
           {
-            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
           },
           {
             "text": "Navigate to Amazon Macie by clicking on the Services menu in the top, then click on Amazon Macie in the Security, Identity & Compliance section."
           },
           {
-            "text": "On the home page, click on the Get started button to configure Amazon Macie."
+            "text": "On the home page, click on the Get started button to configure Amazon Macie.",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-01.png"
+            ]
           },
           {
-            "text": "On the Get started page, click on the Enable Macie button."
+            "text": "Task 2: Enable Macie for the account",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-02.png"
+            ]
+          },
+          {
+            "text": "On the Get started page, click on the Enable Macie button.",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-03.png"
+            ]
+          },
+          {
+            "text": "Task 2: Enable Macie for the account",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-04.png"
+            ]
           }
         ]
       },
@@ -17689,25 +22900,40 @@ export const labsCatalog: Lab[] = [
         "title": "Task 3: Create a Macie job",
         "steps": [
           {
-            "text": "Macie will try to find out all the details of the account, which may take some time. No need to wait, simply click on the Create job button."
+            "text": "Macie will try to find out all the details of the account, which may take some time. No need to wait, simply click on the Create job button.",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-05.png"
+            ]
+          },
+          {
+            "text": "Task 3: Create a Macie job",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-06.png"
+            ]
           },
           {
             "text": "For Step-1, Choose S3 Bucket,"
           },
           {
-            "text": "Note: If you are getting any error notification, leave it and continue the rest steps."
+            "text": "If you can not See the bucket, click on the Add filter criteria field and click on the Bucket name."
           },
           {
-            "text": "If you can not See the bucket, click on the Add filter criteria field and click on the Bucket name."
+            "text": "Type lab and select the bucket name starting with lab, and click on the Next button"
           },
           {
-            "text": "Type lab and select the bucket name starting with lab, and click on the Next button"
+            "text": "Task 3: Create a Macie job",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-07.png"
+            ]
           },
           {
-            "text": "NOTE : If bucket is not listed, wait for 2–5 minutes and refresh the page 2–3 times."
+            "text": "Review S3 buckets Keep everything as default and click on the Next button."
           },
           {
-            "text": "Review S3 buckets Keep everything as default and click on the Next button."
+            "text": "Task 3: Create a Macie job",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-09.png"
+            ]
           },
           {
             "text": "For Step-3, Refine the scope,"
@@ -17716,22 +22942,34 @@ export const labsCatalog: Lab[] = [
             "text": "In Sensitive data discover options: Select One-time job"
           },
           {
-            "text": "Click on the arrow to expand the window of Additional settings"
+            "text": "Click on the arrow to expand the window of Additional settings"
           },
           {
-            "text": "Let the Object criteria be default as File name extensions."
+            "text": "Let the Object criteria be default as File name extensions."
           },
           {
-            "text": "Write csv in the textbox and click on the Include button."
+            "text": "Write csv in the textbox and click on the Include button."
           },
           {
-            "text": "Once done, click on the Next button to proceed."
+            "text": "Once done, click on the Next button to proceed."
+          },
+          {
+            "text": "Task 3: Create a Macie job",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-10.png"
+            ]
           },
           {
             "text": "For Step-4, Select managed data identifiers,"
           },
           {
             "text": "Selection type: Choose Recommended"
+          },
+          {
+            "text": "Task 3: Create a Macie job",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-11.png"
+            ]
           },
           {
             "text": "Click on the Next button."
@@ -17743,25 +22981,40 @@ export const labsCatalog: Lab[] = [
             "text": "Click on the Manage custom identifiers, to create one."
           },
           {
-            "text": "Note: This will open in the New tab, please enable a pop-up, if it doesn't open in one click."
+            "text": "Task 3: Create a Macie job",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-12.png"
+            ]
           },
           {
-            "text": "Click on the Create option present on the top right."
+            "text": "Click on the Create option present on the top right."
           },
           {
-            "text": "?"
+            "text": "?",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-13.png"
+            ]
           },
           {
             "text": "Fill in the details, as follows:"
           },
           {
-            "text": "Name: Enter Whiz"
+            "text": "Name: Enter Whiz"
           },
           {
-            "text": "Description: Enter This identifier finds the data present in the format of AB-01 i.e. two characters, dash and followed by two numbers."
+            "text": "Description: Enter This identifier finds the data present in the format of AB-01 i.e. two characters, dash and followed by two numbers."
           },
           {
-            "text": "Regular expression: Enter [a-z]{2}-[0-9]{2}"
+            "text": "Regular expression: Enter [a-z]{2}-[0-9]{2}",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-14.png"
+            ]
+          },
+          {
+            "text": "Task 3: Create a Macie job",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-15.png"
+            ]
           },
           {
             "text": "Keep all other options as default."
@@ -17770,10 +23023,25 @@ export const labsCatalog: Lab[] = [
             "text": "Click on the Submit button to create the Custom identifier."
           },
           {
-            "text": "Go back to the previous tab (Step 5 Select custom data identifiers ), and click on the refresh icon to see the newly created Custom identifier."
+            "text": "Task 3: Create a Macie job",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-16.png"
+            ]
           },
           {
-            "text": "Once refreshed, you will be able to see the Whiz identifier listed here. Click on the Next button."
+            "text": "Go back to the previous tab (Step 5 Select custom data identifiers ), and click on the refresh icon to see the newly created Custom identifier."
+          },
+          {
+            "text": "Once refreshed, you will be able to see the Whiz identifier listed here. Click on the Next button.",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-17.png"
+            ]
+          },
+          {
+            "text": "Task 3: Create a Macie job",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-18.png"
+            ]
           },
           {
             "text": "Select allow lists : Keep it default and click on Next button"
@@ -17782,19 +23050,31 @@ export const labsCatalog: Lab[] = [
             "text": "In General Setting : Enter a name and description,"
           },
           {
-            "text": "Name: Enter WhizJob"
+            "text": "Name: Enter WhizJob"
           },
           {
-            "text": "Description: Enter This job scans the bucket with a name starting as lab and gathers its finding based on the regular expression pattern."
+            "text": "Description: Enter This job scans the bucket with a name starting as lab and gathers its finding based on the regular expression pattern."
           },
           {
             "text": "Click on the Next button."
           },
           {
+            "text": "Task 3: Create a Macie job",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-19.png"
+            ]
+          },
+          {
             "text": "For Step-8, Review and create,"
           },
           {
-            "text": "Review everything, click on the Submit button present below. Job is now created successfully."
+            "text": "Review everything, click on the Submit button present below. Job is now created successfully."
+          },
+          {
+            "text": "Task 3: Create a Macie job",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-20.png"
+            ]
           }
         ]
       },
@@ -17808,7 +23088,16 @@ export const labsCatalog: Lab[] = [
             "text": "The job runs for approximately 10 minutes and gathers the findings."
           },
           {
-            "text": "After 10 minutes, the status is changed to Complete."
+            "text": "After 10 minutes, the status is changed to Complete.",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-21.png"
+            ]
+          },
+          {
+            "text": "Task 4: Macie job run and findings",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-22.png"
+            ]
           },
           {
             "text": "To view the Findings for the job, perform the following:"
@@ -17820,13 +23109,32 @@ export const labsCatalog: Lab[] = [
             "text": "Select Show results"
           },
           {
-            "text": "And Choose Show findings"
+            "text": "And Choose Show findings",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-23.png"
+            ]
+          },
+          {
+            "text": "Task 4: Macie job run and findings",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-24.png"
+            ]
+          },
+          {
+            "text": "To check the exact results, open the finding. Note : If you can not see findings wait for more 2 minutes and refresh the page.",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-25.png"
+            ]
           },
           {
             "text": "To check the exact results, open the finding."
           },
           {
-            "text": "Note : If you can not see findings wait for more 2 minutes and refresh the page."
+            "text": "Perform the following task: Select the present finding Click on the Actions button And, Choose Export (JSON) JSON present here is in Read-only format, you may choose to download the complete report.",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-26.png",
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-27.png"
+            ]
           },
           {
             "text": "Perform the following task:"
@@ -17838,13 +23146,28 @@ export const labsCatalog: Lab[] = [
             "text": "Click on the Actions button"
           },
           {
-            "text": "And, Choose Export (JSON)"
+            "text": "And, Choose Export (JSON)",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-28.png"
+            ]
           },
           {
-            "text": "JSON present here is in Read-only format, you may choose to download the complete report."
+            "text": "Task 4: Macie job run and findings",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-29.png"
+            ]
           },
           {
-            "text": "Do you know?"
+            "text": "JSON present here is in Read-only format, you may choose to download the complete report.",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-30.png"
+            ]
+          },
+          {
+            "text": "Task 4: Macie job run and findings",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-31.png"
+            ]
           },
           {
             "text": "Amazon Macie is an AWS service designed to enhance data security by automatically discovering, classifying, and protecting sensitive data in Amazon S3. It utilizes machine learning and natural language processing techniques to identify various types of sensitive information, such as personally identifiable information (PII), financial data, intellectual property, and more."
@@ -17855,19 +23178,25 @@ export const labsCatalog: Lab[] = [
         "title": "Task 5: Validation Test",
         "steps": [
           {
-            "text": "Once the lab steps are completed, please click on the Validate button on the Right side panel."
+            "text": "Once the lab steps are completed, please click on the Validate button on the Right side panel."
           },
           {
-            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
           },
           {
-            "text": "Sample output :"
+            "text": "Sample output :",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-32.gif"
+            ]
           },
           {
-            "text": "Completion and Conclusion"
+            "text": "Task 5: Validation Test",
+            "images": [
+              "/labs/discover-sensitive-data-present-in-s3-bucket-using-amazon-macie/step-33.gif"
+            ]
           },
           {
-            "text": "You have successfully enabled Amazon Macie."
+            "text": "You have successfully enabled Amazon Macie."
           },
           {
             "text": "You have successfully created a Macie job."
@@ -17876,16 +23205,13 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully run the Macie job and retrieved the data."
           },
           {
-            "text": "End Lab"
-          },
-          {
             "text": "Sign out of AWS Account."
           },
           {
             "text": "You have successfully completed the lab."
           },
           {
-            "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+            "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
           }
         ]
       }
@@ -27064,7 +32390,7 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the open console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the open console button, and you will get redirected to AWS Console in a new browser tab."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -27073,10 +32399,10 @@ export const labsCatalog: Lab[] = [
             "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
           },
           {
-            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
-            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
           }
         ]
       },
@@ -27084,22 +32410,31 @@ export const labsCatalog: Lab[] = [
         "title": "Task 2 : Exploring templates in an S3 Bucket",
         "steps": [
           {
-            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
           },
           {
-            "text": "Navigate to the services menu in the top, click on S3 in the Storage section."
+            "text": "Navigate to the services menu in the top, click on S3 in the Storage section."
           },
           {
             "text": "You can see the bucket present with a name similar to lab.1400.54051021. In your case, the name of the bucket might be different numerics."
           },
           {
-            "text": "Open that bucket and you will see LAMP_template.json file."
+            "text": "Open that bucket and you will see LAMP_template.json file."
           },
           {
-            "text": "Now copy the Object URL and save it in notepad."
+            "text": "Now copy the Object URL and save it in notepad.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-01.png"
+            ]
           },
           {
-            "text": "This given LAMP_template.json contains the JSON code for launching the LAMP Server using Cloudformation."
+            "text": "Task 2 : Exploring templates in an S3 Bucket",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-02.png"
+            ]
+          },
+          {
+            "text": "This given LAMP_template.json contains the JSON code for launching the LAMP Server using Cloudformation."
           }
         ]
       },
@@ -27110,22 +32445,41 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate to CloudFormation. Click services, click on CloudFormation in the Management and Governance section."
           },
           {
+            "text": "On the CloudFormation dashboard, click on create stack. Prerequisite - Prepare template : Select Choose an existing template Specify Template : Template source: Select Amazon S3 URL Amazon S3 URL: Paste the URL copied from earlier steps."
+          },
+          {
             "text": "On the CloudFormation dashboard, click on create stack."
           },
           {
             "text": "Prerequisite - Prepare template : Select Choose an existing template"
           },
           {
+            "text": "Specify Template : Template source: Select Amazon S3 URL Amazon S3 URL: Paste the URL copied from earlier steps."
+          },
+          {
             "text": "Specify Template :"
           },
           {
-            "text": "Template source: Select Amazon S3 URL"
+            "text": "Template source: Select Amazon S3 URL"
           },
           {
-            "text": "Amazon S3 URL: Paste the URL copied from earlier steps."
+            "text": "Amazon S3 URL: Paste the URL copied from earlier steps."
+          },
+          {
+            "text": "Task 3 : Create Cloudformation Stack",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-03.png"
+            ]
           },
           {
             "text": "Click on Next."
+          },
+          {
+            "text": "Specify stack Details Stack name: Enter a unique stack name - MyFirstCFStack Parameters DB Name : Enter a database name - MyDatabase DB Password : Enter a database password - labdb123 DB Root Password : Enter database root password - labdbroot123 DB User : Enter the database username - labDBUser Instance Type : Select t2.micro Key Name : Select the key from the list name lab-key SSH Location : Enter 0.0.0.0/0 Click on Next.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-04.png",
+              "/labs/introduction-to-amazon-cloudformation/step-05.png"
+            ]
           },
           {
             "text": "Specify stack Details"
@@ -27134,19 +32488,26 @@ export const labsCatalog: Lab[] = [
             "text": "Stack name: Enter a unique stack name - MyFirstCFStack"
           },
           {
+            "text": "Parameters DB Name : Enter a database name - MyDatabase DB Password : Enter a database password - labdb123 DB Root Password : Enter database root password - labdbroot123 DB User : Enter the database username - labDBUser Instance Type : Select t2.micro Key Name : Select the key from the list name lab-key SSH Location : Enter 0.0.0.0/0 Click on Next.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-06.png",
+              "/labs/introduction-to-amazon-cloudformation/step-07.png"
+            ]
+          },
+          {
             "text": "Parameters"
           },
           {
-            "text": "DB Name : Enter a database name - MyDatabase"
+            "text": "DB Name : Enter a database name - MyDatabase"
           },
           {
             "text": "DB Password : Enter a database password - labdb123"
           },
           {
-            "text": "DB Root Password : Enter database root password - labdbroot123"
+            "text": "DB Root Password : Enter database root password - labdbroot123"
           },
           {
-            "text": "DB User : Enter the database username - labDBUser"
+            "text": "DB User : Enter the database username - labDBUser"
           },
           {
             "text": "Instance Type : Select t2.micro"
@@ -27158,19 +32519,50 @@ export const labsCatalog: Lab[] = [
             "text": "SSH Location : Enter 0.0.0.0/0"
           },
           {
-            "text": "Click on Next."
+            "text": "Click on Next.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-08.png",
+              "/labs/introduction-to-amazon-cloudformation/step-09.png"
+            ]
+          },
+          {
+            "text": "Task 3 : Create Cloudformation Stack",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-10.png"
+            ]
+          },
+          {
+            "text": "Configure stack options : Tags: Click on add new tag Key : Enter Name Value : Enter MyCF Permissions: No need to select for this lab, leave it blank. Leave all other configuration fields as default. Click on Next.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-12.png"
+            ]
           },
           {
             "text": "Configure stack options :"
           },
           {
-            "text": "Tags: Click on add new tag"
+            "text": "Tags: Click on add new tag Key : Enter Name Value : Enter MyCF",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-13.png"
+            ]
           },
           {
-            "text": "Key : Enter Name"
+            "text": "Tags: Click on add new tag"
           },
           {
-            "text": "Value : Enter MyCF"
+            "text": "Key : Enter Name"
+          },
+          {
+            "text": "Value : Enter MyCF",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-14.png"
+            ]
+          },
+          {
+            "text": "Task 3 : Create Cloudformation Stack",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-15.png"
+            ]
           },
           {
             "text": "Permissions: No need to select for this lab, leave it blank."
@@ -27185,19 +32577,34 @@ export const labsCatalog: Lab[] = [
             "text": "Review: Review your stack details and click on Submit."
           },
           {
-            "text": "Once you have clicked the create button, you will be redirected to the CloudFormation stack list. A sample screenshot is provided below."
+            "text": "Once you have clicked the create button, you will be redirected to the CloudFormation stack list. A sample screenshot is provided below.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-16.png"
+            ]
           },
           {
-            "text": "Status: You will see the status CREATE_IN_PROGRESS."
+            "text": "Task 3 : Create Cloudformation Stack",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-17.png"
+            ]
+          },
+          {
+            "text": "Status: You will see the status CREATE_IN_PROGRESS."
           },
           {
             "text": "You need to wait around 1-5 minutes to complete the stack resource creation."
           },
           {
-            "text": "Click on the refresh button to see the updates."
+            "text": "Click on the refresh button to see the updates."
           },
           {
-            "text": "Once your stack status changes to Create Complete."
+            "text": "Once your stack status changes to Create Complete."
+          },
+          {
+            "text": "Task 3 : Create Cloudformation Stack",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-18.png"
+            ]
           }
         ]
       },
@@ -27205,16 +32612,34 @@ export const labsCatalog: Lab[] = [
         "title": "Task 4 : Testing",
         "steps": [
           {
-            "text": "Navigate to the outputs tab and you will be able to see an URL similar to below. Click on the URL. This will take you to your server's home page."
+            "text": "Navigate to the outputs tab and you will be able to see an URL similar to below. Click on the URL. This will take you to your server's home page. http://ec2-3-89-73-251.compute-1.amazonaws.com",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-19.png"
+            ]
+          },
+          {
+            "text": "Navigate to the outputs tab and you will be able to see an URL similar to below. Click on the URL. This will take you to your server's home page."
+          },
+          {
+            "text": "Task 4 : Testing",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-20.png"
+            ]
           },
           {
             "text": "http://ec2-3-89-73-251.compute-1.amazonaws.com"
           },
           {
-            "text": "If you see the PHP info and your database connection, it means you have completed a LAMP server setup with AWS CloudFormation. Sample screenshot provided below:"
+            "text": "If you see the PHP info and your database connection, it means you have completed a LAMP server setup with AWS CloudFormation. Sample screenshot provided below:",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-21.png"
+            ]
           },
           {
-            "text": "Do you know?"
+            "text": "Task 4 : Testing",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-22.png"
+            ]
           },
           {
             "text": "By using CloudFormation, you can manage your infrastructure more efficiently, reduce manual effort, ensure consistency, and achieve faster and more reliable deployments. It provides a scalable and flexible approach to infrastructure provisioning and management, making it a valuable tool for both small and large-scale AWS deployments."
@@ -27225,31 +32650,34 @@ export const labsCatalog: Lab[] = [
         "title": "Task 5 : Validation Test",
         "steps": [
           {
-            "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+            "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
           },
           {
-            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
           },
           {
-            "text": "Sample output :"
+            "text": "Sample output :",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-23.gif"
+            ]
           },
           {
-            "text": "Completion and Conclusion"
+            "text": "Task 5 : Validation Test",
+            "images": [
+              "/labs/introduction-to-amazon-cloudformation/step-24.gif"
+            ]
           },
           {
-            "text": "You have successfully created a Lamp server setup using a new Cloudformation Stack with the help of the JSON template provided in the S3 bucket."
+            "text": "You have successfully created a Lamp server setup using a new Cloudformation Stack with the help of the JSON template provided in the S3 bucket."
           },
           {
             "text": "You have successfully tested the new lamp server created by CloudFormation."
           },
           {
-            "text": "End Lab"
-          },
-          {
             "text": "Sign out from the AWS Management Console."
           },
           {
-            "text": "Click on End Lab button from the lab console and wait till the process gets completed."
+            "text": "Click on End Lab button from the lab console and wait till the process gets completed."
           }
         ]
       }
@@ -27271,7 +32699,10 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -27280,10 +32711,10 @@ export const labsCatalog: Lab[] = [
             "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
           },
           {
-            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
-            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
           }
         ]
       },
@@ -27297,10 +32728,20 @@ export const labsCatalog: Lab[] = [
             "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
           },
           {
-            "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
+            "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
           },
           {
-            "text": "In the S3 dashboard, click on the Create bucket and fill in the bucket details."
+            "text": "In the S3 dashboard, click on the Create bucket and fill in the bucket details. Bucket name: Enter lab1234567 Note: S3 Bucket names are globally unique, choose a name that is available. Object Ownership: Select ACLs enabled option and choose Object writer as Object owner Scroll down to Block Public Access settings for this bucket and Uncheck the Block all Public Access and acknowledge the change.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-01.png",
+              "/labs/introduction-to-amazon-cloudfront/step-02.png"
+            ]
+          },
+          {
+            "text": "In the S3 dashboard, click on the Create bucket and fill in the bucket details."
+          },
+          {
+            "text": "Bucket name: Enter lab1234567 Note: S3 Bucket names are globally unique, choose a name that is available."
           },
           {
             "text": "Bucket name: Enter lab1234567"
@@ -27309,13 +32750,151 @@ export const labsCatalog: Lab[] = [
             "text": "Note: S3 Bucket names are globally unique, choose a name that is available."
           },
           {
-            "text": "Object Ownership: Select ACLs enabled option and choose Object writer as Object owner"
+            "text": "Object Ownership: Select ACLs enabled option and choose Object writer as Object owner",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-03.png"
+            ]
           },
           {
-            "text": "Scroll down to Block Public Access settings for this bucket and Uncheck the Block all Public Access and acknowledge the change."
+            "text": "Task 2: Create S3 Bucket",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-04.png"
+            ]
           },
           {
-            "text": "No need to change anything further, just click on the Create bucket button."
+            "text": "Scroll down to Block Public Access settings for this bucket and Uncheck the Block all Public Access and acknowledge the change.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-05.png"
+            ]
+          },
+          {
+            "text": "Task 2: Create S3 Bucket",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-06.png"
+            ]
+          },
+          {
+            "text": "No need to change anything further, just click on the Create bucket button."
+          },
+          {
+            "text": "Click on the bucket name you just created and you can see that there are no objects created in the bucket."
+          },
+          {
+            "text": "You can upload any image from your local machine or you can download our test image from Download me"
+          },
+          {
+            "text": "To upload a file to our S3 bucket, Click on the Upload button. Click on Add files. Browse for image we provided and select it. {NOTE : use the same image provided to ignore the validation failure} Click on the Upload button. You can watch the progress of the upload from within the transfer panel at the bottom of the screen. Once your file has been uploaded, click on Close and you can see an object in the bucket.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-07.png"
+            ]
+          },
+          {
+            "text": "To upload a file to our S3 bucket,"
+          },
+          {
+            "text": "Click on the Upload button.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-08.png"
+            ]
+          },
+          {
+            "text": "Task 2: Create S3 Bucket",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-09.png"
+            ]
+          },
+          {
+            "text": "Click on Add files."
+          },
+          {
+            "text": "Browse for image we provided and select it. {NOTE : use the same image provided to ignore the validation failure}"
+          },
+          {
+            "text": "Click on the Upload button."
+          },
+          {
+            "text": "You can watch the progress of the upload from within the transfer panel at the bottom of the screen."
+          },
+          {
+            "text": "Once your file has been uploaded, click on Close and you can see an object in the bucket."
+          },
+          {
+            "text": "In this task, we will learn how to create customized error pages for CloudFront. These pages will be displayed in the event that an origin returns an HTTP 4xx or 5xx error. To do this, we must ensure that the error pages are stored in a location that CloudFront can access. In this case, we will use the same S3 bucket that we created previously."
+          },
+          {
+            "text": "To set up a custom error page, access the S3 bucket by clicking on it."
+          },
+          {
+            "text": "Click on Create Folder button to create a folder.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-10.png"
+            ]
+          },
+          {
+            "text": "Task 2: Create S3 Bucket",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-11.png"
+            ]
+          },
+          {
+            "text": "Enter the folder name as CustomErrors. For Server-side encryption Select Specify an encryption key keep rest things as default.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-12.png"
+            ]
+          },
+          {
+            "text": "Task 2: Create S3 Bucket",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-13.png"
+            ]
+          },
+          {
+            "text": "Click on the Create folder button."
+          },
+          {
+            "text": "Click on the new CustomErrors folder."
+          },
+          {
+            "text": "We will create an error.html file: Create an error.html file in your local system using Notepad. This custom HTML page will be used for showing errors in CloudFront. Sample error.html content:<html><h1>This is Error Page</h1></html>"
+          },
+          {
+            "text": "We will create an error.html file:"
+          },
+          {
+            "text": "Create an error.html file in your local system using Notepad."
+          },
+          {
+            "text": "This custom HTML page will be used for showing errors in CloudFront."
+          },
+          {
+            "text": "Sample error.html content:<html><h1>This is Error Page</h1></html>"
+          },
+          {
+            "text": "Sample error.html content:"
+          },
+          {
+            "text": "Use the Upload button to upload the error.html file in the folder."
+          },
+          {
+            "text": "We will create a block.html file: Create a block.html file in your local using Notepad. This custom HTML page will be used for showing geo-restrictions of your content in CloudFront. Sample block.html content:<html><h1>This content is blocked in your location!!!</h1></html>"
+          },
+          {
+            "text": "We will create a block.html file:"
+          },
+          {
+            "text": "Create a block.html file in your local using Notepad."
+          },
+          {
+            "text": "This custom HTML page will be used for showing geo-restrictions of your content in CloudFront."
+          },
+          {
+            "text": "Sample block.html content:<html><h1>This content is blocked in your location!!!</h1></html>"
+          },
+          {
+            "text": "Sample block.html content:"
+          },
+          {
+            "text": "Use the Upload button to upload the block.html file in the folder."
           }
         ]
       },
@@ -27329,10 +32908,25 @@ export const labsCatalog: Lab[] = [
             "text": "You can upload any image from your local machine or you can download our test image from Download me"
           },
           {
+            "text": "To upload a file to our S3 bucket, Click on the Upload button. Click on Add files. Browse for image we provided and select it. {NOTE : use the same image provided to ignore the validation failure} Click on the Upload button. You can watch the progress of the upload from within the transfer panel at the bottom of the screen. Once your file has been uploaded, click on Close and you can see an object in the bucket.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-14.png"
+            ]
+          },
+          {
             "text": "To upload a file to our S3 bucket,"
           },
           {
-            "text": "Click on the Upload button."
+            "text": "Click on the Upload button.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-15.png"
+            ]
+          },
+          {
+            "text": "Task 3: Upload a file to an S3 bucket",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-16.png"
+            ]
           },
           {
             "text": "Click on Add files."
@@ -27361,16 +32955,37 @@ export const labsCatalog: Lab[] = [
             "text": "To set up a custom error page, access the S3 bucket by clicking on it."
           },
           {
-            "text": "Click on Create Folder button to create a folder."
+            "text": "Click on Create Folder button to create a folder.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-17.png"
+            ]
           },
           {
-            "text": "Enter the folder name as CustomErrors. For Server-side encryption Select Specify an encryption key keep rest things as default."
+            "text": "Task 4: Creating Custom Error Pages",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-18.png"
+            ]
+          },
+          {
+            "text": "Enter the folder name as CustomErrors. For Server-side encryption Select Specify an encryption key keep rest things as default.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-19.png"
+            ]
+          },
+          {
+            "text": "Task 4: Creating Custom Error Pages",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-20.png"
+            ]
           },
           {
             "text": "Click on the Create folder button."
           },
           {
             "text": "Click on the new CustomErrors folder."
+          },
+          {
+            "text": "We will create an error.html file: Create an error.html file in your local system using Notepad. This custom HTML page will be used for showing errors in CloudFront. Sample error.html content:<html><h1>This is Error Page</h1></html>"
           },
           {
             "text": "We will create an error.html file:"
@@ -27382,16 +32997,19 @@ export const labsCatalog: Lab[] = [
             "text": "This custom HTML page will be used for showing errors in CloudFront."
           },
           {
-            "text": "Sample error.html content:"
+            "text": "Sample error.html content:<html><h1>This is Error Page</h1></html>"
           },
           {
-            "text": "<html><h1>This is Error Page</h1></html>"
+            "text": "Sample error.html content:"
           },
           {
             "text": "Use the Upload button to upload the error.html file in the folder."
           },
           {
-            "text": "We will create a block.html file:"
+            "text": "We will create a block.html file: Create a block.html file in your local using Notepad. This custom HTML page will be used for showing geo-restrictions of your content in CloudFront. Sample block.html content:<html><h1>This content is blocked in your location!!!</h1></html>"
+          },
+          {
+            "text": "We will create a block.html file:"
           },
           {
             "text": "Create a block.html file in your local using Notepad."
@@ -27400,13 +33018,13 @@ export const labsCatalog: Lab[] = [
             "text": "This custom HTML page will be used for showing geo-restrictions of your content in CloudFront."
           },
           {
+            "text": "Sample block.html content:<html><h1>This content is blocked in your location!!!</h1></html>"
+          },
+          {
             "text": "Sample block.html content:"
           },
           {
-            "text": "<html><h1>This content is blocked in your location!!!</h1></html>"
-          },
-          {
-            "text": "Use the Upload button to upload the block.html file in the folder."
+            "text": "Use the Upload button to upload the block.html file in the folder."
           }
         ]
       },
@@ -27420,79 +33038,61 @@ export const labsCatalog: Lab[] = [
             "text": "Copy the Object URL and paste it into a new tab."
           },
           {
-            "text": "Example: https://lab1234567.s3.amazonaws.com/lab_logo_58_32.png"
+            "text": "Example: https://lab1234567.s3.amazonaws.com/lab_logo_58_32.png You will see the AccessDenied message, meaning the object is not publicly accessible.lab_logo_58_32.png",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-21.png"
+            ]
           },
           {
-            "text": "You will see the AccessDenied message, meaning the object is not publicly accessible.lab_logo_58_32.png"
+            "text": "Example: https://lab1234567.s3.amazonaws.com/lab_logo_58_32.png"
+          },
+          {
+            "text": "You will see the AccessDenied message, meaning the object is not publicly accessible.lab_logo_58_32.png",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-22.png"
+            ]
+          },
+          {
+            "text": "Task 5: Making the objects public",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-23.png"
+            ]
           },
           {
             "text": "Go back to the Bucket and click the Permissions tab."
           },
           {
-            "text": "Scroll down to the Bucket Policy and click on Edit button."
+            "text": "Scroll down to the Bucket Policy and click on Edit button."
+          },
+          {
+            "text": "Task 5: Making the objects public",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-24.png"
+            ]
           },
           {
             "text": "Copy and paste the below policy and save the policy."
           },
           {
-            "text": "Note: Change the name of the bucket ARN with your bucket ARN in both the Resource option in the code."
+            "text": "Note: Change the name of the bucket ARN with your bucket ARN in both the Resource option in the code."
           },
           {
-            "text": "{"
-          },
-          {
-            "text": "\"Version\": \"2012-10-17\","
-          },
-          {
-            "text": "\"Statement\": ["
-          },
-          {
-            "text": "{"
-          },
-          {
-            "text": "\"Effect\": \"Allow\","
-          },
-          {
-            "text": "\"Action\": [\"s3:ListBucket\"],"
-          },
-          {
-            "text": "\"Principal\": {\"AWS\": \"*\"},"
-          },
-          {
-            "text": "\"Resource\": \"<YOUR_BUCKET_ARN>\""
-          },
-          {
-            "text": "},"
-          },
-          {
-            "text": "{"
-          },
-          {
-            "text": "\"Effect\": \"Allow\","
-          },
-          {
-            "text": "\"Action\": [\"s3:GetObject\", \"s3:PutObject\"],"
-          },
-          {
-            "text": "\"Principal\": {\"AWS\": \"*\"},"
-          },
-          {
-            "text": "\"Resource\": \"<YOUR_BUCKET_ARN>/*\""
-          },
-          {
-            "text": "}"
-          },
-          {
-            "text": "]"
-          },
-          {
-            "text": "}"
+            "text": "Task 5: Making the objects public",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-25.gif"
+            ]
           },
           {
             "text": "Open the Image Object URL again or refresh the one already open."
           },
           {
             "text": "If you can see your uploaded image in the browser, it means your image is publicly accessible. If not, check your bucket policy again."
+          },
+          {
+            "text": "Task 5: Making the objects public",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-26.png"
+            ]
           }
         ]
       },
@@ -27500,28 +33100,52 @@ export const labsCatalog: Lab[] = [
         "title": "Task 6: Creating a CloudFront Distribution",
         "steps": [
           {
-            "text": "Navigate to CloudFront by clicking on the Services menu at the top, then click on CloudFront in the Network and Content Delivery section."
+            "text": "Navigate to CloudFront by clicking on the Services menu at the top, then click on CloudFront in the Network and Content Delivery section."
           },
           {
-            "text": "Click on Create a CloudFront distribution button."
+            "text": "Click on Create a CloudFront distribution button."
+          },
+          {
+            "text": "Task 6: Creating a CloudFront Distribution",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-27.png"
+            ]
           },
           {
             "text": "Choose a plan: Scroll down and select Pay as you go plan and click Next."
           },
           {
-            "text": "Distribution name: Enter the distribution name of your choice. Keep rest as default and click on Next."
+            "text": "Task 6: Creating a CloudFront Distribution",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-28.png"
+            ]
           },
           {
-            "text": "Now Configure distribution as follows: Specify Origin: Select Amazon S3 as Origin type, then click on Browse S3 and select the bucket you have created. Leave everything as default and click Next."
+            "text": "Distribution name: Enter the distribution name of your choice. Keep rest as default and click on Next."
           },
           {
-            "text": "In Enable security, choose Do not enable security protections under Web Application Firewall(WAF) and click Next."
+            "text": "Now Configure distribution as follows: Specify Origin: Select Amazon S3 as Origin type, then click on Browse S3 and select the bucket you have created. Leave everything as default and click Next."
           },
           {
-            "text": "In Review and Create, leave everything as default and click on the Create distribution button."
+            "text": "Task 6: Creating a CloudFront Distribution",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-29.png"
+            ]
           },
           {
-            "text": "You can see that the CloudFront distribution is enabled successfully. Note: This process will take around 5-10 minutes."
+            "text": "In Enable security, choose Do not enable security protections under Web Application Firewall(WAF) and click Next."
+          },
+          {
+            "text": "Task 6: Creating a CloudFront Distribution",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-30.png"
+            ]
+          },
+          {
+            "text": "In Review and Create, leave everything as default and click on the Create distribution button."
+          },
+          {
+            "text": "You can see that the CloudFront distribution is enabled successfully. Note: This process will take around 5-10 minutes."
           },
           {
             "text": "The domain name that Amazon CloudFront assigns to your distribution appears in the list of distributions."
@@ -27532,19 +33156,31 @@ export const labsCatalog: Lab[] = [
         "title": "Task 7: Accessing Image through CloudFront",
         "steps": [
           {
-            "text": "Amazon CloudFront is now pointed to Amazon S3 bucket origin and you know that the domain name is associated with the distribution. You can create a link to the image in the Amazon S3 bucket with that domain name."
+            "text": "Amazon CloudFront is now pointed to Amazon S3 bucket origin and you know that the domain name is associated with the distribution. You can create a link to the image in the Amazon S3 bucket with that domain name."
+          },
+          {
+            "text": "For testing your distribution, copy your domain name and append your image name after the domain name. Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png"
           },
           {
             "text": "For testing your distribution, copy your domain name and append your image name after the domain name."
           },
           {
-            "text": "Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png"
+            "text": "Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png"
           },
           {
-            "text": "Open the CloudFront URL in a new tab. You can see your uploaded image."
+            "text": "Open the CloudFront URL in a new tab. You can see your uploaded image."
           },
           {
-            "text": "You can see how much faster the CloudFront URL image loads as compared to the S3 URL. When end users request an object using a CloudFront domain name, they are automatically routed to the nearest edge location for high-performance delivery of your content."
+            "text": "You can see how much faster the CloudFront URL image loads as compared to the S3 URL. When end users request an object using a CloudFront domain name, they are automatically routed to the nearest edge location for high-performance delivery of your content.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-31.png"
+            ]
+          },
+          {
+            "text": "Task 7: Accessing Image through CloudFront",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-32.png"
+            ]
           }
         ]
       },
@@ -27555,16 +33191,35 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate back to CloudFront Dashboard and select the distribution created."
           },
           {
-            "text": "Select the Error pages tab."
+            "text": "Select the Error pages tab. Click on the Create custom error response button. Now we need to set up our custom error page: HTTP Error Code: Select 404: Not Found Error Caching Minimum TTL: Enter 10 Customize Error Response: Select Yes Response Page Path: Enter /CustomErrors/error.html HTTP Response Code: Select 404: Not Found Click on Create custom error response button.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-33.png",
+              "/labs/introduction-to-amazon-cloudfront/step-34.png"
+            ]
           },
           {
-            "text": "Click on the Create custom error response button."
+            "text": "Click on the Create custom error response button.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-35.png"
+            ]
+          },
+          {
+            "text": "Task 8 : Configuring Custom Error Page",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-36.png"
+            ]
+          },
+          {
+            "text": "Now we need to set up our custom error page: HTTP Error Code: Select 404: Not Found Error Caching Minimum TTL: Enter 10 Customize Error Response: Select Yes Response Page Path: Enter /CustomErrors/error.html HTTP Response Code: Select 404: Not Found Click on Create custom error response button.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-37.png"
+            ]
           },
           {
             "text": "Now we need to set up our custom error page:"
           },
           {
-            "text": "HTTP Error Code: Select 404: Not Found"
+            "text": "HTTP Error Code: Select 404: Not Found"
           },
           {
             "text": "Error Caching Minimum TTL: Enter 10"
@@ -27573,16 +33228,25 @@ export const labsCatalog: Lab[] = [
             "text": "Customize Error Response: Select Yes"
           },
           {
-            "text": "Response Page Path: Enter /CustomErrors/error.html"
+            "text": "Response Page Path: Enter /CustomErrors/error.html"
           },
           {
-            "text": "HTTP Response Code: Select 404: Not Found"
+            "text": "HTTP Response Code: Select 404: Not Found"
           },
           {
-            "text": "Click on Create custom error response button."
+            "text": "Click on Create custom error response button.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-38.png"
+            ]
           },
           {
-            "text": "Navigate back to Distributions and wait for your distribution to complete state to change Deploy."
+            "text": "Task 8 : Configuring Custom Error Page",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-39.png"
+            ]
+          },
+          {
+            "text": "Navigate back to Distributions and wait for your distribution to complete state to change Deploy. Note: This process will take around 5-10 minutes. Once the state has changed to Deploy, you can verify the deployment by checking the Last modified column, it should display the most recent timestamp, indicating the distribution has been updated. After this, proceed to test the error page. For testing your distribution, copy your domain name and append the name of an image that does not exist in your S3 bucket\nOpen the CloudFront URL in a new tab."
           },
           {
             "text": "Note: This process will take around 5-10 minutes."
@@ -27591,13 +33255,19 @@ export const labsCatalog: Lab[] = [
             "text": "Once the state has changed to Deploy, you can verify the deployment by checking the Last modified column, it should display the most recent timestamp, indicating the distribution has been updated. After this, proceed to test the error page."
           },
           {
-            "text": "For testing your distribution, copy your domain name and append the name of an image that does not exist in your S3 bucket"
+            "text": "For testing your distribution, copy your domain name and append the name of an image that does not exist in your S3 bucket"
           },
           {
-            "text": "Open the CloudFront URL in a new tab."
+            "text": "Open the CloudFront URL in a new tab."
           },
           {
             "text": "If you can see your HTML error page in the browser, it means you successfully set up your custom error page."
+          },
+          {
+            "text": "Task 8 : Configuring Custom Error Page",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-40.png"
+            ]
           }
         ]
       },
@@ -27608,31 +33278,70 @@ export const labsCatalog: Lab[] = [
             "text": "If you need to prevent users in selected countries from accessing your content, you can specify either a whitelist (countries where they can access your content) or a blacklist (countries where they cannot) by using restrictions."
           },
           {
-            "text": "On the distribution settings page, select Security tab and expand CloudFront geographic restrictions click on Edit link near Countries."
+            "text": "On the distribution settings page, select Security tab and expand CloudFront geographic restrictions click on Edit link near Countries. Restriction Type: Select Block list Select the country where you are currently and click on it to check this option. Click on Save changes button.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-41.gif"
+            ]
           },
           {
-            "text": "Restriction Type: Select Block list"
+            "text": "On the distribution settings page, select Security tab and expand CloudFront geographic restrictions click on Edit link near Countries."
+          },
+          {
+            "text": "Restriction Type: Select Block list"
           },
           {
             "text": "Select the country where you are currently and click on it to check this option."
           },
           {
-            "text": "Click on Save changes button."
+            "text": "Click on Save changes button.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-42.gif"
+            ]
+          },
+          {
+            "text": "Task 9 : Restricting the Geographic Distribution of Your Content",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-43.gif"
+            ]
+          },
+          {
+            "text": "Go to the distribution list and wait for your distribution to complete the state changed to deployed. Once the state has been changed to deployed, we will test the restriction through CloudFront in the browser. Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png You can see the following error message: 403: Error The Amazon CloudFront distribution is configured to block access from your country.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-44.png"
+            ]
           },
           {
             "text": "Go to the distribution list and wait for your distribution to complete the state changed to deployed."
           },
           {
-            "text": "Once the state has been changed to deployed, we will test the restriction through CloudFront in the browser."
+            "text": "Once the state has been changed to deployed, we will test the restriction through CloudFront in the browser. Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png"
           },
           {
-            "text": "Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png"
+            "text": "Once the state has been changed to deployed, we will test the restriction through CloudFront in the browser."
           },
           {
-            "text": "You can see the following error message:"
+            "text": "Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png"
           },
           {
-            "text": "403: Error The Amazon CloudFront distribution is configured to block access from your country."
+            "text": "You can see the following error message: 403: Error The Amazon CloudFront distribution is configured to block access from your country.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-45.png"
+            ]
+          },
+          {
+            "text": "You can see the following error message:"
+          },
+          {
+            "text": "403: Error The Amazon CloudFront distribution is configured to block access from your country.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-46.png"
+            ]
+          },
+          {
+            "text": "Task 9 : Restricting the Geographic Distribution of Your Content",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-47.png"
+            ]
           },
           {
             "text": "Let us configure a custom error page:"
@@ -27641,52 +33350,88 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate back to CloudFront Dashboard and select the distribution you have created."
           },
           {
-            "text": "On the settings page, select Error pages tab."
+            "text": "On the settings page, select Error pages tab."
           },
           {
-            "text": "Click on the Create custom error response button."
+            "text": "Click on the Create custom error response button.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-48.png"
+            ]
+          },
+          {
+            "text": "Task 9 : Restricting the Geographic Distribution of Your Content",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-49.png"
+            ]
           },
           {
             "text": "On the settings page, select Error pages tab"
           },
           {
+            "text": "Now we need to set up our custom error page: Http Error Code: Select 403: Forbidden Error Caching Minimum TTL: Enter 10 Customize Error Response: Select Yes Response Page Path: Enter /CustomErrors/block.html HTTP Response Code: Select 403: Forbidden Click on Create custom error response button.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-50.png"
+            ]
+          },
+          {
             "text": "Now we need to set up our custom error page:"
           },
           {
-            "text": "Http Error Code: Select 403: Forbidden"
+            "text": "Http Error Code: Select 403: Forbidden"
           },
           {
-            "text": "Error Caching Minimum TTL: Enter 10"
+            "text": "Error Caching Minimum TTL: Enter 10"
           },
           {
             "text": "Customize Error Response: Select Yes"
           },
           {
-            "text": "Response Page Path: Enter /CustomErrors/block.html"
+            "text": "Response Page Path: Enter /CustomErrors/block.html"
           },
           {
-            "text": "HTTP Response Code: Select 403: Forbidden"
+            "text": "HTTP Response Code: Select 403: Forbidden"
           },
           {
-            "text": "Click on Create custom error response button."
+            "text": "Click on Create custom error response button.",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-51.png"
+            ]
           },
           {
-            "text": "Navigate back to Distributions and wait for your distribution to complete state to change Deploy."
+            "text": "Task 9 : Restricting the Geographic Distribution of Your Content",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-52.png"
+            ]
           },
           {
-            "text": "Note: This process will take around 5-10 minutes."
+            "text": "Navigate back to Distributions and wait for your distribution to complete state to change Deploy."
           },
           {
-            "text": "Once the state has been changed to Deploy, we will test the restriction through CloudFront in the browser."
+            "text": "Note: This process will take around 5-10 minutes."
           },
           {
-            "text": "Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png"
+            "text": "Once the state has been changed to Deploy, we will test the restriction through CloudFront in the browser. Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-53.png"
+            ]
+          },
+          {
+            "text": "Once the state has been changed to Deploy, we will test the restriction through CloudFront in the browser."
+          },
+          {
+            "text": "Example: https://d1jptzlydefk0d.cloudfront.net/lab_logo_58_32.png",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-54.png"
+            ]
+          },
+          {
+            "text": "Task 9 : Restricting the Geographic Distribution of Your Content",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-55.png"
+            ]
           },
           {
             "text": "If you see the error, this means you successfully configured a custom error page and restricted image access from your country."
-          },
-          {
-            "text": "Do you know ?"
           },
           {
             "text": "Amazon CloudFront allows you to use custom SSL/TLS certificates, including certificates issued by third-party certificate authorities (CAs), to secure your content delivery. However, what makes this even more interesting is that CloudFront also provides an integrated solution called AWS Certificate Manager (ACM) to simplify the process of managing SSL/TLS certificates."
@@ -27697,31 +33442,34 @@ export const labsCatalog: Lab[] = [
         "title": "Task 10: Validation Test",
         "steps": [
           {
-            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
           },
           {
-            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
           },
           {
-            "text": "Sample output :"
+            "text": "Sample output :",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-56.gif"
+            ]
           },
           {
-            "text": "Completion and Conclusion"
+            "text": "Task 10: Validation Test",
+            "images": [
+              "/labs/introduction-to-amazon-cloudfront/step-57.gif"
+            ]
           },
           {
             "text": "You have successfully created an Amazon CloudFront distribution and published an image through CloudFront."
           },
           {
-            "text": "You learned how to configure Custom Error Pages for CloudFront Distribution."
+            "text": "You learned how to configure Custom Error Pages for CloudFront Distribution."
           },
           {
-            "text": "You learned how to configure restrictions based on Geo-location."
+            "text": "You learned how to configure restrictions based on Geo-location."
           },
           {
-            "text": "You have successfully validated the lab."
-          },
-          {
-            "text": "End Lab"
+            "text": "You have successfully validated the lab."
           },
           {
             "text": "Sign out of AWS Account."
@@ -27730,7 +33478,7 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully completed the lab."
           },
           {
-            "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+            "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
           }
         ]
       }
@@ -28418,7 +34166,10 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -28427,10 +34178,10 @@ export const labsCatalog: Lab[] = [
             "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
           },
           {
-            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
-            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
           }
         ]
       },
@@ -28438,19 +34189,40 @@ export const labsCatalog: Lab[] = [
         "title": "Task 2: Enabling Amazon GuardDuty",
         "steps": [
           {
-            "text": "Make sure to choose the US East (N. Virginia) us-east-1 region in the AWS Management console dashboard, which is present in the top right corner."
+            "text": "Make sure to choose the US East (N. Virginia) us-east-1 region in the AWS Management console dashboard, which is present in the top right corner."
           },
           {
-            "text": "Navigate to the Services menu at the top and click on GuardDuty in the Security, Identity and Compliance section."
+            "text": "Navigate to the Services menu at the top and click on GuardDuty in the Security, Identity and Compliance section."
           },
           {
-            "text": "Click on Get started."
+            "text": "Click on Get started.",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-01.png"
+            ]
           },
           {
-            "text": "Click on Enable GuardDuty. With one click, the service will be enabled."
+            "text": "Task 2: Enabling Amazon GuardDuty",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-02.png"
+            ]
           },
           {
-            "text": "In the Findings page, you will see the warning You don’t have any findings because there is no malicious activity happening in your AWS Account. Ignore the warnings, wherever you find."
+            "text": "Click on Enable GuardDuty. With one click, the service will be enabled.",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-03.png"
+            ]
+          },
+          {
+            "text": "Task 2: Enabling Amazon GuardDuty",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-04.png"
+            ]
+          },
+          {
+            "text": "In the Findings page, you will see the warning You don’t have any findings because there is no malicious activity happening in your AWS Account. Ignore the warnings, wherever you find.",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-05.png"
+            ]
           }
         ]
       },
@@ -28458,19 +34230,28 @@ export const labsCatalog: Lab[] = [
         "title": "Task 3: Exploring Amazon GuardDuty",
         "steps": [
           {
-            "text": "Settings"
-          },
-          {
             "text": "Click on Settings in the left panel."
           },
           {
             "text": "You will see a Detector ID. A detector is a resource that represents the GuardDuty service."
           },
           {
-            "text": "Service roles: GuardDuty uses a service role to monitor your data sources on your behalf."
+            "text": "Service roles: GuardDuty uses a service role to monitor your data sources on your behalf.",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-06.png"
+            ]
+          },
+          {
+            "text": "Task 3: Exploring Amazon GuardDuty",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-07.png"
+            ]
           },
           {
             "text": "Findings export options: Findings are automatically sent to CloudWatch Events. You can also export findings to an S3 bucket. New findings are exported within 5 minutes. No need to change anything."
+          },
+          {
+            "text": "Suspend GuardDuty: Suspend GuardDuty: When you suspend GuardDuty, it stops monitoring your AWS environment and doesn't generate new findings. Your existing findings remain intact and aren't affected. Disable GuardDuty: When you disable GuardDuty, you not only stop GuardDuty from monitoring your AWS environment and generating new findings, you also lose your existing findings and your GuardDuty configurations. You can’t recover the data later."
           },
           {
             "text": "Suspend GuardDuty:"
@@ -28480,9 +34261,6 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "Disable GuardDuty: When you disable GuardDuty, you not only stop GuardDuty from monitoring your AWS environment and generating new findings, you also lose your existing findings and your GuardDuty configurations. You can’t recover the data later."
-          },
-          {
-            "text": "Lists"
           },
           {
             "text": "Click on Lists below Settings."
@@ -28497,13 +34275,28 @@ export const labsCatalog: Lab[] = [
             "text": "Trusted IP Lists: Trusted IP lists consist of IP addresses that are whitelisted for secure communication with your AWS environment. GuardDuty does not generate findings for IP addresses that are included in trusted IP lists."
           },
           {
-            "text": "Threat IP Lists: Threat lists consist of known malicious IP addresses. GuardDuty generates findings for IP addresses that are included in threat lists."
+            "text": "Threat IP Lists: Threat lists consist of known malicious IP addresses. GuardDuty generates findings for IP addresses that are included in threat lists.",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-08.png"
+            ]
           },
           {
-            "text": "Accounts"
+            "text": "Task 3: Exploring Amazon GuardDuty",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-09.png"
+            ]
           },
           {
-            "text": "Click on Accounts above the settings."
+            "text": "Click on Accounts above the settings.",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-10.png"
+            ]
+          },
+          {
+            "text": "Task 3: Exploring Amazon GuardDuty",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-11.png"
+            ]
           },
           {
             "text": "You can invite other accounts to enable GuardDuty and become associated with your AWS account."
@@ -28526,22 +34319,49 @@ export const labsCatalog: Lab[] = [
             "text": "Since there are no potential threats in our AWS Account, let us generate some sample findings and learn about them."
           },
           {
-            "text": "Navigate to settings from left panel, scroll down and click on Generate sample findings."
+            "text": "Navigate to settings from left panel, scroll down and click on Generate sample findings.",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-12.png"
+            ]
+          },
+          {
+            "text": "Task 4: Generating Sample Findings",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-13.png"
+            ]
           },
           {
             "text": "To find your sample findings, go to Findings from left panel."
           },
           {
-            "text": "Wait until the loading is completed. In the top-right corner, you should see several findings."
+            "text": "Wait until the loading is completed. In the top-right corner, you should see several findings."
           },
           {
-            "text": "You can use filter criteria to filter your findings."
+            "text": "You can use filter criteria to filter your findings.",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-14.png"
+            ]
+          },
+          {
+            "text": "Task 4: Generating Sample Findings",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-15.png"
+            ]
           },
           {
             "text": "Click on one of the sample findings."
           },
           {
-            "text": "You can see various parameters like severity, region, Account ID, Resource ID, Resource Affected, etc."
+            "text": "You can see various parameters like severity, region, Account ID, Resource ID, Resource Affected, etc.",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-16.png"
+            ]
+          },
+          {
+            "text": "Task 4: Generating Sample Findings",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-17.png"
+            ]
           },
           {
             "text": "Go through the sample to learn more about the different severities."
@@ -28559,6 +34379,12 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "Sample Output:"
+          },
+          {
+            "text": "Task 5: Validation of the Lab",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-18.gif"
+            ]
           }
         ]
       },
@@ -28566,22 +34392,16 @@ export const labsCatalog: Lab[] = [
         "title": "Task 6: Disabling GuardDuty",
         "steps": [
           {
-            "text": "Go to the settings and click on DisableGuardDuty under suspend GuardDuty to stop it."
+            "text": "Go to the settings and click on DisableGuardDuty under suspend GuardDuty to stop it."
           },
           {
             "text": "Click on Disable to confirm."
           },
           {
-            "text": "You have successfully disabled GuardDuty."
-          },
-          {
-            "text": "Do You Know ?"
-          },
-          {
-            "text": "Amazon GuardDuty analyzes and monitors billions of events across your AWS accounts, including API calls, network traffic, and DNS data, to identify potential security threats and anomalies."
-          },
-          {
-            "text": "Completion and Conclusion"
+            "text": "You have successfully disabled GuardDuty.",
+            "images": [
+              "/labs/introduction-to-amazon-guardduty/step-19.jpg"
+            ]
           },
           {
             "text": "You have successfully used the AWS management console to enable Amazon GuardDuty."
@@ -28596,16 +34416,13 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully disabled Amazon GuardDuty."
           },
           {
-            "text": "End Lab"
-          },
-          {
             "text": "Sign out of AWS Account."
           },
           {
             "text": "You have successfully completed the lab."
           },
           {
-            "text": "Once you have completed the steps click on End Lab from the lab console."
+            "text": "Once you have completed the steps click on End Lab from the lab console."
           }
         ]
       }
@@ -33034,7 +38851,10 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
             "text": "On the AWS sign-in page,"
@@ -33043,10 +38863,10 @@ export const labsCatalog: Lab[] = [
             "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
           },
           {
-            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
           },
           {
-            "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+            "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
           }
         ]
       },
@@ -33063,7 +38883,13 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate to VPC by clicking on the Services menu in the top, then click on VPC in the Networking & Content Delivery section."
           },
           {
-            "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button."
+            "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button. Select VPC only Name tag : Enter First_VPC IPv4 CIDR block : Enter 10.0.0.0/24",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-01.png"
+            ]
+          },
+          {
+            "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button."
           },
           {
             "text": "Select VPC only"
@@ -33072,19 +38898,43 @@ export const labsCatalog: Lab[] = [
             "text": "Name tag : Enter First_VPC"
           },
           {
-            "text": "IPv4 CIDR block : Enter 10.0.0.0/24"
+            "text": "IPv4 CIDR block : Enter 10.0.0.0/24",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-02.png"
+            ]
           },
           {
-            "text": "Leave everything else as default and click on the Create VPC button."
+            "text": "Task 2: Create the first VPC",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-03.png"
+            ]
+          },
+          {
+            "text": "Leave everything else as default and click on the Create VPC button."
           },
           {
             "text": "You have successfully created the VPC. Note the VPC ID for later use."
           },
           {
-            "text": "Now select the First_VPC from the list and click on the Actions dropdown and select Edit VPC Settings"
+            "text": "Task 2: Create the first VPC",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-04.png"
+            ]
           },
           {
-            "text": "Check the Enable DNS resolution and Enable DNS hostnames checkbox under DNS settings, and then click on the Save button."
+            "text": "Now select the First_VPC from the list and click on the Actions dropdown and select Edit VPC Settings"
+          },
+          {
+            "text": "Check the Enable DNS resolution and Enable DNS hostnames checkbox under DNS settings, and then click on the Save button.",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-05.gif"
+            ]
+          },
+          {
+            "text": "Task 2: Create the first VPC",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-06.gif"
+            ]
           }
         ]
       },
@@ -33095,7 +38945,10 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to create a public subnet within the first VPC. The public subnet will be used for launching an EC2 instance that will be accessible over the internet."
           },
           {
-            "text": "Navigate to Subnet from the left side menu and click on Create subnet button."
+            "text": "Navigate to Subnet from the left side menu and click on Create subnet button. VPC ID : Select the First_VPC VPC from the list. Subnet name : Enter Public_subnet_first_VPC Availability Zone : Leave as No Preference IPv4 CIDR block : Enter 10.0.0.0/25"
+          },
+          {
+            "text": "Navigate to Subnet from the left side menu and click on Create subnet button."
           },
           {
             "text": "VPC ID : Select the First_VPC VPC from the list."
@@ -33121,22 +38974,34 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to create an internet gateway and attach it to the first VPC. The internet gateway allows the EC2 instance in the public subnet to communicate with the internet."
           },
           {
-            "text": "Navigate to the Internet gateways from the left side menu and click on the Create Internet gateway button."
+            "text": "Navigate to the Internet gateways from the left side menu and click on the Create Internet gateway button. Name tag : Enter IGW"
+          },
+          {
+            "text": "Navigate to the Internet gateways from the left side menu and click on the Create Internet gateway button."
           },
           {
             "text": "Name tag : Enter IGW"
           },
           {
-            "text": "Click on the Create Internet gateway button"
+            "text": "Click on the Create Internet gateway button"
           },
           {
-            "text": "Now click on the Actions dropdown and select Attach to VPC."
+            "text": "Now click on the Actions dropdown and select Attach to VPC. Available VPCs : select First_VPC from the list."
+          },
+          {
+            "text": "Now click on the Actions dropdown and select Attach to VPC."
           },
           {
             "text": "Available VPCs : select First_VPC from the list."
           },
           {
             "text": "Now click on the Attach Internet gateway."
+          },
+          {
+            "text": "Task 4: Create and attach an Internet Gateway",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-07.png"
+            ]
           }
         ]
       },
@@ -33145,6 +39010,9 @@ export const labsCatalog: Lab[] = [
         "steps": [
           {
             "text": "In this task, we are going to create a public route table and associate it with the public subnet. The route table controls the traffic between the subnet and the internet gateway."
+          },
+          {
+            "text": "Navigate to Route tables on the left side panel and click on the Create route table. Name : Enter PublicRT VPC* : Select the First_VPC from the list."
           },
           {
             "text": "Navigate to Route tables on the left side panel and click on the Create route table."
@@ -33166,6 +39034,12 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "Now select the subnet with name Public_subnet_first_VPC and click on the Save associations button."
+          },
+          {
+            "text": "Task 5: Create a Public Route Table and associate it with the subnet",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-08.gif"
+            ]
           }
         ]
       },
@@ -33176,13 +39050,16 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to add a public route in the route table to allow traffic from the public subnet to the internet. This enables the EC2 instance in the public subnet to communicate with resources outside the VPC."
           },
           {
-            "text": "Navigate to Route tables on the left side panel and select the PublicRT from the list."
+            "text": "Navigate to Route tables on the left side panel and select the PublicRT from the list."
           },
           {
-            "text": "Switch to the Routes tab in below and click on the Edit routes."
+            "text": "Switch to the Routes tab in below and click on the Edit routes."
           },
           {
-            "text": "Now click on the Add route"
+            "text": "Now click on the Add route Destination : Enter 0.0.0.0/0 Target : select Internet Gateway and then select the Internet Gateway id present."
+          },
+          {
+            "text": "Now click on the Add route"
           },
           {
             "text": "Destination : Enter 0.0.0.0/0"
@@ -33192,6 +39069,12 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "Click on the Save changes."
+          },
+          {
+            "text": "Task 6: Add public Route in the Route table",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-09.gif"
+            ]
           }
         ]
       },
@@ -33211,6 +39094,15 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate to Instances from the left side menu and click on Launch Instances button."
           },
           {
+            "text": "Task 7: Launch an EC2 instance in the First VPC",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-10.png"
+            ]
+          },
+          {
+            "text": "Under the Name and tags section : Name : First_VPCs_EC2"
+          },
+          {
             "text": "Under the Name and tags section :"
           },
           {
@@ -33220,13 +39112,19 @@ export const labsCatalog: Lab[] = [
             "text": "Under the Application and OS Images (Amazon Machine Image) section :"
           },
           {
-            "text": "Select Quick Start tab and Amazon Linux 2023 kernel-6.1 AMI under it"
+            "text": "Select Quick Start tab and Amazon Linux 2023 kernel-6.1 AMI under it",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-11.png"
+            ]
           },
           {
             "text": "Under the Instance Type section :"
           },
           {
-            "text": "Instance Type : Select t2.micro"
+            "text": "Instance Type : Select t2.micro",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-12.png"
+            ]
           },
           {
             "text": "Under the Key Pair (login) section :"
@@ -33271,6 +39169,9 @@ export const labsCatalog: Lab[] = [
             "text": "Description : Enter Security group for public EC2"
           },
           {
+            "text": "To add SSH: Choose Type: SSH Source: Anywhere (From ALL IP addresses accessible)."
+          },
+          {
             "text": "To add SSH:"
           },
           {
@@ -33278,6 +39179,9 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "Source: Anywhere (From ALL IP addresses accessible)."
+          },
+          {
+            "text": "For HTTP, click on Add security group rule, Choose Type: HTTP Source: Anywhere (From ALL IP addresses accessible)."
           },
           {
             "text": "For HTTP, click on Add security group rule,"
@@ -33289,6 +39193,9 @@ export const labsCatalog: Lab[] = [
             "text": "Source: Anywhere (From ALL IP addresses accessible)."
           },
           {
+            "text": "For HTTPS, click on Add security group rule, Choose Type: HTTPS Source: Anywhere (From ALL IP addresses accessible)."
+          },
+          {
             "text": "For HTTPS, click on Add security group rule,"
           },
           {
@@ -33298,31 +39205,16 @@ export const labsCatalog: Lab[] = [
             "text": "Source: Anywhere (From ALL IP addresses accessible)."
           },
           {
+            "text": "Under the Advanced details section : Under the IAM instance profile: Select task232_profile_... role. Under the User data: copy and paste the following script to create an HTML page served by an Apache httpd web server. Make sure you remove the extra space after pasting the comment."
+          },
+          {
             "text": "Under the Advanced details section :"
           },
           {
-            "text": "Under the IAM instance profile: Select task232_profile_... role."
+            "text": "Under the IAM instance profile: Select task232_profile_... role."
           },
           {
             "text": "Under the User data: copy and paste the following script to create an HTML page served by an Apache httpd web server. Make sure you remove the extra space after pasting the comment."
-          },
-          {
-            "text": "#!/bin/bash"
-          },
-          {
-            "text": "sudo dnf update -y"
-          },
-          {
-            "text": "sudo dnf install httpd -y"
-          },
-          {
-            "text": "systemctl start httpd"
-          },
-          {
-            "text": "systemctl enable httpd"
-          },
-          {
-            "text": "echo \"<html><h1> Welcome to lab Public Server</h1><html>\" > /var/www/html/index.html"
           },
           {
             "text": "Keep everything else as default and click on the Launch instance button."
@@ -33331,10 +39223,28 @@ export const labsCatalog: Lab[] = [
             "text": "Launch Status: Your instance is now launching, Navigate to Instances page from the left menu and wait until the status of the EC2 Instance changes to running."
           },
           {
+            "text": "Task 7: Launch an EC2 instance in the First VPC",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-13.png"
+            ]
+          },
+          {
             "text": "Note down the sample IPv4 Public IP Address of the EC2 instance. A sample is shown in the screenshot below."
           },
           {
+            "text": "Task 7: Launch an EC2 instance in the First VPC",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-14.png"
+            ]
+          },
+          {
             "text": "If you paste the IPv4 Public IP in your browser and hit [enter]. You will be able to the below webpage."
+          },
+          {
+            "text": "Task 7: Launch an EC2 instance in the First VPC",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-15.png"
+            ]
           }
         ]
       },
@@ -33348,7 +39258,13 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking & Content Delivery section."
           },
           {
-            "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button."
+            "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button. Select VPC only Name tag : Enter Second_VPC IPv4 CIDR block : Enter 20.0.0.0/24",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-16.png"
+            ]
+          },
+          {
+            "text": "Navigate to Your VPCs on the left panel and click on the Create VPC button."
           },
           {
             "text": "Select VPC only"
@@ -33357,7 +39273,16 @@ export const labsCatalog: Lab[] = [
             "text": "Name tag : Enter Second_VPC"
           },
           {
-            "text": "IPv4 CIDR block : Enter 20.0.0.0/24"
+            "text": "IPv4 CIDR block : Enter 20.0.0.0/24",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-17.png"
+            ]
+          },
+          {
+            "text": "Task 8: Create a Second VPC",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-18.png"
+            ]
           },
           {
             "text": "Leave everything else as default and click on the Create VPC button."
@@ -33366,10 +39291,16 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully created the VPC. Note the VPC ID for later use."
           },
           {
-            "text": "Now select the Second_VPC from the list and click on the Actions and select Edit VPC settings"
+            "text": "Task 8: Create a Second VPC",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-19.png"
+            ]
           },
           {
-            "text": "Check the Enable DNS resolution and Enable DNS hostnames checkbox under DNS settings and then click on the Save button"
+            "text": "Now select the Second_VPC from the list and click on the Actions and select Edit VPC settings"
+          },
+          {
+            "text": "Check the Enable DNS resolution and Enable DNS hostnames checkbox under DNS settings and then click on the Save button"
           }
         ]
       },
@@ -33380,7 +39311,7 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to create a private subnet within the second VPC. The private subnet will be used for launching an EC2 instance that will not have direct internet connectivity."
           },
           {
-            "text": "Navigate to Subnets from the left side menu and click on Create Subnet button."
+            "text": "Navigate to Subnets from the left side menu and click on Create Subnet button."
           },
           {
             "text": "VPC ID : Select the Second_VPC VPC from the list."
@@ -33395,7 +39326,7 @@ export const labsCatalog: Lab[] = [
             "text": "IPv4 CIDR block : Enter 20.0.0.0/25"
           },
           {
-            "text": "Now click on the Create subnet button"
+            "text": "Now click on the Create subnet button"
           }
         ]
       },
@@ -33418,13 +39349,25 @@ export const labsCatalog: Lab[] = [
             "text": "Under the Application and OS Images (Amazon Machine Image) section :"
           },
           {
-            "text": "Select Quick Start tab and Amazon Linux 2023 kernel-6.1 AMI under it"
+            "text": "Select Quick Start tab and Amazon Linux 2023 kernel-6.1 AMI under it",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-20.png"
+            ]
+          },
+          {
+            "text": "Under the Instance Type section : Instance Type : Select t2.micro",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-21.png"
+            ]
           },
           {
             "text": "Under the Instance Type section :"
           },
           {
-            "text": "Instance Type : Select t2.micro"
+            "text": "Instance Type : Select t2.micro",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-22.png"
+            ]
           },
           {
             "text": "Under the Key Pair (login) section :"
@@ -33457,6 +39400,9 @@ export const labsCatalog: Lab[] = [
             "text": "Description : Enter Security group for private EC2"
           },
           {
+            "text": "To add SSH: Choose Type: SSH Source: Anywhere (From ALL IP addresses accessible)."
+          },
+          {
             "text": "To add SSH:"
           },
           {
@@ -33472,7 +39418,19 @@ export const labsCatalog: Lab[] = [
             "text": "Your instances are now launching. Navigate to the EC2 instance page and wait until the status changes to the Running. It will usually take 1-2 minutes."
           },
           {
+            "text": "Task 10: Launch an EC2 instance in Second VPC",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-23.png"
+            ]
+          },
+          {
             "text": "Since this EC2 is created in a private subnet, the machine will only have Private IP so, note down the sample IPv4 Private IP Address of the EC2 instance. A sample is shown in the screenshot below."
+          },
+          {
+            "text": "Task 10: Launch an EC2 instance in Second VPC",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-24.png"
+            ]
           }
         ]
       },
@@ -33486,22 +39444,37 @@ export const labsCatalog: Lab[] = [
             "text": "Navigate to VPC by clicking on the Services menu at the top, then click on VPC in the Networking & Content Delivery section."
           },
           {
-            "text": "Click on the Transit Gateways present under Transit Gateways section on the left sidebar."
+            "text": "Click on the Transit Gateways present under Transit Gateways section on the left sidebar."
           },
           {
-            "text": "Click on the Create Transit gateway button to create a Transit gateway."
+            "text": "Click on the Create Transit gateway button to create a Transit gateway."
           },
           {
-            "text": "Name tag: Enter DemoTG"
+            "text": "Task 11: Create a Transit gateway",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-25.png"
+            ]
           },
           {
-            "text": "Description: Enter TG for peering two VPCs"
+            "text": "Name tag: Enter DemoTG"
           },
           {
-            "text": "Keep all the options as default and click on Create transit gateway button."
+            "text": "Description: Enter TG for peering two VPCs"
           },
           {
-            "text": "Currently, the status of the Transit gateway is in a pending state. It takes up to 5 minutes for it to become available."
+            "text": "Keep all the options as default and click on Create transit gateway button."
+          },
+          {
+            "text": "Currently, the status of the Transit gateway is in a pending state. It takes up to 5 minutes for it to become available.",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-26.png"
+            ]
+          },
+          {
+            "text": "Task 11: Create a Transit gateway",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-27.png"
+            ]
           }
         ]
       },
@@ -33512,10 +39485,13 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to create two Transit Gateway attachments, one for each of the VPCs created. These attachments establish the peering between the VPCs and the Transit Gateway."
           },
           {
-            "text": "Navigate to the Transit gateways attachments present under Transit Gateways section on the left side bar."
+            "text": "Navigate to the Transit gateways attachments present under Transit Gateways section on the left side bar."
           },
           {
-            "text": "Click on the Create transit gateway attachment button"
+            "text": "Click on the Create transit gateway attachment button Name tag : First_VPC_TGA Transit Gateway ID: Select transit gateway present with Name tag DemoTG. Attachment type: Select VPC DNS support: Checked (default) IPv6 support: Unchecked VPC ID: Select VPC with the Name First_VPC Subnet IDs: Default"
+          },
+          {
+            "text": "Click on the Create transit gateway attachment button"
           },
           {
             "text": "Name tag : First_VPC_TGA"
@@ -33533,13 +39509,13 @@ export const labsCatalog: Lab[] = [
             "text": "IPv6 support: Unchecked"
           },
           {
-            "text": "VPC ID: Select VPC with the Name First_VPC"
+            "text": "VPC ID: Select VPC with the Name First_VPC"
           },
           {
             "text": "Subnet IDs: Default"
           },
           {
-            "text": "Click on the Create transit gateway attachment."
+            "text": "Click on the Create transit gateway attachment."
           },
           {
             "text": "Creation will be in-progress for the Transit gateway attachment."
@@ -33548,10 +39524,13 @@ export const labsCatalog: Lab[] = [
             "text": "It takes upto 5 minutes for it to come in available state."
           },
           {
-            "text": "To create the Transit gateway attachment for the second VPC, Click on the Create transit gateway attachment"
+            "text": "To create the Transit gateway attachment for the second VPC, Click on the Create transit gateway attachment Name tag: Second_VPCs_TGA Transit Gateway ID: Select transit gateway present with Name tag DemoTG. Attachment type: Select VPC DNS support: Checked (default) IPv6 support: Unchecked VPC ID: Select VPC with the Name Second_VPC Subnet IDs: Default"
           },
           {
-            "text": "Name tag: Second_VPCs_TGA"
+            "text": "To create the Transit gateway attachment for the second VPC, Click on the Create transit gateway attachment"
+          },
+          {
+            "text": "Name tag: Second_VPCs_TGA"
           },
           {
             "text": "Transit Gateway ID: Select transit gateway present with Name tag DemoTG."
@@ -33575,7 +39554,16 @@ export const labsCatalog: Lab[] = [
             "text": "Creation will be in-progress for the Transit gateway attachment."
           },
           {
-            "text": "Once created both the Transit gateway attachment will be present."
+            "text": "Once created both the Transit gateway attachment will be present.",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-28.png"
+            ]
+          },
+          {
+            "text": "Task 12: Create two Transit gateway attachment for the VPCs created",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-29.png"
+            ]
           }
         ]
       },
@@ -33586,7 +39574,7 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to add a route in the first VPC's route table that directs traffic destined for the second VPC's CIDR range to the Transit Gateway. This enables communication between the VPCs through the Transit Gateway."
           },
           {
-            "text": "Navigate to Route tables on the left side panel."
+            "text": "Navigate to Route tables on the left side panel."
           },
           {
             "text": "There will be 4 route tables present, and to avoid confusion put the entry in the correct route table. Let's filter the route table present using the VPC filter."
@@ -33598,7 +39586,7 @@ export const labsCatalog: Lab[] = [
             "text": "Click on the Route table ID to see the routes present."
           },
           {
-            "text": "Click on the Routes tab below and click on the Edit routes."
+            "text": "Click on the Routes tab below and click on the Edit routes."
           },
           {
             "text": "For this Route table, there are two entries present, First the local entry i.e. CIDR block of the First VPC, the second entry is about the route to the internet with Destination as 0.0.0.0/0 having target as the Internet gateway."
@@ -33607,19 +39595,25 @@ export const labsCatalog: Lab[] = [
             "text": "Let’s add the third route which has destination as 20.0.0.0/24 i.e. CIDR range of second VPC and Target as Transit gateway."
           },
           {
+            "text": "To add the third route, Click on the Add route. Destination: Enter 20.0.0.0/24 Target: Enter Transit Gateway"
+          },
+          {
             "text": "To add the third route, Click on the Add route."
           },
           {
-            "text": "Destination: Enter 20.0.0.0/24"
+            "text": "Destination: Enter 20.0.0.0/24"
           },
           {
-            "text": "Target: Enter Transit Gateway"
+            "text": "Target: Enter Transit Gateway"
           },
           {
             "text": "Click on the Save changes button."
           },
           {
-            "text": "Make sure Routes have Destination as 20.0.0.0/24"
+            "text": "Make sure Routes have Destination as 20.0.0.0/24",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-30.gif"
+            ]
           },
           {
             "text": "Note: Sometimes it does not show the destination as 20.0.0.0/24, in that case, please add the following from Step 6 of this task."
@@ -33633,7 +39627,7 @@ export const labsCatalog: Lab[] = [
             "text": "In this task, we are going to add a route in the second VPC's route table that directs traffic destined for the first VPC's CIDR range to the Transit Gateway. This allows communication between the VPCs through the Transit Gateway."
           },
           {
-            "text": "Navigate to Route tables on the left side panel."
+            "text": "Navigate to Route tables on the left side panel."
           },
           {
             "text": "Filter the VPC’s by using the ID of the second VPC."
@@ -33645,28 +39639,40 @@ export const labsCatalog: Lab[] = [
             "text": "Let's filter the route table present using the VPC filter."
           },
           {
-            "text": "To get the filter using the VPC option, simply click on the search bar and it will show the different options for the filter. Select VPC from that list and choose the ID of Second VPC."
+            "text": "To get the filter using the VPC option, simply click on the search bar and it will show the different options for the filter. Select VPC from that list and choose the ID of Second VPC."
           },
           {
             "text": "Click on the Route table ID to see the routes present."
           },
           {
-            "text": "Click on the Routes tab in below and click on the Edit routes."
+            "text": "Click on the Routes tab in below and click on the Edit routes."
           },
           {
             "text": "There will be only one entry to local, as we have not created an internet gateway because this is a private route table."
           },
           {
+            "text": "Task 14: Add the routes in the Second VPC’s route table",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-31.gif"
+            ]
+          },
+          {
             "text": "Let’s add the entry to 10.0.0.0/24 i.e. CIDR of the first VPC as a destination and Transit gateway as a target."
           },
           {
-            "text": "To get the Transit gateway ID, click on the search button and select Transit Gateway from the list of options present."
+            "text": "To get the Transit gateway ID, click on the search button and select Transit Gateway from the list of options present.",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-32.png"
+            ]
           },
           {
-            "text": "Click on the Save changes button."
+            "text": "Click on the Save changes button."
           },
           {
-            "text": "Make sure Routes have Destination as 10.0.0.0/24"
+            "text": "Make sure Routes have Destination as 10.0.0.0/24",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-33.png"
+            ]
           },
           {
             "text": "Note: Sometimes it does not show the destination as 10.0.0.0/24, in that case, please add the following from Step 5 of this task."
@@ -33677,46 +39683,68 @@ export const labsCatalog: Lab[] = [
         "title": "Task 15: Test the connectivity between two VPCs",
         "steps": [
           {
-            "text": "In this task, we are going to test the connectivity between the EC2 instances in both VPCs. This step confirms that the VPCs have been successfully peered using the Transit Gateway, and the EC2 instances can communicate with each other."
+            "text": "In this task, we are going to test the connectivity between the EC2 instances in both VPCs. This step confirms that the VPCs have been successfully peered using the Transit Gateway, and the EC2 instances can communicate with each other."
           },
           {
             "text": "You have copied the IPv4 Public IP of the EC2 instance created in the First VPC."
           },
           {
-            "text": "Please follow the steps for the Session Manager to connect to First_VPCs_EC2"
+            "text": "Please follow the steps for the Session Manager to connect to First_VPCs_EC2Select First_VPCs_EC2 and click on the Connect button.Go to SSM Session Manager and click Connect",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-34.png",
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-35.png"
+            ]
           },
           {
-            "text": "Select First_VPCs_EC2 and click on the Connect button."
+            "text": "Please follow the steps for the Session Manager to connect to First_VPCs_EC2"
           },
           {
-            "text": "Go to SSM Session Manager and click Connect"
+            "text": "Select First_VPCs_EC2 and click on the Connect button.",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-36.png"
+            ]
+          },
+          {
+            "text": "Go to SSM Session Manager and click Connect",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-37.png"
+            ]
           },
           {
             "text": "Once you have successfully connected in to EC2, run the following commands :"
           },
           {
+            "text": "Switch to root user :sudo su"
+          },
+          {
             "text": "Switch to root user :"
           },
           {
-            "text": "sudo su"
+            "text": "Update server repository :sudo dnf update -y"
           },
           {
             "text": "Update server repository :"
           },
           {
-            "text": "sudo dnf update -y"
+            "text": "Now we need to copy the .pem key of the EC2 instance created."
           },
           {
-            "text": "Now we need to copy the .pem key of the EC2 instance created."
+            "text": "Create a file :nano ec2_ssh_key.pem"
           },
           {
             "text": "Create a file :"
           },
           {
-            "text": "nano ec2_ssh_key.pem"
+            "text": "Task 15: Test the connectivity between two VPCs",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-38.png"
+            ]
           },
           {
-            "text": "Open the .pem key of EC2 ec2_ssh_key in your local editor and paste it in the terminal file."
+            "text": "Open the .pem key of EC2 ec2_ssh_key in your local editor and paste it in the terminal file.",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-39.png"
+            ]
           },
           {
             "text": "Press [ctrl] + x / [control] + x"
@@ -33728,16 +39756,16 @@ export const labsCatalog: Lab[] = [
             "text": "File Name : No changes, press [Enter] key in your keyboard"
           },
           {
+            "text": "Change the .pem key permissionchmod 400 ec2_ssh_key.pem"
+          },
+          {
             "text": "Change the .pem key permission"
           },
           {
-            "text": "chmod 400 ec2_ssh_key.pem"
+            "text": "SSH into the Private EC2 ec2_ssh_keyssh ec2-user@<IPv4 private Ip> -i ec2_ssh_key.pem"
           },
           {
             "text": "SSH into the Private EC2 ec2_ssh_key"
-          },
-          {
-            "text": "ssh ec2-user@<IPv4 private Ip> -i ec2_ssh_key.pem"
           },
           {
             "text": "Copy the Private IP of Second_VPCs_EC2"
@@ -33749,13 +39777,22 @@ export const labsCatalog: Lab[] = [
             "text": "If the connection prompts a message to confirm connect enter yes"
           },
           {
+            "text": "Task 15: Test the connectivity between two VPCs",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-40.png"
+            ]
+          },
+          {
             "text": "As you can see the IP address is changed to private ec2 private IP 30.0.1.154"
           },
           {
-            "text": "Now you have connected two VPCs using the Transit gateway."
+            "text": "Task 15: Test the connectivity between two VPCs",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-41.png"
+            ]
           },
           {
-            "text": "Do You Know?"
+            "text": "Now you have connected two VPCs using the Transit gateway."
           },
           {
             "text": "With Transit Gateway, you can easily add or remove VPC connections as your network grows or changes, without impacting existing connections. It provides a flexible and scalable solution for interconnecting VPCs and simplifies network administration, routing, and security."
@@ -33766,13 +39803,22 @@ export const labsCatalog: Lab[] = [
         "title": "Task 16: Validation Test",
         "steps": [
           {
-            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+            "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
           },
           {
             "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
           },
           {
-            "text": "Sample output :"
+            "text": "Sample output :",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-42.gif"
+            ]
+          },
+          {
+            "text": "Task 16: Validation Test",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-43.gif"
+            ]
           }
         ]
       },
@@ -33780,22 +39826,22 @@ export const labsCatalog: Lab[] = [
         "title": "Task 17: Delete AWS Resources",
         "steps": [
           {
-            "text": "Deleting EC2 Instances"
-          },
-          {
             "text": "Make sure you are in the US East (N. Virginia) Region."
           },
           {
-            "text": "Navigate to EC2 by clicking on the Services menu in the top left, then click on EC2 in the Compute section."
+            "text": "Navigate to EC2 by clicking on the Services menu in the top left, then click on EC2 in the Compute section."
           },
           {
             "text": "Now select both the EC2 instances that you have created, click on Instance State and click on the Terminate instance option."
           },
           {
-            "text": "Click on the Terminate button and your EC2 will start terminating."
+            "text": "Task 17: Delete AWS Resources",
+            "images": [
+              "/labs/peer-vpc-with-transit-gateway-and-its-components/step-44.jpg"
+            ]
           },
           {
-            "text": "Completion and Conclusion"
+            "text": "Click on the Terminate button and your EC2 will start terminating."
           },
           {
             "text": "You have successfully created a VPC with a public subnet & internet gateway and Launched an EC2 instance."
@@ -33813,16 +39859,13 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully tested the connectivity of VPC after peering using the Transit gateway."
           },
           {
-            "text": "End Lab"
-          },
-          {
             "text": "Sign out of AWS Account."
           },
           {
             "text": "You have successfully completed the lab."
           },
           {
-            "text": "Once you have completed the steps, click on End Lab from the lab console."
+            "text": "Once you have completed the steps, click on End Lab from the lab console."
           }
         ]
       }
@@ -35147,6 +41190,494 @@ export const labsCatalog: Lab[] = [
           },
           {
             "text": "Once you have completed the steps, click on End Lab from the lab console."
+          }
+        ]
+      }
+    ],
+    "takeaways": [],
+    "source": "course"
+  },
+  {
+    "slug": "perform-etl-operation-in-glue-with-s3",
+    "title": "Perform ETL operation in Glue with S3",
+    "level": "Intermediate",
+    "services": [
+      "AWS"
+    ],
+    "summary": "",
+    "duration": "00:45:00",
+    "tasks": [
+      {
+        "title": "Task 1: Sign in to AWS Management Console",
+        "steps": [
+          {
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          },
+          {
+            "text": "On the AWS sign-in page,"
+          },
+          {
+            "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
+          },
+          {
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          },
+          {
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          }
+        ]
+      },
+      {
+        "title": "Task 2 : Copy S3 Bucket's Sample data URI",
+        "steps": [
+          {
+            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+          },
+          {
+            "text": "Navigate to S3 by clicking on the Services menu at the top, then click on S3 in the Storage section."
+          },
+          {
+            "text": "Click on the bucket name starting with lab followed by a random number."
+          },
+          {
+            "text": "Task 2 : Copy S3 Bucket's Sample data URI"
+          },
+          {
+            "text": "Here, you will see two files, First, glue_code.py we will use this in upcoming steps. Second, sample_data.csv we need this data to perform ETL operations, let's copy the path (URI)"
+          },
+          {
+            "text": "Here, you will see two files,"
+          },
+          {
+            "text": "First, glue_code.py we will use this in upcoming steps."
+          },
+          {
+            "text": "Second, sample_data.csv we need this data to perform ETL operations, let's copy the path (URI)"
+          },
+          {
+            "text": "Task 2 : Copy S3 Bucket's Sample data URI"
+          },
+          {
+            "text": "Click on the sample_data.csv, to check the properties of this file."
+          },
+          {
+            "text": "Click on either of the copy buttons to copy the path (URI) of the sample_data.csv file."
+          },
+          {
+            "text": "Task 2 : Copy S3 Bucket's Sample data URI"
+          },
+          {
+            "text": "Save this URI in a notepad, we'll need this during the creation of the Glue crawler."
+          },
+          {
+            "text": "And, save the S3 bucket name, we need this one, when working with glue script."
+          }
+        ]
+      },
+      {
+        "title": "Task 3 : Download the glue code",
+        "steps": [
+          {
+            "text": "Click on the bucket name."
+          },
+          {
+            "text": "To download the glue_code, Select the file glue_code.py Click on the Download button."
+          },
+          {
+            "text": "To download the glue_code,"
+          },
+          {
+            "text": "Select the file glue_code.py"
+          },
+          {
+            "text": "Click on the Download button."
+          },
+          {
+            "text": "Task 3 : Download the glue code"
+          },
+          {
+            "text": "Save this file as .py"
+          }
+        ]
+      },
+      {
+        "title": "Task 4 : Create a Glue crawler",
+        "steps": [
+          {
+            "text": "Navigate to AWS Glue by clicking on the Services menu in the top, then click on AWS Glue in the Analytics section."
+          },
+          {
+            "text": "Click on Crawlers under the Data catalog section."
+          },
+          {
+            "text": "Task 4 : Create a Glue crawler"
+          },
+          {
+            "text": "To create a Crawler, click on the Create Crawler button. Section 1: Set Crawler properties Crawler name: Enter WhizCrawler Click on the Next button. Section 2: Choose Data Sources and classifiers Is your data already mapped to Glue tables: Select Not yet Data Sources: Select Add a data source. Section 3: Add a data store Choose a data store: Select S3 Location of S3 data : Select In this account S3 path: paste the copied S3 URI i.e. s3://lab38281856/sample_data.csv Subsequent crawler runs : Select Crawl all sub-folders Click on Add an S3 data source button. Click on Next button."
+          },
+          {
+            "text": "To create a Crawler, click on the Create Crawler button."
+          },
+          {
+            "text": "Section 1: Set Crawler properties Crawler name: Enter WhizCrawler Click on the Next button."
+          },
+          {
+            "text": "Section 1: Set Crawler properties"
+          },
+          {
+            "text": "Crawler name: Enter WhizCrawler"
+          },
+          {
+            "text": "Click on the Next button."
+          },
+          {
+            "text": "Task 4 : Create a Glue crawler"
+          },
+          {
+            "text": "Section 2: Choose Data Sources and classifiers Is your data already mapped to Glue tables: Select Not yet Data Sources: Select Add a data source."
+          },
+          {
+            "text": "Section 2: Choose Data Sources and classifiers"
+          },
+          {
+            "text": "Is your data already mapped to Glue tables: Select Not yet"
+          },
+          {
+            "text": "Data Sources: Select Add a data source."
+          },
+          {
+            "text": "Task 4 : Create a Glue crawler"
+          },
+          {
+            "text": "Section 3: Add a data store Choose a data store: Select S3 Location of S3 data : Select In this account S3 path: paste the copied S3 URI i.e. s3://lab38281856/sample_data.csv Subsequent crawler runs : Select Crawl all sub-folders Click on Add an S3 data source button. Click on Next button."
+          },
+          {
+            "text": "Section 3: Add a data store"
+          },
+          {
+            "text": "Choose a data store: Select S3"
+          },
+          {
+            "text": "Location of S3 data : Select In this account"
+          },
+          {
+            "text": "S3 path: paste the copied S3 URI i.e. s3://lab38281856/sample_data.csv"
+          },
+          {
+            "text": "Subsequent crawler runs : Select Crawl all sub-folders"
+          },
+          {
+            "text": "Click on Add an S3 data source button."
+          },
+          {
+            "text": "Task 4 : Create a Glue crawler"
+          },
+          {
+            "text": "Click on Next button."
+          },
+          {
+            "text": "Section 4: Configure security settings IAM role : Open drop-down of Existing IAM Role IAM role: Select Glue_Role_*** Click on the Next button:"
+          },
+          {
+            "text": "Section 4: Configure security settings"
+          },
+          {
+            "text": "IAM role : Open drop-down of Existing IAM Role"
+          },
+          {
+            "text": "IAM role: Select Glue_Role_***"
+          },
+          {
+            "text": "Click on the Next button:"
+          },
+          {
+            "text": "Section 5: Set output and scheduling Click on the Add database button. This will navigate you to the new tab. Database name: enter demo Keep other options as default. Click on the Create database button. Go back to the previous tab. Click on the Refresh icon and choose the database created. Under Crawler Schedule, Set Frequency as On demand Click on the Next button. Under Review and Create, Click on Create button."
+          },
+          {
+            "text": "Section 5: Set output and scheduling"
+          },
+          {
+            "text": "Click on the Add database button. This will navigate you to the new tab."
+          },
+          {
+            "text": "Database name: enter demo"
+          },
+          {
+            "text": "Keep other options as default."
+          },
+          {
+            "text": "Click on the Create database button."
+          },
+          {
+            "text": "Go back to the previous tab."
+          },
+          {
+            "text": "Click on the Refresh icon and choose the database created."
+          },
+          {
+            "text": "Under Crawler Schedule, Set Frequency as On demand"
+          },
+          {
+            "text": "Task 4 : Create a Glue crawler"
+          },
+          {
+            "text": "Click on the Next button."
+          },
+          {
+            "text": "Under Review and Create, Click on Create button."
+          },
+          {
+            "text": "A crawler is now created."
+          }
+        ]
+      },
+      {
+        "title": "Task 5: Run the crawler, to create a table",
+        "steps": [
+          {
+            "text": "Select the crawler and click on the Run crawler button."
+          },
+          {
+            "text": "Task 5: Run the crawler, to create a table"
+          },
+          {
+            "text": "The crawler will now attempt to run."
+          },
+          {
+            "text": "It will start."
+          },
+          {
+            "text": "Task 5: Run the crawler, to create a table"
+          },
+          {
+            "text": "The crawler has completed, one table is now created."
+          },
+          {
+            "text": "Task 5: Run the crawler, to create a table"
+          }
+        ]
+      },
+      {
+        "title": "Task 6: Create a Glue Job",
+        "steps": [
+          {
+            "text": "Click on ETL jobs under the Data Integration and ETL section in the left navigation panel."
+          },
+          {
+            "text": "Task 6: Create a Glue Job"
+          },
+          {
+            "text": "Click on Create job from a blank graph button."
+          },
+          {
+            "text": "Task 6: Create a Glue Job"
+          },
+          {
+            "text": "Navigate to Script tab and click on Edit script button and click on confirm button."
+          },
+          {
+            "text": "Now, update the existing script with the downloaded code (glue_code). Upload and edit an existing script."
+          },
+          {
+            "text": "Few modifications in the glue script, On line 15, make sure your database name is correct, i.e. demo On line 16, make sure your glue table name is correct i.e. sample_data_csv On line 18, replace the s3 bucket name with the bucket name present in this account, starting with lab. Note: The output will not be sent to the S3 bucket if you miss replacing the bucket name on line 18."
+          },
+          {
+            "text": "Few modifications in the glue script,"
+          },
+          {
+            "text": "On line 15, make sure your database name is correct, i.e. demo"
+          },
+          {
+            "text": "On line 16, make sure your glue table name is correct i.e. sample_data_csv"
+          },
+          {
+            "text": "On line 18, replace the s3 bucket name with the bucket name present in this account, starting with lab."
+          },
+          {
+            "text": "Note: The output will not be sent to the S3 bucket if you miss replacing the bucket name on line 18."
+          },
+          {
+            "text": "Navigate to the Job Details tab Name: enter WhizJob IAM role: select Glue_Role_*** Type: Select SparkGlue version: select Glue 4.0 - Supports spark 3.3, Scala 2, Python 3 Worker type: Select G 1X Check the Automatically scale the number of workers box Maximum number of workers: Enter 5 Expand the Advanced properties and Scroll down. Max concurrency: Enter 1 Delay notification threshold (minutes): Enter 10"
+          },
+          {
+            "text": "Navigate to the Job Details tab"
+          },
+          {
+            "text": "Name: enter WhizJob"
+          },
+          {
+            "text": "IAM role: select Glue_Role_***"
+          },
+          {
+            "text": "Type: Select SparkGlue version: select Glue 4.0 - Supports spark 3.3, Scala 2, Python 3 Worker type: Select G 1X Check the Automatically scale the number of workers box Maximum number of workers: Enter 5 Expand the Advanced properties and Scroll down. Max concurrency: Enter 1 Delay notification threshold (minutes): Enter 10"
+          },
+          {
+            "text": "Type: Select SparkGlue version: select Glue 4.0 - Supports spark 3.3, Scala 2, Python 3"
+          },
+          {
+            "text": "Worker type: Select G 1X"
+          },
+          {
+            "text": "Check the Automatically scale the number of workers box"
+          },
+          {
+            "text": "Maximum number of workers: Enter 5"
+          },
+          {
+            "text": "Expand the Advanced properties and Scroll down. Max concurrency: Enter 1 Delay notification threshold (minutes): Enter 10"
+          },
+          {
+            "text": "Expand the Advanced properties and Scroll down."
+          },
+          {
+            "text": "Max concurrency: Enter 1"
+          },
+          {
+            "text": "Delay notification threshold (minutes): Enter 10"
+          },
+          {
+            "text": "Task 6: Create a Glue Job"
+          },
+          {
+            "text": "Leave other options as default"
+          },
+          {
+            "text": "Click on the Save button on the top right."
+          },
+          {
+            "text": "Click on Run button."
+          },
+          {
+            "text": "Navigate to Runs tab, Job is currently in Running state."
+          },
+          {
+            "text": "Task 6: Create a Glue Job"
+          },
+          {
+            "text": "The glue job will be shown as succeeded with-in 10 minutes."
+          },
+          {
+            "text": "Task 6: Create a Glue Job"
+          }
+        ]
+      },
+      {
+        "title": "Task 7: Check the output of Glue Job",
+        "steps": [
+          {
+            "text": "Navigate to S3 by clicking on the Services menu at the top, then click on S3 in the Storage section."
+          },
+          {
+            "text": "Open the S3 Bucket, starting with the name lab."
+          },
+          {
+            "text": "Here, you will see some additional files."
+          },
+          {
+            "text": "Download the output file, named as run-1610354854518-part-r-00000, and save this file as CSV."
+          },
+          {
+            "text": "Task 7: Check the output of Glue Job"
+          },
+          {
+            "text": "You'll get the below Output in the downloaded file."
+          }
+        ]
+      },
+      {
+        "title": "Task 8: Validation Test",
+        "steps": [
+          {
+            "text": "Once the lab steps are completed, please click on the Validation button on the right side panel."
+          },
+          {
+            "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
+          },
+          {
+            "text": "Sample output :"
+          },
+          {
+            "text": "Task 8: Validation Test"
+          }
+        ]
+      },
+      {
+        "title": "Task 9: Delete AWS Resources",
+        "steps": [
+          {
+            "text": "Navigate to AWS Glue by clicking on the Services menu in the top, then click on AWS Glue in the Analytics section."
+          },
+          {
+            "text": "Click on Jobs under the Data Integration and ETL section."
+          },
+          {
+            "text": "WhizJob will be listed here."
+          },
+          {
+            "text": "To delete the present Job, perform the following actions: Select the WhizJob, In the menu, click on the Action button. Choose the Delete option."
+          },
+          {
+            "text": "To delete the present Job, perform the following actions:"
+          },
+          {
+            "text": "Select the WhizJob,"
+          },
+          {
+            "text": "In the menu, click on the Action button."
+          },
+          {
+            "text": "Choose the Delete option."
+          },
+          {
+            "text": "Confirm the deletion by clicking on the Delete button."
+          },
+          {
+            "text": "Glue job WhizJob will be deleted immediately."
+          },
+          {
+            "text": "Click on Crawlers under the Data catalog section."
+          },
+          {
+            "text": "The crawler will be listed here."
+          },
+          {
+            "text": "To delete the crawler, perform the following task: Select the crawler, WhizCrawler In the menu, click on the Actions button. Choose the Delete Crawler option."
+          },
+          {
+            "text": "To delete the crawler, perform the following task:"
+          },
+          {
+            "text": "Select the crawler, WhizCrawler"
+          },
+          {
+            "text": "In the menu, click on the Actions button."
+          },
+          {
+            "text": "Choose the Delete Crawler option."
+          },
+          {
+            "text": "Confirm the deletion by clicking on the Delete button."
+          },
+          {
+            "text": "The crawler will be deleted immediately."
+          },
+          {
+            "text": "You have successfully created a Glue crawler and Glue Job."
+          },
+          {
+            "text": "You have successfully performed ETL operations on the sample data file."
+          },
+          {
+            "text": "Sign out of AWS Account."
+          },
+          {
+            "text": "You have successfully completed the lab."
+          },
+          {
+            "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
           }
         ]
       }
@@ -38699,7 +45230,10 @@ export const labsCatalog: Lab[] = [
         "title": "Task 1: Sign in to the AWS Management Console",
         "steps": [
           {
-            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+            "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          },
+          {
+            "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button"
           },
           {
             "text": "On the AWS sign-in page,"
@@ -38708,13 +45242,13 @@ export const labsCatalog: Lab[] = [
             "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
           },
           {
-            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button"
+            "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign in button"
           },
           {
-            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+            "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
           },
           {
-            "text": "Note: If you face any issues, please go through FAQs and Troubleshooting for Labs.?"
+            "text": "Note: If you face any issues, please go through FAQs and Troubleshooting for Labs.?"
           }
         ]
       },
@@ -38722,37 +45256,82 @@ export const labsCatalog: Lab[] = [
         "title": "Task 2: Create an S3 Bucket",
         "steps": [
           {
-            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
           },
           {
-            "text": "Navigate to S3 by clicking on the Services menu at the top, then click on S3 in the Storage section."
+            "text": "Navigate to S3 by clicking on the Services menu at the top, then click on S3 in the Storage section."
           },
           {
-            "text": "On the S3 Page, click on Create Bucket and fill in the bucket details."
+            "text": "On the S3 Page, click on Create Bucket and fill in the bucket details. Bucket type : General purpose Bucket name: Enter kinesisfirehose-lab Note: You can enter any unique name of your choice.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-01.png"
+            ]
+          },
+          {
+            "text": "On the S3 Page, click on Create Bucket and fill in the bucket details."
           },
           {
             "text": "Bucket type : General purpose"
           },
           {
-            "text": "Bucket name: Enter kinesisfirehose-lab"
+            "text": "Bucket name: Enter kinesisfirehose-lab Note: You can enter any unique name of your choice.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-02.png"
+            ]
           },
           {
-            "text": "Note: You can enter any unique name of your choice."
+            "text": "Bucket name: Enter kinesisfirehose-lab"
           },
           {
-            "text": "Object ownership: Select the ACLs disabled (recommended) option"
+            "text": "Note: You can enter any unique name of your choice.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-03.png"
+            ]
           },
           {
-            "text": "Uncheck the option, Block all public access, and check the acknowledge option."
+            "text": "Task 2: Create an S3 Bucket",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-04.png"
+            ]
+          },
+          {
+            "text": "Object ownership: Select the ACLs disabled (recommended) option"
+          },
+          {
+            "text": "Uncheck the option, Block all public access, and check the acknowledge option.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-05.png"
+            ]
+          },
+          {
+            "text": "Task 2: Create an S3 Bucket",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-06.png"
+            ]
           },
           {
             "text": "Leave other settings as default."
           },
           {
-            "text": "Click on Create Bucket."
+            "text": "Click on Create Bucket.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-07.png"
+            ]
+          },
+          {
+            "text": "Task 2: Create an S3 Bucket",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-08.png"
+            ]
           },
           {
             "text": "Select the Created S3 bucket and click on Copy ARN button to copy the s3 bucket arn and note it down in notepad for later use"
+          },
+          {
+            "text": "Task 2: Create an S3 Bucket",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-09.png"
+            ]
           }
         ]
       },
@@ -38760,31 +45339,59 @@ export const labsCatalog: Lab[] = [
         "title": "Task 3: Create an Amazon Kinesis Data Firehose delivery stream",
         "steps": [
           {
-            "text": "Navigate to Kinesis by clicking on the Services menu at the top, then click on Kinesis in the Analytics section."
+            "text": "Navigate to Kinesis by clicking on the Services menu at the top, then click on Kinesis in the Analytics section."
           },
           {
-            "text": "On the Get started page, Select amazon Data Firehose and click on the Create Firehose stream button."
+            "text": "On the Get started page, Select amazon Data Firehose and click on the Create Firehose stream button.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-10.png"
+            ]
           },
           {
-            "text": "Under Choose source and destination section:"
+            "text": "Under Choose source and destination section: Source: Select Direct PUT Destination: Select Amazon S3"
           },
           {
-            "text": "Source: Select Direct PUT"
+            "text": "Under Choose source and destination section:"
           },
           {
-            "text": "Destination: Select Amazon S3"
+            "text": "Source: Select Direct PUT"
           },
           {
-            "text": "Under the Firehose stream name section:"
+            "text": "Destination: Select Amazon S3"
           },
           {
-            "text": "Firehose stream name: Enter whiz-demo"
+            "text": "Under the Firehose stream name section: Firehose stream name: Enter whiz-demo",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-11.png"
+            ]
           },
           {
-            "text": "Under Transformand convert records - optional:"
+            "text": "Firehose stream name: Enter whiz-demo",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-12.png"
+            ]
           },
           {
-            "text": "Do nothing keep everything as disabled"
+            "text": "Task 3: Create an Amazon Kinesis Data Firehose delivery stream",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-13.png"
+            ]
+          },
+          {
+            "text": "Under Transformand convert records - optional: Do nothing keep everything as disabled"
+          },
+          {
+            "text": "Under Transformand convert records - optional:"
+          },
+          {
+            "text": "Do nothing keep everything as disabled"
+          },
+          {
+            "text": "Under Destination settings: S3 bucket: Click on browse and Choose the bucket we have created earlier. Leave the rest as default. Click on Buffer hints, compression and encryption to expand, Under S3 buffer hints: Buffer size: 1 MiB Buffer interval: 60 seconds Note: If you enter buffer size as more than 1 MiB and Buffer interval as more than 60 seconds, then it will take more time to load the sample data in S3.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-14.png",
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-15.png"
+            ]
           },
           {
             "text": "Under Destination settings:"
@@ -38793,28 +45400,64 @@ export const labsCatalog: Lab[] = [
             "text": "S3 bucket: Click on browse and Choose the bucket we have created earlier."
           },
           {
-            "text": "Leave the rest as default."
+            "text": "Leave the rest as default.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-16.png"
+            ]
           },
           {
-            "text": "Click on Buffer hints, compression and encryption to expand, Under S3 buffer hints:"
+            "text": "Task 3: Create an Amazon Kinesis Data Firehose delivery stream",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-17.png"
+            ]
           },
           {
-            "text": "Buffer size: 1 MiB"
+            "text": "Click on Buffer hints, compression and encryption to expand, Under S3 buffer hints: Buffer size: 1 MiB Buffer interval: 60 seconds Note: If you enter buffer size as more than 1 MiB and Buffer interval as more than 60 seconds, then it will take more time to load the sample data in S3.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-18.png"
+            ]
           },
           {
-            "text": "Buffer interval: 60 seconds"
+            "text": "Click on Buffer hints, compression and encryption to expand, Under S3 buffer hints:"
           },
           {
-            "text": "Note: If you enter buffer size as more than 1 MiB and Buffer interval as more than 60 seconds, then it will take more time to load the sample data in S3."
+            "text": "Buffer size: 1 MiB"
+          },
+          {
+            "text": "Buffer interval: 60 seconds"
+          },
+          {
+            "text": "Note: If you enter buffer size as more than 1 MiB and Buffer interval as more than 60 seconds, then it will take more time to load the sample data in S3.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-19.png"
+            ]
+          },
+          {
+            "text": "Under Advanced settings: Server-side encryption: Uncheck Enable server-side encryption for source records in the delivery stream. Amazon CloudWatch error logging: Not enabled Service access: Choose existing IAM roleFrom the drop down select role name starts with : KinesisFirehosePolicy-Random-Number Under Tags: Key: Name Value: whiz-stream",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-20.png"
+            ]
           },
           {
             "text": "Under Advanced settings:"
           },
           {
-            "text": "Server-side encryption: Uncheck Enable server-side encryption for source records in the delivery stream."
+            "text": "Server-side encryption: Uncheck Enable server-side encryption for source records in the delivery stream."
           },
           {
-            "text": "Amazon CloudWatch error logging: Not enabled"
+            "text": "Amazon CloudWatch error logging: Not enabled",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-21.png"
+            ]
+          },
+          {
+            "text": "Task 3: Create an Amazon Kinesis Data Firehose delivery stream",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-22.png"
+            ]
+          },
+          {
+            "text": "Service access: Choose existing IAM roleFrom the drop down select role name starts with : KinesisFirehosePolicy-Random-Number"
           },
           {
             "text": "Service access: Choose existing IAM role"
@@ -38823,22 +45466,43 @@ export const labsCatalog: Lab[] = [
             "text": "From the drop down select role name starts with : KinesisFirehosePolicy-Random-Number"
           },
           {
+            "text": "Under Tags: Key: Name Value: whiz-stream"
+          },
+          {
             "text": "Under Tags:"
           },
           {
-            "text": "Key: Name"
+            "text": "Key: Name"
           },
           {
-            "text": "Value: whiz-stream"
+            "text": "Value: whiz-stream"
           },
           {
-            "text": "Click on Create Firehose stream"
+            "text": "Click on Create Firehose stream",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-23.png"
+            ]
+          },
+          {
+            "text": "Task 3: Create an Amazon Kinesis Data Firehose delivery stream",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-24.png"
+            ]
           },
           {
             "text": "Creation of the delivery stream will take a few minutes."
           },
           {
-            "text": "Once created, the Status will be shown as Active."
+            "text": "Once created, the Status will be shown as Active.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-25.png"
+            ]
+          },
+          {
+            "text": "Task 3: Create an Amazon Kinesis Data Firehose delivery stream",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-26.png"
+            ]
           }
         ]
       },
@@ -38846,22 +45510,46 @@ export const labsCatalog: Lab[] = [
         "title": "Task 4: Create a VPC",
         "steps": [
           {
-            "text": "Navigate to the Services menu at the top and choose VPC under Networking and Content Delivery."
+            "text": "Navigate to the Services menu at the top and choose VPC under Networking and Content Delivery."
           },
           {
-            "text": "Click on Your VPC’s in the left side panel then click on Create VPC"
+            "text": "Click on Your VPC’s in the left side panel then click on Create VPC"
           },
           {
-            "text": "Select VPC Only."
+            "text": "Select VPC Only. Enter the Name tag: MyVPC and enter IPv4 CIDR block: 10.1.0.0/16.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-27.png"
+            ]
           },
           {
-            "text": "Enter the Name tag: MyVPC and enter IPv4 CIDR block: 10.1.0.0/16."
+            "text": "Select VPC Only."
           },
           {
-            "text": "Then leave the other fields as default and click on Create VPC."
+            "text": "Enter the Name tag: MyVPC and enter IPv4 CIDR block: 10.1.0.0/16.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-28.png"
+            ]
           },
           {
-            "text": "Once created it will be shown like this."
+            "text": "Task 4: Create a VPC",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-29.png"
+            ]
+          },
+          {
+            "text": "Then leave the other fields as default and click on Create VPC."
+          },
+          {
+            "text": "Once created it will be shown like this.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-30.png"
+            ]
+          },
+          {
+            "text": "Task 4: Create a VPC",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-31.png"
+            ]
           }
         ]
       },
@@ -38869,19 +45557,52 @@ export const labsCatalog: Lab[] = [
         "title": "Task 5: Creating an Internet Gateway",
         "steps": [
           {
-            "text": "Select Internet Gateways in the left side panel and click on the Create Internet Gateway"
+            "text": "Select Internet Gateways in the left side panel and click on the Create Internet Gateway"
           },
           {
-            "text": "Enter the name MyInternetGateway and Click on Create Internet Gateway."
+            "text": "Enter the name MyInternetGateway and Click on Create Internet Gateway.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-32.png"
+            ]
           },
           {
-            "text": "Once created, attach it to MyVPC by clicking on Actions at the top and selecting Attach to VPC, and then selecting MyVPC."
+            "text": "Task 5: Creating an Internet Gateway",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-33.png"
+            ]
           },
           {
-            "text": "Select Route Tables on the left side and click on MyVPC route table. Click on Routes and select Edit routes."
+            "text": "Once created, attach it to MyVPC by clicking on Actions at the top and selecting Attach to VPC, and then selecting MyVPC.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-34.png"
+            ]
           },
           {
-            "text": "Select Add Routes then enter 0.0.0.0/0. Set the Target as “Internet Gateway” and choose Your Internet Gateway from the drop-down list. Click on Save changes."
+            "text": "Task 5: Creating an Internet Gateway",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-35.png"
+            ]
+          },
+          {
+            "text": "Select Route Tables on the left side and click on MyVPC route table. Click on Routes and select Edit routes."
+          },
+          {
+            "text": "Task 5: Creating an Internet Gateway",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-36.png"
+            ]
+          },
+          {
+            "text": "Select Add Routes then enter 0.0.0.0/0. Set the Target as “Internet Gateway” and choose Your Internet Gateway from the drop-down list. Click on Save changes.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-37.png"
+            ]
+          },
+          {
+            "text": "Task 5: Creating an Internet Gateway",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-38.png"
+            ]
           }
         ]
       },
@@ -38889,10 +45610,22 @@ export const labsCatalog: Lab[] = [
         "title": "Task 6: Create a Subnet",
         "steps": [
           {
-            "text": "Click on Subnets in the left side panel and click on Create Subnet. Select “MyVPC” in VPCID."
+            "text": "Click on Subnets in the left side panel and click on Create Subnet. Select “MyVPC” in VPCID.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-39.png"
+            ]
           },
           {
-            "text": "Give whizsub as the name of your subnet and us-east-1a for the availability zone. Enter the IPv4 CIDR Block as 10.1.1.0/24 and click on the Create subnet button."
+            "text": "Task 6: Create a Subnet",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-40.png"
+            ]
+          },
+          {
+            "text": "Give whizsub as the name of your subnet and us-east-1a for the availability zone. Enter the IPv4 CIDR Block as 10.1.1.0/24 and click on the Create subnet button.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-41.png"
+            ]
           }
         ]
       },
@@ -38900,34 +45633,43 @@ export const labsCatalog: Lab[] = [
         "title": "Task 7: Create VPC Flow Logs",
         "steps": [
           {
-            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
+            "text": "Make sure you are in the US East (N. Virginia) us-east-1 Region."
           },
           {
-            "text": "Navigate to VPC by clicking on Services at the top of the AWS Console."
+            "text": "Navigate to VPC by clicking on Services at the top of the AWS Console."
           },
           {
-            "text": "Click on VPC (under the Networking & Content Delivery section) or you can also search for VPC."
+            "text": "Click on VPC (under the Networking & Content Delivery section) or you can also search for VPC."
           },
           {
-            "text": "Click on Your VPCs from the left menu."
+            "text": "Click on Your VPCs from the left menu."
           },
           {
-            "text": "Navigate to the VPC you just created, click on Actions then select Create Flow Log."
+            "text": "Navigate to the VPC you just created, click on Actions then select Create Flow Log."
           },
           {
-            "text": "Enter the name as MyVPCFlowLog"
+            "text": "Enter the name as MyVPCFlowLog"
           },
           {
-            "text": "Select Accept in Filter options and then set the “Maximum Aggregation Interval” to 1 minute."
+            "text": "Select Accept in Filter options and then set the “Maximum Aggregation Interval” to 1 minute."
           },
           {
-            "text": "Select Send to Amazon S3 bucket as the Destination."
+            "text": "Select Send to Amazon S3 bucket as the Destination."
           },
           {
-            "text": "Enter the ARN of your S3 Bucket, which you've copied earlier, then click on the Create Flow Log button."
+            "text": "Enter the ARN of your S3 Bucket, which you've copied earlier, then click on the Create Flow Log button.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-42.png"
+            ]
           },
           {
-            "text": "Once the flow logs are created, head back to the AWS VPC service, select it, and click on the Flow Logs tab."
+            "text": "Once the flow logs are created, head back to the AWS VPC service, select it, and click on the Flow Logs tab."
+          },
+          {
+            "text": "Task 7: Create VPC Flow Logs",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-43.png"
+            ]
           },
           {
             "text": "Now you have successfully learned how to create the VPC Flow Logs."
@@ -38938,85 +45680,146 @@ export const labsCatalog: Lab[] = [
         "title": "Task 8: Creating an EC2 Instance",
         "steps": [
           {
-            "text": "Make sure you are in the US-East (N.Virginia) us-east-1 region."
+            "text": "Make sure you are in the US-East (N.Virginia) us-east-1 region."
           },
           {
-            "text": "Navigate to Services at the top and click on EC2 under Compute."
+            "text": "Navigate to Services at the top and click on EC2 under Compute."
           },
           {
-            "text": "Select Instances in the left side panel and click on Launch Instances"
+            "text": "Select Instances in the left side panel and click on Launch Instances"
           },
           {
-            "text": "Enter Name as labec2instance"
+            "text": "Enter Name as labec2instance"
           },
           {
-            "text": "Select Amazon Linux 2023 kernel 6.1 AMI from the dropdown."
+            "text": "Select Amazon Linux 2023 kernel 6.1 AMI from the dropdown.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-44.png"
+            ]
           },
           {
-            "text": "Choose an Instance Type: Choose t2.micro."
+            "text": "Task 8: Creating an EC2 Instance",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-45.png"
+            ]
           },
           {
-            "text": "For Key pair: Select Create a new key pair"
+            "text": "Choose an Instance Type: Choose t2.micro.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-46.png"
+            ]
           },
           {
-            "text": "Key pair name: MySSHKey"
+            "text": "Task 8: Creating an EC2 Instance",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-47.png"
+            ]
           },
           {
-            "text": "Key pair type: RSA"
+            "text": "For Key pair: Select Create a new key pair Key pair name: MySSHKey Key pair type: RSA Private key file format: .pem"
           },
           {
-            "text": "Private key file format: .pem"
+            "text": "For Key pair: Select Create a new key pair"
           },
           {
-            "text": "In Network Settings Click on Edit Button:"
+            "text": "Key pair name: MySSHKey"
           },
           {
-            "text": "VPC: Choose MyVPC"
+            "text": "Key pair type: RSA"
           },
           {
-            "text": "Auto-assign public IP: Enable"
+            "text": "Private key file format: .pem"
           },
           {
-            "text": "Select Create new Security group"
+            "text": "In Network Settings Click on Edit Button: VPC: Choose MyVPC Auto-assign public IP: Enable Select Create new Security group Security group name: Enter MyEC2Server_SG Description: Enter Security Group to allow traffic to EC2 To add SSH, Choose Type: SSH Source: Select Anywhere For HTTP, Select the Add Security rule Button Choose Type: HTTP Source: Select Anywhere For HTTPs, Select the Add Security rule Button Choose Type: HTTPS Source: Select Anywhere",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-48.png",
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-49.png"
+            ]
           },
           {
-            "text": "Security group name: Enter MyEC2Server_SG"
+            "text": "In Network Settings Click on Edit Button:"
           },
           {
-            "text": "Description: Enter Security Group to allow traffic to EC2"
+            "text": "VPC: Choose MyVPC"
           },
           {
-            "text": "To add SSH,"
+            "text": "Auto-assign public IP: Enable"
           },
           {
-            "text": "Choose Type: SSH"
+            "text": "Select Create new Security group"
           },
           {
-            "text": "Source: Select Anywhere"
+            "text": "Security group name: Enter MyEC2Server_SG"
           },
           {
-            "text": "For HTTP, Select the Add Security rule Button"
+            "text": "Description: Enter Security Group to allow traffic to EC2",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-50.png"
+            ]
           },
           {
-            "text": "Choose Type: HTTP"
+            "text": "To add SSH, Choose Type: SSH Source: Select Anywhere"
           },
           {
-            "text": "Source: Select Anywhere"
+            "text": "To add SSH,"
           },
           {
-            "text": "For HTTPs, Select the Add Security rule Button"
+            "text": "Choose Type: SSH"
           },
           {
-            "text": "Choose Type: HTTPS"
+            "text": "Source: Select Anywhere"
           },
           {
-            "text": "Source: Select Anywhere"
+            "text": "For HTTP, Select the Add Security rule Button Choose Type: HTTP Source: Select Anywhere"
           },
           {
-            "text": "Leave others as default, and click on the Launch Instance button."
+            "text": "For HTTP, Select the Add Security rule Button"
           },
           {
-            "text": "After 1-5 minutes, the Instance State will change to running, as shown below. Then click on Connect."
+            "text": "Choose Type: HTTP"
+          },
+          {
+            "text": "Source: Select Anywhere"
+          },
+          {
+            "text": "For HTTPs, Select the Add Security rule Button Choose Type: HTTPS Source: Select Anywhere",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-51.png"
+            ]
+          },
+          {
+            "text": "For HTTPs, Select the Add Security rule Button"
+          },
+          {
+            "text": "Choose Type: HTTPS"
+          },
+          {
+            "text": "Source: Select Anywhere",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-52.png"
+            ]
+          },
+          {
+            "text": "Task 8: Creating an EC2 Instance",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-53.png"
+            ]
+          },
+          {
+            "text": "Leave others as default, and click on the Launch Instance button."
+          },
+          {
+            "text": "After 1-5 minutes, the Instance State will change to running, as shown below. Then click on Connect.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-54.png"
+            ]
+          },
+          {
+            "text": "Task 8: Creating an EC2 Instance",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-55.png"
+            ]
           }
         ]
       },
@@ -39024,37 +45827,34 @@ export const labsCatalog: Lab[] = [
         "title": "Task 9: Generating Traffic",
         "steps": [
           {
-            "text": "Under EC2 Instance connect, click on Connect. Here we need to SSH into the instance to generate traffic. You can follow the steps mentioned in SSH into EC2 Instance."
+            "text": "Under EC2 Instance connect, click on Connect. Here we need to SSH into the instance to generate traffic. You can follow the steps mentioned in SSH into EC2 Instance."
+          },
+          {
+            "text": "Task 9: Generating Traffic",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-56.png"
+            ]
           },
           {
             "text": "Once you SSH into the instance, install an Apache Server. To install it, follow the below steps. Run these commands one by one."
           },
           {
-            "text": "sudo su"
+            "text": "Task 9: Generating Traffic",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-57.png"
+            ]
           },
           {
-            "text": "dnf update -y"
+            "text": "Copy your instance Public IP, open a new tab and paste it into the address bar, and hit enter. It should be shown as below:",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-58.png"
+            ]
           },
           {
-            "text": "dnf install httpd -y"
-          },
-          {
-            "text": "cd /var/www/html"
-          },
-          {
-            "text": "echo \"Response coming from server\" > /var/www/html/index.html"
-          },
-          {
-            "text": "systemctl start httpd"
-          },
-          {
-            "text": "systemctl enable httpd"
-          },
-          {
-            "text": "systemctl status httpd"
-          },
-          {
-            "text": "Copy your instance Public IP, open a new tab and paste it into the address bar, and hit enter. It should be shown as below:"
+            "text": "Task 9: Generating Traffic",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-59.png"
+            ]
           }
         ]
       },
@@ -39062,19 +45862,16 @@ export const labsCatalog: Lab[] = [
         "title": "Task 10: Check the logs in S3 Bucket.",
         "steps": [
           {
-            "text": "Now Navigate to S3, Wait for few minutes and refresh the page, and click on Created bucket. You will see the AWSLogs appear under Objects."
+            "text": "Now Navigate to S3, Wait for few minutes and refresh the page, and click on Created bucket. You will see the AWSLogs appear under Objects."
           },
           {
-            "text": "Click on AWSLogs -> Account ID -> vpcflowlogs -> us-east-1 -> Year -> Month -> Date."
+            "text": "Click on AWSLogs -> Account ID -> vpcflowlogs -> us-east-1 -> Year -> Month -> Date."
           },
           {
-            "text": "You will be able to view all the details i.e. the traffic that is being directed to our EC2 Instance."
-          },
-          {
-            "text": "Do You Know ?"
-          },
-          {
-            "text": "Amazon Kinesis Firehose is a fully managed service that makes it easy to capture, transform, and load streaming data into various AWS data stores, including Amazon S3. It provides a reliable and scalable solution for ingesting and processing large volumes of streaming data in real-time."
+            "text": "You will be able to view all the details i.e. the traffic that is being directed to our EC2 Instance.",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-60.png"
+            ]
           }
         ]
       },
@@ -39091,10 +45888,13 @@ export const labsCatalog: Lab[] = [
             "text": "Sample output :"
           },
           {
-            "text": "Completion and Conclusion"
+            "text": "Task 11: Validation of the Lab",
+            "images": [
+              "/labs/transfer-data-to-s3-using-amazon-kinesis-firehose/step-61.gif"
+            ]
           },
           {
-            "text": "You have successfully created an S3 bucket."
+            "text": "You have successfully created an S3 bucket."
           },
           {
             "text": "You have successfully created a Kinesis firehose delivery stream."
@@ -39103,16 +45903,13 @@ export const labsCatalog: Lab[] = [
             "text": "You have successfully transferred the sample data generated by the EC2 Instance, from VPC Flow Logs to Amazon S3 Bucket using Kinesis firehose delivery stream."
           },
           {
-            "text": "End Lab"
-          },
-          {
             "text": "Sign out of AWS Account."
           },
           {
             "text": "You have completed the lab."
           },
           {
-            "text": "Once you have completed the steps, click on End Lab from the lab console."
+            "text": "Once you have completed the steps, click on End Lab from the lab console."
           }
         ]
       }
