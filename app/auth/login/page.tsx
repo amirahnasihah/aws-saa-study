@@ -45,6 +45,12 @@ function LoginForm() {
     const { error } = await supabase.auth.signInWithOtp({ email })
 
     if (error) {
+      if (error.message.toLowerCase().includes('rate limit')) {
+        setErrorMessage('Email rate limited — if you have a code, enter it below.')
+        setStatus('idle')
+        setStep('code')
+        return
+      }
       setStatus('error')
       setErrorMessage(error.message)
       return

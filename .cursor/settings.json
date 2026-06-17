@@ -1,5 +1,14 @@
 {
   "plugins": {
+    "context7-plugin": {
+      "enabled": true
+    },
+    "cloudflare": {
+      "enabled": true
+    },
+    "posthog": {
+      "enabled": true
+    },
     "supabase": {
       "enabled": true
     }
