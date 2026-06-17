@@ -241,7 +241,7 @@
           "text": "Master username : Enter rdsuser"
         },
         {
-          "text": "Master password and Confirm password: Enter <example-password>"
+          "text": "Master password and Confirm password: Enter lab123"
         },
         {
           "text": "Note: This is the username/password combo used to log onto your database. Please make note of them somewhere safe."
@@ -375,7 +375,7 @@
           "text": "Switch to the root user using the command:"
         },
         {
-          "text": "Connect to the MySQL RDS Instance with the following command: Syntax: mysql -h <mysql-instance-dns> -u <username> -p In our case: mysql -h mydbinstance.c1sh5a4j91dp.us-east-1.rds.amazonaws.com -u rdsuser -p Password : Enter <example-password>"
+          "text": "Connect to the MySQL RDS Instance with the following command: Syntax: mysql -h <mysql-instance-dns> -u <username> -p In our case: mysql -h mydbinstance.c1sh5a4j91dp.us-east-1.rds.amazonaws.com -u rdsuser -p Password : Enter lab123"
         },
         {
           "text": "Connect to the MySQL RDS Instance with the following command:"
@@ -387,7 +387,7 @@
           "text": "In our case: mysql -h mydbinstance.c1sh5a4j91dp.us-east-1.rds.amazonaws.com -u rdsuser -p"
         },
         {
-          "text": "Password : Enter <example-password>"
+          "text": "Password : Enter lab123"
         },
         {
           "text": "You will enter the MYSQL command line."

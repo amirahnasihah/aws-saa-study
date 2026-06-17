@@ -336,10 +336,10 @@
           "text": "Credentials management: Select Self managed"
         },
         {
-          "text": "Master password: Enter <example-password>"
+          "text": "Master password: Enter lab123"
         },
         {
-          "text": "Confirm password: Enter <example-password>"
+          "text": "Confirm password: Enter lab123"
         },
         {
           "text": "Note: This is the username and password used to log into your database. Please make note of them.",
@@ -588,7 +588,7 @@
           "text": "Username : Enter labAdmin"
         },
         {
-          "text": "Password : Enter <example-password> (Use yours incase you changed the password while creating RDS)"
+          "text": "Password : Enter lab123 (Use yours incase you changed the password while creating RDS)"
         },
         {
           "text": "You should now be able to log into the database,"
@@ -727,7 +727,7 @@
           "text": "mysql -h myauroracluster.cluster-ro-cjp5t9qppjnx.us-east-1.rds.amazonaws.com -u labAdmin -p"
         },
         {
-          "text": "Password: Enter <example-password>"
+          "text": "Password: Enter lab123"
         },
         {
           "text": "You will be able to Log into MySQL and check for the database and table created in the master DB instance before the failover."
