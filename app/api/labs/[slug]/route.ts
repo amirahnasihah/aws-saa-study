@@ -1,6 +1,6 @@
 import { getRequestContext } from '@cloudflare/next-on-pages'
-import { findLabFallback } from '@/lib/labs-fallback'
-import { rowToLab, shouldUseCompiledLabs, type LabDBRow } from '@/lib/labs'
+import { findLabFallback, mergeLabRowWithCatalog } from '@/lib/labs-fallback'
+import { shouldUseCompiledLabs, type LabDBRow } from '@/lib/labs'
 
 export const runtime = 'edge'
 
@@ -19,7 +19,8 @@ export async function GET(_request: Request, context: RouteContext) {
         .first<LabDBRow>()
 
       if (row) {
-        return Response.json(rowToLab(row), {
+        const catalog = findLabFallback(slug)
+        return Response.json(mergeLabRowWithCatalog(row, catalog), {
           headers: { 'Cache-Control': 'public, s-maxage=3600, stale-while-revalidate=86400' },
         })
       }

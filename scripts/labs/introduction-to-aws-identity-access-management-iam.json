@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to the AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab. Now copy your Username and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign-in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. Otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign-in button."
+          "text": "Now copy your Username and Password in the Lab Console to the IAM Username and Password in the AWS Console and click on the Sign-in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -35,10 +38,16 @@
           "text": "In this task, we are going to create new IAM users by providing the name, password access, permissions, and tags. These users will be added to their respective groups in the next task."
         },
         {
-          "text": "Click on Services and select IAM under the Security, Identity, & Compliance section."
+          "text": "Click on Services and select IAM under the Security, Identity, & Compliance section."
         },
         {
-          "text": "In the IAM dashboard, select the IAM Users option in the left panel and click on the Create User button to create a new IAM user."
+          "text": "In the IAM dashboard, select the IAM Users option in the left panel and click on the Create User button to create a new IAM user."
+        },
+        {
+          "text": "In the Add User page, fill in the User Details section as follows: User name: Enter John (or the desired name for the user) Check the Provide user access to the AWS Management Console - optional checkbox Select Custom password under Console Password and Enter <example-password> (or the desired password for the user) Uncheck the Users must create a new password at the next sign-in (recommended) checkbox. Click on the Next button.",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-01.jpg"
+          ]
         },
         {
           "text": "In the Add User page, fill in the User Details section as follows:"
@@ -56,34 +65,70 @@
           "text": "Uncheck the Users must create a new password at the next sign-in (recommended) checkbox."
         },
         {
-          "text": "Click on the Next button."
+          "text": "Click on the Next button.",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-02.jpg"
+          ]
         },
         {
-          "text": "In the Set permissions section, keep things as default. Click on the Next button."
+          "text": "Task 2: Create IAM Users",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-03.jpg"
+          ]
         },
         {
-          "text": "Scroll down and Under Tags, Click on the Add new tag button:"
+          "text": "In the Set permissions section, keep things as default. Click on the Next button."
+        },
+        {
+          "text": "Scroll down and Under Tags, Click on the Add new tag button: Key: Enter Dev-Team Value: Enter Developers",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-04.jpg"
+          ]
+        },
+        {
+          "text": "Scroll down and Under Tags, Click on the Add new tag button:"
         },
         {
           "text": "Key: Enter Dev-Team"
         },
         {
-          "text": "Value: Enter Developers"
+          "text": "Value: Enter Developers",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-05.jpg"
+          ]
         },
         {
-          "text": "Click on the Create User button"
+          "text": "Task 2: Create IAM Users",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-06.jpg"
+          ]
         },
         {
-          "text": "Note: Ignore the above error if it appears while creating Users and click on Close."
+          "text": "Click on the Create User button",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-07.jpg"
+          ]
         },
         {
-          "text": "Click on the Return to users list button and then on the Continue button."
+          "text": "Task 2: Create IAM Users",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-08.jpg"
+          ]
+        },
+        {
+          "text": "Note: Ignore the above error if it appears while creating Users and click on Close."
+        },
+        {
+          "text": "Click on the Return to users list button and then on the Continue button."
         },
         {
           "text": "Repeat the same steps and tags for the IAM user by the name Sarah."
         },
         {
-          "text": "Repeat the steps to create IAM users by the name Ted and Rita with the following details,"
+          "text": "Repeat the steps to create IAM users by the name Ted and Rita with the following details, Custom password: <example-password> Key: HR-Team Value: HR"
+        },
+        {
+          "text": "Repeat the steps to create IAM users by the name Ted and Rita with the following details,"
         },
         {
           "text": "Custom password: <example-password>"
@@ -97,10 +142,13 @@
         {
           "text": "We have created 4 IAM users.",
           "images": [
-            "/labs/introduction-to-aws-identity-access-management-iam/step-01.jpg",
-            "/labs/introduction-to-aws-identity-access-management-iam/step-02.jpg",
-            "/labs/introduction-to-aws-identity-access-management-iam/step-03.jpg",
-            "/labs/introduction-to-aws-identity-access-management-iam/step-04.jpg"
+            "/labs/introduction-to-aws-identity-access-management-iam/step-09.jpg"
+          ]
+        },
+        {
+          "text": "Task 2: Create IAM Users",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-10.jpg"
           ]
         }
       ]
@@ -112,16 +160,32 @@
           "text": "In this task, we are going to create new IAM groups and will add the users to their respective groups. Moreover, we will be adding permissions to the group so that users within the group have access to the services allocated to them using the permission policies."
         },
         {
-          "text": "Select the IAM User groups in the left panel and click on the Create group"
+          "text": "Select the IAM User groups in the left panel and click on the Create group"
+        },
+        {
+          "text": "Set Group Name: User group name: Enter Dev-Team Scroll down and select John and Sarah under Add Users to the group. Scroll down to the Attach permissions Policies section and search for AmazonEC2ReadOnlyAccess and AmazonS3ReadOnlyAccess policies. These policies provide read access for EC2 and S3 to the added users in the group. Note: Do not add other policies than the ones mentioned above. You will get an error while creating a group Review all details and click on the Create group button. Repeat the same steps to create an HR-Team group. Click on the Create group User group name: HR-Team Scroll down and select Ted and Rita under Add Users to the group. Under Attach permissions Policies, select the Billing policy. Note: Do not add other policies than the ones mentioned above. You will get an error while creating a group Review all details and click on the Create group button.",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-11.jpg",
+            "/labs/introduction-to-aws-identity-access-management-iam/step-12.jpg"
+          ]
         },
         {
           "text": "Set Group Name:"
         },
         {
-          "text": "User group name: Enter Dev-Team"
+          "text": "User group name: Enter Dev-Team"
         },
         {
-          "text": "Scroll down and select John and Sarah under Add Users to the group."
+          "text": "Scroll down and select John and Sarah under Add Users to the group.",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-13.jpg"
+          ]
+        },
+        {
+          "text": "Task 3: Create IAM Groups and add IAM Users",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-14.jpg"
+          ]
         },
         {
           "text": "Scroll down to the Attach permissions Policies section and search for AmazonEC2ReadOnlyAccess and AmazonS3ReadOnlyAccess policies. These policies provide read access for EC2 and S3 to the added users in the group."
@@ -130,19 +194,25 @@
           "text": "Note: Do not add other policies than the ones mentioned above. You will get an error while creating a group"
         },
         {
-          "text": "Review all details and click on the Create group button."
+          "text": "Review all details and click on the Create group button."
+        },
+        {
+          "text": "Repeat the same steps to create an HR-Team group. Click on the Create group User group name: HR-Team Scroll down and select Ted and Rita under Add Users to the group. Under Attach permissions Policies, select the Billing policy. Note: Do not add other policies than the ones mentioned above. You will get an error while creating a group Review all details and click on the Create group button.",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-15.jpg"
+          ]
         },
         {
           "text": "Repeat the same steps to create an HR-Team group."
         },
         {
-          "text": "Click on the Create group"
+          "text": "Click on the Create group"
         },
         {
-          "text": "User group name: HR-Team"
+          "text": "User group name: HR-Team"
         },
         {
-          "text": "Scroll down and select Ted and Rita under Add Users to the group."
+          "text": "Scroll down and select Ted and Rita under Add Users to the group."
         },
         {
           "text": "Under Attach permissions Policies, select the Billing policy."
@@ -151,17 +221,19 @@
           "text": "Note: Do not add other policies than the ones mentioned above. You will get an error while creating a group"
         },
         {
-          "text": "Review all details and click on the Create group button."
-        },
-        {
-          "text": "Do You Know?"
-        },
-        {
-          "text": "In 2021, AWS IAM introduced a new feature called Access Analyzer, which uses automated reasoning to help identify the resources that an IAM policy allows or denies access to. This can be useful for identifying unintended access and for auditing IAM policies to ensure they conform to security best practices. Access Analyzer also provides recommendations for how to modify policies to remove unintended access, making it easier to maintain a secure AWS environment",
+          "text": "Review all details and click on the Create group button.",
           "images": [
-            "/labs/introduction-to-aws-identity-access-management-iam/step-05.jpg",
-            "/labs/introduction-to-aws-identity-access-management-iam/step-06.jpg"
+            "/labs/introduction-to-aws-identity-access-management-iam/step-16.jpg"
           ]
+        },
+        {
+          "text": "Task 3: Create IAM Groups and add IAM Users",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-17.jpg"
+          ]
+        },
+        {
+          "text": "In 2021, AWS IAM introduced a new feature called Access Analyzer, which uses automated reasoning to help identify the resources that an IAM policy allows or denies access to. This can be useful for identifying unintended access and for auditing IAM policies to ensure they conform to security best practices. Access Analyzer also provides recommendations for how to modify policies to remove unintended access, making it easier to maintain a secure AWS environment"
         }
       ]
     },
@@ -169,19 +241,25 @@
       "title": "Task 4: Validation Test",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click the Lab Validation button on the left side panel. Click Validate My Lab on the Lab Validation tab."
+          "text": "Once the lab steps are completed, please click the Lab Validation button on the left side panel. Click Validate My Lab on the Lab Validation tab."
         },
         {
-          "text": "This will validate the resources in the AWS account and display whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and display whether you have completed this lab successfully or not."
         },
         {
-          "text": "Sample output :"
+          "text": "Sample output :",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-18.gif"
+          ]
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 4: Validation Test",
+          "images": [
+            "/labs/introduction-to-aws-identity-access-management-iam/step-19.gif"
+          ]
         },
         {
-          "text": "In this lab, you created 4 IAM users & 2 IAM groups. At the time of the IAM groups creation, you attached the required IAM policies, added John and Sarah to the Dev Team group, and added Ted and Rita to the HR Team group."
+          "text": "In this lab, you created 4 IAM users & 2 IAM groups. At the time of the IAM groups creation, you attached the required IAM policies, added John and Sarah to the Dev Team group, and added Ted and Rita to the HR Team group."
         },
         {
           "text": "You have learned how to create IAM users and groups."
@@ -196,10 +274,7 @@
           "text": "You have learned how to allow a specific user/group to access services and resources in your AWS account."
         },
         {
-          "text": "You have successfully validated the lab."
-        },
-        {
-          "text": "End Lab"
+          "text": "You have successfully validated the lab."
         },
         {
           "text": "Sign out of AWS Account."
@@ -208,10 +283,7 @@
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps click on End Lab from the lab console.",
-          "images": [
-            "/labs/introduction-to-aws-identity-access-management-iam/step-07.gif"
-          ]
+          "text": "Once you have completed the steps click on End Lab from the lab console."
         }
       ]
     }
