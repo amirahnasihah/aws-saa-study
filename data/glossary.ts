@@ -8,7 +8,7 @@ export const glossaryCategories: Record<string, string[]> = {
   'Encryption':         ['envelope encryption','Compliance mode','Governance mode','legal hold','retention period','EBK','PBK'],
   'Database & HA':      ['Multi-AZ','Read Replica','Availability Zone','RPO','RTO','RDS Multi-AZ','Aurora Serverless','Aurora Replicas','DynamoDB PITR','DynamoDB Auto Scaling','CloudFormation DeletionPolicy','RDS Proxy','Partition Key','Sort Key','Item Collection','GSI','LSI','Memcached','Lazy Loading','Write-Through'],
   'Containers':         ['awsvpc','ENI','bridge','host'],
-  'Messaging':          ['SQS Long Polling','SQS Short Polling','Visibility Timeout','SQS FIFO','Dead Letter Queue','SNS fan-out','Step Functions','API Gateway throttling','API caching','Lambda authorizer','Usage Plan'],
+  'Messaging':          ['SQS Long Polling','SQS Short Polling','Visibility Timeout','SQS FIFO','Dead Letter Queue','SNS fan-out','SNS Message Filtering','SNS FIFO Topic','Step Functions','Step Functions Standard','Step Functions Express','EventBridge Schema Registry','EventBridge Pipes','EventBridge Scheduler','Amazon MQ','AWS AppSync','AWS Amplify','GraphQL','API Gateway throttling','API caching','Lambda authorizer','Usage Plan'],
   'CloudFront':         ['OAC','OAI'],
   'ML / AI':            ['Amazon Comprehend','Amazon Lex','Amazon Textract','Amazon Kendra','Amazon Rekognition','Amazon Polly','Amazon Translate','Amazon Transcribe','Amazon Bedrock','Amazon SageMaker'],
   'Analytics':          ['Amazon MSK','Amazon OpenSearch Service','AWS Data Exchange','Amazon Kinesis Data Streams','AWS Glue'],
@@ -337,4 +337,17 @@ export const glossary: Record<string, string> = {
   'TTL': 'Time To Live — DynamoDB feature that auto-deletes items after a specified timestamp. No extra cost. Items expired within ~48 hours. Useful for session data, temp records, log expiry. Does NOT consume write capacity.',
   'DLQ': 'Dead Letter Queue — SQS queue that receives messages which failed processing after the maximum number of retries (maxReceiveCount). Used for debugging, manual reprocessing, alerting. Prevents poison-pill messages blocking the queue.',
   'FIFO Queue': 'First-In-First-Out SQS queue. Guarantees: (1) exact ordering of messages, (2) exactly-once processing. Max 300 transactions/second (3,000 with batching). Use when order matters (e.g. financial transactions, sequential steps).',
+
+  // Application Integration (batch3)
+  'Amazon MQ': 'Managed message broker for ActiveMQ and RabbitMQ. Supports AMQP, MQTT, STOMP, OpenWire protocols. Use for lift-and-shift migration of existing on-premises messaging apps to AWS without code changes. New cloud-native apps should use SQS/SNS instead.',
+  'SNS Message Filtering': 'SNS subscription filter policy (JSON) that lets subscribers receive only messages matching specific attribute criteria. Without filtering, all subscribers get all messages. Reduces unnecessary processing and costs.',
+  'SNS FIFO Topic': 'SNS topic with strict message ordering and exactly-once delivery. Pairs with SQS FIFO queues for ordered fan-out. Max 300 publishes/sec (3,000 with batching). Use when downstream processing requires message order.',
+  'EventBridge Schema Registry': 'EventBridge feature that auto-discovers and stores event schemas from your event bus. Generates code bindings (Java, Python, TypeScript) from schemas. Speeds up development by providing typed event structures.',
+  'EventBridge Pipes': 'Point-to-point integration connecting a source (SQS, Kinesis, DynamoDB Streams) directly to a target with optional filtering, enrichment, and transformation. Simpler alternative to writing Lambda glue code for source-to-target integrations.',
+  'EventBridge Scheduler': 'Serverless scheduler for one-time or recurring tasks (cron/rate expressions). Replaces CloudWatch Events scheduled rules. Supports timezone-aware scheduling, flexible time windows, and 14,000+ targets.',
+  'Step Functions Standard': 'Step Functions workflow type: exactly-once execution, up to 1 year duration, full execution history. Use for long-running, auditable workflows (e.g. order processing, ETL pipelines). Higher cost per state transition.',
+  'Step Functions Express': 'Step Functions workflow type: at-least-once execution, up to 5 minutes duration. Use for high-volume, short-duration workflows (e.g. IoT data processing, streaming transforms). Lower cost, priced per execution.',
+  'AWS AppSync': 'Fully managed GraphQL API service with real-time subscriptions (WebSocket), offline data sync with conflict resolution, and resolvers for DynamoDB, Lambda, Aurora, OpenSearch, HTTP. Use for mobile/web apps needing real-time updates or offline capability.',
+  'AWS Amplify': 'Platform for building fullstack web/mobile apps. Amplify Hosting = Git-based CI/CD + CDN (SSR/SSG/SPA). Backend powered by Cognito (auth), AppSync (API), DynamoDB (data), S3 (storage). Like Heroku/Vercel for AWS.',
+  'GraphQL': 'API query language that lets clients request exactly the data they need in a single query. Unlike REST (multiple endpoints, fixed response shape), GraphQL uses one endpoint with flexible queries. AWS AppSync is the managed GraphQL service.',
 }
