@@ -20,6 +20,7 @@
     "scrape:lab:checklist:import": "bun run scripts/scrape-checklist-labs.ts -- --compile --cdp-endpoint chrome",
     "scrape:lab:images": "bun run scripts/scrape-course-lab.ts -- --batch --missing-images --cdp-endpoint chrome",
     "scrape:videos": "bun run scripts/scrape-course-videos.ts",
+    "course:archive": "bun run scripts/export-course-archive.ts",
     "seed:labs": "bun run scripts/seed-labs.ts",
     "labs:compile": "bun run scripts/compile-labs-from-json.ts && bun run scripts/generate-labs-topics.ts && bun run scripts/generate-labs-checklist.ts && bun run scripts/generate-labs-library-order.ts",
     "labs:library:order": "bun run scripts/generate-labs-library-order.ts",
