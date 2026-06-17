@@ -60,7 +60,7 @@ function LoginForm() {
 
   return (
     <>
-      <Nav activePage="auth" />
+      <Nav />
       <main className="max-w-[640px] mx-auto px-4 pt-[calc(3.5rem+2rem)] pb-16">
         <div className="rounded-2xl border border-aws-border bg-aws-card p-6 sm:p-8">
           <p className="font-space-mono text-[0.62rem] uppercase tracking-[0.2em] text-c1 mb-2">

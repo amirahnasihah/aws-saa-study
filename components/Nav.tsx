@@ -1,21 +1,37 @@
 'use client'
 
-import { useState, type CSSProperties } from 'react'
+import { useState, useEffect, type CSSProperties } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { navDomains } from '@/data/awsServices'
 import { navTransitionTypes } from '@/lib/nav-transition'
+import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import FloatingSearch from './FloatingSearch'
 
 interface NavProps {
-  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc' | 'labs' | 'ai' | 'auth'
+  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc' | 'labs' | 'ai'
 }
 
 const siteHeaderTransition: CSSProperties = { viewTransitionName: 'site-header' }
 
 export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [userEmail, setUserEmail] = useState<string | null>(null)
   const pathname = usePathname()
+
+  useEffect(() => {
+    const supabase = createSupabaseBrowserClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUserEmail(user?.email ?? null)
+    })
+  }, [])
+
+  const handleSignOut = async () => {
+    const supabase = createSupabaseBrowserClient()
+    await supabase.auth.signOut()
+    setUserEmail(null)
+    window.location.href = '/'
+  }
 
   return (
     <>
@@ -38,7 +54,16 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
         <PageLink pathname={pathname} href="/visual" label="Visual" active={activePage === 'visual'} />
         <PageLink pathname={pathname} href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
         <PageLink pathname={pathname} href="/labs" label="Labs" active={activePage === 'labs'} />
-        <PageLink pathname={pathname} href="/auth/login" label="Login" active={activePage === 'auth'} />
+        {userEmail ? (
+          <button
+            onClick={handleSignOut}
+            className="font-space-mono text-[0.6rem] uppercase tracking-widest px-2 py-1 rounded-md border border-transparent text-aws-muted hover:text-aws-text hover:bg-white/5 transition-all whitespace-nowrap"
+          >
+            Sign out
+          </button>
+        ) : (
+          <PageLink pathname={pathname} href="/auth/login" label="Sign in" active={false} />
+        )}
         <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="icon" />
 
         <span className="text-aws-border text-sm shrink-0">·</span>
@@ -107,7 +132,9 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                 { href: '/visual',    label: 'Visual',      icon: '🗺️', active: activePage === 'visual' },
                 { href: '/vpc',       label: 'VPC Guide',   icon: '🏘️', active: activePage === 'vpc' },
                 { href: '/labs',      label: 'Labs',        icon: '🧪', active: activePage === 'labs' },
-                { href: '/auth/login',label: 'Login',       icon: '🔐', active: activePage === 'auth' },
+                ...(userEmail
+                  ? []
+                  : [{ href: '/auth/login', label: 'Sign in', icon: '🔐', active: false }]),
                 { href: '/ai',        label: 'Ask AI',      icon: '✦',  active: activePage === 'ai' },
               ].map((p) => (
                 <Link
@@ -130,6 +157,15 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                   {p.active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-c1" />}
                 </Link>
               ))}
+              {userEmail && (
+                <button
+                  onClick={async () => { await handleSignOut(); setMenuOpen(false) }}
+                  className="flex items-center gap-3 w-full px-3 py-2 rounded-lg transition-all text-aws-muted hover:bg-white/4 hover:text-aws-text"
+                >
+                  <span className="text-base leading-none">👋</span>
+                  <span className="font-space-mono text-[0.68rem] uppercase tracking-widest">Sign out</span>
+                </button>
+              )}
             </div>
 
             <div className="p-4 space-y-5">
