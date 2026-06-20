@@ -29,7 +29,7 @@ export const librarySections: Array<{ id: LibrarySectionId; label: string }> = [
   }
 ]
 
-/** SAA-C03 Whizlabs library labs not in domain catalog or study checklist */
+/** SAA-C03 library labs not in domain catalog or study checklist */
 export const labsLibraryTotal = 74
 
 export const labsLibraryOrder: LibraryLabEntry[] = [

@@ -19,7 +19,8 @@ export async function callGroq(
   systemPrompt: string,
   messages: GroqMessage[],
   groqApiKey: string,
-  maxTokens: number
+  maxTokens: number,
+  jsonMode = true
 ): Promise<{ text: string } | { error: string; status: number }> {
   let res: Response
   try {
@@ -32,7 +33,7 @@ export async function callGroq(
       body: JSON.stringify({
         model: GROQ_MODEL,
         max_tokens: maxTokens,
-        response_format: { type: 'json_object' },
+        ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
         messages: [{ role: 'system', content: systemPrompt }, ...messages],
       }),
     })

@@ -9,6 +9,14 @@
     "supabase": {
       "type": "http",
       "url": "https://mcp.supabase.com/mcp?project_ref=neifhjhgwyxpruziazin"
+    },
+    "playwright": {
+      "command": "bunx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "chrome-devtools": {
+      "command": "bunx",
+      "args": ["chrome-devtools-mcp@latest"]
     }
   }
 }

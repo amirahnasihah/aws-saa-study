@@ -7,6 +7,7 @@ import { navDomains } from '@/data/awsServices'
 import { navTransitionTypes } from '@/lib/nav-transition'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import FloatingSearch from './FloatingSearch'
+import FloatingAIChat from './FloatingAIChat'
 import AccountMenu from './nav/AccountMenu'
 import BrowseServicesMenu from './nav/BrowseServicesMenu'
 import SignInButton from './nav/SignInButton'
@@ -207,6 +208,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
       )}
 
       <FloatingSearch />
+      {userEmail && activePage !== 'ai' && <FloatingAIChat />}
     </>
   )
 }

@@ -84,7 +84,7 @@ export default function VpcPage() {
           </div>
         </section>
 
-        {/* Whizlabs VPC Components diagram */}
+        {/* VPC Components diagram */}
         <section className="mb-10">
           <SectionHeader id="vpc-diagram" emoji="🗺️" title="VPC Components — Subnets & CIDR" />
           <div className="bg-aws-card border border-aws-border rounded-xl p-5 space-y-4">

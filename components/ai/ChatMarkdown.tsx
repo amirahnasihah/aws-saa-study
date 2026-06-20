@@ -38,6 +38,21 @@ const components: Components = {
     </blockquote>
   ),
   hr: () => <hr className="my-2 border-aws-border/40" />,
+  // Tool-fetched AWS diagrams arrive as Markdown images — render them framed
+  // and constrained so they never overflow the chat bubble.
+  img: ({ src, alt }) => {
+    const url = typeof src === 'string' ? src : ''
+    if (!url) return null
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={url}
+        alt={typeof alt === 'string' ? alt : ''}
+        loading="lazy"
+        className="my-2 max-w-full rounded-xl border border-aws-border/60 bg-white/5"
+      />
+    )
+  },
   // react-markdown nests block code inside <pre>; pass <pre> through so
   // `code` below fully controls block-level rendering (incl. mermaid).
   pre: ({ children }) => <>{children}</>,

@@ -1,36 +1,23 @@
-import { buildDocsSearchPhrase, resolveAwsDocLink } from '@/lib/ai/aws-knowledge'
-import { completeChatMessages, resolveAiProvider } from '@/lib/ai/complete-json'
-import { findInternalLinks } from '@/lib/ai/internal-links'
-import { parseAIJson, salvageText } from '@/lib/ai/json'
-import type { ChatResponse, ErrorResponse } from '@/lib/ai/types'
+import { resolveAiProvider } from '@/lib/ai/complete-json'
+import { streamChat, type ChatTurn } from '@/lib/ai/stream'
+import type { ErrorResponse } from '@/lib/ai/types'
 
 export const runtime = 'edge'
 
-interface ChatMessage {
-  role: 'user' | 'assistant'
-  content: string
-}
-
 interface ChatRequest {
   message: string
-  history: ChatMessage[]
+  history: ChatTurn[]
 }
 
 const CHAT_SYSTEM_PROMPT = `You are an AWS Solutions Architect study assistant. Answer questions about AWS services, architecture patterns, and exam topics concisely (3-6 sentences, or a short list).
 
-Respond with a single valid JSON object — the object itself must NOT be wrapped in a code fence:
-{"reply":"string","youtubeQuery":"string","docsSearchPhrase":"string"}
+Format every answer as GitHub-flavored Markdown: use **bold**, bullet or numbered lists, tables, and inline \`code\` where they make the answer clearer.
 
-Rules:
-- reply: your answer as Markdown. Use **bold**, lists, and inline \`code\` where helpful. When a diagram would help explain an architecture, request flow, or comparison, include a fenced \`\`\`mermaid code block with valid Mermaid flowchart or sequence-diagram syntax. Use standard JSON string escaping: represent each newline as \\n (the two-character escape sequence), each double-quote as \\". Never embed raw newline characters directly inside a JSON string value.
-- youtubeQuery: a specific search query for a YouTube tutorial (e.g. "AWS VPC peering tutorial")
-- docsSearchPhrase: a short phrase to search official AWS documentation (e.g. "S3 bucket versioning configuration") — do NOT invent URLs`
+When a visual would help explain an architecture, request flow, or comparison:
+- Prefer calling the get_aws_diagram tool to fetch an official AWS image. If it returns status "ok", embed the image with ![title](url) using the exact url it returns. If it returns "not_found", do not invent a URL.
+- Otherwise (or on not_found), include a fenced \`\`\`mermaid code block with valid flowchart or sequence-diagram syntax.
 
-interface ChatJson {
-  reply?: string
-  youtubeQuery?: string
-  docsSearchPhrase?: string
-}
+Answer directly in Markdown — do not wrap your response in JSON or a code fence.`
 
 export async function POST(request: Request): Promise<Response> {
   const apiKey = request.headers.get('x-api-key') ?? ''
@@ -43,46 +30,22 @@ export async function POST(request: Request): Promise<Response> {
     return Response.json({ error: 'Invalid request body.' } satisfies ErrorResponse, { status: 400 })
   }
 
-  const historyMessages = body.history.slice(-6)
-  const allMessages: ChatMessage[] = [...historyMessages, { role: 'user', content: body.message }]
-
-  const aiResult = await completeChatMessages(
-    provider,
-    apiKey,
-    CHAT_SYSTEM_PROMPT,
-    allMessages,
-    // Headroom for the JSON envelope + youtubeQuery/docsSearchPhrase, plus
-    // room for an optional ```mermaid block, so a reply isn't truncated
-    // mid-string (parser salvages either way).
-    1300
-  )
-
-  if ('error' in aiResult) {
-    return Response.json({ error: aiResult.error } satisfies ErrorResponse, { status: aiResult.status })
+  const message = (body.message ?? '').trim()
+  if (!message) {
+    return Response.json({ error: 'Message is required.' } satisfies ErrorResponse, { status: 400 })
   }
 
-  const parsed = parseAIJson<ChatJson>(aiResult.text)
-  // If the model double-escapes newlines (writes \\n in JSON → literal \n after parse),
-  // convert them back to real newlines so Markdown renders correctly.
-  const rawReply = parsed?.reply ?? salvageText(aiResult.text, 'reply') ?? aiResult.text
-  const reply = rawReply.replace(/\\n/g, '\n').replace(/\\"/g, '"')
-  const youtubeQuery = parsed?.youtubeQuery ?? 'AWS Solutions Architect tutorial'
-  const docsSearchPhrase = buildDocsSearchPhrase([
-    parsed?.docsSearchPhrase ?? '',
-    body.message,
-    reply.slice(0, 120),
-  ])
+  const history = Array.isArray(body.history) ? body.history.slice(-6) : []
+  const messages: ChatTurn[] = [...history, { role: 'user', content: message }]
 
-  const [awsDoc, internalLinks] = await Promise.all([
-    resolveAwsDocLink(docsSearchPhrase, ['general']),
-    Promise.resolve(findInternalLinks([body.message, reply.slice(0, 200)])),
-  ])
-
-  return Response.json({
-    reply,
-    awsDocsUrl: awsDoc.url,
-    awsDocsTitle: awsDoc.title,
-    youtubeQuery,
-    internalLinks,
-  } satisfies ChatResponse)
+  // Higher cap than the old 1300 — no JSON envelope to budget for, and tool-use
+  // rounds (diagram fetches) add follow-up tokens to a single answer.
+  return streamChat({
+    provider,
+    apiKey,
+    systemPrompt: CHAT_SYSTEM_PROMPT,
+    messages,
+    userMessage: message,
+    maxTokens: 2048,
+  })
 }
