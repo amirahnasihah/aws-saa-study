@@ -171,11 +171,34 @@ export const domains: DomainData[] = [
           {
             shortName: 'STS',
             fullName: 'AWS Security Token Service',
-            ingat: '"Pinjam IC sementara"',
+            ingat: '"Pinjam IC sementara — short-lived credentials, auto-expire"',
             gunaUntuk: 'Generate temporary security credentials',
-            fungsi: 'Menyediakan credentials sementara (access key, secret key, session token) untuk access AWS resources',
-            contohGuna: 'Developer nak test dengan AWS account lain — AssumeRole via STS, dapat temp credentials tanpa perlu IAM user baru',
-            keywords: ['temporary credentials', 'AssumeRole', 'cross-account', 'federation'],
+            fungsi: 'Bagi short-lived credentials (access key + secret key + session token) yang auto-expire. Pilih API ikut SIAPA yang minta: AssumeRole (cross-account / EC2 role), AssumeRoleWithSAML (enterprise AD/SAML), AssumeRoleWithWebIdentity (Google/Facebook/Cognito/OIDC). Tak perlu cipta IAM user baru.',
+            contohGuna: 'App dalam Account A nak akses S3 dalam Account B — AssumeRole ke role dalam B, dapat temp credentials, tak perlu hardcode long-term keys',
+            compare: {
+              label: 'STS API — pilih ikut SIAPA yang call',
+              headers: ['API', 'Siapa boleh call', 'Guna bila', 'Lifetime'],
+              rows: [
+                ['AssumeRole', 'IAM user / role sedia ada', 'Cross-account access ATAU role chaining dalam AWS', '15 min → max session (default 1 jam)'],
+                ['AssumeRoleWithSAML', 'User yang dah authenticate via SAML 2.0 IdP', 'Enterprise federation — corporate AD / ADFS / Okta', '15 min → max session (default 1 jam)'],
+                ['AssumeRoleWithWebIdentity', 'User yang login via OIDC (Google, Facebook, Amazon, Cognito)', 'Web/mobile app — public identity federation', '15 min → max session (default 1 jam)'],
+                ['GetSessionToken', 'IAM user / root', 'Hardened MFA-protected temp creds untuk user yang sama', '15 min → 36 jam (default 12 jam)'],
+                ['GetFederationToken', 'IAM user / root', 'Custom identity broker bagi creds kat federated user (no role)', '15 min → 36 jam (default 12 jam)'],
+              ],
+              takeaway: 'Cross-account / EC2 / chaining → AssumeRole. SAML enterprise IdP → AssumeRoleWithSAML. Public social/OIDC login → AssumeRoleWithWebIdentity. Cognito Identity Pool guna AssumeRoleWithWebIdentity bawah hood.',
+            },
+            tips: [
+              'Semua AssumeRole* return temp creds dengan lifetime 15 min sampai "maximum session duration" role tu (default 1 jam, boleh set sampai 12 jam). DurationSeconds tak boleh exceed setting role',
+              'Role chaining = guna temp creds dari satu AssumeRole untuk AssumeRole lagi sekali. Bila chain, sesi di-cap kepada 1 jam — DurationSeconds > 1 jam akan gagal',
+              'Session policy: pass policy masa AssumeRole untuk SEKAT lagi permissions sesi tu (effective = intersection role policy ∩ session policy). Tak boleh tambah permissions melebihi role',
+              'STS endpoint: ada global endpoint + Regional endpoints. Guna Regional endpoint untuk kurangkan latency dan teruskan operasi kalau satu Region down',
+              'Exam: "app dalam account lain perlu akses resource saya buat sementara" → AssumeRole (cross-account). "corporate AD users perlu akses AWS" → AssumeRoleWithSAML. "mobile app users login Google/Facebook nak temp AWS creds" → AssumeRoleWithWebIdentity (atau Cognito Identity Pool yang panggil ia)',
+              'Exam trap: STS = TEMPORARY credentials yang AUTO-EXPIRE. Kalau soalan minta elak hardcode long-term access keys / rotate manual → STS roles, bukan IAM user access keys',
+            ],
+            docs: [
+              { label: 'Compare AWS STS credentials', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_sts-comparison.html' },
+            ],
+            keywords: ['temporary credentials', 'AssumeRole', 'AssumeRoleWithSAML', 'AssumeRoleWithWebIdentity', 'GetSessionToken', 'GetFederationToken', 'cross-account', 'role chaining', 'session policy', 'federation', 'auto-expire'],
           },
           {
             shortName: 'Directory Service',
@@ -233,7 +256,13 @@ export const domains: DomainData[] = [
             fungsi: 'AWS membenarkan pelanggan menjalankan security assessments atau penetration tests terhadap infrastruktur AWS mereka sendiri tanpa kelulusan awal untuk 8 perkhidmatan yang dibenarkan. Activities yang dilarang termasuk DoS/DDoS simulation, port flooding, dan DNS zone walking.',
             contohGuna: 'Security team nak test EC2 instances atau RDS databases untuk vulnerabilities — dibenarkan tanpa minta izin AWS terlebih dahulu.',
             scenario: '"AWS Acceptable Use Policy", "penetration testing position", "security assessments on AWS" → AWS allow for SOME resources WITHOUT prior authorization (not all, not none). 8 permitted services include EC2, RDS, CloudFront, Aurora, API Gateways, Lambda, Lightsail, Elastic Beanstalk.',
-            keywords: ['penetration testing', 'security assessment', 'Acceptable Use Policy', 'AUP', 'no prior approval', '8 services', 'prohibited activities'],
+            tips: [
+              '8 permitted services (no prior approval needed): EC2, RDS, Aurora, CloudFront, API Gateway, Lambda + Lambda@Edge, Lightsail, Elastic Beanstalk',
+              'PROHIBITED activities (tetap tak boleh, walaupun atas resource sendiri): DoS / DDoS simulation, port flooding, protocol flooding, request flooding, DNS zone walking via Route 53 Hosted Zones',
+              'Test atas resource SENDIRI sahaja — bukan infrastruktur AWS underlying atau resource tenant lain',
+              'Exam: kalau soalan kata perlu "request AWS approval first / open support case" untuk pen-test 8 service ni → SALAH; AWS dah pre-authorize. Tapi DDoS simulation / network stress test → perlu engage AWS DDoS Simulation Testing program berasingan',
+            ],
+            keywords: ['penetration testing', 'security assessment', 'Acceptable Use Policy', 'AUP', 'no prior approval', '8 services', 'prohibited activities', 'DoS DDoS prohibited', 'DNS zone walking'],
           },
           {
             shortName: 'Cognito',
@@ -284,6 +313,17 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Share subnets, Transit Gateway, Route 53 resolver rules cross-account',
             fungsi: 'Membenarkan perkongsian resources AWS merentasi akaun tanpa pendua.',
             scenario: '"Company ada 10 AWS accounts, semua perlu access sama subnet" → AWS RAM share the subnet. Bukan VPC Peering untuk ni.',
+            compare: {
+              label: 'RAM vs VPC Peering vs Resource-based policy',
+              headers: ['Aspect', 'AWS RAM', 'VPC Peering', 'Resource-based policy'],
+              rows: [
+                ['Buat apa', 'Share resource sebenar cross-account (no duplicate)', 'Sambung network 2 VPC supaya boleh route traffic', 'Bagi specific principal akses satu resource'],
+                ['Use case', 'Banyak account guna subnet / TGW / Resolver rule yang SAMA', 'Resource dalam VPC lain perlu cakap antara satu sama lain via IP', 'Share satu S3 bucket / SQS / KMS key ke account tertentu'],
+                ['Skala org', '🟢 Auto-share ke semua account dalam Organization / OU', 'Pairwise sahaja — N VPC = banyak peering', '🟡 Configure satu-satu per resource / account'],
+                ['Contoh resource', 'Subnet, Transit Gateway, Route 53 Resolver rule, License Manager config, Prefix list', 'VPC ↔ VPC', 'S3 bucket policy, SQS policy, KMS key policy'],
+              ],
+              takeaway: 'Kongsi infrastruktur (subnet/TGW/Resolver) merentas banyak account → RAM. Cuma nak network connectivity antara 2 VPC → Peering. Bagi akses satu resource ke account tertentu → resource-based policy. RAM + Organizations = create sekali, share ke semua member auto.',
+            },
             tips: [
               'RAM + AWS Organizations → create resources ONCE in one account, share across ALL member accounts — jimat kos dan elak duplicate infrastructure',
               'Shareable resources: VPC subnets, Transit Gateway, Route 53 Resolver rules, License Manager configs, Resource Groups',
@@ -299,6 +339,19 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Manage multiple AWS accounts centrally with guardrails',
             fungsi: 'Mengurus pelbagai AWS accounts dalam satu organisasi dengan Service Control Policies (SCPs) sebagai guardrails',
             contohGuna: 'Prevent semua dev accounts dari disable CloudTrail — SCP: Deny cloudtrail:StopLogging. Control Tower automate setup multi-account environment',
+            scenario: '"Restrict apa member accounts boleh buat org-wide, exempt management account" → SCP (member accounts only). "Enforce guardrails + auto setup landing zone / multi-account baseline" → Control Tower. "Satu bil + kongsi diskaun" → Consolidated Billing (bukan SCP). Ingat: SCP RESTRICT sahaja, tak GRANT.',
+            mermaid: {
+              label: 'Adakah action ni dibenarkan? (SCP + IAM evaluation)',
+              source: `flowchart TD
+  A[Request dari IAM user/role member account] --> B{Akaun management?}
+  B -- Ya --> Z[SCP tak apply<br/>ikut IAM policy sahaja]
+  B -- Tidak --> C{SCP benarkan action?}
+  C -- Tidak/implicit deny --> D[DENIED<br/>SCP cap permissions max]
+  C -- Ya --> E{IAM identity policy benarkan?}
+  E -- Tidak --> F[DENIED<br/>SCP tak GRANT, IAM kena Allow]
+  E -- Ya --> G[ALLOWED]`,
+              caption: 'Effective permission = intersection SCP ∩ IAM policy. SCP tak grant apa-apa — kena ADA Allow dalam IAM policy juga. Management account tak terkena SCP langsung.',
+            },
             tips: [
               'SCP TIDAK apply ke management (root) account by default — SCPs hanya restrict MEMBER accounts',
               'Kalau soalan tanya "prevent actions org-wide tapi exempt management account" → answer specify "member accounts only"',
@@ -340,18 +393,35 @@ export const domains: DomainData[] = [
             fullName: 'Network Access Control Lists',
             ingat: '"Guard kat pintu masuk subnet — check both ways"',
             gunaUntuk: 'Subnet-level firewall, stateless, boleh block IP',
-            fungsi: 'Mengawal traffic masuk dan keluar subnet secara stateless — kena ada rule eksplisit untuk inbound DAN outbound',
-            contohGuna: 'Block IP range 192.168.1.0/24 dari masuk subnet — tambah DENY rule dalam NACL (Security Groups tak boleh explicitly deny)',
+            fungsi: 'Mengawal traffic masuk dan keluar subnet secara stateless — kena ada rule eksplisit untuk inbound DAN outbound. Rules diproses ikut nombor (rendah → tinggi); rule pertama yang match terus apply. Boleh ALLOW dan DENY (tak macam SG yang allow-only). Custom NACL: deny all by default. Default NACL: allow all.',
+            contohGuna: 'Block IP range 192.168.1.0/24 dari masuk subnet — tambah DENY rule dalam NACL (Security Groups tak boleh explicitly deny).',
+            scenario: '"Block satu malicious IP daripada akses semua instance dalam subnet" → NACL DENY rule (SG tak boleh deny). "Allow/deny per EC2 ikut role" → Security Group. Exam keyword "explicit deny" atau "block specific IP" hampir selalu = NACL.',
+            compare: {
+              label: 'Security Group vs NACL — THE classic exam trap',
+              headers: ['Aspect', 'Security Group', 'NACL'],
+              rows: [
+                ['Beroperasi di', 'Instance / ENI level', 'Subnet level'],
+                ['State', '🟢 Stateful — return traffic auto-allow', 'Stateless — kena rule untuk SETIAP arah'],
+                ['Rules', 'ALLOW only (implicit deny)', 'ALLOW dan DENY'],
+                ['Evaluation', 'Semua rules dinilai, kalau ada allow → pass', 'Ikut nombor, rendah → tinggi, first match menang'],
+                ['Default (custom)', 'No inbound, allow all outbound', 'DENY semua inbound & outbound'],
+                ['Apply ke', 'Setiap instance yang attach SG tu', 'Auto semua instance dalam subnet'],
+              ],
+              takeaway: 'Stateful + allow-only + instance level → Security Group. Stateless + boleh DENY + subnet level + numbered rules → NACL. Nak block satu IP jahat = NACL (SG tak boleh deny). Return traffic kena fikir ephemeral ports = NACL je (SG ingat sendiri).',
+            },
             tips: [
               'Stateless = check every packet — kena ada rules untuk BOTH inbound DAN outbound directions',
               'Custom NACL: deny all by default. Default NACL: allow all (berbeza dengan SG!)',
-              'Rules by number — rule 100 diprocess sebelum rule 200. DENY rule kena nombor lebih kecil dari ALLOW',
-              'Outbound replies perlu allow ephemeral ports 1024–65535',
+              'Rules by number — rule 100 diprocess sebelum rule 200. First match menang, jadi letak DENY rule nombor lebih kecil dari ALLOW yang nak override',
+              'Outbound replies perlu allow ephemeral ports 1024–65535 (Linux 32768–60999, Windows 49152–65535) — sebab NACL stateless, return traffic guna random high port',
+              'SG = allow only. Nak EXPLICITLY DENY satu IP/range? → NACL je yang boleh',
+              'Mnemonic: NACL = Numbered + Allow/deny + Check both ways + subnet Level. SG = Stateful + allow-only + instance-level',
             ],
             docs: [
               { label: 'Network ACLs', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html' },
+              { label: 'Compare security groups and network ACLs', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/infrastructure-security.html' },
             ],
-            keywords: ['stateless', 'subnet-level', 'allow & deny', 'numbered rules', 'explicit both ways'],
+            keywords: ['stateless', 'subnet-level', 'allow & deny', 'numbered rules', 'explicit both ways', 'ephemeral ports', 'explicit deny', 'block IP', 'SG vs NACL'],
           },
           {
             shortName: 'WAF',
@@ -399,11 +469,35 @@ export const domains: DomainData[] = [
           {
             shortName: 'Network Firewall',
             fullName: 'AWS Network Firewall',
-            ingat: '"Polis traffic dalam VPC — deep inspection"',
-            gunaUntuk: 'VPC-level stateful deep packet inspection, domain filtering',
-            fungsi: 'Menyediakan firewall managed untuk inspect dan filter traffic dalam VPC dengan stateful rules dan intrusion prevention',
-            contohGuna: 'Company policy semua outbound traffic kena inspect untuk block malicious domains — deploy Network Firewall kat centralized VPC, route semua traffic melaluinya',
-            keywords: ['deep packet inspection', 'stateful', 'VPC-level', 'intrusion prevention', 'domain filtering'],
+            ingat: '"Polis traffic dalam VPC — deep inspection, Layer 3-7, pakai Suricata"',
+            gunaUntuk: 'VPC-level managed firewall — stateful deep packet inspection, domain filtering, IDS/IPS',
+            fungsi: 'Managed network firewall + IDS/IPS untuk VPC. Ada DUA engine: stateless engine (macam NACL, nilai packet sorang-sorang ikut priority) dan stateful engine (guna Suricata-compatible rules, nilai dalam konteks traffic flow). Boleh buat domain/URL filtering, intrusion prevention, dan filter traffic Layer 3 sampai 7. Deploy dalam dedicated firewall subnet, route traffic VPC melaluinya.',
+            contohGuna: 'Company policy: semua outbound traffic kena inspect dan block malicious/unapproved domains — deploy Network Firewall kat centralized inspection VPC, route semua traffic melaluinya guna stateful domain-list rules.',
+            scenario: '"Filter outbound traffic ikut domain name (allow *.amazonaws.com je), VPC-wide, managed" → AWS Network Firewall. "Block SQLi/XSS pada HTTP request ke website" → WAF (bukan Network Firewall). "DDoS volumetric" → Shield. Network Firewall = traffic dalam/keluar VPC, bukan khusus web app.',
+            compare: {
+              label: 'WAF vs Shield vs Network Firewall — 3 lapisan, jangan campur',
+              headers: ['Aspect', 'AWS WAF', 'AWS Shield', 'Network Firewall'],
+              rows: [
+                ['Lindung apa', 'Web app exploits (SQLi, XSS, bad bots)', 'DDoS (volumetric, protocol)', 'Traffic masuk/keluar VPC'],
+                ['Layer', 'Layer 7 (HTTP/S)', 'Layer 3/4 (+ L7 Advanced)', 'Layer 3-7 (packet + flow)'],
+                ['Skop', 'CloudFront, ALB, API GW, AppSync', 'Edge / AWS resources', 'Seluruh VPC (subnet route)'],
+                ['Engine / rules', 'Web ACL + managed rule groups', 'Auto mitigation', 'Stateless + Suricata stateful, domain filter'],
+                ['Guna untuk', 'Tapis HTTP request berbahaya', 'Tahan serangan DDoS', 'IDS/IPS, domain filtering, egress control'],
+              ],
+              takeaway: 'HTTP/web exploit (SQLi/XSS) → WAF. DDoS → Shield. Inspect/filter SEMUA traffic VPC ikut domain atau Suricata rule (IDS/IPS, egress filtering) → Network Firewall. Ketiga-tiga boleh berlapis sekali.',
+            },
+            tips: [
+              'Network Firewall = managed AWS alternative kepada third-party firewall appliance — tak payah urus EC2 firewall sendiri',
+              'Dua engine: stateless (macam NACL, priority order, first match) + stateful (Suricata-compatible rules, nilai ikut traffic flow)',
+              'Stateful rules support pass / drop / reject / alert + domain-list filtering (TLS SNI / HTTP host) untuk allow/block domain',
+              'Deploy dalam dedicated firewall subnet; route table hantar traffic VPC melaluinya (selalu pakai centralized inspection VPC + Transit Gateway)',
+              'Network Firewall = traffic VPC (Layer 3-7). WAF = HTTP request je (Layer 7 web). Jangan keliru bila soalan sebut "domain filtering / egress" → Network Firewall',
+            ],
+            docs: [
+              { label: 'Network Firewall rules engines', url: 'https://docs.aws.amazon.com/network-firewall/latest/developerguide/firewall-rules-engines.html' },
+              { label: 'Stateful rule groups (Suricata)', url: 'https://docs.aws.amazon.com/network-firewall/latest/developerguide/stateful-rule-groups-ips.html' },
+            ],
+            keywords: ['deep packet inspection', 'stateful', 'stateless', 'VPC-level', 'intrusion prevention', 'IDS/IPS', 'domain filtering', 'Suricata', 'egress filtering', 'firewall subnet', 'managed firewall'],
           },
           {
             shortName: 'VPC Flow Logs',
@@ -467,23 +561,37 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Automated threat detection: crypto-mining, unusual API calls, compromised instances',
             fungsi: 'Pengesanan ancaman menggunakan ML pada CloudTrail, VPC Flow Logs, DNS logs.',
             scenario: '"EC2 buat unusual API calls ke cryptocurrency mining" → GuardDuty detect and alert. Tak perlu install agents.',
+            mermaid: {
+              label: 'Pilih security service yang betul',
+              source: `flowchart TD
+  A[Apa masalah security?] --> B{Jenis?}
+  B -->|Detect ancaman dari logs| C[GuardDuty<br/>ML, CloudTrail/VPC Flow/DNS]
+  B -->|Scan vuln/CVE software| D[Inspector<br/>EC2 ECR Lambda]
+  B -->|Cari PII/sensitive data| E[Macie<br/>S3 je]
+  B -->|Siasat root cause finding| F[Detective<br/>behavior graph]
+  B -->|Pusat semua findings + compliance| G[Security Hub<br/>aggregate + standards]`,
+              caption: 'Detect dari logs → GuardDuty. CVE/patch → Inspector. PII dalam S3 → Macie. Siasat selepas detect → Detective. Satu dashboard untuk semua + check compliance → Security Hub.',
+            },
             compare: {
-              label: 'GuardDuty vs Inspector vs Macie — 3 yang selalu keliru',
+              label: 'Threat-detection family — 5 yang selalu keliru',
               headers: ['Service', 'What it does', 'Data / target', 'Keyword'],
               rows: [
                 ['GuardDuty', 'Threat detection (ML)', 'CloudTrail, VPC Flow, DNS logs', 'unusual activity, crypto-mining, compromised'],
                 ['Inspector', 'Vulnerability scan', 'EC2, ECR images, Lambda', 'CVE, patch, vulnerability'],
                 ['Macie', 'Sensitive-data discovery', 'S3 objects', 'PII, credit card, GDPR, S3'],
+                ['Detective', 'Investigate / root cause', 'GuardDuty findings + logs (graph)', 'investigate, root cause, behavior graph'],
+                ['Security Hub', 'Aggregate + compliance', 'Findings dari GD/Inspector/Macie + standards', 'central dashboard, posture, CIS/PCI standards'],
               ],
-              takeaway: 'Threats from logs → GuardDuty. Software vulnerabilities/CVEs → Inspector. PII in S3 → Macie. (Investigate a GuardDuty finding → Detective.)',
+              takeaway: 'Threats from logs → GuardDuty. Software vulns/CVEs → Inspector. PII in S3 → Macie. Investigate a finding → Detective. ONE place untuk semua finding + compliance score → Security Hub.',
             },
             tips: [
               'GuardDuty → detect threats (SIEM-like). Detective → investigate findings (forensics). Ingat: GD = detect, Detective = investigate',
               'GuardDuty findings integrate dengan Security Hub untuk centralized view',
               'Foundational threat detection (CloudTrail MANAGEMENT events) ON by default bila GuardDuty enabled — TAK boleh disable. ListBuckets/DeleteBucket = management events, bukan data events',
               'S3 Protection (optional, enable berasingan): monitor CloudTrail DATA events untuk S3 — object-level ops (GetObject, PutObject, DeleteObject, ListObjects) untuk detect data exfiltration/destruction. Tak perlu manually configure S3 data event logging dalam CloudTrail',
+              'Security Hub = aggregator/CSPM (kumpul finding GuardDuty + Inspector + Macie + run compliance standards). Bukan dia yang detect — dia central dashboard. Cross-Region aggregation pun ada',
             ],
-            keywords: ['threat detection', 'ML', 'CloudTrail logs', 'VPC Flow Logs', 'no agents', 'findings', 'S3 Protection', 'management events', 'data events', 'object-level API'],
+            keywords: ['threat detection', 'ML', 'CloudTrail logs', 'VPC Flow Logs', 'no agents', 'findings', 'S3 Protection', 'management events', 'data events', 'object-level API', 'Security Hub', 'Detective', 'CSPM'],
           },
           {
             shortName: 'Detective',
@@ -504,11 +612,22 @@ export const domains: DomainData[] = [
           {
             shortName: 'Inspector',
             fullName: 'Amazon Inspector',
-            ingat: '"Scanner kelemahan EC2 dan containers"',
-            gunaUntuk: 'Find OS vulnerabilities, CVEs in EC2 instances and ECR images',
-            fungsi: 'Pengimbasan kelemahan automatik untuk EC2 dan container images.',
-            scenario: '"Audit EC2 instances untuk known CVEs dan security misconfigurations" → Amazon Inspector. Bukan GuardDuty (yang untuk active threats).',
-            keywords: ['vulnerability scanning', 'CVE', 'EC2', 'ECR', 'automated', 'security findings'],
+            ingat: '"Scanner kelemahan — CVE/vuln untuk EC2, ECR, Lambda (continuous, automatic)"',
+            gunaUntuk: 'Find OS/software vulnerabilities, CVEs, unintended network exposure in EC2, ECR images, Lambda',
+            fungsi: 'Pengimbasan kelemahan automatik dan BERTERUSAN untuk EC2, ECR container images, dan Lambda. Detect CVEs, OS + programming-language package vulnerabilities, dan unintended network exposure / network reachability. Auto re-scan bila CVE baru keluar atau image/function berubah. Aktif sekali → semua scan type auto-on (Lambda code scanning optional).',
+            scenario: '"Audit EC2 instances untuk known CVEs dan security misconfigurations" → Amazon Inspector. "Scan container image dalam ECR sebelum deploy untuk vulnerability" → Inspector ECR scanning. Bukan GuardDuty (yang untuk active threats dari logs).',
+            tips: [
+              'Inspector = vulnerability/CVE scan (software lemah). GuardDuty = threat detection (aktiviti jahat dari logs). Beza ni THE exam trap',
+              '3 target: EC2, ECR container images, Lambda functions. Aktif sekali → auto enroll semua (Lambda CODE scanning optional, enable bila-bila)',
+              'EC2 scan guna SSM agent ATAU EBS snapshot (agentless/hybrid mode) — detect CVE, OS + language package vuln, dan network reachability',
+              'CONTINUOUS, bukan one-off — auto re-scan bila ada CVE baru atau resource berubah, generate findings',
+              'Findings boleh push ke Security Hub + EventBridge untuk automated remediation',
+              'Bukan Macie (PII dalam S3). Bukan Detective (siasat finding). Inspector = "apa software aku ada known vulnerability?"',
+            ],
+            docs: [
+              { label: 'Amazon Inspector scan types', url: 'https://docs.aws.amazon.com/inspector/latest/user/scanning-resources.html' },
+            ],
+            keywords: ['vulnerability scanning', 'CVE', 'EC2', 'ECR', 'Lambda', 'continuous', 'network reachability', 'package vulnerability', 'automated', 'security findings', 'SSM agent', 'agentless'],
           },
           {
             shortName: 'Macie',
@@ -613,24 +732,62 @@ export const domains: DomainData[] = [
             fullName: 'Amazon S3 Object Lock',
             ingat: '"Lock file — tak boleh delete atau ubah (WORM)"',
             gunaUntuk: 'WORM compliance, prevent deletion/modification',
-            fungsi: 'Menghalang objek S3 dari dihapuskan atau diubah suai dalam tempoh tertentu untuk pematuhan kawal selia',
-            contohGuna: 'Financial records kena simpan 7 tahun tak boleh diubah — enable Object Lock Compliance mode. Governance mode untuk internal policy yang admin boleh override',
-            keywords: ['WORM', 'compliance', 'retention period', 'Governance mode', 'Compliance mode', 'legal hold'],
+            fungsi: 'Menghalang objek S3 dari dipadam atau di-overwrite untuk tempoh tetap (retention period) atau selamanya (legal hold) — WORM model untuk pematuhan kawal selia. WAJIB Versioning ON pada bucket.',
+            contohGuna: 'Financial records kena simpan 7 tahun tak boleh diubah — enable Object Lock Compliance mode + retention period 7 tahun. Governance mode untuk internal policy yang admin boleh override.',
+            scenario: '"Records mesti immutable, takde sesiapa termasuk root boleh padam dalam tempoh retention" → Compliance mode. "Admin tertentu masih perlu boleh override/padam" → Governance mode (perlu s3:BypassGovernanceRetention). "Hold tanpa tarikh tamat sampai siasatan selesai" → Legal Hold.',
+            compare: {
+              label: 'Compliance vs Governance vs Legal Hold',
+              headers: ['Aspect', 'Compliance mode', 'Governance mode', 'Legal Hold'],
+              rows: [
+                ['Siapa boleh padam/ubah', '🟢 TIADA sesiapa — termasuk root account', 'Hanya user dengan s3:BypassGovernanceRetention', 'TIADA sampai legal hold di-remove'],
+                ['Boleh shorten retention?', 'Tidak — mode & period tak boleh dikurangkan', 'Boleh, kalau ada bypass permission', 'Takde retention period — no expiry'],
+                ['Ada tarikh tamat?', '🟢 Ya, Retain Until Date', 'Ya, Retain Until Date', '❌ Kekal sampai di-remove manual'],
+                ['Cara override', 'Mustahil (satu-satunya jalan: tutup AWS account)', 'x-amz-bypass-governance-retention:true + permission', 's3:PutObjectLegalHold untuk remove'],
+                ['Guna bila', 'Regulatory ketat (SEC 17a-4, FINRA, CFTC)', 'Internal policy, test retention dulu', 'Litigation / siasatan, tempoh tak tentu'],
+              ],
+              takeaway: '"Tak boleh padam langsung walau root" → Compliance. "Admin masih boleh override bila perlu" → Governance. "Hold tanpa tarikh tamat" → Legal Hold. Semua mode WAJIB Versioning ON dulu.',
+            },
+            tips: [
+              'Object Lock WAJIB ada S3 Versioning ON — kalau soalan kata versioning off, enable dulu',
+              'Compliance mode: SATU-SATUNYA cara padam sebelum retention tamat = tutup AWS account. Root pun tak boleh',
+              'Governance mode: override perlu DUA benda — permission s3:BypassGovernanceRetention + header x-amz-bypass-governance-retention:true',
+              'Legal Hold = TAKDE expiry, independent dari retention period. Boleh ada legal hold + retention period serentak',
+              'Retention period boleh EXTEND (Retain Until Date lebih lewat) tapi tak boleh shorten dalam compliance mode',
+              'Exam: "WORM untuk SEC/FINRA, mutlak tak boleh ubah" → Compliance. "Hold dokumen untuk litigation, tak tahu bila habis" → Legal Hold',
+            ],
+            docs: [{ label: 'S3 Object Lock overview', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lock-overview.html' }],
+            keywords: ['WORM', 'compliance', 'retention period', 'Governance mode', 'Compliance mode', 'legal hold', 'versioning required', 'BypassGovernanceRetention', 'immutable', 'SEC 17a-4', 'FINRA', 'Retain Until Date'],
           },
           {
             shortName: 'S3 Glacier Vault',
             fullName: 'Amazon S3 Glacier Vault Lock & Access Policy',
             ingat: '"Vault Lock = immutable compliance. Vault Access Policy = mutable access control"',
             gunaUntuk: 'WORM compliance for Glacier archives — enforce retention policies that cannot be changed',
-            fungsi: 'Dua policies berbeza: (1) Vault Lock Policy = IMMUTABLE selepas locked, enforce compliance controls (WORM, retention). Cannot be changed. (2) Vault Access Policy = MUTABLE, untuk access control (siapa boleh access). Untuk compliance = Vault Lock.',
+            fungsi: 'Dua policies berbeza: (1) Vault Lock Policy = IMMUTABLE selepas locked, enforce compliance controls (WORM, retention). Cannot be changed. (2) Vault Access Policy = MUTABLE, untuk access control (siapa boleh access). Untuk compliance = Vault Lock. Nota: Glacier vault (standalone) sekarang legacy — AWS galak guna S3 Glacier storage classes untuk arkib baru.',
+            scenario: '"Lock retention policy supaya takde sesiapa boleh ubah/padam archive untuk compliance" → Vault Lock Policy. "Grant business partner read access yang boleh berubah-ubah" → Vault Access Policy. "Legal hold tanpa tarikh tamat" → BUKAN Glacier, itu S3 Object Lock feature.',
+            compare: {
+              label: 'Vault Lock Policy vs Vault Access Policy',
+              headers: ['Aspect', 'Vault Lock Policy', 'Vault Access Policy'],
+              rows: [
+                ['Boleh ubah lepas set?', '❌ IMMUTABLE selepas locked', '🟢 MUTABLE — boleh ubah bila-bila'],
+                ['Tujuan', 'Compliance / WORM / retention enforcement', 'Access control biasa (siapa boleh access)'],
+                ['Proses set', '2 langkah: initiate (in-progress) → complete dalam 24 jam', 'Terus attach, no lock step'],
+                ['Boleh test dulu?', '🟢 Ya — 24 jam in-progress window untuk validate sebelum complete', 'N/A — boleh edit bila-bila'],
+                ['Guna bila', 'Regulatory retention, deny deletes', 'Temporary / kerap berubah, grant reads'],
+              ],
+              takeaway: '"Compliance, retention, tak boleh diubah lagi" → Vault Lock Policy. "Access control yang fleksibel/sementara" → Vault Access Policy. Boleh guna kedua-dua serentak (Lock deny deletes + Access grant reads).',
+            },
             tips: [
               'Vault Lock Policy: IMMUTABLE once locked — enforce WORM, retention periods, tag-based deny. Cannot be modified or deleted',
               'Vault Access Policy: MUTABLE — for access control only. Can be changed anytime',
+              'Lock process 2 langkah: (1) initiate → in-progress state + lock ID, ada 24 JAM untuk test/validate; (2) complete guna lock ID. Tak complete dalam 24 jam → policy auto-deleted',
+              'Best practice: create vault → complete Vault Lock policy → baru upload archives, supaya policy apply pada semua',
               'For compliance/retention requirements → always Vault Lock Policy, BUKAN Vault Access Policy',
               '"Set a legal hold" bukan Glacier Vault feature — legal hold ialah S3 Object Lock feature',
               'Exam: "prevent deletion of archives, compliance, WORM" → Vault Lock Policy + set retention period',
             ],
-            keywords: ['Vault Lock', 'Vault Access Policy', 'WORM', 'compliance', 'immutable', 'retention', 'Glacier archive'],
+            docs: [{ label: 'Glacier Vault Lock', url: 'https://docs.aws.amazon.com/amazonglacier/latest/dev/vault-lock.html' }],
+            keywords: ['Vault Lock', 'Vault Access Policy', 'WORM', 'compliance', 'immutable', 'retention', 'Glacier archive', 'in-progress state', '24-hour window', 'lock ID', 'two-step lock'],
           },
           {
             shortName: 'Amazon Redshift',
@@ -730,8 +887,9 @@ export const domains: DomainData[] = [
             fullName: 'AWS Direct Connect',
             ingat: '"Kabel terus ke AWS — private dedicated lane"',
             gunaUntuk: 'Private dedicated connection from on-premises to AWS',
-            fungsi: 'Menyediakan sambungan jaringan peribadi yang berdedikasi antara data center on-premises dengan AWS',
+            fungsi: 'Menyediakan sambungan jaringan peribadi yang berdedikasi antara data center on-premises dengan AWS melalui fiber-optic cable di Direct Connect location (bypass internet/ISP). Private VIF → access VPC. Public VIF → access public AWS services (S3) guna private line. NOTA: DX TIDAK encrypted by default — kalau perlu encryption, run VPN over DX (IPSec).',
             contohGuna: 'Company transfer 100TB data sebulan dari on-prem ke AWS — Direct Connect lebih murah (no internet data transfer charges), consistent latency berbanding internet',
+            scenario: '"Steady high-volume transfer + consistent low latency + predictable bandwidth" → Direct Connect. "DX kena encrypted juga (compliance)" → DX + Site-to-Site VPN (run IPSec over DX). "Connect DX ke banyak VPC merentas region/account" → Direct Connect Gateway (global resource).',
             compare: {
               label: 'Direct Connect vs Site-to-Site VPN',
               headers: ['Aspect', 'Direct Connect (DX)', 'Site-to-Site VPN'],
@@ -746,16 +904,66 @@ export const domains: DomainData[] = [
               ],
               takeaway: '"Consistent low latency + high bandwidth + private" → Direct Connect. "Quick, cheap, encrypted over internet" → Site-to-Site VPN. Best resilience = DX primary + VPN backup (encrypted DX = run VPN over DX).',
             },
-            keywords: ['dedicated connection', 'private', 'consistent latency', '1Gbps/10Gbps', 'no internet', 'vs VPN', 'IPSec backup', 'data transfer cost'],
+            tips: [
+              'DX = "Dedicated eXpensive" — physical fiber, weeks-months to provision. Tak suitable bila jawapan perlu "quickly/immediately" → itu VPN',
+              'DX NOT encrypted by default — exam trap! Perlu private + encrypted = DX + Site-to-Site VPN (IPSec over DX)',
+              'Resilience pattern: DX primary + Site-to-Site VPN backup (failover bila DX down). Cheaper than dual-DX',
+              'Direct Connect Gateway = global resource, connect satu DX ke banyak VPC merentas Regions + accounts (associate dengan VGW atau Transit Gateway)',
+              'Public VIF = access public AWS services (S3, DynamoDB) over private line. Private VIF = access VPC. Transit VIF = access TGW',
+              'Bukan untuk "fast setup" — provisioning ambil masa. Untuk migration segera guna VPN dulu, DX kemudian',
+            ],
+            docs: [
+              { label: 'What is Direct Connect', url: 'https://docs.aws.amazon.com/directconnect/latest/UserGuide/Welcome.html' },
+              { label: 'Direct Connect Gateways', url: 'https://docs.aws.amazon.com/directconnect/latest/UserGuide/direct-connect-gateways-intro.html' },
+            ],
+            keywords: ['dedicated connection', 'private', 'consistent latency', '1Gbps/10Gbps', 'no internet', 'vs VPN', 'IPSec backup', 'data transfer cost', 'Direct Connect Gateway', 'not encrypted', 'VPN over DX', 'public VIF', 'private VIF'],
           },
           {
             shortName: 'Site-to-Site VPN',
             fullName: 'AWS Site-to-Site VPN',
-            ingat: '"Tunnel rahsia ke AWS, guna internet biasa"',
-            gunaUntuk: 'Encrypted IPSec tunnel from on-premises to VPC over internet',
-            fungsi: 'Mewujudkan sambungan VPN yang disulitkan antara on-premises network dengan AWS VPC menggunakan internet sedia ada',
-            contohGuna: 'Small office nak access resources dalam VPC secara selamat — setup Site-to-Site VPN. Lebih murah dan cepat setup dari Direct Connect tapi latency tak konsisten',
-            keywords: ['IPSec', 'encrypted', 'internet-based', 'Virtual Private Gateway', 'quick setup', 'cost-effective'],
+            ingat: '"Tunnel rahsia ke AWS, guna internet biasa — NETWORK ke NETWORK"',
+            gunaUntuk: 'Encrypted IPSec tunnel from on-premises network to VPC over internet',
+            fungsi: 'Mewujudkan sambungan IPSec yang disulitkan antara seluruh on-premises NETWORK dengan AWS VPC menggunakan internet sedia ada. Dua komponen: Customer Gateway (CGW = device/info kat sebelah kau) + target gateway kat AWS — sama ada Virtual Private Gateway (VGW, attach ke 1 VPC) atau Transit Gateway (banyak VPC). Setiap VPN connection ada 2 tunnels untuk high availability. Routing: static atau dynamic (BGP).',
+            contohGuna: 'Small office nak access resources dalam VPC secara selamat — setup Site-to-Site VPN. Lebih murah dan cepat setup dari Direct Connect tapi latency tak konsisten (ikut internet)',
+            scenario: '"Connect entire branch/office NETWORK ke VPC, encrypted, cepat & murah" → Site-to-Site VPN. "Backup untuk Direct Connect" → Site-to-Site VPN as failover. "Individual remote workers (laptop) nak access VPC" → itu Client VPN, BUKAN Site-to-Site.',
+            compare: {
+              label: 'Site-to-Site VPN vs Client VPN — siapa yang connect?',
+              headers: ['Aspect', 'Site-to-Site VPN', 'Client VPN'],
+              rows: [
+                ['Siapa connect', '🟢 Entire NETWORK (office/data center)', '🟢 Individual USERS (laptop/device)'],
+                ['Sebelah customer', 'Customer Gateway device (router)', 'OpenVPN software client per user'],
+                ['Auth', 'Pre-shared key / certificate (device)', 'AD / SAML / mutual certificate (per user)'],
+                ['AWS endpoint', 'Virtual Private Gateway atau TGW', 'Client VPN endpoint'],
+                ['Use case', 'Hybrid network, branch office, DX backup', 'Remote/WFH staff, vendor temporary access'],
+              ],
+              takeaway: 'Soalan sebut "network/office/data center connect to VPC" → Site-to-Site. Sebut "users/employees/remote/laptop connect to VPC" → Client VPN.',
+            },
+            mermaid: {
+              label: 'Which hybrid connectivity? (decision tree)',
+              source: `flowchart TD
+  A[Need connect on-prem to AWS] --> B{Individual users<br/>or whole network?}
+  B -->|Individual users / laptops| C[Client VPN]
+  B -->|Whole network| D{Need consistent<br/>low latency +<br/>high bandwidth?}
+  D -->|No, quick & cheap is fine| E[Site-to-Site VPN<br/>IPSec over internet]
+  D -->|Yes, predictable| F{Need encryption<br/>over the private line?}
+  F -->|No| G[Direct Connect]
+  F -->|Yes| H[Direct Connect + VPN<br/>IPSec over DX]
+  D -->|Yes but also want backup| I[DX primary +<br/>Site-to-Site VPN backup]`,
+              caption: 'Users vs network is the first fork. DX = consistent/predictable; VPN = quick/cheap/encrypted; combine for encrypted-private or resilient.',
+            },
+            tips: [
+              'Site-to-Site = NETWORK to NETWORK. Client VPN = USER to network. Ini pembeza utama dalam soalan',
+              '2 komponen: Customer Gateway (sebelah kau) + Virtual Private Gateway / Transit Gateway (sebelah AWS)',
+              'Setiap VPN connection = 2 tunnels auto untuk HA (redundancy)',
+              'Encrypted by default (IPSec) — bagus bila jawapan perlu "encrypted" + "quick/cheap setup"',
+              'VGW = attach ke 1 VPC sahaja. Nak banyak VPC → guna Transit Gateway sebagai target gateway',
+              'Single tunnel ~1.25 Gbps. Nak lebih throughput → multiple VPN ke TGW dengan ECMP (VGW tak support ECMP)',
+              'Classic combo: DX primary + Site-to-Site VPN backup = resilient hybrid tanpa dual-DX',
+            ],
+            docs: [
+              { label: 'What is Site-to-Site VPN', url: 'https://docs.aws.amazon.com/vpn/latest/s2svpn/VPC_VPN.html' },
+            ],
+            keywords: ['IPSec', 'encrypted', 'internet-based', 'Virtual Private Gateway', 'Customer Gateway', 'Transit Gateway', 'two tunnels', 'quick setup', 'cost-effective', 'network to network', 'DX backup', 'BGP', 'vs Client VPN'],
           },
           {
             shortName: 'Client VPN',
@@ -3190,11 +3398,51 @@ export const domains: DomainData[] = [
           {
             shortName: 'Spot Instances',
             fullName: 'EC2 Spot Instances',
-            ingat: '"Harga murah tapi boleh kena interrupt"',
-            gunaUntuk: 'Batch jobs, fault-tolerant workloads, flexible timing',
-            fungsi: 'Menggunakan kapasiti EC2 yang tidak digunakan pada harga sehingga 90% lebih murah',
-            scenario: 'Data science team nak process big dataset — tak kisah kalau interrupted. Atau render farm untuk video yang boleh resume. JANGAN guna untuk critical production server.',
-            keywords: ['up to 90% discount', 'interruptible', 'batch jobs', 'fault-tolerant'],
+            ingat: '"Kapasiti EC2 lebihan, sampai 90% murah — tapi AWS boleh ambil balik dengan notis 2 minit"',
+            gunaUntuk: 'Batch jobs, fault-tolerant & stateless workloads, flexible timing',
+            fungsi: 'Guna kapasiti EC2 yang tidak digunakan pada harga sehingga 90% lebih murah dari On-Demand. Tukaran-nya: AWS boleh INTERRUPT (ambil balik) instance bila perlukan kapasiti semula, dengan notis 2 minit sahaja. Sebab tu sesuai untuk beban yang fault-tolerant / boleh resume, BUKAN untuk server kritikal yang stateful.',
+            scenario: '"Batch processing / big data / render farm yang boleh interrupt & resume" → Spot, jimat besar. "Production database / stateful app / payment service yang TAK boleh putus" → JANGAN Spot, guna On-Demand atau RI/Savings Plans. Soalan tekan "fault-tolerant + lowest cost" hampir mesti = Spot.',
+            storageDetails: 'Notis interrupt 2 minit datang melalui DUA saluran: (1) EventBridge event "EC2 Spot Instance Interruption Warning" (detail-type), dan (2) instance metadata pada instance itu sendiri. Best practice: poll metadata setiap 5 saat. Ada juga Rebalance Recommendation — signal AWAL sebelum notis 2 minit, bagi peluang pindahkan beban lebih cepat. NOTA: kalau interruption behavior = hibernate, kau dapat notis tapi BUKAN 2 minit awal (hibernate mula serta-merta).',
+            detailsLabel: 'Macam mana dapat notis interrupt',
+            compare: {
+              label: 'Spot interruption behaviors + bila guna apa',
+              headers: ['Behavior', 'Apa jadi bila interrupt', 'Syarat / nota'],
+              rows: [
+                ['Terminate (default)', 'Instance ditamatkan terus', 'Default. Beban stateless / boleh start fresh'],
+                ['Stop', 'Instance di-stop, EBS dikekalkan', 'Request type mesti persistent (Fleet: maintain). Hanya AWS boleh restart bila kapasiti ada balik'],
+                ['Hibernate', 'RAM disimpan ke EBS, resume balik', 'Dapat notis tapi TIADA 2-minit awal (hibernate mula serta-merta)'],
+              ],
+              takeaway: 'Default = terminate. Nak simpan EBS & sambung kerja → stop (persistent/maintain). Nak resume state RAM → hibernate. Soalan "resume work after interruption" → stop/hibernate, bukan terminate.',
+            },
+            mermaid: {
+              label: 'Provision Spot dengan resilien (Fleet & Auto Scaling)',
+              source: `flowchart TD
+  A[Nak Spot tapi kurang risiko interrupt] --> B{Macam mana nak provision?}
+  B -->|Satu group, banyak instance type/AZ| C[EC2 Fleet / Spot Fleet]
+  B -->|Auto Scaling group| D[Mixed Instances Policy<br/>campur On-Demand + Spot]
+  C --> E{Allocation strategy?}
+  D --> E
+  E -->|Beban high cost-of-interruption| F[capacity-optimized<br/>pool paling banyak kapasiti]
+  E -->|Nak imbang kos + interruption| G[price-capacity-optimized<br/>disyorkan AWS]
+  F --> H[Capacity Rebalancing<br/>ganti instance berisiko awal]
+  G --> H`,
+              caption: 'EC2 Fleet/Spot Fleet atau ASG Mixed Instances Policy = sebar merentas banyak instance type & AZ supaya kalau satu pool kena ambil balik, yang lain sambung. capacity-optimized = ambil dari pool paling banyak kapasiti (kurang interrupt). price-capacity-optimized = pilihan default disyorkan (imbang murah + kurang interrupt).',
+            },
+            tips: [
+              'Notis interrupt = 2 MINIT, dihantar via EventBridge event DAN instance metadata. Poll metadata setiap ~5 saat. (Exam selalu tanya angka 2 minit ni.)',
+              'Interruption behaviors: terminate (default), stop, hibernate. Stop perlu request persistent / Fleet maintain. Hibernate dapat notis tapi tak ada 2-minit awal.',
+              'EC2 Fleet & Spot Fleet: minta kapasiti merentas BANYAK instance type, saiz & AZ dalam satu request → lebih tahan interrupt. Spot Fleet boleh campur Spot + On-Demand juga.',
+              'Auto Scaling Mixed Instances Policy: satu ASG campur On-Demand (baseline stabil) + Spot (jimat). Letak % On-Demand sebagai baseline, selebihnya Spot.',
+              'Allocation strategy capacity-optimized = ambil Spot dari pool dengan kapasiti paling banyak → kurang kemungkinan interrupt (bagus untuk beban yang mahal kalau interrupt). price-capacity-optimized = default disyorkan AWS (imbang harga + kapasiti).',
+              'Capacity Rebalancing (rebalance recommendation): ASG/Fleet ganti instance yang BERISIKO TINGGI interrupt secara proaktif, sebelum notis 2 minit penuh.',
+              'JANGAN guna Spot untuk: database stateful, production kritikal, beban yang tak boleh putus / tak boleh resume. Untuk itu → On-Demand / RI / Savings Plans.',
+            ],
+            docs: [
+              { label: 'Spot Instance interruption notices (2-min)', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-instance-termination-notices.html' },
+              { label: 'Behavior of Spot Instance interruptions', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/interruption-behavior.html' },
+              { label: 'EC2 Fleet / Spot Fleet allocation strategies', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-fleet-allocation-strategy.html' },
+            ],
+            keywords: ['up to 90% discount', 'interruptible', '2-minute interruption notice', 'EventBridge', 'instance metadata', 'rebalance recommendation', 'terminate', 'stop', 'hibernate', 'persistent request', 'Spot Fleet', 'EC2 Fleet', 'mixed instances policy', 'capacity-optimized', 'price-capacity-optimized', 'capacity rebalancing', 'fault-tolerant', 'batch jobs'],
           },
           {
             shortName: 'Savings Plans',
@@ -3326,6 +3574,37 @@ export const domains: DomainData[] = [
               takeaway: 'Analyze trends → Cost Explorer. Alert before overspend → Budgets (proactive). Deepest raw billing data for custom queries → Cost & Usage Report (CUR) → S3 + Athena.',
             },
             keywords: ['cost analysis', 'spending visualization', 'RI recommendations', 'usage patterns', 'rightsizing', 'forecast', 'hourly granularity', 'anomaly detection', 'vs Budgets', 'CUR'],
+          },
+          {
+            shortName: 'Cost & Usage Report',
+            fullName: 'AWS Cost and Usage Report (CUR)',
+            ingat: '"Data billing PALING detail → drop ke S3 → query guna Athena"',
+            gunaUntuk: 'Raw line-item billing paling granular untuk custom/deep cost analysis',
+            fungsi: 'Report billing PALING terperinci yang AWS ada — setiap line item kos & usage (per jam, per resource, per tag, termasuk RI & Savings Plans utilization). Dihantar automatik ke S3 bucket kau dalam format CSV (atau Parquet untuk Athena). Lepas tu boleh query guna Amazon Athena (SQL terus atas S3), load ke Redshift, atau visualize dalam QuickSight.',
+            scenario: '"Nak data billing mentah paling detail untuk buat custom report / query sendiri guna SQL" → Cost & Usage Report → S3 + Athena. Bukan Cost Explorer (itu untuk VISUALIZE dalam UI siap). Bukan Budgets (itu untuk ALERT). CUR = raw data, kau yang olah sendiri.',
+            tips: [
+              'Output ke S3: CSV (boleh gzip/zip) atau Parquet. Athena hanya support Parquet — pilih Parquet kalau nak query guna Athena.',
+              'Query options: Amazon Athena (SQL terus atas S3, tak payah data warehouse), Amazon Redshift (load masuk), atau Amazon QuickSight (dashboard).',
+              'Paling granular: hourly, per-resource, per-tag, plus Savings Plans & RI utilization/coverage. Lebih detail dari Cost Explorer.',
+              'CUR boleh auto-refresh line item bila ada late-arriving data, dan support versioning fail dalam S3.',
+              'Exam keyword: "detailed line-item billing data" / "raw billing data to query with SQL" → Cost & Usage Report (CUR). "visualize trends" → Cost Explorer. "alert before overspend" → Budgets.',
+            ],
+            compare: {
+              label: 'CUR vs Cost Explorer vs Budgets',
+              headers: ['Aspect', 'Cost & Usage Report', 'Cost Explorer', 'AWS Budgets'],
+              rows: [
+                ['Job', '🟢 Raw line items paling granular', 'Visualize & analyze spend', 'Alert before/over threshold'],
+                ['Output', 'CSV/Parquet ke S3', 'Charts, trends, forecast', 'Email/SNS + Budget Actions'],
+                ['Cara guna', 'Query Athena/Redshift/QuickSight', 'Interactive UI siap', 'Set threshold → tunggu alert'],
+                ['Keyword', '"detailed line-item / SQL billing"', '"visualize / analyze trends"', '"alert before overspending"'],
+              ],
+              takeaway: 'Nak data mentah paling detail untuk olah sendiri → CUR (S3 + Athena). Nak tengok graf siap → Cost Explorer. Nak amaran sebelum lebih bajet → Budgets.',
+            },
+            docs: [
+              { label: 'What is the AWS Cost and Usage Report', url: 'https://docs.aws.amazon.com/cur/latest/userguide/what-is-cur.html' },
+              { label: 'Query CUR using Amazon Athena', url: 'https://docs.aws.amazon.com/cur/latest/userguide/cur-query-athena.html' },
+            ],
+            keywords: ['Cost and Usage Report', 'CUR', 'line-item billing', 'most granular', 'S3 delivery', 'CSV', 'Parquet', 'Athena', 'Redshift', 'QuickSight', 'per-resource', 'hourly', 'raw billing data'],
           },
           {
             shortName: 'Cost Allocation Tags',
