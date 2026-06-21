@@ -159,6 +159,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                 ...(userEmail
                   ? [{ href: '/ai', label: 'Ask AI', icon: '✦', active: activePage === 'ai' }]
                   : []),
+                { href: '/bookmarks', label: 'Bookmarks', icon: '📌', active: activePage === 'bookmarks' },
               ].map((p) => (
                 <Link
                   key={p.href}
