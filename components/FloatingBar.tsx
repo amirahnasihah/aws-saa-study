@@ -25,6 +25,49 @@ function SparkleIcon() {
   )
 }
 
+function AskAIButton({
+  open,
+  segment,
+  onToggle,
+}: {
+  open: boolean
+  segment: string
+  onToggle: () => void
+}) {
+  const label = open ? 'Close AI chat' : 'Open AI chat'
+  const className = `${segment} ${open ? 'bg-c1/10' : ''}`
+
+  if (open) {
+    return (
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-label={label}
+        aria-expanded="true"
+        aria-controls="floating-bar-ai-chat"
+        className={className}
+      >
+        <SparkleIcon />
+        <span className="hidden sm:inline">Ask AI</span>
+      </button>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-label={label}
+      aria-expanded="false"
+      aria-controls="floating-bar-ai-chat"
+      className={className}
+    >
+      <SparkleIcon />
+      <span className="hidden sm:inline">Ask AI</span>
+    </button>
+  )
+}
+
 /**
  * Single floating command bar that replaces the two corner FABs. One connected
  * pill, centered at the bottom, with three segments (Ask AI · Search ·
@@ -81,16 +124,11 @@ export default function FloatingBar({ showAskAI }: FloatingBarProps) {
         <div className="flex items-center overflow-hidden rounded-full border border-aws-border/80 bg-aws-card/95 font-space-mono text-[0.65rem] text-aws-text shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md">
           {showAskAI && (
             <>
-              <button
-                type="button"
-                onClick={() => setAiOpen((o) => !o)}
-                aria-label={aiOpen ? 'Close AI chat' : 'Open AI chat'}
-                aria-expanded={aiOpen}
-                className={`${segment} ${aiOpen ? 'bg-c1/10' : ''}`}
-              >
-                <SparkleIcon />
-                <span className="hidden sm:inline">Ask AI</span>
-              </button>
+              <AskAIButton
+                open={aiOpen}
+                segment={segment}
+                onToggle={() => setAiOpen((o) => !o)}
+              />
               {divider}
             </>
           )}
@@ -157,6 +195,7 @@ export default function FloatingBar({ showAskAI }: FloatingBarProps) {
             aria-hidden
           />
           <div
+            id="floating-bar-ai-chat"
             role="dialog"
             aria-label="AI chat"
             className="fixed inset-x-3 bottom-3 top-20 z-[60] flex flex-col rounded-2xl border border-aws-border bg-aws-bg/98 shadow-[0_8px_40px_rgba(0,0,0,0.55)] backdrop-blur-md sm:inset-auto sm:bottom-24 sm:left-1/2 sm:h-[600px] sm:max-h-[78vh] sm:w-[400px] sm:-translate-x-1/2"

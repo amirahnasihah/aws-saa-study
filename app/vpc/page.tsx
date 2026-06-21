@@ -1,16 +1,80 @@
+'use client'
+
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Nav from '@/components/Nav'
 import GlossaryText from '@/components/GlossaryText'
 import SiteFooter from '@/components/SiteFooter'
 
-export const metadata = {
-  title: 'AWS SAA-C03 — VPC Study Guide',
-  description: 'Master AWS VPC: CIDR, subnets, SG vs NACL, traffic flow, memory tricks, and official docs for the SAA-C03 exam',
+const tocSections = [
+  { id: 'mental-model', label: 'Mental Model' },
+  { id: 'vpc-diagram', label: 'VPC Diagram' },
+  { id: 'cidr', label: 'CIDR & IP Structure' },
+  { id: 'subnets', label: 'Public vs Private' },
+  { id: 'sg-nacl', label: 'SG vs NACL' },
+  { id: 'route-tables', label: 'Route Tables' },
+  { id: 'traffic', label: 'Traffic Flow' },
+  { id: 'nat-flow', label: 'NAT Outbound Flow' },
+  { id: 'nat-compare', label: 'NAT GW vs Instance' },
+  { id: 'endpoints', label: 'VPC Endpoints' },
+  { id: 'connectivity', label: 'Connectivity' },
+  { id: 'vpn-dx', label: 'VPN vs Direct Connect' },
+  { id: 'anatomy', label: 'Full Anatomy' },
+  { id: 'tips', label: 'Memory Tricks' },
+  { id: 'exam', label: 'Exam Quick Wins' },
+  { id: 'links', label: 'Resources' },
+] as const
+
+function SidebarTOC({ activeId }: { activeId: string }) {
+  return (
+    <nav className="hidden xl:block fixed top-[calc(3.5rem+2rem)] right-[max(1rem,calc((100vw-860px)/2-220px))] w-[200px]">
+      <p className="font-space-mono text-[0.55rem] uppercase tracking-[0.15em] text-aws-muted mb-2">On this page</p>
+      <div className="border-l border-aws-border/40 space-y-0.5">
+        {tocSections.map((s) => (
+          <a
+            key={s.id}
+            href={`#${s.id}`}
+            className={`block pl-3 py-0.5 text-[0.68rem] leading-snug transition-colors ${
+              activeId === s.id
+                ? 'text-c4 border-l-2 border-c4 -ml-px font-semibold'
+                : 'text-aws-muted hover:text-aws-text'
+            }`}
+          >
+            {s.label}
+          </a>
+        ))}
+      </div>
+    </nav>
+  )
 }
 
 export default function VpcPage() {
+  const [activeId, setActiveId] = useState('mental-model')
+  const observerRef = useRef<IntersectionObserver | null>(null)
+
+  const handleIntersect = useCallback((entries: IntersectionObserverEntry[]) => {
+    const visible = entries.filter((e) => e.isIntersecting)
+    if (visible.length > 0) {
+      const sorted = visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+      setActiveId(sorted[0].target.id)
+    }
+  }, [])
+
+  useEffect(() => {
+    observerRef.current = new IntersectionObserver(handleIntersect, {
+      rootMargin: '-80px 0px -60% 0px',
+      threshold: 0,
+    })
+    const ids = tocSections.map((s) => s.id)
+    ids.forEach((id) => {
+      const el = document.getElementById(id)
+      if (el) observerRef.current?.observe(el)
+    })
+    return () => observerRef.current?.disconnect()
+  }, [handleIntersect])
   return (
     <>
       <Nav activePage="vpc" />
+      <SidebarTOC activeId={activeId} />
 
       <main id="top" className="max-w-[860px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
 
@@ -23,26 +87,14 @@ export default function VpcPage() {
           <p className="font-space-mono text-[0.78rem] text-aws-muted max-w-lg mx-auto leading-relaxed">
             Topic paling banyak keluar dalam SAA-C03. Faham konsep ni dan banyak soalan lain akan jadi senang.
           </p>
-          <div className="flex flex-wrap justify-center gap-2 mt-4">
-            {[
-              { href: '#mental-model', label: 'Mental Model' },
-              { href: '#vpc-diagram', label: 'VPC Diagram' },
-              { href: '#cidr', label: 'CIDR & IP Structure' },
-              { href: '#subnets', label: 'Subnets' },
-              { href: '#sg-nacl', label: 'SG vs NACL' },
-              { href: '#traffic', label: 'Traffic Flow' },
-              { href: '#nat-flow', label: 'NAT Flow' },
-              { href: '#connectivity', label: 'Connectivity' },
-              { href: '#tips', label: 'Memory Tricks' },
-              { href: '#exam', label: 'Exam Wins' },
-              { href: '#links', label: 'Resources' },
-            ].map((link) => (
+          <div className="flex flex-wrap justify-center gap-2 mt-4 xl:hidden">
+            {tocSections.map((s) => (
               <a
-                key={link.href}
-                href={link.href}
+                key={s.id}
+                href={`#${s.id}`}
                 className="font-space-mono text-[0.6rem] uppercase tracking-widest px-2.5 py-1 rounded-full border border-c4/30 text-c4 hover:bg-c4/10 transition-colors"
               >
-                {link.label}
+                {s.label}
               </a>
             ))}
           </div>
@@ -514,6 +566,135 @@ export default function VpcPage() {
           </div>
         </section>
 
+        {/* Route Tables Deep Dive */}
+        <section className="mb-10">
+          <SectionHeader id="route-tables" emoji="🗺️" title="Route Tables — Papan Tanda Dalam VPC" />
+          <div className="bg-aws-card border border-aws-border rounded-xl p-5 space-y-5">
+
+            {/* DNS vs Route Table analogy */}
+            <div className="bg-c4/8 border border-c4/20 rounded-lg px-4 py-3">
+              <p className="font-space-mono text-[0.65rem] uppercase tracking-[0.12em] text-c4/70 mb-2">Route Table bukan DNS Records</p>
+              <p className="text-[0.82rem] text-aws-text leading-relaxed mb-3">
+                Route Table bukan macam DNS records. DNS = <strong className="text-c2">buku telefon</strong> (&ldquo;nama ini → alamat IP ini&rdquo;).
+                Route Table = <strong className="text-c4">Waze / Google Maps</strong> (&ldquo;nak pergi rangkaian ini → ikut jalan ini&rdquo;).
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="bg-c2/8 border border-c2/20 rounded-lg px-3 py-2.5">
+                  <p className="font-space-mono text-[0.62rem] font-bold text-c2 mb-1">DNS Records</p>
+                  <p className="text-[0.75rem] text-aws-text"><code className="text-c2">api.example.com</code> → <code className="text-c2">10.0.1.20</code></p>
+                  <p className="text-[0.68rem] text-aws-muted mt-1">&ldquo;Rumah Ali berada di alamat Jalan Mawar No. 10&rdquo;</p>
+                </div>
+                <div className="bg-c4/8 border border-c4/20 rounded-lg px-3 py-2.5">
+                  <p className="font-space-mono text-[0.62rem] font-bold text-c4 mb-1">Route Table</p>
+                  <p className="text-[0.75rem] text-aws-text"><code className="text-c4">10.0.2.0/24</code> → <code className="text-c4">NAT Gateway</code></p>
+                  <p className="text-[0.68rem] text-aws-muted mt-1">&ldquo;Nak pergi ke Jalan Mawar? Keluar simpang A&rdquo;</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Route Table Anatomy */}
+            <div>
+              <p className="font-space-mono text-[0.65rem] uppercase tracking-[0.12em] text-c4/70 mb-3">Anatomy Route Table</p>
+              <p className="text-[0.78rem] text-aws-muted leading-relaxed mb-3">
+                Setiap route ada dua bahagian: <strong className="text-aws-text">Destination</strong> (CIDR — ke mana nak pergi) dan{' '}
+                <strong className="text-aws-text">Target</strong> (through mana — gateway/connection mana).
+                AWS auto-buat <strong className="text-c4">local route</strong> untuk semua traffic dalam VPC — tak boleh delete.
+              </p>
+
+              {/* Example route table */}
+              <div className="rounded-lg overflow-hidden border border-aws-border/40 mb-3">
+                <div className="bg-c4/10 border-b border-c4/20 px-3 py-2">
+                  <p className="font-space-mono text-[0.62rem] font-bold text-c4">Contoh: Public Subnet Route Table</p>
+                </div>
+                <table className="w-full text-[0.78rem]">
+                  <thead>
+                    <tr className="bg-white/3 border-b border-aws-border/40">
+                      <th className="font-space-mono text-[0.58rem] uppercase tracking-widest text-aws-muted text-left px-3 py-2">Destination</th>
+                      <th className="font-space-mono text-[0.58rem] uppercase tracking-widest text-aws-muted text-left px-3 py-2">Target</th>
+                      <th className="font-space-mono text-[0.58rem] uppercase tracking-widest text-aws-muted text-left px-3 py-2">Maksud</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { dest: '10.0.0.0/16', target: 'local', meaning: 'Traffic dalam VPC → hantar terus (auto, tak boleh delete)', hi: true },
+                      { dest: '0.0.0.0/0', target: 'igw-abc123', meaning: 'Semua destination lain → keluar melalui Internet Gateway', hi: false },
+                    ].map((r, i) => (
+                      <tr key={i} className={`border-b border-aws-border/30 ${r.hi ? 'bg-c4/5' : ''}`}>
+                        <td className="font-mono text-[0.75rem] text-c4 font-semibold px-3 py-2">{r.dest}</td>
+                        <td className="font-mono text-[0.75rem] text-aws-text px-3 py-2">{r.target}</td>
+                        <td className="text-[0.72rem] text-aws-muted px-3 py-2">{r.meaning}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+
+              <div className="rounded-lg overflow-hidden border border-aws-border/40 mb-3">
+                <div className="bg-c3/10 border-b border-c3/20 px-3 py-2">
+                  <p className="font-space-mono text-[0.62rem] font-bold text-c3">Contoh: Private Subnet Route Table</p>
+                </div>
+                <table className="w-full text-[0.78rem]">
+                  <thead>
+                    <tr className="bg-white/3 border-b border-aws-border/40">
+                      <th className="font-space-mono text-[0.58rem] uppercase tracking-widest text-aws-muted text-left px-3 py-2">Destination</th>
+                      <th className="font-space-mono text-[0.58rem] uppercase tracking-widest text-aws-muted text-left px-3 py-2">Target</th>
+                      <th className="font-space-mono text-[0.58rem] uppercase tracking-widest text-aws-muted text-left px-3 py-2">Maksud</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {[
+                      { dest: '10.0.0.0/16', target: 'local', meaning: 'Traffic dalam VPC → hantar terus', hi: true },
+                      { dest: '0.0.0.0/0', target: 'nat-xyz789', meaning: 'Outbound internet → melalui NAT Gateway (private IP ditranslate)', hi: false },
+                      { dest: 'pl-s3xxxxx', target: 'vpce-s3abc', meaning: 'S3 traffic → Gateway Endpoint (shortcut, free, tak perlu NAT)', hi: false },
+                    ].map((r, i) => (
+                      <tr key={i} className={`border-b border-aws-border/30 ${r.hi ? 'bg-c3/5' : ''}`}>
+                        <td className="font-mono text-[0.75rem] text-c3 font-semibold px-3 py-2">{r.dest}</td>
+                        <td className="font-mono text-[0.75rem] text-aws-text px-3 py-2">{r.target}</td>
+                        <td className="text-[0.72rem] text-aws-muted px-3 py-2">{r.meaning}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Key Concepts */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {[
+                { label: 'Main Route Table', desc: 'Auto-cipta bila buat VPC. Control routing untuk subnet yang tak explicitly associate dengan route table lain.', icon: '📋' },
+                { label: 'Custom Route Table', desc: 'Kau buat sendiri untuk granular control. Contoh: satu untuk public subnets, satu lagi untuk private subnets.', icon: '✏️' },
+                { label: 'Local Route', desc: 'Sentiasa ada: VPC CIDR → local. Membolehkan semua resources dalam VPC communicate antara satu sama lain. Tak boleh delete.', icon: '🏠' },
+                { label: 'Most Specific Route Wins', desc: '10.0.1.0/24 lebih specific dari 0.0.0.0/0. AWS pilih route paling specific yang match destination IP.', icon: '🎯' },
+              ].map((item) => (
+                <div key={item.label} className="flex gap-3 bg-white/3 border border-aws-border/40 rounded-lg px-3 py-2.5">
+                  <span className="text-lg shrink-0">{item.icon}</span>
+                  <div>
+                    <p className="font-space-mono text-[0.62rem] font-bold text-c4 mb-0.5">{item.label}</p>
+                    <p className="text-[0.72rem] text-aws-muted leading-snug"><GlossaryText text={item.desc} /></p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* What makes a subnet public? */}
+            <div className="bg-amber-500/5 border border-amber-500/15 rounded-lg px-4 py-3">
+              <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-amber-400/70 mb-2">Apa yang jadikan subnet &ldquo;Public&rdquo;?</p>
+              <p className="text-[0.78rem] text-aws-text leading-relaxed">
+                <strong className="text-amber-300">Satu je syarat:</strong> Route table ada entry <code className="text-c4">0.0.0.0/0 → igw-id</code>.
+                Tanpa route ini, walaupun kau namakan &ldquo;public-subnet&rdquo;, ia tetap private — tak ada jalan ke internet.
+                EC2 juga mesti ada Public IP atau Elastic IP untuk internet boleh reply balik.
+              </p>
+            </div>
+
+            <p className="text-[0.68rem] text-aws-muted">
+              Sumber:{' '}
+              <a href="https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html" target="_blank" rel="noopener noreferrer" className="text-c4/70 hover:text-c4 transition-colors">AWS Route Tables docs</a>
+              {' · '}
+              <a href="https://docs.aws.amazon.com/vpc/latest/userguide/RouteTables.html" target="_blank" rel="noopener noreferrer" className="text-c4/70 hover:text-c4 transition-colors">Route Table Concepts</a>
+            </p>
+          </div>
+        </section>
+
         {/* Traffic Flow */}
         <section className="mb-10">
           <SectionHeader id="traffic" emoji="📡" title="Traffic Flow — Journey Request melalui VPC" />
@@ -635,9 +816,130 @@ export default function VpcPage() {
           </div>
         </section>
 
+        {/* NAT Gateway vs NAT Instance */}
+        <section className="mb-10">
+          <SectionHeader id="nat-compare" emoji="⚖️" title="NAT Gateway vs NAT Instance — Comparison Table" />
+          <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden">
+            <div className="p-4 pb-2">
+              <p className="text-[0.78rem] text-aws-muted leading-relaxed">
+                AWS <strong className="text-aws-text">recommends NAT Gateway</strong> — better availability, bandwidth, dan zero maintenance.
+                NAT Instance masih ada dalam exam sebagai distractor atau untuk edge cases (port forwarding, bastion).
+              </p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-[0.78rem]">
+                <thead>
+                  <tr className="border-b border-aws-border">
+                    <th className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted text-left p-3 w-[25%]">Feature</th>
+                    <th className="font-space-mono text-[0.6rem] uppercase tracking-widest text-c4 text-left p-3 bg-c4/5">NAT Gateway</th>
+                    <th className="font-space-mono text-[0.6rem] uppercase tracking-widest text-c5 text-left p-3 bg-c5/5">NAT Instance</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { f: 'Managed by', gw: 'AWS (fully managed)', inst: 'Kau sendiri (patching, updates, failover)' },
+                    { f: 'Availability', gw: 'HA within AZ (redundant). Buat satu per AZ untuk full HA.', inst: 'Kena script sendiri untuk failover' },
+                    { f: 'Bandwidth', gw: 'Scale up to 100 Gbps', inst: 'Bergantung pada instance type' },
+                    { f: 'Security Groups', gw: '❌ Tak boleh attach SG pada NAT GW', inst: '✅ Boleh attach SG' },
+                    { f: 'Port Forwarding', gw: '❌ Tak support', inst: '✅ Boleh configure manually' },
+                    { f: 'Bastion Server', gw: '❌ Tak support', inst: '✅ Boleh guna sebagai bastion' },
+                    { f: 'Public IP', gw: 'Elastic IP (pilih masa create)', inst: 'Elastic IP atau Public IP' },
+                    { f: 'Cost', gw: 'Per hour + per GB processed', inst: 'EC2 pricing (instance + EBS)' },
+                    { f: 'Timeout', gw: 'RST packet (clean reset)', inst: 'FIN packet (graceful close)' },
+                  ].map((row, i) => (
+                    <tr key={row.f} className={`border-b border-aws-border/40 ${i % 2 !== 0 ? 'bg-white/[0.015]' : ''}`}>
+                      <td className="font-space-mono font-bold text-[0.65rem] text-aws-muted p-3">{row.f}</td>
+                      <td className="text-aws-text p-3 bg-c4/[0.03]"><GlossaryText text={row.gw} /></td>
+                      <td className="text-aws-text p-3 bg-c5/[0.03]"><GlossaryText text={row.inst} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="p-4 bg-amber-500/5 border-t border-amber-500/15">
+              <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-amber-400/70 mb-2">Exam Tips</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[0.78rem]">
+                <p className="text-aws-text">
+                  <span className="text-amber-300 font-bold">Default answer = NAT Gateway.</span> Kalau soalan mention &ldquo;managed&rdquo;, &ldquo;highly available&rdquo;, atau &ldquo;least operational overhead&rdquo; → NAT Gateway.
+                </p>
+                <p className="text-aws-text">
+                  <span className="text-amber-300 font-bold">NAT Instance bila:</span> soalan mention &ldquo;port forwarding&rdquo;, &ldquo;bastion host&rdquo;, atau &ldquo;security group on NAT&rdquo; — tapi ini jarang keluar.
+                </p>
+              </div>
+            </div>
+            <div className="px-4 py-2 border-t border-aws-border/40">
+              <p className="text-[0.68rem] text-aws-muted">
+                Sumber: <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-comparison.html" target="_blank" rel="noopener noreferrer" className="text-c4/70 hover:text-c4 transition-colors">AWS Compare NAT gateways and NAT instances</a>
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* VPC Endpoints Deep Dive */}
+        <section className="mb-10">
+          <SectionHeader id="endpoints" emoji="🔗" title="VPC Endpoints — Gateway vs Interface" />
+          <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden space-y-0">
+            <div className="p-4 pb-2">
+              <p className="text-[0.78rem] text-aws-muted leading-relaxed">
+                VPC Endpoint = shortcut untuk EC2 access AWS services <strong className="text-aws-text">tanpa keluar ke internet</strong>.
+                Traffic stays within AWS network. Dua jenis utama — pilih ikut service.
+              </p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-[0.78rem]">
+                <thead>
+                  <tr className="border-b border-aws-border">
+                    <th className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted text-left p-3 w-[22%]">Feature</th>
+                    <th className="font-space-mono text-[0.6rem] uppercase tracking-widest text-c2 text-left p-3 bg-c2/5">Gateway Endpoint</th>
+                    <th className="font-space-mono text-[0.6rem] uppercase tracking-widest text-c5 text-left p-3 bg-c5/5">Interface Endpoint (PrivateLink)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { f: 'Services', gw: '🟢 S3 dan DynamoDB sahaja', iface: 'Hampir semua AWS services lain (CloudWatch, SSM, ECR, SQS, dll)' },
+                    { f: 'How it works', gw: 'Entry dalam route table → prefix list', iface: 'ENI (network interface) dalam subnet kau dengan private IP' },
+                    { f: 'Cost', gw: '✅ FREE — tiada charges', iface: '💰 Berbayar — per hour + per GB processed' },
+                    { f: 'Security', gw: 'Endpoint policy (IAM)', iface: 'Endpoint policy + Security Groups pada ENI' },
+                    { f: 'DNS', gw: 'Tak perlu — route table handle', iface: 'Private DNS name resolve ke private IP (enable Private DNS)' },
+                    { f: 'Cross-region', gw: '❌ Same region sahaja', iface: '❌ Same region sahaja' },
+                    { f: 'Access from on-prem', gw: '❌ Tak boleh', iface: '✅ Boleh via VPN/Direct Connect' },
+                  ].map((row, i) => (
+                    <tr key={row.f} className={`border-b border-aws-border/40 ${i % 2 !== 0 ? 'bg-white/[0.015]' : ''}`}>
+                      <td className="font-space-mono font-bold text-[0.65rem] text-aws-muted p-3">{row.f}</td>
+                      <td className="text-aws-text p-3 bg-c2/[0.03]"><GlossaryText text={row.gw} /></td>
+                      <td className="text-aws-text p-3 bg-c5/[0.03]"><GlossaryText text={row.iface} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="p-4 bg-amber-500/5 border-t border-amber-500/15">
+              <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-amber-400/70 mb-2">Cara Mudah Ingat</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[0.78rem]">
+                <p className="text-aws-text">
+                  <span className="text-c2 font-bold">&ldquo;GD Free&rdquo;</span> — <span className="text-c2">G</span>ateway endpoint untuk S3 + <span className="text-c2">D</span>ynamoDB = <span className="text-c2">Free</span>.
+                  Letak dalam route table, bukan dalam subnet.
+                </p>
+                <p className="text-aws-text">
+                  <span className="text-c5 font-bold">Interface = ENI</span> — buat network interface baru dalam subnet kau.
+                  Boleh attach Security Group. Berbayar tapi support hampir semua services.
+                </p>
+              </div>
+            </div>
+            <div className="px-4 py-2 border-t border-aws-border/40">
+              <p className="text-[0.68rem] text-aws-muted">
+                Sumber:{' '}
+                <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints.html" target="_blank" rel="noopener noreferrer" className="text-c4/70 hover:text-c4 transition-colors">AWS PrivateLink Concepts</a>
+                {' · '}
+                <a href="https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html" target="_blank" rel="noopener noreferrer" className="text-c4/70 hover:text-c4 transition-colors">Gateway Endpoints</a>
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* Connectivity Options */}
         <section className="mb-10">
-          <SectionHeader id="connectivity" emoji="🔗" title="VPC Connectivity — Pilih Yang Mana?" />
+          <SectionHeader id="connectivity" emoji="🤝" title="VPC Connectivity — Pilih Yang Mana?" />
           <div className="space-y-3">
             {[
               {
@@ -698,6 +1000,167 @@ export default function VpcPage() {
                 </div>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* VPN vs Direct Connect */}
+        <section className="mb-10">
+          <SectionHeader id="vpn-dx" emoji="📡" title="Site-to-Site VPN vs Direct Connect — Detailed Comparison" />
+          <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-[0.78rem]">
+                <thead>
+                  <tr className="border-b border-aws-border">
+                    <th className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted text-left p-3 w-[22%]">Feature</th>
+                    <th className="font-space-mono text-[0.6rem] uppercase tracking-widest text-c6 text-left p-3 bg-c6/5">Site-to-Site VPN</th>
+                    <th className="font-space-mono text-[0.6rem] uppercase tracking-widest text-c1 text-left p-3 bg-c1/5">AWS Direct Connect</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {[
+                    { f: 'Connection type', vpn: 'Encrypted tunnel over public internet', dx: 'Dedicated private physical connection' },
+                    { f: 'Setup time', vpn: 'Minit ke jam — quick', dx: 'Minggu ke bulan — lambat (physical install)' },
+                    { f: 'Bandwidth', vpn: 'Up to 1.25 Gbps per tunnel', dx: '1 Gbps, 10 Gbps, atau 100 Gbps' },
+                    { f: 'Latency', vpn: 'Tak konsisten (traverse internet)', dx: 'Konsisten dan rendah (dedicated line)' },
+                    { f: 'Encryption', vpn: '✅ IPsec encrypted by default', dx: '❌ Tak encrypted by default (tambah VPN on top untuk encryption)' },
+                    { f: 'Cost', vpn: 'Murah — per connection hour + data', dx: 'Mahal — port hour + data out' },
+                    { f: 'Redundancy', vpn: '2 tunnels per connection (active/passive)', dx: 'Kena buat 2 connections ke different locations' },
+                    { f: 'Use case', vpn: 'Quick setup, backup, testing, small workloads', dx: 'Production, compliance, large data transfer, hybrid cloud' },
+                  ].map((row, i) => (
+                    <tr key={row.f} className={`border-b border-aws-border/40 ${i % 2 !== 0 ? 'bg-white/[0.015]' : ''}`}>
+                      <td className="font-space-mono font-bold text-[0.65rem] text-aws-muted p-3">{row.f}</td>
+                      <td className="text-aws-text p-3 bg-c6/[0.03]"><GlossaryText text={row.vpn} /></td>
+                      <td className="text-aws-text p-3 bg-c1/[0.03]"><GlossaryText text={row.dx} /></td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="p-4 bg-amber-500/5 border-t border-amber-500/15">
+              <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-amber-400/70 mb-2">Exam Pattern</p>
+              <div className="space-y-2 text-[0.78rem]">
+                <p className="text-aws-text">
+                  <span className="text-amber-300 font-bold">&ldquo;Consistent latency&rdquo; / &ldquo;dedicated&rdquo; / &ldquo;compliance&rdquo;</span> → Direct Connect.
+                </p>
+                <p className="text-aws-text">
+                  <span className="text-amber-300 font-bold">&ldquo;Quick setup&rdquo; / &ldquo;encrypted&rdquo; / &ldquo;backup connection&rdquo;</span> → Site-to-Site VPN.
+                </p>
+                <p className="text-aws-text">
+                  <span className="text-amber-300 font-bold">&ldquo;Encrypted + consistent latency&rdquo;</span> → <strong className="text-c4">Direct Connect + VPN</strong> (DX for private line, VPN on top untuk encryption).
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Full VPC Anatomy */}
+        <section className="mb-10">
+          <SectionHeader id="anatomy" emoji="🏗️" title="Full VPC Anatomy — Semua Components Dalam Satu Gambar" />
+          <div className="bg-aws-card border border-aws-border rounded-xl p-5 space-y-5">
+
+            <p className="text-[0.78rem] text-aws-muted leading-relaxed">
+              Ni macam &ldquo;peta sebenar&rdquo; — semua VPC components dan hubungan antara satu sama lain. Exam suka tanya &ldquo;mana kena letak apa&rdquo;.
+            </p>
+
+            {/* ASCII Architecture Diagram */}
+            <div className="bg-[#0d1117] border border-aws-border/60 rounded-xl overflow-x-auto">
+              <pre className="text-[0.58rem] sm:text-[0.68rem] leading-relaxed font-mono text-aws-muted p-4 sm:p-5 whitespace-pre">{`┌─────────────────────────────────────────────────────────────┐
+│                    AWS REGION (ap-southeast-1)              │
+│  ┌───────────────────────────────────────────────────────┐  │
+│  │              VPC  10.0.0.0/16                         │  │
+│  │                                                       │  │
+│  │  ┌─── AZ-a ────────────────────────────────────────┐  │  │
+│  │  │                                                  │  │  │
+│  │  │  ┌─ Public Subnet 10.0.1.0/24 ───────────────┐  │  │  │
+│  │  │  │  Route: 0.0.0.0/0 → `}<span className="text-c4">IGW</span>{`                  │  │  │  │
+│  │  │  │                                            │  │  │  │
+│  │  │  │  ┌──────────┐   ┌──────────┐               │  │  │  │
+│  │  │  │  │`}<span className="text-c2"> ALB/Web  </span>{`│   │`}<span className="text-c2"> NAT GW   </span>{`│ ← Elastic IP │  │  │  │
+│  │  │  │  │`}<span className="text-c2"> Server   </span>{`│   │`}<span className="text-c2"> (outbound)</span>{`│               │  │  │  │
+│  │  │  │  └──────────┘   └──────────┘               │  │  │  │
+│  │  │  │     ↑ SG               │                   │  │  │  │
+│  │  │  └─────│──────────────────│────────────────────┘  │  │  │
+│  │  │        │ NACL             │                       │  │  │
+│  │  │  ┌─ Private Subnet 10.0.2.0/24 ──────────────┐  │  │  │
+│  │  │  │  Route: 0.0.0.0/0 → `}<span className="text-c3">NAT GW</span>{`                │  │  │  │
+│  │  │  │                                            │  │  │  │
+│  │  │  │  ┌──────────┐   ┌──────────┐               │  │  │  │
+│  │  │  │  │`}<span className="text-c3"> App      </span>{`│   │`}<span className="text-c3"> Database </span>{`│               │  │  │  │
+│  │  │  │  │`}<span className="text-c3"> Server   </span>{`│   │`}<span className="text-c3"> (RDS)    </span>{`│               │  │  │  │
+│  │  │  │  └──────────┘   └──────────┘               │  │  │  │
+│  │  │  │     ↑ SG            ↑ SG                   │  │  │  │
+│  │  │  └────────────────────────────────────────────┘  │  │  │
+│  │  │                                                  │  │  │
+│  │  └──────────────────────────────────────────────────┘  │  │
+│  │                                                       │  │
+│  └───────────────────────────────────────────────────────┘  │
+│                          │                                   │
+│                   ┌──────┴──────┐                            │
+│                   │`}<span className="text-c4">{`  Internet  `}</span>{`│                            │
+│                   │`}<span className="text-c4">{`  Gateway   `}</span>{`│ ← 1 per VPC, free          │
+│                   └──────┬──────┘                            │
+└──────────────────────────│───────────────────────────────────┘
+                           │
+          ┌────────────────┼────────────────┐
+          │                │                │
+   ┌──────┴──────┐  ┌─────┴─────┐  ┌───────┴───────┐
+   │`}<span className="text-c6">{`  Internet   `}</span>{`│  │`}<span className="text-c6">{`  VPN GW  `}</span>{`│  │`}<span className="text-c1">{` Direct Connect`}</span>{`│
+   │`}<span className="text-c6">{`  (users)    `}</span>{`│  │`}<span className="text-c6">{` (IPsec)  `}</span>{`│  │`}<span className="text-c1">{` (dedicated)   `}</span>{`│
+   └─────────────┘  └─────┬─────┘  └───────┬───────┘
+                          │                │
+                    ┌─────┴────────────────┴─────┐
+                    │     On-Premises Data Center │
+                    └────────────────────────────┘`}</pre>
+            </div>
+
+            {/* Component Legend */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {[
+                { label: 'IGW', desc: '1 per VPC, free, bidirectional', color: 'text-c4', bg: 'bg-c4/8 border-c4/20' },
+                { label: 'NAT GW', desc: 'Public subnet, outbound only, berbayar', color: 'text-c2', bg: 'bg-c2/8 border-c2/20' },
+                { label: 'SG', desc: 'Instance level, stateful, allow only', color: 'text-c2', bg: 'bg-c2/8 border-c2/20' },
+                { label: 'NACL', desc: 'Subnet level, stateless, allow + deny', color: 'text-c5', bg: 'bg-c5/8 border-c5/20' },
+                { label: 'Route Table', desc: 'Destination → Target per subnet', color: 'text-c3', bg: 'bg-c3/8 border-c3/20' },
+                { label: 'VPC Endpoint', desc: 'Shortcut ke S3/DynamoDB (free) atau services lain', color: 'text-c4', bg: 'bg-c4/8 border-c4/20' },
+              ].map((item) => (
+                <div key={item.label} className={`rounded-lg border px-2.5 py-2 ${item.bg}`}>
+                  <p className={`font-space-mono text-[0.62rem] font-bold ${item.color}`}>{item.label}</p>
+                  <p className="text-[0.65rem] text-aws-muted leading-snug">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Placement Rules */}
+            <div className="bg-c4/5 border border-c4/15 rounded-xl p-4">
+              <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-c4/70 mb-3">Exam Cheat: Apa Letak Mana?</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[0.75rem]">
+                <div>
+                  <p className="text-c4 font-bold font-space-mono text-[0.62rem] mb-1.5">PUBLIC SUBNET</p>
+                  <ul className="space-y-1 text-aws-text">
+                    {['ALB / NLB', 'NAT Gateway', 'Bastion Host / Jump Box', 'Web servers (with public IP)'].map((item) => (
+                      <li key={item} className="flex gap-1.5"><span className="text-c4 shrink-0">•</span> {item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <p className="text-c3 font-bold font-space-mono text-[0.62rem] mb-1.5">PRIVATE SUBNET</p>
+                  <ul className="space-y-1 text-aws-text">
+                    {['Application servers', 'Databases (RDS, Aurora, DynamoDB)', 'Lambda functions (VPC-connected)', 'ElastiCache clusters'].map((item) => (
+                      <li key={item} className="flex gap-1.5"><span className="text-c3 shrink-0">•</span> {item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            {/* Multi-AZ diagram note */}
+            <div className="bg-amber-500/5 border border-amber-500/15 rounded-lg px-4 py-3">
+              <p className="text-[0.78rem] text-aws-text leading-relaxed">
+                <span className="text-amber-400 font-bold">Production best practice:</span> Duplicate structure across 2+ AZs —
+                setiap AZ ada public + private subnet sendiri, dengan NAT Gateway sendiri.
+                Kalau satu AZ down, traffic failover ke AZ lain. Ini yang dimaksudkan &ldquo;zone-independent architecture&rdquo;.
+              </p>
+            </div>
           </div>
         </section>
 
