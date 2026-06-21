@@ -63,8 +63,8 @@ export interface ServiceCard {
   scenario?: string
   storageDetails?: string
   detailsLabel?: string
-  diagram?: FlowDiagram
-  compare?: CompareTable
+  diagram?: FlowDiagram | FlowDiagram[]
+  compare?: CompareTable | CompareTable[]
   tips?: string[]
   docs?: Array<{ label: string; url: string }>
   keywords: string[]
@@ -163,6 +163,18 @@ export const domains: DomainData[] = [
             ingat: '"Active Directory dalam AWS — tiga jenis, pilih ikut use case"',
             gunaUntuk: 'Managed Microsoft Active Directory, AD Connector, or Simple AD for AWS workloads',
             fungsi: 'AWS Directory Service ada tiga pilihan: (1) AWS Managed Microsoft AD — full AD dalam AWS. (2) AD Connector — proxy ke on-premises AD. (3) Simple AD — Samba-based, lightweight, bukan full AD.',
+            compare: {
+              label: 'Managed Microsoft AD vs AD Connector vs Simple AD',
+              headers: ['Aspect', 'Managed Microsoft AD', 'AD Connector', 'Simple AD'],
+              rows: [
+                ['Apa dia', '🟢 Real Microsoft AD dalam AWS', 'Proxy/redirect ke on-prem AD', 'Samba 4 — AD-compatible, BUKAN real AD'],
+                ['Directory ada kat mana', 'Dalam AWS (managed by AWS)', 'Kekal on-premises (tiada dalam cloud)', 'Dalam AWS (standalone)'],
+                ['Trust ke on-prem AD', '🟢 Ya (one-way / two-way)', 'N/A — guna terus on-prem AD', '❌ Tiada trust'],
+                ['Group Policy / Kerberos / LDAP', '🟢 Penuh', 'Guna feature on-prem AD', 'Asas sahaja (subset)'],
+                ['Guna bila', 'Perlu full AD features dalam AWS, atau migrate AD', 'Dah ada on-prem AD, tak nak replicate ke cloud', 'Workload kecil, basic AD features, no on-prem'],
+              ],
+              takeaway: 'Full AD dalam cloud / ada trust → Managed Microsoft AD. AD kekal on-prem, AWS cuma proxy auth → AD Connector. Kecil + murah + basic → Simple AD. (User external Google/Facebook → Cognito, bukan Directory Service.)',
+            },
             tips: [
               'AWS Managed Microsoft AD: full Microsoft AD dalam AWS. Untuk apps yang perlukan actual AD features (Group Policy, Kerberos, LDAP). Boleh trust ke on-premises AD',
               'AD Connector: BUKAN AD dalam cloud — ia redirect authentication requests ke on-premises AD. Data tetap on-prem. Untuk existing on-prem AD yang tak nak migrate',
@@ -344,6 +356,18 @@ export const domains: DomainData[] = [
             gunaUntuk: 'DDoS protection Layer 3/4 (Standard) and Layer 7 (Advanced)',
             fungsi: 'Melindungi dari serangan DDoS — Standard free untuk semua, Advanced untuk protection 24/7 + DDoS Response Team',
             contohGuna: 'Website kena volumetric DDoS — Shield Standard protect automatically. Enterprise nak protection + cost protection + DRT = Shield Advanced',
+            compare: {
+              label: 'WAF vs Shield Standard vs Shield Advanced — yang mana untuk apa',
+              headers: ['Aspect', 'AWS WAF', 'Shield Standard', 'Shield Advanced'],
+              rows: [
+                ['Lindung dari', 'L7 web exploits (SQLi, XSS, bots)', 'L3/L4 DDoS (SYN flood, UDP reflection)', 'L3/L4 + L7 DDoS, scale besar'],
+                ['Layer', 'Layer 7 (HTTP/S)', 'Layer 3/4', 'Layer 3/4/7'],
+                ['Harga', 'Bayar per rule + request', '🟢 FREE, auto untuk semua', '$3,000/bulan/org + data'],
+                ['Pasang kat', 'CloudFront, ALB, API GW, AppSync, Cognito', 'Auto (semua AWS edge)', 'CloudFront, ALB, NLB, EIP, Route 53, GA'],
+                ['Extra', 'Custom + managed rule groups, rate limit', 'Tiada visibility / custom rules', 'DRT/SRT 24/7, cost protection, real-time metrics, WAF percuma'],
+              ],
+              takeaway: 'SQLi/XSS/bad-bot/rate-limit (Layer 7) → WAF. DDoS asas percuma → Shield Standard (auto, takyah buat apa). DDoS besar + DDoS Response Team + bil tak naik masa diserang → Shield Advanced (selalu dgn WAF).',
+            },
             tips: [
               'Shield Standard: FREE, automatic, protect Layer 3/4 DDoS. TIADA: custom rules, real-time visibility, WAF integration',
               'Shield Advanced: PAID ($3,000/month). Ada: DDoS Response Team (DRT), real-time metrics, WAF integration, custom mitigation',
@@ -808,6 +832,20 @@ export const domains: DomainData[] = [
             fungsi: 'NAT GW allow instances dalam private subnet buat OUTBOUND connection ke internet (download packages, call external APIs) tanpa exposed kepada inbound connections. NAT GW duduk dalam PUBLIC subnet (bukan private!), ada Elastic IP. Private subnet route: 0.0.0.0/0 → NAT GW.',
             contohGuna: 'RDS dalam private subnet perlu download security patches. Traffic: RDS → NAT GW (public subnet) → IGW → internet. Internet tak boleh initiate connection masuk ke RDS.',
             scenario: '"Private subnet EC2 perlu access internet tapi tak nak exposed" → NAT Gateway. Letak NAT GW dalam public subnet, route private subnet 0.0.0.0/0 → NAT GW.',
+            compare: {
+              label: 'NAT Gateway vs NAT Instance',
+              headers: ['Aspect', 'NAT Gateway', 'NAT Instance'],
+              rows: [
+                ['Urus oleh', '🟢 AWS (fully managed)', 'Kau sendiri (EC2 biasa)'],
+                ['Availability', '🟢 HA dalam 1 AZ auto (deploy 1 per AZ utk multi-AZ)', 'Manual — kena script failover sendiri'],
+                ['Bandwidth', '🟢 Auto scale 5→100 Gbps', 'Ikut saiz EC2 instance'],
+                ['Security Group', '❌ Tak boleh attach SG', '🟢 Boleh (ia EC2)'],
+                ['Bastion / port forward', '❌ Tak boleh', '🟢 Boleh (guna sebagai bastion juga)'],
+                ['Patch / maintenance', '🟢 AWS handle', 'Kau patch OS sendiri'],
+                ['Kos', 'Per jam + per GB', 'Kos EC2 (boleh lagi murah utk traffic kecik)'],
+              ],
+              takeaway: 'Default jawapan exam = NAT Gateway (managed, HA, auto-scale). Pilih NAT Instance HANYA bila perlu SG/bastion/port-forwarding atau nak jimat untuk traffic sangat kecil. Source/destination check MESTI disable untuk NAT Instance.',
+            },
             tips: [
               'NAT GW DUDUK DALAM PUBLIC SUBNET — bukan private! Ini exam trap paling common',
               'Private subnet route: 0.0.0.0/0 → nat-xxx. Public subnet route: 0.0.0.0/0 → igw-xxx',
@@ -1070,6 +1108,19 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Route global users to nearest healthy endpoint via AWS backbone',
             fungsi: 'Menggunakan AWS global network untuk route traffic ke endpoint yang paling dekat dan sihat, bukan melalui internet awam',
             scenario: 'App dengan users dari US dan Asia — Global Accelerator route via AWS backbone (bukan public internet), lagi laju. Kalau satu region fail, auto-failover ke region lain dalam <30 saat. Beza dengan CloudFront: GA untuk TCP/UDP apps, bukan static content caching.',
+            compare: {
+              label: 'Global Accelerator vs CloudFront — dua-dua guna AWS edge, tapi beza tujuan',
+              headers: ['Aspect', 'Global Accelerator', 'CloudFront'],
+              rows: [
+                ['Tujuan utama', 'Optimize ROUTING ke regional endpoint', 'CACHE content dekat user (CDN)'],
+                ['Protocol', '🟢 TCP/UDP (apa-apa app)', 'HTTP/HTTPS sahaja'],
+                ['Caching', '❌ Tiada — proxy traffic terus', '🟢 Ya, cache kat edge'],
+                ['Entry point', '2 static anycast IP', 'Domain (dxxxx.cloudfront.net)'],
+                ['Endpoint', 'ALB, NLB, EC2, Elastic IP', 'S3, ALB, custom origin (HTTP)'],
+                ['Best untuk', 'Gaming, IoT, VoIP, non-HTTP, fixed IP, failover Region <30s', 'Website, video/image, static + dynamic web'],
+              ],
+              takeaway: 'Content boleh cache + HTTP → CloudFront. TCP/UDP atau perlu static IP (gaming/IoT/VoIP) atau cross-Region failover pantas → Global Accelerator. Boleh combine: CloudFront depan untuk caching, GA untuk non-HTTP.',
+            },
             tips: [
               'Global Accelerator provisions TWO static Anycast IP addresses — clients always connect to the same two IPs regardless of region',
               'IP caching problem (IoT devices, hard-coded IPs): use Global Accelerator (fixed IPs) not Route 53 (DNS changes require propagation + clients may cache old IPs)',
@@ -1196,18 +1247,29 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Non-critical systems, lowest cost DR strategy',
             fungsi: 'Strategi DR paling asas — backup data ke S3/Glacier, restore bila diperlukan. Tiada infrastruktur standby di DR region',
             scenario: 'Non-critical archival system — backup snapshots ke S3/Glacier regularly. RPO: hours/days. RTO: hours. Paling murah tapi paling lambat recover. Guna bila downtime beberapa jam boleh diterima.',
-            compare: {
-              label: 'The 4 DR strategies — cost ↔ speed spectrum',
-              headers: ['Aspect', 'Backup & Restore', 'Pilot Light', 'Warm Standby', 'Multi-Site Active/Active'],
-              rows: [
-                ['RPO', 'Hours–days', 'Minutes', 'Seconds–minutes', '🟢 Near-zero'],
-                ['RTO', 'Hours', 'Minutes–hours', 'Minutes', '🟢 Seconds'],
-                ['What runs in DR', 'Nothing — just backups', 'Core DB only (app off)', 'Scaled-down full stack', '🟢 Full capacity, live'],
-                ['Cost', '🟢 Lowest', 'Low–medium', 'Higher', 'Highest'],
-                ['Use when', 'Non-critical, downtime OK', 'Can tolerate some recovery time', 'Need fast recovery, low traffic loss', 'Mission-critical, zero downtime'],
-              ],
-              takeaway: 'Cost & recovery speed naik dari kiri → kanan. Cheapest+slowest = Backup & Restore. Fastest+priciest = Multi-Site Active/Active. Pilih ikut RPO/RTO requirement vs budget. Pilot Light = DB on, app off; Warm Standby = full stack scaled-down running.',
-            },
+            compare: [
+              {
+                label: 'RTO vs RPO — jangan keliru!',
+                headers: ['Term', 'Maksud', 'Soalan', 'Arah masa'],
+                rows: [
+                  ['RPO (Recovery Point Objective)', 'Berapa banyak DATA boleh hilang', '"Berapa kerap aku backup?"', '⏪ Ke BELAKANG dari masa crash'],
+                  ['RTO (Recovery Time Objective)', 'Berapa lama nak PULIH semula', '"Berapa lama downtime boleh tahan?"', '⏩ Ke HADAPAN dari masa crash'],
+                ],
+                takeaway: 'RPO = Point = titik data terakhir yang selamat (data loss tolerance). RTO = Time = masa untuk online balik (downtime tolerance). RPO 1 jam → backup tiap jam. RTO 5 minit → kena ada standby panas. Makin kecil dua-dua → makin mahal.',
+              },
+              {
+                label: 'The 4 DR strategies — cost ↔ speed spectrum',
+                headers: ['Aspect', 'Backup & Restore', 'Pilot Light', 'Warm Standby', 'Multi-Site Active/Active'],
+                rows: [
+                  ['RPO', 'Hours–days', 'Minutes', 'Seconds–minutes', '🟢 Near-zero'],
+                  ['RTO', 'Hours', 'Minutes–hours', 'Minutes', '🟢 Seconds'],
+                  ['What runs in DR', 'Nothing — just backups', 'Core DB only (app off)', 'Scaled-down full stack', '🟢 Full capacity, live'],
+                  ['Cost', '🟢 Lowest', 'Low–medium', 'Higher', 'Highest'],
+                  ['Use when', 'Non-critical, downtime OK', 'Can tolerate some recovery time', 'Need fast recovery, low traffic loss', 'Mission-critical, zero downtime'],
+                ],
+                takeaway: 'Cost & recovery speed naik dari kiri → kanan. Cheapest+slowest = Backup & Restore. Fastest+priciest = Multi-Site Active/Active. Pilih ikut RPO/RTO requirement vs budget. Pilot Light = DB on, app off; Warm Standby = full stack scaled-down running.',
+              },
+            ],
             keywords: ['RPO: hours/days', 'RTO: hours', 'lowest cost', 'no standby infra', 'S3/Glacier backup', 'DR spectrum', 'Pilot Light', 'Warm Standby', 'Multi-Site'],
           },
           {
@@ -1500,18 +1562,31 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Run containers',
             fungsi: 'Mengurus dan menjalankan Docker containers pada cluster',
             contohGuna: 'Run microservices dalam Docker, e-commerce modules',
-            compare: {
-              label: 'EC2 launch type vs Fargate',
-              headers: ['Aspect', 'EC2 launch type', 'Fargate'],
-              rows: [
-                ['Infrastructure', '🔴 You manage EC2 instances', '🟢 Serverless — AWS manages it'],
-                ['Patching/scaling hosts', 'Your responsibility', 'No hosts to manage'],
-                ['Pricing', 'Pay for EC2 instances (per-instance)', 'Pay per task vCPU + memory'],
-                ['Best for', 'Cost control at scale, GPU, special host config', 'Variable load, least ops overhead'],
-              ],
-              takeaway: '"Least operational overhead / no servers to manage" → Fargate. "Need control over the host (GPU, large reserved fleet, cheaper at steady scale)" → EC2 launch type.',
-            },
+            compare: [
+              {
+                label: 'EC2 launch type vs Fargate',
+                headers: ['Aspect', 'EC2 launch type', 'Fargate'],
+                rows: [
+                  ['Infrastructure', '🔴 You manage EC2 instances', '🟢 Serverless — AWS manages it'],
+                  ['Patching/scaling hosts', 'Your responsibility', 'No hosts to manage'],
+                  ['Pricing', 'Pay for EC2 instances (per-instance)', 'Pay per task vCPU + memory'],
+                  ['Best for', 'Cost control at scale, GPU, special host config', 'Variable load, least ops overhead'],
+                ],
+                takeaway: '"Least operational overhead / no servers to manage" → Fargate. "Need control over the host (GPU, large reserved fleet, cheaper at steady scale)" → EC2 launch type.',
+              },
+              {
+                label: 'Task Placement Strategies (EC2 launch type sahaja)',
+                headers: ['Strategy', 'Buat apa', 'Optimize untuk'],
+                rows: [
+                  ['binpack', 'Pack tasks ke instance yang ada paling SIKIT CPU/mem lagi cukup', '🟢 Kos — guna instance sepenuh, kurangkan bilangan instance'],
+                  ['spread', 'Agih tasks SAMA RATA ikut attribute (cth AZ, instanceId)', '🟢 Availability / HA'],
+                  ['random', 'Letak tasks secara rawak', 'Mudah, tiada keutamaan'],
+                ],
+                takeaway: 'Jimat duit / packing padat → binpack. Tahan failure / sebar across AZ → spread (selalu spread by AZ). Constraint pula: distinctInstance (satu task satu instance), memberOf (ikut syarat). NOTA: Fargate = best-effort AZ spread sahaja, TAK support strategy/constraint.',
+              },
+            ],
             tips: [
+              'Task placement: binpack = jimat kos (padat), spread = HA (sebar AZ), random = rawak. Constraint: distinctInstance, memberOf',
               'Task Definition = JSON template yang describe containers untuk application (image, CPU, memory, ports, env vars, volumes)',
               'Task Definition BUKAN: IAM template, bukan service yang launch clusters, bukan program yang run — ia BLUEPRINT untuk containers',
               'ECS Launch Types: Fargate (serverless, AWS manage infrastructure) vs EC2 (kau manage EC2 cluster)',
@@ -1527,6 +1602,19 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Container orchestration guna K8s',
             fungsi: 'Mengurus Kubernetes cluster untuk container orchestration',
             contohGuna: 'Large-scale containerized apps yang guna K8s',
+            compare: {
+              label: 'ECS vs EKS — bila pilih yang mana',
+              headers: ['Aspect', 'ECS', 'EKS'],
+              rows: [
+                ['Orchestrator', 'AWS proprietary (mudah)', 'Kubernetes (standard industri)'],
+                ['Learning curve', '🟢 Rendah — AWS-native', '🔴 Tinggi — perlu tahu K8s'],
+                ['Portability', 'AWS-centric', '🟢 Portable (K8s di mana-mana)'],
+                ['Kos control plane', 'Percuma', '~$0.10/jam per cluster'],
+                ['Serverless data plane', 'Fargate', 'Fargate (boleh juga)'],
+                ['Guna bila', 'Nak cepat, AWS sahaja, simple', 'Dah ada K8s skill/tooling, multi-cloud, ekosistem K8s'],
+              ],
+              takeaway: 'Default + ringkas + AWS sahaja → ECS. Dah pakai Kubernetes / nak portable / ada team K8s → EKS. Dua-dua boleh guna Fargate untuk buang urusan server. "Least ops + no K8s knowledge" → ECS Fargate.',
+            },
             tips: [
               'IRSA (IAM Roles for Service Accounts): pods assume IAM roles via service account annotation — no credentials stored anywhere',
               'Best practice for EKS pods to access AWS services (Secrets Manager, S3, DynamoDB) without embedding credentials',
@@ -1738,6 +1826,19 @@ export const domains: DomainData[] = [
             scenario: 'Serve private paid video globally dengan low latency → CloudFront signed URLs/cookies (cache kat edge + restrict access). BUKAN S3 presigned URL — presigned = direct S3, takde edge caching, takde IP restriction. Untuk serve private S3 objects → OAC + bucket policy (bucket kekal private).',
             detailsLabel: 'Signed URL vs S3 Presigned URL',
             storageDetails: 'CloudFront Signed URL/Cookie → access private content MELALUI CloudFront (edge-cached, global low latency, boleh restrict by IP range + expiry, guna trusted key group). Untuk serve at scale via CDN.\nS3 Presigned URL → direct access ke SATU S3 object, signed dengan IAM credentials orang yang generate (inherit permission dia), takde CDN caching. Untuk one-off upload/download terus ke S3.',
+            compare: {
+              label: 'CloudFront Signed URL vs S3 Presigned URL',
+              headers: ['Aspect', 'CloudFront Signed URL/Cookie', 'S3 Presigned URL'],
+              rows: [
+                ['Akses melalui', 'CloudFront (edge cache, global)', 'Direct ke S3 (tiada CDN)'],
+                ['Sign guna', 'Trusted key group (public/private key)', 'IAM creds orang yang generate'],
+                ['Permission', 'Independent dari IAM caller', 'Inherit permission si-pemberi'],
+                ['Skop', 'URL = 1 file; Cookie = banyak file', '1 object sahaja'],
+                ['Extra control', '🟢 Restrict by IP, expiry, geo, caching', 'Expiry sahaja'],
+                ['Best untuk', 'Serve private media AT SCALE via CDN', 'One-off upload/download terus ke S3'],
+              ],
+              takeaway: 'Private content ramai user + low latency (paid video, downloads) → CloudFront signed URL/cookie. Bagi satu orang upload/download terus satu file → S3 presigned URL. Nak bucket kekal private tapi serve via CF → OAC + bucket policy (bukan signed URL).',
+            },
             tips: [
               'OAC (Origin Access Control) = GANTI OAI. Wajib guna OAC untuk S3 origins yang guna SSE-KMS. OAI tidak support KMS. Update bucket policy grant s3:GetObject kepada CloudFront service principal.',
               '"Serve private S3 objects via CloudFront securely" → OAC + bucket policy. Keep bucket block public access = ON.',
@@ -1817,6 +1918,20 @@ export const domains: DomainData[] = [
             fungsi: 'Pelbagai routing policies untuk optimize availability, performance, failover, dan geolocation berdasarkan health checks dan rules',
             detailsLabel: 'Routing Policies',
             storageDetails: 'Simple → 1 resource, no health check, no failover\nWeighted → split traffic by % (A=70%, B=30%)\nLatency-based → route to lowest latency AWS region\nFailover → primary (active) + secondary (passive) via health check\nGeolocation → route by user\'s country/continent\nGeoproximity → route by geographic distance + bias\nMulti-Value → up to 8 healthy records, random selection',
+            compare: {
+              label: 'Scenario → Policy mana? (exam pakai keyword ni)',
+              headers: ['Keyword dalam soalan', 'Policy', 'Kenapa'],
+              rows: [
+                ['"Satu resource, no rules"', 'Simple', 'Default, tiada health check'],
+                ['"A/B test", "split %", "blue-green by %", "gradual shift"', 'Weighted', 'Bahagi traffic ikut peratus'],
+                ['"Lowest latency", "fastest response", "nearest Region"', 'Latency-based', 'Route ke Region paling rendah latency (bukan paling dekat geo)'],
+                ['"Active-passive", "DR", "failover ke backup"', 'Failover', 'Primary + secondary, ikut health check'],
+                ['"Comply by country", "block/serve by location", "bahasa ikut negara"', 'Geolocation', 'Ikut lokasi USER (negara/benua)'],
+                ['"Shift traffic toward a Region", "bias"', 'Geoproximity', 'Ikut jarak + bias (besar/kecilkan Region)'],
+                ['"Client-side HA", "return multiple healthy IPs"', 'Multivalue Answer', 'Sampai 8 record sihat, random — bukan LB betul'],
+              ],
+              takeaway: 'Latency-based ≠ Geolocation! Latency = laju (performance). Geolocation = lokasi user (compliance/bahasa). "Fastest" → Latency. "By country/comply" → Geolocation. Active-passive DR → Failover.',
+            },
             scenario: 'ALB (primary) unhealthy → Route 53 Failover policy auto-redirect ke S3 static error page (secondary). Health check detect ALB down, traffic pindah ke secondary automatik. BUKAN CloudFront — CF cache content tapi tak handle active-passive failover.',
             tips: [
               'Hybrid failover (AWS primary + on-premises secondary): PERLU DUA alias records berasingan',
@@ -1999,6 +2114,19 @@ export const domains: DomainData[] = [
             fungsi: 'EventBridge route events dari sources (EC2 state change, S3 upload, custom apps, SaaS) ke targets (Lambda, SQS, SNS, Step Functions) berdasarkan rules. Gantikan CloudWatch Events. Boleh schedule events (cron/rate).',
             contohGuna: 'EC2 instance terminate → EventBridge rule detect → trigger Lambda untuk cleanup. Atau schedule Lambda setiap hari pukul 9pm.',
             scenario: '"EC2 instance stop → trigger Lambda automatically" → EventBridge rule. "Schedule Lambda every day at midnight" → EventBridge Scheduler. Bukan SNS (yang untuk broadcast notifications, bukan event routing).',
+            compare: {
+              label: 'SQS vs SNS vs EventBridge — 3 yang selalu keliru',
+              headers: ['Aspect', 'SQS', 'SNS', 'EventBridge'],
+              rows: [
+                ['Model', 'Queue (pull)', 'Pub/Sub (push)', 'Event bus (push, rule-based)'],
+                ['Consumer', '1 queue, ramai poller kongsi', 'Ramai subscriber dapat SAMA salinan', 'Target ikut event pattern'],
+                ['Routing pintar', '❌ Tiada', '❌ Tiada (broadcast semua)', '🟢 Content-based (filter by field)'],
+                ['Buffer / retry', '🟢 Simpan msg (4–14 hari), DLQ', 'Tiada storage (retry + DLQ)', 'Retry + archive/replay'],
+                ['Sumber', 'App kau', 'App kau', '🟢 90+ AWS service + SaaS + custom'],
+                ['Guna bila', 'Decouple + buffer kerja, proses ikut kadar sendiri', 'Fan-out satu mesej ke ramai (SNS→banyak SQS)', 'React ke event AWS, route by content, jadual cron'],
+              ],
+              takeaway: 'Buffer + proses ikut kadar sendiri → SQS. Hantar SATU mesej ke RAMAI serentak → SNS. Route ikut ISI event / event AWS / SaaS / jadual → EventBridge. Fan-out klasik = SNS → banyak SQS. EventBridge latency lebih tinggi (~0.5s) tapi paling pintar.',
+            },
             tips: [
               'Schema Registry: EventBridge auto-discovers event schemas dari event bus. Boleh generate code bindings (Java, Python, TypeScript) dari schema — speeds up development',
               'Archive & Replay: archive events dari event bus, replay later untuk debugging atau reprocessing. Useful bila downstream service was down',
@@ -2330,8 +2458,23 @@ export const domains: DomainData[] = [
             ingat: '"SQL terus pada S3 — serverless, bayar per TB scan"',
             gunaUntuk: 'Ad-hoc SQL analysis of data in S3 without loading to a database',
             fungsi: 'Serverless interactive query service. Point ke S3, tulis SQL, dapat results. Bayar per TB data yang di-scan. Sokong CSV, JSON, Parquet, ORC. Pair dengan Glue Data Catalog sebagai metadata store.',
+            diagram: {
+              label: 'Serverless analytics pattern (100% serverless, no cluster)',
+              steps: [
+                { nodes: [{ label: 'S3', sub: 'raw data lake', tone: 'c4' }] },
+                { nodes: [{ label: 'Glue Crawler', sub: '+ Data Catalog (schema)', tone: 'c3' }] },
+                { nodes: [{ label: 'Athena', sub: 'SQL, pay per scan', tone: 'c1' }] },
+                { nodes: [{ label: 'QuickSight', sub: 'dashboard / BI', tone: 'c2' }] },
+              ],
+              caption: 'S3 simpan data → Glue Crawler discover schema isi Data Catalog → Athena query guna SQL → QuickSight visualize. Tiada server/cluster untuk urus. Ini "serverless analytics" classic — kalau soalan kata "no infrastructure / serverless / query S3 directly", ini jawapannya (bukan Redshift/EMR).',
+            },
             scenario: '"Analyse CloudTrail logs atau ALB access logs dalam S3 guna SQL" → Athena. "Ad-hoc analysis tanpa setup database" → Athena. Bukan Redshift (yang untuk structured, recurring analytics dengan dedicated cluster).',
-            keywords: ['serverless SQL', 'S3 queries', 'pay per scan', 'Parquet', 'ORC', 'Glue Catalog', 'log analysis', 'ad-hoc'],
+            tips: [
+              'Kurangkan kos Athena: data di-scan = duit. Guna columnar format (Parquet/ORC) + PARTITION data (by date/region) + compress → scan kurang, murah + laju',
+              'Serverless analytics pipeline: S3 (store) → Glue (catalog/ETL) → Athena (query) → QuickSight (visualize). Hafal urutan ni',
+              'Athena = ad-hoc/interactive SQL pada S3. Redshift = data warehouse dedicated untuk recurring/complex analytics. Redshift Spectrum = Redshift query terus S3',
+            ],
+            keywords: ['serverless SQL', 'S3 queries', 'pay per scan', 'Parquet', 'ORC', 'Glue Catalog', 'log analysis', 'ad-hoc', 'partition', 'columnar', 'QuickSight', 'serverless analytics pattern'],
           },
           {
             shortName: 'Glue',
@@ -2427,6 +2570,21 @@ export const domains: DomainData[] = [
             fungsi: 'AWS menyediakan pelbagai AI services ready-to-use: speech, vision, NLP, document processing.',
             storageDetails: 'Amazon Polly → Text-to-Speech (TTS): convert text jadi audio (natural voice)\nAmazon Transcribe → Speech-to-Text (STT): convert audio/video jadi text\nAmazon Lex → Conversational chatbot: NLU + ASR, maintains context, integrates Lambda (powers Alexa)\nAmazon Rekognition → Image/Video analysis: face detection, object/scene detection, labels\nAmazon Comprehend → NLP: sentiment analysis, entities, key phrases, language detection\nAmazon Textract → Document OCR: extract text, forms, tables from PDFs/images\nAmazon Translate → Neural machine translation: convert text between languages, real-time + batch\nKinesis Video Streams → Ingest, store, process video/audio streams (for Rekognition real-time analysis)',
             detailsLabel: 'AI Services Comparison',
+            compare: {
+              label: 'Match the AI service to the use case (exam guna keyword input→output)',
+              headers: ['Service', 'Input → Output', 'Keyword soalan'],
+              rows: [
+                ['Polly', 'Text → Speech (audio)', '"read aloud", "voice", "audiobook"'],
+                ['Transcribe', 'Speech → Text', '"transcribe", "caption", "meeting notes"'],
+                ['Translate', 'Text → Text (bahasa lain)', '"translate", "multilingual", "localize"'],
+                ['Comprehend', 'Text → Insight (NLP)', '"sentiment", "entities", "key phrases", "topic"'],
+                ['Lex', 'Text/Speech → Dialog (chatbot)', '"chatbot", "conversation", "intent", "Alexa"'],
+                ['Rekognition', 'Image/Video → Labels/Faces', '"face detection", "object", "moderation", "CCTV"'],
+                ['Textract', 'Document → Structured text', '"OCR", "scanned PDF", "forms", "tables", "invoice"'],
+                ['SageMaker', 'Data → Custom model', '"train your own", "custom ML", "hyperparameter"'],
+              ],
+              takeaway: 'Pre-built API (Polly/Transcribe/Translate/Comprehend/Lex/Rekognition/Textract) = no training, call API terus. SageMaker = bina/latih model sendiri. Pipeline klasik: Transcribe → Translate → Comprehend → Polly. CCTV real-time = Rekognition + Kinesis VIDEO Streams.',
+            },
             tips: [
               'Polly = text → speech. Transcribe = speech → text. INGAT: P=produce speech, T=transcribe speech',
               'Lex = chatbot dengan context awareness. Kalau soalan sebut "chatbot", "natural language", "conversation turns" → Lex',

@@ -168,9 +168,15 @@ export default function LearnCard({ service, category, sectionId }: LearnCardPro
             </div>
           )}
 
-          {service.diagram && <FlowAnatomy diagram={service.diagram} />}
+          {service.diagram &&
+            (Array.isArray(service.diagram) ? service.diagram : [service.diagram]).map((d, i) => (
+              <FlowAnatomy key={d.label ?? i} diagram={d} />
+            ))}
 
-          {service.compare && <ComparisonTable compare={service.compare} />}
+          {service.compare &&
+            (Array.isArray(service.compare) ? service.compare : [service.compare]).map((c, i) => (
+              <ComparisonTable key={c.label ?? i} compare={c} />
+            ))}
 
           {service.scenario && (
             <div className={`rounded-lg px-3 py-2.5 border ${styles.scenario}`}>

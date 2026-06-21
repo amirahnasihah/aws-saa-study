@@ -11,6 +11,7 @@ const tocSections = [
   { id: 'cidr', label: 'CIDR & IP Structure' },
   { id: 'subnets', label: 'Public vs Private' },
   { id: 'sg-nacl', label: 'SG vs NACL' },
+  { id: 'flow-logs', label: 'VPC Flow Logs' },
   { id: 'route-tables', label: 'Route Tables' },
   { id: 'traffic', label: 'Traffic Flow' },
   { id: 'nat-flow', label: 'NAT Outbound Flow' },
@@ -563,6 +564,196 @@ export default function VpcPage() {
                 </p>
               </div>
             </div>
+          </div>
+        </section>
+
+        {/* VPC Flow Logs */}
+        <section className="mb-10">
+          <SectionHeader id="flow-logs" emoji="🎥" title="VPC Flow Logs — CCTV Network Kau" />
+          <div className="bg-aws-card border border-aws-border rounded-xl p-5 space-y-5">
+
+            {/* Mental model */}
+            <div className="bg-c3/8 border border-c3/20 rounded-lg px-4 py-3">
+              <p className="font-space-mono text-[0.65rem] uppercase tracking-[0.12em] text-c3/70 mb-2">Mental Model</p>
+              <p className="text-[0.82rem] text-aws-text leading-relaxed">
+                Flow Logs = <strong className="text-c3">CCTV network VPC</strong>. Dia rakam <strong className="text-aws-text">SIAPA cakap dengan SIAPA</strong>{' '}
+                (source IP, destination IP, port, ACCEPT/REJECT) — <strong className="text-c2">bukan APA dia cakap</strong> (bukan packet payload/content).
+                Nak tengok isi packet sebenar? Itu kerja <GlossaryText text="Traffic Mirroring" />, bukan Flow Logs.
+              </p>
+              <p className="text-[0.75rem] text-aws-muted leading-relaxed mt-2">
+                Data dikumpul <strong className="text-c4">di luar laluan traffic</strong> kau — jadi zero impact pada throughput/latency.
+                Tapi <strong className="text-amber-300">bukan real-time</strong>: ambil beberapa minit untuk mula keluar log.
+              </p>
+            </div>
+
+            {/* Anatomy: capture levels → flow log → destinations */}
+            <div>
+              <p className="font-space-mono text-[0.65rem] uppercase tracking-[0.12em] text-c3/70 mb-3">Anatomy — Dari Mana ke Mana</p>
+              <div className="flex flex-col lg:flex-row items-stretch gap-3">
+
+                {/* Capture levels */}
+                <div className="flex-1 rounded-lg border border-c4/25 bg-c4/5 px-3 py-3">
+                  <p className="font-space-mono text-[0.6rem] font-bold text-c4 mb-2">1. Capture Level (pilih satu)</p>
+                  <div className="space-y-1.5">
+                    {[
+                      { k: 'VPC', d: 'Monitor SEMUA ENI dalam VPC' },
+                      { k: 'Subnet', d: 'Monitor SEMUA ENI dalam subnet itu' },
+                      { k: 'ENI', d: 'Monitor satu network interface je' },
+                    ].map((x) => (
+                      <div key={x.k} className="rounded-md bg-c4/8 border border-c4/20 px-2.5 py-1.5">
+                        <p className="font-space-mono text-[0.7rem] font-bold text-c4">{x.k}</p>
+                        <p className="text-[0.66rem] text-aws-muted leading-snug">{x.d}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <span aria-hidden className="hidden lg:flex self-center text-aws-muted/60 text-lg shrink-0">→</span>
+
+                {/* Flow log */}
+                <div className="flex-1 rounded-lg border border-c3/25 bg-c3/5 px-3 py-3 flex flex-col justify-center">
+                  <p className="font-space-mono text-[0.6rem] font-bold text-c3 mb-2">2. Flow Log (filter traffic)</p>
+                  <div className="space-y-1.5">
+                    {[
+                      { k: 'ACCEPT', d: 'Traffic yang SG/NACL benarkan', c: 'text-c4' },
+                      { k: 'REJECT', d: 'Traffic yang SG/NACL block', c: 'text-c2' },
+                      { k: 'ALL', d: 'Kedua-duanya sekali', c: 'text-c5' },
+                    ].map((x) => (
+                      <div key={x.k} className="rounded-md bg-c3/8 border border-c3/20 px-2.5 py-1.5">
+                        <p className={`font-space-mono text-[0.7rem] font-bold ${x.c}`}>{x.k}</p>
+                        <p className="text-[0.66rem] text-aws-muted leading-snug">{x.d}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <span aria-hidden className="hidden lg:flex self-center text-aws-muted/60 text-lg shrink-0">→</span>
+
+                {/* Destinations */}
+                <div className="flex-1 rounded-lg border border-c2/25 bg-c2/5 px-3 py-3">
+                  <p className="font-space-mono text-[0.6rem] font-bold text-c2 mb-2">3. Destination (hantar ke mana)</p>
+                  <div className="space-y-1.5">
+                    {[
+                      { k: 'CloudWatch Logs', d: 'Search/alarm cepat, real-ish-time monitoring' },
+                      { k: 'Amazon S3', d: 'Simpan murah + query guna Athena' },
+                      { k: 'Data Firehose', d: 'Stream ke analytics/3rd-party (dulu Kinesis Firehose)' },
+                    ].map((x) => (
+                      <div key={x.k} className="rounded-md bg-c2/8 border border-c2/20 px-2.5 py-1.5">
+                        <p className="font-space-mono text-[0.7rem] font-bold text-c2">{x.k}</p>
+                        <p className="text-[0.66rem] text-aws-muted leading-snug">{x.d}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Anatomy of a flow log record */}
+            <div>
+              <p className="font-space-mono text-[0.65rem] uppercase tracking-[0.12em] text-c3/70 mb-3">Anatomy Satu Flow Log Record (default format)</p>
+              <div className="rounded-lg overflow-hidden border border-aws-border/40">
+                <div className="bg-aws-bg/60 px-3 py-2 border-b border-aws-border/40 overflow-x-auto nav-scroll">
+                  <code className="font-mono text-[0.68rem] whitespace-nowrap">
+                    <span className="text-aws-muted">2 </span>
+                    <span className="text-aws-muted">123456789010 </span>
+                    <span className="text-aws-muted">eni-1235b8ca </span>
+                    <span className="text-c4 font-bold">172.31.16.139 </span>
+                    <span className="text-c2 font-bold">172.31.16.21 </span>
+                    <span className="text-c5">20641 </span>
+                    <span className="text-c5">22 </span>
+                    <span className="text-aws-muted">6 20 4249 1418530010 1418530070 </span>
+                    <span className="text-c2 font-bold">REJECT </span>
+                    <span className="text-aws-muted">OK</span>
+                  </code>
+                </div>
+                <div className="px-3 py-3 grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-1.5">
+                  {[
+                    { f: 'srcaddr', d: 'IP yang HANTAR', c: 'text-c4' },
+                    { f: 'dstaddr', d: 'IP yang TERIMA', c: 'text-c2' },
+                    { f: 'srcport / dstport', d: 'Port (22 = SSH)', c: 'text-c5' },
+                    { f: 'protocol', d: '6 = TCP, 17 = UDP', c: 'text-aws-text' },
+                    { f: 'action', d: 'ACCEPT / REJECT ← verdict SG+NACL', c: 'text-c2' },
+                    { f: 'log-status', d: 'OK / NODATA / SKIPDATA', c: 'text-aws-text' },
+                  ].map((x) => (
+                    <div key={x.f}>
+                      <p className={`font-mono text-[0.68rem] font-bold ${x.c}`}>{x.f}</p>
+                      <p className="text-[0.64rem] text-aws-muted leading-snug">{x.d}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <p className="text-[0.72rem] text-aws-muted leading-relaxed mt-2">
+                Record atas: ada orang cuba <strong className="text-c5">SSH (port 22)</strong> masuk tapi kena{' '}
+                <strong className="text-c2">REJECT</strong> — maknanya SG atau NACL kau block. Inilah cara No.1 guna Flow Logs:{' '}
+                <strong className="text-aws-text">diagnose SG/NACL terlalu ketat</strong>.
+              </p>
+            </div>
+
+            {/* ACCEPT vs REJECT troubleshooting decision */}
+            <div className="bg-amber-500/5 border border-amber-500/15 rounded-lg px-4 py-3">
+              <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-amber-400/70 mb-2">🔍 Baca REJECT macam mana?</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <p className="text-[0.76rem] text-aws-text leading-relaxed">
+                  <strong className="text-c2">REJECT pada INBOUND</strong> → request masuk kena block.
+                  Suspect: <strong className="text-aws-text">SG inbound rule</strong> tak allow, atau NACL inbound DENY.
+                </p>
+                <p className="text-[0.76rem] text-aws-text leading-relaxed">
+                  <strong className="text-c2">Request OK tapi REJECT pada return</strong> → NACL stateless punya pasal!
+                  Tambah <strong className="text-aws-text">NACL outbound rule untuk ephemeral ports</strong> (1024–65535). SG takkan jadi macam ni (stateful).
+                </p>
+              </div>
+            </div>
+
+            {/* Not logged */}
+            <div>
+              <p className="font-space-mono text-[0.65rem] uppercase tracking-[0.12em] text-c3/70 mb-3">⛔ Yang TAK Di-log (exam suka tanya)</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {[
+                  'Traffic ke Amazon DNS server (kalau guna DNS sendiri → di-log)',
+                  'Windows license activation traffic',
+                  '169.254.169.254 — instance metadata',
+                  '169.254.169.123 — Amazon Time Sync Service',
+                  'DHCP traffic',
+                  'Traffic ke reserved IP default VPC router',
+                  'Traffic antara ENI endpoint ↔ Network Load Balancer',
+                  'ARP (Address Resolution Protocol)',
+                ].map((x) => (
+                  <div key={x} className="flex gap-2 bg-white/3 border border-aws-border/40 rounded-lg px-3 py-2">
+                    <span className="text-c2/70 shrink-0 text-[0.72rem]">✕</span>
+                    <p className="text-[0.72rem] text-aws-muted leading-snug"><GlossaryText text={x} /></p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Gotchas / memory */}
+            <div className="bg-amber-500/5 border border-amber-500/15 rounded-lg px-4 py-3">
+              <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-amber-400/70 mb-2">🧠 Cara Mudah Ingat + Gotchas</p>
+              <ul className="space-y-1.5">
+                {[
+                  'INGAT "CCTV": rakam metadata SIAPA→SIAPA, bukan content. Content = Traffic Mirroring.',
+                  'Tak boleh EDIT flow log lepas create — nak tukar format/IAM role/filter? Delete & buat baru.',
+                  'Tak boleh enable untuk VPC peered melainkan peer VPC dalam account kau sendiri.',
+                  'Nitro-based instance: aggregation interval SENTIASA ≤ 1 minit, walaupun kau set max 10 min.',
+                  'Boleh enable untuk ENI service lain juga: ELB, RDS, ElastiCache, Redshift, WorkSpaces, NAT GW, TGW.',
+                  'Flow Logs = sumber untuk GuardDuty & VPC Reachability/Detective. S3 + Athena = query SQL murah.',
+                ].map((tip) => (
+                  <li key={tip} className="text-[0.76rem] text-aws-text leading-relaxed flex gap-2">
+                    <span className="text-amber-400/60 shrink-0">→</span>
+                    <span><GlossaryText text={tip} /></span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <p className="text-[0.68rem] text-aws-muted">
+              Sumber:{' '}
+              <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs.html" target="_blank" rel="noopener noreferrer" className="text-c3/70 hover:text-c3 transition-colors">VPC Flow Logs docs</a>
+              {' · '}
+              <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-log-records.html" target="_blank" rel="noopener noreferrer" className="text-c3/70 hover:text-c3 transition-colors">Flow Log Records</a>
+              {' · '}
+              <a href="https://docs.aws.amazon.com/vpc/latest/userguide/flow-logs-limitations.html" target="_blank" rel="noopener noreferrer" className="text-c3/70 hover:text-c3 transition-colors">Limitations</a>
+            </p>
           </div>
         </section>
 
