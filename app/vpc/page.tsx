@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, type ReactNode } from 'react'
 import Nav from '@/components/Nav'
 import GlossaryText from '@/components/GlossaryText'
 import SiteFooter from '@/components/SiteFooter'
@@ -882,7 +882,9 @@ export default function VpcPage() {
             <div className="p-4 pb-2">
               <p className="text-[0.78rem] text-aws-muted leading-relaxed">
                 VPC Endpoint = shortcut untuk EC2 access AWS services <strong className="text-aws-text">tanpa keluar ke internet</strong>.
-                Traffic stays within AWS network. Dua jenis utama — pilih ikut service.
+                Traffic stays within AWS network (AWS private backbone) — bukan lalu IGW / NAT / public internet.
+                Sebab tu ia jawapan classic untuk <strong className="text-aws-text">&ldquo;low latency + high security&rdquo;</strong>:
+                fewer hops = lower latency, tak terdedah ke internet = higher security (bonus: tak perlu NAT = jimat kos). Dua jenis utama — pilih ikut service.
               </p>
             </div>
             <div className="overflow-x-auto">
@@ -1062,55 +1064,83 @@ export default function VpcPage() {
               Ni macam &ldquo;peta sebenar&rdquo; — semua VPC components dan hubungan antara satu sama lain. Exam suka tanya &ldquo;mana kena letak apa&rdquo;.
             </p>
 
-            {/* ASCII Architecture Diagram */}
-            <div className="bg-[#0d1117] border border-aws-border/60 rounded-xl overflow-x-auto">
-              <pre className="text-[0.58rem] sm:text-[0.68rem] leading-relaxed font-mono text-aws-muted p-4 sm:p-5 whitespace-pre">{`┌─────────────────────────────────────────────────────────────┐
-│                    AWS REGION (ap-southeast-1)              │
-│  ┌───────────────────────────────────────────────────────┐  │
-│  │              VPC  10.0.0.0/16                         │  │
-│  │                                                       │  │
-│  │  ┌─── AZ-a ────────────────────────────────────────┐  │  │
-│  │  │                                                  │  │  │
-│  │  │  ┌─ Public Subnet 10.0.1.0/24 ───────────────┐  │  │  │
-│  │  │  │  Route: 0.0.0.0/0 → `}<span className="text-c4">IGW</span>{`                  │  │  │  │
-│  │  │  │                                            │  │  │  │
-│  │  │  │  ┌──────────┐   ┌──────────┐               │  │  │  │
-│  │  │  │  │`}<span className="text-c2"> ALB/Web  </span>{`│   │`}<span className="text-c2"> NAT GW   </span>{`│ ← Elastic IP │  │  │  │
-│  │  │  │  │`}<span className="text-c2"> Server   </span>{`│   │`}<span className="text-c2"> (outbound)</span>{`│               │  │  │  │
-│  │  │  │  └──────────┘   └──────────┘               │  │  │  │
-│  │  │  │     ↑ SG               │                   │  │  │  │
-│  │  │  └─────│──────────────────│────────────────────┘  │  │  │
-│  │  │        │ NACL             │                       │  │  │
-│  │  │  ┌─ Private Subnet 10.0.2.0/24 ──────────────┐  │  │  │
-│  │  │  │  Route: 0.0.0.0/0 → `}<span className="text-c3">NAT GW</span>{`                │  │  │  │
-│  │  │  │                                            │  │  │  │
-│  │  │  │  ┌──────────┐   ┌──────────┐               │  │  │  │
-│  │  │  │  │`}<span className="text-c3"> App      </span>{`│   │`}<span className="text-c3"> Database </span>{`│               │  │  │  │
-│  │  │  │  │`}<span className="text-c3"> Server   </span>{`│   │`}<span className="text-c3"> (RDS)    </span>{`│               │  │  │  │
-│  │  │  │  └──────────┘   └──────────┘               │  │  │  │
-│  │  │  │     ↑ SG            ↑ SG                   │  │  │  │
-│  │  │  └────────────────────────────────────────────┘  │  │  │
-│  │  │                                                  │  │  │
-│  │  └──────────────────────────────────────────────────┘  │  │
-│  │                                                       │  │
-│  └───────────────────────────────────────────────────────┘  │
-│                          │                                   │
-│                   ┌──────┴──────┐                            │
-│                   │`}<span className="text-c4">{`  Internet  `}</span>{`│                            │
-│                   │`}<span className="text-c4">{`  Gateway   `}</span>{`│ ← 1 per VPC, free          │
-│                   └──────┬──────┘                            │
-└──────────────────────────│───────────────────────────────────┘
-                           │
-          ┌────────────────┼────────────────┐
-          │                │                │
-   ┌──────┴──────┐  ┌─────┴─────┐  ┌───────┴───────┐
-   │`}<span className="text-c6">{`  Internet   `}</span>{`│  │`}<span className="text-c6">{`  VPN GW  `}</span>{`│  │`}<span className="text-c1">{` Direct Connect`}</span>{`│
-   │`}<span className="text-c6">{`  (users)    `}</span>{`│  │`}<span className="text-c6">{` (IPsec)  `}</span>{`│  │`}<span className="text-c1">{` (dedicated)   `}</span>{`│
-   └─────────────┘  └─────┬─────┘  └───────┬───────┘
-                          │                │
-                    ┌─────┴────────────────┴─────┐
-                    │     On-Premises Data Center │
-                    └────────────────────────────┘`}</pre>
+            {/* AWS-style nested architecture diagram */}
+            <div className="bg-[#0d1117] border border-aws-border/60 rounded-xl p-3 sm:p-5 overflow-x-auto">
+              <div className="min-w-[300px] space-y-3">
+
+                {/* AWS Cloud boundary */}
+                <div className="rounded-lg border border-aws-border bg-white/[0.015] p-2.5 sm:p-3">
+                  <div className="flex items-center gap-1.5 mb-2.5">
+                    <span className="inline-flex h-5 w-5 items-center justify-center rounded bg-[#242F3E] shrink-0">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6.5 18a4 4 0 0 1 .3-8 5 5 0 0 1 9.5-1.4A3.5 3.5 0 1 1 17 18H6.5z" /></svg>
+                    </span>
+                    <span className="font-space-mono text-[0.6rem] font-bold text-aws-muted tracking-wide">AWS Cloud</span>
+                    <span className="ml-auto font-space-mono text-[0.55rem] text-aws-muted/70">Region · ap-southeast-1</span>
+                  </div>
+
+                  {/* VPC boundary */}
+                  <div className="rounded-lg border border-[#8C4FFF]/50 bg-[#8C4FFF]/[0.04] p-2.5 sm:p-3">
+                    <div className="flex items-center gap-1.5 mb-2.5">
+                      <AwsIcon kind="vpc" size={22} />
+                      <span className="font-space-mono text-[0.62rem] font-bold text-[#B794FF]">Virtual Private Cloud</span>
+                      <span className="ml-auto font-space-mono text-[0.58rem] text-[#B794FF]/80">10.0.0.0/16</span>
+                    </div>
+
+                    {/* Availability Zone boundary */}
+                    <div className="rounded-lg border border-dashed border-[#00A4A6]/50 p-2.5 sm:p-3">
+                      <div className="flex items-center gap-1.5 mb-2.5">
+                        <span className="inline-block h-3 w-3 rounded-sm border border-dashed border-[#00A4A6] shrink-0" />
+                        <span className="font-space-mono text-[0.58rem] font-semibold text-[#4FD0D2]">Availability Zone A</span>
+                      </div>
+
+                      {/* Public subnet */}
+                      <div className="rounded-md border border-[#7AA116]/45 bg-[#7AA116]/[0.07] p-2.5 mb-2.5">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2.5">
+                          <span className="font-space-mono text-[0.58rem] font-bold text-[#A6CE39]">Public Subnet</span>
+                          <span className="font-space-mono text-[0.55rem] text-aws-muted">10.0.1.0/24</span>
+                          <span className="ml-auto font-space-mono text-[0.5rem] text-[#A6CE39] bg-[#7AA116]/15 px-1.5 py-0.5 rounded">0.0.0.0/0 → IGW</span>
+                        </div>
+                        <div className="flex flex-wrap gap-3">
+                          <ServiceTile kind="alb" label="Application Load Balancer" />
+                          <ServiceTile kind="nat" label="NAT Gateway" sub="+ Elastic IP" />
+                        </div>
+                      </div>
+
+                      {/* Private subnet */}
+                      <div className="rounded-md border border-[#147EBA]/55 bg-[#147EBA]/[0.07] p-2.5">
+                        <div className="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2.5">
+                          <span className="font-space-mono text-[0.58rem] font-bold text-[#3FA9E0]">Private Subnet</span>
+                          <span className="font-space-mono text-[0.55rem] text-aws-muted">10.0.2.0/24</span>
+                          <span className="ml-auto font-space-mono text-[0.5rem] text-[#3FA9E0] bg-[#147EBA]/15 px-1.5 py-0.5 rounded">0.0.0.0/0 → NAT GW</span>
+                        </div>
+                        <div className="flex flex-wrap gap-3">
+                          <ServiceTile kind="ec2" label="App Server" sub="EC2" />
+                          <ServiceTile kind="rds" label="Database" sub="RDS" />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Internet Gateway at VPC edge */}
+                    <div className="flex items-center justify-center gap-1.5 mt-3">
+                      <AwsIcon kind="igw" size={22} />
+                      <span className="font-space-mono text-[0.56rem] text-[#B794FF]">Internet Gateway · 1 per VPC · free</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* connector */}
+                <div className="flex justify-center"><div className="h-4 w-px bg-aws-border" /></div>
+
+                {/* external connectivity */}
+                <div className="grid grid-cols-3 gap-2">
+                  <ExternalTile kind="users" label="Internet Users" sub="public" />
+                  <ExternalTile kind="vpngw" label="Site-to-Site VPN" sub="IPsec tunnel" />
+                  <ExternalTile kind="dx" label="Direct Connect" sub="dedicated line" />
+                </div>
+                <p className="text-center font-space-mono text-[0.55rem] text-aws-muted leading-relaxed">
+                  ↑ VPN &amp; Direct Connect link the VPC to your On-Premises Data Center
+                </p>
+              </div>
             </div>
 
             {/* Component Legend */}
@@ -1211,6 +1241,7 @@ export default function VpcPage() {
               { s: 'Block specific IP address dari masuk ke subnet', a: 'NACL — tambah Deny rule (SG tak boleh deny)', c: 'text-c5' },
               { s: 'Subnet tak dapat access internet walaupun ada IGW', a: 'Check route table: ada 0.0.0.0/0 → IGW? Subnet associate?', c: 'text-c4' },
               { s: 'EC2 private subnet access S3 tanpa NAT (jimat kos)', a: 'S3 Gateway VPC Endpoint (percuma)', c: 'text-c4' },
+              { s: 'EC2 private subnet write ke S3 — low latency + high security', a: 'S3 Gateway VPC Endpoint — traffic stays dalam AWS backbone, tak lalu internet, free', c: 'text-c4' },
               { s: 'Connect 10 VPCs dan 3 on-premises data centers', a: 'Transit Gateway (TGW)', c: 'text-c3' },
               { s: 'Connect 2 VPCs dari different accounts', a: 'VPC Peering (pastikan IP ranges tak overlap!)', c: 'text-c2' },
               { s: 'High bandwidth, consistent low latency, on-prem ke AWS', a: 'Direct Connect', c: 'text-c1' },
@@ -1309,6 +1340,61 @@ function SectionHeader({ id, emoji, title }: { id: string; emoji: string; title:
       <a href="#top" className="ml-auto font-space-mono text-[0.65rem] text-aws-muted hover:text-aws-text transition-colors">
         ↑ Top
       </a>
+    </div>
+  )
+}
+
+// AWS official icon palette — category gradients matching the AWS Architecture Icons toolkit
+const NET = 'linear-gradient(135deg,#8C4FFF,#5A30C7)' // Networking & Content Delivery (purple)
+const COMPUTE = 'linear-gradient(135deg,#F58536,#C75A0E)' // Compute (orange)
+const DB = 'linear-gradient(135deg,#4D72F5,#2E27AD)' // Database (blue)
+
+type AwsIconKind = 'vpc' | 'igw' | 'nat' | 'alb' | 'ec2' | 'rds' | 'vpngw' | 'dx' | 'users'
+
+const awsIconMeta: Record<AwsIconKind, { bg: string; glyph: ReactNode }> = {
+  vpc: { bg: NET, glyph: (<><rect x="4" y="5" width="16" height="14" rx="1.5" /><path d="M4 10h16M9.5 5v14" /></>) },
+  igw: { bg: NET, glyph: (<><rect x="4" y="4" width="16" height="16" rx="2" /><path d="M12 7v10M12 7l-3 3M12 7l3 3M12 17l-3-3M12 17l3 3" /></>) },
+  nat: { bg: NET, glyph: (<><rect x="3.5" y="4" width="17" height="16" rx="2" /><path d="M6.5 9.5h8M6.5 9.5l2.5-2.5M6.5 9.5l2.5 2.5M17.5 14.5h-8M17.5 14.5l-2.5-2.5M17.5 14.5l-2.5 2.5" /></>) },
+  alb: { bg: NET, glyph: (<><circle cx="12" cy="5" r="2" /><circle cx="5" cy="19" r="2" /><circle cx="12" cy="19" r="2" /><circle cx="19" cy="19" r="2" /><path d="M12 7v3M5 17v-3h14v3M12 14v3" /></>) },
+  ec2: { bg: COMPUTE, glyph: (<><rect x="6" y="6" width="12" height="12" rx="1" /><rect x="9" y="9" width="6" height="6" rx="0.5" /><path d="M9 6V3.5M12 6V3.5M15 6V3.5M9 20.5V18M12 20.5V18M15 20.5V18M6 9H3.5M6 12H3.5M6 15H3.5M20.5 9H18M20.5 12H18M20.5 15H18" /></>) },
+  rds: { bg: DB, glyph: (<><ellipse cx="12" cy="6" rx="7" ry="2.5" /><path d="M5 6v12c0 1.38 3.13 2.5 7 2.5s7-1.12 7-2.5V6" /><path d="M5 12c0 1.38 3.13 2.5 7 2.5s7-1.12 7-2.5" /></>) },
+  vpngw: { bg: NET, glyph: (<><rect x="5" y="11" width="14" height="9" rx="2" /><path d="M8 11V8a4 4 0 0 1 8 0v3M12 15v2" /></>) },
+  dx: { bg: NET, glyph: (<><path d="M9 15l6-6" /><path d="M11 7.5l1-1a3.4 3.4 0 0 1 4.8 4.8l-1 1" /><path d="M13 16.5l-1 1a3.4 3.4 0 0 1-4.8-4.8l1-1" /></>) },
+  users: { bg: DB, glyph: (<><circle cx="12" cy="8" r="3.5" /><path d="M5.5 20a6.5 6.5 0 0 1 13 0" /></>) },
+}
+
+function AwsIcon({ kind, size = 30 }: { kind: AwsIconKind; size?: number }) {
+  const meta = awsIconMeta[kind]
+  const inner = Math.round(size * 0.6)
+  return (
+    <span
+      className="inline-flex items-center justify-center rounded-md shrink-0 shadow-sm"
+      style={{ width: size, height: size, background: meta.bg }}
+      aria-hidden
+    >
+      <svg width={inner} height={inner} viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round">
+        {meta.glyph}
+      </svg>
+    </span>
+  )
+}
+
+function ServiceTile({ kind, label, sub }: { kind: AwsIconKind; label: string; sub?: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1 w-[74px] text-center">
+      <AwsIcon kind={kind} size={34} />
+      <span className="font-space-mono text-[0.52rem] leading-tight text-aws-text">{label}</span>
+      {sub && <span className="font-space-mono text-[0.46rem] leading-tight text-aws-muted">{sub}</span>}
+    </div>
+  )
+}
+
+function ExternalTile({ kind, label, sub }: { kind: AwsIconKind; label: string; sub?: string }) {
+  return (
+    <div className="flex flex-col items-center gap-1 rounded-lg border border-aws-border bg-white/[0.02] px-2 py-2.5 text-center">
+      <AwsIcon kind={kind} size={30} />
+      <span className="font-space-mono text-[0.52rem] leading-tight text-aws-text">{label}</span>
+      {sub && <span className="font-space-mono text-[0.46rem] leading-tight text-aws-muted">{sub}</span>}
     </div>
   )
 }
