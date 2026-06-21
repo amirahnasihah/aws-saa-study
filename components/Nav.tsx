@@ -60,13 +60,15 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
           <PageLink pathname={pathname} href="/visual" label="Visual" active={activePage === 'visual'} />
           <PageLink pathname={pathname} href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
           {userEmail && <PageLink pathname={pathname} href="/labs" label="Labs" active={activePage === 'labs'} />}
-          {userEmail && <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="icon" />}
         </div>
 
         {/* Zone 3 — account */}
-        <div className="ml-auto flex items-center pl-2 shrink-0">
+        <div className="ml-auto flex items-center gap-1.5 pl-2 shrink-0">
           {userEmail ? (
-            <AccountMenu email={userEmail} onSignOut={handleSignOut} />
+            <>
+              <AskAINavLink pathname={pathname} active={activePage === 'ai'} variant="icon" />
+              <AccountMenu email={userEmail} onSignOut={handleSignOut} />
+            </>
           ) : (
             <SignInButton />
           )}
