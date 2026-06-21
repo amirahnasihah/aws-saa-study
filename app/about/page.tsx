@@ -4,7 +4,6 @@ import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import { GITHUB_URL, PORTFOLIO_URL, SITE_URL } from '@/data/siteLinks'
 import { glossary } from '@/data/glossary'
-import { registerSteps, delivery, deliveryAccent, duringTesting } from '@/data/exam'
 
 export const metadata: Metadata = {
   title: 'About — AWS SAA-C03 Study',
@@ -231,120 +230,6 @@ export default function AboutPage() {
           </div>
 
         </div>
-
-        {/* Exam day & registration — full width */}
-        <section className="mt-12 space-y-8">
-
-          {/* Register */}
-          <div>
-            <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-c1 mb-2">
-              Getting started
-            </p>
-            <h2 className="text-xl font-bold text-aws-text mb-1">Register & schedule</h2>
-            <p className="text-sm text-aws-muted leading-relaxed max-w-[520px] mb-5">
-              Five steps from sign-in to a booked seat. The whole flow runs through AWS
-              Certification → Pearson VUE.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {registerSteps.map((step) => (
-                <div
-                  key={step.n}
-                  className="rounded-xl border border-aws-border bg-aws-card/60 p-4 flex items-start gap-3"
-                >
-                  <span className="font-space-mono text-[0.62rem] font-bold text-c1 shrink-0 mt-0.5">
-                    {step.n}
-                  </span>
-                  <div className="min-w-0">
-                    <h3 className="text-sm font-semibold text-aws-text mb-1">{step.title}</h3>
-                    <p className="text-[0.8rem] text-aws-muted leading-relaxed">{step.body}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Delivery: on-site vs online */}
-          <div>
-            <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-c1 mb-2">
-              Delivery
-            </p>
-            <h2 className="text-xl font-bold text-aws-text mb-1">On-site or online?</h2>
-            <p className="text-sm text-aws-muted leading-relaxed max-w-[520px] mb-5">
-              Two ways to sit the exam — pick what fits your setup. The rules differ on ID,
-              breaks, and what you can do mid-exam.
-            </p>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {delivery.map((opt) => {
-                const accent = deliveryAccent[opt.mode]
-                return (
-                  <div
-                    key={opt.mode}
-                    className="rounded-xl border border-aws-border bg-aws-card/60 p-5"
-                  >
-                    <div className="flex items-center gap-2 mb-3 pb-3 border-b border-aws-border">
-                      <span className={`w-2 h-2 rounded-full shrink-0 ${accent.dot}`} />
-                      <div className="min-w-0">
-                        <h3 className="text-sm font-bold text-aws-text leading-tight">{opt.label}</h3>
-                        <p className={`font-space-mono text-[0.55rem] ${accent.text}`}>{opt.sub}</p>
-                      </div>
-                      <span
-                        className={`ml-auto font-space-mono text-[0.53rem] border rounded-full px-2 py-0.5 ${accent.pill}`}
-                      >
-                        {opt.mode === 'center' ? 'in person' : 'remote'}
-                      </span>
-                    </div>
-                    <ul className="space-y-2">
-                      {opt.points.map((point) => (
-                        <li key={point} className="flex items-start gap-2">
-                          <span className={`font-space-mono text-[0.6rem] ${accent.text} shrink-0 mt-1`}>
-                            ▸
-                          </span>
-                          <span className="text-[0.8rem] text-aws-muted leading-relaxed">{point}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-
-          {/* During testing */}
-          <div>
-            <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-c1 mb-2">
-              During testing
-            </p>
-            <h2 className="text-xl font-bold text-aws-text mb-1">Exam-day rules</h2>
-            <p className="text-sm text-aws-muted leading-relaxed max-w-[520px] mb-5">
-              Applies to both delivery modes. Know these before you walk in (or log in).
-            </p>
-            <div className="rounded-xl border border-aws-border bg-aws-card/60 p-5">
-              <ul className="space-y-3">
-                {duringTesting.map((rule, i) => (
-                  <li key={rule} className="flex items-start gap-3">
-                    <span className="font-space-mono text-[0.6rem] font-bold text-c1 shrink-0 mt-0.5 w-5 text-right">
-                      {String(i + 1).padStart(2, '0')}
-                    </span>
-                    <span className="text-[0.8rem] text-aws-muted leading-relaxed">{rule}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-
-          {/* Policy link */}
-          <p className="font-space-mono text-[0.6rem] text-aws-muted">
-            Full rules:{' '}
-            <a
-              href="https://aws.amazon.com/certification/policies/during-testing/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-c1 hover:underline"
-            >
-              aws.amazon.com/certification/policies/during-testing ↗
-            </a>
-          </p>
-        </section>
 
         <SiteFooter tagline="AWS SAA-C03 · Open Source Study Reference" />
       </main>

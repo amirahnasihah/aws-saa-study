@@ -5,8 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { navTransitionTypes } from '@/lib/nav-transition'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
-import FloatingSearch from './FloatingSearch'
-import FloatingAIChat from './FloatingAIChat'
+import FloatingBar from './FloatingBar'
 import AccountMenu from './nav/AccountMenu'
 import SignInButton from './nav/SignInButton'
 import { LogOutIcon } from './nav/icons'
@@ -185,8 +184,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
         </div>
       )}
 
-      <FloatingSearch />
-      {userEmail && activePage !== 'ai' && <FloatingAIChat />}
+      <FloatingBar showAskAI={!!userEmail && activePage !== 'ai'} />
     </>
   )
 }

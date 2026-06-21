@@ -171,7 +171,7 @@ export default function ExamGuidePage() {
         </div>
 
         {/* Exam day & registration */}
-        <section className="mt-10 space-y-8">
+        <section className="mt-12 space-y-8">
 
           {/* Register */}
           <div>
@@ -257,7 +257,7 @@ export default function ExamGuidePage() {
               Applies to both delivery modes. Know these before you walk in (or log in).
             </p>
             <div className="rounded-xl border border-aws-border bg-aws-card/60 p-5">
-              <ul className="space-y-3">
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3">
                 {duringTesting.map((rule, i) => (
                   <li key={rule} className="flex items-start gap-3">
                     <span className="font-space-mono text-[0.6rem] font-bold text-c1 shrink-0 mt-0.5 w-5 text-right">
