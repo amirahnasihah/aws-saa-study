@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   ReactFlow,
   Background,
@@ -38,52 +38,119 @@ const domainLabels: Record<string, string> = {
   d4: 'D4 · Cost-Opt',
 }
 
+// Sidebar grouping. `extra` is a separate boolean on Architecture, so it gets
+// collapsed into its own group key alongside the four exam domains.
+type GroupKey = 'd1' | 'd2' | 'd3' | 'd4' | 'extra'
+const groupOrder: GroupKey[] = ['d1', 'd2', 'd3', 'd4', 'extra']
+
+const groupLabels: Record<GroupKey, string> = {
+  d1: 'D1 · Secure',
+  d2: 'D2 · Resilient',
+  d3: 'D3 · High-Perf',
+  d4: 'D4 · Cost-Opt',
+  extra: 'Extra · Not in exam',
+}
+
+// Left-rail accent dot per group (matches the domainColors families).
+const groupDot: Record<GroupKey, string> = {
+  d1: 'bg-c3',
+  d2: 'bg-c2',
+  d3: 'bg-c1',
+  d4: 'bg-c6',
+  extra: 'bg-c5',
+}
+
+const groupKey = (arch: Architecture): GroupKey => (arch.extra ? 'extra' : arch.domain)
+
 export default function VisualPage() {
   const [active, setActive] = useState<Architecture>(architectures[0])
+
+  // Diagrams grouped by exam domain (+ extra) in fixed order, for the sidebar.
+  const groups = useMemo(
+    () =>
+      groupOrder
+        .map((g) => ({ key: g, items: architectures.filter((a) => groupKey(a) === g) }))
+        .filter((g) => g.items.length > 0),
+    [],
+  )
+
+  // Single source of truth for the nav — reused in desktop sidebar + mobile picker.
+  const navList = (
+    <nav className="space-y-4">
+      {groups.map((g) => (
+        <div key={g.key}>
+          <p className="font-space-mono text-[0.55rem] uppercase tracking-[0.15em] text-aws-muted/50 px-2 mb-1.5">
+            {groupLabels[g.key]}
+          </p>
+          <ul className="space-y-0.5">
+            {g.items.map((a) => {
+              const isActive = active.id === a.id
+              return (
+                <li key={a.id}>
+                  <button
+                    onClick={() => setActive(a)}
+                    className={`group w-full text-left flex items-start gap-2 rounded-md px-2 py-1.5 transition-colors duration-150 ${
+                      isActive ? 'bg-white/[0.06] text-aws-text' : 'text-aws-muted hover:bg-white/[0.03] hover:text-aws-text'
+                    }`}
+                  >
+                    <span className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 transition-opacity ${groupDot[g.key]} ${isActive ? 'opacity-100' : 'opacity-40 group-hover:opacity-70'}`} />
+                    <span className={`text-[0.78rem] leading-snug ${isActive ? 'font-medium' : ''}`}>{a.title}</span>
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  )
 
   return (
     <>
       <Nav activePage="visual" />
-      <main className="max-w-[1100px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
-        {/* header */}
+      <main className="max-w-[1280px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
+        {/* page header */}
         <div className="mb-6">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted">Architecture Visuals</span>
+            <span className="font-space-mono text-[0.6rem] text-aws-muted/50">· {architectures.length} diagrams</span>
+          </div>
           <h1 className="font-space-mono text-2xl font-bold text-aws-text mb-1">Visual Architectures</h1>
-          <p className="text-aws-muted text-sm">Common AWS architecture patterns — interactive diagrams. Pan, zoom, explore.</p>
+          <p className="text-aws-muted text-sm max-w-2xl">
+            Common AWS architecture patterns — interactive diagrams. Pan, zoom, and click any
+            node for an AI explanation of what it does and the exam traps around it.
+          </p>
         </div>
 
-        {/* diagram selector */}
-        <div className="flex flex-wrap gap-2 mb-5 items-center">
-          {architectures.map((arch, i) => {
-            const prevIsAws = i > 0 && !architectures[i - 1].extra
-            const isFirstExtra = arch.extra && prevIsAws
-            return (
-              <div key={arch.id} className="flex items-center gap-2">
-                {isFirstExtra && (
-                  <div className="flex items-center gap-2 mr-1">
-                    <div className="w-px h-5 bg-aws-border/60" />
-                    <span className="font-space-mono text-[0.55rem] text-aws-muted/50 uppercase tracking-widest whitespace-nowrap">extra · not in exam</span>
-                    <div className="w-px h-5 bg-aws-border/60" />
-                  </div>
-                )}
-                <button
-                  onClick={() => setActive(arch)}
-                  className={`font-space-mono text-[0.65rem] px-3 py-1.5 rounded-lg border transition-all duration-150 ${
-                    active.id === arch.id
-                      ? arch.extra
-                        ? 'text-c5 border-c5/30 bg-c5/8'
-                        : domainColors[arch.domain]
-                      : 'text-aws-muted border-aws-border/60 bg-transparent hover:border-aws-border hover:text-aws-text'
-                  }`}
-                >
-                  {arch.title}
-                </button>
-              </div>
-            )
-          })}
-        </div>
+        {/* mobile picker — Notion-style disclosure */}
+        <details className="lg:hidden mb-5 bg-aws-card border border-aws-border rounded-xl overflow-hidden group">
+          <summary className="flex items-center justify-between gap-2 px-4 py-3 cursor-pointer list-none select-none">
+            <span className="flex items-center gap-2 min-w-0">
+              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${groupDot[groupKey(active)]}`} />
+              <span className="text-[0.85rem] text-aws-text font-medium truncate">{active.title}</span>
+            </span>
+            <span className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted shrink-0 group-open:rotate-180 transition-transform">▾</span>
+          </summary>
+          <div className="px-3 pb-3 pt-1 border-t border-aws-border/60 max-h-[60vh] overflow-y-auto nav-scroll">
+            {navList}
+          </div>
+        </details>
 
-        {/* diagram */}
-        <DiagramPanel arch={active} key={active.id} />
+        {/* desktop two-column: sidebar + content */}
+        <div className="lg:grid lg:grid-cols-[248px_minmax(0,1fr)] lg:gap-8 lg:items-start">
+          {/* sidebar */}
+          <aside className="hidden lg:block lg:sticky lg:top-[5rem] lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto nav-scroll pr-1 pb-4">
+            <p className="font-space-mono text-[0.55rem] uppercase tracking-[0.15em] text-aws-muted/40 px-2 mb-3">
+              {architectures.length} Diagrams
+            </p>
+            {navList}
+          </aside>
+
+          {/* content */}
+          <div className="min-w-0">
+            <DiagramPanel arch={active} key={active.id} />
+          </div>
+        </div>
 
         <SiteFooter tagline="AWS SAA-C03 · Architecture Visuals · Good luck! 💪" />
       </main>
