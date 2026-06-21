@@ -1,6 +1,50 @@
+'use client'
+
+import { useState } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import MermaidDiagram from '@/components/ai/MermaidDiagram'
+
+// Markdown images are often model-invented URLs that 404. Render the image, but
+// fall back to a tidy captioned placeholder (instead of the browser's broken
+// icon) the moment it fails to load.
+function ChatImage({ src, alt }: { src: string; alt: string }) {
+  const [failed, setFailed] = useState(false)
+
+  if (failed) {
+    return (
+      <span className="my-2 flex items-center gap-2 rounded-xl border border-aws-border/60 bg-aws-card px-3 py-2 font-space-mono text-[0.72rem] text-aws-muted/70">
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 16 16"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.4"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="shrink-0"
+        >
+          <rect x="2" y="2" width="12" height="12" rx="2" />
+          <path d="m3 11 3-3 2 2 3-3 2 2" />
+          <path d="M2 2l12 12" />
+        </svg>
+        {alt || 'Image unavailable'}
+      </span>
+    )
+  }
+
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={src}
+      alt={alt}
+      loading="lazy"
+      onError={() => setFailed(true)}
+      className="my-2 max-w-full rounded-xl border border-aws-border/60 bg-white/5"
+    />
+  )
+}
 
 const components: Components = {
   p: ({ children }) => <p className="mb-2 last:mb-0">{children}</p>,
@@ -43,15 +87,7 @@ const components: Components = {
   img: ({ src, alt }) => {
     const url = typeof src === 'string' ? src : ''
     if (!url) return null
-    return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={url}
-        alt={typeof alt === 'string' ? alt : ''}
-        loading="lazy"
-        className="my-2 max-w-full rounded-xl border border-aws-border/60 bg-white/5"
-      />
-    )
+    return <ChatImage src={url} alt={typeof alt === 'string' ? alt : ''} />
   },
   // react-markdown nests block code inside <pre>; pass <pre> through so
   // `code` below fully controls block-level rendering (incl. mermaid).

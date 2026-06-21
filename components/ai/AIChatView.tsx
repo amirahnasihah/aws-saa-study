@@ -238,6 +238,28 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
     })()
   }, [requestReply, drain])
 
+  // Edit a previously-sent question: pull it back into the composer and trim the
+  // conversation from that turn onward, so re-sending continues with clean
+  // context (the stale answer + later turns are dropped, ChatGPT-style).
+  const editMessage = useCallback(
+    (index: number) => {
+      if (drainingRef.current || streamingText !== null || queueRef.current.length > 0) return
+      const msg = messagesRef.current[index]
+      if (!msg || msg.role !== 'user') return
+      setInput(msg.content)
+      setMessages((prev) => prev.slice(0, index))
+      setErrorMsg(null)
+      requestAnimationFrame(() => {
+        const el = textareaRef.current
+        if (!el) return
+        el.focus()
+        const pos = msg.content.length
+        el.setSelectionRange(pos, pos)
+      })
+    },
+    [streamingText, setMessages]
+  )
+
   // Insert a newline at the caret — the mobile-friendly alternative to
   // Shift+Enter (soft keyboards have no Shift, and Enter sends on desktop).
   const insertNewline = useCallback(() => {
@@ -331,8 +353,21 @@ export default function AIChatView({ provider, byokKey }: AIChatViewProps) {
                 <div className="px-3.5 py-2.5 rounded-2xl rounded-tr-sm bg-c1/10 border border-c1/15 font-space-mono text-[0.78rem] text-aws-text leading-relaxed whitespace-pre-wrap break-words">
                   {msg.content}
                 </div>
-                <div className="pr-1">
+                <div className="flex items-center gap-2 pr-1">
                   <CopyButton text={msg.content} label="Copy your message" />
+                  {!busy && queue.length === 0 && (
+                    <button
+                      type="button"
+                      onClick={() => editMessage(i)}
+                      title="Edit & resend"
+                      aria-label="Edit and resend this message"
+                      className="text-aws-muted/40 hover:text-c1 transition-colors duration-150"
+                    >
+                      <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11.5 2.5a1.414 1.414 0 0 1 2 2L5 13l-3 1 1-3 8.5-8.5Z" />
+                      </svg>
+                    </button>
+                  )}
                 </div>
               </div>
             ) : (
