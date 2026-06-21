@@ -14,7 +14,6 @@ import {
 } from '@/data/scenarios'
 
 type Tab = 'anatomy' | 'compare' | 'traps' | 'tips'
-type DomainFilter = Scenario['domain'] | 'all'
 
 // Per-column tint for compared columns (skips the attribute column).
 // Cycles c2/c5/c4/c6 so 2-, 3- and 4-way tables stay visually distinct —
@@ -22,20 +21,31 @@ type DomainFilter = Scenario['domain'] | 'all'
 const compareHeadTint = ['text-c2 bg-c2/5', 'text-c5 bg-c5/5', 'text-c4 bg-c4/5', 'text-c6 bg-c6/5']
 const compareCellTint = ['bg-c2/[0.03]', 'bg-c5/[0.03]', 'bg-c4/[0.03]', 'bg-c6/[0.03]']
 
-const filterOrder: DomainFilter[] = ['all', 'd1', 'd2', 'd3', 'd4', 'extra']
+const domainOrder: Scenario['domain'][] = ['d1', 'd2', 'd3', 'd4', 'extra']
+
+// Small left-rail accent dot per domain (matches the domainColor families).
+const domainDot: Record<Scenario['domain'], string> = {
+  d1: 'bg-c3',
+  d2: 'bg-c2',
+  d3: 'bg-c1',
+  d4: 'bg-c6',
+  extra: 'bg-c5',
+}
 
 export default function ScenariosPage() {
-  const [filter, setFilter] = useState<DomainFilter>('all')
   const [activeId, setActiveId] = useState<string>(scenarios[0].id)
   const [tab, setTab] = useState<Tab>('anatomy')
 
-  const visible = useMemo(
-    () => (filter === 'all' ? scenarios : scenarios.filter((s) => s.domain === filter)),
-    [filter],
-  )
+  const active = scenarios.find((s) => s.id === activeId) ?? scenarios[0]
 
-  // Keep the active scenario valid for the current filter.
-  const active = visible.find((s) => s.id === activeId) ?? visible[0] ?? scenarios[0]
+  // Scenarios grouped by domain, in fixed exam order, for the sidebar.
+  const groups = useMemo(
+    () =>
+      domainOrder
+        .map((d) => ({ domain: d, items: scenarios.filter((s) => s.domain === d) }))
+        .filter((g) => g.items.length > 0),
+    [],
+  )
 
   const select = (s: Scenario) => {
     setActiveId(s.id)
@@ -50,12 +60,44 @@ export default function ScenariosPage() {
   ]
   const activeTab = tabs.find((t) => t.key === tab)?.show ? tab : 'anatomy'
 
+  // The grouped, selectable nav list — reused in the desktop sidebar and the
+  // mobile disclosure so there is a single source of truth.
+  const navList = (
+    <nav className="space-y-4">
+      {groups.map((g) => (
+        <div key={g.domain}>
+          <p className="font-space-mono text-[0.55rem] uppercase tracking-[0.15em] text-aws-muted/50 px-2 mb-1.5">
+            {domainLabel[g.domain]}
+          </p>
+          <ul className="space-y-0.5">
+            {g.items.map((s) => {
+              const isActive = active.id === s.id
+              return (
+                <li key={s.id}>
+                  <button
+                    onClick={() => select(s)}
+                    className={`group w-full text-left flex items-start gap-2 rounded-md px-2 py-1.5 transition-colors duration-150 ${
+                      isActive ? 'bg-white/[0.06] text-aws-text' : 'text-aws-muted hover:bg-white/[0.03] hover:text-aws-text'
+                    }`}
+                  >
+                    <span className={`mt-1.5 w-1.5 h-1.5 rounded-full shrink-0 transition-opacity ${domainDot[s.domain]} ${isActive ? 'opacity-100' : 'opacity-40 group-hover:opacity-70'}`} />
+                    <span className={`text-[0.78rem] leading-snug ${isActive ? 'font-medium' : ''}`}>{s.title}</span>
+                  </button>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  )
+
   return (
     <>
       <Nav activePage="scenarios" />
-      <main className="max-w-[1100px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
-        {/* header */}
-        <div className="mb-5">
+      <main className="max-w-[1280px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
+        {/* page header */}
+        <div className="mb-6">
           <div className="flex items-center gap-2 mb-1">
             <span className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted">Scenario Patterns</span>
             <span className="font-space-mono text-[0.6rem] text-aws-muted/50">· {scenarios.length} patterns</span>
@@ -68,47 +110,32 @@ export default function ScenariosPage() {
           </p>
         </div>
 
-        {/* domain filter */}
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {filterOrder.map((f) => {
-            const count = f === 'all' ? scenarios.length : scenarios.filter((s) => s.domain === f).length
-            if (count === 0) return null
-            const isActive = filter === f
-            return (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`font-space-mono text-[0.6rem] uppercase tracking-widest px-2.5 py-1 rounded-md border transition-all duration-150 ${
-                  isActive
-                    ? 'border-c1/40 text-c1 bg-c1/8'
-                    : 'text-aws-muted/70 border-aws-border/50 hover:border-aws-border hover:text-aws-text'
-                }`}
-              >
-                {f === 'all' ? 'All' : domainLabel[f]} <span className="opacity-50">{count}</span>
-              </button>
-            )
-          })}
-        </div>
+        {/* mobile picker — Notion-style disclosure */}
+        <details className="lg:hidden mb-5 bg-aws-card border border-aws-border rounded-xl overflow-hidden group">
+          <summary className="flex items-center justify-between gap-2 px-4 py-3 cursor-pointer list-none select-none">
+            <span className="flex items-center gap-2 min-w-0">
+              <span className={`w-1.5 h-1.5 rounded-full shrink-0 ${domainDot[active.domain]}`} />
+              <span className="text-[0.85rem] text-aws-text font-medium truncate">{active.title}</span>
+            </span>
+            <span className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted shrink-0 group-open:rotate-180 transition-transform">▾</span>
+          </summary>
+          <div className="px-3 pb-3 pt-1 border-t border-aws-border/60 max-h-[60vh] overflow-y-auto nav-scroll">
+            {navList}
+          </div>
+        </details>
 
-        {/* scenario selector */}
-        <div className="flex flex-wrap gap-2 mb-6">
-          {visible.map((s) => (
-            <button
-              key={s.id}
-              onClick={() => select(s)}
-              className={`font-space-mono text-[0.65rem] px-3 py-1.5 rounded-lg border transition-all duration-150 ${
-                active.id === s.id
-                  ? domainColor[s.domain]
-                  : 'text-aws-muted border-aws-border/60 hover:border-aws-border hover:text-aws-text'
-              }`}
-            >
-              {s.title}
-            </button>
-          ))}
-        </div>
+        {/* desktop two-column: sidebar + content */}
+        <div className="lg:grid lg:grid-cols-[248px_minmax(0,1fr)] lg:gap-8 lg:items-start">
+          {/* sidebar */}
+          <aside className="hidden lg:block lg:sticky lg:top-[5rem] lg:max-h-[calc(100vh-6rem)] lg:overflow-y-auto nav-scroll pr-1 pb-4">
+            <p className="font-space-mono text-[0.55rem] uppercase tracking-[0.15em] text-aws-muted/40 px-2 mb-3">
+              {scenarios.length} Scenarios
+            </p>
+            {navList}
+          </aside>
 
-        {/* main card */}
-        <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden">
+          {/* content */}
+          <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden min-w-0">
           {/* card header */}
           <div className="px-5 py-4 border-b border-aws-border/60">
             <div className="flex items-start gap-3 flex-wrap">
@@ -254,7 +281,10 @@ export default function ScenariosPage() {
               ))}
             </div>
           </div>
+          {/* content card end */}
+          </div>
         </div>
+        {/* grid end */}
 
         <SiteFooter tagline="AWS SAA-C03 · Scenario Patterns · Study the why, not just the diagram" />
       </main>
