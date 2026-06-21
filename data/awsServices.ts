@@ -1027,6 +1027,18 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Automatically scale EC2 instances based on load',
             fungsi: 'Menambah atau mengurangkan bilangan EC2 instances secara automatik berdasarkan policies, schedules, atau metrics',
             scenario: 'E-commerce traffic spike masa sale event — ASG scale out bila CPU >70%, tambah EC2 instances automatik. Bila traffic turun, scale in untuk jimat kos. Set minimum=2 untuk high availability.',
+            compare: {
+              label: 'Scaling policies — pilih cara scale ikut corak traffic',
+              headers: ['Policy', 'Macam mana ia scale', 'Guna bila'],
+              rows: [
+                ['Target Tracking', 'Kekalkan 1 metric pada target (cth CPU 50%) — auto naik/turun', '🟢 Default & paling senang — most workloads'],
+                ['Step Scaling', 'Adjustment berbeza ikut SAIZ breach (CPU 60%→+1, 90%→+3)', 'Perlu reaksi bertingkat ikut keterukan beban'],
+                ['Simple Scaling', '1 adjustment per alarm, tunggu cooldown dulu', 'Legacy — guna Step/Target instead'],
+                ['Scheduled', 'Scale pada masa tetap (cth Isnin 9am +5)', 'Traffic ikut jadual yang DIKETAHUI'],
+                ['Predictive', 'ML forecast beban, scale AWAL sebelum spike', 'Traffic berulang / cyclical (proactive)'],
+              ],
+              takeaway: 'Senang + default → Target Tracking. Tahu jadual → Scheduled. Corak berulang → Predictive (scale dulu sebelum spike). Reaksi ikut keterukan → Step. Cooldown elak scale berulang terlalu cepat; warm-up bagi instance baru "matang" sebelum dikira dalam metric.',
+            },
             tips: [
               'Termination Policies — menentukan instance MANA yang ditamatkan semasa scale in:',
               'OldestLaunchTemplate → terminate instances guna launch template LAMA (guna ni untuk rolling AMI updates — pastikan instances lama diganti dengan yang baru)',
@@ -1805,6 +1817,19 @@ export const domains: DomainData[] = [
             fungsi: 'EBS ada 4 jenis: SSD-backed (gp2, gp3, io1, io2) untuk IOPS-intensive, HDD-backed (st1, sc1) untuk throughput-intensive sequential.',
             storageDetails: 'gp3 → General Purpose SSD. Up to 16,000 IOPS, 1,000 MB/s throughput independently configurable. Default choice.\ngp2 → Older General Purpose. Burst IOPS (3 IOPS/GB). Less predictable under sustained load\nio2 → Provisioned IOPS SSD. Up to 64,000 IOPS. 99.999% durability. Supports Multi-Attach\nio1 → Older Provisioned IOPS. Up to 64,000 IOPS. Supports Multi-Attach\nst1 → Throughput-Optimized HDD. Sequential workloads: log processing, ETL, big data. NOT for random I/O\nsc1 → Cold HDD. Lowest cost. Infrequently accessed data',
             detailsLabel: 'EBS Types',
+            compare: {
+              label: 'EBS volume types — IOPS vs throughput vs cost',
+              headers: ['Type', 'Kategori', 'Max prestasi', 'Best untuk', 'Multi-Attach'],
+              rows: [
+                ['gp3', 'SSD', '16,000 IOPS · 1,000 MB/s', '🟢 Default — boot, most workloads', '❌'],
+                ['gp2', 'SSD', '16,000 IOPS (burst 3/GB)', 'Older general purpose', '❌'],
+                ['io2', 'SSD', '64,000+ IOPS · 99.999% durable', 'Mission-critical DB, latency rendah', '🟢 Ya'],
+                ['io1', 'SSD', '64,000 IOPS', 'Older provisioned IOPS', '🟢 Ya'],
+                ['st1', 'HDD', '500 MB/s throughput', 'Big data, log, ETL (sequential)', '❌'],
+                ['sc1', 'HDD', '250 MB/s · kos terendah', 'Cold / infrequent access', '❌'],
+              ],
+              takeaway: 'SSD (gp/io) = random I/O & IOPS-bound (database, boot volume). HDD (st1/sc1) = sequential throughput / cold storage — BUKAN untuk random I/O. Multi-Attach HANYA io1/io2. Tak pasti? → gp3.',
+            },
             tips: [
               'Multi-Attach: HANYA io1 dan io2 — attach satu EBS ke multiple EC2 instances simultaneously',
               'gp2, gp3, st1, sc1 TIDAK support Multi-Attach',
@@ -1915,6 +1940,18 @@ export const domains: DomainData[] = [
             fungsi: 'Mengagihkan traffic HTTP/HTTPS berdasarkan path atau host rules (Layer 7). Boleh route ke instances dalam peered VPCs menggunakan IP address sebagai target — bukan hanya dalam satu VPC.',
             contohGuna: 'myshop.com/products → service A, myshop.com/cart → service B. Cross-VPC: route ke EC2 instances dalam peered VPCs guna IP targets.',
             scenario: 'Cross-VPC load balancing: company ada 3 VPCs peered. Guna satu ALB dengan IP address targets untuk route ke instances dalam semua 3 VPCs. Classic Load Balancer (CLB) tak boleh buat ni — CLB hanya support instance ID targets dalam same VPC.',
+            compare: {
+              label: 'ELB types — pilih load balancer ikut layer & keperluan',
+              headers: ['Aspect', 'ALB', 'NLB', 'GWLB'],
+              rows: [
+                ['OSI Layer', '7 — HTTP/HTTPS', '4 — TCP/UDP/TLS', '3 — IP packets'],
+                ['Routing', 'Path / host / header / query', 'Connection (ultra-low latency)', 'Forward ke virtual appliance'],
+                ['Static IP', '❌ DNS name je', '🟢 Elastic IP per AZ', 'Via GWLB endpoint'],
+                ['Preserve client IP', '❌ guna X-Forwarded-For', '🟢 Ya', '🟢 Ya (transparent)'],
+                ['Best untuk', 'Web, microservices, containers', 'Gaming/IoT/VoIP, extreme perf, static IP', 'Firewall / IDS / IPS (GENEVE 6081)'],
+              ],
+              takeaway: 'HTTP + routing pintar (path/host) → ALB. TCP/UDP, latency rendah, perlu static IP → NLB. Nak salurkan traffic melalui virtual appliance (firewall/IDS/IPS) → GWLB. CLB = legacy (L4/L7, instance-ID + same-VPC sahaja) — elak untuk design baru.',
+            },
             tips: [
               'ALB = Layer 7 (HTTP/HTTPS). NLB = Layer 4 (TCP/UDP). CLB = legacy, avoid',
               'IP targets membolehkan ALB/NLB route ke peered VPCs, on-premises (via Direct Connect/VPN)',
