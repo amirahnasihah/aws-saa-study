@@ -2,6 +2,8 @@ import type { Metadata } from 'next'
 import Nav from '@/components/Nav'
 import BookmarkDetailClient from '@/components/bookmarks/BookmarkDetailClient'
 
+export const runtime = 'edge'
+
 type PageProps = {
   params: Promise<{ id: string }>
 }
