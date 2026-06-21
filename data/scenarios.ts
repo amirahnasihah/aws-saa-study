@@ -1303,6 +1303,725 @@ export const scenarios: Scenario[] = [
       { label: 'Amazon EC2 Spot Instances', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-spot-instances.html' },
     ],
   },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // D2 · VPC connectivity — Peering vs Transit Gateway vs PrivateLink
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    id: 'vpc-connectivity-options',
+    title: 'VPC Connectivity — Peering, TGW & PrivateLink',
+    subtitle: 'Connect VPCs/accounts: 1:1 peering vs hub-and-spoke vs single-service exposure',
+    domain: 'd2',
+    tags: ['VPC Peering', 'Transit Gateway', 'PrivateLink', 'Hybrid', 'CIDR', 'Routing'],
+    overview:
+      'Three ways to connect VPCs, accounts, and on-prem — each for a different shape. VPC Peering is ' +
+      'a simple 1:1, non-transitive link. Transit Gateway is a regional hub that connects hundreds of ' +
+      'VPCs + VPN + Direct Connect transitively. PrivateLink exposes ONE service privately via an ENI, ' +
+      'without exposing the whole VPC or worrying about CIDR overlap.',
+    flow: [
+      { nodes: [{ label: 'VPC Peering', sublabel: '1:1 · non-transitive · no overlap', color: 'c1' }] },
+      { nodes: [{ label: 'Transit Gateway', sublabel: 'hub · transitive · 1000s VPCs + VPN/DX', color: 'c3' }] },
+      { nodes: [{ label: 'PrivateLink', sublabel: 'one service · ENI · overlap OK', color: 'c5' }] },
+    ],
+    anatomy: [
+      {
+        component: 'VPC Peering',
+        role: 'Direct 1:1 private link between two VPCs',
+        notes: [
+          'Non-transitive: if A↔B and B↔C peer, A still cannot reach C',
+          'CIDR blocks must NOT overlap',
+          'Works cross-region and cross-account',
+          'You must update route tables on both sides + SG references',
+          'Full mesh of N VPCs needs N(N-1)/2 peerings — explodes quickly',
+        ],
+      },
+      {
+        component: 'Transit Gateway (TGW)',
+        role: 'Regional hub connecting VPCs, VPN, and Direct Connect',
+        notes: [
+          'Transitive: every attachment can route to every other (subject to route tables)',
+          'Scales to thousands of VPCs; solves the peering-mesh explosion',
+          'Single place to attach Site-to-Site VPN and Direct Connect (via DX gateway)',
+          'TGW route tables segment traffic (e.g., isolate prod from dev)',
+          'Cross-region peering between Transit Gateways for global topologies',
+        ],
+      },
+      {
+        component: 'PrivateLink (Interface Endpoint)',
+        role: 'Privately expose/consume a single service',
+        notes: [
+          'Surfaces a service as an ENI (private IP) inside the consumer VPC',
+          'Consumer reaches only that ONE service — not the whole provider VPC',
+          'Overlapping CIDRs are fine (no routing between the VPCs)',
+          'Powered by an NLB on the provider side (endpoint service)',
+          'Used for SaaS / shared services and AWS service access without internet',
+        ],
+      },
+    ],
+    compare: [
+      {
+        label: 'Peering vs Transit Gateway vs PrivateLink',
+        headers: ['Aspect', 'VPC Peering', 'Transit Gateway', 'PrivateLink'],
+        rows: [
+          ['Shape', '1:1 link', 'Hub-and-spoke', 'One service exposed'],
+          ['Transitive', 'No', 'Yes', 'N/A'],
+          ['Scale', 'Few VPCs (mesh)', 'Thousands', 'Per-service'],
+          ['CIDR overlap', 'Not allowed', 'Not allowed', 'Allowed'],
+          ['VPN / DX', 'No', 'Yes (central)', 'No'],
+          ['Exposes', 'Whole VPC', 'Whole VPCs', 'Single service only'],
+        ],
+        takeaway: 'Two VPCs → Peering. Many VPCs + hybrid → Transit Gateway. Share ONE service (overlap OK) → PrivateLink.',
+      },
+    ],
+    nuances: [
+      {
+        trap: 'Expecting traffic to route A→C through a peered B (transitive peering)',
+        correct: 'VPC peering is NOT transitive. For many-to-many connectivity use a Transit Gateway hub.',
+      },
+      {
+        trap: 'Trying to peer two VPCs with overlapping CIDR blocks',
+        correct: 'Peering and TGW both require non-overlapping CIDRs. If CIDRs overlap and you only need one service, use PrivateLink (no routing between VPCs).',
+      },
+      {
+        trap: 'Building a full mesh of peerings for 20+ VPCs',
+        correct: 'A mesh needs N(N-1)/2 connections and becomes unmanageable. Transit Gateway centralises this into one hub.',
+      },
+      {
+        trap: 'Using PrivateLink to give a VPC full network access to another VPC',
+        correct: 'PrivateLink exposes a single service via an ENI, not the whole network. For full VPC-to-VPC routing use peering or TGW.',
+      },
+    ],
+    tips: [
+      'Decision: 2 VPCs → Peering · many VPCs/hybrid → Transit Gateway · one service or overlapping CIDR → PrivateLink',
+      'Peering is non-transitive and CIDRs can\'t overlap — two facts the exam loves',
+      'Transit Gateway is the central attach point for VPN + Direct Connect at scale',
+      'PrivateLink = NLB on the provider, ENI on the consumer; keeps traffic off the internet',
+      'TGW route tables let you isolate environments (prod can\'t talk to dev)',
+    ],
+    mnemonic: [
+      'Peering = "Pair" (1:1, never passes through a friend = non-transitive).',
+      'Transit Gateway = "Train station" — every line meets at the hub.',
+      'PrivateLink = "one private door" to a single service (overlap doesn\'t matter).',
+    ],
+    sources: [
+      { label: 'VPC peering basics', url: 'https://docs.aws.amazon.com/vpc/latest/peering/vpc-peering-basics.html' },
+      { label: 'What is a transit gateway?', url: 'https://docs.aws.amazon.com/vpc/latest/tgw/what-is-transit-gateway.html' },
+      { label: 'What is AWS PrivateLink?', url: 'https://docs.aws.amazon.com/vpc/latest/privatelink/what-is-privatelink.html' },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // D1 · VPC Endpoints — Gateway vs Interface
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    id: 'vpc-endpoints-gateway-interface',
+    title: 'VPC Endpoints — Gateway vs Interface',
+    subtitle: 'Reach AWS services privately without an internet gateway or NAT',
+    domain: 'd1',
+    tags: ['VPC Endpoint', 'Gateway Endpoint', 'Interface Endpoint', 'PrivateLink', 'S3', 'NAT'],
+    overview:
+      'VPC endpoints let resources in private subnets call AWS services without traversing the public ' +
+      'internet (no IGW/NAT). There are exactly two types and the difference is heavily tested: Gateway ' +
+      'endpoints (S3 and DynamoDB ONLY, free, via a route-table entry) and Interface endpoints (most ' +
+      'other services, an ENI powered by PrivateLink, billed per hour + per GB).',
+    flow: [
+      { nodes: [{ label: 'Private EC2', sublabel: 'no public IP', color: 'gray' }] },
+      {
+        nodes: [
+          { label: 'Gateway Endpoint', sublabel: 'route table · S3 / DynamoDB · free', color: 'c2' },
+          { label: 'Interface Endpoint', sublabel: 'ENI · most services · $/hr', color: 'c5' },
+        ],
+      },
+      { nodes: [{ label: 'AWS Service', sublabel: 'private — never hits internet', color: 'c1' }] },
+    ],
+    anatomy: [
+      {
+        component: 'Gateway Endpoint',
+        role: 'Private access to S3 and DynamoDB only',
+        notes: [
+          'Supports ONLY S3 and DynamoDB — memorise this',
+          'Implemented as a target (prefix list) in the subnet route table',
+          'FREE — no hourly or data charge',
+          'Cannot be accessed from on-premises (route-table based, in-VPC only)',
+          'Control access with an endpoint policy (and S3 bucket policy condition aws:sourceVpce)',
+        ],
+      },
+      {
+        component: 'Interface Endpoint (PrivateLink)',
+        role: 'Private access to most other AWS services',
+        notes: [
+          'An ENI with a private IP placed in your subnet(s)',
+          'Works for most services (SQS, SNS, KMS, Systems Manager, ECR, API Gateway, etc.)',
+          'Billed per hour + per GB processed (not free)',
+          'Reachable from on-premises over VPN / Direct Connect (unlike gateway endpoints)',
+          'Uses private DNS so the standard service hostname resolves to the ENI',
+        ],
+      },
+      {
+        component: 'Why endpoints at all',
+        role: 'Keep traffic private + cut NAT cost',
+        notes: [
+          'Private instances can reach AWS APIs without an internet gateway or NAT Gateway',
+          'Reduces NAT data-processing charges for S3/DynamoDB-heavy workloads',
+          'Improves security posture — traffic stays on the AWS network',
+        ],
+      },
+    ],
+    compare: [
+      {
+        label: 'Gateway vs Interface endpoint',
+        headers: ['Aspect', 'Gateway Endpoint', 'Interface Endpoint'],
+        rows: [
+          ['Services', 'S3 + DynamoDB ONLY', 'Most AWS services'],
+          ['Mechanism', 'Route table entry', 'ENI (private IP) via PrivateLink'],
+          ['Cost', 'Free', 'Per hour + per GB'],
+          ['On-prem access', 'No', 'Yes (VPN / DX)'],
+          ['DNS', 'Prefix list in route table', 'Private DNS name'],
+        ],
+        takeaway: 'S3 or DynamoDB + free + in-VPC → Gateway. Anything else, or need on-prem reach → Interface (PrivateLink, paid).',
+      },
+    ],
+    nuances: [
+      {
+        trap: 'Choosing an Interface endpoint for S3 to save money',
+        correct: 'For S3/DynamoDB the Gateway endpoint is FREE. Only use an S3 Interface endpoint if you specifically need on-premises (VPN/DX) access to S3 privately.',
+      },
+      {
+        trap: 'Expecting a Gateway endpoint to work from on-premises over Direct Connect',
+        correct: 'Gateway endpoints are route-table based and only work inside the VPC. On-prem private access to AWS services needs an Interface endpoint.',
+      },
+      {
+        trap: 'Thinking a VPC endpoint needs a NAT Gateway or internet gateway',
+        correct: 'The whole point of an endpoint is to remove that dependency — traffic to the service stays on the AWS private network.',
+      },
+      {
+        trap: 'Assuming Gateway endpoints support services like SQS, KMS, or SSM',
+        correct: 'Gateway endpoints support only S3 and DynamoDB. Everything else uses an Interface endpoint.',
+      },
+    ],
+    tips: [
+      'Only TWO services get a Gateway endpoint: S3 and DynamoDB. Both free. Everything else = Interface.',
+      'Need private S3 access FROM on-prem? That is the one case for an S3 Interface endpoint',
+      'Endpoint policy restricts what the endpoint can do; S3 bucket policy can require aws:sourceVpce',
+      'Interface endpoints cost money (hourly + per GB) — factor that vs NAT savings',
+      'Endpoints kill the need for IGW/NAT for those service calls = more secure + cheaper egress',
+    ],
+    mnemonic: [
+      'Gateway = "Great, it\'s free" but only for S3 + DynamoDB (the 2 G-endpoint services).',
+      'Interface = "I need an ENI" — paid, works for almost everything, reachable from on-prem.',
+      'On-prem private access? Only the Interface endpoint can do it.',
+    ],
+    sources: [
+      { label: 'Gateway endpoints', url: 'https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html' },
+      { label: 'Access an AWS service using an interface endpoint', url: 'https://docs.aws.amazon.com/vpc/latest/privatelink/create-interface-endpoint.html' },
+      { label: 'Gateway endpoints for Amazon S3', url: 'https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html' },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // D2 · Route 53 routing policies decision tree
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    id: 'route53-routing-policies',
+    title: 'Route 53 Routing Policies',
+    subtitle: 'Pick the right DNS policy per scenario — failover, latency, geo, weighted',
+    domain: 'd2',
+    tags: ['Route 53', 'DNS', 'Failover', 'Latency', 'Geolocation', 'Weighted', 'Health Check'],
+    overview:
+      'Route 53 routes DNS queries with seven policies, each for a distinct goal. The exam gives a ' +
+      'requirement ("active-passive DR", "send users to the nearest region", "blue/green 10% traffic", ' +
+      '"route by country") and asks for the policy. Most policies pair with health checks to skip ' +
+      'unhealthy endpoints. ALIAS records (not CNAME) point to AWS targets at the zone apex for free.',
+    flow: [
+      { nodes: [{ label: 'Simple', sublabel: 'one resource', color: 'gray' }] },
+      { nodes: [{ label: 'Failover', sublabel: 'active-passive DR', color: 'c2' }] },
+      { nodes: [{ label: 'Latency', sublabel: 'lowest latency region', color: 'c1' }] },
+      {
+        nodes: [
+          { label: 'Weighted', sublabel: 'split % (blue/green)', color: 'c3' },
+          { label: 'Geolocation', sublabel: 'by user country', color: 'c5' },
+          { label: 'Multivalue', sublabel: 'up to 8 healthy IPs', color: 'c4' },
+        ],
+      },
+    ],
+    anatomy: [
+      {
+        component: 'Simple',
+        role: 'One record, one (or random multi) value — no logic',
+        notes: [
+          'Routes to a single resource; no health checks',
+          'If multiple values are returned, the client picks one at random',
+          'Use when there is just one endpoint',
+        ],
+      },
+      {
+        component: 'Failover (active-passive)',
+        role: 'Primary normally; secondary if primary unhealthy',
+        notes: [
+          'Requires a health check on the primary',
+          'Classic DR pattern: primary site → static S3 maintenance page on failure',
+          'Exactly two roles: PRIMARY and SECONDARY',
+        ],
+      },
+      {
+        component: 'Latency-based',
+        role: 'Sends user to the region with lowest latency',
+        notes: [
+          'Routes to the AWS region that gives the user the best latency (not nearest by distance)',
+          'Requires records tagged with their region',
+          'Use for multi-region apps optimising performance',
+        ],
+      },
+      {
+        component: 'Weighted',
+        role: 'Split traffic by assigned weights',
+        notes: [
+          'Assign weights (e.g., 90/10) to distribute across endpoints',
+          'Use for blue/green, canary releases, and A/B testing',
+          'Weight 0 disables a record; can combine with health checks',
+        ],
+      },
+      {
+        component: 'Geolocation & Geoproximity',
+        role: 'Route by user location / shift traffic by bias',
+        notes: [
+          'Geolocation: route by the user\'s continent/country/state (compliance, localisation, licensing)',
+          'Geoproximity: route by geographic distance with an adjustable "bias" to grow/shrink a region',
+          'Geolocation ≠ Latency: location is about WHERE the user is, latency is about SPEED',
+        ],
+      },
+      {
+        component: 'Multivalue Answer',
+        role: 'Return up to 8 healthy records at random',
+        notes: [
+          'Returns multiple healthy IPs (up to 8) with health checks — basic client-side load spreading',
+          'Not a substitute for a real load balancer, but improves availability',
+        ],
+      },
+    ],
+    compare: [
+      {
+        label: 'Route 53 policy — pick by goal',
+        headers: ['Goal', 'Policy'],
+        rows: [
+          ['Single endpoint', 'Simple'],
+          ['Active-passive DR / standby', 'Failover'],
+          ['Best performance across regions', 'Latency-based'],
+          ['Blue/green, canary, A/B %', 'Weighted'],
+          ['Compliance / route by country', 'Geolocation'],
+          ['Shift traffic between regions by bias', 'Geoproximity'],
+          ['Return several healthy IPs', 'Multivalue answer'],
+        ],
+        takeaway: 'Keyword → policy: "DR/standby"=Failover · "lowest latency"=Latency · "%/canary"=Weighted · "by country"=Geolocation.',
+      },
+      {
+        label: 'ALIAS vs CNAME',
+        headers: ['Aspect', 'ALIAS', 'CNAME'],
+        rows: [
+          ['Zone apex (example.com)', 'Yes', 'No'],
+          ['Target', 'AWS resources (ALB, CF, S3, etc.)', 'Any hostname'],
+          ['Cost', 'Free queries', 'Charged'],
+          ['Type', 'Route 53-specific', 'Standard DNS'],
+        ],
+        takeaway: 'Apex pointing to an AWS resource → ALIAS (free). Subdomain to a generic hostname → CNAME.',
+      },
+    ],
+    nuances: [
+      {
+        trap: 'Using Latency-based routing for a "route users by their country" requirement',
+        correct: 'Latency optimises SPEED, not location. For routing by user country (compliance/licensing) use Geolocation.',
+      },
+      {
+        trap: 'Picking Weighted routing for active-passive disaster recovery',
+        correct: 'Active-passive DR is the Failover policy (primary + secondary with a health check). Weighted is for percentage splits like canary releases.',
+      },
+      {
+        trap: 'Treating Multivalue answer as a load balancer replacement',
+        correct: 'Multivalue returns up to 8 healthy records at random — it improves availability but is not a true load balancer (no health-aware distribution beyond up/down).',
+      },
+      {
+        trap: 'Using a CNAME at the zone apex (example.com)',
+        correct: 'CNAME is not allowed at the apex. Use an ALIAS record to point example.com at an AWS resource (and ALIAS queries are free).',
+      },
+    ],
+    tips: [
+      'Map the keyword: DR→Failover · speed→Latency · %→Weighted · country→Geolocation · bias→Geoproximity',
+      'Almost every policy except Simple can use health checks to skip dead endpoints',
+      'ALIAS for zone apex + AWS targets (free); CNAME only for non-apex generic hostnames',
+      'Failover + S3 static site = cheap "we\'ll be right back" page during outages',
+      'Geolocation has a "Default" record for users who don\'t match any location rule',
+    ],
+    mnemonic: [
+      'Failover = Flip to backup · Latency = Lowest lag · Weighted = % split · Geo = by place.',
+      'Latency ≠ Geo: latency is SPEED, geolocation is PLACE.',
+      'Apex can\'t CNAME — ALIAS it (and it\'s free).',
+    ],
+    sources: [
+      { label: 'Choosing a routing policy', url: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html' },
+      { label: 'Choosing between alias and non-alias records', url: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/resource-record-sets-choosing-alias-non-alias.html' },
+      { label: 'Configuring DNS failover', url: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/dns-failover.html' },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // D3 · Serverless analytics — S3 + Glue + Athena + QuickSight
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    id: 'serverless-analytics-athena',
+    title: 'Serverless Analytics on S3',
+    subtitle: 'Query a data lake with no servers: S3 → Glue → Athena → QuickSight',
+    domain: 'd3',
+    tags: ['Athena', 'Glue', 'S3', 'QuickSight', 'Data Lake', 'Serverless', 'ETL'],
+    overview:
+      'The canonical serverless analytics pipeline. Data lands in S3 (the data lake). AWS Glue crawls ' +
+      'it to build a Data Catalog (schema) and optionally runs serverless ETL. Athena runs standard SQL ' +
+      'directly on S3 — no servers, pay only for data scanned. QuickSight visualises the results. ' +
+      'Nothing to provision, scales automatically.',
+    flow: [
+      { nodes: [{ label: 'S3 Data Lake', sublabel: 'raw / curated objects', color: 'c2' }] },
+      { nodes: [{ label: 'Glue Crawler + Catalog', sublabel: 'discovers schema · ETL', color: 'c3' }] },
+      { nodes: [{ label: 'Athena', sublabel: 'serverless SQL · pay per scan', color: 'c1' }] },
+      { nodes: [{ label: 'QuickSight', sublabel: 'dashboards / BI', color: 'c5' }] },
+    ],
+    anatomy: [
+      {
+        component: 'S3 (Data Lake)',
+        role: 'Durable, cheap storage for all your data',
+        notes: [
+          'Stores raw and processed data at any scale (11 nines durability)',
+          'Partition data by date/region in the prefix to cut Athena scan cost',
+          'Columnar formats (Parquet/ORC) dramatically reduce data scanned',
+        ],
+      },
+      {
+        component: 'AWS Glue',
+        role: 'Serverless ETL + the Data Catalog (schema)',
+        notes: [
+          'Crawler scans S3 and infers table schemas into the Glue Data Catalog',
+          'The Data Catalog is the shared metastore for Athena, Redshift Spectrum, EMR',
+          'Glue Jobs run serverless Spark ETL (transform/clean/convert formats)',
+          'Fully managed — no clusters to run',
+        ],
+      },
+      {
+        component: 'Amazon Athena',
+        role: 'Serverless SQL query engine over S3',
+        notes: [
+          'Standard SQL (Presto/Trino) directly on S3 — zero infrastructure',
+          'Cost = data scanned per query (≈ $5/TB) — partition + columnar to minimise',
+          'Uses the Glue Data Catalog for table definitions',
+          'Great for ad-hoc queries, log analysis, one-off reporting',
+        ],
+      },
+      {
+        component: 'Amazon QuickSight',
+        role: 'Serverless BI / dashboards',
+        notes: [
+          'Connects to Athena, RDS, Redshift, S3, etc.',
+          'SPICE in-memory engine for fast interactive dashboards',
+          'Pay-per-session pricing option for occasional viewers',
+        ],
+      },
+    ],
+    compare: [
+      {
+        label: 'Athena vs Redshift vs EMR',
+        headers: ['Aspect', 'Athena', 'Redshift', 'EMR'],
+        rows: [
+          ['Type', 'Serverless SQL on S3', 'Managed data warehouse', 'Managed Hadoop/Spark'],
+          ['Provisioning', 'None', 'Clusters (or Serverless)', 'Clusters'],
+          ['Best for', 'Ad-hoc / occasional queries', 'Complex BI, heavy joins, PB-scale', 'Custom big-data frameworks'],
+          ['Cost model', 'Per data scanned', 'Per node-hour', 'Per cluster-hour'],
+        ],
+        takeaway: 'Occasional SQL on S3, no infra → Athena. Always-on warehouse / complex analytics → Redshift. Custom Spark/Hadoop → EMR.',
+      },
+      {
+        label: 'Glue vs EMR (for ETL)',
+        headers: ['Aspect', 'AWS Glue', 'EMR'],
+        rows: [
+          ['Management', 'Serverless', 'You manage clusters'],
+          ['Catalog', 'Built-in Data Catalog', 'Use Glue Catalog or Hive'],
+          ['Best for', 'Standard serverless ETL', 'Custom/large frameworks, fine control'],
+        ],
+        takeaway: 'Serverless, low-ops ETL → Glue. Need framework control / huge custom jobs → EMR.',
+      },
+    ],
+    nuances: [
+      {
+        trap: 'Provisioning a Redshift cluster for occasional ad-hoc queries on S3 data',
+        correct: 'For infrequent SQL directly on S3 with no infrastructure, Athena is cheaper and simpler. Redshift suits always-on, complex warehouse workloads.',
+      },
+      {
+        trap: 'Ignoring partitioning/columnar formats and wondering why Athena is expensive',
+        correct: 'Athena bills per data scanned. Partition the S3 prefix and store as Parquet/ORC to scan far less data and slash cost.',
+      },
+      {
+        trap: 'Thinking you must run an ETL job before you can query with Athena',
+        correct: 'Athena can query raw S3 directly once the Glue Catalog has the schema. Glue ETL is optional (for cleaning/format conversion).',
+      },
+      {
+        trap: 'Choosing EMR when there is no custom framework requirement',
+        correct: 'If you just need serverless ETL + a catalog, Glue is lower-ops. Reach for EMR only when you need Hadoop/Spark/Hive control at scale.',
+      },
+    ],
+    tips: [
+      'The pattern to memorise: S3 (lake) → Glue (catalog/ETL) → Athena (SQL) → QuickSight (dashboards)',
+      'Athena cost lever = scan less: partition by date + use Parquet/ORC columnar format',
+      'Glue Data Catalog is the shared metastore across Athena, Redshift Spectrum, and EMR',
+      '"Serverless" + "query S3 with SQL" + "no infrastructure" → Athena, every time',
+      'Redshift Spectrum = query S3 from within Redshift (the warehouse counterpart to Athena)',
+    ],
+    mnemonic: [
+      'Pipeline: "Store (S3) → Catalog (Glue) → Ask (Athena) → Show (QuickSight)."',
+      'Athena pays per SCAN → partition + Parquet to pay less.',
+      'Athena = serverless & occasional · Redshift = always-on warehouse.',
+    ],
+    sources: [
+      { label: 'What is Amazon Athena?', url: 'https://docs.aws.amazon.com/athena/latest/ug/what-is.html' },
+      { label: 'AWS Glue Data Catalog', url: 'https://docs.aws.amazon.com/glue/latest/dg/components-overview.html' },
+      { label: 'Using Athena with the Glue Data Catalog', url: 'https://docs.aws.amazon.com/athena/latest/ug/glue-athena.html' },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // D1 · Observability triad — CloudTrail vs CloudWatch vs Config
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    id: 'observability-triad',
+    title: 'CloudTrail vs CloudWatch vs Config',
+    subtitle: 'The classic triad: WHO did it · HOW it performs · WHAT state it is in',
+    domain: 'd1',
+    tags: ['CloudTrail', 'CloudWatch', 'AWS Config', 'Audit', 'Monitoring', 'Compliance'],
+    overview:
+      'Three services constantly confused on the exam. CloudTrail = an audit log of API calls (WHO did ' +
+      'WHAT, WHEN). CloudWatch = performance metrics, logs, alarms, dashboards (HOW resources are doing). ' +
+      'AWS Config = resource configuration history + compliance rules (WHAT a resource looks like over ' +
+      'time, and whether it complies). Match the verb in the question to the service.',
+    flow: [
+      { nodes: [{ label: 'CloudTrail', sublabel: 'WHO did it · API audit', color: 'c1' }] },
+      { nodes: [{ label: 'CloudWatch', sublabel: 'HOW it performs · metrics/logs/alarms', color: 'c3' }] },
+      { nodes: [{ label: 'AWS Config', sublabel: 'WHAT state · config + compliance', color: 'c5' }] },
+    ],
+    anatomy: [
+      {
+        component: 'AWS CloudTrail',
+        role: 'Audit log of API activity (governance/forensics)',
+        notes: [
+          'Records who made which API call, from where, when (management + data events)',
+          'Answers "who deleted this bucket / launched this instance?"',
+          'Management events on by default (90-day history); deliver to S3 for long-term + CloudTrail Lake',
+          'Data events (S3 object-level, Lambda invokes) are high-volume and opt-in',
+        ],
+      },
+      {
+        component: 'Amazon CloudWatch',
+        role: 'Metrics, logs, alarms, dashboards (performance)',
+        notes: [
+          'Metrics: CPU, network, custom metrics; standard 5-min, detailed 1-min',
+          'EC2 memory/disk are NOT default — need the CloudWatch agent',
+          'Alarms trigger actions (SNS, Auto Scaling) on thresholds',
+          'Logs + Logs Insights for querying application/system logs',
+          'CloudWatch Events / EventBridge react to events in near real-time',
+        ],
+      },
+      {
+        component: 'AWS Config',
+        role: 'Configuration history + continuous compliance',
+        notes: [
+          'Records the configuration state of resources over time (a timeline of changes)',
+          'Answers "what did this security group look like last Tuesday?"',
+          'Config Rules evaluate compliance (e.g., "no public S3 buckets") + auto-remediation',
+          'Conformance packs bundle rules; works across accounts/regions via aggregators',
+        ],
+      },
+    ],
+    compare: [
+      {
+        label: 'The triad — match the question',
+        headers: ['Question asks…', 'Service', 'Mental model'],
+        rows: [
+          ['Who made this API call?', 'CloudTrail', 'Audit / forensics'],
+          ['Is CPU/latency too high? alarm me', 'CloudWatch', 'Performance / health'],
+          ['What changed in this config & is it compliant?', 'AWS Config', 'State history / compliance'],
+        ],
+        takeaway: 'CloudTrail = WHO (API audit) · CloudWatch = HOW (performance) · Config = WHAT (config state + compliance).',
+      },
+    ],
+    nuances: [
+      {
+        trap: 'Using CloudWatch to find out who deleted a resource',
+        correct: 'CloudWatch is performance/logs. The "who did what" API audit trail is CloudTrail.',
+      },
+      {
+        trap: 'Using CloudTrail to check whether resources comply with a policy',
+        correct: 'Compliance against desired configuration is AWS Config (Config Rules + remediation), not CloudTrail.',
+      },
+      {
+        trap: 'Expecting EC2 memory and disk usage in CloudWatch by default',
+        correct: 'Only CPU/network/disk-I-O at the hypervisor level are default. Memory and in-guest disk-used require the CloudWatch agent.',
+      },
+      {
+        trap: 'Confusing Config (state over time) with CloudTrail (the action that caused it)',
+        correct: 'Config shows WHAT the resource looked like across time; CloudTrail shows the API call that changed it. They complement each other.',
+      },
+    ],
+    tips: [
+      'Three verbs: CloudTrail=WHO · CloudWatch=HOW · Config=WHAT. Match the verb in the question.',
+      '"Who/audit/API call" → CloudTrail · "metric/alarm/CPU/latency" → CloudWatch · "compliant/config changed" → Config',
+      'EC2 memory & disk-used metrics need the CloudWatch agent — common trap',
+      'CloudWatch Alarm → SNS or Auto Scaling action is the standard automated-response pattern',
+      'Config Rules + auto-remediation = continuous compliance (e.g., auto-fix public buckets)',
+    ],
+    mnemonic: [
+      'Trail = "trail of WHO did it" · Watch = "watch HOW it performs" · Config = "WHAT it\'s configured as".',
+      'Deleted resource mystery → CloudTrail. Compliance question → Config. Alarm/metric → CloudWatch.',
+      'Memory metric missing? Install the CloudWatch agent.',
+    ],
+    sources: [
+      { label: 'What is AWS CloudTrail?', url: 'https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-user-guide.html' },
+      { label: 'What is Amazon CloudWatch?', url: 'https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/WhatIsCloudWatch.html' },
+      { label: 'What is AWS Config?', url: 'https://docs.aws.amazon.com/config/latest/developerguide/WhatIsConfig.html' },
+    ],
+  },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // Extra · Migration & transfer picker
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    id: 'migration-transfer-picker',
+    title: 'Migration & Transfer — Picking the Tool',
+    subtitle: 'Snow vs DataSync vs DMS vs MGN vs Transfer Family — match data + path',
+    domain: 'extra',
+    tags: ['Snow Family', 'DataSync', 'DMS', 'MGN', 'Transfer Family', 'Migration'],
+    overview:
+      'Migration questions are won by matching the data type + network situation to the right tool. ' +
+      'Offline/huge data or no bandwidth → Snow Family. Online file/object transfer → DataSync. ' +
+      'Databases → DMS. Whole-server lift-and-shift → MGN. Ongoing SFTP/FTPS ingest → Transfer Family. ' +
+      'A rough rule: if moving online would take >1 week, ship a Snow device instead.',
+    flow: [
+      { nodes: [{ label: 'Snow Family', sublabel: 'offline · huge / low bandwidth', color: 'c2' }] },
+      { nodes: [{ label: 'DataSync', sublabel: 'online files/objects → S3/EFS/FSx', color: 'c3' }] },
+      { nodes: [{ label: 'DMS', sublabel: 'databases (homo/hetero)', color: 'c1' }] },
+      {
+        nodes: [
+          { label: 'MGN', sublabel: 'server lift-and-shift', color: 'c5' },
+          { label: 'Transfer Family', sublabel: 'managed SFTP/FTPS/FTP', color: 'c4' },
+        ],
+      },
+    ],
+    anatomy: [
+      {
+        component: 'AWS Snow Family',
+        role: 'Physical devices for offline bulk transfer / edge',
+        notes: [
+          'Snowcone: smallest (~8–14 TB), portable, rugged edge device',
+          'Snowball Edge Storage Optimized: ~210 TB usable for large migrations',
+          'Snowball Edge Compute Optimized: compute at the edge (vCPUs + optional GPU)',
+          'Use when bandwidth is limited or the online transfer would take longer than ~1 week',
+          'Data is encrypted; device shipped back and ingested into S3',
+        ],
+      },
+      {
+        component: 'AWS DataSync',
+        role: 'Online file/object transfer (on-prem ⇄ AWS)',
+        notes: [
+          'Moves data over the network from NFS/SMB/HDFS/object stores to S3/EFS/FSx',
+          'Scheduled, incremental, with automatic data-integrity verification',
+          'Also does EFS-to-EFS and cross-region transfers over the AWS backbone',
+          'Use when you have adequate bandwidth and want managed, repeatable online transfer',
+        ],
+      },
+      {
+        component: 'AWS DMS (Database Migration Service)',
+        role: 'Migrate/replicate databases with minimal downtime',
+        notes: [
+          'Homogeneous (Oracle→Oracle) or heterogeneous (Oracle→Aurora) migrations',
+          'Heterogeneous uses the Schema Conversion Tool (SCT) to convert schema first',
+          'CDC (change data capture) keeps source and target in sync for near-zero downtime',
+          'Runs on a replication instance (can be Multi-AZ for resilience)',
+        ],
+      },
+      {
+        component: 'AWS MGN (Application Migration Service)',
+        role: 'Rehost (lift-and-shift) whole servers',
+        notes: [
+          'Block-level replication of entire servers into EC2',
+          'AWS-recommended primary tool for lift-and-shift rehosting',
+          'Minimal downtime cutover; converts source machines to run natively on AWS',
+        ],
+      },
+      {
+        component: 'AWS Transfer Family',
+        role: 'Managed SFTP/FTPS/FTP/AS2 endpoints into S3/EFS',
+        notes: [
+          'Drop-in managed file-transfer endpoints for partners using legacy protocols',
+          'Lands files directly in S3 or EFS — no protocol/code changes for senders',
+          'Use for ongoing B2B ingest, not a one-time bulk migration',
+        ],
+      },
+    ],
+    compare: [
+      {
+        label: 'Which migration tool?',
+        headers: ['Need', 'Tool', 'Why'],
+        rows: [
+          ['Huge data / poor bandwidth (offline)', 'Snow Family', 'Ship a device, skip the network'],
+          ['Online file/object transfer', 'DataSync', 'Managed, incremental, verified'],
+          ['Migrate a database', 'DMS', 'Homo/hetero + CDC sync'],
+          ['Lift-and-shift whole servers', 'MGN', 'Block-level rehost to EC2'],
+          ['Ongoing SFTP/FTPS ingest', 'Transfer Family', 'Managed legacy-protocol endpoints'],
+          ['Track migrations across tools', 'Migration Hub', 'Dashboard only — does NOT migrate'],
+        ],
+        takeaway: 'Data type + path decides: offline bulk=Snow · online files=DataSync · DB=DMS · servers=MGN · SFTP ingest=Transfer Family.',
+      },
+      {
+        label: 'Snow Family sizing',
+        headers: ['Device', 'Capacity', 'Use'],
+        rows: [
+          ['Snowcone', '~8–14 TB', 'Small, portable, rugged edge'],
+          ['Snowball Edge Storage', '~210 TB usable', 'Large data migration'],
+          ['Snowball Edge Compute', '~28 TB + compute', 'Edge processing (vCPU/GPU)'],
+        ],
+        takeaway: 'Pick by data size + whether you need edge compute. >1 week online → go Snow.',
+      },
+    ],
+    nuances: [
+      {
+        trap: 'Using DataSync to move petabytes when the site has almost no bandwidth',
+        correct: 'If the online transfer would take longer than ~a week, ship a Snow device instead — physics beats the network.',
+      },
+      {
+        trap: 'Choosing DataSync (file transfer) to migrate a relational database',
+        correct: 'Databases use DMS (with SCT for heterogeneous engines and CDC for ongoing sync), not DataSync.',
+      },
+      {
+        trap: 'Expecting Migration Hub to perform the migration',
+        correct: 'Migration Hub only TRACKS migrations across MGN/DMS/DataSync — it provides visibility, it does not move data itself.',
+      },
+      {
+        trap: 'Using DMS to move entire servers (OS + app + data)',
+        correct: 'Whole-server lift-and-shift is MGN (block-level rehost). DMS migrates database contents, not the server.',
+      },
+    ],
+    tips: [
+      'Decide by data type: files→DataSync · database→DMS · whole server→MGN · SFTP partners→Transfer Family · offline bulk→Snow',
+      'Rule of thumb: online transfer >1 week → Snow device',
+      'Heterogeneous DB migration = DMS + Schema Conversion Tool (SCT)',
+      'Need near-zero downtime DB cutover → DMS with CDC (change data capture)',
+      'Migration Hub = visibility/tracking only — never the migration engine itself',
+    ],
+    mnemonic: [
+      'Snow = "ship it" (offline) · DataSync = "sync files online" · DMS = "Database Migration" · MGN = "Move whole machiNes".',
+      'Heterogeneous DB → DMS + SCT (Schema Conversion Tool).',
+      'Migration Hub watches; it does not move.',
+    ],
+    sources: [
+      { label: 'AWS Snow Family', url: 'https://docs.aws.amazon.com/snowball/latest/developer-guide/whatissnowball.html' },
+      { label: 'What is AWS DataSync?', url: 'https://docs.aws.amazon.com/datasync/latest/userguide/what-is-datasync.html' },
+      { label: 'What is AWS DMS?', url: 'https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html' },
+      { label: 'What is Application Migration Service?', url: 'https://docs.aws.amazon.com/mgn/latest/ug/what-is-application-migration-service.html' },
+    ],
+  },
 ]
 
 export const domainLabel: Record<Scenario['domain'], string> = {
