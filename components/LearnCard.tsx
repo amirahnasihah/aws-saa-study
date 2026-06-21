@@ -1,4 +1,4 @@
-import { ServiceCard, CompareTable, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
+import { ServiceCard, CompareTable, FlowDiagram, DiagramTone, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
 import GlossaryText from './GlossaryText'
 
 interface LearnCardProps {
@@ -7,11 +7,59 @@ interface LearnCardProps {
   sectionId: string
 }
 
+// Box border/text per tone — literal classes so Tailwind keeps them at build time.
+const diagramToneClass: Record<DiagramTone, string> = {
+  c1: 'border-c1/45 text-c1',
+  c2: 'border-c2/45 text-c2',
+  c3: 'border-c3/45 text-c3',
+  c4: 'border-c4/45 text-c4',
+  c5: 'border-c5/45 text-c5',
+  c6: 'border-c6/45 text-c6',
+}
+
+function FlowAnatomy({ diagram }: { diagram: FlowDiagram }) {
+  return (
+    <div className="rounded-lg border border-aws-border/60 bg-white/[0.015] px-3 py-3">
+      {diagram.label && (
+        <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-aws-muted mb-2.5">
+          {diagram.label}
+        </p>
+      )}
+      <div className="flex items-stretch gap-1.5 overflow-x-auto nav-scroll pb-1">
+        {diagram.steps.map((step, s) => (
+          <div key={s} className="flex items-stretch gap-1.5 shrink-0">
+            {s > 0 && (
+              <span aria-hidden className="self-center text-aws-muted/70 text-sm shrink-0">→</span>
+            )}
+            <div className="flex flex-col justify-center gap-1.5">
+              {step.nodes.map((node, n) => (
+                <div
+                  key={n}
+                  className={`rounded-md border bg-aws-bg/60 px-2.5 py-1.5 text-center min-w-[84px] ${node.tone ? diagramToneClass[node.tone] : 'border-aws-border text-aws-text'}`}
+                >
+                  <p className="font-space-mono text-[0.66rem] font-bold leading-tight whitespace-nowrap">{node.label}</p>
+                  {node.sub && <p className="text-[0.55rem] text-aws-muted leading-tight mt-0.5 whitespace-nowrap">{node.sub}</p>}
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      {diagram.caption && (
+        <p className="text-[0.7rem] text-aws-muted leading-relaxed mt-2">
+          <GlossaryText text={diagram.caption} />
+        </p>
+      )}
+    </div>
+  )
+}
+
 // Per-column tint for the compared columns (skips the attribute column).
-// Cycles c2/c5/c4 so 2- and 3-way comparisons stay visually distinct — same
-// palette the bespoke VPC-page tables use.
-const compareHeadTint = ['text-c2 bg-c2/5', 'text-c5 bg-c5/5', 'text-c4 bg-c4/5']
-const compareCellTint = ['bg-c2/[0.03]', 'bg-c5/[0.03]', 'bg-c4/[0.03]']
+// Cycles c2/c5/c4/c6 so 2-, 3- and 4-way comparisons stay visually distinct —
+// same palette family the bespoke VPC-page tables use (c6 covers the 4th column
+// so 4-way tables like the DR spectrum & EC2 purchasing options don't collide).
+const compareHeadTint = ['text-c2 bg-c2/5', 'text-c5 bg-c5/5', 'text-c4 bg-c4/5', 'text-c6 bg-c6/5']
+const compareCellTint = ['bg-c2/[0.03]', 'bg-c5/[0.03]', 'bg-c4/[0.03]', 'bg-c6/[0.03]']
 
 function ComparisonTable({ compare }: { compare: CompareTable }) {
   const [attrHeader, ...valueHeaders] = compare.headers
@@ -119,6 +167,8 @@ export default function LearnCard({ service, category, sectionId }: LearnCardPro
               </div>
             </div>
           )}
+
+          {service.diagram && <FlowAnatomy diagram={service.diagram} />}
 
           {service.compare && <ComparisonTable compare={service.compare} />}
 

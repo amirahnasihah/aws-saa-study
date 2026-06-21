@@ -35,6 +35,24 @@ export interface CompareTable {
   takeaway?: string
 }
 
+// Lightweight anatomy/flow diagram — the AWS-docs style "boxes + arrows" picture.
+// Each step is rendered left→right with an arrow between steps; a step holding more
+// than one node renders as stacked parallel boxes (fan-out / branching).
+export type DiagramTone = 'c1' | 'c2' | 'c3' | 'c4' | 'c5' | 'c6'
+export interface DiagramNode {
+  label: string
+  sub?: string
+  tone?: DiagramTone
+}
+export interface DiagramStep {
+  nodes: DiagramNode[]
+}
+export interface FlowDiagram {
+  label?: string
+  steps: DiagramStep[]
+  caption?: string
+}
+
 export interface ServiceCard {
   shortName: string
   fullName: string
@@ -45,6 +63,7 @@ export interface ServiceCard {
   scenario?: string
   storageDetails?: string
   detailsLabel?: string
+  diagram?: FlowDiagram
   compare?: CompareTable
   tips?: string[]
   docs?: Array<{ label: string; url: string }>
@@ -189,12 +208,42 @@ export const domains: DomainData[] = [
             fullName: 'Amazon Cognito',
             ingat: '"Login untuk user apps — User Pool = siapa kau, Identity Pool = boleh buat apa"',
             gunaUntuk: 'User sign-up/sign-in, federated identity (Google/Facebook), mobile app auth',
-            fungsi: 'User auth untuk web/mobile apps. User Pools (authentication) vs Identity Pools (AWS credentials).',
-            scenario: '"Web app perlu user registration dan login" → Cognito User Pools. "Mobile app user perlu access S3 directly" → Identity Pool untuk temp AWS credentials.',
+            fungsi: 'Identity platform untuk web/mobile apps. Dua komponen yang operate independent atau bersama: User Pools (authentication — siapa user, issue JWT) vs Identity Pools (authorization — tukar token jadi temp AWS credentials via STS).',
+            diagram: {
+              label: 'User Pool + Identity Pool flow',
+              steps: [
+                { nodes: [{ label: 'User', sub: 'sign in', tone: 'c4' }] },
+                { nodes: [{ label: 'User Pool', sub: 'auth → JWT', tone: 'c3' }] },
+                { nodes: [{ label: 'Identity Pool', sub: 'JWT → STS creds', tone: 'c5' }] },
+                { nodes: [
+                  { label: 'S3', tone: 'c2' },
+                  { label: 'DynamoDB', tone: 'c2' },
+                ] },
+              ],
+              caption: '1) Sign in ikut User Pool → dapat JWT. 2) Tukar JWT kat Identity Pool → dapat temp AWS credentials (STS). 3) Guna credentials access AWS services. Dua-dua boleh guna sendiri-sendiri.',
+            },
+            compare: {
+              label: 'User Pool vs Identity Pool',
+              headers: ['Aspect', 'User Pool', 'Identity Pool'],
+              rows: [
+                ['Job', 'Authentication — "siapa kau"', 'Authorization — "boleh access apa kat AWS"'],
+                ['Issues', 'JWT tokens (ID, access, refresh)', 'Temp AWS credentials (via STS)'],
+                ['Backed by', 'User directory + OIDC IdP', 'IAM roles (role + attribute based)'],
+                ['Federated IdP', '🟢 SAML, OIDC, Google, Facebook, Apple', '🟢 Accepts User Pool or external IdP claims'],
+                ['Guest/anonymous', 'No', '🟢 Yes — boleh issue creds untuk guest'],
+                ['Use when', 'App perlu sign-up / sign-in', 'App perlu call AWS APIs (S3, DynamoDB) directly'],
+              ],
+              takeaway: '"Web app perlu login/registration" → User Pool. "App perlu access S3/DynamoDB terus dengan temp credentials" → Identity Pool. Selalu pair: User Pool authenticate → Identity Pool bagi AWS creds.',
+            },
             tips: [
-              'Cognito User Pools support federated identity — users TAK PERLU di-create dalam AWS, boleh authenticate guna external IdPs (Facebook, Google, etc.)',
+              'Cognito User Pools support federated identity — users TAK PERLU di-create dalam AWS, boleh authenticate guna external IdPs (Facebook, Google, Apple, SAML, OIDC)',
+              'Identity Pool guna IAM roles (role-based + attribute-based access control) untuk decide apa user boleh access. Boleh issue credentials untuk guest/unauthenticated users juga',
+              'Exam: "exchange social/SAML login for temporary AWS credentials to access S3" → Identity Pool. "Managed user directory with sign-up, MFA, password policies" → User Pool',
             ],
-            keywords: ['User Pools', 'Identity Pools', 'OAuth', 'JWT', 'federated identity', 'MFA'],
+            docs: [
+              { label: 'What is Amazon Cognito (User vs Identity pools)', url: 'https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html' },
+            ],
+            keywords: ['User Pools', 'Identity Pools', 'OAuth', 'JWT', 'federated identity', 'MFA', 'STS', 'temp credentials', 'OIDC', 'SAML', 'authentication', 'authorization', 'guest access'],
           },
           {
             shortName: 'RAM',
@@ -420,7 +469,20 @@ export const domains: DomainData[] = [
               '3 jenis KMS key: (1) AWS Owned keys — fully managed by AWS, free, tak boleh view/manage/audit langsung. (2) AWS Managed keys (aws/service-name) — dalam account anda tapi RESTRICTED kepada satu service, rotation automatic (anual), TAK boleh customize policy/rotation. (3) Customer Managed Keys (CMK) — FULL control: custom key policy, manual/auto rotation, enable/disable, audit penuh dalam CloudTrail',
               'Exam trick: "comprehensive lifecycle management, key rotation, auditing & access control" = ciri CUSTOMER Managed Key (CMK), BUKAN AWS Managed Key — AWS Managed Key tak boleh di-customize oleh user',
             ],
-            keywords: ['encryption at rest', 'CMK', 'key rotation', 'SSE-KMS', 'envelope encryption', 'CloudTrail audit', 'asymmetric keys', 'digital signing', 'multi-region keys', 'aws:SourceVpce'],
+            compare: {
+              label: 'KMS vs CloudHSM',
+              headers: ['Aspect', 'AWS KMS', 'AWS CloudHSM'],
+              rows: [
+                ['Tenancy', 'Multi-tenant, shared (AWS managed)', '🟢 Single-tenant, dedicated hardware'],
+                ['Who controls keys', 'AWS manages HSM; you manage key policy', '🟢 You fully control — AWS cannot access'],
+                ['FIPS 140-2', 'Level 2 (overall)', '🟢 Level 3'],
+                ['Key types', 'Symmetric + asymmetric, AWS service integration', 'Symmetric + asymmetric, your own crypto (PKCS#11, JCE)'],
+                ['Effort', '🟢 Low — fully managed', 'High — you manage cluster, users, backups'],
+                ['Use when', 'Default encryption for S3/RDS/EBS, easy & cheap', 'Regulatory need for dedicated HW + exclusive control'],
+              ],
+              takeaway: '"Customer-exclusive control / dedicated hardware / FIPS 140-2 Level 3" → CloudHSM. Anything else (normal encrypt-at-rest for AWS services) → KMS. KMS boleh guna CloudHSM sebagai custom key store kalau perlu both.',
+            },
+            keywords: ['encryption at rest', 'CMK', 'key rotation', 'SSE-KMS', 'envelope encryption', 'CloudTrail audit', 'asymmetric keys', 'digital signing', 'multi-region keys', 'aws:SourceVpce', 'CloudHSM', 'FIPS 140-2', 'single-tenant', 'custom key store'],
           },
           {
             shortName: 'Secrets Manager',
@@ -429,7 +491,23 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Store dan auto-rotate credentials, API keys, DB passwords',
             fungsi: 'Menyimpan, mendapatkan semula dan memutar rahsia secara automatik tanpa perlu update aplikasi',
             contohGuna: 'Lambda function perlu DB password — jangan letak dalam env var atau code. Store dalam Secrets Manager, Lambda retrieve masa runtime. Auto-rotate setiap 30 hari',
-            keywords: ['auto-rotation', 'credentials', 'API keys', 'no hardcoded secrets', 'Lambda integration'],
+            compare: {
+              label: 'Secrets Manager vs Parameter Store',
+              headers: ['Aspect', 'Secrets Manager', 'SSM Parameter Store'],
+              rows: [
+                ['Built for', 'Secrets (DB creds, API keys, OAuth tokens)', 'Config data + secrets (AMI IDs, license codes, passwords)'],
+                ['Auto-rotation', '🟢 Built-in (Lambda, scheduled)', 'No native rotation (boleh reference Secrets Manager)'],
+                ['Cost', 'Paid per secret + per API call', '🟢 Standard tier free (Advanced tier paid)'],
+                ['Encryption', 'Always KMS-encrypted', 'Plaintext (String) or KMS (SecureString)'],
+                ['Cross-region replicate', '🟢 Yes, built-in', 'No (per-region)'],
+                ['Use when', 'Rotate DB creds automatically, RDS/Redshift integration', 'Store config cheaply, occasional secrets, hierarchy'],
+              ],
+              takeaway: '"Auto-rotate database credentials" → Secrets Manager. "Cheap/free config + plain parameters, no rotation needed" → Parameter Store. Parameter Store boleh reference Secrets Manager secrets via /aws/reference/secretsmanager.',
+            },
+            docs: [
+              { label: 'Secrets Manager vs Parameter Store', url: 'https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/AWSHowTo.secrets.Secrets-Manager-and-Parameter-Store.html' },
+            ],
+            keywords: ['auto-rotation', 'credentials', 'API keys', 'no hardcoded secrets', 'Lambda integration', 'Parameter Store', 'SecureString', 'cross-region replication', 'KMS'],
           },
           {
             shortName: 'S3 Object Lock',
@@ -497,7 +575,19 @@ export const domains: DomainData[] = [
               'Insight Events: detect unusual API activity patterns (e.g. sudden spike in EC2 TerminateInstances calls). Optional, additional cost.',
               'Exam: "S3 object download activity logging" → CloudTrail data events (not management events). "Who created this IAM role?" → CloudTrail management events (default logging).',
             ],
-            keywords: ['API audit', 'who did what', 'compliance', 'forensics', 'account activity', '90-day retention', 'CloudTrail Lake', 'SQL query', 'long-term retention', '7 years', 'management events', 'data events', 'control plane', 'data plane', 'S3 object-level', 'Lambda invocations', 'multi-region trail', 'Insight Events'],
+            compare: {
+              label: 'CloudTrail vs CloudWatch vs Config',
+              headers: ['Aspect', 'CloudTrail', 'CloudWatch', 'AWS Config'],
+              rows: [
+                ['Question it answers', 'WHO did WHAT? (API calls)', 'WHAT is happening NOW? (metrics/logs)', 'Is config COMPLIANT & what CHANGED?'],
+                ['Records', 'Every API call (user, time, IP, action)', 'Metrics, logs, alarms, dashboards', 'Resource config snapshots over time'],
+                ['Main use', 'Audit, forensics, compliance trail', 'Monitoring, alerting, troubleshooting', 'Compliance rules, config history, drift'],
+                ['Triggers on', 'API activity', 'Threshold breach → alarm/action', 'Config change → rule evaluation'],
+                ['Keyword', '"who deleted…", "audit log of API"', '"alarm when CPU > 80%", "log metrics"', '"is this resource compliant", "config drift"'],
+              ],
+              takeaway: 'CloudTrail = WHO DID WHAT (API audit). CloudWatch = WHAT IS HAPPENING NOW (metrics/alarms). Config = IS IT COMPLIANT + WHAT CHANGED (resource state history). Soalan sebut "compliance + configuration over time" → Config, bukan CloudTrail.',
+            },
+            keywords: ['API audit', 'who did what', 'compliance', 'forensics', 'account activity', '90-day retention', 'CloudTrail Lake', 'SQL query', 'long-term retention', '7 years', 'management events', 'data events', 'control plane', 'data plane', 'S3 object-level', 'Lambda invocations', 'multi-region trail', 'Insight Events', 'vs CloudWatch', 'vs Config'],
           },
           {
             shortName: 'ACM',
@@ -543,7 +633,21 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Private dedicated connection from on-premises to AWS',
             fungsi: 'Menyediakan sambungan jaringan peribadi yang berdedikasi antara data center on-premises dengan AWS',
             contohGuna: 'Company transfer 100TB data sebulan dari on-prem ke AWS — Direct Connect lebih murah (no internet data transfer charges), consistent latency berbanding internet',
-            keywords: ['dedicated connection', 'private', 'consistent latency', '1Gbps/10Gbps', 'no internet'],
+            compare: {
+              label: 'Direct Connect vs Site-to-Site VPN',
+              headers: ['Aspect', 'Direct Connect (DX)', 'Site-to-Site VPN'],
+              rows: [
+                ['Path', 'Private dedicated line (no internet)', 'Encrypted IPSec tunnel over public internet'],
+                ['Latency', '🟢 Consistent, low', 'Variable (depends on internet)'],
+                ['Bandwidth', 'High, dedicated (1/10/100 Gbps)', 'Up to ~1.25 Gbps per tunnel'],
+                ['Setup time', 'Weeks–months (physical provisioning)', '🟢 Minutes–hours'],
+                ['Cost', 'Higher fixed cost, cheaper data transfer at scale', '🟢 Low, pay-as-you-go'],
+                ['Encryption', 'Not encrypted by default (add VPN over DX)', '🟢 Encrypted by default (IPSec)'],
+                ['Use when', 'Steady high-volume, low-latency, predictable', 'Quick, cheap, encrypted, or DX backup'],
+              ],
+              takeaway: '"Consistent low latency + high bandwidth + private" → Direct Connect. "Quick, cheap, encrypted over internet" → Site-to-Site VPN. Best resilience = DX primary + VPN backup (encrypted DX = run VPN over DX).',
+            },
+            keywords: ['dedicated connection', 'private', 'consistent latency', '1Gbps/10Gbps', 'no internet', 'vs VPN', 'IPSec backup', 'data transfer cost'],
           },
           {
             shortName: 'Site-to-Site VPN',
@@ -747,6 +851,19 @@ export const domains: DomainData[] = [
             fungsi: 'TGW bertindak sebagai network transit hub yang boleh connect ribuan VPCs, VPNs, dan Direct Connect. Menggantikan peering mesh yang kompleks. TRANSITIVE — VPC A boleh reach VPC C melalui TGW tanpa A↔C peering. Tanpa TGW, 10 VPCs = n*(n-1)/2 = 45 peering connections.',
             contohGuna: 'Company ada 10 VPCs dari pelbagai teams + 2 on-premises data centers → satu TGW connect semua. Kos naik tapi operationally jauh lebih simple.',
             scenario: '"Many VPCs perlu communicate dengan satu sama lain" → Transit Gateway. "Hanya 2 VPCs" → VPC Peering (simpler, lebih murah). TGW = transitive, VPC Peering = non-transitive.',
+            compare: {
+              label: 'VPC Peering vs Transit Gateway',
+              headers: ['Aspect', 'VPC Peering', 'Transit Gateway'],
+              rows: [
+                ['Topology', '1-to-1 link between 2 VPCs', '🟢 Hub-and-spoke, central hub'],
+                ['Transitive routing', 'No — A↔B, B↔C tapi A✗C', '🟢 Yes — A reach C via hub'],
+                ['Scale', 'Mesh grows fast: 10 VPCs = 45 links', '🟢 10 VPCs = 10 attachments'],
+                ['On-prem (VPN/DX)', 'Not via peering', '🟢 Attach VPN + Direct Connect to hub'],
+                ['Cost', '🟢 No hourly fee (data transfer only)', 'Hourly per attachment + data processing'],
+                ['Use when', 'Just 2 VPCs, simplest + cheapest', '3+ VPCs all-to-all, or hybrid network'],
+              ],
+              takeaway: '2 VPCs → Peering (cheaper, simple). 3+ VPCs all-to-all atau perlu connect on-prem → Transit Gateway (transitive hub, elak peering mesh). Peering non-transitive, TGW transitive.',
+            },
             tips: [
               '2 VPCs = Peering (cheaper). 3+ VPCs all-to-all = Transit Gateway (simpler)',
               'TGW support TRANSITIVE routing — ini perbezaan utama dari VPC Peering',
@@ -768,6 +885,19 @@ export const domains: DomainData[] = [
             fungsi: 'Dua jenis: Gateway Endpoint (S3 + DynamoDB, free, guna route table) dan Interface Endpoint (services lain via PrivateLink, ada ENI dalam subnet, berbayar). Traffic tak keluar ke internet langsung — lebih selamat dan murah (jimat NAT GW data fees).',
             contohGuna: 'EC2 private subnet banyak upload ke S3. Tanpa endpoint: bayar NAT GW per GB. Dengan S3 Gateway Endpoint (free): traffic terus dalam AWS network.',
             scenario: '"Access S3/DynamoDB dari private subnet tanpa internet" → Gateway VPC Endpoint (free). "Access ECR, SSM, atau services lain privately" → Interface Endpoint (PrivateLink).',
+            compare: {
+              label: 'Gateway vs Interface Endpoint',
+              headers: ['Aspect', 'Gateway Endpoint', 'Interface Endpoint'],
+              rows: [
+                ['Supports', '🟢 S3 + DynamoDB only', 'Most AWS services (ECR, SSM, KMS, SQS…) + PrivateLink'],
+                ['How it works', 'Route table entry (prefix list)', 'ENI with private IP in your subnet'],
+                ['Cost', '🟢 Free', 'Hourly per-ENI + data processing'],
+                ['Access from on-prem', 'No (route-table based, in-VPC only)', '🟢 Yes via VPN/Direct Connect (DNS)'],
+                ['DNS', 'No private DNS', 'Private DNS — service name resolves to ENI'],
+                ['Use when', 'S3/DynamoDB from private subnet, save NAT cost', 'Any other service privately, or from on-prem'],
+              ],
+              takeaway: '"GD Free" → Gateway endpoint = S3 + DynamoDB sahaja, percuma, guna route table. Semua service lain (atau access from on-prem) → Interface endpoint (PrivateLink, ENI, berbayar).',
+            },
             tips: [
               '"GD Free" — Gateway Endpoint untuk S3 + DynamoDB = PERCUMA',
               'Interface Endpoint = semua services lain (ECR, SSM, KMS...) = berbayar (ada ENI)',
@@ -1011,7 +1141,19 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Non-critical systems, lowest cost DR strategy',
             fungsi: 'Strategi DR paling asas — backup data ke S3/Glacier, restore bila diperlukan. Tiada infrastruktur standby di DR region',
             scenario: 'Non-critical archival system — backup snapshots ke S3/Glacier regularly. RPO: hours/days. RTO: hours. Paling murah tapi paling lambat recover. Guna bila downtime beberapa jam boleh diterima.',
-            keywords: ['RPO: hours/days', 'RTO: hours', 'lowest cost', 'no standby infra', 'S3/Glacier backup'],
+            compare: {
+              label: 'The 4 DR strategies — cost ↔ speed spectrum',
+              headers: ['Aspect', 'Backup & Restore', 'Pilot Light', 'Warm Standby', 'Multi-Site Active/Active'],
+              rows: [
+                ['RPO', 'Hours–days', 'Minutes', 'Seconds–minutes', '🟢 Near-zero'],
+                ['RTO', 'Hours', 'Minutes–hours', 'Minutes', '🟢 Seconds'],
+                ['What runs in DR', 'Nothing — just backups', 'Core DB only (app off)', 'Scaled-down full stack', '🟢 Full capacity, live'],
+                ['Cost', '🟢 Lowest', 'Low–medium', 'Higher', 'Highest'],
+                ['Use when', 'Non-critical, downtime OK', 'Can tolerate some recovery time', 'Need fast recovery, low traffic loss', 'Mission-critical, zero downtime'],
+              ],
+              takeaway: 'Cost & recovery speed naik dari kiri → kanan. Cheapest+slowest = Backup & Restore. Fastest+priciest = Multi-Site Active/Active. Pilih ikut RPO/RTO requirement vs budget. Pilot Light = DB on, app off; Warm Standby = full stack scaled-down running.',
+            },
+            keywords: ['RPO: hours/days', 'RTO: hours', 'lowest cost', 'no standby infra', 'S3/Glacier backup', 'DR spectrum', 'Pilot Light', 'Warm Standby', 'Multi-Site'],
           },
           {
             shortName: 'Pilot Light',
@@ -1200,6 +1342,18 @@ export const domains: DomainData[] = [
             ingat: '"Lift-and-shift server migration ke EC2 — continuous replication, minimal downtime"',
             gunaUntuk: 'Migrate servers (physical/virtual/cloud) to AWS EC2 with minimal downtime',
             fungsi: 'MGN melakukan continuous block-level replication dari source server ke AWS. Bila ready cutover, MGN launch EC2 instance dari replikasi latest. Minimal downtime. Gantikan CloudEndure Migration.',
+            compare: {
+              label: 'MGN vs DMS vs DataSync — what are you moving?',
+              headers: ['Aspect', 'MGN', 'DMS', 'DataSync'],
+              rows: [
+                ['Moves', 'Whole server (OS + apps + data)', 'Databases', 'Files / objects'],
+                ['Target', 'EC2', 'RDS, Aurora, EC2 DB, on-prem', 'S3, EFS, FSx'],
+                ['How', 'Continuous block-level replication', 'Replication + CDC (live sync)', 'Scheduled transfer + verification'],
+                ['Engine change', 'N/A (same server)', '🟢 Heterogeneous via SCT (Oracle→Aurora)', 'N/A'],
+                ['Keyword', '"lift-and-shift server to EC2"', '"migrate database, minimal downtime"', '"transfer NAS/NFS files to S3"'],
+              ],
+              takeaway: 'Server (OS+apps) → MGN. Database → DMS (+SCT kalau tukar engine). Files to S3/EFS/FSx → DataSync. Application Discovery Service = planning sahaja, bukan migrate.',
+            },
             tips: [
               'MGN = server migration (OS + apps + data). DMS = database migration only. DataSync = file/object data transfer',
               'Application Discovery Service = discovery/planning phase bukan migration',
@@ -1669,6 +1823,19 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Push notification ke many subscribers (fan-out)',
             fungsi: 'Pub/sub messaging service — publisher hantar message ke SNS topic, semua subscribers terima serentak. Subscribers boleh jadi SQS, Lambda, HTTP/S endpoints, email, SMS. Push-based (SNS hantar ke subscriber), bukan pull-based macam SQS.',
             contohGuna: 'S3 upload → SNS topic → fan-out ke 3 SQS queues (thumbnail, metadata, archive) sekaligus.',
+            diagram: {
+              label: 'Fan-out anatomy',
+              steps: [
+                { nodes: [{ label: 'S3 Upload', sub: 'event source', tone: 'c2' }] },
+                { nodes: [{ label: 'SNS Topic', sub: '1 publish', tone: 'c3' }] },
+                { nodes: [
+                  { label: 'SQS', sub: 'thumbnail', tone: 'c4' },
+                  { label: 'SQS', sub: 'metadata', tone: 'c4' },
+                  { label: 'SQS', sub: 'archive', tone: 'c4' },
+                ] },
+              ],
+              caption: '1 publish → SNS pecah ke semua subscribers serentak. Tiap SQS queue process independent & scale sendiri. Ingat: queue policy mesti allow SNS SendMessage.',
+            },
             storageDetails: 'Message Filtering → Subscriber boleh set filter policy (JSON) supaya hanya terima message yang match criteria — tak perlu filter dalam app code\nMessage Delivery → Push-based, SNS hantar ke subscriber endpoint. Retry policy built-in untuk HTTP/S\nFIFO Topics → Ordered, deduplicated delivery (pair dengan SQS FIFO queues). Max 300 publishes/sec (3000 with batching)\nMessage Size → Max 256 KB per message. Guna Extended Client Library + S3 untuk larger payloads',
             detailsLabel: 'SNS Key Concepts',
             scenario: '"S3 event perlu trigger multiple downstream processes simultaneously" → SNS fan-out. S3 event notification → SNS topic → multiple SQS queues. S3 hanya boleh hantar 1 event notification per prefix+suffix combination ke 1 destination — SNS fan-out bypasses this limitation.',
@@ -1691,6 +1858,23 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Ingest & process real-time streaming data (logs, clickstream, IoT, metrics)',
             fungsi: 'Kinesis Data Streams (KDS): real-time, data dalam shards, custom consumers baca dengrn code (Lambda/KCL). Retention default 24 jam, boleh extend sampai 365 hari. Kinesis Data Firehose: near-real-time (buffer ~60s/MB), fully managed, ZERO code — auto-deliver ke S3, Redshift, OpenSearch, Splunk, boleh transform guna Lambda.',
             contohGuna: 'Live clickstream/IoT telemetry yang perlu custom real-time processing → Data Streams. "Just load streaming logs into S3/Redshift tanpa manage apa-apa" → Firehose.',
+            diagram: {
+              label: 'Streaming pipeline anatomy',
+              steps: [
+                { nodes: [
+                  { label: 'Producers', sub: 'IoT · app · logs', tone: 'c1' },
+                ] },
+                { nodes: [
+                  { label: 'Shard 1', tone: 'c3' },
+                  { label: 'Shard 2', tone: 'c3' },
+                  { label: 'Shard 3', tone: 'c3' },
+                ] },
+                { nodes: [
+                  { label: 'Consumers', sub: 'Lambda / KCL', tone: 'c4' },
+                ] },
+              ],
+              caption: 'Data masuk shards by partition key. Throughput = bilangan shards (1 shard = 1MB/s in, 2MB/s out). Retention 24h→365d → consumers boleh replay. Firehose ganti consumers ni dengan auto-deliver no-code.',
+            },
             scenario: '"Real-time, sub-second, multiple consumers, replay data" → Data Streams (shards + retention up to 365 days). "Load streaming data ke S3/Redshift/OpenSearch with no servers and no code" → Firehose.',
             compare: {
               label: 'Data Streams vs Firehose',
@@ -1716,6 +1900,16 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Manage & expose REST, HTTP, dan WebSocket APIs',
             fungsi: 'Mencipta, mengurus dan mendedahkan API pada mana-mana skala. Handle auth, throttling, caching, request validation, dan integrate ke Lambda / HTTP backend / VPC resources.',
             contohGuna: 'Frontend → API Gateway → Lambda → DynamoDB',
+            diagram: {
+              label: 'Serverless API anatomy',
+              steps: [
+                { nodes: [{ label: 'Client', sub: 'web / mobile', tone: 'c4' }] },
+                { nodes: [{ label: 'API Gateway', sub: 'auth · throttle · cache', tone: 'c3' }] },
+                { nodes: [{ label: 'Lambda', sub: 'business logic', tone: 'c1' }] },
+                { nodes: [{ label: 'DynamoDB', sub: 'data', tone: 'c2' }] },
+              ],
+              caption: 'API Gateway = pintu masuk: handle auth (Cognito/IAM/Lambda authorizer), throttling (429 bila exceed), caching, request validation — backend (Lambda) fokus logic je.',
+            },
             scenario: 'Real-time multiplayer game / chat → WebSocket API (server boleh push ke client, two-way). Simple low-cost serverless proxy ke Lambda tanpa API keys/WAF → HTTP API (~70% lebih murah, lower latency). Enterprise API perlu API keys, usage plans, request validation, WAF, atau private endpoint → REST API.',
             detailsLabel: 'REST vs HTTP vs WebSocket',
             storageDetails: 'REST API → full features: API keys + usage plans (per-client throttling), request validation, AWS WAF, resource policies, private endpoint, endpoint types edge-optimized/regional/private\nHTTP API → minimal features, ~70% lebih murah, lower latency, JWT (OIDC/OAuth2) authorizer, regional sahaja — pilih bila tak perlu REST extras\nWebSocket API → bidirectional real-time (chat, games, trading, live dashboard) — server push ke client',
@@ -1767,6 +1961,16 @@ export const domains: DomainData[] = [
             ingat: '"Flowchart yang run sendiri — orchestrate multi-step workflows"',
             gunaUntuk: 'Coordinate multi-step processes with error handling, retry, and branching',
             fungsi: 'Visual workflow orchestration. Setiap step boleh timeout, retry, atau branch ikut result. Integrate dengan Lambda, ECS, Glue, DynamoDB, dan 200+ services. State machine dengan JSON definition.',
+            diagram: {
+              label: 'Order workflow (state machine)',
+              steps: [
+                { nodes: [{ label: 'Validate', sub: 'order', tone: 'c3' }] },
+                { nodes: [{ label: 'Charge Card', sub: 'retry on fail', tone: 'c1' }] },
+                { nodes: [{ label: 'Notify', sub: 'warehouse', tone: 'c4' }] },
+                { nodes: [{ label: 'Send Email', sub: 'confirm', tone: 'c2' }] },
+              ],
+              caption: 'Tiap step ada built-in retry + timeout + branch (Choice state). Kalau step gagal → catch & route ke fallback, bukan crash whole flow. Visual console tunjuk state setiap step.',
+            },
             scenario: '"Order processing: validate → charge card → notify warehouse → send email, dengan error handling pada setiap step" → Step Functions. Bukan Lambda je (Lambda tak ada built-in retry/branching logic across services).',
             tips: [
               'Distributed Map state: parallelizes processing over large datasets (e.g. chunk a text file and process each chunk concurrently) — key for PT5 text-to-speech pipeline question',
@@ -2278,7 +2482,19 @@ export const domains: DomainData[] = [
               'Requires CloudWatch metrics — needs at least 14 days of usage data for recommendations',
               'Exam: "get ML-based rightsizing recommendations for EC2/Lambda" → Compute Optimizer. "General cost recommendations across many services" → Trusted Advisor',
             ],
-            keywords: ['rightsizing', 'ML recommendations', 'EC2 optimization', 'Lambda optimization', 'cost savings', 'underutilized'],
+            compare: {
+              label: 'Compute Optimizer vs Trusted Advisor',
+              headers: ['Aspect', 'Compute Optimizer', 'Trusted Advisor'],
+              rows: [
+                ['Focus', 'Deep rightsizing of compute', 'Broad account-wide checks'],
+                ['Method', '🟢 ML on 14 days of metrics', 'Rule-based best-practice checks'],
+                ['Covers', 'EC2, ASG, EBS, Lambda, ECS/Fargate', 'Cost, Security, Performance, Fault Tolerance, Service Limits'],
+                ['Output', 'Optimal instance config + projected savings', 'Flags idle/risky resources + recommendations'],
+                ['Use when', '"ML rightsizing for EC2/Lambda"', '"general best-practice/cost/security review"'],
+              ],
+              takeaway: '"ML-based deep rightsizing for compute" → Compute Optimizer. "Broad checks across cost/security/performance/limits" → Trusted Advisor (5 categories).',
+            },
+            keywords: ['rightsizing', 'ML recommendations', 'EC2 optimization', 'Lambda optimization', 'cost savings', 'underutilized', 'vs Trusted Advisor'],
           },
           {
             shortName: 'Trusted Advisor',
@@ -2325,7 +2541,19 @@ export const domains: DomainData[] = [
               'Cost anomaly detection: ML-powered, auto-detects unusual spending spikes and alerts you',
               'Exam: "visualize spending trends" → Cost Explorer. "alert when budget exceeded" → Budgets. "detailed CSV billing report" → Cost and Usage Report (CUR)',
             ],
-            keywords: ['cost analysis', 'spending visualization', 'RI recommendations', 'usage patterns', 'rightsizing', 'forecast', 'hourly granularity', 'anomaly detection'],
+            compare: {
+              label: 'Cost Explorer vs Budgets vs CUR',
+              headers: ['Aspect', 'Cost Explorer', 'AWS Budgets', 'Cost & Usage Report'],
+              rows: [
+                ['Job', 'Visualize & analyze past spend', 'Alert before/over a threshold', 'Most granular billing line items'],
+                ['Direction', 'Reactive — "where did money go?"', '🟢 Proactive — "warn me at 80%"', 'Raw data for deep/custom analysis'],
+                ['Output', 'Charts, trends, forecast, RI/SP recs', 'Email/SNS alerts + Budget Actions', 'CSV/Parquet to S3 (query w/ Athena)'],
+                ['Granularity', 'Monthly / daily / hourly', 'Per budget threshold', 'Hourly, per-resource, per-tag'],
+                ['Keyword', '"visualize / analyze trends"', '"alert before overspending"', '"detailed line-item billing data"'],
+              ],
+              takeaway: 'Analyze trends → Cost Explorer. Alert before overspend → Budgets (proactive). Deepest raw billing data for custom queries → Cost & Usage Report (CUR) → S3 + Athena.',
+            },
+            keywords: ['cost analysis', 'spending visualization', 'RI recommendations', 'usage patterns', 'rightsizing', 'forecast', 'hourly granularity', 'anomaly detection', 'vs Budgets', 'CUR'],
           },
         ],
       },
