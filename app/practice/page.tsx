@@ -223,52 +223,25 @@ export default function PracticePage() {
     handleRestart()
   }, [handleRestart])
 
+  const inSession = (mode === 'quiz' && !finished) || mode === 'review'
+
   return (
     <>
       <Nav activePage="practice" />
       <main
         className={`mx-auto max-w-[1280px] px-4 pt-[calc(3.5rem+1.5rem)] pb-28 ${
-          (mode === 'quiz' && !finished) || mode === 'review' ? 'md:pb-12' : ''
+          inSession ? 'md:pb-12' : ''
         }`}
       >
-        <div
-          className={`mb-8 flex items-start justify-between gap-4 ${
-            (mode === 'quiz' && !finished) || mode === 'review' ? 'md:hidden' : ''
-          }`}
-        >
+        <div className="mb-8 flex items-start justify-between gap-4">
           <div>
             <h1 className="font-space-mono text-2xl font-bold text-aws-text mb-1">Practice Questions</h1>
             <p className="text-aws-muted text-sm">AWS SAA-C03 · MCQ · Scenario-based · With full explanations</p>
           </div>
-
-          {/* mode toggle */}
-          <div className="flex shrink-0 items-center gap-1 bg-white/4 border border-aws-border rounded-lg p-1">
-            <button
-              onClick={() => handleModeSwitch('quiz')}
-              className={`font-space-mono text-[0.65rem] font-bold px-3 py-1.5 rounded-md transition-all duration-150 ${
-                mode === 'quiz'
-                  ? 'bg-c1/20 border border-c1/40 text-c1'
-                  : 'text-aws-muted hover:text-aws-text'
-              }`}
-            >
-              Quiz
-            </button>
-            <button
-              onClick={() => handleModeSwitch('review')}
-              className={`font-space-mono text-[0.65rem] font-bold px-3 py-1.5 rounded-md transition-all duration-150 ${
-                mode === 'review'
-                  ? 'bg-c1/20 border border-c1/40 text-c1'
-                  : 'text-aws-muted hover:text-aws-text'
-              }`}
-            >
-              Review
-            </button>
-          </div>
+          <PracticeModeToggle mode={mode} onSwitch={handleModeSwitch} />
         </div>
 
-        <div className={(mode === 'quiz' && !finished) || mode === 'review' ? 'md:hidden' : ''}>
-          <FilterBar filters={filters} onChange={setFilters} />
-        </div>
+        <FilterBar filters={filters} onChange={setFilters} />
 
         {mode === 'review' ? (
           <ReviewMode
@@ -391,6 +364,70 @@ function FilterBar({ filters, onChange }: { filters: FilterState; onChange: (f: 
   )
 }
 
+function PracticeModeToggle({
+  mode,
+  onSwitch,
+}: {
+  mode: PageMode
+  onSwitch: (next: PageMode) => void
+}) {
+  return (
+    <div className="flex shrink-0 items-center gap-1 bg-white/4 border border-aws-border rounded-lg p-1">
+      <button
+        type="button"
+        onClick={() => onSwitch('quiz')}
+        className={`font-space-mono text-[0.65rem] font-bold px-3 py-1.5 rounded-md transition-all duration-150 ${
+          mode === 'quiz'
+            ? 'bg-c1/20 border border-c1/40 text-c1'
+            : 'text-aws-muted hover:text-aws-text'
+        }`}
+      >
+        Quiz
+      </button>
+      <button
+        type="button"
+        onClick={() => onSwitch('review')}
+        className={`font-space-mono text-[0.65rem] font-bold px-3 py-1.5 rounded-md transition-all duration-150 ${
+          mode === 'review'
+            ? 'bg-c1/20 border border-c1/40 text-c1'
+            : 'text-aws-muted hover:text-aws-text'
+        }`}
+      >
+        Review
+      </button>
+    </div>
+  )
+}
+
+function QuestionNavSidebar({
+  current,
+  total,
+  answeredIndices,
+  onSelect,
+}: {
+  current: number
+  total: number
+  answeredIndices: Set<number>
+  onSelect: (i: number) => void
+}) {
+  return (
+    <aside className="sticky top-[calc(3.5rem+1rem)] max-h-[calc(100dvh-5rem)]">
+      <div className="bg-aws-card border border-aws-border rounded-xl p-3 shadow-lg flex flex-col min-h-0 max-h-[calc(100dvh-5rem)]">
+        <p className="font-space-mono text-[0.52rem] uppercase tracking-wider text-aws-muted/50 mb-2 shrink-0">
+          {total} questions
+        </p>
+        <QuestionNumberGrid
+          current={current}
+          total={total}
+          answeredIndices={answeredIndices}
+          onSelect={onSelect}
+          variant="sidebar"
+        />
+      </div>
+    </aside>
+  )
+}
+
 function QuestionNumberGrid({
   current,
   total,
@@ -417,7 +454,7 @@ function QuestionNumberGrid({
     const isCurrent = i === current
     if (variant === 'sidebar') {
       return [
-        'flex h-8 w-8 items-center justify-center rounded-full border font-space-mono text-[0.68rem] transition-all duration-150 shrink-0',
+        'flex h-7 w-7 items-center justify-center rounded-full border font-space-mono text-[0.62rem] transition-all duration-150 shrink-0',
         isCurrent
           ? 'border-c1 bg-c1/15 text-c1 font-bold ring-2 ring-c1/30'
           : answered
@@ -490,7 +527,7 @@ function QuestionGrid({
   onClose: () => void
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 pb-24 md:hidden">
+    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 pb-24">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-aws-card border border-aws-border rounded-2xl p-4 w-full max-w-[1280px] shadow-2xl">
         <div className="flex items-center justify-between mb-3">
@@ -570,7 +607,7 @@ function InlineQuizFooter({
   nextLabel?: string
 }) {
   return (
-    <div className="hidden md:flex items-center justify-between gap-4 mt-6 pt-4 border-t border-aws-border/60">
+    <div className="flex items-center justify-between gap-4 mt-6 pt-4 border-t border-aws-border/60">
       <button
         type="button"
         onClick={onPrev}
@@ -610,8 +647,8 @@ function FloatingQuizNav({
 }) {
   return (
     <>
-      <div className="h-28 md:h-24 md:hidden" />
-      <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] md:bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[1280px] px-4 z-50 md:hidden">
+      <div className="h-28 md:h-24" />
+      <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] md:bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[1280px] px-4 z-50">
         <div className="flex gap-2 bg-aws-card/80 backdrop-blur-md border border-aws-border rounded-2xl p-2 shadow-xl">
           <button
             type="button"
@@ -659,6 +696,87 @@ function ReviewMode({
   const [hintHighlight, setHintHighlight] = useQuestionHintHighlight(q.id)
   const isLast = clampedIndex + 1 >= total
 
+  const questionMain = (
+    <>
+      <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-4">
+        <div className="px-5 py-4 border-b border-aws-border/60 bg-white/2 md:px-6 md:py-5">
+          <p className="font-space-mono text-[0.72rem] font-bold text-aws-text mb-2">
+            Domain: {q.domainLabel}
+          </p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
+              {q.difficulty}
+            </span>
+            <span className="font-space-mono text-[0.58rem] text-emerald-400/90">Correct answer shown</span>
+          </div>
+        </div>
+
+        <div className="px-5 py-5 md:px-6 md:py-6">
+          {q.screenshotUrl && (
+            <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={q.screenshotUrl}
+                alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? clampedIndex + 1} reference screenshot`}
+                className="w-full h-auto"
+                loading="lazy"
+              />
+              {q.screenshotCredit ? (
+                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                  Architecture diagram —{' '}
+                  <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
+                    AWS Documentation
+                  </a>
+                </figcaption>
+              ) : q.pageNumber ? (
+                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                  Practice test page {q.pageNumber}
+                </figcaption>
+              ) : null}
+            </figure>
+          )}
+          {hintHighlight.length > 0 ? (
+            <KeywordHighlightedText
+              text={q.scenario}
+              studyKeywords={hintHighlight}
+              bankKeywords={q.keywords}
+              className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed"
+            />
+          ) : (
+            <p className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed">{q.scenario}</p>
+          )}
+        </div>
+
+        <PracticeQuestionHint
+          key={q.id}
+          questionId={q.id}
+          question={q.scenario}
+          domainLabel={q.domainLabel}
+          keywords={q.keywords}
+          options={q.options}
+          reviewMode
+          onHintActive={(_active, terms) => setHintHighlight(terms)}
+        />
+
+        <div className="px-5 pb-5 md:px-6 md:pb-6 space-y-3">
+          {q.options.map((opt) => (
+            <OptionButton
+              key={opt.id}
+              opt={opt}
+              selected={q.correctId}
+              correctId={q.correctId}
+              quizState="revealed"
+              onSelect={() => undefined}
+              desktopStyle
+            />
+          ))}
+        </div>
+      </div>
+
+      <ExplanationBlock q={q} selected={q.correctId} isCorrect={true} reviewMode={true} />
+    </>
+  )
+
   return (
     <div>
       <div className="hidden md:flex items-center justify-between gap-4 mb-5 px-1">
@@ -670,131 +788,52 @@ function ReviewMode({
         </span>
       </div>
 
-      <div className="md:grid md:grid-cols-[minmax(0,1fr)_13.5rem] md:gap-6 md:items-start">
-        <div className="min-w-0">
-          <div className="md:hidden">
-            <QuestionProgressStrip
-              index={clampedIndex}
-              total={total}
-              onOpenPicker={() => setShowPicker(true)}
-              badge={
-                <span className="font-space-mono text-[0.62rem] uppercase tracking-widest px-2 py-0.5 rounded border border-c3/35 bg-c3/10 text-c3 whitespace-nowrap">
-                  Review
-                </span>
-              }
-            />
-          </div>
-
-          <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-4 md:mb-0">
-            <div className="px-5 py-4 border-b border-aws-border/60 bg-white/2 md:px-6 md:py-5">
-              <p className="font-space-mono text-[0.72rem] font-bold text-aws-text mb-2">
-                Domain: {q.domainLabel}
-              </p>
-              <div className="flex items-center gap-2 flex-wrap">
-                <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
-                  {q.difficulty}
-                </span>
-                <span className="font-space-mono text-[0.58rem] text-emerald-400/90">Correct answer shown</span>
-              </div>
-            </div>
-
-            <div className="px-5 py-5 md:px-6 md:py-6">
-              {q.screenshotUrl && (
-                <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={q.screenshotUrl}
-                    alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? clampedIndex + 1} reference screenshot`}
-                    className="w-full h-auto"
-                    loading="lazy"
-                  />
-                  {q.screenshotCredit ? (
-                    <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
-                      Architecture diagram —{' '}
-                      <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
-                        AWS Documentation
-                      </a>
-                    </figcaption>
-                  ) : q.pageNumber ? (
-                    <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
-                      Practice test page {q.pageNumber}
-                    </figcaption>
-                  ) : null}
-                </figure>
-              )}
-              {hintHighlight.length > 0 ? (
-                <KeywordHighlightedText
-                  text={q.scenario}
-                  studyKeywords={hintHighlight}
-                  bankKeywords={q.keywords}
-                  className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed"
-                />
-              ) : (
-                <p className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed">{q.scenario}</p>
-              )}
-            </div>
-
-            <PracticeQuestionHint
-              key={q.id}
-              questionId={q.id}
-              question={q.scenario}
-              domainLabel={q.domainLabel}
-              keywords={q.keywords}
-              options={q.options}
-              reviewMode
-              onHintActive={(_active, terms) => setHintHighlight(terms)}
-            />
-
-            <div className="px-5 pb-5 md:px-6 md:pb-6 space-y-3">
-              {q.options.map((opt) => (
-                <OptionButton
-                  key={opt.id}
-                  opt={opt}
-                  selected={q.correctId}
-                  correctId={q.correctId}
-                  quizState="revealed"
-                  onSelect={() => undefined}
-                  desktopStyle
-                />
-              ))}
-            </div>
-          </div>
-
-          <ExplanationBlock q={q} selected={q.correctId} isCorrect={true} reviewMode={true} />
-
-          <InlineQuizFooter
-            index={clampedIndex}
-            onPrev={() => onIndexChange(clampedIndex - 1)}
-            onNext={() => onIndexChange(clampedIndex + 1)}
-            nextDisabled={isLast}
-            nextLabel={isLast ? 'End of review' : 'Next →'}
-          />
-        </div>
-
-        <aside className="hidden md:block sticky top-[calc(3.5rem+1rem)] max-h-[calc(100dvh-5rem)]">
-          <div className="bg-aws-card border border-aws-border rounded-xl p-3 shadow-lg flex flex-col min-h-0 max-h-[calc(100dvh-5rem)]">
-            <p className="font-space-mono text-[0.52rem] uppercase tracking-wider text-aws-muted/50 mb-2 shrink-0">
-              {total} questions
-            </p>
-            <QuestionNumberGrid
-              current={clampedIndex}
-              total={total}
-              answeredIndices={new Set()}
-              onSelect={onIndexChange}
-              variant="sidebar"
-            />
-          </div>
-        </aside>
+      <div className="md:hidden">
+        <QuestionProgressStrip
+          index={clampedIndex}
+          total={total}
+          onOpenPicker={() => setShowPicker(true)}
+          badge={
+            <span className="font-space-mono text-[0.62rem] uppercase tracking-widest px-2 py-0.5 rounded border border-c3/35 bg-c3/10 text-c3 whitespace-nowrap">
+              Review
+            </span>
+          }
+        />
       </div>
 
-      <FloatingQuizNav
-        index={clampedIndex}
-        total={total}
-        onPrev={() => onIndexChange(clampedIndex - 1)}
-        onNext={() => onIndexChange(clampedIndex + 1)}
-        onOpenPicker={() => setShowPicker(true)}
-        nextDisabled={isLast}
-      />
+      <div className="md:grid md:grid-cols-[minmax(0,1fr)_18rem] md:gap-6 md:items-start">
+        <div className="min-w-0">
+          {questionMain}
+          <div className="hidden md:block">
+            <InlineQuizFooter
+              index={clampedIndex}
+              onPrev={() => onIndexChange(clampedIndex - 1)}
+              onNext={() => onIndexChange(clampedIndex + 1)}
+              nextDisabled={isLast}
+              nextLabel={isLast ? 'End of review' : 'Next →'}
+            />
+          </div>
+        </div>
+        <div className="hidden md:block">
+          <QuestionNavSidebar
+            current={clampedIndex}
+            total={total}
+            answeredIndices={new Set()}
+            onSelect={onIndexChange}
+          />
+        </div>
+      </div>
+
+      <div className="md:hidden">
+        <FloatingQuizNav
+          index={clampedIndex}
+          total={total}
+          onPrev={() => onIndexChange(clampedIndex - 1)}
+          onNext={() => onIndexChange(clampedIndex + 1)}
+          onOpenPicker={() => setShowPicker(true)}
+          nextDisabled={isLast}
+        />
+      </div>
 
       {showPicker && (
         <QuestionGrid
@@ -841,9 +880,110 @@ function QuestionCard({
   const answeredIndices = new Set(Object.keys(answers).map(Number))
   const isLast = index + 1 >= total
 
+  const cardHeader = (
+    <>
+      <div className="px-5 py-4 border-b border-aws-border/60 bg-white/2 md:hidden">
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className={`font-space-mono text-[0.6rem] font-bold uppercase tracking-widest ${domainColors[q.domain]}`}>
+            {q.domainLabel}
+          </span>
+          <span className="text-aws-border">·</span>
+          <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
+            {q.difficulty}
+          </span>
+          <span className="text-aws-border">·</span>
+          <span className="font-space-mono text-[0.58rem] text-aws-muted">Select one answer</span>
+        </div>
+      </div>
+      <div className="hidden md:block px-5 py-4 border-b border-aws-border/60 bg-white/2 md:px-6 md:py-5">
+        <p className="font-space-mono text-[0.72rem] font-bold text-aws-text mb-2">
+          Domain: {q.domainLabel}
+        </p>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
+            {q.difficulty}
+          </span>
+          <span className="font-space-mono text-[0.58rem] text-aws-muted">Select one answer</span>
+        </div>
+      </div>
+    </>
+  )
+
+  const questionMain = (
+    <>
+      <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-4">
+        {cardHeader}
+
+        <div className="px-5 py-5 md:px-6 md:py-6">
+          {q.screenshotUrl && (
+            <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={q.screenshotUrl}
+                alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? index + 1} reference screenshot`}
+                className="w-full h-auto"
+                loading="lazy"
+              />
+              {q.screenshotCredit ? (
+                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                  Architecture diagram —{' '}
+                  <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
+                    AWS Documentation
+                  </a>
+                </figcaption>
+              ) : q.pageNumber ? (
+                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                  Practice test page {q.pageNumber}
+                </figcaption>
+              ) : null}
+            </figure>
+          )}
+          {hintHighlight.length > 0 ? (
+            <KeywordHighlightedText
+              text={q.scenario}
+              studyKeywords={hintHighlight}
+              bankKeywords={q.keywords}
+              className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed"
+            />
+          ) : (
+            <p className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed">{q.scenario}</p>
+          )}
+        </div>
+
+        {quizState === 'question' && (
+          <PracticeQuestionHint
+            questionId={q.id}
+            question={q.scenario}
+            domainLabel={q.domainLabel}
+            keywords={q.keywords}
+            options={q.options}
+            onHintActive={(_active, terms) => setHintHighlight(terms)}
+          />
+        )}
+
+        <div className="px-5 pb-5 md:px-6 md:pb-6 space-y-3">
+          {q.options.map((opt) => (
+            <OptionButton
+              key={opt.id}
+              opt={opt}
+              selected={selected}
+              correctId={q.correctId}
+              quizState={quizState}
+              onSelect={onSelect}
+              desktopStyle
+            />
+          ))}
+        </div>
+      </div>
+
+      {quizState === 'revealed' && selected && (
+        <ExplanationBlock q={q} selected={selected} isCorrect={isCorrect} />
+      )}
+    </>
+  )
+
   return (
     <div>
-      {/* desktop quiz header */}
       <div className="hidden md:flex items-center justify-between gap-4 mb-5 px-1">
         <p className="font-space-mono text-[0.85rem] font-bold text-aws-text">
           Question {index + 1} of {total}
@@ -853,142 +993,49 @@ function QuestionCard({
         </span>
       </div>
 
-      <div className="md:grid md:grid-cols-[minmax(0,1fr)_13.5rem] md:gap-6 md:items-start">
-        <div className="min-w-0">
-          <div className="md:hidden">
-            <QuestionProgressStrip
-              index={index}
-              total={total}
-              score={score}
-              onOpenPicker={() => setShowPicker(true)}
-            />
-          </div>
-
-          <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-4 md:mb-0">
-            <div className="px-5 py-4 border-b border-aws-border/60 bg-white/2 md:px-6 md:py-5">
-              <p className="hidden md:block font-space-mono text-[0.72rem] font-bold text-aws-text mb-2">
-                Domain: {q.domainLabel}
-              </p>
-              <div className="flex items-center gap-2 flex-wrap md:hidden">
-                <span className={`font-space-mono text-[0.6rem] font-bold uppercase tracking-widest ${domainColors[q.domain]}`}>
-                  {q.domainLabel}
-                </span>
-                <span className="text-aws-border">·</span>
-                <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
-                  {q.difficulty}
-                </span>
-                <span className="text-aws-border">·</span>
-                <span className="font-space-mono text-[0.58rem] text-aws-muted">Select one answer</span>
-              </div>
-              <div className="hidden md:flex items-center gap-2 flex-wrap">
-                <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
-                  {q.difficulty}
-                </span>
-                <span className="font-space-mono text-[0.58rem] text-aws-muted">Select one answer</span>
-              </div>
-            </div>
-
-            <div className="px-5 py-5 md:px-6 md:py-6">
-              {q.screenshotUrl && (
-                <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={q.screenshotUrl}
-                    alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? index + 1} reference screenshot`}
-                    className="w-full h-auto"
-                    loading="lazy"
-                  />
-                  {q.screenshotCredit ? (
-                    <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
-                      Architecture diagram —{' '}
-                      <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
-                        AWS Documentation
-                      </a>
-                    </figcaption>
-                  ) : q.pageNumber ? (
-                    <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
-                      Practice test page {q.pageNumber}
-                    </figcaption>
-                  ) : null}
-                </figure>
-              )}
-              {hintHighlight.length > 0 ? (
-                <KeywordHighlightedText
-                  text={q.scenario}
-                  studyKeywords={hintHighlight}
-                  bankKeywords={q.keywords}
-                  className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed"
-                />
-              ) : (
-                <p className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed">{q.scenario}</p>
-              )}
-            </div>
-
-            {quizState === 'question' && (
-              <PracticeQuestionHint
-                questionId={q.id}
-                question={q.scenario}
-                domainLabel={q.domainLabel}
-                keywords={q.keywords}
-                options={q.options}
-                onHintActive={(_active, terms) => setHintHighlight(terms)}
-              />
-            )}
-
-            <div className="px-5 pb-5 md:px-6 md:pb-6 space-y-3">
-              {q.options.map((opt) => (
-                <OptionButton
-                  key={opt.id}
-                  opt={opt}
-                  selected={selected}
-                  correctId={q.correctId}
-                  quizState={quizState}
-                  onSelect={onSelect}
-                  desktopStyle
-                />
-              ))}
-            </div>
-          </div>
-
-          {quizState === 'revealed' && selected && (
-            <ExplanationBlock q={q} selected={selected} isCorrect={isCorrect} />
-          )}
-
-          <InlineQuizFooter
-            index={index}
-            onPrev={onPrev}
-            onNext={onNext}
-            nextDisabled={quizState !== 'revealed'}
-            nextLabel={isLast ? 'See Results' : 'Next →'}
-          />
-        </div>
-
-        {/* desktop sidebar — question grid only */}
-        <aside className="hidden md:block sticky top-[calc(3.5rem+1rem)] max-h-[calc(100dvh-5rem)]">
-          <div className="bg-aws-card border border-aws-border rounded-xl p-3 shadow-lg flex flex-col min-h-0 max-h-[calc(100dvh-5rem)]">
-            <p className="font-space-mono text-[0.52rem] uppercase tracking-wider text-aws-muted/50 mb-2 shrink-0">
-              {total} questions
-            </p>
-            <QuestionNumberGrid
-              current={index}
-              total={total}
-              answeredIndices={answeredIndices}
-              onSelect={onJump}
-              variant="sidebar"
-            />
-          </div>
-        </aside>
+      <div className="md:hidden">
+        <QuestionProgressStrip
+          index={index}
+          total={total}
+          score={score}
+          onOpenPicker={() => setShowPicker(true)}
+        />
       </div>
 
-      <FloatingQuizNav
-        index={index}
-        total={total}
-        onPrev={onPrev}
-        onNext={onNext}
-        onOpenPicker={() => setShowPicker(true)}
-        nextDisabled={quizState !== 'revealed'}
-        nextLabel={isLast ? 'Results →' : 'Next →'}
-      />
+      <div className="md:grid md:grid-cols-[minmax(0,1fr)_18rem] md:gap-6 md:items-start">
+        <div className="min-w-0">
+          {questionMain}
+          <div className="hidden md:block">
+            <InlineQuizFooter
+              index={index}
+              onPrev={onPrev}
+              onNext={onNext}
+              nextDisabled={quizState !== 'revealed'}
+              nextLabel={isLast ? 'See Results' : 'Next →'}
+            />
+          </div>
+        </div>
+        <div className="hidden md:block">
+          <QuestionNavSidebar
+            current={index}
+            total={total}
+            answeredIndices={answeredIndices}
+            onSelect={onJump}
+          />
+        </div>
+      </div>
+
+      <div className="md:hidden">
+        <FloatingQuizNav
+          index={index}
+          total={total}
+          onPrev={onPrev}
+          onNext={onNext}
+          onOpenPicker={() => setShowPicker(true)}
+          nextDisabled={quizState !== 'revealed'}
+          nextLabel={isLast ? 'Results →' : 'Next →'}
+        />
+      </div>
 
       {showPicker && (
         <QuestionGrid
