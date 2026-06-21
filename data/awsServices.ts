@@ -1058,6 +1058,15 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Multi-AZ = HA / disaster survival (same region). Read Replicas = read scaling + cross-region reads. Soalan "reporting queries slow down prod" → Read Replica. "Survive an AZ outage" → Multi-AZ. Boleh guna dua-dua sekali.',
             },
+            diagram: {
+              label: 'Anatomy failover — endpoint SAMA flip ke standby',
+              steps: [
+                { nodes: [{ label: 'App', sub: '1 endpoint (DNS)', tone: 'c1' }] },
+                { nodes: [{ label: 'Primary DB', sub: 'AZ-a · read + write', tone: 'c2' }] },
+                { nodes: [{ label: 'Standby DB', sub: 'AZ-b · idle, no reads', tone: 'c4' }] },
+              ],
+              caption: 'Sync replication Primary → Standby (sentiasa identical). AZ-a fail → AWS auto-flip DNS endpoint ke Standby (AZ-b) dalam ~60–120s; app guna endpoint yang SAMA, tak payah tukar config. Standby TAK serve reads — nak offload reads guna Read Replica.',
+            },
             tips: [
               'Automated backups: AWS backup daily (during backup window) + transaction logs — boleh restore ke ANY point-in-time dalam retention period (1-35 hari). Auto-deleted bila instance dipadam.',
               'Manual snapshots: kau trigger sendiri, bila-bila masa — KEKAL walaupun RDS instance dipadam. Guna untuk "before major upgrade" atau long-term retention.',
@@ -1137,6 +1146,34 @@ export const domains: DomainData[] = [
             fungsi: 'Aurora simpan 6 salinan data merentasi 3 AZs secara automatik. Storage auto-grow hingga 256 TiB. Up to 15 Read Replicas dengan lag <10ms. Failover automatik dalam <30 saat.',
             contohGuna: 'Replace RDS MySQL production — Aurora bagi HA automatik, 6 copies, failover <30s, storage auto-scale, tanpa manage sendiri.',
             scenario: '"High availability relational DB, auto-failover, multiple copies" → Aurora. Bukan RDS Multi-AZ (Aurora lebih canggih: 6 copies vs 1 standby, failover 30s vs 1-2 minit). Aurora Serverless untuk unpredictable/intermittent workloads.',
+            diagram: [
+              {
+                label: 'Cluster anatomy — compute & storage TERPISAH',
+                steps: [
+                  { nodes: [{ label: 'App', sub: '', tone: 'c1' }] },
+                  { nodes: [
+                    { label: 'Writer endpoint', sub: '→ primary', tone: 'c2' },
+                    { label: 'Reader endpoint', sub: 'load-balance replicas', tone: 'c4' },
+                  ] },
+                  { nodes: [
+                    { label: 'Primary (Writer)', sub: 'read + write · 1 je', tone: 'c2' },
+                    { label: 'Aurora Replicas', sub: 'up to 15 · read-only · failover target', tone: 'c4' },
+                  ] },
+                  { nodes: [{ label: 'Shared Cluster Volume', sub: '6 copies · 3 AZs (2/AZ) · auto-grow → 128 TiB', tone: 'c3' }] },
+                ],
+                caption: 'SEMUA instance (writer + readers) share SATU cluster volume — bukan tiap instance ada copy sendiri (beza dengan RDS Multi-AZ). Tambah replica = laju sebab tak perlu copy data. Writer endpoint sentiasa tunjuk primary; reader endpoint auto load-balance across replicas. Primary fail → replica dipromote <30s.',
+              },
+              {
+                label: 'Aurora Global Database — cross-region DR',
+                steps: [
+                  { nodes: [{ label: 'Primary Region', sub: 'read + write', tone: 'c2' }] },
+                  { nodes: [{ label: 'Storage replication', sub: 'typical < 1s lag', tone: 'c3' }] },
+                  { nodes: [{ label: 'Secondary Region(s)', sub: 'up to 5 · read-only', tone: 'c4' }] },
+                  { nodes: [{ label: 'Promote on outage', sub: 'RTO < 1 min · RPO ~1s', tone: 'c5' }] },
+                ],
+                caption: '1 primary region + up to 5 secondary read-only regions, replicate di peringkat storage (typical <1s lag). Region utama down → promote secondary jadi primary (RTO <1 min). Exam: "cross-region DR, downtime <1 min, low data loss" → Aurora Global Database (bukan Multi-AZ yang same-region je).',
+              },
+            ],
             tips: [
               'Aurora = 6 copies across 3 AZs auto. RDS Multi-AZ = 1 standby copy sahaja',
               'Aurora failover <30 saat. RDS Multi-AZ failover 1-2 minit',
@@ -1181,19 +1218,33 @@ export const domains: DomainData[] = [
             fungsi: 'Fully managed NoSQL database. Auto-scale, no servers. DynamoDB Streams capture changes untuk event-driven patterns. DAX (DynamoDB Accelerator) untuk microsecond reads. Global Tables untuk multi-region active-active.',
             contohGuna: 'Shopping cart, user sessions, real-time leaderboards, gaming scores — workloads yang perlu high throughput, low latency, dan serverless.',
             scenario: '"Serverless NoSQL millisecond latency at any scale" → DynamoDB. "Microsecond reads for DynamoDB" → DAX. "Multi-region active-active database" → DynamoDB Global Tables. "Capture DynamoDB changes → trigger Lambda" → DynamoDB Streams.',
-            compare: {
-              label: 'LSI vs GSI — secondary indexes',
-              headers: ['Aspect', 'LSI (Local)', 'GSI (Global)'],
-              rows: [
-                ['Partition key', 'SAME as base table', 'Can be DIFFERENT'],
-                ['Sort key', 'Alternate sort key', 'Different partition + sort key'],
-                ['When created', '🔴 Only at table creation', '🟢 Anytime (create/delete)'],
-                ['Capacity', 'Shares base table throughput', 'Own provisioned RCU/WCU'],
-                ['Consistency', 'Strong OR eventual', 'Eventual only'],
-                ['Limit per table', '5', '20'],
-              ],
-              takeaway: '"Alternate sort order, must define at creation, same partition key" → LSI. "New query pattern, create anytime, own capacity" → GSI.',
-            },
+            compare: [
+              {
+                label: 'Capacity modes — On-Demand vs Provisioned',
+                headers: ['Aspect', 'On-Demand', 'Provisioned'],
+                rows: [
+                  ['Billing', 'Pay per request', 'Pay for RCU/WCU reserved per jam'],
+                  ['Capacity planning', '🟢 Zero — auto instant', 'Set RCU/WCU (+ optional Auto Scaling)'],
+                  ['Best untuk', 'Unpredictable / spiky / baru launch', 'Predictable steady traffic'],
+                  ['Cost', 'Mahal sikit per request', '🟢 Murah kalau traffic stabil'],
+                  ['Throttling risk', 'Sangat rendah (scale terus)', 'Boleh throttle kalau lebih provisioned'],
+                ],
+                takeaway: 'Traffic tak menentu / app baru / tak nak fikir capacity → On-Demand. Traffic stabil & nak jimat → Provisioned + Auto Scaling. Boleh tukar mode (had sekali per 24 jam).',
+              },
+              {
+                label: 'LSI vs GSI — secondary indexes',
+                headers: ['Aspect', 'LSI (Local)', 'GSI (Global)'],
+                rows: [
+                  ['Partition key', 'SAME as base table', 'Can be DIFFERENT'],
+                  ['Sort key', 'Alternate sort key', 'Different partition + sort key'],
+                  ['When created', '🔴 Only at table creation', '🟢 Anytime (create/delete)'],
+                  ['Capacity', 'Shares base table throughput', 'Own provisioned RCU/WCU'],
+                  ['Consistency', 'Strong OR eventual', 'Eventual only'],
+                  ['Limit per table', '5', '20'],
+                ],
+                takeaway: '"Alternate sort order, must define at creation, same partition key" → LSI. "New query pattern, create anytime, own capacity" → GSI.',
+              },
+            ],
             tips: [
               'DynamoDB = NoSQL (key-value/document). Aurora/RDS = SQL (relational)',
               'DAX = DynamoDB Accelerator = microsecond reads (in-memory cache for DynamoDB)',
@@ -2845,18 +2896,32 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Cache frequent queries, reduce RDS cost',
             fungsi: 'Menyediakan in-memory caching untuk mengurangkan beban dan kos pada database utama',
             scenario: 'E-commerce app — product listing query kena berjuta kali sehari. Tanpa cache, RDS kena scale up (mahal). Dengan ElastiCache (Redis), query popular disimpan dalam memory — RDS tak terlalu terbeban, kos lebih rendah.',
-            compare: {
-              label: 'Redis vs Memcached',
-              headers: ['Aspect', 'Redis', 'Memcached'],
-              rows: [
-                ['Data structures', 'Rich (lists, sets, sorted sets, pub/sub)', 'Simple key-value only'],
-                ['Persistence', '✅ Snapshots / backup', '❌ None — data lost on restart'],
-                ['Replication + Multi-AZ', '✅ Yes (auto-failover)', '❌ No'],
-                ['Threading', 'Single-threaded', '🟢 Multi-threaded'],
-                ['Use case', 'Leaderboards, session store, pub/sub, HA cache', 'Simple cache, scale out horizontally'],
-              ],
-              takeaway: 'Perlu persistence / replication / Multi-AZ / complex data → Redis. Perlu simple multi-threaded cache, horizontal scale → Memcached. Default exam answer biasanya Redis.',
-            },
+            compare: [
+              {
+                label: 'Redis vs Memcached',
+                headers: ['Aspect', 'Redis', 'Memcached'],
+                rows: [
+                  ['Data structures', 'Rich (lists, sets, sorted sets, pub/sub)', 'Simple key-value only'],
+                  ['Persistence', '✅ Snapshots / backup', '❌ None — data lost on restart'],
+                  ['Replication + Multi-AZ', '✅ Yes (auto-failover)', '❌ No'],
+                  ['Threading', 'Single-threaded', '🟢 Multi-threaded'],
+                  ['Use case', 'Leaderboards, session store, pub/sub, HA cache', 'Simple cache, scale out horizontally'],
+                ],
+                takeaway: 'Perlu persistence / replication / Multi-AZ / complex data → Redis. Perlu simple multi-threaded cache, horizontal scale → Memcached. Default exam answer biasanya Redis.',
+              },
+              {
+                label: 'Caching strategies — Lazy Loading vs Write-Through',
+                headers: ['Aspect', 'Lazy Loading', 'Write-Through'],
+                rows: [
+                  ['Bila cache di-isi', 'Bila cache MISS (read dulu)', 'Setiap kali WRITE ke DB'],
+                  ['Data dalam cache', 'Hanya yang pernah diminta', 'Semua yang pernah ditulis'],
+                  ['Cache miss penalty', 'Ya — 3 trips (cache→DB→cache)', '🟢 Tiada untuk data baru ditulis'],
+                  ['Risiko stale data', 'Boleh stale (fix: TTL)', '🟢 Sentiasa fresh'],
+                  ['Kelemahan', 'First read lambat', 'Cache penuh data tak pernah dibaca + write latency naik'],
+                ],
+                takeaway: 'Lazy Loading = isi bila diminta (jimat memory, boleh stale). Write-Through = isi masa tulis (fresh, tapi boros). Pattern paling common di exam: Lazy Loading + TTL untuk imbang freshness vs saiz cache.',
+              },
+            ],
             tips: [
               'ElastiCache for Redis: sub-millisecond latency, key-value + data structures (lists, sets, sorted sets), persistence (snapshots), replication, Multi-AZ auto-failover',
               'ElastiCache for Memcached: multi-threaded, simple key-value only, NO persistence, NO replication — data hilang bila node restart/fail',
