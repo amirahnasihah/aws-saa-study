@@ -15,6 +15,18 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    id: '2026-06-21',
+    date: '2026-06-21',
+    changes: [
+      { type: 'feat', text: 'Bookmarks page (/bookmarks): full list of saved services and AI answers — export .md, clear all, synced to Supabase when signed in' },
+      { type: 'feat', text: 'Bookmark detail (/bookmarks/[id]): full saved AI answer with ChatMarkdown rendering, AWS docs link, remove action' },
+      { type: 'feat', text: 'Bookmarks panel: title links to /bookmarks; AI answer rows open detail page; Bookmarks added to mobile nav drawer' },
+      { type: 'feat', text: 'Practice quiz mode: floating bottom nav (← Prev · N/M · Next →) matches Review — answer history preserved when jumping back' },
+      { type: 'fix', text: 'Mobile nav drawer: Browse Services section restored (D1–D4 domain jump pills to Cheat Sheet sections)' },
+      { type: 'feat', text: 'FloatingBar: single bottom pill (Ask AI · Search · Bookmarks) replaces separate corner FABs; lifts above Practice action bar' },
+    ],
+  },
+  {
     id: '2026-06-11',
     date: '2026-06-11',
     changes: [
