@@ -2,6 +2,7 @@ import { domains } from '@/data/awsServices'
 import Nav from '@/components/Nav'
 import DomainHeader from '@/components/DomainHeader'
 import LearnCard from '@/components/LearnCard'
+import OnThisPage from '@/components/OnThisPage'
 import SiteFooter from '@/components/SiteFooter'
 import { categoryStyles } from '@/data/awsServices'
 
@@ -16,6 +17,7 @@ export default function LearnPage() {
       <Nav activePage="learn" />
 
       <main id="top" className="max-w-[860px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
+        <OnThisPage />
 
         {/* page header */}
         <div className="text-center mb-10">
@@ -50,7 +52,7 @@ export default function LearnPage() {
             {domain.sections.map((section) => {
               const styles = categoryStyles[section.category]
               return (
-                <div key={section.id} id={section.id} className="mb-10">
+                <div key={section.id} id={section.id} className="mb-10 scroll-mt-20">
                   <div className="flex items-center gap-2 mb-4 pb-3 border-b border-aws-border">
                     <span className="text-xl">{section.icon}</span>
                     <span className={`text-sm font-extrabold uppercase tracking-[0.05em] ${styles.title}`}>

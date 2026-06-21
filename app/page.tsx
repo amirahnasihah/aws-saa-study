@@ -2,6 +2,7 @@ import { domains } from '@/data/awsServices'
 import Nav from '@/components/Nav'
 import DomainHeader from '@/components/DomainHeader'
 import Section from '@/components/Section'
+import OnThisPage from '@/components/OnThisPage'
 import Link from 'next/link'
 import SiteFooter from '@/components/SiteFooter'
 
@@ -11,6 +12,8 @@ export default function Home() {
       <Nav activePage="cheatsheet" />
 
       <main id="top" className="max-w-[920px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
+        <OnThisPage />
+
         {/* page hint */}
         <div className="flex items-center justify-between mb-6 px-1">
           <div>

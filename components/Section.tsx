@@ -10,7 +10,7 @@ export default function Section({ section }: SectionProps) {
   const styles = categoryStyles[section.category]
 
   return (
-    <section id={section.id} className="mb-10">
+    <section id={section.id} className="mb-10 scroll-mt-20">
       <div className="flex items-center gap-2 mb-4 pb-3 border-b border-aws-border">
         <span className="text-xl">{section.icon}</span>
         <span className={`text-sm font-extrabold uppercase tracking-[0.05em] ${styles.title}`}>

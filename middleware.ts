@@ -12,10 +12,23 @@ function isProtectedApi(pathname: string): boolean {
   return PROTECTED_API.some((prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`))
 }
 
+function hasSupabaseSessionCookie(request: NextRequest): boolean {
+  return request.cookies.getAll().some(({ name }) => name.startsWith('sb-'))
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   if (pathname.startsWith('/auth/')) {
+    return NextResponse.next()
+  }
+
+  const needsAuthCheck =
+    isProtectedPage(pathname) ||
+    isProtectedApi(pathname) ||
+    hasSupabaseSessionCookie(request)
+
+  if (!needsAuthCheck) {
     return NextResponse.next()
   }
 

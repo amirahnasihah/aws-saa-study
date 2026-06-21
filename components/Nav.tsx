@@ -3,13 +3,11 @@
 import { useState, useEffect, type CSSProperties } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { navDomains } from '@/data/awsServices'
 import { navTransitionTypes } from '@/lib/nav-transition'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import FloatingSearch from './FloatingSearch'
 import FloatingAIChat from './FloatingAIChat'
 import AccountMenu from './nav/AccountMenu'
-import BrowseServicesMenu from './nav/BrowseServicesMenu'
 import SignInButton from './nav/SignInButton'
 import { LogOutIcon } from './nav/icons'
 
@@ -57,7 +55,6 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
         <div className="flex items-center gap-1 min-w-0">
           <PageLink pathname={pathname} href="/" label="Cheat Sheet" active={activePage === 'cheatsheet'} />
           <PageLink pathname={pathname} href="/learn" label="Deep Notes" active={activePage === 'learn'} />
-          <BrowseServicesMenu />
           {userEmail && <PageLink pathname={pathname} href="/practice" label="Practice" active={activePage === 'practice'} />}
           {userEmail && <PageLink pathname={pathname} href="/scenarios" label="Scenarios" active={activePage === 'scenarios'} />}
           <PageLink pathname={pathname} href="/visual" label="Visual" active={activePage === 'visual'} />
@@ -180,27 +177,6 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                   <span className="font-space-mono text-[0.68rem] uppercase tracking-widest">{p.label}</span>
                   {p.active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-c1" />}
                 </Link>
-              ))}
-            </div>
-
-            {/* browse services */}
-            <div className="p-4 space-y-5">
-              <p className="font-space-mono text-[0.6rem] uppercase tracking-[0.2em] text-aws-muted">
-                Browse Services
-              </p>
-              {navDomains.map((domain) => (
-                <div key={domain.href}>
-                  <a href={domain.href} onClick={() => setMenuOpen(false)} className={`block font-space-mono text-[0.7rem] font-bold uppercase tracking-widest mb-2 ${domain.colorClass}`}>
-                    {domain.label}
-                  </a>
-                  <div className="flex flex-wrap gap-2">
-                    {domain.items.map((item) => (
-                      <a key={item.href} href={item.href} onClick={() => setMenuOpen(false)} className={`font-space-mono text-[0.65rem] px-2.5 py-1 rounded-full border transition-all hover:bg-white/6 ${item.className}`}>
-                        {item.label}
-                      </a>
-                    ))}
-                  </div>
-                </div>
               ))}
             </div>
           </div>

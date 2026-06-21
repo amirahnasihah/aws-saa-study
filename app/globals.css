@@ -18,11 +18,11 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   background-color: var(--color-aws-bg);
   color: var(--color-aws-text);
   font-family: var(--font-inter), sans-serif;
