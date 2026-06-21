@@ -27,7 +27,7 @@ export default function BrowseServicesMenu() {
             : 'border-transparent text-aws-muted hover:bg-white/5 hover:text-aws-text'
         }`}
       >
-        Browse Services
+        Services
         <ChevronDown open={open} />
       </button>
 
