@@ -226,8 +226,16 @@ export default function PracticePage() {
   return (
     <>
       <Nav activePage="practice" />
-      <main className="mx-auto max-w-[1280px] px-4 pt-[calc(3.5rem+1.5rem)] pb-28">
-        <div className="mb-8 flex items-start justify-between gap-4">
+      <main
+        className={`mx-auto max-w-[1280px] px-4 pt-[calc(3.5rem+1.5rem)] pb-28 ${
+          (mode === 'quiz' && !finished) || mode === 'review' ? 'md:pb-12' : ''
+        }`}
+      >
+        <div
+          className={`mb-8 flex items-start justify-between gap-4 ${
+            (mode === 'quiz' && !finished) || mode === 'review' ? 'md:hidden' : ''
+          }`}
+        >
           <div>
             <h1 className="font-space-mono text-2xl font-bold text-aws-text mb-1">Practice Questions</h1>
             <p className="text-aws-muted text-sm">AWS SAA-C03 · MCQ · Scenario-based · With full explanations</p>
@@ -258,7 +266,9 @@ export default function PracticePage() {
           </div>
         </div>
 
-        <FilterBar filters={filters} onChange={setFilters} />
+        <div className={(mode === 'quiz' && !finished) || mode === 'review' ? 'md:hidden' : ''}>
+          <FilterBar filters={filters} onChange={setFilters} />
+        </div>
 
         {mode === 'review' ? (
           <ReviewMode
@@ -431,7 +441,7 @@ function QuestionNumberGrid({
         ref={scrollRef}
         className="nav-scroll flex-1 min-h-0 overflow-y-auto pr-1 -mr-1"
       >
-        <div className="grid grid-cols-5 gap-1.5">
+        <div className="grid grid-cols-7 gap-1.5">
           {Array.from({ length: total }, (_, i) => (
             <button
               key={i}
@@ -480,7 +490,7 @@ function QuestionGrid({
   onClose: () => void
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 pb-24 lg:hidden">
+    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 pb-24 md:hidden">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-aws-card border border-aws-border rounded-2xl p-4 w-full max-w-[1280px] shadow-2xl">
         <div className="flex items-center justify-between mb-3">
@@ -546,6 +556,41 @@ function QuestionProgressStrip({
   )
 }
 
+function InlineQuizFooter({
+  index,
+  onPrev,
+  onNext,
+  nextDisabled,
+  nextLabel = 'Next →',
+}: {
+  index: number
+  onPrev: () => void
+  onNext: () => void
+  nextDisabled: boolean
+  nextLabel?: string
+}) {
+  return (
+    <div className="hidden md:flex items-center justify-between gap-4 mt-6 pt-4 border-t border-aws-border/60">
+      <button
+        type="button"
+        onClick={onPrev}
+        disabled={index === 0}
+        className="inline-flex items-center gap-2 font-space-mono text-[0.72rem] font-bold px-5 py-2.5 rounded-lg border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-emerald-500/15 border-emerald-500/35 text-emerald-300 hover:bg-emerald-500/25"
+      >
+        ← Prev
+      </button>
+      <button
+        type="button"
+        onClick={onNext}
+        disabled={nextDisabled}
+        className="inline-flex items-center gap-2 font-space-mono text-[0.72rem] font-bold px-6 py-2.5 rounded-lg border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-emerald-500/15 border-emerald-500/35 text-emerald-300 hover:bg-emerald-500/25"
+      >
+        {nextLabel}
+      </button>
+    </div>
+  )
+}
+
 function FloatingQuizNav({
   index,
   total,
@@ -565,8 +610,8 @@ function FloatingQuizNav({
 }) {
   return (
     <>
-      <div className="h-28 md:h-24" />
-      <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] md:bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[1280px] px-4 z-50">
+      <div className="h-28 md:h-24 md:hidden" />
+      <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] md:bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[1280px] px-4 z-50 md:hidden">
         <div className="flex gap-2 bg-aws-card/80 backdrop-blur-md border border-aws-border rounded-2xl p-2 shadow-xl">
           <button
             type="button"
@@ -616,103 +661,131 @@ function ReviewMode({
 
   return (
     <div>
-      <QuestionProgressStrip
-        index={clampedIndex}
-        total={total}
-        onOpenPicker={() => setShowPicker(true)}
-        badge={
-          <span className="font-space-mono text-[0.62rem] uppercase tracking-widest px-2 py-0.5 rounded border border-c3/35 bg-c3/10 text-c3 whitespace-nowrap">
-            Review
-          </span>
-        }
-      />
-
-      <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-3">
-        <div className="flex items-center gap-2 px-5 py-3 border-b border-aws-border/60 bg-white/2 flex-wrap">
-          <span className={`font-space-mono text-[0.6rem] font-bold uppercase tracking-widest ${domainColors[q.domain]}`}>
-            {q.domainLabel}
-          </span>
-          <span className="text-aws-border">·</span>
-          <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
-            {q.difficulty}
-          </span>
-          <span className="text-aws-border">·</span>
-          <span className="font-space-mono text-[0.58rem] text-emerald-400/90">Correct answer shown</span>
-        </div>
-
-        <div className="px-5 py-5">
-          {q.screenshotUrl && (
-            <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={q.screenshotUrl}
-                alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? clampedIndex + 1} reference screenshot`}
-                className="w-full h-auto"
-                loading="lazy"
-              />
-              {q.screenshotCredit ? (
-                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
-                  Architecture diagram —{' '}
-                  <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
-                    AWS Documentation
-                  </a>
-                </figcaption>
-              ) : q.pageNumber ? (
-                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
-                  Practice test page {q.pageNumber}
-                </figcaption>
-              ) : null}
-            </figure>
-          )}
-          {hintHighlight.length > 0 ? (
-            <KeywordHighlightedText
-              text={q.scenario}
-              studyKeywords={hintHighlight}
-              bankKeywords={q.keywords}
-              className="text-[0.92rem] text-aws-text leading-relaxed"
-            />
-          ) : (
-            <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
-          )}
-        </div>
-
-        <PracticeQuestionHint
-          key={q.id}
-          questionId={q.id}
-          question={q.scenario}
-          domainLabel={q.domainLabel}
-          keywords={q.keywords}
-          options={q.options}
-          reviewMode
-          onHintActive={(_active, terms) => setHintHighlight(terms)}
-        />
-
-        <div className="px-5 pb-5 space-y-2.5">
-          {q.options.map((opt) => {
-            const correct = opt.id === q.correctId
-            return (
-              <div
-                key={opt.id}
-                className={`w-full px-4 py-3 rounded-xl border text-[0.88rem] leading-snug ${
-                  correct
-                    ? 'bg-emerald-500/12 border-emerald-500/50 text-emerald-300 font-semibold'
-                    : 'bg-white/2 border-aws-border/40 text-aws-muted'
-                }`}
-              >
-                <span className="flex items-start gap-3">
-                  <span className="font-space-mono text-[0.65rem] font-bold mt-0.5 shrink-0 opacity-60">
-                    {opt.id.toUpperCase()}
-                  </span>
-                  <span>{opt.text}</span>
-                  {correct && <span className="ml-auto shrink-0 text-emerald-400">✓</span>}
-                </span>
-              </div>
-            )
-          })}
-        </div>
+      <div className="hidden md:flex items-center justify-between gap-4 mb-5 px-1">
+        <p className="font-space-mono text-[0.85rem] font-bold text-aws-text">
+          Question {clampedIndex + 1} of {total}
+        </p>
+        <span className="font-space-mono text-[0.62rem] uppercase tracking-widest px-2.5 py-1 rounded-md border border-c3/35 bg-c3/10 text-c3">
+          Review
+        </span>
       </div>
 
-      <ExplanationBlock q={q} selected={q.correctId} isCorrect={true} reviewMode={true} />
+      <div className="md:grid md:grid-cols-[minmax(0,1fr)_13.5rem] md:gap-6 md:items-start">
+        <div className="min-w-0">
+          <div className="md:hidden">
+            <QuestionProgressStrip
+              index={clampedIndex}
+              total={total}
+              onOpenPicker={() => setShowPicker(true)}
+              badge={
+                <span className="font-space-mono text-[0.62rem] uppercase tracking-widest px-2 py-0.5 rounded border border-c3/35 bg-c3/10 text-c3 whitespace-nowrap">
+                  Review
+                </span>
+              }
+            />
+          </div>
+
+          <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-4 md:mb-0">
+            <div className="px-5 py-4 border-b border-aws-border/60 bg-white/2 md:px-6 md:py-5">
+              <p className="font-space-mono text-[0.72rem] font-bold text-aws-text mb-2">
+                Domain: {q.domainLabel}
+              </p>
+              <div className="flex items-center gap-2 flex-wrap">
+                <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
+                  {q.difficulty}
+                </span>
+                <span className="font-space-mono text-[0.58rem] text-emerald-400/90">Correct answer shown</span>
+              </div>
+            </div>
+
+            <div className="px-5 py-5 md:px-6 md:py-6">
+              {q.screenshotUrl && (
+                <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={q.screenshotUrl}
+                    alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? clampedIndex + 1} reference screenshot`}
+                    className="w-full h-auto"
+                    loading="lazy"
+                  />
+                  {q.screenshotCredit ? (
+                    <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                      Architecture diagram —{' '}
+                      <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
+                        AWS Documentation
+                      </a>
+                    </figcaption>
+                  ) : q.pageNumber ? (
+                    <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                      Practice test page {q.pageNumber}
+                    </figcaption>
+                  ) : null}
+                </figure>
+              )}
+              {hintHighlight.length > 0 ? (
+                <KeywordHighlightedText
+                  text={q.scenario}
+                  studyKeywords={hintHighlight}
+                  bankKeywords={q.keywords}
+                  className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed"
+                />
+              ) : (
+                <p className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed">{q.scenario}</p>
+              )}
+            </div>
+
+            <PracticeQuestionHint
+              key={q.id}
+              questionId={q.id}
+              question={q.scenario}
+              domainLabel={q.domainLabel}
+              keywords={q.keywords}
+              options={q.options}
+              reviewMode
+              onHintActive={(_active, terms) => setHintHighlight(terms)}
+            />
+
+            <div className="px-5 pb-5 md:px-6 md:pb-6 space-y-3">
+              {q.options.map((opt) => (
+                <OptionButton
+                  key={opt.id}
+                  opt={opt}
+                  selected={q.correctId}
+                  correctId={q.correctId}
+                  quizState="revealed"
+                  onSelect={() => undefined}
+                  desktopStyle
+                />
+              ))}
+            </div>
+          </div>
+
+          <ExplanationBlock q={q} selected={q.correctId} isCorrect={true} reviewMode={true} />
+
+          <InlineQuizFooter
+            index={clampedIndex}
+            onPrev={() => onIndexChange(clampedIndex - 1)}
+            onNext={() => onIndexChange(clampedIndex + 1)}
+            nextDisabled={isLast}
+            nextLabel={isLast ? 'End of review' : 'Next →'}
+          />
+        </div>
+
+        <aside className="hidden md:block sticky top-[calc(3.5rem+1rem)] max-h-[calc(100dvh-5rem)]">
+          <div className="bg-aws-card border border-aws-border rounded-xl p-3 shadow-lg flex flex-col min-h-0 max-h-[calc(100dvh-5rem)]">
+            <p className="font-space-mono text-[0.52rem] uppercase tracking-wider text-aws-muted/50 mb-2 shrink-0">
+              {total} questions
+            </p>
+            <QuestionNumberGrid
+              current={clampedIndex}
+              total={total}
+              answeredIndices={new Set()}
+              onSelect={onIndexChange}
+              variant="sidebar"
+            />
+          </div>
+        </aside>
+      </div>
 
       <FloatingQuizNav
         index={clampedIndex}
@@ -770,90 +843,142 @@ function QuestionCard({
 
   return (
     <div>
-      <QuestionProgressStrip
-        index={index}
-        total={total}
-        score={score}
-        onOpenPicker={() => setShowPicker(true)}
-      />
-
-      <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-3">
-        <div className="flex items-center gap-2 px-5 py-3 border-b border-aws-border/60 bg-white/2 flex-wrap">
-          <span className={`font-space-mono text-[0.6rem] font-bold uppercase tracking-widest ${domainColors[q.domain]}`}>
-            {q.domainLabel}
-          </span>
-          <span className="text-aws-border">·</span>
-          <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
-            {q.difficulty}
-          </span>
-          <span className="text-aws-border">·</span>
-          <span className="font-space-mono text-[0.58rem] text-aws-muted">Select one answer</span>
-        </div>
-
-        <div className="px-5 py-5">
-          {q.screenshotUrl && (
-            <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={q.screenshotUrl}
-                alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? index + 1} reference screenshot`}
-                className="w-full h-auto"
-                loading="lazy"
-              />
-              {q.screenshotCredit ? (
-                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
-                  Architecture diagram —{' '}
-                  <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
-                    AWS Documentation
-                  </a>
-                </figcaption>
-              ) : q.pageNumber ? (
-                <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
-                  Practice test page {q.pageNumber}
-                </figcaption>
-              ) : null}
-            </figure>
-          )}
-          {hintHighlight.length > 0 ? (
-            <KeywordHighlightedText
-              text={q.scenario}
-              studyKeywords={hintHighlight}
-              bankKeywords={q.keywords}
-              className="text-[0.92rem] text-aws-text leading-relaxed"
-            />
-          ) : (
-            <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
-          )}
-        </div>
-
-        {quizState === 'question' && (
-          <PracticeQuestionHint
-            questionId={q.id}
-            question={q.scenario}
-            domainLabel={q.domainLabel}
-            keywords={q.keywords}
-            options={q.options}
-            onHintActive={(_active, terms) => setHintHighlight(terms)}
-          />
-        )}
-
-        <div className="px-5 pb-5 space-y-2.5">
-          {q.options.map((opt) => (
-            <OptionButton
-              key={opt.id}
-              opt={opt}
-              selected={selected}
-              correctId={q.correctId}
-              quizState={quizState}
-              onSelect={onSelect}
-            />
-          ))}
-        </div>
+      {/* desktop quiz header */}
+      <div className="hidden md:flex items-center justify-between gap-4 mb-5 px-1">
+        <p className="font-space-mono text-[0.85rem] font-bold text-aws-text">
+          Question {index + 1} of {total}
+        </p>
+        <span className="font-space-mono text-[0.65rem] text-emerald-400">
+          {score.correct}/{score.total} correct
+        </span>
       </div>
 
-      {quizState === 'revealed' && selected && (
-        <ExplanationBlock q={q} selected={selected} isCorrect={isCorrect} />
-      )}
+      <div className="md:grid md:grid-cols-[minmax(0,1fr)_13.5rem] md:gap-6 md:items-start">
+        <div className="min-w-0">
+          <div className="md:hidden">
+            <QuestionProgressStrip
+              index={index}
+              total={total}
+              score={score}
+              onOpenPicker={() => setShowPicker(true)}
+            />
+          </div>
+
+          <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-4 md:mb-0">
+            <div className="px-5 py-4 border-b border-aws-border/60 bg-white/2 md:px-6 md:py-5">
+              <p className="hidden md:block font-space-mono text-[0.72rem] font-bold text-aws-text mb-2">
+                Domain: {q.domainLabel}
+              </p>
+              <div className="flex items-center gap-2 flex-wrap md:hidden">
+                <span className={`font-space-mono text-[0.6rem] font-bold uppercase tracking-widest ${domainColors[q.domain]}`}>
+                  {q.domainLabel}
+                </span>
+                <span className="text-aws-border">·</span>
+                <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
+                  {q.difficulty}
+                </span>
+                <span className="text-aws-border">·</span>
+                <span className="font-space-mono text-[0.58rem] text-aws-muted">Select one answer</span>
+              </div>
+              <div className="hidden md:flex items-center gap-2 flex-wrap">
+                <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
+                  {q.difficulty}
+                </span>
+                <span className="font-space-mono text-[0.58rem] text-aws-muted">Select one answer</span>
+              </div>
+            </div>
+
+            <div className="px-5 py-5 md:px-6 md:py-6">
+              {q.screenshotUrl && (
+                <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={q.screenshotUrl}
+                    alt={q.screenshotCredit ? 'AWS architecture diagram illustrating the scenario' : `Question ${q.pageNumber ?? index + 1} reference screenshot`}
+                    className="w-full h-auto"
+                    loading="lazy"
+                  />
+                  {q.screenshotCredit ? (
+                    <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                      Architecture diagram —{' '}
+                      <a href={q.screenshotCredit} target="_blank" rel="noopener noreferrer" className="underline hover:text-aws-orange">
+                        AWS Documentation
+                      </a>
+                    </figcaption>
+                  ) : q.pageNumber ? (
+                    <figcaption className="px-3 py-1.5 font-space-mono text-[0.58rem] text-aws-muted border-t border-aws-border/40">
+                      Practice test page {q.pageNumber}
+                    </figcaption>
+                  ) : null}
+                </figure>
+              )}
+              {hintHighlight.length > 0 ? (
+                <KeywordHighlightedText
+                  text={q.scenario}
+                  studyKeywords={hintHighlight}
+                  bankKeywords={q.keywords}
+                  className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed"
+                />
+              ) : (
+                <p className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed">{q.scenario}</p>
+              )}
+            </div>
+
+            {quizState === 'question' && (
+              <PracticeQuestionHint
+                questionId={q.id}
+                question={q.scenario}
+                domainLabel={q.domainLabel}
+                keywords={q.keywords}
+                options={q.options}
+                onHintActive={(_active, terms) => setHintHighlight(terms)}
+              />
+            )}
+
+            <div className="px-5 pb-5 md:px-6 md:pb-6 space-y-3">
+              {q.options.map((opt) => (
+                <OptionButton
+                  key={opt.id}
+                  opt={opt}
+                  selected={selected}
+                  correctId={q.correctId}
+                  quizState={quizState}
+                  onSelect={onSelect}
+                  desktopStyle
+                />
+              ))}
+            </div>
+          </div>
+
+          {quizState === 'revealed' && selected && (
+            <ExplanationBlock q={q} selected={selected} isCorrect={isCorrect} />
+          )}
+
+          <InlineQuizFooter
+            index={index}
+            onPrev={onPrev}
+            onNext={onNext}
+            nextDisabled={quizState !== 'revealed'}
+            nextLabel={isLast ? 'See Results' : 'Next →'}
+          />
+        </div>
+
+        {/* desktop sidebar — question grid only */}
+        <aside className="hidden md:block sticky top-[calc(3.5rem+1rem)] max-h-[calc(100dvh-5rem)]">
+          <div className="bg-aws-card border border-aws-border rounded-xl p-3 shadow-lg flex flex-col min-h-0 max-h-[calc(100dvh-5rem)]">
+            <p className="font-space-mono text-[0.52rem] uppercase tracking-wider text-aws-muted/50 mb-2 shrink-0">
+              {total} questions
+            </p>
+            <QuestionNumberGrid
+              current={index}
+              total={total}
+              answeredIndices={answeredIndices}
+              onSelect={onJump}
+              variant="sidebar"
+            />
+          </div>
+        </aside>
+      </div>
 
       <FloatingQuizNav
         index={index}
