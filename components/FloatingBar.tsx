@@ -8,6 +8,7 @@ import { useBookmarksCtx } from './BookmarksContext'
 import { useAnswerBookmarksCtx } from './AnswerBookmarksContext'
 import { useAIProvider } from '@/hooks/useAIProvider'
 import AIChatView from '@/components/ai/AIChatView'
+import { PRACTICE_QUESTION_PICKER_EVENT } from '@/lib/practice-picker'
 
 interface FloatingBarProps {
   /** Ask AI is gated to signed-in users off the dedicated /ai page. */
@@ -34,6 +35,7 @@ export default function FloatingBar({ showAskAI }: FloatingBarProps) {
   const [searchOpen, setSearchOpen] = useState(false)
   const [bookmarksOpen, setBookmarksOpen] = useState(false)
   const [aiOpen, setAiOpen] = useState(false)
+  const [practicePickerOpen, setPracticePickerOpen] = useState(false)
 
   const { count: serviceCount } = useBookmarksCtx()
   const { count: answerCount } = useAnswerBookmarksCtx()
@@ -56,13 +58,26 @@ export default function FloatingBar({ showAskAI }: FloatingBarProps) {
     return () => window.removeEventListener('keydown', handler)
   }, [])
 
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const detail = (e as CustomEvent<{ open: boolean }>).detail
+      setPracticePickerOpen(detail?.open ?? false)
+    }
+    window.addEventListener(PRACTICE_QUESTION_PICKER_EVENT, handler)
+    return () => window.removeEventListener(PRACTICE_QUESTION_PICKER_EVENT, handler)
+  }, [])
+
+  const hideBarOnMobile = pathname === '/practice' && practicePickerOpen
+
   const segment =
     'flex items-center gap-2 px-4 py-3 transition-colors duration-150 hover:bg-white/[0.06]'
   const divider = <span aria-hidden className="h-5 w-px shrink-0 bg-aws-border/60" />
 
   return (
     <>
-      <div className={`fixed ${bottom} left-1/2 z-[55] -translate-x-1/2`}>
+      <div
+        className={`fixed ${bottom} left-1/2 z-[55] -translate-x-1/2 ${hideBarOnMobile ? 'max-md:hidden' : ''}`}
+      >
         <div className="flex items-center overflow-hidden rounded-full border border-aws-border/80 bg-aws-card/95 font-space-mono text-[0.65rem] text-aws-text shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md">
           {showAskAI && (
             <>

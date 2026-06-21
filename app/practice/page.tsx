@@ -7,6 +7,7 @@ import KeywordHighlightedText from '@/components/practice/KeywordHighlightedText
 import PracticeQuestionHint from '@/components/practice/PracticeQuestionHint'
 import { practiceQuestions, PracticeQuestion } from '@/data/practiceQuestions'
 import { PRACTICE_SESSION_KEY, readSessionJson, writeSessionJson } from '@/lib/ai/session-persist'
+import { setPracticeQuestionPickerOpen } from '@/lib/practice-picker'
 
 const domainColors: Record<string, string> = {
   d1: 'text-c3',
@@ -526,8 +527,13 @@ function QuestionGrid({
   onSelect: (i: number) => void
   onClose: () => void
 }) {
+  useEffect(() => {
+    setPracticeQuestionPickerOpen(true)
+    return () => setPracticeQuestionPickerOpen(false)
+  }, [])
+
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 pb-24">
+    <div className="fixed inset-0 z-[60] flex items-end justify-center px-4 pb-6 md:pb-24">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
       <div className="relative bg-aws-card border border-aws-border rounded-2xl p-4 w-full max-w-[1280px] shadow-2xl">
         <div className="flex items-center justify-between mb-3">
@@ -824,16 +830,18 @@ function ReviewMode({
         </div>
       </div>
 
-      <div className="md:hidden">
-        <FloatingQuizNav
-          index={clampedIndex}
-          total={total}
-          onPrev={() => onIndexChange(clampedIndex - 1)}
-          onNext={() => onIndexChange(clampedIndex + 1)}
-          onOpenPicker={() => setShowPicker(true)}
-          nextDisabled={isLast}
-        />
-      </div>
+      {!showPicker && (
+        <div className="md:hidden">
+          <FloatingQuizNav
+            index={clampedIndex}
+            total={total}
+            onPrev={() => onIndexChange(clampedIndex - 1)}
+            onNext={() => onIndexChange(clampedIndex + 1)}
+            onOpenPicker={() => setShowPicker(true)}
+            nextDisabled={isLast}
+          />
+        </div>
+      )}
 
       {showPicker && (
         <QuestionGrid
@@ -1025,17 +1033,19 @@ function QuestionCard({
         </div>
       </div>
 
-      <div className="md:hidden">
-        <FloatingQuizNav
-          index={index}
-          total={total}
-          onPrev={onPrev}
-          onNext={onNext}
-          onOpenPicker={() => setShowPicker(true)}
-          nextDisabled={quizState !== 'revealed'}
-          nextLabel={isLast ? 'Results →' : 'Next →'}
-        />
-      </div>
+      {!showPicker && (
+        <div className="md:hidden">
+          <FloatingQuizNav
+            index={index}
+            total={total}
+            onPrev={onPrev}
+            onNext={onNext}
+            onOpenPicker={() => setShowPicker(true)}
+            nextDisabled={quizState !== 'revealed'}
+            nextLabel={isLast ? 'Results →' : 'Next →'}
+          />
+        </div>
+      )}
 
       {showPicker && (
         <QuestionGrid
