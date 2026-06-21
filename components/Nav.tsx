@@ -11,7 +11,7 @@ import SignInButton from './nav/SignInButton'
 import { LogOutIcon } from './nav/icons'
 
 interface NavProps {
-  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc' | 'labs' | 'ai'
+  activePage?: 'cheatsheet' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc' | 'labs' | 'ai' | 'bookmarks'
 }
 
 const siteHeaderTransition: CSSProperties = { viewTransitionName: 'site-header' }

@@ -23,6 +23,7 @@ const difficultyColors: Record<string, string> = {
 
 type QuizState = 'question' | 'revealed'
 type PageMode = 'quiz' | 'review'
+type AnswerRecord = { selected: string }
 
 type FilterSource = 'all' | 'core' | 'others'
 type FilterDomain = 'all' | 'd1' | 'd2' | 'd3' | 'd4'
@@ -88,8 +89,20 @@ export default function PracticePage() {
   const [reviewIndex, setReviewIndex] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
   const [quizState, setQuizState] = useState<QuizState>('question')
-  const [score, setScore] = useState({ correct: 0, total: 0 })
+  const [answers, setAnswers] = useState<Record<number, AnswerRecord>>({})
   const [finished, setFinished] = useState(false)
+
+  const score = Object.entries(answers).reduce(
+    (acc, [idx, ans]) => {
+      const question = questions[Number(idx)]
+      if (!question) return acc
+      return {
+        total: acc.total + 1,
+        correct: acc.correct + (ans.selected === question.correctId ? 1 : 0),
+      }
+    },
+    { correct: 0, total: 0 },
+  )
 
   // Persist session state on every change.
   useEffect(() => {
@@ -97,6 +110,15 @@ export default function PracticePage() {
       filters, mode, currentIndex, reviewIndex, selected, quizState, score, finished,
     } satisfies PracticeSessionState)
   }, [filters, mode, currentIndex, reviewIndex, selected, quizState, score, finished])
+
+  const goToQuestion = useCallback((index: number, answerMap: Record<number, AnswerRecord>) => {
+    const clamped = Math.min(Math.max(index, 0), Math.max(questions.length - 1, 0))
+    const saved = answerMap[clamped]
+    setCurrentIndex(clamped)
+    setSelected(saved?.selected ?? null)
+    setQuizState(saved ? 'revealed' : 'question')
+    setFinished(false)
+  }, [questions.length])
 
   useEffect(() => {
     // Apply persisted session state once, on the very first effect run. This re-triggers
@@ -111,7 +133,6 @@ export default function PracticePage() {
         setCurrentIndex(p.currentIndex ?? 0)
         setSelected(p.selected ?? null)
         setQuizState(p.quizState ?? 'question')
-        setScore(p.score ?? { correct: 0, total: 0 })
         setFinished(p.finished ?? false)
         skipNextResetRef.current = true
         return
@@ -157,7 +178,7 @@ export default function PracticePage() {
           setCurrentIndex(0)
           setSelected(null)
           setQuizState('question')
-          setScore({ correct: 0, total: 0 })
+          setAnswers({})
           setFinished(false)
         }
       })
@@ -168,36 +189,32 @@ export default function PracticePage() {
 
   const handleSelect = useCallback((id: string) => {
     if (quizState === 'revealed') return
+    setAnswers((prev) => ({ ...prev, [currentIndex]: { selected: id } }))
     setSelected(id)
     setQuizState('revealed')
-    setScore((prev) => ({
-      correct: prev.correct + (id === q.correctId ? 1 : 0),
-      total: prev.total + 1,
-    }))
-  }, [quizState, q.correctId])
+  }, [quizState, currentIndex])
 
   const handleNext = useCallback(() => {
     if (currentIndex + 1 >= questions.length) {
       setFinished(true)
-    } else {
-      setCurrentIndex((i) => i + 1)
-      setSelected(null)
-      setQuizState('question')
+      return
     }
-  }, [currentIndex, questions.length])
+    goToQuestion(currentIndex + 1, answers)
+  }, [currentIndex, questions.length, answers, goToQuestion])
+
+  const handlePrev = useCallback(() => {
+    goToQuestion(currentIndex - 1, answers)
+  }, [currentIndex, answers, goToQuestion])
 
   const handleJump = useCallback((i: number) => {
-    setCurrentIndex(i)
-    setSelected(null)
-    setQuizState('question')
-    setFinished(false)
-  }, [])
+    goToQuestion(i, answers)
+  }, [answers, goToQuestion])
 
   const handleRestart = useCallback(() => {
     setCurrentIndex(0)
     setSelected(null)
     setQuizState('question')
-    setScore({ correct: 0, total: 0 })
+    setAnswers({})
     setFinished(false)
   }, [])
 
@@ -260,6 +277,7 @@ export default function PracticePage() {
             score={score}
             onSelect={handleSelect}
             onNext={handleNext}
+            onPrev={handlePrev}
             onJump={handleJump}
           />
         )}
@@ -572,6 +590,7 @@ function QuestionCard({
   score,
   onSelect,
   onNext,
+  onPrev,
   onJump,
 }: {
   q: PracticeQuestion
@@ -583,6 +602,7 @@ function QuestionCard({
   score: { correct: number; total: number }
   onSelect: (id: string) => void
   onNext: () => void
+  onPrev: () => void
   onJump: (i: number) => void
 }) {
   const [showPicker, setShowPicker] = useState(false)
@@ -692,15 +712,38 @@ function QuestionCard({
         <ExplanationBlock q={q} selected={selected} isCorrect={isCorrect} />
       )}
 
-      {/* next button */}
-      {quizState === 'revealed' && (
-        <button
-          onClick={onNext}
-          className="w-full mt-4 py-3 rounded-xl font-space-mono text-sm font-bold bg-c1/15 border border-c1/40 text-c1 hover:bg-c1/25 transition-all duration-150"
-        >
-          {index + 1 >= total ? 'See Results →' : 'Next Question →'}
-        </button>
-      )}
+      {/* bottom padding so content doesn't hide behind floating bars */}
+      <div className="h-28 md:h-24" />
+
+      {/* floating nav bar — matches Review mode; sits below Ask AI / Search bar */}
+      <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] md:bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[720px] px-4 z-50">
+        <div className="flex gap-2 bg-aws-card/80 backdrop-blur-md border border-aws-border rounded-2xl p-2 shadow-xl">
+          <button
+            type="button"
+            onClick={onPrev}
+            disabled={index === 0}
+            className="flex-1 py-2.5 rounded-xl font-space-mono text-sm font-bold border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-white/4 border-aws-border text-aws-muted hover:text-aws-text hover:bg-white/8"
+          >
+            ← Prev
+          </button>
+          <button
+            type="button"
+            onClick={() => setShowPicker(true)}
+            className="px-4 py-2.5 rounded-xl font-space-mono text-[0.65rem] font-bold border border-aws-border/50 text-aws-muted hover:text-aws-text hover:bg-white/6 transition-all duration-150 whitespace-nowrap"
+            title="Jump to question"
+          >
+            {index + 1} / {total}
+          </button>
+          <button
+            type="button"
+            onClick={onNext}
+            disabled={quizState !== 'revealed'}
+            className="flex-1 py-2.5 rounded-xl font-space-mono text-sm font-bold border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-c1/15 border-c1/40 text-c1 hover:bg-c1/25"
+          >
+            {index + 1 >= total ? 'Results →' : 'Next →'}
+          </button>
+        </div>
+      </div>
 
       {showPicker && (
         <QuestionGrid
