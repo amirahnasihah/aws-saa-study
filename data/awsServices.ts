@@ -2762,6 +2762,56 @@ export const domains: DomainData[] = [
         category: 'd3db',
         services: [
           {
+            shortName: 'Pilih Database',
+            fullName: 'Which AWS Database? — purpose-built selector',
+            ingat: '"Tiap database ada KERJA dia — match shape data dengan engine"',
+            gunaUntuk: 'Pilih database betul ikut shape data + access pattern (THE exam decision)',
+            fungsi: 'AWS galak "purpose-built database" — pilih ikut bentuk data dan cara access, bukan satu DB untuk semua. Relational (SQL, transaksi) → RDS/Aurora. Key-value laju → DynamoDB. Cache → ElastiCache. Document/Mongo → DocumentDB. Graph → Neptune. Wide-column → Keyspaces. Analytics/warehouse → Redshift. In-memory durable → MemoryDB.',
+            mermaid: {
+              label: 'Pilih database (decision tree)',
+              source: `flowchart TD
+  A[Apa bentuk data + access?] --> B{Relational / SQL?}
+  B -->|Ya, transaksi OLTP| C{Perlu HA hebat + auto-scale storage?}
+  C -->|Ya| C1[Aurora]
+  C -->|Standard MySQL/Postgres| C2[RDS]
+  B -->|Tak| D{Key-value, ms latency, serverless?}
+  D -->|Ya| D1[DynamoDB]
+  D -->|Tak| E{Guna untuk apa lagi?}
+  E -->|Cache depan DB| E1[ElastiCache / DAX]
+  E -->|Document / MongoDB| E2[DocumentDB]
+  E -->|Graph, relationship| E3[Neptune]
+  E -->|Wide-column / Cassandra| E4[Keyspaces]
+  E -->|Analytics / warehouse OLAP| E5[Redshift]`,
+              caption: 'Mula-mula tanya "relational ke tak". Relational + transaksi → RDS/Aurora. Lepas tu match keyword soalan: "MongoDB" → DocumentDB, "graph/relationship/fraud" → Neptune, "Cassandra/wide-column" → Keyspaces, "warehouse/analytics" → Redshift, "microsecond cache" → DAX/ElastiCache.',
+            },
+            compare: {
+              label: 'Purpose-built database matrix',
+              headers: ['Engine', 'Jenis', 'Guna bila / keyword exam'],
+              rows: [
+                ['RDS', 'Relational (managed)', 'MySQL/Postgres/Oracle/SQL Server, transaksi standard'],
+                ['Aurora', 'Relational (cloud-native)', 'HA hebat, 6 copies, 5x MySQL, auto-scale storage, Global DB'],
+                ['DynamoDB', 'Key-value / document NoSQL', 'Serverless, single-digit ms, any scale, spiky traffic'],
+                ['ElastiCache', 'In-memory cache', 'Kurangkan load DB, Redis/Memcached, session store'],
+                ['DAX', 'In-memory cache (DynamoDB)', 'Microsecond reads KHUSUS DynamoDB'],
+                ['DocumentDB', 'Document (Mongo-compat)', '"Migrate MongoDB", JSON documents, collections'],
+                ['Neptune', 'Graph', 'Social network, fraud detection, relationship query'],
+                ['Keyspaces', 'Wide-column (Cassandra)', '"Migrate Cassandra", CQL, wide-column'],
+                ['Redshift', 'Data warehouse (OLAP)', 'Analytics berulang, BI, aggregate berjuta baris'],
+                ['Timestream', 'Time-series', 'IoT sensor data, metrics ikut masa'],
+              ],
+              takeaway: 'Exam fish for KEYWORD: "MongoDB"→DocumentDB, "Cassandra"→Keyspaces, "graph/relationship"→Neptune, "warehouse/analytics"→Redshift, "time-series/IoT metrics"→Timestream, "microsecond DynamoDB"→DAX, "transaksi + HA"→Aurora. Jangan jawab DynamoDB untuk soalan relational/transaksi.',
+            },
+            tips: [
+              'OLTP (transaksi, banyak read/write baris tunggal) → RDS/Aurora. OLAP (analytics, aggregate besar) → Redshift. Ni beza paling kerap ditanya.',
+              'SQL/relational + perlu HA terbaik + auto storage + global → Aurora. SQL standard / engine spesifik (Oracle, SQL Server) → RDS.',
+              'NoSQL key-value serverless ms latency → DynamoDB. Perlu microsecond reads atas DynamoDB → tambah DAX.',
+              'Keyword migrasi: "migrate MongoDB"→DocumentDB, "migrate Cassandra"→Keyspaces, "migrate Kafka"→MSK (streaming, bukan DB).',
+              'Cache: ElastiCache = cache depan SEBARANG DB (Redis/Memcached). DAX = cache KHUSUS DynamoDB sahaja.',
+              'Graph (mutual friends, fraud rings, recommendation) → Neptune. Bukan DynamoDB, bukan RDS.',
+            ],
+            keywords: ['purpose-built database', 'OLTP vs OLAP', 'relational', 'NoSQL', 'key-value', 'document', 'graph', 'wide-column', 'time-series', 'database selection', 'which database'],
+          },
+          {
             shortName: 'DocumentDB',
             fullName: 'Amazon DocumentDB',
             ingat: '"MongoDB dalam AWS — JSON documents"',
@@ -3095,12 +3145,47 @@ export const domains: DomainData[] = [
           },
           {
             shortName: 'Reserved Instances',
-            fullName: 'EC2 Reserved Instances',
-            ingat: '"Bayar awal, dapat diskaun besar"',
-            gunaUntuk: 'Workload steady, predictable usage, 1-3 tahun',
-            fungsi: 'Menyediakan diskaun sehingga 72% berbanding On-Demand dengan komitmen 1 atau 3 tahun',
-            scenario: 'E-commerce company yang dah established, database server mesti run 24/7 sepanjang tahun. Jimat besar kalau commit 1-3 tahun.',
-            keywords: ['1 or 3 year', 'up to 72% discount', 'predictable', 'steady state'],
+            fullName: 'EC2 Reserved Instances (RI)',
+            ingat: '"Commit 1-3 thn → diskaun sampai 72%. Standard = murah-tegar, Convertible = fleksibel-kurang"',
+            gunaUntuk: 'Workload steady predictable 24/7 untuk 1-3 tahun',
+            fungsi: 'Komitmen 1 atau 3 tahun pada konfigurasi instance tertentu → diskaun sampai 72% vs On-Demand. Dua kelas: Standard (diskaun besar, boleh MODIFY AZ/saiz dalam family, boleh jual di RI Marketplace) dan Convertible (diskaun kurang, boleh EXCHANGE tukar family/OS/tenancy). Scope: Regional (fleksibel AZ, no capacity reservation) atau Zonal (lock 1 AZ + capacity reservation).',
+            scenario: '"Database 24/7 sepanjang tahun, instance type takkan berubah, nak diskaun maksimum" → Standard RI (3-tahun All Upfront). "Steady tapi mungkin tukar instance family tahun depan" → Convertible RI. "Perlu jaminan kapasiti dalam AZ tertentu" → Zonal RI (regional RI TIDAK reserve capacity).',
+            compare: [
+              {
+                label: 'Standard vs Convertible RI',
+                headers: ['Aspect', 'Standard RI', 'Convertible RI'],
+                rows: [
+                  ['Diskaun', '🟢 Sampai 72%', 'Sampai 66% (kurang sikit)'],
+                  ['Tukar instance family/OS', '❌ Tak boleh', '🟢 Boleh exchange'],
+                  ['Modify AZ / saiz dalam family', '✅ Boleh', '✅ Boleh'],
+                  ['Jual di RI Marketplace', '🟢 Boleh', '❌ Tak boleh'],
+                  ['Best bila', 'Konfigurasi takkan berubah, nak diskaun max', 'Mungkin perlu tukar family/OS kemudian'],
+                ],
+                takeaway: 'Pasti tak berubah + diskaun max → Standard. Nak fleksibiliti tukar family/OS → Convertible. Tapi kalau nak fleksibel SAMBIL auto-apply tanpa exchange manual → consider Savings Plans.',
+              },
+              {
+                label: 'Payment options (sama untuk Standard & Convertible)',
+                headers: ['Bayaran', 'Diskaun', 'Bila pilih'],
+                rows: [
+                  ['All Upfront', '🟢 Paling tinggi', 'Ada cash, nak jimat maksimum'],
+                  ['Partial Upfront', 'Pertengahan', 'Imbang cash flow vs diskaun'],
+                  ['No Upfront', 'Paling rendah', 'Tak nak bayar awal, masih commit 1-3 thn'],
+                ],
+                takeaway: 'Lagi banyak bayar awal = lagi besar diskaun. All Upfront 3-tahun Standard RI = diskaun paling besar yang ada (~72%).',
+              },
+            ],
+            tips: [
+              'Standard RI = diskaun lebih besar tapi TAK boleh tukar instance family. Convertible RI = boleh exchange family/OS/tenancy tapi diskaun kurang.',
+              'Regional RI (default, disyorkan): apply ke mana-mana AZ dalam region, boleh modify, TAPI tiada capacity reservation. Zonal RI: lock satu AZ + dapat capacity reservation.',
+              'Payment: All Upfront > Partial Upfront > No Upfront (ikut saiz diskaun). Term: 3 tahun > 1 tahun.',
+              'RI vs Savings Plans: RI lock pada instance config (atau exchange manual untuk Convertible). Savings Plans commit $/jam, auto-apply lebih fleksibel — exam selalu pilih Savings Plans bila soalan tekankan "flexibility".',
+              'RI bukan cuma EC2 — ada juga untuk RDS, Redshift, ElastiCache, OpenSearch.',
+              'Billing order: RI diapply DULU, baru Savings Plans (EC2 Instance SP → Compute SP) pada usage yang tinggal.',
+            ],
+            docs: [
+              { label: 'Reserved Instance types (Standard vs Convertible)', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/reserved-instances-types.html' },
+            ],
+            keywords: ['1 or 3 year', 'up to 72% discount', 'Standard RI', 'Convertible RI', 'exchange', 'modify', 'All Upfront', 'Partial Upfront', 'No Upfront', 'Regional RI', 'Zonal RI', 'capacity reservation', 'RI Marketplace'],
           },
           {
             shortName: 'Spot Instances',
@@ -3113,12 +3198,48 @@ export const domains: DomainData[] = [
           },
           {
             shortName: 'Savings Plans',
-            fullName: 'AWS Savings Plans',
-            ingat: '"Reserved tapi lebih flexible"',
-            gunaUntuk: 'Commit spend per hour, flexible instance type',
-            fungsi: 'Menawarkan diskaun sehingga 66% dengan komitmen penggunaan dalam USD/jam tanpa terikat instance type',
-            scenario: 'Company yang nak jimat macam Reserved tapi plan nak tukar instance type atau region dalam masa terdekat. Lebih flexible dari Reserved Instances.',
-            keywords: ['flexible', 'hourly commitment', 'up to 66% discount', 'compute savings'],
+            fullName: 'AWS Savings Plans (SP)',
+            ingat: '"Commit $/jam, bukan instance. Compute = paling fleksibel (+Fargate/Lambda), EC2 Instance = diskaun lebih besar"',
+            gunaUntuk: 'Steady compute spend tapi nak fleksibiliti tukar instance/region — auto-apply',
+            fungsi: 'Komitmen pada jumlah belanja compute ($/jam) untuk 1 atau 3 tahun → diskaun auto-apply. Dua jenis: Compute Savings Plans (paling fleksibel — apply ke mana-mana instance family, saiz, OS, tenancy, region, dan TERMASUK Fargate & Lambda; sampai 66%) dan EC2 Instance Savings Plans (commit pada satu instance family dalam satu region; diskaun lebih besar sampai 72% tapi kurang fleksibel).',
+            scenario: '"Nak jimat tapi mungkin tukar instance type/region/OS, dan ada beban Fargate + Lambda sekali" → Compute Savings Plans (auto-apply tanpa exchange manual). "Komited pada family tertentu (cth m5) dalam satu region, nak diskaun lebih besar dari Compute SP" → EC2 Instance Savings Plans. "Beban batch boleh interrupt" → Spot (bukan SP).',
+            mermaid: {
+              label: 'Pilih EC2 purchasing option (decision tree)',
+              source: `flowchart TD
+  A[Macam mana beban compute?] --> B{Boleh tahan interrupt?}
+  B -->|Ya, fault-tolerant batch| C[Spot<br/>sampai 90% murah]
+  B -->|Tak, perlu stabil| D{Predictable 1-3 tahun?}
+  D -->|Tak, spiky / short-term| E[On-Demand]
+  D -->|Ya| F{Perlu fleksibiliti?}
+  F -->|Tukar family/region + Fargate/Lambda| G[Compute Savings Plans<br/>sampai 66%]
+  F -->|Lock 1 family/region, diskaun lebih| H[EC2 Instance Savings Plans<br/>sampai 72%]
+  F -->|Config tetap + capacity reservation| I[Reserved Instances]`,
+              caption: 'Boleh interrupt → Spot. Tak predictable → On-Demand. Predictable + fleksibel (+Fargate/Lambda) → Compute SP. Predictable + lock family untuk diskaun max → EC2 Instance SP / Standard RI. Soalan tekan "flexibility" biasanya = Savings Plans (bukan RI).',
+            },
+            compare: {
+              label: 'Compute SP vs EC2 Instance SP vs RI',
+              headers: ['Aspect', 'Compute SP', 'EC2 Instance SP', 'Reserved Instances'],
+              rows: [
+                ['Diskaun', 'Sampai 66%', '🟢 Sampai 72%', 'Sampai 72%'],
+                ['Komit pada', '$/jam (apa-apa compute)', '$/jam (1 family + region)', 'Instance config tertentu'],
+                ['Tukar family/region', '🟢 Bebas', 'Region & family terkunci', 'Exchange (Convertible) je'],
+                ['Fargate / Lambda', '🟢 Ya, termasuk', '❌ EC2 sahaja', '❌ EC2 sahaja'],
+                ['Capacity reservation', '❌ Tiada', '❌ Tiada', '🟢 Zonal RI ada'],
+              ],
+              takeaway: 'Paling fleksibel + cover Fargate/Lambda → Compute SP. Diskaun lebih besar tapi lock family/region → EC2 Instance SP. Perlu jaminan kapasiti AZ → Zonal RI. Billing apply order: RI → EC2 Instance SP → Compute SP (highest discount dulu).',
+            },
+            tips: [
+              'Compute Savings Plans = paling fleksibel: apa-apa instance family, saiz, OS, tenancy, region — DAN apply ke Fargate + Lambda. Sampai 66%.',
+              'EC2 Instance Savings Plans = lock pada satu instance family dalam satu region (boleh tukar saiz/OS/AZ dalam family). Diskaun lebih besar (sampai 72%) tapi kurang fleksibel. EC2 sahaja.',
+              'SP vs RI: dua-dua commit 1/3 tahun. SP commit $/jam (auto-apply, tak payah exchange). RI commit pada instance config. Soalan tekan "flexibility / minimal management" → Savings Plans.',
+              'Spot ≠ SP: Spot untuk beban yang boleh di-interrupt (sampai 90% murah, no commitment). SP untuk beban steady yang TAK boleh interrupt.',
+              'Payment: All / Partial / No Upfront — sama macam RI, lagi banyak upfront = lagi besar diskaun.',
+              'Billing apply order penting: AWS apply RI dulu, lepas tu EC2 Instance SP, last sekali Compute SP (ikut highest discount).',
+            ],
+            docs: [
+              { label: 'Compute vs EC2 Instance Savings Plans', url: 'https://docs.aws.amazon.com/savingsplans/latest/userguide/sp-ris.html' },
+            ],
+            keywords: ['flexible', 'hourly commitment', 'up to 66% discount', 'Compute Savings Plans', 'EC2 Instance Savings Plans', 'Fargate', 'Lambda', 'auto-apply', 'vs Reserved Instances', 'billing apply order'],
           },
           {
             shortName: 'Compute Optimizer',

@@ -494,7 +494,7 @@ function DiagramPanel({ arch }: { arch: Architecture }) {
       </div>
 
       {/* canvas + unified sidebar */}
-      <div className="flex" style={{ height: 460 }}>
+      <div className="flex" style={{ height: 520 }}>
         <div className="flex-1 min-w-0">
           <ReactFlow
             nodes={nodes}
