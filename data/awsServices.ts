@@ -53,6 +53,24 @@ export interface FlowDiagram {
   caption?: string
 }
 
+// An official AWS diagram (or any static image). `src` may be a remote URL or a
+// path under /public. Rendered with a caption + optional eyebrow label.
+export interface CardImage {
+  src: string
+  alt: string
+  label?: string
+  caption?: string
+}
+
+// A Mermaid diagram rendered client-side by components/ai/MermaidDiagram.tsx.
+// Use for flows too branchy for the box-and-arrow FlowDiagram (decision trees,
+// sequence diagrams, state machines).
+export interface MermaidSpec {
+  label?: string
+  source: string
+  caption?: string
+}
+
 export interface ServiceCard {
   shortName: string
   fullName: string
@@ -64,6 +82,8 @@ export interface ServiceCard {
   storageDetails?: string
   detailsLabel?: string
   diagram?: FlowDiagram | FlowDiagram[]
+  mermaid?: MermaidSpec | MermaidSpec[]
+  image?: CardImage | CardImage[]
   compare?: CompareTable | CompareTable[]
   tips?: string[]
   docs?: Array<{ label: string; url: string }>
@@ -1991,20 +2011,139 @@ export const domains: DomainData[] = [
           {
             shortName: 'S3',
             fullName: 'Simple Storage Service',
-            ingat: '"Infinite storage bucket"',
-            gunaUntuk: 'Object storage, images, backups',
-            fungsi: 'Menyimpan dan mendapatkan semula sebarang jumlah data sebagai objects',
-            contohGuna: 'Store images, videos, backups, static website hosting',
-            keywords: ['object storage', 'static website', 'backup', 'unlimited'],
+            ingat: '"Infinite bucket — object storage, 11 nines durability"',
+            gunaUntuk: 'Object storage: images, video, backup, data lake, static website',
+            fungsi: 'Object storage tanpa had — simpan apa-apa jenis fail sebagai OBJECT dalam BUCKET. Bukan block (EBS) bukan file system (EFS). Tiap object ada key (nama penuh), value (data), metadata, version ID. Bucket nama global unik. Max 1 object = 5TB. 11 nines durability (99.999999999%) sebab tiap object auto-replicate across ≥3 AZ.',
+            contohGuna: 'Store images/video, backup & restore, data lake untuk Athena/Redshift, static website hosting, log storage, distribute software',
+            detailsLabel: 'S3 Anatomy — Bucket → Object',
+            storageDetails: 'Bucket → bekas top-level, nama GLOBAL unik (semua AWS), terikat pada 1 Region\nObject → fail sebenar; identified by Key (full path nama, cth photos/2026/cat.jpg)\nKey → "nama penuh" object dalam bucket (prefix + nama). Tiada folder sebenar — prefix je\nValue → kandungan data object (max 5TB)\nMetadata → key-value tags pasal object (content-type, dll)\nVersion ID → bila versioning ON, tiap update dapat ID baru',
+            diagram: {
+              label: 'S3 Request → Durability Flow',
+              steps: [
+                { nodes: [{ label: 'Client PUT', sub: 'upload object', tone: 'c1' }] },
+                { nodes: [{ label: 'S3 Bucket', sub: 'Region X', tone: 'c2' }] },
+                { nodes: [
+                  { label: 'AZ-1', sub: 'copy', tone: 'c4' },
+                  { label: 'AZ-2', sub: 'copy', tone: 'c4' },
+                  { label: 'AZ-3', sub: 'copy', tone: 'c4' },
+                ] },
+                { nodes: [{ label: '11 Nines', sub: '99.999999999%', tone: 'c5' }] },
+              ],
+              caption: 'Satu PUT → S3 auto-replicate object across ≥3 AZ dalam Region → 11 nines durability. Ni sebab S3 boleh "kehilangan" 1 object dalam 10,000 tahun untuk 10 juta object.',
+            },
+            mermaid: {
+              label: 'Pilih Encryption S3 (decision tree)',
+              source: `flowchart TD
+  A[Nak encrypt object S3?] --> B{Sapa urus key?}
+  B -->|AWS urus semua, default ON| C[SSE-S3<br/>AES-256, free, auto]
+  B -->|Aku nak audit + rotate + control| D[SSE-KMS<br/>CloudTrail log, key policy]
+  B -->|Aku bagi key tiap request| E[SSE-C<br/>AWS tak simpan key]
+  B -->|Encrypt dulu sebelum hantar| F[Client-Side<br/>AWS tak nampak plaintext]`,
+              caption: 'Default sejak 2023: semua bucket auto SSE-S3. Nak audit siapa decrypt + rotate key → SSE-KMS (tapi kena ingat KMS ada request limit). Compliance pegang key sendiri → SSE-C atau client-side.',
+            },
+            compare: [
+              {
+                label: 'S3 Encryption — 4 pilihan',
+                headers: ['Aspect', 'SSE-S3', 'SSE-KMS', 'SSE-C', 'Client-Side'],
+                rows: [
+                  ['Sapa urus key', 'AWS sepenuhnya', 'AWS KMS (kau control)', 'Kau bagi key tiap request', 'Kau, sebelum upload'],
+                  ['Audit trail', '❌', '🟢 CloudTrail', '❌', '❌'],
+                  ['Key rotation', 'Auto (AWS)', '🟢 Boleh atur', 'Manual', 'Manual'],
+                  ['Kos / had', 'Free', 'KMS request cost + throttle', 'Free', 'Free'],
+                  ['Best bila', 'Default, senang', 'Perlu audit + access control atas key', 'Wajib pegang key sendiri', 'AWS tak boleh nampak plaintext langsung'],
+                ],
+                takeaway: 'Default = SSE-S3 (auto ON sejak 2023). "Audit & control siapa guna key" → SSE-KMS. "App high-throughput tapi kena 503 sebab KMS throttle" → tukar ke SSE-S3 atau guna S3 Bucket Keys untuk kurangkan KMS calls.',
+              },
+              {
+                label: 'Versioning · Replication · Lock — guna bila',
+                headers: ['Feature', 'Apa dia', 'Exam trigger'],
+                rows: [
+                  ['Versioning', 'Simpan semua versi object; delete = delete marker, boleh restore', '"Protect from accidental delete/overwrite" → enable Versioning'],
+                  ['MFA Delete', 'Perlu MFA untuk delete version / matikan versioning', '"Extra protection against deletion"'],
+                  ['CRR (Cross-Region)', 'Auto-copy object ke bucket Region LAIN', '"DR / latency / compliance simpan di Region berbeza"'],
+                  ['SRR (Same-Region)', 'Auto-copy dalam Region sama, bucket lain', '"Aggregate logs / replicate prod→test sama Region"'],
+                  ['Object Lock (WORM)', 'Write-Once-Read-Many: object tak boleh delete/ubah sampai tarikh', '"Compliance, immutable, tak boleh padam" → Object Lock'],
+                ],
+                takeaway: 'Replication (CRR/SRR) WAJIB versioning ON di SUMBER dan DESTINASI. Replication hanya untuk object BARU selepas enable (guna S3 Batch Replication untuk yang lama).',
+              },
+            ],
+            scenario: 'App tetiba dapat banyak HTTP 503 "Slow Down" masa upload laju → bukan kena scale apa-apa, S3 tengah auto-scale; agih objek across MULTIPLE PREFIX (3,500 PUT / 5,500 GET per prefix/saat, prefix tak terhad). Nak hantar fail besar laju merentas benua → S3 Transfer Acceleration (guna edge CloudFront). Fail >100MB → guna Multipart Upload (wajib >5GB).',
+            tips: [
+              'Durability = 11 nines (99.999999999%) SEMUA storage class (kecuali One Zone — masih 11 nines tapi 1 AZ je, risiko bila AZ musnah). Availability lain-lain: Standard 99.99%, Standard-IA 99.9%, One Zone-IA 99.5%.',
+              'Consistency: STRONG read-after-write untuk semua operation (sejak Dec 2020) — PUT object baru terus boleh GET, tiada "eventual consistency" lagi. Soalan lama cakap eventual = jawapan dah usang.',
+              'Performance: 3,500 PUT/COPY/POST/DELETE + 5,500 GET/HEAD per PREFIX per saat. Prefix tak terhad → parallelize across prefix untuk scale. 503 Slow Down = tengah scale, retry with backoff.',
+              'Saiz: max 1 object = 5TB. Single PUT max 5GB. Multipart Upload: disyorkan >100MB, WAJIB >5GB. Multipart boleh resume + parallel part.',
+              'Encryption default: sejak Jan 2023 semua object baru auto SSE-S3 (AES-256). Nak audit/control key → SSE-KMS (hati2 KMS throttle → guna S3 Bucket Keys).',
+              'Security: Block Public Access (account + bucket level, default ON) > bucket policy/ACL. Bucket policy (resource-based JSON) untuk grant cross-account / public; ACL = legacy, AWS galak matikan. "Bucket tak sengaja public" → hidupkan Block Public Access.',
+              'Static website hosting: S3 boleh host static site (HTML/JS/CSS) tapi HTTP sahaja — nak HTTPS + custom domain → letak CloudFront depan.',
+              'Event notification: S3 boleh trigger SNS / SQS / Lambda / EventBridge bila object dibuat/dipadam (cth auto-process gambar bila upload).',
+            ],
+            docs: [
+              { label: 'S3 performance best practices', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/optimizing-performance.html' },
+              { label: 'S3 encryption options', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html' },
+              { label: 'S3 Replication', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html' },
+            ],
+            keywords: ['object storage', '11 nines durability', 'strong consistency', 'bucket policy', 'block public access', 'versioning', 'CRR', 'SRR', 'SSE-S3', 'SSE-KMS', 'SSE-C', 'multipart upload', '5TB', 'transfer acceleration', '503 slow down', 'prefix', 'static website', 'event notification'],
           },
           {
             shortName: 'S3 Glacier',
-            fullName: 'Amazon S3 Glacier',
-            ingat: '"S3 yang sejuk beku"',
-            gunaUntuk: 'Archiving, jarang access',
-            fungsi: 'Menyediakan arkib data jangka panjang dengan kos yang rendah',
-            contohGuna: 'Store old financial records, compliance archives, log archives',
-            keywords: ['archiving', 'long-term storage', 'infrequent access', 'cold storage'],
+            fullName: 'Amazon S3 Glacier (storage classes)',
+            ingat: '"S3 sejuk beku — murah, tapi tunggu lama nak retrieve"',
+            gunaUntuk: 'Archive jangka panjang, jarang/tak pernah access (compliance, backup lama)',
+            fungsi: 'Glacier = kelas storan S3 paling murah untuk ARKIB. Tiga jenis ikut berapa laju kau perlu data balik: Instant Retrieval (ms), Flexible Retrieval (minit–jam), Deep Archive (jam). Makin sejuk makin murah, tapi makin lama nak "cairkan" (restore). Nota: servis lama "Glacier Vault" yang berasingan dah legacy — exam & AWS sekarang guna S3 Glacier storage classes.',
+            contohGuna: 'Rekod kewangan 7 tahun, arkib perubatan, log compliance, backup yang mungkin tak pernah dibuka',
+            mermaid: {
+              label: 'Pilih Glacier class (decision tree)',
+              source: `flowchart TD
+  A[Data arkib, jarang access] --> B{Perlu balik berapa laju?}
+  B -->|Milliseconds, instant GET| C[Glacier Instant Retrieval<br/>min 90 hari]
+  B -->|Boleh tunggu minit-jam| D[Glacier Flexible Retrieval<br/>min 90 hari]
+  B -->|Boleh tunggu 12-48 jam, paling murah| E[Glacier Deep Archive<br/>min 180 hari]
+  D --> F{Nak laju ke murah?}
+  F -->|Urgent, 1-5 min| G[Expedited]
+  F -->|Default, 3-5 jam| H[Standard]
+  F -->|Murah, 5-12 jam| I[Bulk]`,
+              caption: 'Deep Archive TIADA Expedited — paling laju pun Standard ~12 jam. Kalau soalan kata "retrieve dalam minit" + Deep Archive = jawapan SALAH.',
+            },
+            compare: [
+              {
+                label: 'Glacier 3 classes — retrieval & kos',
+                headers: ['Aspect', 'Instant Retrieval', 'Flexible Retrieval', 'Deep Archive'],
+                rows: [
+                  ['Retrieval speed', '🟢 Milliseconds (terus GET)', 'Minit – jam (kena restore)', 'Jam (kena restore)'],
+                  ['Min storage duration', '90 hari', '90 hari', '180 hari'],
+                  ['Kos storage', 'Murah', 'Lagi murah', '🟢 Paling murah (~$0.00099/GB)'],
+                  ['Access pattern', 'Jarang, tapi kena segera bila perlu', 'Arkib, sekali-sekala', 'Arkib jangka sangat panjang'],
+                  ['Contoh', 'Medical imaging, news media lama', 'Backup, DR, log arkib', 'Compliance 7-10 thn, regulatory'],
+                ],
+                takeaway: 'Pilih ikut keperluan retrieval: "rarely access TAPI bila perlu kena ms" → Instant Retrieval (bukan Flexible/Deep). "Petabytes, 10-year retention, paling murah" → Deep Archive.',
+              },
+              {
+                label: 'Retrieval tiers — masa & kos (verified AWS docs)',
+                headers: ['Tier', 'Flexible Retrieval', 'Deep Archive', 'Kos'],
+                rows: [
+                  ['Expedited', '1–5 minit', '❌ Tiada', 'Paling mahal'],
+                  ['Standard', '3–5 jam', '~12 jam', 'Sederhana'],
+                  ['Bulk', '5–12 jam', '~48 jam', '🟢 Paling murah'],
+                ],
+                takeaway: 'Trap utama: Deep Archive TAK ADA Expedited. Glacier Instant Retrieval TAK PERLU restore langsung — terus GET macam Standard-IA.',
+              },
+            ],
+            scenario: 'Hospital simpan imej X-ray jarang dibuka TAPI bila doktor minta kena dapat dalam milisaat → S3 Glacier Instant Retrieval (bukan Flexible — Flexible kena tunggu minit-jam). Firma guaman simpan rekod 10 tahun, petabytes, hampir tak pernah buka, nak paling murah → S3 Glacier Deep Archive. Auto-pindah guna S3 Lifecycle Policy (Standard → IA → Glacier ikut umur object).',
+            tips: [
+              'Glacier Instant Retrieval: retrieve MILLISECONDS, tak payah restore job — terus GET. Untuk data jarang access tapi perlu segera (medical, news archive). Min 90 hari.',
+              'Glacier Flexible Retrieval (dulu nama "Glacier"): kena buat restore job dulu. Expedited 1-5min / Standard 3-5jam / Bulk 5-12jam. Min 90 hari.',
+              'Glacier Deep Archive: PALING MURAH. Restore Standard ~12 jam, Bulk ~48 jam. TIADA Expedited. Min 180 hari. Untuk compliance 7-10 tahun.',
+              'Min storage charge: kalau delete sebelum tempoh minimum (90/90/180 hari) tetap kena bayar baki tempoh — jangan letak data jangka pendek dalam Glacier.',
+              'S3 Object Lock + Glacier = WORM compliance (immutable, tak boleh padam sampai tarikh) — untuk regulatory (SEC, FINRA).',
+              'Lifecycle Policy: auto-transition object ikut umur (cth >30 hari → Standard-IA, >90 hari → Glacier Flexible, >365 hari → Deep Archive) + auto-expire/delete.',
+              'Trap: "rarely accessed + millisecond retrieval" = Instant Retrieval. "retrieve dalam minit" + Deep Archive = SALAH (Deep paling laju ~12 jam).',
+            ],
+            docs: [
+              { label: 'S3 Glacier storage classes', url: 'https://aws.amazon.com/s3/storage-classes/glacier/' },
+              { label: 'Archive retrieval options', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/restoring-objects-retrieval-options.html' },
+            ],
+            keywords: ['archiving', 'cold storage', 'Glacier Instant Retrieval', 'Glacier Flexible Retrieval', 'Glacier Deep Archive', 'restore job', 'Expedited', 'Standard', 'Bulk', 'min storage duration', 'lifecycle policy', 'WORM', '11 nines'],
           },
         ],
       },
@@ -2255,7 +2394,17 @@ export const domains: DomainData[] = [
               ],
               caption: 'Data masuk shards by partition key. Throughput = bilangan shards (1 shard = 1MB/s in, 2MB/s out). Retention 24h→365d → consumers boleh replay. Firehose ganti consumers ni dengan auto-deliver no-code.',
             },
-            scenario: '"Real-time, sub-second, multiple consumers, replay data" → Data Streams (shards + retention up to 365 days). "Load streaming data ke S3/Redshift/OpenSearch with no servers and no code" → Firehose.',
+            mermaid: {
+              label: 'Pilih ahli keluarga Kinesis (decision tree)',
+              source: `flowchart TD
+  A[Data streaming masuk] --> B{Nak buat apa?}
+  B -->|Custom real-time, replay, ramai consumer| C[Data Streams<br/>shards + code]
+  B -->|Hantar terus ke S3/Redshift/OpenSearch, no code| D[Data Firehose<br/>fully managed]
+  B -->|Transform/analisa stream guna SQL/Flink masa real-time| E[Managed Service for Apache Flink<br/>dulu: Kinesis Data Analytics]
+  B -->|Stream video untuk ML/playback| F[Video Streams]`,
+              caption: 'Nota: "Kinesis Data Analytics" dah ditukar nama jadi Amazon Managed Service for Apache Flink — soalan lama mungkin masih guna nama lama. 4 ahli: Data Streams (real-time + code), Firehose (auto-deliver no code), Managed Flink (proses/analisa stream), Video Streams (video).',
+            },
+            scenario: '"Real-time, sub-second, multiple consumers, replay data" → Data Streams (shards + retention up to 365 days). "Load streaming data ke S3/Redshift/OpenSearch with no servers and no code" → Firehose. "Analisa/transform streaming data guna SQL atau Apache Flink real-time" → Managed Service for Apache Flink (bekas Kinesis Data Analytics).',
             compare: {
               label: 'Data Streams vs Firehose',
               headers: ['Aspect', 'Kinesis Data Streams', 'Kinesis Data Firehose'],
@@ -2647,6 +2796,85 @@ export const domains: DomainData[] = [
         title: 'Analytics & Streaming',
         category: 'd3analytics',
         services: [
+          {
+            shortName: 'Redshift',
+            fullName: 'Amazon Redshift',
+            ingat: '"Data warehouse — OLAP, columnar, petabyte SQL analytics"',
+            gunaUntuk: 'Data warehouse: complex/recurring analytics atas structured data berskala besar',
+            fungsi: 'Petabyte-scale data warehouse untuk OLAP (analytics), BUKAN OLTP (transaksi → guna RDS). Simpan data secara COLUMNAR + compress → query aggregate (SUM, GROUP BY) atas berbilion baris jadi laju. Massively Parallel Processing (MPP): leader node agih query ke banyak compute node. Spectrum boleh query S3 terus tanpa load.',
+            contohGuna: 'BI/reporting atas data berkumpul (sales, finance), join besar merentas berjuta baris, dashboard berulang yang sama tiap hari',
+            detailsLabel: 'Redshift Anatomy (MPP)',
+            storageDetails: 'Leader Node → terima query, buat plan, agih ke compute node, kumpul hasil\nCompute Nodes → simpan data + jalankan query selari (MPP)\nRA3 + Managed Storage → compute & storage berasingan, bayar ikut guna; scale tanpa pindah data\nRedshift Spectrum → query data dalam S3 TERUS tanpa load ke cluster\nConcurrency Scaling → auto-tambah cluster sementara bila ramai user query serentak',
+            diagram: {
+              label: 'Redshift MPP + Spectrum flow',
+              steps: [
+                { nodes: [{ label: 'SQL Client / BI', sub: 'JDBC/ODBC', tone: 'c1' }] },
+                { nodes: [{ label: 'Leader Node', sub: 'plan + agih', tone: 'c5' }] },
+                { nodes: [
+                  { label: 'Compute 1', tone: 'c3' },
+                  { label: 'Compute 2', tone: 'c3' },
+                  { label: 'Compute 3', tone: 'c3' },
+                ] },
+                { nodes: [
+                  { label: 'Managed Storage', sub: 'columnar', tone: 'c4' },
+                  { label: 'Spectrum → S3', sub: 'query data lake', tone: 'c2' },
+                ] },
+              ],
+              caption: 'Leader node pecahkan query, compute nodes proses selari (MPP) atas data columnar. Spectrum extend query terus ke S3 tanpa load. Inilah sebab Redshift laju untuk aggregate besar — tapi LEMAH untuk single-row insert/update (itu kerja OLTP → RDS).',
+            },
+            mermaid: {
+              label: 'Pilih servis query/analytics (decision tree)',
+              source: `flowchart TD
+  A[Nak query / analyze data] --> B{Jenis workload?}
+  B -->|Transaksi, banyak insert/update baris tunggal| C[RDS / Aurora<br/>OLTP]
+  B -->|Analytics atas data besar| D{Berulang atau ad-hoc?}
+  D -->|Recurring, complex join, dashboard tetap| E[Redshift<br/>data warehouse OLAP]
+  D -->|Ad-hoc, sekali-sekala, data dalam S3| F[Athena<br/>serverless SQL on S3]
+  B -->|Custom Spark/Hadoop, kawalan penuh cluster| G[EMR<br/>big data framework]`,
+              caption: 'OLTP (transaksi) → RDS/Aurora. Analytics berulang/kompleks → Redshift. Ad-hoc SQL atas S3 tanpa setup → Athena. Custom Spark/Hadoop → EMR. Ni trap paling kerap di exam: jangan pilih Redshift untuk "ad-hoc, jarang query" (itu Athena) atau untuk OLTP (itu RDS).',
+            },
+            compare: [
+              {
+                label: 'Redshift vs Athena vs EMR vs RDS',
+                headers: ['Aspect', 'Redshift', 'Athena', 'EMR', 'RDS/Aurora'],
+                rows: [
+                  ['Jenis', 'Data warehouse (OLAP)', 'Serverless SQL on S3', 'Big-data cluster', 'Relational (OLTP)'],
+                  ['Data', 'Structured, loaded/Spectrum', 'Data dalam S3', 'Apa saja dalam S3/HDFS', 'Structured transaksi'],
+                  ['Server', 'Cluster (atau Serverless)', '🟢 Serverless, no infra', 'Kau urus cluster', 'Managed instance'],
+                  ['Kos model', 'Per node/jam atau RPU', 'Per TB di-scan', 'Per instance (Spot jimat)', 'Per instance/jam'],
+                  ['Best bila', 'Recurring complex analytics, BI', 'Ad-hoc, jarang, no setup', 'Custom Spark/Hadoop/ML', 'App transaksi (CRUD)'],
+                ],
+                takeaway: 'Recurring + complex + structured + perlu laju konsisten → Redshift. Sekali-sekala / jarang / tak nak urus apa-apa → Athena. Custom big-data processing → EMR. Transaksi → RDS. Jangan campur OLAP (Redshift) dengan OLTP (RDS).',
+              },
+              {
+                label: 'Redshift — features penting exam',
+                headers: ['Feature', 'Apa dia', 'Trigger'],
+                rows: [
+                  ['RA3 + Managed Storage', 'Compute & storage berasingan, scale sendiri', '"Scale compute tanpa bayar storage lebih"'],
+                  ['Redshift Spectrum', 'Query S3 TERUS tanpa load ke cluster', '"Query data warehouse + data lake S3 sekali"'],
+                  ['Redshift Serverless', 'Auto-scale RPU, no cluster management', '"Analytics tapi tak nak urus cluster / beban tak tetap"'],
+                  ['Concurrency Scaling', 'Auto-tambah cluster bila ramai query serentak', '"Banyak user query serentak, jangan slow / queue"'],
+                  ['Zero-ETL (Aurora→Redshift)', 'Data Aurora auto-flow ke Redshift, tak payah pipeline ETL', '"Analytics near-real-time tanpa bina ETL"'],
+                ],
+                takeaway: 'Spectrum = warehouse + S3 dalam satu query. Serverless = tak nak urus cluster. Concurrency Scaling = ramai user serentak. Zero-ETL = buang kerja bina pipeline Aurora→Redshift.',
+              },
+            ],
+            scenario: '"Dashboard BI berulang atas berbilion baris sales, perlu join kompleks laju & konsisten" → Redshift. "Banyak analyst query serentak waktu puncak, jangan beratur" → Concurrency Scaling. "Nak query data dalam Redshift DAN data lake S3 dalam satu SQL" → Redshift Spectrum. "Beban analytics tak menentu, tak nak urus cluster" → Redshift Serverless. Bukan Athena (ad-hoc/jarang), bukan RDS (OLTP).',
+            tips: [
+              'Redshift = OLAP/analytics (columnar, aggregate berjuta baris). RDS/Aurora = OLTP (transaksi, single-row read/write). Jangan keliru — soalan "transactional app" JANGAN jawab Redshift.',
+              'Columnar storage + compression = sebab Redshift laju untuk SUM/AVG/GROUP BY atas data besar, tapi teruk untuk insert/update satu-satu baris.',
+              'Redshift Spectrum vs Athena: dua-dua query S3. Spectrum = kau dah ada Redshift cluster, nak extend query ke S3. Athena = standalone, no cluster, ad-hoc.',
+              'RA3 nodes = compute & managed storage berasingan (scale independent). DC2 = compute+storage bercantum (legacy, dataset kecil).',
+              'Concurrency Scaling: auto add transient cluster untuk handle spike concurrent queries — per-second billing, ada free credits harian.',
+              'Multi-AZ: Redshift RA3 boleh Multi-AZ untuk HA. Cross-region snapshot untuk DR.',
+              'Zero-ETL integration: Aurora/RDS → Redshift tanpa bina ETL pipeline sendiri (near-real-time analytics atas data transaksi).',
+            ],
+            docs: [
+              { label: 'Redshift Spectrum', url: 'https://docs.aws.amazon.com/redshift/latest/dg/c-using-spectrum.html' },
+              { label: 'Concurrency Scaling', url: 'https://docs.aws.amazon.com/redshift/latest/dg/concurrency-scaling.html' },
+            ],
+            keywords: ['data warehouse', 'OLAP', 'columnar', 'MPP', 'RA3', 'managed storage', 'Redshift Spectrum', 'Redshift Serverless', 'concurrency scaling', 'zero-ETL', 'leader node', 'compute node', 'petabyte', 'BI analytics'],
+          },
           {
             shortName: 'QuickSight',
             fullName: 'Amazon QuickSight',

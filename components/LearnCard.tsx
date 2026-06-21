@@ -1,5 +1,6 @@
-import { ServiceCard, CompareTable, FlowDiagram, DiagramTone, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
+import { ServiceCard, CompareTable, FlowDiagram, MermaidSpec, CardImage, DiagramTone, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
 import GlossaryText from './GlossaryText'
+import MermaidDiagram from './ai/MermaidDiagram'
 
 interface LearnCardProps {
   service: ServiceCard
@@ -113,6 +114,47 @@ function ComparisonTable({ compare }: { compare: CompareTable }) {
   )
 }
 
+// Mermaid flowchart/decision-tree — rendered client-side. Same chrome as
+// FlowAnatomy (eyebrow label + caption) so the two read as one visual family.
+function MermaidBlock({ spec }: { spec: MermaidSpec }) {
+  return (
+    <div className="rounded-lg border border-aws-border/60 bg-white/[0.015] px-3 py-3">
+      {spec.label && (
+        <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-aws-muted mb-2.5">
+          {spec.label}
+        </p>
+      )}
+      <MermaidDiagram source={spec.source} />
+      {spec.caption && (
+        <p className="text-[0.7rem] text-aws-muted leading-relaxed mt-2">
+          <GlossaryText text={spec.caption} />
+        </p>
+      )}
+    </div>
+  )
+}
+
+// Static image (official AWS architecture diagram, etc.). Plain <img> so it
+// works in a server component without next/image config for remote hosts.
+function CardImageView({ image }: { image: CardImage }) {
+  return (
+    <figure className="rounded-lg border border-aws-border/60 bg-white/[0.015] px-3 py-3">
+      {image.label && (
+        <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-aws-muted mb-2.5">
+          {image.label}
+        </p>
+      )}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img src={image.src} alt={image.alt} className="max-w-full h-auto rounded-md mx-auto" loading="lazy" />
+      {image.caption && (
+        <figcaption className="text-[0.7rem] text-aws-muted leading-relaxed mt-2">
+          <GlossaryText text={image.caption} />
+        </figcaption>
+      )}
+    </figure>
+  )
+}
+
 export default function LearnCard({ service, category, sectionId }: LearnCardProps) {
   const styles = categoryStyles[category]
 
@@ -171,6 +213,16 @@ export default function LearnCard({ service, category, sectionId }: LearnCardPro
           {service.diagram &&
             (Array.isArray(service.diagram) ? service.diagram : [service.diagram]).map((d, i) => (
               <FlowAnatomy key={d.label ?? i} diagram={d} />
+            ))}
+
+          {service.mermaid &&
+            (Array.isArray(service.mermaid) ? service.mermaid : [service.mermaid]).map((m, i) => (
+              <MermaidBlock key={m.label ?? i} spec={m} />
+            ))}
+
+          {service.image &&
+            (Array.isArray(service.image) ? service.image : [service.image]).map((img, i) => (
+              <CardImageView key={img.label ?? img.src ?? i} image={img} />
             ))}
 
           {service.compare &&
