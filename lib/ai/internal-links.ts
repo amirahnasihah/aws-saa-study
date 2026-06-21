@@ -1,4 +1,4 @@
-import { allLabsFallback } from '@/lib/labs-fallback'
+import { labsLinkIndex } from '@/data/labsLinkIndex'
 
 export type InternalLink = {
   url: string
@@ -56,7 +56,7 @@ type IndexedLab = {
   titleWords: string[]     // lower-cased, non-generic words from the lab title
 }
 
-const labsIndex: IndexedLab[] = allLabsFallback().map((lab) => ({
+const labsIndex: IndexedLab[] = labsLinkIndex.map((lab) => ({
   slug: lab.slug,
   title: lab.title,
   titleWords: lab.title

@@ -98,6 +98,22 @@ Copy `.dev.vars.example` to `.dev.vars` with the same secret names. Wrangler rea
 
 Never commit `.dev.vars` or `.env` with real keys.
 
+## Worker size (free plan 3 MiB)
+
+Cloudflare Pages bundles all `@cloudflare/next-on-pages` function chunks into one Worker. The **free plan limit is 3 MiB (gzip)**.
+
+If deploy fails with `Worker exceeded the size limit of 3 MiB`:
+
+1. Run `bun run pages:build` locally and check sizes:
+   ```bash
+   find .vercel/output/static/_worker.js -name "*.func.js" -exec sh -c 'echo "$(gzip -c "$1" | wc -c) $1"' _ {} \; | sort -rn
+   ```
+2. This repo keeps AI link indexes compact (`data/labsLinkIndex.ts`, `data/deepNotesLinkIndex.ts`) via `scripts/generate-ai-link-indexes.ts` — **do not** import full `labsCatalog` / `awsServices` from edge API routes.
+3. Mermaid loads client-only (`next/dynamic` with `ssr: false`) so it is not in the Worker bundle.
+4. If still over limit: upgrade to Workers Paid ($5/mo) for **10 MiB**, or split heavy API routes to a separate Worker.
+
+`bun run deploy` runs the index generator before build automatically.
+
 ## D1 binding
 
 The `DB` binding is in `wrangler.jsonc` — no manual env var needed.

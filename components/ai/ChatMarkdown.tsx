@@ -1,9 +1,11 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useState } from 'react'
 import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import MermaidDiagram from '@/components/ai/MermaidDiagram'
+
+const MermaidDiagram = dynamic(() => import('@/components/ai/MermaidDiagram'), { ssr: false })
 
 // Markdown images are often model-invented URLs that 404. Render the image, but
 // fall back to a tidy captioned placeholder (instead of the browser's broken

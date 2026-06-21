@@ -1,10 +1,12 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import SiteFooter from '@/components/SiteFooter'
 import BookmarkIcon from '@/components/bookmarks/BookmarkIcon'
-import ChatMarkdown from '@/components/ai/ChatMarkdown'
 import { useAnswerBookmarksCtx } from '@/components/AnswerBookmarksContext'
+
+const ChatMarkdown = dynamic(() => import('@/components/ai/ChatMarkdown'), { ssr: false })
 
 const savedDate = (ts: number) => new Date(ts).toISOString().slice(0, 10)
 
