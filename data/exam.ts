@@ -49,6 +49,7 @@ export const delivery: {
       'A photo may be taken at check-in',
       'Unscheduled breaks allowed — timer keeps running',
       'You cannot leave the building during the exam',
+      'Scratch work: use the provided erasable note board — no personal paper or pens',
     ],
   },
   {
@@ -61,6 +62,7 @@ export const delivery: {
       'Pass the system test + workspace check first',
       'Stay on camera the entire time, no standing',
       "No breaks — don't leave the camera frame",
+      'No physical paper or pens — use the on-screen whiteboard/notes only',
     ],
   },
 ]

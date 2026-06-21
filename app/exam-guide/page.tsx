@@ -270,18 +270,31 @@ export default function ExamGuidePage() {
             </div>
           </div>
 
-          {/* Policy link */}
-          <p className="font-space-mono text-[0.6rem] text-aws-muted">
-            Full rules:{' '}
-            <a
-              href="https://aws.amazon.com/certification/policies/during-testing/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-c1 hover:underline"
-            >
-              aws.amazon.com/certification/policies/during-testing ↗
-            </a>
-          </p>
+          {/* Policy links */}
+          <div className="flex flex-col gap-1.5 font-space-mono text-[0.6rem] text-aws-muted">
+            <p>
+              Full rules:{' '}
+              <a
+                href="https://aws.amazon.com/certification/policies/during-testing/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-c1 hover:underline"
+              >
+                aws.amazon.com/certification/policies/during-testing ↗
+              </a>
+            </p>
+            <p>
+              Online (OnVUE) setup & rules:{' '}
+              <a
+                href="https://www.pearsonvue.com/us/en/aws/onvue.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-c1 hover:underline"
+              >
+                pearsonvue.com/aws/onvue ↗
+              </a>
+            </p>
+          </div>
         </section>
 
         {/* Cross-links */}
