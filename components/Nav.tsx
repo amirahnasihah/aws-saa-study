@@ -3,6 +3,7 @@
 import { useState, useEffect, type CSSProperties } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { navDomains } from '@/data/awsServices'
 import { navTransitionTypes } from '@/lib/nav-transition'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import FloatingBar from './FloatingBar'
@@ -178,6 +179,36 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                   <span className="font-space-mono text-[0.68rem] uppercase tracking-widest">{p.label}</span>
                   {p.active && <span className="ml-auto w-1.5 h-1.5 rounded-full bg-c1" />}
                 </Link>
+              ))}
+            </div>
+
+            {/* browse services — D1–D4 domain jump links */}
+            <div className="p-4 space-y-5">
+              <p className="font-space-mono text-[0.6rem] uppercase tracking-[0.2em] text-aws-muted">
+                Browse Services
+              </p>
+              {navDomains.map((domain) => (
+                <div key={domain.href}>
+                  <a
+                    href={domain.href}
+                    onClick={() => setMenuOpen(false)}
+                    className={`block font-space-mono text-[0.7rem] font-bold uppercase tracking-widest mb-2 ${domain.colorClass}`}
+                  >
+                    {domain.label}
+                  </a>
+                  <div className="flex flex-wrap gap-2">
+                    {domain.items.map((item) => (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        onClick={() => setMenuOpen(false)}
+                        className={`font-space-mono text-[0.65rem] px-2.5 py-1 rounded-full border transition-all hover:bg-white/6 ${item.className}`}
+                      >
+                        {item.label}
+                      </a>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           </div>
