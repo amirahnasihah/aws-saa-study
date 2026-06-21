@@ -25,6 +25,16 @@ export type ColorCategory =
 export const serviceSlug = (sectionId: string, shortName: string): string =>
   `${sectionId}-${shortName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')}`
 
+// Structured side-by-side comparison rendered as a real table (VPC-page style).
+// `headers[0]` labels the attribute column; the rest are the things being compared.
+// Each row is [attribute, ...valuesPerComparedColumn] — keep row length === headers length.
+export interface CompareTable {
+  label?: string
+  headers: string[]
+  rows: string[][]
+  takeaway?: string
+}
+
 export interface ServiceCard {
   shortName: string
   fullName: string
@@ -35,6 +45,7 @@ export interface ServiceCard {
   scenario?: string
   storageDetails?: string
   detailsLabel?: string
+  compare?: CompareTable
   tips?: string[]
   docs?: Array<{ label: string; url: string }>
   keywords: string[]
@@ -308,6 +319,16 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Automated threat detection: crypto-mining, unusual API calls, compromised instances',
             fungsi: 'Pengesanan ancaman menggunakan ML pada CloudTrail, VPC Flow Logs, DNS logs.',
             scenario: '"EC2 buat unusual API calls ke cryptocurrency mining" → GuardDuty detect and alert. Tak perlu install agents.',
+            compare: {
+              label: 'GuardDuty vs Inspector vs Macie — 3 yang selalu keliru',
+              headers: ['Service', 'What it does', 'Data / target', 'Keyword'],
+              rows: [
+                ['GuardDuty', 'Threat detection (ML)', 'CloudTrail, VPC Flow, DNS logs', 'unusual activity, crypto-mining, compromised'],
+                ['Inspector', 'Vulnerability scan', 'EC2, ECR images, Lambda', 'CVE, patch, vulnerability'],
+                ['Macie', 'Sensitive-data discovery', 'S3 objects', 'PII, credit card, GDPR, S3'],
+              ],
+              takeaway: 'Threats from logs → GuardDuty. Software vulnerabilities/CVEs → Inspector. PII in S3 → Macie. (Investigate a GuardDuty finding → Detective.)',
+            },
             tips: [
               'GuardDuty → detect threats (SIEM-like). Detective → investigate findings (forensics). Ingat: GD = detect, Detective = investigate',
               'GuardDuty findings integrate dengan Security Hub untuk centralized view',
@@ -670,8 +691,20 @@ export const domains: DomainData[] = [
             ingat: '"SG = Smart/Stateful (instance). NACL = Needs-both-ways/stateless (subnet)"',
             gunaUntuk: 'Two-layer defence: SG guards each EC2, NACL guards each subnet',
             fungsi: 'SG dan NACL bekerja bersama sebagai firewall berlapis. SG (stateful) bekerja pada peringkat EC2 — ingat connections, reply auto dibenarkan, allow-only rules. NACL (stateless) bekerja pada peringkat subnet — check tiap packet, perlu explicit rules untuk inbound DAN outbound, boleh deny IPs.',
-            storageDetails: 'Level → SG: EC2/ENI | NACL: Subnet boundary\nStateful → SG: YES (reply auto OK) | NACL: NO (check every packet)\nRules → SG: Allow only | NACL: Allow + Deny\nDefault → SG: Deny all in, Allow all out | NACL: Default = Allow all\nCan deny IPs → SG: NO | NACL: YES\nRule order → SG: All rules checked | NACL: Lowest number first',
-            detailsLabel: 'SG vs NACL',
+            compare: {
+              label: 'Security Group vs NACL',
+              headers: ['Aspect', 'Security Group', 'Network ACL'],
+              rows: [
+                ['Level', 'EC2 instance / ENI', 'Subnet boundary'],
+                ['State', '🟢 Stateful — reply auto-allowed', '🔴 Stateless — check every packet both ways'],
+                ['Rules', 'Allow only', 'Allow + Deny'],
+                ['Default', 'Deny all in, allow all out', 'Default NACL: allow all · custom NACL: deny all'],
+                ['Block an IP', '❌ Cannot deny', '✅ Deny rule (lowest number wins)'],
+                ['Evaluation', 'All rules combined', 'Rules in order, stops at first match'],
+                ['Reference SG?', '✅ Can reference another SG as source', '❌ CIDR ranges only'],
+              ],
+              takeaway: '"Block a specific IP range" → NACL (only NACL can Deny). "Allow app→DB on port 3306 only" → Security Group. Guna dua-dua = defense-in-depth.',
+            },
             scenario: '"Block specific IP range" → NACL Deny rule (SG cannot deny). "Allow web servers talk to DB on port 3306 only" → Security Group. Best practice: guna kedua-dua untuk defense-in-depth.',
             tips: [
               'SG = Stateful (ingat conversations). NACL = Stateless (check every packet)',
@@ -789,6 +822,19 @@ export const domains: DomainData[] = [
             gunaUntuk: 'High availability for RDS — automatic failover',
             fungsi: 'Menyimpan satu salinan database standby dalam Availability Zone berbeza yang akan take over secara automatik jika primary fail',
             scenario: 'Production RDS kat AZ-1 fail — automatic failover ke standby kat AZ-2 dalam 1-2 minit. Same connection endpoint, app tak perlu tukar config. BUKAN untuk scale reads — guna Read Replicas untuk tu.',
+            compare: {
+              label: 'Multi-AZ vs Read Replicas — THE classic exam comparison',
+              headers: ['Aspect', 'Multi-AZ', 'Read Replicas'],
+              rows: [
+                ['Purpose', 'High availability (failover)', 'Scale read traffic'],
+                ['Replication', '🟢 Synchronous', '🟡 Asynchronous'],
+                ['Standby usable?', '❌ Standby idle — no reads', '✅ Serves read queries'],
+                ['Failover', 'Automatic (~1–2 min)', 'Manual — can promote to standalone'],
+                ['Region', 'Same region (across AZs)', 'Same OR cross-region'],
+                ['How many', '1 standby', 'Up to 15'],
+              ],
+              takeaway: 'Multi-AZ = HA / disaster survival (same region). Read Replicas = read scaling + cross-region reads. Soalan "reporting queries slow down prod" → Read Replica. "Survive an AZ outage" → Multi-AZ. Boleh guna dua-dua sekali.',
+            },
             tips: [
               'Automated backups: AWS backup daily (during backup window) + transaction logs — boleh restore ke ANY point-in-time dalam retention period (1-35 hari). Auto-deleted bila instance dipadam.',
               'Manual snapshots: kau trigger sendiri, bila-bila masa — KEKAL walaupun RDS instance dipadam. Guna untuk "before major upgrade" atau long-term retention.',
@@ -899,6 +945,19 @@ export const domains: DomainData[] = [
             fungsi: 'Fully managed NoSQL database. Auto-scale, no servers. DynamoDB Streams capture changes untuk event-driven patterns. DAX (DynamoDB Accelerator) untuk microsecond reads. Global Tables untuk multi-region active-active.',
             contohGuna: 'Shopping cart, user sessions, real-time leaderboards, gaming scores — workloads yang perlu high throughput, low latency, dan serverless.',
             scenario: '"Serverless NoSQL millisecond latency at any scale" → DynamoDB. "Microsecond reads for DynamoDB" → DAX. "Multi-region active-active database" → DynamoDB Global Tables. "Capture DynamoDB changes → trigger Lambda" → DynamoDB Streams.',
+            compare: {
+              label: 'LSI vs GSI — secondary indexes',
+              headers: ['Aspect', 'LSI (Local)', 'GSI (Global)'],
+              rows: [
+                ['Partition key', 'SAME as base table', 'Can be DIFFERENT'],
+                ['Sort key', 'Alternate sort key', 'Different partition + sort key'],
+                ['When created', '🔴 Only at table creation', '🟢 Anytime (create/delete)'],
+                ['Capacity', 'Shares base table throughput', 'Own provisioned RCU/WCU'],
+                ['Consistency', 'Strong OR eventual', 'Eventual only'],
+                ['Limit per table', '5', '20'],
+              ],
+              takeaway: '"Alternate sort order, must define at creation, same partition key" → LSI. "New query pattern, create anytime, own capacity" → GSI.',
+            },
             tips: [
               'DynamoDB = NoSQL (key-value/document). Aurora/RDS = SQL (relational)',
               'DAX = DynamoDB Accelerator = microsecond reads (in-memory cache for DynamoDB)',
@@ -1089,6 +1148,16 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Petabyte-scale data transfer bila internet terlalu lambat/mahal, atau edge computing',
             fungsi: 'Physical devices: Snowcone (8-14TB, smallest, edge compute), Snowball Edge Storage Optimized (210TB), Snowball Edge Compute Optimized (28TB NVMe, 104 vCPUs). Encrypt data, hantar ke AWS, AWS load ke S3.',
             scenario: '"Transfer 100TB data tapi internet ambil berbulan-bulan atau bandwidth mahal" → Snow Family. Rule of thumb: >1 week via internet → consider Snowball. Petabyte-scale → order multiple Snowball Edge devices.',
+            compare: {
+              label: 'Pick a Snow device by data size + compute',
+              headers: ['Device', 'Capacity', 'Pick when'],
+              rows: [
+                ['Snowcone', '8TB HDD / 14TB SSD', 'Small, rugged, portable; light edge + transfer'],
+                ['Snowball Edge Storage Optimized', '210TB NVMe', 'Large-scale data migration (default Snowball answer)'],
+                ['Snowball Edge Compute Optimized', '28TB · 104 vCPUs · 416GB RAM', 'Edge ML inference / video processing'],
+              ],
+              takeaway: 'Pilih ikut data size + compute need. >1 week via internet → go Snow. Online migration to S3/EFS (network available) → DataSync, bukan Snow.',
+            },
             tips: [
               'Snowcone: 8TB HDD or 14TB SSD. Smallest, lightest (4.5 lbs). Edge computing + data transfer. Battery-powered option. Use DataSync agent to send data online',
               'Snowball Edge Storage Optimized: 210TB NVMe. For large-scale data migration. Supports S3-compatible storage, NFS, EC2 compute',
@@ -1222,6 +1291,17 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Run containers',
             fungsi: 'Mengurus dan menjalankan Docker containers pada cluster',
             contohGuna: 'Run microservices dalam Docker, e-commerce modules',
+            compare: {
+              label: 'EC2 launch type vs Fargate',
+              headers: ['Aspect', 'EC2 launch type', 'Fargate'],
+              rows: [
+                ['Infrastructure', '🔴 You manage EC2 instances', '🟢 Serverless — AWS manages it'],
+                ['Patching/scaling hosts', 'Your responsibility', 'No hosts to manage'],
+                ['Pricing', 'Pay for EC2 instances (per-instance)', 'Pay per task vCPU + memory'],
+                ['Best for', 'Cost control at scale, GPU, special host config', 'Variable load, least ops overhead'],
+              ],
+              takeaway: '"Least operational overhead / no servers to manage" → Fargate. "Need control over the host (GPU, large reserved fleet, cheaper at steady scale)" → EC2 launch type.',
+            },
             tips: [
               'Task Definition = JSON template yang describe containers untuk application (image, CPU, memory, ports, env vars, volumes)',
               'Task Definition BUKAN: IAM template, bukan service yang launch clusters, bukan program yang run — ia BLUEPRINT untuk containers',
@@ -1557,6 +1637,18 @@ export const domains: DomainData[] = [
             storageDetails: 'Visibility Timeout → Message invisible semasa diproses (max 12 jam). Jika consumer mati sebelum siap → message visible semula selepas timeout\nDelay Seconds → Delay sebelum message pertama kali visible dalam queue (max 15 minit)\nDead Letter Queue (DLQ) → Message yang gagal diproses N kali dihantar ke DLQ untuk debug\nMessage Retention → Default 4 hari, max 14 hari',
             detailsLabel: 'SQS Key Concepts',
             scenario: 'Spot instance terminated masa process SQS message → message TIDAK hilang. Ia akan visible semula selepas Visibility Timeout expired. Message hanya deleted bila consumer call DeleteMessage API selepas berjaya process.',
+            compare: {
+              label: 'Standard vs FIFO queue',
+              headers: ['Aspect', 'Standard', 'FIFO'],
+              rows: [
+                ['Ordering', 'Best-effort (can arrive out of order)', '🟢 Strict order (per MessageGroupId)'],
+                ['Delivery', 'At-least-once (can duplicate)', 'Exactly-once (deduplication)'],
+                ['Throughput', 'Nearly unlimited', '300 msg/s (3000 with batching)'],
+                ['Name suffix', 'any', 'must end in .fifo'],
+                ['Use when', 'Max throughput, dupes OK', 'Order + no duplicates matter'],
+              ],
+              takeaway: '"Duplicate processing must be eliminated" or "order must be preserved" → FIFO. Default high-throughput decoupling → Standard.',
+            },
             tips: [
               'Cross-account SQS access: guna SQS RESOURCE-BASED policy (queue policy) pada queue — bukan IAM policy dalam source account',
               'IAM policy dalam target account SAHAJA tidak cukup untuk cross-account SQS access. Queue policy mesti explicitly allow source account principal',
@@ -1594,12 +1686,28 @@ export const domains: DomainData[] = [
           },
           {
             shortName: 'Kinesis',
-            fullName: 'Amazon Kinesis',
-            ingat: '"SQS tapi real-time streaming"',
-            gunaUntuk: 'Real-time data streaming & analytics',
-            fungsi: 'Memproses dan menganalisis data streaming secara real-time',
-            contohGuna: 'Real-time analytics, live dashboard, clickstream data',
-            keywords: ['real-time', 'streaming', 'data pipeline', 'analytics'],
+            fullName: 'Amazon Kinesis (Data Streams vs Firehose)',
+            ingat: '"Streaming pipe — Streams = real-time + code, Firehose = auto-deliver no code"',
+            gunaUntuk: 'Ingest & process real-time streaming data (logs, clickstream, IoT, metrics)',
+            fungsi: 'Kinesis Data Streams (KDS): real-time, data dalam shards, custom consumers baca dengrn code (Lambda/KCL). Retention default 24 jam, boleh extend sampai 365 hari. Kinesis Data Firehose: near-real-time (buffer ~60s/MB), fully managed, ZERO code — auto-deliver ke S3, Redshift, OpenSearch, Splunk, boleh transform guna Lambda.',
+            contohGuna: 'Live clickstream/IoT telemetry yang perlu custom real-time processing → Data Streams. "Just load streaming logs into S3/Redshift tanpa manage apa-apa" → Firehose.',
+            scenario: '"Real-time, sub-second, multiple consumers, replay data" → Data Streams (shards + retention up to 365 days). "Load streaming data ke S3/Redshift/OpenSearch with no servers and no code" → Firehose.',
+            compare: {
+              label: 'Data Streams vs Firehose',
+              headers: ['Aspect', 'Kinesis Data Streams', 'Kinesis Data Firehose'],
+              rows: [
+                ['Latency', 'Real-time (~200ms)', 'Near-real-time (min ~60s buffer)'],
+                ['Management', 'You manage shards + consumers', '🟢 Fully managed, serverless'],
+                ['Consumers', 'Custom code (Lambda, KCL apps)', 'Fixed targets: S3, Redshift, OpenSearch, Splunk'],
+                ['Storage / replay', 'Retention 24h → 365 days, replayable', 'No storage — delivers then gone'],
+                ['Scaling', 'Provision/adjust shards', 'Auto-scales'],
+              ],
+              takeaway: '"Custom real-time processing / replay / multiple apps read same stream" → Data Streams. "Just deliver streaming data to a store, no code" → Firehose.',
+            },
+            docs: [
+              { label: 'Change data retention period', url: 'https://docs.aws.amazon.com/streams/latest/dev/kinesis-extended-retention.html' },
+            ],
+            keywords: ['real-time', 'streaming', 'data pipeline', 'analytics', 'Data Streams', 'Firehose', 'shards', 'retention', 'clickstream', 'IoT', 'replay', 'serverless delivery'],
           },
           {
             shortName: 'API Gateway',
@@ -2117,6 +2225,17 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Workload tak menentu, short-term, testing',
             fungsi: 'Menyediakan kapasiti compute tanpa komitmen jangka panjang pada kadar tetap per jam',
             scenario: 'Startup baru launch app, tak tahu lagi berapa traffic. Atau developer nak test environment kejap je — tak nak commit lama.',
+            compare: {
+              label: 'EC2 purchasing options — pick per workload',
+              headers: ['Option', 'Discount', 'Commit', 'Best for'],
+              rows: [
+                ['On-Demand', 'None (most $)', 'None', 'Spiky / unknown / short-term'],
+                ['Reserved Instances', 'Up to 72%', '1 or 3 yr (instance type)', 'Steady 24/7 predictable workload'],
+                ['Savings Plans', 'Up to 66%', '1 or 3 yr ($/hr spend)', 'Steady but want flexibility (any type/region)'],
+                ['Spot', 'Up to 90%', 'None (interruptible)', 'Fault-tolerant batch / can resume'],
+              ],
+              takeaway: '"Steady 24/7" → RI/Savings Plan. "Flexible across instance types" → Savings Plan. "Interruptible batch" → Spot. "Unpredictable / short-term" → On-Demand. NEVER Spot for critical stateful prod.',
+            },
             keywords: ['no commitment', 'flexible', 'short-term', 'highest cost'],
           },
           {
@@ -2285,6 +2404,18 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Cache frequent queries, reduce RDS cost',
             fungsi: 'Menyediakan in-memory caching untuk mengurangkan beban dan kos pada database utama',
             scenario: 'E-commerce app — product listing query kena berjuta kali sehari. Tanpa cache, RDS kena scale up (mahal). Dengan ElastiCache (Redis), query popular disimpan dalam memory — RDS tak terlalu terbeban, kos lebih rendah.',
+            compare: {
+              label: 'Redis vs Memcached',
+              headers: ['Aspect', 'Redis', 'Memcached'],
+              rows: [
+                ['Data structures', 'Rich (lists, sets, sorted sets, pub/sub)', 'Simple key-value only'],
+                ['Persistence', '✅ Snapshots / backup', '❌ None — data lost on restart'],
+                ['Replication + Multi-AZ', '✅ Yes (auto-failover)', '❌ No'],
+                ['Threading', 'Single-threaded', '🟢 Multi-threaded'],
+                ['Use case', 'Leaderboards, session store, pub/sub, HA cache', 'Simple cache, scale out horizontally'],
+              ],
+              takeaway: 'Perlu persistence / replication / Multi-AZ / complex data → Redis. Perlu simple multi-threaded cache, horizontal scale → Memcached. Default exam answer biasanya Redis.',
+            },
             tips: [
               'ElastiCache for Redis: sub-millisecond latency, key-value + data structures (lists, sets, sorted sets), persistence (snapshots), replication, Multi-AZ auto-failover',
               'ElastiCache for Memcached: multi-threaded, simple key-value only, NO persistence, NO replication — data hilang bila node restart/fail',

@@ -1,10 +1,68 @@
-import { ServiceCard, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
+import { ServiceCard, CompareTable, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
 import GlossaryText from './GlossaryText'
 
 interface LearnCardProps {
   service: ServiceCard
   category: ColorCategory
   sectionId: string
+}
+
+// Per-column tint for the compared columns (skips the attribute column).
+// Cycles c2/c5/c4 so 2- and 3-way comparisons stay visually distinct — same
+// palette the bespoke VPC-page tables use.
+const compareHeadTint = ['text-c2 bg-c2/5', 'text-c5 bg-c5/5', 'text-c4 bg-c4/5']
+const compareCellTint = ['bg-c2/[0.03]', 'bg-c5/[0.03]', 'bg-c4/[0.03]']
+
+function ComparisonTable({ compare }: { compare: CompareTable }) {
+  const [attrHeader, ...valueHeaders] = compare.headers
+  return (
+    <div className="rounded-lg border border-aws-border/60 overflow-hidden">
+      {compare.label && (
+        <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-aws-muted px-3 pt-2.5 pb-1.5">
+          {compare.label}
+        </p>
+      )}
+      <div className="overflow-x-auto">
+        <table className="w-full text-[0.78rem] border-collapse">
+          <thead>
+            <tr className="border-b border-aws-border">
+              <th className="font-space-mono text-[0.55rem] uppercase tracking-widest text-aws-muted text-left p-2.5 align-bottom">
+                {attrHeader}
+              </th>
+              {valueHeaders.map((h, i) => (
+                <th
+                  key={h}
+                  className={`font-space-mono text-[0.55rem] uppercase tracking-widest text-left p-2.5 align-bottom ${compareHeadTint[i % compareHeadTint.length]}`}
+                >
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {compare.rows.map(([attr, ...values], r) => (
+              <tr key={attr} className={`border-b border-aws-border/40 ${r % 2 !== 0 ? 'bg-white/[0.015]' : ''}`}>
+                <td className="font-space-mono font-bold text-[0.62rem] text-aws-muted p-2.5 align-top whitespace-nowrap">
+                  {attr}
+                </td>
+                {values.map((value, i) => (
+                  <td key={i} className={`text-aws-text p-2.5 align-top leading-snug ${compareCellTint[i % compareCellTint.length]}`}>
+                    <GlossaryText text={value} />
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      {compare.takeaway && (
+        <p className="text-[0.78rem] text-aws-text leading-relaxed px-3 py-2.5 bg-amber-500/5 border-t border-amber-500/15">
+          <span className="text-amber-300 font-bold">Ingat: </span>
+          <GlossaryText text={compare.takeaway} />
+        </p>
+      )}
+    </div>
+  )
 }
 
 export default function LearnCard({ service, category, sectionId }: LearnCardProps) {
@@ -61,6 +119,8 @@ export default function LearnCard({ service, category, sectionId }: LearnCardPro
               </div>
             </div>
           )}
+
+          {service.compare && <ComparisonTable compare={service.compare} />}
 
           {service.scenario && (
             <div className={`rounded-lg px-3 py-2.5 border ${styles.scenario}`}>
