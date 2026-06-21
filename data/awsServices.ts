@@ -700,6 +700,19 @@ export const domains: DomainData[] = [
               ],
               takeaway: '"Customer-exclusive control / dedicated hardware / FIPS 140-2 Level 3" → CloudHSM. Anything else (normal encrypt-at-rest for AWS services) → KMS. KMS boleh guna CloudHSM sebagai custom key store kalau perlu both.',
             },
+            mermaid: {
+              label: 'Pilih KMS key type yang betul',
+              source: `flowchart TD
+  A[Nak encrypt / manage key] --> B{Perlu dedicated hardware<br/>FIPS 140-2 Level 3<br/>exclusive control?}
+  B -->|Ya| C[CloudHSM<br/>single-tenant HSM]
+  B -->|Tidak| D{Digital signing /<br/>asymmetric encryption?}
+  D -->|Ya| E[Asymmetric CMK<br/>public/private key pair]
+  D -->|Tidak, symmetric| F{Perlu control penuh:<br/>custom policy, rotation, audit?}
+  F -->|Ya| G[Customer Managed Key CMK]
+  F -->|Tak, terhad satu service| H[AWS Managed Key<br/>aws/service-name]
+  F -->|Langsung tak nak urus| I[AWS Owned Key<br/>free, tak boleh audit]`,
+              caption: 'Dedicated HW + FIPS Level 3 + kawalan eksklusif → CloudHSM. Sign/asymmetric → Asymmetric CMK. Nak custom policy + rotation + audit penuh → Customer Managed Key. Terhad satu service, tak nak customize → AWS Managed Key. Zero management → AWS Owned Key.',
+            },
             keywords: ['encryption at rest', 'CMK', 'key rotation', 'SSE-KMS', 'envelope encryption', 'CloudTrail audit', 'asymmetric keys', 'digital signing', 'multi-region keys', 'aws:SourceVpce', 'CloudHSM', 'FIPS 140-2', 'single-tenant', 'custom key store'],
           },
           {
@@ -842,6 +855,15 @@ export const domains: DomainData[] = [
                 ['Keyword', '"who deleted…", "audit log of API"', '"alarm when CPU > 80%", "log metrics"', '"is this resource compliant", "config drift"'],
               ],
               takeaway: 'CloudTrail = WHO DID WHAT (API audit). CloudWatch = WHAT IS HAPPENING NOW (metrics/alarms). Config = IS IT COMPLIANT + WHAT CHANGED (resource state history). Soalan sebut "compliance + configuration over time" → Config, bukan CloudTrail.',
+            },
+            mermaid: {
+              label: 'CloudTrail vs CloudWatch vs Config — pilih ikut soalan',
+              source: `flowchart TD
+  A[Soalan tanya apa?] --> B{Fokus soalan?}
+  B -->|Siapa buat apa<br/>API audit, forensics| C[CloudTrail<br/>who did what, when]
+  B -->|Apa berlaku sekarang<br/>metrics, alarm, logs| D[CloudWatch<br/>monitoring + alerting]
+  B -->|Resource compliant?<br/>apa config berubah?| E[AWS Config<br/>config history + drift]`,
+              caption: '"Who deleted / audit log of API calls" → CloudTrail. "Alarm bila CPU > 80%, monitor logs" → CloudWatch. "Is this resource compliant, what changed over time, config drift" → AWS Config.',
             },
             keywords: ['API audit', 'who did what', 'compliance', 'forensics', 'account activity', '90-day retention', 'CloudTrail Lake', 'SQL query', 'long-term retention', '7 years', 'management events', 'data events', 'control plane', 'data plane', 'S3 object-level', 'Lambda invocations', 'multi-region trail', 'Insight Events', 'vs CloudWatch', 'vs Config'],
           },
