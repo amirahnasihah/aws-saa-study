@@ -3256,7 +3256,31 @@ export const domains: DomainData[] = [
               ],
               caption: 'S3 simpan data → Glue Crawler discover schema isi Data Catalog → Athena query guna SQL → QuickSight visualize. Tiada server/cluster untuk urus. Ini "serverless analytics" classic — kalau soalan kata "no infrastructure / serverless / query S3 directly", ini jawapannya (bukan Redshift/EMR).',
             },
-            scenario: '"Analyse CloudTrail logs atau ALB access logs dalam S3 guna SQL" → Athena. "Ad-hoc analysis tanpa setup database" → Athena. Bukan Redshift (yang untuk structured, recurring analytics dengan dedicated cluster).',
+            compare: [
+              {
+                label: 'Athena — cara kurangkan kos (kos = data di-scan)',
+                headers: ['Teknik', 'Kenapa jimat', 'Kesan'],
+                rows: [
+                  ['Columnar format (Parquet/ORC)', 'Athena scan kolum yang perlu sahaja, bukan seluruh baris', '🟢 Scan ↓ banyak + laju'],
+                  ['Partition data (by date/region)', 'Athena langkau partition yang tak kena filter WHERE', '🟢 Scan ↓ ikut partition pruning'],
+                  ['Compress (gzip/Snappy)', 'Saiz fail kecil = byte di-scan kurang', '🟢 Kos ↓'],
+                  ['SELECT kolum tertentu (bukan SELECT *)', 'Kurangkan kolum dibaca', '🟢 Scan ↓'],
+                ],
+                takeaway: 'Kos Athena = jumlah data DI-SCAN, bukan bilangan query. Parquet/ORC + partition + compress = combo standard untuk turunkan kos & masa. Soalan "kurangkan kos Athena" → convert ke columnar + partition.',
+              },
+              {
+                label: 'Athena vs Redshift Spectrum vs Redshift',
+                headers: ['Aspect', 'Athena', 'Redshift Spectrum', 'Redshift'],
+                rows: [
+                  ['Perlu cluster?', '🟢 Tidak (serverless)', '🔴 Ya (Redshift cluster)', '🔴 Ya'],
+                  ['Data di mana', 'S3', 'S3 (extend dari cluster)', 'Loaded dalam cluster'],
+                  ['Guna bila', 'Ad-hoc, jarang, no setup', 'Dah ada Redshift, nak query S3 sekali', 'Recurring complex analytics'],
+                  ['Kos model', 'Per TB di-scan', 'Per TB di-scan (+ cluster)', 'Per node/jam atau RPU'],
+                ],
+                takeaway: 'Ad-hoc tanpa cluster → Athena. Dah ada Redshift, nak gabung query warehouse + S3 → Spectrum. Recurring/complex dengan prestasi konsisten → Redshift loaded. Dua-dua Athena & Spectrum query S3, beza pada "ada cluster ke tak".',
+              },
+            ],
+            scenario: '"Analyse CloudTrail logs atau ALB access logs dalam S3 guna SQL" → Athena. "Ad-hoc analysis tanpa setup database" → Athena. "Kurangkan kos query S3" → convert ke Parquet + partition. Bukan Redshift (yang untuk structured, recurring analytics dengan dedicated cluster).',
             tips: [
               'Kurangkan kos Athena: data di-scan = duit. Guna columnar format (Parquet/ORC) + PARTITION data (by date/region) + compress → scan kurang, murah + laju',
               'Serverless analytics pipeline: S3 (store) → Glue (catalog/ETL) → Athena (query) → QuickSight (visualize). Hafal urutan ni',
@@ -3267,16 +3291,64 @@ export const domains: DomainData[] = [
           {
             shortName: 'Glue',
             fullName: 'AWS Glue',
-            ingat: '"Penyambung data — ETL serverless dan data catalog"',
+            ingat: '"Crawler endus schema → Catalog simpan → ETL Job transform. Glue = gam yang sambung data lake."',
             gunaUntuk: 'ETL jobs, data catalog for data lake, prepare and transform data for analytics',
-            fungsi: 'Glue Data Catalog = metadata store untuk semua data assets (S3, RDS, Redshift). Glue ETL = serverless Spark jobs untuk transform data. Glue Crawler = auto-discover dan catalog schema dari S3/databases.',
-            scenario: '"Transform raw CSV dalam S3 ke Parquet format untuk Athena" → Glue ETL job. "Auto-catalog all data sources for data lake" → Glue Crawler + Data Catalog. Keywords: ETL, data lake, data catalog, transform, Spark.',
+            fungsi: 'Glue = serverless ETL + metadata layer untuk data lake. Glue Data Catalog = kedai metadata pusat (table/column) untuk semua data assets (S3, RDS, Redshift) — Athena, EMR, Redshift Spectrum semua baca katalog yang sama. Glue Crawler = auto-endus (discover) schema dari sumber dan ISI Data Catalog. Glue ETL Job = serverless Spark job untuk transform data (cth CSV → Parquet). Bayar per DPU-hour, tiada cluster untuk diurus.',
+            detailsLabel: 'Glue — komponen utama',
+            storageDetails: 'Data Catalog → kedai metadata pusat (database, table, column, partition). Satu sumber kebenaran untuk Athena, EMR, Redshift Spectrum, Lake Formation\nCrawler → connect ke sumber (S3/JDBC/DynamoDB), infer schema, ISI Data Catalog. Boleh jadual berkala\nClassifier → kenal pasti format data (CSV/JSON/Parquet/custom grok); Crawler panggil Classifier untuk tentukan schema\nETL Job → serverless Spark (atau Python shell) yang transform data; auto-generate kod, bayar per DPU-hour\nTrigger / Workflow → orchestration: jalankan job ikut jadual, event, atau on-demand (rantai crawler → job)\nDataBrew → visual data prep, no-code (250+ transformation) untuk pembersihan data\nGlue Studio → antara muka visual drag-drop untuk bina ETL pipeline',
+            mermaid: {
+              label: 'Anatomy komponen Glue (crawler → catalog → job)',
+              source: `flowchart TD
+  SRC["📁 Sumber data<br/>S3 · RDS · DynamoDB · JDBC"] --> CR["Glue Crawler<br/>connect + infer schema"]
+  CR -->|"panggil"| CLS["Classifier<br/>kenal format<br/>(CSV/JSON/Parquet/custom)"]
+  CLS --> CR
+  CR -->|"ISI metadata"| DC["🗂️ Glue Data Catalog<br/>table · column · partition"]
+  DC --> JOB["Glue ETL Job<br/>Spark serverless<br/>transform (CSV→Parquet)"]
+  JOB --> TGT["🎯 Target<br/>S3 (Parquet) · Redshift"]
+  DC -.->|"baca katalog sama"| Q["Athena · EMR ·<br/>Redshift Spectrum"]`,
+              caption: 'Aliran: Crawler connect ke sumber → panggil Classifier untuk kenal format → ISI Data Catalog dengan schema. Lepas tu ETL Job (Spark) baca katalog, transform data, tulis ke target. Athena/EMR/Redshift Spectrum semua kongsi Data Catalog yang sama. INGAT exam: komponen yang ISI Data Catalog = Crawler (bukan Job, bukan Table).',
+            },
+            compare: [
+              {
+                label: 'Glue — komponen mana buat apa',
+                headers: ['Komponen', 'Peranan', 'Trigger exam'],
+                rows: [
+                  ['Data Catalog', 'Kedai metadata pusat (table/column/partition)', '"central metadata store", "schema registry untuk data lake"'],
+                  ['Crawler', 'Endus schema dari sumber & ISI Data Catalog', '"determine schema & populate Data Catalog" → Crawler'],
+                  ['Classifier', 'Kenal pasti format data; dipanggil oleh Crawler', '"recognize custom/log format" → custom Classifier'],
+                  ['ETL Job', 'Serverless Spark transform (CSV→Parquet)', '"transform/convert data tanpa urus server" → Glue Job'],
+                  ['Trigger / Workflow', 'Orchestrate job ikut jadual/event', '"automate & schedule ETL pipeline"'],
+                  ['DataBrew', 'Visual no-code data cleaning', '"clean/prep data tanpa tulis kod"'],
+                ],
+                takeaway: 'Crawler ISI katalog · Classifier kenal format · Job transform · Catalog simpan metadata. Soalan "apa populate Data Catalog?" → Crawler. "Convert CSV ke Parquet serverless?" → Glue ETL Job.',
+              },
+              {
+                label: 'Glue vs EMR vs Athena — bila guna yang mana (ETL/query)',
+                headers: ['Aspect', 'Glue', 'EMR', 'Athena'],
+                rows: [
+                  ['Fungsi utama', 'Serverless ETL + Catalog', 'Cluster Hadoop/Spark', 'Serverless SQL on S3'],
+                  ['Urus server?', '🟢 Tidak (serverless)', '🔴 Ya (kau urus cluster)', '🟢 Tidak (serverless)'],
+                  ['Guna untuk', 'Transform & catalog data', 'Custom big-data, ML, full control', 'Ad-hoc query data S3'],
+                  ['Kos', 'Per DPU-hour', 'Per instance (Spot jimat)', 'Per TB di-scan'],
+                  ['Trigger soalan', '"ETL serverless + Data Catalog"', '"Hadoop/Spark cluster, full control"', '"SQL ad-hoc, no setup"'],
+                ],
+                takeaway: 'ETL ringkas + katalog tanpa cluster → Glue. Custom Spark/Hadoop dengan kawalan penuh → EMR. Query SQL ad-hoc atas S3 → Athena. Ketiga-tiga boleh kongsi Glue Data Catalog.',
+              },
+            ],
+            scenario: '"Transform raw CSV dalam S3 ke Parquet format untuk Athena" → Glue ETL job. "Auto-catalog all data sources for data lake" → Glue Crawler + Data Catalog. "Determine schema dari DynamoDB & populate Data Catalog" → Crawler. "Clean & prep data tanpa tulis kod" → DataBrew. Keywords: ETL, data lake, data catalog, transform, Spark, serverless.',
             tips: [
               'Glue Crawler specifically = the component that connects to a data source, infers schema, and POPULATES the Glue Data Catalog with table metadata',
               'Exam pattern: "determine schema from DynamoDB/S3 and populate Glue Data Catalog" → Crawler (not a Table, not a Classifier)',
               'Glue Classifier helps the Crawler recognize custom data formats — but Crawler is the orchestrator that calls Classifiers',
+              'Glue Data Catalog = metadata sahaja (apa data wujud). Lake Formation = kawalan akses (siapa boleh akses) atas katalog yang sama',
+              'Serverless analytics pattern: S3 (store) → Glue (crawl + catalog + ETL) → Athena (query) → QuickSight (visualize). Hafal urutan ni',
+              'Glue = serverless (no cluster). Kalau soalan tekankan "full control" / "Hadoop/Spark cluster" → itu EMR, bukan Glue',
             ],
-            keywords: ['ETL', 'data catalog', 'Spark', 'serverless', 'crawler', 'data lake', 'transform', 'Parquet', 'schema discovery', 'DynamoDB', 'schema inference'],
+            docs: [
+              { label: 'AWS Glue components', url: 'https://docs.aws.amazon.com/glue/latest/dg/components-key-concepts.html' },
+              { label: 'Glue Crawlers', url: 'https://docs.aws.amazon.com/glue/latest/dg/add-crawler.html' },
+            ],
+            keywords: ['ETL', 'data catalog', 'Spark', 'serverless', 'crawler', 'classifier', 'ETL job', 'DataBrew', 'Glue Studio', 'workflow', 'data lake', 'transform', 'Parquet', 'schema discovery', 'DynamoDB', 'schema inference', 'DPU'],
           },
           {
             shortName: 'Lake Formation',
@@ -3296,7 +3368,7 @@ export const domains: DomainData[] = [
           {
             shortName: 'EMR',
             fullName: 'Amazon EMR',
-            ingat: '"Hadoop/Spark cluster untuk big data — kau control cluster"',
+            ingat: '"EMR = Energetik Mandor Ramai-pekerja: Elastic cluster, Mandor (Master node), Ramai pekerja (Core/Task). Hadoop/Spark, kau urus cluster (BUKAN serverless)."',
             gunaUntuk: 'Process petabyte-scale data with Spark, Hadoop, Hive, Presto — full control',
             fungsi: 'Managed cluster platform untuk big data frameworks (Spark, Hadoop, Hive, Presto, HBase). Kau choose cluster size, instance types, frameworks. Cluster ada 3 jenis node: Master (urus cluster), Core (run task + simpan HDFS), Task (run task sahaja, no HDFS). EMRFS benarkan EMR guna S3 sebagai storage layer → decouple compute dari storage. Lebih control dari Glue — untuk complex/custom big-data jobs.',
             diagram: {
@@ -3314,6 +3386,17 @@ export const domains: DomainData[] = [
                 { nodes: [{ label: 'S3 via EMRFS', sub: 'durable storage layer', tone: 'c4' }] },
               ],
               caption: 'Master = otak cluster. Core nodes simpan HDFS data + run tasks → JANGAN letak atas Spot (hilang node = hilang data). Task nodes compute sahaja → selamat & jimat atas Spot. EMRFS guna S3 sebagai storage supaya cluster boleh transient (mati lepas job, data kekal di S3).',
+            },
+            mermaid: {
+              label: 'Analogi Kilang Kerupuk Lekor — EMR cluster nodes',
+              source: `flowchart TD
+  JOB["🐟 10 tan ikan nak proses<br/>(big data — 1 EC2 tak larat)"] --> CLUSTER["🏭 Kilang EMR (Cluster)<br/>ramai pekerja, satu pasukan"]
+  CLUSTER --> M["👷 Mandor = Master Node<br/>pegang klipbod, agih kerja,<br/>tak potong ikan sendiri"]
+  M -->|"agih tugas"| C["🔪 Pekerja Tetap = Core Node<br/>potong ikan + ada meja sendiri<br/>(proses + simpan HDFS)"]
+  M -->|"upah bila sibuk"| T["🧑‍🍳 Pekerja Sambilan = Task Node<br/>tolong potong je, pinjam meja<br/>(compute only) → halau bila siap (Spot)"]
+  C --> S3["🪣 Gudang S3 (EMRFS)<br/>simpan hasil walau kilang tutup"]
+  T --> S3`,
+              caption: 'EMR = kilang besar proses ikan pukal (big data) sebab satu blender rumah (1 EC2) tak larat. Mandor (Master) agih kerja, tak potong sendiri. Pekerja Tetap (Core) potong + ada meja simpan ikan (HDFS) → jangan Spot, hilang meja = hilang ikan. Pekerja Sambilan (Task) tolong potong je, pinjam meja → selamat & jimat atas Spot, halau bila siap. Gudang S3 (EMRFS) simpan hasil walau kilang dah tutup (transient cluster).',
             },
             compare: [
               {
