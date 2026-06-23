@@ -3296,9 +3296,10 @@ export const domains: DomainData[] = [
             fungsi: 'Glue = serverless ETL + metadata layer untuk data lake. Glue Data Catalog = kedai metadata pusat (table/column) untuk semua data assets (S3, RDS, Redshift) — Athena, EMR, Redshift Spectrum semua baca katalog yang sama. Glue Crawler = auto-endus (discover) schema dari sumber dan ISI Data Catalog. Glue ETL Job = serverless Spark job untuk transform data (cth CSV → Parquet). Bayar per DPU-hour, tiada cluster untuk diurus.',
             detailsLabel: 'Glue — komponen utama',
             storageDetails: 'Data Catalog → kedai metadata pusat (database, table, column, partition). Satu sumber kebenaran untuk Athena, EMR, Redshift Spectrum, Lake Formation\nCrawler → connect ke sumber (S3/JDBC/DynamoDB), infer schema, ISI Data Catalog. Boleh jadual berkala\nClassifier → kenal pasti format data (CSV/JSON/Parquet/custom grok); Crawler panggil Classifier untuk tentukan schema\nETL Job → serverless Spark (atau Python shell) yang transform data; auto-generate kod, bayar per DPU-hour\nTrigger / Workflow → orchestration: jalankan job ikut jadual, event, atau on-demand (rantai crawler → job)\nDataBrew → visual data prep, no-code (250+ transformation) untuk pembersihan data\nGlue Studio → antara muka visual drag-drop untuk bina ETL pipeline',
-            mermaid: {
-              label: 'Anatomy komponen Glue (crawler → catalog → job)',
-              source: `flowchart TD
+            mermaid: [
+              {
+                label: 'Anatomy komponen Glue (crawler → catalog → job)',
+                source: `flowchart TD
   SRC["📁 Sumber data<br/>S3 · RDS · DynamoDB · JDBC"] --> CR["Glue Crawler<br/>connect + infer schema"]
   CR -->|"panggil"| CLS["Classifier<br/>kenal format<br/>(CSV/JSON/Parquet/custom)"]
   CLS --> CR
@@ -3306,8 +3307,17 @@ export const domains: DomainData[] = [
   DC --> JOB["Glue ETL Job<br/>Spark serverless<br/>transform (CSV→Parquet)"]
   JOB --> TGT["🎯 Target<br/>S3 (Parquet) · Redshift"]
   DC -.->|"baca katalog sama"| Q["Athena · EMR ·<br/>Redshift Spectrum"]`,
-              caption: 'Aliran: Crawler connect ke sumber → panggil Classifier untuk kenal format → ISI Data Catalog dengan schema. Lepas tu ETL Job (Spark) baca katalog, transform data, tulis ke target. Athena/EMR/Redshift Spectrum semua kongsi Data Catalog yang sama. INGAT exam: komponen yang ISI Data Catalog = Crawler (bukan Job, bukan Table).',
-            },
+                caption: 'Aliran: Crawler connect ke sumber → panggil Classifier untuk kenal format → ISI Data Catalog dengan schema. Lepas tu ETL Job (Spark) baca katalog, transform data, tulis ke target. Athena/EMR/Redshift Spectrum semua kongsi Data Catalog yang sama. INGAT exam: komponen yang ISI Data Catalog = Crawler (bukan Job, bukan Table).',
+              },
+              {
+                label: 'Analogi Jus Mangga — apa itu ETL (Extract · Transform · Load)',
+                source: `flowchart LR
+  E["🥭 EXTRACT<br/>petik mangga dari pokok<br/>(ambil raw data:<br/>S3 · RDS · DynamoDB)"] --> T["🔪 TRANSFORM<br/>kupas kulit, buang biji, blend<br/>(bersih + tukar format:<br/>CSV → Parquet, buang null)"]
+  T --> L["🥤 LOAD<br/>tuang jus dalam botol siap jual<br/>(simpan ke target:<br/>S3 Parquet · Redshift · Athena)"]
+  L --> USE["😋 Sedia diminum<br/>analyst query &amp; buat dashboard"]`,
+                caption: 'ETL = Extract → Transform → Load, macam buat jus mangga. EXTRACT = petik mangga mentah dari pokok (tarik raw data dari sumber). TRANSFORM = kupas, buang biji, blend (bersihkan + tukar format, cth CSV→Parquet) — ini bahagian paling berat & guna Spark. LOAD = tuang jus siap dalam botol (tulis data bersih ke target supaya boleh terus "minum"/query). Glue buat ketiga-tiga langkah ni secara serverless — kau tak payah beli & jaga "blender" (cluster) sendiri.',
+              },
+            ],
             compare: [
               {
                 label: 'Glue — komponen mana buat apa',
@@ -3420,6 +3430,19 @@ export const domains: DomainData[] = [
                   ['Kos', 'Per instance (Spot jimat)', 'Per DPU-hour, no idle cost'],
                 ],
                 takeaway: 'Nak kawalan penuh framework / custom Spark / ML besar → EMR. Nak ETL serverless tanpa urus cluster → Glue. Soalan sebut "Hadoop/Spark cluster" atau "full control" → EMR.',
+              },
+              {
+                label: 'Glue vs EMR Serverless — dua-dua serverless, beza di mana?',
+                headers: ['Aspect', 'AWS Glue', 'EMR Serverless'],
+                rows: [
+                  ['Tujuan utama', 'ETL + Data Catalog (data integration)', 'Run Spark/Hive jobs serverless (analytics engine)'],
+                  ['Framework', 'Spark (abstracted, Glue uruskan)', 'Pilih sendiri: Spark atau Hive, kawal versi'],
+                  ['Kawalan Spark', 'Terhad — config diabstrak', '🟢 Lebih — tune Spark config, sizing'],
+                  ['Catalog & Crawler', '🟢 Built-in (Crawler, DataBrew, Studio)', 'Tiada — guna Glue Data Catalog bila perlu'],
+                  ['Best bila', 'ETL pipeline, catalog data lake, no-code prep', 'Migrate Spark/Hive job sedia ada, tak nak urus cluster'],
+                  ['Kos', 'Per DPU-hour', 'Per vCPU + memori (per saat, auto-scale)'],
+                ],
+                takeaway: 'Dua-dua serverless (tiada cluster). Bezanya: Glue = alat integrasi data lengkap (Crawler + Catalog + ETL) untuk bina pipeline. EMR Serverless = enjin Spark/Hive je dengan lebih kawalan — sesuai kalau kau dah ada Spark job dan cuma nak run tanpa jaga cluster. Soalan "migrate existing Spark job, no cluster management" → EMR Serverless. "ETL + auto data catalog" → Glue.',
               },
             ],
             scenario: '"Process petabytes of log data using custom Spark jobs" → EMR. "Migrate on-prem Hadoop/Spark cluster ke AWS" → EMR. "Jimatkan kos batch processing yang fault-tolerant" → Task nodes atas Spot. Glue = serverless ETL (simpler, less control). EMR = full cluster (more control). Keywords: Hadoop, Spark, big data cluster, full control.',
