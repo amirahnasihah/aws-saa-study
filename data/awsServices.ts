@@ -3461,17 +3461,31 @@ export const domains: DomainData[] = [
               ],
               caption: 'Master = otak cluster. Core nodes simpan HDFS data + run tasks → JANGAN letak atas Spot (hilang node = hilang data). Task nodes compute sahaja → selamat & jimat atas Spot. EMRFS guna S3 sebagai storage supaya cluster boleh transient (mati lepas job, data kekal di S3).',
             },
-            mermaid: {
-              label: 'Analogi Kilang Kerupuk Lekor — EMR cluster nodes',
-              source: `flowchart TD
+            mermaid: [
+              {
+                label: 'Analogi Kilang Kerupuk Lekor — EMR cluster nodes',
+                source: `flowchart TD
   JOB["🐟 10 tan ikan nak proses<br/>(big data — 1 EC2 tak larat)"] --> CLUSTER["🏭 Kilang EMR (Cluster)<br/>ramai pekerja, satu pasukan"]
   CLUSTER --> M["👷 Mandor = Master Node<br/>pegang klipbod, agih kerja,<br/>tak potong ikan sendiri"]
   M -->|"agih tugas"| C["🔪 Pekerja Tetap = Core Node<br/>potong ikan + ada meja sendiri<br/>(proses + simpan HDFS)"]
   M -->|"upah bila sibuk"| T["🧑‍🍳 Pekerja Sambilan = Task Node<br/>tolong potong je, pinjam meja<br/>(compute only) → halau bila siap (Spot)"]
   C --> S3["🪣 Gudang S3 (EMRFS)<br/>simpan hasil walau kilang tutup"]
   T --> S3`,
-              caption: 'EMR = kilang besar proses ikan pukal (big data) sebab satu blender rumah (1 EC2) tak larat. Mandor (Master) agih kerja, tak potong sendiri. Pekerja Tetap (Core) potong + ada meja simpan ikan (HDFS) → jangan Spot, hilang meja = hilang ikan. Pekerja Sambilan (Task) tolong potong je, pinjam meja → selamat & jimat atas Spot, halau bila siap. Gudang S3 (EMRFS) simpan hasil walau kilang dah tutup (transient cluster).',
-            },
+                caption: 'EMR = kilang besar proses ikan pukal (big data) sebab satu blender rumah (1 EC2) tak larat. Mandor (Master) agih kerja, tak potong sendiri. Pekerja Tetap (Core) potong + ada meja simpan ikan (HDFS) → jangan Spot, hilang meja = hilang ikan. Pekerja Sambilan (Task) tolong potong je, pinjam meja → selamat & jimat atas Spot, halau bila siap. Gudang S3 (EMRFS) simpan hasil walau kilang dah tutup (transient cluster).',
+              },
+              {
+                label: 'HDFS dalaman — NameNode vs DataNode (Stor Ikan kilang)',
+                source: `flowchart TD
+  FILE["📂 Fail 100 TB<br/>(1 hard disk tak muat)"] --> SPLIT["✂️ Pecah jadi Blocks<br/>~128MB sepotong"]
+  SPLIT --> NN["🗂️ NameNode (Master)<br/>Kerani Kaunter — pegang BUKU REKOD (metadata):<br/>blok mana di node mana. TAK simpan data sebenar"]
+  NN -->|"arah simpan"| DN1["💾 DataNode 1 (Core)<br/>Bilik Stor — simpan blok sebenar"]
+  NN -->|"arah simpan"| DN2["💾 DataNode 2 (Core)<br/>Bilik Stor — simpan blok sebenar"]
+  NN -->|"arah simpan"| DN3["💾 DataNode 3 (Core)<br/>Bilik Stor — simpan blok sebenar"]
+  DN1 -.->|"replication ×3"| DN2
+  DN2 -.->|"salinan pendua"| DN3`,
+                caption: 'HDFS = "hard disk maya" merentas banyak komputer. Fail gergasi dipecah jadi Blocks (~128MB). NameNode (otak, atas Master) cuma pegang BUKU REKOD (metadata) — blok mana di node mana, dia TAK simpan data sebenar. DataNodes (atas Core nodes) yang betul-betul simpan blok. Tiap blok disalin ×3 ke node berbeza → satu node terbakar pun data selamat (fault tolerance). INGAT exam: Core node = pegang HDFS → JANGAN Spot. Dalam AWS, ramai tukar HDFS → S3 (via EMRFS): serverless, murah, tak payah jaga DataNode.',
+              },
+            ],
             compare: [
               {
                 label: 'EMR node types — apa boleh Spot, apa tak',
@@ -3496,6 +3510,19 @@ export const domains: DomainData[] = [
                 takeaway: 'Nak kawalan penuh framework / custom Spark / ML besar → EMR. Nak ETL serverless tanpa urus cluster → Glue. Soalan sebut "Hadoop/Spark cluster" atau "full control" → EMR.',
               },
               {
+                label: 'Redshift vs EMR — gaya analisis (SQL vs Kod)',
+                headers: ['Ciri', 'Amazon Redshift', 'Amazon EMR'],
+                rows: [
+                  ['Kategori', 'Data Warehouse (OLAP)', 'Big-data framework (Hadoop/Spark)'],
+                  ['Jenis data', 'Berstruktur — table, columnar', 'Bebas — log, teks, video, unstructured'],
+                  ['Bahasa', 'SQL sahaja (SELECT, JOIN, SUM)', 'Kod (Python, Scala, Spark, Hive)'],
+                  ['Infra', 'Managed cluster / Serverless', 'EC2 cluster (Master/Core/Task)'],
+                  ['Analogi', '📚 Perpustakaan tersusun — rujuk katalog, terus dapat', '🏭 Kilang kitar semula — ramai pekerja proses sampah mentah'],
+                  ['Guna bila', 'Laporan BI / dashboard atas data dah kemas', 'Bersih & proses data gergasi mentah, Data Science/ML'],
+                ],
+                takeaway: 'Mereka TAK bergantung antara satu sama lain — dua enjin berbeza untuk gaya kerja berbeza. Data dah kemas + nak SQL → Redshift. Data mentah berterabur + perlu kod Spark/Hadoop → EMR. Boleh kolaborasi dalam satu pipeline (lihat tip), tapi EMR BUKAN buat analisis "di dalam" Redshift — itu salah faham biasa.',
+              },
+              {
                 label: 'Glue vs EMR Serverless — dua-dua serverless, beza di mana?',
                 headers: ['Aspect', 'AWS Glue', 'EMR Serverless'],
                 rows: [
@@ -3517,12 +3544,14 @@ export const domains: DomainData[] = [
               'Exam trigger "managed Hadoop/Spark", "custom big-data framework", atau "full control over cluster" → EMR (bukan Glue, bukan Athena).',
               'EMR Serverless = run Spark/Hive tanpa urus cluster langsung. EMR on EKS = jalankan EMR atas cluster Kubernetes sedia ada.',
               'Instance fleets vs instance groups = dua cara provision capacity; fleets bagi flexibility pilih banyak instance type + Spot strategy.',
+              'Pipeline sebenar (EMR + Redshift KOLABORASI, bukan bergantung): S3 (log mentah) → EMR/Spark bersih & transform (ETL) → load ke Redshift → analyst query SQL + QuickSight dashboard. EMR = pembersih data mentah; Redshift = warehouse untuk analisis akhir. Jangan fikir "EMR analyze dalam Redshift".',
+              'HDFS dalaman: NameNode (Master) = pegang metadata/buku rekod (blok mana di node mana, TAK simpan data). DataNode (Core) = simpan blok sebenar. Block ~128MB, replication ×3 → fault tolerant. Sebab tu Core node bahaya atas Spot.',
             ],
             docs: [
               { label: 'EMR cluster node types', url: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-master-core-task-nodes.html' },
               { label: 'EMRFS', url: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-fs.html' },
             ],
-            keywords: ['Hadoop', 'Spark', 'Hive', 'Presto', 'HBase', 'big data', 'cluster', 'petabyte', 'managed', 'Spot instances', 'master node', 'core node', 'task node', 'HDFS', 'EMRFS', 'transient cluster', 'EMR Serverless', 'EMR on EKS'],
+            keywords: ['Hadoop', 'Spark', 'Hive', 'Presto', 'HBase', 'big data', 'cluster', 'petabyte', 'managed', 'Spot instances', 'master node', 'core node', 'task node', 'HDFS', 'NameNode', 'DataNode', 'block', 'replication', 'EMRFS', 'ETL pipeline', 'transient cluster', 'EMR Serverless', 'EMR on EKS'],
           },
           {
             shortName: 'OpenSearch',
