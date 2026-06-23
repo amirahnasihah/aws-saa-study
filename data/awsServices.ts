@@ -3139,17 +3139,32 @@ export const domains: DomainData[] = [
               ],
               caption: 'Leader node pecahkan query, compute nodes proses selari (MPP) atas data columnar. Spectrum extend query terus ke S3 tanpa load. Inilah sebab Redshift laju untuk aggregate besar — tapi LEMAH untuk single-row insert/update (itu kerja OLTP → RDS).',
             },
-            mermaid: {
-              label: 'Pilih servis query/analytics (decision tree)',
-              source: `flowchart TD
+            mermaid: [
+              {
+                label: 'Anatomy komponen Redshift (cluster → slices → storage)',
+                source: `flowchart TD
+  CL["🏢 Redshift Cluster"] --> LN["Leader Node<br/>terima query · buat plan · kumpul hasil"]
+  LN -->|"agih query (MPP)"| CN1["Compute Node 1<br/>CPU · RAM · disk sendiri"]
+  LN -->|"agih query (MPP)"| CN2["Compute Node 2<br/>CPU · RAM · disk sendiri"]
+  CN1 --> SL1["Slices<br/>node pecah jadi slices,<br/>proses data SELARI"]
+  CN2 --> SL2["Slices<br/>node pecah jadi slices,<br/>proses data SELARI"]
+  SL1 --> RMS["Managed Storage (RMS)<br/>columnar + compress · atas S3 (RA3)"]
+  SL2 --> RMS
+  RMS --> SPEC["Spectrum → query S3 terus<br/>tanpa load ke cluster"]`,
+                caption: 'Hierarki: satu Cluster = 1 Leader Node (otak: plan & agih query) + banyak Compute Node (pekerja, ada CPU/RAM/disk sendiri). Tiap compute node dipecah jadi Slices — slice inilah unit MPP yang proses data selari. RA3 simpan data dalam Managed Storage (RMS) columnar atas S3, jadi compute & storage boleh scale berasingan. Spectrum extend query terus ke S3.',
+              },
+              {
+                label: 'Pilih servis query/analytics (decision tree)',
+                source: `flowchart TD
   A[Nak query / analyze data] --> B{Jenis workload?}
   B -->|Transaksi, banyak insert/update baris tunggal| C[RDS / Aurora<br/>OLTP]
   B -->|Analytics atas data besar| D{Berulang atau ad-hoc?}
   D -->|Recurring, complex join, dashboard tetap| E[Redshift<br/>data warehouse OLAP]
   D -->|Ad-hoc, sekali-sekala, data dalam S3| F[Athena<br/>serverless SQL on S3]
   B -->|Custom Spark/Hadoop, kawalan penuh cluster| G[EMR<br/>big data framework]`,
-              caption: 'OLTP (transaksi) → RDS/Aurora. Analytics berulang/kompleks → Redshift. Ad-hoc SQL atas S3 tanpa setup → Athena. Custom Spark/Hadoop → EMR. Ni trap paling kerap di exam: jangan pilih Redshift untuk "ad-hoc, jarang query" (itu Athena) atau untuk OLTP (itu RDS).',
-            },
+                caption: 'OLTP (transaksi) → RDS/Aurora. Analytics berulang/kompleks → Redshift. Ad-hoc SQL atas S3 tanpa setup → Athena. Custom Spark/Hadoop → EMR. Ni trap paling kerap di exam: jangan pilih Redshift untuk "ad-hoc, jarang query" (itu Athena) atau untuk OLTP (itu RDS).',
+              },
+            ],
             compare: [
               {
                 label: 'Redshift vs Athena vs EMR vs RDS',
@@ -3265,18 +3280,105 @@ export const domains: DomainData[] = [
             fullName: 'Amazon EMR',
             ingat: '"Hadoop/Spark cluster untuk big data — kau control cluster"',
             gunaUntuk: 'Process petabyte-scale data with Spark, Hadoop, Hive, Presto — full control',
-            fungsi: 'Managed cluster platform untuk big data frameworks. Kau choose cluster size, instance types, frameworks. Spot instances untuk cost saving. Lebih control dari Glue — untuk complex custom jobs.',
-            scenario: '"Process petabytes of log data using custom Spark jobs" → EMR. "Machine learning training on large datasets" → EMR. Glue = serverless ETL (simpler, less control). EMR = full cluster (more control, more complex). Keywords: Hadoop, Spark, big data cluster.',
-            keywords: ['Hadoop', 'Spark', 'Hive', 'Presto', 'big data', 'cluster', 'petabyte', 'managed', 'Spot instances'],
+            fungsi: 'Managed cluster platform untuk big data frameworks (Spark, Hadoop, Hive, Presto, HBase). Kau choose cluster size, instance types, frameworks. Cluster ada 3 jenis node: Master (urus cluster), Core (run task + simpan HDFS), Task (run task sahaja, no HDFS). EMRFS benarkan EMR guna S3 sebagai storage layer → decouple compute dari storage. Lebih control dari Glue — untuk complex/custom big-data jobs.',
+            diagram: {
+              label: 'EMR cluster — node roles',
+              steps: [
+                { nodes: [{ label: 'Master Node', sub: 'urus + coordinate', tone: 'c5' }] },
+                { nodes: [
+                  { label: 'Core Node', sub: 'task + HDFS data', tone: 'c1' },
+                  { label: 'Core Node', sub: 'task + HDFS data', tone: 'c1' },
+                ] },
+                { nodes: [
+                  { label: 'Task Node (Spot)', sub: 'compute only, no data', tone: 'c3' },
+                  { label: 'Task Node (Spot)', sub: 'compute only, no data', tone: 'c3' },
+                ] },
+                { nodes: [{ label: 'S3 via EMRFS', sub: 'durable storage layer', tone: 'c4' }] },
+              ],
+              caption: 'Master = otak cluster. Core nodes simpan HDFS data + run tasks → JANGAN letak atas Spot (hilang node = hilang data). Task nodes compute sahaja → selamat & jimat atas Spot. EMRFS guna S3 sebagai storage supaya cluster boleh transient (mati lepas job, data kekal di S3).',
+            },
+            compare: [
+              {
+                label: 'EMR node types — apa boleh Spot, apa tak',
+                headers: ['Node', 'Peranan', 'Simpan data?', 'Spot ok?'],
+                rows: [
+                  ['Master', 'Urus & coordinate cluster', 'Tidak', '🔴 Tak (mati = cluster mati)'],
+                  ['Core', 'Run tasks + simpan HDFS', '✅ Ya (HDFS)', '🟡 Berisiko (hilang data)'],
+                  ['Task', 'Run tasks sahaja', 'Tidak', '🟢 Ya — jimat selamat'],
+                ],
+                takeaway: 'Letak Task nodes atas Spot untuk jimat tanpa risiko data. Core nodes pegang HDFS — guna On-Demand/RI. Master tak boleh Spot langsung.',
+              },
+              {
+                label: 'EMR vs Glue — bila guna yang mana',
+                headers: ['Aspect', 'EMR', 'Glue'],
+                rows: [
+                  ['Model', 'Managed cluster (kau urus)', 'Serverless ETL (no cluster)'],
+                  ['Control', '🟢 Penuh — pilih framework, tune', 'Terhad (Spark abstracted)'],
+                  ['Framework', 'Spark, Hadoop, Hive, Presto, HBase', 'Spark (managed)'],
+                  ['Best bila', 'Custom/complex big-data, ML, kawalan penuh', 'ETL ringkas + Data Catalog'],
+                  ['Kos', 'Per instance (Spot jimat)', 'Per DPU-hour, no idle cost'],
+                ],
+                takeaway: 'Nak kawalan penuh framework / custom Spark / ML besar → EMR. Nak ETL serverless tanpa urus cluster → Glue. Soalan sebut "Hadoop/Spark cluster" atau "full control" → EMR.',
+              },
+            ],
+            scenario: '"Process petabytes of log data using custom Spark jobs" → EMR. "Migrate on-prem Hadoop/Spark cluster ke AWS" → EMR. "Jimatkan kos batch processing yang fault-tolerant" → Task nodes atas Spot. Glue = serverless ETL (simpler, less control). EMR = full cluster (more control). Keywords: Hadoop, Spark, big data cluster, full control.',
+            tips: [
+              'Tiga node: Master (urus), Core (task + HDFS data), Task (task sahaja). Core pegang data → bahaya atas Spot; Task tak pegang data → selamat & jimat atas Spot.',
+              'EMRFS = guna S3 sebagai storage layer (bukan HDFS lokal). Ini benarkan TRANSIENT cluster: cluster mati lepas job habis, data kekal di S3 → jimat kos.',
+              'Transient cluster = auto-terminate lepas step habis (batch jobs). Long-running cluster = kekal hidup untuk interactive/ad-hoc query.',
+              'Exam trigger "managed Hadoop/Spark", "custom big-data framework", atau "full control over cluster" → EMR (bukan Glue, bukan Athena).',
+              'EMR Serverless = run Spark/Hive tanpa urus cluster langsung. EMR on EKS = jalankan EMR atas cluster Kubernetes sedia ada.',
+              'Instance fleets vs instance groups = dua cara provision capacity; fleets bagi flexibility pilih banyak instance type + Spot strategy.',
+            ],
+            docs: [
+              { label: 'EMR cluster node types', url: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-master-core-task-nodes.html' },
+              { label: 'EMRFS', url: 'https://docs.aws.amazon.com/emr/latest/ManagementGuide/emr-fs.html' },
+            ],
+            keywords: ['Hadoop', 'Spark', 'Hive', 'Presto', 'HBase', 'big data', 'cluster', 'petabyte', 'managed', 'Spot instances', 'master node', 'core node', 'task node', 'HDFS', 'EMRFS', 'transient cluster', 'EMR Serverless', 'EMR on EKS'],
           },
           {
             shortName: 'OpenSearch',
             fullName: 'Amazon OpenSearch Service',
             ingat: '"Enjin carian dan log analytics — Elasticsearch dalam AWS"',
             gunaUntuk: 'Full-text search, real-time log/event analytics, dashboard visualisation',
-            fungsi: 'Managed OpenSearch (Elasticsearch fork) cluster. Ingestion via Kinesis Firehose atau Lambda. Visualise dengan OpenSearch Dashboards (Kibana). Guna untuk search yang perlu ranking, fuzzy matching, atau aggregations.',
-            scenario: '"E-commerce product search dengan fuzzy matching" → OpenSearch. "Ingest dan search application logs real-time dengan visualisation" → OpenSearch. DynamoDB = exact key lookups. OpenSearch = full-text search. Keywords: search engine, log analytics, Elasticsearch.',
-            keywords: ['search engine', 'log analytics', 'Elasticsearch compatible', 'Kibana', 'real-time analytics', 'full-text search', 'fuzzy'],
+            fungsi: 'Managed OpenSearch (Elasticsearch fork) cluster. Ingestion via Amazon Data Firehose, OpenSearch Ingestion, atau Lambda. Visualise dengan OpenSearch Dashboards (Kibana). Guna untuk search yang perlu relevance ranking, fuzzy matching, atau aggregations real-time. Storage tiers (hot / UltraWarm / cold) untuk imbang kos vs kelajuan.',
+            diagram: {
+              label: 'Log analytics ingestion pipeline',
+              steps: [
+                { nodes: [{ label: 'Sources', sub: 'apps, CloudWatch Logs, IoT', tone: 'c4' }] },
+                { nodes: [{ label: 'Amazon Data Firehose', sub: 'buffer + deliver, no code', tone: 'c3' }] },
+                { nodes: [{ label: 'OpenSearch', sub: 'index + search + aggregate', tone: 'c1' }] },
+                { nodes: [{ label: 'OpenSearch Dashboards', sub: 'Kibana visualise', tone: 'c2' }] },
+              ],
+              caption: 'Pola klasik log/observability: sumber → Firehose hantar ke OpenSearch (no code) → index untuk full-text search + aggregation → Dashboards visualize. Kalau soalan sebut "real-time log analytics + search + dashboard", ini jawapannya.',
+            },
+            compare: [
+              {
+                label: 'OpenSearch vs servis "cari/log" yang mengelirukan',
+                headers: ['Servis', 'Untuk apa', 'Bila pilih'],
+                rows: [
+                  ['OpenSearch', 'Full-text search + log analytics + dashboard', 'Search dengan ranking/fuzzy, atau log analytics real-time'],
+                  ['CloudWatch Logs Insights', 'Ad-hoc query atas log CloudWatch', 'Cuma nak query log AWS sedia ada, no cluster'],
+                  ['Amazon Kendra', 'Enterprise document search (ML, natural language)', 'Soalan natural language atas dokumen/PDF'],
+                  ['Athena', 'SQL ad-hoc atas data S3', 'Query log dalam S3 guna SQL, jarang-jarang'],
+                  ['DynamoDB', 'Key-value exact lookup', 'Lookup guna primary key — BUKAN full-text search'],
+                ],
+                takeaway: 'Full-text/fuzzy search + log analytics + dashboard → OpenSearch. Natural-language document search → Kendra. Query log CloudWatch cepat → Logs Insights. Exact key lookup → DynamoDB (bukan OpenSearch).',
+              },
+            ],
+            scenario: '"E-commerce product search dengan fuzzy matching dan relevance ranking" → OpenSearch. "Ingest dan search application logs real-time dengan visualisation" → OpenSearch + Firehose + Dashboards. "Natural-language search atas dokumen korporat" → Kendra (bukan OpenSearch). DynamoDB = exact key lookups. Keywords: search engine, log analytics, Elasticsearch.',
+            tips: [
+              'Ingestion: Amazon Data Firehose (managed, no code), OpenSearch Ingestion (Data Prepper), atau Lambda. Firehose = jawapan paling kerap untuk "stream logs ke OpenSearch tanpa code".',
+              'Storage tiers untuk jimat kos: Hot (laju, mahal) → UltraWarm (S3-backed, baca lambat sikit) → Cold (arkib, paling murah). Soalan "kekal log lama untuk kos rendah" → UltraWarm/Cold.',
+              'Dedicated master nodes (3 untuk quorum) = stabilkan cluster besar; berbeza dari data nodes yang simpan/index data.',
+              'Multi-AZ with standby untuk HA production. OpenSearch Serverless = auto-scale tanpa urus cluster.',
+              'Exam confusion: OpenSearch = full-text/fuzzy SEARCH + log analytics. Kendra = ML natural-language document search. Jangan keliru dua ni.',
+              'OpenSearch Dashboards = fork Kibana — soalan lama mungkin sebut "Kibana" untuk visualisation.',
+            ],
+            docs: [
+              { label: 'OpenSearch UltraWarm storage', url: 'https://docs.aws.amazon.com/opensearch-service/latest/developerguide/ultrawarm.html' },
+            ],
+            keywords: ['search engine', 'log analytics', 'Elasticsearch compatible', 'Kibana', 'OpenSearch Dashboards', 'real-time analytics', 'full-text search', 'fuzzy', 'UltraWarm', 'cold storage', 'dedicated master', 'Firehose ingestion', 'relevance ranking'],
           },
           {
             shortName: 'MSK',
