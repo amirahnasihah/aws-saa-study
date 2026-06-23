@@ -1096,6 +1096,18 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Default jawapan exam = NAT Gateway (managed, HA, auto-scale). Pilih NAT Instance HANYA bila perlu SG/bastion/port-forwarding atau nak jimat untuk traffic sangat kecil. Source/destination check MESTI disable untuk NAT Instance.',
             },
+            mermaid: {
+              label: 'Analogi Grab — NAT Gateway vs NAT Instance',
+              source: `flowchart TD
+  Q["EC2 private subnet<br/>nak keluar internet"] --> PILIH{Nak urus sendiri?}
+  PILIH -->|"Tak nak pening<br/>🛵 macam naik Grab"| GW["NAT Gateway<br/>(managed)"]
+  PILIH -->|"Nak kawalan penuh<br/>🚗 macam bawa kereta sendiri"| INST["NAT Instance<br/>(EC2 sendiri)"]
+  GW --> GW1["AWS bawa & jaga:<br/>auto-scale, HA, patch"]
+  GW1 --> ANS["✅ Default exam:<br/>NAT Gateway"]
+  INST --> IN1["Kau maintain:<br/>saiz, patch, scaling, baiki sendiri"]
+  IN1 --> ANS2["Pilih HANYA bila perlu<br/>SG / bastion / port-forward"]`,
+              caption: 'Analogi Grab: NAT Gateway = naik Grab — bayar sikit lebih tapi orang lain (AWS) yang bawa & jaga kereta, kau duduk diam (managed, auto-scale, HA). NAT Instance = bawa kereta sendiri — boleh jimat / kawalan penuh, tapi kau kena beli, isi minyak, dan baiki sendiri bila rosak (EC2 yang kau urus). Default exam = NAT Gateway.',
+            },
             tips: [
               'NAT GW DUDUK DALAM PUBLIC SUBNET — bukan private! Ini exam trap paling common',
               'Private subnet route: 0.0.0.0/0 → nat-xxx. Public subnet route: 0.0.0.0/0 → igw-xxx',
@@ -2409,6 +2421,16 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Private content ramai user + low latency (paid video, downloads) → CloudFront signed URL/cookie. Bagi satu orang upload/download terus satu file → S3 presigned URL. Nak bucket kekal private tapi serve via CF → OAC + bucket policy (bukan signed URL).',
             },
+            mermaid: {
+              label: 'Analogi Netflix — Signed URL vs Signed Cookie',
+              source: `flowchart TD
+  Q["Serve private content<br/>via CloudFront"] --> N{Berapa banyak fail?}
+  N -->|"Satu fail je<br/>(cth: 1 installer / 1 PDF)"| URL["Signed URL"]
+  N -->|"🎬 Banyak fail sekali gus<br/>(cth: pelanggan Netflix tengok<br/>10 episod HLS dlm 1 folder)"| COOKIE["Signed Cookie"]
+  URL --> U1["Restrict access<br/>ke SATU file"]
+  COOKIE --> C1["Satu cookie buka SEMUA fail<br/>tanpa jana URL baru tiap fail"]`,
+              caption: 'Analogi Netflix: pelanggan langgan Netflix nak tengok 10 episod dalam satu folder S3 — guna Signed Cookie: satu cookie bagi akses SEMUA fail tanpa perlu jana URL baru tiap episod. Kalau setakat satu fail (cth muat turun satu installer), Signed URL dah cukup. Dua-dua untuk private content VIA CloudFront; OAC pula untuk kunci bucket S3 supaya kekal private.',
+            },
             tips: [
               'OAC (Origin Access Control) = GANTI OAI. Wajib guna OAC untuk S3 origins yang guna SSE-KMS. OAI tidak support KMS. Update bucket policy grant s3:GetObject kepada CloudFront service principal.',
               '"Serve private S3 objects via CloudFront securely" → OAC + bucket policy. Keep bucket block public access = ON.',
@@ -3000,9 +3022,10 @@ export const domains: DomainData[] = [
             ingat: '"Tiap database ada KERJA dia — match shape data dengan engine"',
             gunaUntuk: 'Pilih database betul ikut shape data + access pattern (THE exam decision)',
             fungsi: 'AWS galak "purpose-built database" — pilih ikut bentuk data dan cara access, bukan satu DB untuk semua. Relational (SQL, transaksi) → RDS/Aurora. Key-value laju → DynamoDB. Cache → ElastiCache. Document/Mongo → DocumentDB. Graph → Neptune. Wide-column → Keyspaces. Analytics/warehouse → Redshift. In-memory durable → MemoryDB.',
-            mermaid: {
-              label: 'Pilih database (decision tree)',
-              source: `flowchart TD
+            mermaid: [
+              {
+                label: 'Pilih database (decision tree)',
+                source: `flowchart TD
   A[Apa bentuk data + access?] --> B{Relational / SQL?}
   B -->|Ya, transaksi OLTP| C{Perlu HA hebat + auto-scale storage?}
   C -->|Ya| C1[Aurora]
@@ -3015,8 +3038,19 @@ export const domains: DomainData[] = [
   E -->|Graph, relationship| E3[Neptune]
   E -->|Wide-column / Cassandra| E4[Keyspaces]
   E -->|Analytics / warehouse OLAP| E5[Redshift]`,
-              caption: 'Mula-mula tanya "relational ke tak". Relational + transaksi → RDS/Aurora. Lepas tu match keyword soalan: "MongoDB" → DocumentDB, "graph/relationship/fraud" → Neptune, "Cassandra/wide-column" → Keyspaces, "warehouse/analytics" → Redshift, "microsecond cache" → DAX/ElastiCache.',
-            },
+                caption: 'Mula-mula tanya "relational ke tak". Relational + transaksi → RDS/Aurora. Lepas tu match keyword soalan: "MongoDB" → DocumentDB, "graph/relationship/fraud" → Neptune, "Cassandra/wide-column" → Keyspaces, "warehouse/analytics" → Redshift, "microsecond cache" → DAX/ElastiCache.',
+              },
+              {
+                label: 'Analogi Shopee — OLTP vs OLAP',
+                source: `flowchart TD
+  Q["Apa kerja database ni?"] --> T{Transaksi atau analytics?}
+  T -->|"🛒 Tekan Checkout di Shopee<br/>(tolak stok, simpan order, millisecond)"| OLTP["OLTP → RDS / Aurora / DynamoDB"]
+  T -->|"📊 'Jumlah jualan semua kedai<br/>ikut negeri bulan ni?'"| OLAP["OLAP → Redshift"]
+  OLTP --> O1["Banyak insert/update<br/>baris tunggal, laju"]
+  OLAP --> A1["Aggregate berjuta baris<br/>(SUM, GROUP BY)"]`,
+                caption: 'Analogi Shopee: setiap kali kau tekan Checkout = satu transaksi kecil pantas (tolak stok, simpan order dalam millisecond) = OLTP → RDS/Aurora/DynamoDB. Bila bos minta laporan "jumlah jualan semua kedai ikut negeri bulan ni" = baca & aggregate berjuta baris = OLAP → Redshift. Jangan keliru: checkout = OLTP, dashboard/laporan = OLAP.',
+              },
+            ],
             compare: {
               label: 'Purpose-built database matrix',
               headers: ['Engine', 'Jenis', 'Guna bila / keyword exam'],
