@@ -2649,16 +2649,28 @@ export const domains: DomainData[] = [
               ],
               caption: 'Data masuk shards by partition key. Throughput = bilangan shards (1 shard = 1MB/s in, 2MB/s out). Retention 24h→365d → consumers boleh replay. Firehose ganti consumers ni dengan auto-deliver no-code.',
             },
-            mermaid: {
-              label: 'Pilih ahli keluarga Kinesis (decision tree)',
-              source: `flowchart TD
+            mermaid: [
+              {
+                label: 'Pilih ahli keluarga Kinesis (decision tree)',
+                source: `flowchart TD
   A[Data streaming masuk] --> B{Nak buat apa?}
   B -->|Custom real-time, replay, ramai consumer| C[Data Streams<br/>shards + code]
   B -->|Hantar terus ke S3/Redshift/OpenSearch, no code| D[Data Firehose<br/>fully managed]
   B -->|Transform/analisa stream guna SQL/Flink masa real-time| E[Managed Service for Apache Flink<br/>dulu: Kinesis Data Analytics]
   B -->|Stream video untuk ML/playback| F[Video Streams]`,
-              caption: 'Nota: "Kinesis Data Analytics" dah ditukar nama jadi Amazon Managed Service for Apache Flink — soalan lama mungkin masih guna nama lama. 4 ahli: Data Streams (real-time + code), Firehose (auto-deliver no code), Managed Flink (proses/analisa stream), Video Streams (video).',
-            },
+                caption: 'Nota: "Kinesis Data Analytics" dah ditukar nama jadi Amazon Managed Service for Apache Flink — soalan lama mungkin masih guna nama lama. 4 ahli: Data Streams (real-time + code), Firehose (auto-deliver no code), Managed Flink (proses/analisa stream), Video Streams (video).',
+              },
+              {
+                label: 'Analogi Belt Sushi vs Hos Bomba — Streams vs Firehose',
+                source: `flowchart TD
+  DATA["🌊 Data streaming<br/>(clickstream · IoT · log)"] --> Q{"Nak proses sendiri ke<br/>nak hantar terus?"}
+  Q -->|"proses sendiri,<br/>ramai orang ambil"| KDS["🍣 Belt Sushi = Data Streams<br/>pinggan lalu atas belt,<br/>ramai pelanggan ambil ikut suka<br/>(custom consumer + code)"]
+  KDS --> KDS2["belt pusing simpan 24j–365hari<br/>→ boleh ambil balik (replay)<br/>kau atur berapa lorong (shards)"]
+  Q -->|"terus pancut ke takung,<br/>takde orang pegang"| FH["🚒 Hos Bomba = Firehose<br/>air terus pancut ke kolam<br/>(S3/Redshift/OpenSearch),<br/>fully managed, ZERO code"]
+  FH --> FH2["tapi tunggu tong kumpul dulu<br/>(buffer ~60s/MB) → near-real-time,<br/>auto-scale, no replay"]`,
+                caption: 'Data Streams = belt sushi (kaiten): pinggan (record) lalu atas belt, RAMAI pelanggan (consumers) boleh ambil & proses ikut cara sendiri guna code, belt pusing simpan sekejap (retention 24j–365hari) jadi boleh ambil balik (replay) — kau yang atur berapa lorong belt (shards). Firehose = hos bomba: air (data) terus pancut ke kolam (S3/Redshift/OpenSearch/Splunk) automatik tanpa sesiapa pegang gelas (no code, fully managed), TAPI kena tunggu tong kumpul dulu (buffer ~60s) jadi near-real-time, dan tiada simpanan untuk replay. INGAT exam: "custom real-time + replay + ramai consumer" → Streams. "Just deliver ke store, no code" → Firehose.',
+              },
+            ],
             scenario: '"Real-time, sub-second, multiple consumers, replay data" → Data Streams (shards + retention up to 365 days). "Load streaming data ke S3/Redshift/OpenSearch with no servers and no code" → Firehose. "Analisa/transform streaming data guna SQL atau Apache Flink real-time" → Managed Service for Apache Flink (bekas Kinesis Data Analytics).',
             compare: {
               label: 'Data Streams vs Firehose',
@@ -3228,17 +3240,69 @@ export const domains: DomainData[] = [
           {
             shortName: 'QuickSight',
             fullName: 'Amazon QuickSight',
-            ingat: '"BI dashboard AWS — kau drag-drop, dia visualize"',
+            ingat: '"QuickSight = panel meter kereta: sensor (data) → meter cluster (SPICE) → pemandu nampak sekali pandang. Serverless BI, drag-drop, dia visualize."',
             gunaUntuk: 'Business intelligence dashboards, data visualization, ML-powered analytics',
-            fungsi: 'Serverless BI service. Connect directly to S3, RDS, Redshift, Athena, or other sources. Build dashboards and visualizations. ML Insights feature includes anomaly detection, forecasting (seasonality, trends), and auto-narratives — no separate ML infrastructure needed.',
-            scenario: '"Executive dashboards dari IoT data dalam S3 dengan forecasting, no data warehouse" → QuickSight + S3 direct. QuickSight bukan untuk ad-hoc SQL (→ Athena), bukan untuk ETL (→ Glue). Keywords: dashboard, forecast, trend, BI, visualization.',
-            tips: [
-              'QuickSight connects directly to S3 — no need to load into Redshift first for dashboard use cases',
-              'ML Insights = built-in forecasting dan anomaly detection — "usage trends + forecasting" → QuickSight ML Insights',
-              'SPICE = QuickSight in-memory engine untuk fast queries on imported data',
-              'Exam trap: "dashboards + forecasting, minimal ops" → QuickSight (not Redshift + custom ML)',
+            fungsi: 'Serverless BI service. Connect terus ke S3, RDS, Redshift, Athena, atau sumber lain. Bina dashboard & visualisasi tanpa server. SPICE = enjin in-memory yang cache data import → query dashboard laju & berulang tanpa pukul sumber tiap kali. ML Insights bagi anomaly detection, forecasting (seasonality/trend), dan auto-narratives — tiada infrastruktur ML berasingan. Edition Enterprise tambah row-level security, akses AD/SSO, dan embedded analytics.',
+            detailsLabel: 'QuickSight — komponen utama',
+            storageDetails: 'Data sources → S3, Athena, Redshift, RDS/Aurora, sumber luar (databases, SaaS); QuickSight baca TERUS, tak payah ETL dulu\nSPICE → Super-fast Parallel In-memory Calculation Engine; cache data import dalam memori untuk dashboard laju & repeatable. Alternatif: Direct Query (pukul sumber live)\nAnalysis → kanvas tempat kau bina visual (carta, jadual, peta)\nDashboard → analysis yang dah di-publish, read-only, untuk dikongsi\nML Insights → anomaly detection, forecasting, auto-narrative (built-in, no ML setup)\nEdition → Standard (asas) vs Enterprise (row-level security, AD/SSO, encryption-at-rest, embedded, fine-grained access)',
+            mermaid: {
+              label: 'Analogi Panel Meter Kereta — apa QuickSight buat',
+              source: `flowchart LR
+  SENS["🛢️ Sensor enjin & tangki<br/>(raw data: S3 · Redshift ·<br/>Athena · RDS)"] --> SPICE["⚡ Meter cluster (SPICE)<br/>baca sekali, simpan dalam memori<br/>jarum gerak laju, tak pukul enjin tiap saat"]
+  SPICE --> DASH["📊 Panel pemandu (Dashboard)<br/>speedometer, fuel, RPM<br/>boss nampak sekali pandang"]
+  SPICE --> ML["🚨 Lampu amaran (ML Insights)<br/>anomaly + forecast<br/>'minyak nak habis dalam 50km'"]`,
+              caption: 'QuickSight = panel meter kereta. Sensor enjin/tangki (raw data dalam S3/Redshift/Athena) hantar bacaan. SPICE = meter cluster yang baca sekali & simpan dalam memori supaya jarum bergerak laju tanpa pukul enjin tiap saat (in-memory cache, dashboard berulang laju). Panel pemandu (Dashboard) tunjuk semua sekali pandang untuk "boss"/executive. Lampu amaran (ML Insights) = anomaly detection + forecasting ("usage akan naik bulan depan"). INGAT exam: "dashboard + forecasting, minimal ops" → QuickSight, BUKAN Redshift + custom ML.',
+            },
+            compare: [
+              {
+                label: 'QuickSight vs alat analytics lain — siapa buat apa',
+                headers: ['Servis', 'Peranan dalam pipeline', 'Trigger exam'],
+                rows: [
+                  ['QuickSight', 'VISUALIZE — dashboard, carta, BI', '"executive dashboard", "visualization", "forecast trend"'],
+                  ['Athena', 'QUERY — SQL ad-hoc atas S3', '"ad-hoc SQL", "query S3 no setup"'],
+                  ['Glue', 'TRANSFORM — ETL + Data Catalog', '"ETL serverless", "catalog data lake"'],
+                  ['Redshift', 'STORE/ANALYZE — data warehouse OLAP', '"recurring complex analytics", "data warehouse"'],
+                ],
+                takeaway: 'Pipeline serverless klasik: S3 (store) → Glue (catalog/ETL) → Athena (query) → QuickSight (visualize). QuickSight = lapisan PALING HUJUNG (visual). Soalan sebut "dashboard / chart / visualize / report untuk boss" → QuickSight. Sebut "SQL" → Athena. Sebut "transform" → Glue.',
+              },
+              {
+                label: 'SPICE vs Direct Query — dua cara QuickSight baca data',
+                headers: ['Aspect', 'SPICE (import)', 'Direct Query'],
+                rows: [
+                  ['Di mana data', 'Cache dalam memori QuickSight', 'Kekal di sumber, pukul live'],
+                  ['Kelajuan dashboard', '🟢 Laju, konsisten', 'Ikut kelajuan sumber'],
+                  ['Data freshness', 'Sefresh refresh terakhir (jadual)', '🟢 Real-time, sentiasa terkini'],
+                  ['Beban ke sumber', '🟢 Rendah (baca sekali)', 'Tinggi (tiap query pukul sumber)'],
+                  ['Guna bila', 'Dashboard kerap dibuka, data tak perlu real-time', 'Data mesti terkini detik ini'],
+                ],
+                takeaway: 'SPICE = laju + jimat sumber tapi data sefresh refresh terakhir. Direct Query = sentiasa terkini tapi bergantung & bebankan sumber. Soalan "dashboard laju untuk ramai user" → SPICE. "Mesti real-time" → Direct Query.',
+              },
+              {
+                label: 'QuickSight Standard vs Enterprise edition',
+                headers: ['Ciri', 'Standard', 'Enterprise'],
+                rows: [
+                  ['Row-level / column-level security', '🔴 Tiada', '🟢 Ada'],
+                  ['Akses AD / SSO (IAM Identity Center)', '🔴 Tiada', '🟢 Ada'],
+                  ['Encryption at rest (SPICE)', '🔴 Tiada', '🟢 Ada'],
+                  ['Embedded analytics dalam app', 'Terhad', '🟢 Penuh'],
+                  ['ML Insights', '🔴 Tiada', '🟢 Ada'],
+                ],
+                takeaway: 'Soalan sebut "row-level security", "restrict data per user", "Active Directory", "embed dashboard", atau "ML Insights/forecast" → mesti Enterprise edition. Standard = BI asas sahaja.',
+              },
             ],
-            keywords: ['QuickSight', 'BI', 'dashboard', 'forecasting', 'ML Insights', 'visualization', 'S3 direct', 'SPICE', 'IoT analytics'],
+            scenario: '"Executive dashboards dari IoT data dalam S3 dengan forecasting, no data warehouse" → QuickSight + S3 direct + ML Insights. "Dashboard laju untuk ramai user, data tak perlu real-time" → SPICE. "Setiap analyst nampak hanya baris data region dia" → QuickSight Enterprise + row-level security. QuickSight BUKAN untuk ad-hoc SQL (→ Athena), BUKAN untuk ETL (→ Glue). Keywords: dashboard, forecast, trend, BI, visualization.',
+            tips: [
+              'QuickSight connect TERUS ke S3/Athena/Redshift/RDS — tak payah load ke Redshift dulu untuk dashboard. Lapisan paling hujung dalam pipeline analytics.',
+              'SPICE = in-memory cache → dashboard laju & berulang. Direct Query = pukul sumber live (real-time tapi bebankan sumber). "Dashboard laju ramai user" → SPICE.',
+              'ML Insights = built-in forecasting + anomaly detection + auto-narrative. "Usage trends + forecasting, minimal ops" → QuickSight ML Insights (Enterprise), bukan SageMaker.',
+              'Row-level security, Active Directory/SSO, encryption-at-rest, embedded analytics, ML Insights = SEMUA Enterprise edition. Soalan sebut mana-mana ni → Enterprise.',
+              'Exam trap: "dashboards + forecasting, minimal ops" → QuickSight (bukan Redshift + custom ML). "Visualize" / "report untuk eksekutif" = QuickSight.',
+            ],
+            docs: [
+              { label: 'What is Amazon QuickSight', url: 'https://docs.aws.amazon.com/quicksight/latest/user/welcome.html' },
+              { label: 'Importing data into SPICE', url: 'https://docs.aws.amazon.com/quicksight/latest/user/spice.html' },
+            ],
+            keywords: ['QuickSight', 'BI', 'dashboard', 'forecasting', 'ML Insights', 'visualization', 'S3 direct', 'SPICE', 'Direct Query', 'row-level security', 'Enterprise edition', 'embedded analytics', 'anomaly detection', 'auto-narrative', 'IoT analytics', 'Active Directory'],
           },
           {
             shortName: 'Athena',
