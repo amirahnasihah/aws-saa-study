@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
-import { registerSteps, delivery, deliveryAccent, duringTesting } from '@/data/exam'
+import { registerSteps, delivery, deliveryAccent, duringTesting, studyChecklist, checklistStatus } from '@/data/exam'
 
 export const metadata: Metadata = {
   title: 'Exam Guide — AWS SAA-C03 Study',
@@ -302,6 +302,64 @@ export default function ExamGuidePage() {
           <a href="https://aws.amazon.com/certification/certified-solutions-architect-associate/" target="_blank" rel="noopener noreferrer" className="text-c1 hover:underline underline-offset-2">Official AWS exam page ↗</a>
         </div>
 
+        {/* Study readiness checklist */}
+        <section className="mt-12">
+          <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-c1 mb-2">
+            Study checklist
+          </p>
+          <h2 className="text-xl font-bold text-aws-text mb-1">Are you ready?</h2>
+          <p className="text-sm text-aws-muted leading-relaxed max-w-[520px] mb-4">
+            The 14 course sections and, for each, the questions you must be able to answer
+            out loud without notes. If one trips you up, rewatch that lecture before moving on.
+          </p>
+
+          {/* Status legend */}
+          <div className="flex flex-wrap gap-x-4 gap-y-1.5 mb-5">
+            {(Object.keys(checklistStatus) as Array<keyof typeof checklistStatus>).map((k) => (
+              <span key={k} className="inline-flex items-center gap-1.5 font-space-mono text-[0.55rem] text-aws-muted">
+                <span className={`w-2 h-2 rounded-full shrink-0 ${checklistStatus[k].dot}`} />
+                {checklistStatus[k].label}
+              </span>
+            ))}
+          </div>
+
+          <div className="space-y-3">
+            {studyChecklist.map((s) => {
+              const st = checklistStatus[s.status]
+              return (
+                <div key={s.n} className="rounded-xl border border-aws-border bg-aws-card/60 p-5">
+                  <div className="flex items-center gap-2 mb-3 pb-2 border-b border-aws-border">
+                    <span className={`w-2 h-2 rounded-full shrink-0 ${st.dot}`} />
+                    <span className={`font-space-mono text-[0.62rem] font-bold ${st.text}`}>
+                      §{s.n}
+                    </span>
+                    <h3 className="text-sm font-bold text-aws-text leading-tight min-w-0">{s.title}</h3>
+                    <span
+                      className={`ml-auto font-space-mono text-[0.5rem] border rounded-full px-2 py-0.5 shrink-0 ${st.pill}`}
+                    >
+                      {st.label}
+                    </span>
+                  </div>
+                  <p className="font-space-mono text-[0.55rem] text-aws-muted mb-3">{s.meta}</p>
+                  <ul className="space-y-1.5">
+                    {s.mustAnswer.map((item) => (
+                      <li key={item} className="flex items-start gap-2">
+                        <span className={`font-space-mono text-[0.6rem] ${st.text} shrink-0 mt-1`}>▸</span>
+                        <span className="text-[0.78rem] text-aws-muted leading-relaxed">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )
+            })}
+          </div>
+
+          <p className="font-space-mono text-[0.53rem] text-aws-muted mt-3">
+            Don&apos;t move on from a §5–§14 section until its quiz is ≥80%. Sources:{' '}
+            <Link href="/glossary" className="text-c1 hover:underline">glossary</Link> ·{' '}
+            <Link href="/practice" className="text-c1 hover:underline">practice</Link>.
+          </p>
+        </section>
 
         <SiteFooter tagline="AWS SAA-C03 · Open Source Study Reference" />
       </main>
