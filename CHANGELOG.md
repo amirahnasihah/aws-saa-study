@@ -5,6 +5,71 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 
 ---
 
+## 2026-06-23
+
+- **chore** Deep Notes authoring standard codified in CLAUDE.md — 6-ingredient recipe (anatomy, comparison tables, mermaid, memory aids, exam traps, sources + glossary) for every awsServices/scenarios enrichment
+- **feat** Analytics §10 (D4) Deep Notes enrichment — EMR node roles + Kilang Kerupuk analogy, Glue Jus Mangga anatomy, Athena cost model, Redshift cluster anatomy, OpenSearch/MSK/CUR comparisons; 15+ glossary terms added
+- **feat** Scenarios: long-running / async processing pattern — Lambda → SQS → Batch/Fargate/EC2 beyond 15-minute limit; matching architecture on /visual
+- **feat** Deep Notes: S3 bucket policy insights (sourceVpce denial trap), VPC endpoint connectivity clarifications, KMS + monitoring service mermaid diagrams
+- **feat** AI routes (chat, explain, hint, explain-arch): mirror user language — Malay or English prose, AWS service names and technical terms stay English
+- **fix** Bookmark sync: Supabase aws_study_notes schema USAGE + API exposure — silent write failures fixed; useBookmarks error logging + local→remote merge upsert
+
+## 2026-06-21
+
+- **feat** Bookmarks page (/bookmarks): full list of saved services and AI answers — export .md, clear all, synced to Supabase when signed in
+- **feat** Bookmark detail (/bookmarks/[id]): full saved AI answer with ChatMarkdown rendering, AWS docs link, remove action
+- **feat** Bookmarks panel: title links to /bookmarks; AI answer rows open detail page; Bookmarks added to mobile nav drawer
+- **fix** Cloudflare Pages deploy: edge runtime on /bookmarks/[id] — fixes next-on-pages build failure for dynamic bookmark routes
+- **feat** Practice page redesign: desktop sidebar question grid (answered/current states), wider 1280px layout, PracticeModeToggle, InlineQuizFooter + shared FloatingQuizNav
+- **feat** Practice question picker: FloatingBar hides on mobile while the jump-to-question modal is open — no overlap with bottom nav
+- **feat** FloatingBar: AskAIButton with aria-controls + static aria-expanded for Edge Tools a11y; dedicated toggle wired to AI chat dialog
+- **feat** VPC page (/vpc): sticky “On this page” TOC with scrollspy, nested AWS-style architecture diagram, route-table comparison blocks
+- **feat** OnThisPage (Cheat Sheet + Deep Notes): Notion-style vertical rail on xl screens, horizontal sticky domain pills below — scrollspy highlights active section
+- **feat** Deep Notes comparison tables: LearnCard renders CompareTable side-by-side blocks (e.g. Multi-AZ vs Read Replicas, NAT GW vs Instance) from awsServices data
+- **chore** AI internal links: generated deepNotesLinkIndex + labsLinkIndex at build time (bun run scripts/generate-ai-link-indexes.ts); pages:build runs index gen before next-on-pages
+- **feat** Practice quiz mode: floating bottom nav (← Prev · N/M · Next →) matches Review — answer history preserved when jumping back
+- **fix** Mobile nav drawer: Browse Services section restored (D1–D4 domain jump pills to Cheat Sheet sections)
+- **feat** FloatingBar: single bottom pill (Ask AI · Search · Bookmarks) replaces separate corner FABs; lifts above Practice action bar
+- **feat** Exam guide page (/exam-guide): D1–D4 weight bars, competencies, topics, scoring note — shared data/exam.ts module; linked from About page
+- **feat** LearnCard: Mermaid diagrams, static images, and flow diagrams rendered inline in Deep Notes cards
+- **feat** Scenarios page (/scenarios): domain filter pills (D1–D4), 18 SAA-C03 architecture patterns — VPC connectivity, TGW, endpoints, CloudFront+OAC, IAM, security
+- **feat** Visual page: structured sidebar navigation, DiagramPanel layout, 15 architectures — TGW hub, VPC Endpoints (gateway vs interface), CloudFront+OAC; canvas 460→520px
+- **feat** VPC page + Deep Notes: VPC Flow Logs section — ACCEPT/REJECT metadata, CloudWatch Logs / S3 / Firehose destinations, exam traps
+- **feat** Deep Notes D1–D3 enrichments: STS, Directory Service, KMS, Aurora vs DynamoDB comparisons, S3 storage classes, Fargate anatomy
+- **feat** AIChatView: message edit + resend; ChatMarkdown image fallback
+
+## 2026-06-11
+
+- **feat** RAG over glossary + labs: 197 glossary terms and 110 labs embedded into Cloudflare Vectorize (@cf/baai/bge-base-en-v1.5, 768-dim cosine index "glossary-rag") for semantic retrieval
+- **feat** lib/ai/rag.ts — queryRag() embeds the question and retrieves the top-K most similar entries (similarity ≥ 0.6); formatRagContext() injects them as AWS-verified grounding context
+- **feat** /api/ai/explain (practice AI Explain drawer) now grounds answers in semantically matched glossary definitions, not just keyword matches
+- **feat** /api/ai/explain-arch (Visual page sidebar) now grounds node + diagram explanations in retrieved glossary and lab content alongside live AWS docs search
+- **chore** scripts/sync-rag-index.ts (bun run rag:sync): offline embedding + upsert pipeline via Workers AI and Vectorize v2 REST APIs, idempotent by content hash
+
+## 2026-06-09
+
+- **feat** Labs section (/labs): new index + detail pages for personal hands-on lab notes — typed data model (slug, level, services, tasks, takeaways), anchor navigation between tasks, "What I Learned" section
+- **feat** Labs: seeded with IAM intro lab (users, groups, least-privilege policies) and EC2 fundamentals lab (VPC, instance launch, Apache, custom page)
+- **feat** Nav: Labs added to desktop nav bar and mobile drawer (🧪 icon)
+- **feat** SiteFooter: Labs link added site-wide ("Labs · hands-on practice notes")
+- **feat** AI sources: internal site pages (Labs, VPC Guide) now surface as clickable source links alongside AWS Docs and YouTube — powered by keyword-scored findInternalLinks() matcher
+- **feat** Internal sources wired into all AI flows: chat, explain (practice), hint (practice), and Visual page explain-arch sidebar
+
+## 2026-06-06
+
+- **feat** Visual page: always-visible AI sidebar — click any node for per-service explanation or "✦ Explain diagram" for full architecture overview; structured sections: What problem, How traffic flows, SAA-C03 Exam Relevance, Common Exam Traps, Sources
+- **feat** Visual page: Sources section now powered by AWS Knowledge MCP — up to 3 live docs.aws.amazon.com links fetched in parallel with AI explanation (replaced static study PDFs)
+- **fix** aws-knowledge.ts pickBestHit: optional chaining on h.url prevents TypeError when MCP returns hits with missing url field (was causing 500s)
+- **feat** ReactFlow Controls panel: dark theme override via globals.css — transparent bg, visible icons, consistent with site dark palette
+- **feat** AI page (/ai) now linked in nav — animated sparkle ✦ icon on desktop, "Ask AI" in mobile drawer
+- **feat** Free AI: ILMU (primary) → NVIDIA NIM → Gemini 2.5 Flash automatic fallback chain — if one hits rate limits, next kicks in transparently
+- **feat** NVIDIA NIM added as free server-side provider (nvapi- key, 40 RPM, 100+ models including Llama 3.3 70B)
+- **feat** OpenRouter BYOK: access 27+ free models (Llama, DeepSeek, Qwen) via single sk-or- key
+- **feat** AI provider toggle redesigned: Auto (free fallback) + OpenRouter/Ollama as BYOK — no manual free provider selection needed
+- **feat** AI chat: viewport-height layout, example prompt chips, Chat / Explain question mode toggle, trash icon to clear history
+- **fix** SSR hydration mismatch on AI provider — localStorage now read in useEffect, not useState initializer
+- **refactor** ILMU, Gemini, NVIDIA use server-side keys (no user config); Claude/Anthropic BYOK hidden from UI (backend still functional)
+
 ## 2026-06-05
 
 - **feat** Global PWA MVP: manifest.webmanifest + icon-192/512 PNG on whole site (installable from any page); /pwa stays hidden design lab for mockups

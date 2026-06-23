@@ -15,6 +15,18 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    id: '2026-06-23',
+    date: '2026-06-23',
+    changes: [
+      { type: 'chore', text: 'Deep Notes authoring standard codified in CLAUDE.md — 6-ingredient recipe (anatomy, comparison tables, mermaid, memory aids, exam traps, sources + glossary) for every awsServices/scenarios enrichment' },
+      { type: 'feat', text: 'Analytics §10 (D4) Deep Notes enrichment — EMR node roles + Kilang Kerupuk analogy, Glue Jus Mangga anatomy, Athena cost model, Redshift cluster anatomy, OpenSearch/MSK/CUR comparisons; 15+ glossary terms added' },
+      { type: 'feat', text: 'Scenarios: long-running / async processing pattern — Lambda → SQS → Batch/Fargate/EC2 beyond 15-minute limit; matching architecture on /visual' },
+      { type: 'feat', text: 'Deep Notes: S3 bucket policy insights (sourceVpce denial trap), VPC endpoint connectivity clarifications, KMS + monitoring service mermaid diagrams' },
+      { type: 'feat', text: 'AI routes (chat, explain, hint, explain-arch): mirror user language — Malay or English prose, AWS service names and technical terms stay English' },
+      { type: 'fix', text: 'Bookmark sync: Supabase aws_study_notes schema USAGE + API exposure — silent write failures fixed; useBookmarks error logging + local→remote merge upsert' },
+    ],
+  },
+  {
     id: '2026-06-21',
     date: '2026-06-21',
     changes: [
@@ -32,6 +44,13 @@ export const changelog: ChangeEntry[] = [
       { type: 'feat', text: 'Practice quiz mode: floating bottom nav (← Prev · N/M · Next →) matches Review — answer history preserved when jumping back' },
       { type: 'fix', text: 'Mobile nav drawer: Browse Services section restored (D1–D4 domain jump pills to Cheat Sheet sections)' },
       { type: 'feat', text: 'FloatingBar: single bottom pill (Ask AI · Search · Bookmarks) replaces separate corner FABs; lifts above Practice action bar' },
+      { type: 'feat', text: 'Exam guide page (/exam-guide): D1–D4 weight bars, competencies, topics, scoring note — shared data/exam.ts module; linked from About page' },
+      { type: 'feat', text: 'LearnCard: Mermaid diagrams, static images, and flow diagrams rendered inline in Deep Notes cards' },
+      { type: 'feat', text: 'Scenarios page (/scenarios): domain filter pills (D1–D4), 18 SAA-C03 architecture patterns — VPC connectivity, TGW, endpoints, CloudFront+OAC, IAM, security' },
+      { type: 'feat', text: 'Visual page: structured sidebar navigation, DiagramPanel layout, 15 architectures — TGW hub, VPC Endpoints (gateway vs interface), CloudFront+OAC; canvas 460→520px' },
+      { type: 'feat', text: 'VPC page + Deep Notes: VPC Flow Logs section — ACCEPT/REJECT metadata, CloudWatch Logs / S3 / Firehose destinations, exam traps' },
+      { type: 'feat', text: 'Deep Notes D1–D3 enrichments: STS, Directory Service, KMS, Aurora vs DynamoDB comparisons, S3 storage classes, Fargate anatomy' },
+      { type: 'feat', text: 'AIChatView: message edit + resend; ChatMarkdown image fallback' },
     ],
   },
   {
