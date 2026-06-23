@@ -38,11 +38,13 @@ export function useBookmarks() {
 
       userIdRef.current = user.id
 
-      const { data } = await supabase
+      const { data, error } = await supabase
         .schema(SCHEMA)
         .from(TABLE)
         .select('short_name')
         .eq('user_id', user.id)
+
+      if (error) console.error('[bookmarks] failed to load from db', error)
 
       if (data && data.length > 0) {
         const remote = new Set(data.map((r: { short_name: string }) => r.short_name))
@@ -54,7 +56,11 @@ export function useBookmarks() {
             .filter((s) => !remote.has(s))
             .map((short_name) => ({ user_id: user.id, short_name }))
           if (toInsert.length > 0) {
-            await supabase.schema(SCHEMA).from(TABLE).insert(toInsert)
+            const { error: upErr } = await supabase
+              .schema(SCHEMA)
+              .from(TABLE)
+              .upsert(toInsert, { onConflict: 'user_id,short_name' })
+            if (upErr) console.error('[bookmarks] failed to sync local→db', upErr)
           }
         }
 
@@ -64,7 +70,11 @@ export function useBookmarks() {
         const local = loadLocal()
         if (local.size > 0) {
           const toInsert = [...local].map((short_name) => ({ user_id: user.id, short_name }))
-          await supabase.schema(SCHEMA).from(TABLE).insert(toInsert)
+          const { error: upErr } = await supabase
+            .schema(SCHEMA)
+            .from(TABLE)
+            .upsert(toInsert, { onConflict: 'user_id,short_name' })
+          if (upErr) console.error('[bookmarks] failed to seed db from local', upErr)
         }
         setBookmarks(local)
       }
@@ -90,13 +100,20 @@ export function useBookmarks() {
             .delete()
             .eq('user_id', userIdRef.current)
             .eq('short_name', shortName)
-            .then()
+            .then(({ error }) => {
+              if (error) console.error('[bookmarks] failed to delete', error)
+            })
         } else {
           supabase
             .schema(SCHEMA)
             .from(TABLE)
-            .insert({ user_id: userIdRef.current, short_name: shortName })
-            .then()
+            .upsert(
+              { user_id: userIdRef.current, short_name: shortName },
+              { onConflict: 'user_id,short_name' },
+            )
+            .then(({ error }) => {
+              if (error) console.error('[bookmarks] failed to save', error)
+            })
         }
       }
 
