@@ -2022,6 +2022,155 @@ export const scenarios: Scenario[] = [
       { label: 'What is Application Migration Service?', url: 'https://docs.aws.amazon.com/mgn/latest/ug/what-is-application-migration-service.html' },
     ],
   },
+
+  // ─────────────────────────────────────────────────────────────────────────
+  // D3 · Long-running / async processing — beyond Lambda's 15-minute limit
+  // ─────────────────────────────────────────────────────────────────────────
+  {
+    id: 'long-running-async-processing',
+    title: 'Long-Running & Async Processing',
+    subtitle: 'When a job exceeds Lambda’s 15-minute limit — decouple with a queue and process on Batch / Fargate',
+    domain: 'd3',
+    tags: ['Lambda', 'SQS', 'AWS Batch', 'Fargate', 'Step Functions', 'SNS', 'Decoupling'],
+    overview:
+      'A request triggers heavy work that can run for many minutes or hours — video transcoding, ' +
+      'big-data reports, ML training. Lambda caps a single invocation at 15 minutes, and a synchronous ' +
+      'API call would time out (API Gateway integration timeout is 29s by default) and leave the user ' +
+      'staring at a spinner. The pattern: accept the request quickly, return "202 Accepted — we’ll notify ' +
+      'you when it’s done", drop the job onto an SQS queue, and let a worker that has NO time limit ' +
+      '(AWS Batch or Fargate/ECS) do the heavy lifting in the background, then store the result in S3 ' +
+      'and notify via SNS/SES. This is "asynchronous decoupling".',
+    flow: [
+      { nodes: [{ label: 'Client', sublabel: 'submit large job', color: 'gray' }] },
+      { nodes: [{ label: 'API Gateway + Lambda', sublabel: 'enqueue → 202 Accepted', color: 'c4' }] },
+      { nodes: [{ label: 'SQS Queue', sublabel: 'decouple · buffer · retry', color: 'c2' }] },
+      {
+        nodes: [
+          { label: 'AWS Batch', sublabel: 'batch jobs · Spot', color: 'c1' },
+          { label: 'Fargate / ECS', sublabel: 'containers · no time limit', color: 'c1' },
+        ],
+      },
+      { nodes: [{ label: 'S3', sublabel: 'store result', color: 'c6' }] },
+      { nodes: [{ label: 'SNS / SES', sublabel: 'notify "siap"', color: 'c5', optional: true }] },
+    ],
+    anatomy: [
+      {
+        component: 'API Gateway + Lambda (front door)',
+        role: 'Accept the request fast and hand off — never block on the heavy work',
+        notes: [
+          'Lambda validates + enqueues the job, then returns immediately (HTTP 202 Accepted)',
+          'API Gateway default integration timeout = 29s — a synchronous long job would time out here',
+          'Lambda hard limit = 15 minutes (900s) per invocation — fine for the enqueue step, NOT the processing',
+          'Client later polls a status endpoint or waits for the notification — it never holds the connection open',
+        ],
+      },
+      {
+        component: 'SQS Queue (decoupler)',
+        role: 'Buffer work between the fast front door and the slow worker',
+        notes: [
+          'Decouples producer from consumer — if workers are busy, jobs wait safely in the queue',
+          'Visibility Timeout MUST be ≥ the worker’s max processing time, or the message reappears and a second worker re-runs the job (duplicate work). Max visibility timeout = 12 hours',
+          'Workers delete the message only AFTER the job succeeds — a crash mid-job lets another worker retry',
+          'Dead-Letter Queue (DLQ) catches messages that fail repeatedly (poison pills) for inspection',
+          'Standard = at-least-once + best-effort order; FIFO = exactly-once + strict order (lower throughput)',
+        ],
+      },
+      {
+        component: 'Worker compute (AWS Batch / Fargate / ECS / EC2)',
+        role: 'Do the actual long-running work — no 15-minute ceiling',
+        notes: [
+          'AWS Batch = managed batch scheduler; packages job in a container, provisions EC2/Fargate, runs to completion, tears down. Loves Spot for cost',
+          'Fargate = serverless containers (ECS/EKS), pay per task, no servers to patch, no time limit',
+          'EC2 (in an Auto Scaling Group) = full control over OS / GPU / memory for specialised workloads',
+          'Scale workers horizontally — split a 5-hour job into many small messages and run workers in parallel ("upah 10 pekerja")',
+        ],
+      },
+      {
+        component: 'Step Functions (optional orchestrator)',
+        role: 'Coordinate multi-step long workflows with retries and branching',
+        notes: [
+          'Standard workflows can run up to 1 year — ideal for long, multi-stage pipelines',
+          'Built-in retry / catch / parallel state — no custom orchestration code',
+          'Use when the job is several dependent steps, not one monolithic task',
+        ],
+      },
+      {
+        component: 'S3 + SNS / SES (result & notify)',
+        role: 'Persist the output and tell the user it is ready',
+        notes: [
+          'Worker writes the finished artefact (video, report, model) to S3',
+          'SNS / SES sends "your job is done" (email, push, or fan-out to other systems)',
+          'CloudFront can then deliver the S3 result globally with low latency',
+        ],
+      },
+    ],
+    compare: [
+      {
+        label: 'Which compute for a job > 15 minutes?',
+        headers: ['Aspect', 'Lambda', 'AWS Batch', 'Fargate / ECS', 'EC2 (ASG)'],
+        rows: [
+          ['Max duration', '🔴 15 min hard limit', '🟢 No limit', '🟢 No limit', '🟢 No limit'],
+          ['Management', 'Fully managed', 'Managed scheduler', 'Serverless containers', 'You manage OS'],
+          ['Best for', 'Short event-driven tasks', 'Scheduled / queued batch jobs', 'Long containers, steady or bursty', 'Custom OS / GPU / licences'],
+          ['Cost lever', 'Per ms', 'Spot-friendly', 'Per task / sec', 'RI / Spot / Savings Plans'],
+        ],
+        takeaway: '"Runs longer than 15 min" → it is NOT Lambda. Batch = queued/scheduled jobs (Spot-friendly). Fargate = long-running containers, no servers. EC2 = need OS/GPU control.',
+      },
+      {
+        label: 'Real-world long jobs → the AWS service the exam expects',
+        headers: ['Workload', 'Service', 'Why'],
+        rows: [
+          ['Video transcoding (4K → multiple resolutions)', 'MediaConvert, or Batch / Fargate', 'CPU-heavy, minutes-to-hours — never Lambda'],
+          ['Big-data analytics over TB of files', 'EMR (Spark/Hadoop) or Glue ETL', 'Distributed processing of huge datasets'],
+          ['ML model training on GPUs', 'SageMaker', 'Managed training on GPU instances, can run for days'],
+          ['Complex nightly reports', 'AWS Batch (scheduled, off-peak)', 'Long compute on a schedule, Spot to cut cost'],
+        ],
+        takeaway: 'Map the keyword: "transcode" → MediaConvert/Batch · "big data / Spark" → EMR/Glue · "train a model" → SageMaker · "nightly batch" → AWS Batch.',
+      },
+    ],
+    nuances: [
+      {
+        trap: 'Run a multi-hour job directly in Lambda',
+        correct: 'Lambda caps at 15 minutes. Anything longer → AWS Batch, Fargate/ECS, EC2, or Step Functions for orchestration.',
+      },
+      {
+        trap: 'Call the long job synchronously through API Gateway and wait for the result',
+        correct: 'API Gateway integration timeout is 29s by default — the call times out. Decouple: accept fast (202), enqueue to SQS, process async, then notify (SNS/SES).',
+      },
+      {
+        trap: 'Set the SQS visibility timeout shorter than the processing time',
+        correct: 'If a job takes 20 min but visibility timeout is 5 min, the message becomes visible again and a second worker re-runs it — duplicate work. Set visibility timeout ≥ max processing time (up to 12h).',
+      },
+      {
+        trap: 'Reach for Kinesis just because the data is "streaming"',
+        correct: 'SQS = decoupled task queue, one message → one worker, then deleted. Kinesis = ordered stream with replay for multiple consumers (real-time analytics). A background job queue is SQS, not Kinesis.',
+      },
+      {
+        trap: 'Use SQS when you need one event to trigger many independent systems',
+        correct: 'SQS delivers a message to a single consumer group. To fan out one event to many subscribers, use SNS (or SNS → multiple SQS queues).',
+      },
+    ],
+    tips: [
+      'Keyword "process for hours" / "longer than 15 minutes" → Lambda is WRONG. Think Batch / Fargate / EC2 / Step Functions',
+      'Keyword "don’t make the user wait" / "decouple" → SQS in front, return 202, notify via SNS/SES when done',
+      'Visibility timeout ≥ worker processing time — the #1 SQS long-job trap',
+      'Split a giant job into many SQS messages + parallel workers — finishes faster and survives worker crashes',
+      'Step Functions Standard workflow = up to 1 year, built-in retries — for multi-step long pipelines',
+      'AWS Batch + Spot Instances = cheapest way to run large, interruption-tolerant batch jobs',
+    ],
+    mnemonic: [
+      '"15 minutes" is the Lambda wall — hear "hours", climb over to Batch / Fargate / EC2.',
+      'Async recipe: Accept (202) → Queue (SQS) → Work (Batch/Fargate) → Store (S3) → Notify (SNS/SES).',
+      'Visibility timeout too short = the queue forgets the worker is still cooking → duplicate jobs.',
+    ],
+    sources: [
+      { label: 'Lambda quotas (15-minute timeout)', url: 'https://docs.aws.amazon.com/lambda/latest/dg/gettingstarted-limits.html' },
+      { label: 'What is AWS Batch?', url: 'https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html' },
+      { label: 'AWS Fargate for Amazon ECS', url: 'https://docs.aws.amazon.com/AmazonECS/latest/userguide/what-is-fargate.html' },
+      { label: 'Amazon SQS visibility timeout', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html' },
+      { label: 'AWS Step Functions — service quotas', url: 'https://docs.aws.amazon.com/step-functions/latest/dg/limits-overview.html' },
+    ],
+  },
 ]
 
 export const domainLabel: Record<Scenario['domain'], string> = {
