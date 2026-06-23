@@ -3167,6 +3167,24 @@ export const domains: DomainData[] = [
             ],
             compare: [
               {
+                label: 'Redshift — komponen dalaman (anatomy)',
+                headers: ['Komponen', 'Peranan', 'Nota exam'],
+                rows: [
+                  ['Cluster', 'Keseluruhan: 1 Leader Node + 1 atau lebih Compute Node', 'Unit yang kau provision (atau guna Serverless)'],
+                  ['Leader Node', 'Terima query SQL, buat execution plan, agih kerja ke compute node, kumpul & pulang hasil', 'TAK dikira caj dalam cluster multi-node; single-node = leader & compute jadi satu'],
+                  ['Compute Node', 'Simpan data + jalankan query; ada CPU, memory & disk sendiri', 'Tambah node = lebih storage + lebih laju (scale horizontal)'],
+                  ['Node Slices', 'Tiap compute node dipecah jadi beberapa slice; tiap slice proses sebahagian data SELARI', 'Inilah unit MPP sebenar — lebih slice = lebih parallelism'],
+                  ['Managed Storage (RMS)', 'RA3: data disimpan dalam Redshift Managed Storage atas S3, auto-scale', 'Asingkan compute & storage → scale satu tanpa tambah satu lagi'],
+                  ['Columnar + Compression', 'Simpan data ikut COLUMN (bukan row) + mampat', 'Sebab aggregate (SUM/GROUP BY) laju; lemah untuk single-row update'],
+                  ['Zone Maps', 'Simpan min/max tiap blok data dalam memory → langkau blok tak relevan', 'Kurangkan jumlah data di-scan = query lagi laju'],
+                  ['Distribution Style (DISTKEY)', 'Cara baris diagih antara slices: KEY / EVEN / ALL', 'KEY co-locate baris untuk join; ALL replicate table kecil ke semua node'],
+                  ['Sort Key (SORTKEY)', 'Cara data disusun fizikal atas disk', 'Range scan & merge join laju bila filter ikut sort key'],
+                  ['Redshift Spectrum', 'Query data dalam S3 TERUS guna external table, tanpa load', 'Warehouse + data lake S3 dalam satu query'],
+                  ['Concurrency Scaling', 'Auto-tambah cluster sementara bila ramai query serentak', 'Spike concurrent users → tak beratur'],
+                ],
+                takeaway: 'Aliran: Cluster → Leader Node (otak: plan & agih) → Compute Nodes (pekerja) → Node Slices (unit selari MPP) → Managed Storage (columnar atas S3). DISTKEY & SORTKEY tuning prestasi; Spectrum extend ke S3; Concurrency Scaling handle ramai user serentak.',
+              },
+              {
                 label: 'Redshift vs Athena vs EMR vs RDS',
                 headers: ['Aspect', 'Redshift', 'Athena', 'EMR', 'RDS/Aurora'],
                 rows: [
@@ -3205,7 +3223,7 @@ export const domains: DomainData[] = [
               { label: 'Redshift Spectrum', url: 'https://docs.aws.amazon.com/redshift/latest/dg/c-using-spectrum.html' },
               { label: 'Concurrency Scaling', url: 'https://docs.aws.amazon.com/redshift/latest/dg/concurrency-scaling.html' },
             ],
-            keywords: ['data warehouse', 'OLAP', 'columnar', 'MPP', 'RA3', 'managed storage', 'Redshift Spectrum', 'Redshift Serverless', 'concurrency scaling', 'zero-ETL', 'leader node', 'compute node', 'petabyte', 'BI analytics'],
+            keywords: ['data warehouse', 'OLAP', 'columnar', 'MPP', 'RA3', 'managed storage', 'RMS', 'Redshift Spectrum', 'Redshift Serverless', 'concurrency scaling', 'zero-ETL', 'cluster', 'leader node', 'compute node', 'node slices', 'distribution key', 'DISTKEY', 'sort key', 'SORTKEY', 'zone maps', 'petabyte', 'BI analytics'],
           },
           {
             shortName: 'QuickSight',
