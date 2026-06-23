@@ -2780,13 +2780,72 @@ export const domains: DomainData[] = [
               ],
               caption: 'Tiap step ada built-in retry + timeout + branch (Choice state). Kalau step gagal → catch & route ke fallback, bukan crash whole flow. Visual console tunjuk state setiap step.',
             },
-            scenario: '"Order processing: validate → charge card → notify warehouse → send email, dengan error handling pada setiap step" → Step Functions. Bukan Lambda je (Lambda tak ada built-in retry/branching logic across services).',
+            mermaid: [
+              {
+                label: 'Standard vs Express — pilih jenis workflow (decision tree)',
+                source: `flowchart TD
+  A["Nak orchestrate workflow"] --> B{"Berapa lama satu<br/>run boleh ambil?"}
+  B -->|"> 5 minit / berjam / berhari<br/>(sampai 1 tahun)"| STD["🧾 STANDARD<br/>exactly-once · audit penuh<br/>max 1 tahun"]
+  B -->|"≤ 5 minit, volume tinggi"| C{"Tindakan idempotent?<br/>(boleh ulang tanpa rosak)"}
+  C -->|"Ya — IoT ingest, streaming,<br/>transform data"| EXP["⚡ EXPRESS<br/>at-least-once · murah · laju<br/>max 5 minit"]
+  C -->|"TIDAK — bayar duit,<br/>start EMR cluster"| STD
+  STD --> S2["Perlu human-approval (.waitForTaskToken),<br/>.sync job-run, Distributed Map, Activities?<br/>→ wajib STANDARD"]
+  EXP --> E2["Sync Express = tunggu jawapan (API backend)<br/>Async Express = fire-and-forget (log/stream)"]`,
+                caption: 'Soalan pertama exam = tempoh + idempotency. >5 min ATAU non-idempotent (payment, start cluster) → Standard (exactly-once, audit penuh). ≤5 min + idempotent + volume tinggi (IoT/streaming) → Express (at-least-once, bayar per execution). INGAT: human-approval/callback (.waitForTaskToken), .sync job-run, Distributed Map & Activities → STANDARD SAHAJA.',
+              },
+              {
+                label: 'Analogi — Pos Berdaftar vs Blast SMS',
+                source: `flowchart TD
+  W["📋 Borang proses berlangkah<br/>(validate → bayar → hantar → email)"] --> Q{"Penting & kena ada resit?<br/>atau laju & banyak?"}
+  Q -->|"Penting, kena jejak,<br/>jangan hantar 2 kali"| STD["📮 Pos Berdaftar = STANDARD<br/>setiap langkah ada resit (audit),<br/>exactly-once, boleh ambil masa,<br/>bayar ikut bilangan langkah"]
+  Q -->|"Laju, banyak,<br/>ulang pun tak apa"| EXP["📲 Blast SMS = EXPRESS<br/>pukul rata laju & murah,<br/>kadang sampai 2 kali (at-least-once),<br/>siap dalam 5 minit"]`,
+                caption: 'Standard = pos berdaftar: setiap langkah ada resit (execution history/audit), dijamin exactly-once (tak hantar 2 kali) → sesuai bayar duit, start EMR cluster, workflow berhari/berbulan. Express = blast SMS: laju + murah + volume besar, tapi boleh sampai 2 kali (at-least-once) → sesuai IoT ingest & streaming yang idempotent. INGAT exam: "non-idempotent / payment / long-running / audit trail" → Standard; "high-volume event / IoT / streaming, short" → Express.',
+              },
+            ],
+            scenario: '"Order processing: validate → charge card → notify warehouse → send email, dengan error handling pada setiap step" → Step Functions. Bukan Lambda je (Lambda tak ada built-in retry/branching logic across services). "Payment / non-idempotent / berjam-jam / perlu audit trail penuh" → Standard. "IoT ingestion / streaming transform / high-volume, idempotent, <5 min" → Express. "Workflow kena tunggu kelulusan manusia dulu sebelum sambung" → Standard + Callback pattern (.waitForTaskToken).',
+            compare: [
+              {
+                label: 'Standard vs Express Workflow (discriminator utama exam)',
+                headers: ['Ciri', 'Standard', 'Express'],
+                rows: [
+                  ['Tempoh max', '🟢 1 tahun', '5 minit'],
+                  ['Execution semantics', 'Exactly-once', 'Async = at-least-once · Sync = at-most-once'],
+                  ['Sesuai untuk', 'Non-idempotent (bayar, start EMR), long-running, audit', 'High-volume event: IoT ingest, streaming, mobile backend (idempotent)'],
+                  ['Harga', 'Per state transition', 'Per execution + tempoh + memory'],
+                  ['Execution history', '🟢 Penuh (API 90 hari) + visual console', 'CloudWatch Logs sahaja'],
+                  ['Callback (.waitForTaskToken) & .sync job-run', '🟢 Ya', '❌ Tidak'],
+                  ['Distributed Map & Activities', '🟢 Ya', '❌ Tidak'],
+                ],
+                takeaway: 'Long-running / non-idempotent / perlu audit / human-approval-callback / Distributed Map → Standard. Short (<5 min) + high-volume + idempotent (IoT/streaming) → Express. Jenis workflow IMMUTABLE — tak boleh tukar lepas create.',
+              },
+              {
+                label: 'Step Functions vs Lambda-sahaja vs SWF — bila orchestrate?',
+                headers: ['Situasi', 'Pilih'],
+                rows: [
+                  ['Multi-step merentas banyak service, perlu retry/branch/visual', '🟢 Step Functions'],
+                  ['Satu fungsi ringkas, tiada coordination antara langkah', 'Lambda sahaja'],
+                  ['Perlu visual console tengok state setiap langkah', 'Step Functions (BUKAN SQS/SWF)'],
+                  ['Legacy / perlu external "deciders" & "workers" sendiri', 'SWF (lama — elak untuk projek baru)'],
+                ],
+                takeaway: 'Step Functions = orchestrator moden (state machine + visual + built-in retry/catch). Lambda-sahaja kalau takde langkah nak coordinate. SWF legacy — Step Functions ganti dia.',
+              },
+            ],
             tips: [
-              'Distributed Map state: parallelizes processing over large datasets (e.g. chunk a text file and process each chunk concurrently) — key for PT5 text-to-speech pipeline question',
+              'Standard vs Express adalah discriminator #1: ingat tempoh (1 tahun vs 5 minit) + idempotency. Non-idempotent (charge payment, start EMR cluster) → Standard (exactly-once). High-volume idempotent (IoT, streaming) → Express (at-least-once).',
+              'Workflow type IMMUTABLE — tak boleh tukar Standard↔Express selepas state machine dicipta. Kena buat state machine baru.',
+              'Express ada 2 rasa: Synchronous Express = tunggu & pulang result (sesuai orchestrate API backend / API Gateway integration); Asynchronous Express = fire-and-forget (sesuai streaming/log ingestion).',
+              'Service integration patterns: Request-Response (default, terus sambung), .sync (Job-run — tunggu job AWS habis, cth EMR/Glue/ECS), .waitForTaskToken (Callback — pause sampai external system/human hantar token balik). .sync & Callback → STANDARD SAHAJA, Express tak support.',
+              'Error handling terbina dalam ASL: Retry (cuba semula dengan backoff), Catch (tangkap error & route ke fallback state). Sebab tu Step Functions menang vs Lambda-chaining manual untuk workflow yang perlu resilience.',
+              'Choice state = branching (if/else ikut input). Parallel state = jalankan beberapa cabang serentak. Map state = ulang langkah atas array. Distributed Map = versi besar Map untuk dataset besar (Standard sahaja).',
+              'Distributed Map state: parallelizes processing over large datasets (e.g. chunk a text file and process each chunk concurrently) — key for PT5 text-to-speech pipeline question. Standard sahaja.',
               '"Graphical/visual console to see each step\'s state" → Step Functions (not SQS, not SWF)',
               'SWF vs Step Functions: Step Functions is the modern replacement; SWF is legacy and lacks the visual console',
             ],
-            keywords: ['workflow', 'state machine', 'orchestration', 'retry logic', 'error handling', 'Lambda orchestration', 'visual workflow', 'Distributed Map', 'parallel processing'],
+            docs: [
+              { label: 'Choosing workflow type (Standard vs Express)', url: 'https://docs.aws.amazon.com/step-functions/latest/dg/choosing-workflow-type.html' },
+              { label: 'Service integration patterns (.sync, .waitForTaskToken)', url: 'https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html' },
+            ],
+            keywords: ['workflow', 'state machine', 'orchestration', 'retry logic', 'error handling', 'Lambda orchestration', 'visual workflow', 'Distributed Map', 'parallel processing', 'Standard workflow', 'Express workflow', 'exactly-once', 'at-least-once', 'idempotent', 'callback pattern', 'waitForTaskToken', 'sync integration', 'ASL', 'Amazon States Language', 'Choice state', 'Map state', 'Activities', 'SWF'],
           },
           {
             shortName: 'Amazon MQ',
