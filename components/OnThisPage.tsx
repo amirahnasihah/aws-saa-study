@@ -51,7 +51,7 @@ export default function OnThisPage() {
       {/* Vertical Notion-style rail — xl and up */}
       <aside
         aria-label="On this page"
-        className="hidden xl:block fixed top-[calc(3.5rem+2rem)] right-[max(1rem,calc((100vw-860px)/2-224px))] w-[208px] max-h-[calc(100vh-7rem)] overflow-y-auto nav-scroll"
+        className="hidden min-[1400px]:block fixed top-[calc(3.5rem+2rem)] right-[max(1rem,calc((100vw-920px)/2-224px))] w-[208px] max-h-[calc(100vh-7rem)] overflow-y-auto nav-scroll"
       >
         <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted mb-3 pl-3">On this page</p>
         <ul className="space-y-3">
@@ -94,7 +94,7 @@ export default function OnThisPage() {
       {/* Horizontal sticky bar — below xl */}
       <nav
         aria-label="On this page"
-        className="xl:hidden sticky top-14 z-30 -mx-4 mb-6 border-b border-aws-border/60 bg-aws-bg/85 backdrop-blur-md"
+        className="min-[1400px]:hidden sticky top-14 z-30 -mx-4 mb-6 border-b border-aws-border/60 bg-aws-bg/85 backdrop-blur-md"
       >
         <div className="nav-scroll flex items-center gap-1.5 overflow-x-auto px-4 py-2.5">
           {navDomains.map((domain, index) => (
