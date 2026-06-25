@@ -420,8 +420,10 @@ export const domains: DomainData[] = [
               'Kalau soalan tanya "prevent actions org-wide tapi exempt management account" → answer specify "member accounts only"',
               'SCPs cannot GRANT permissions — they only RESTRICT maximum available permissions. IAM policies still needed untuk grant access',
               'S3 Block Public Access via SCP: most scalable way nak prevent public S3 org-wide. SCP prevent members dari disable BPA setting',
+              'PRICING: AWS Organizations is FREE — tiada charge untuk OUs, SCPs, atau consolidated billing. Yang kau bayar adalah resources dalam setiap account. Consolidated billing percuma dan boleh dapat volume discounts (S3, EC2 reserved, dll) kerana aggregate usage.',
+              'Exam: "no charge for Organizations" → free. "consolidated billing discount" → volume pricing benefit dari aggregate usage across all member accounts.',
             ],
-            keywords: ['multi-account', 'SCPs', 'guardrails', 'Control Tower', 'management account', 'OU', 'management account exemption', 'SCP cannot grant', 'S3 Block Public Access SCP'],
+            keywords: ['multi-account', 'SCPs', 'guardrails', 'Control Tower', 'management account', 'OU', 'management account exemption', 'SCP cannot grant', 'S3 Block Public Access SCP', 'pricing', 'free', 'consolidated billing', 'volume discount'],
           },
         ],
       },
@@ -906,6 +908,8 @@ export const domains: DomainData[] = [
               'Console-created Trail applies to ALL REGIONS by default (multi-region trail). CloudTrail Events dari semua regions dihantar ke satu S3 bucket.',
               'Insight Events: detect unusual API activity patterns (e.g. sudden spike in EC2 TerminateInstances calls). Optional, additional cost.',
               'Exam: "S3 object download activity logging" → CloudTrail data events (not management events). "Who created this IAM role?" → CloudTrail management events (default logging).',
+              'PRICING: First copy of management events = FREE (all accounts). Data events (S3 object-level, Lambda invocations) = $0.10 per 100,000 events. CloudTrail Lake = $0.75/GB ingested + $0.005/GB scanned. Insight events = additional cost. Long-term: export ke S3 (bayar S3 storage sahaja, CloudTrail tak charge untuk export).',
+              'Exam: "free audit trail of API calls" → CloudTrail management events (free). "log S3 object-level API calls" → data events ($0.10/100K events, not free).',
             ],
             compare: {
               label: 'CloudTrail vs CloudWatch vs Config',
@@ -1983,8 +1987,10 @@ export const domains: DomainData[] = [
               'Soalan sebut "lowest latency / highest throughput / HPC" → Cluster. Sebut "large distributed/replicated (Hadoop, Cassandra, Kafka)" → Partition. Sebut "critical instances mesti elak simultaneous failure" → Spread',
               'Spread = maks 7 running instances per AZ per group; Partition = maks 7 partition per AZ — angka 7 ni selalu jadi distractor exam',
               'EC2 purchasing: On-Demand (bayar ikut guna, no commit) · Reserved/Savings Plans (commit 1–3 thn, jimat sampai ~72%) · Spot (sampai 90% murah, boleh kena reclaim) · Dedicated Host (hardware fizikal khas, untuk lesen BYOL)',
+              'PRICING (us-east-1, t3.medium approx): On-Demand ~$0.0416/hr. Reserved (3yr All Upfront) ~72% off. Savings Plans ~66% off. Spot up to 90% off. Dedicated Instance: +$2/hr region fee. Dedicated Host: billed per-host (~$3.20/hr for t3 host). Billing: Linux/Ubuntu per-second (min 60s), Windows per-hour.',
+              'Exam: "Linux per-second billing, minimum 60 seconds" → EC2. "Windows billed per-hour" → EC2 Windows. "Dedicated Host billed per physical host" → not per-instance.',
             ],
-            keywords: ['full control', 'custom OS', 'lift and shift', 'placement groups', 'cluster/partition/spread'],
+            keywords: ['full control', 'custom OS', 'lift and shift', 'placement groups', 'cluster/partition/spread', 'pricing', 'per-second billing', 'per-hour Windows', 'On-Demand cost', 'Reserved discount', 'Dedicated Host billing'],
           },
           {
             shortName: 'Lambda',
@@ -2012,6 +2018,8 @@ export const domains: DomainData[] = [
               '/tmp ephemeral storage: 512 MB default, boleh naik sampai 10,240 MB (10 GB)',
               'Deployment package: 50 MB (zip, direct upload) / 250 MB (unzipped + layers), atau container image sampai 10 GB',
               'Cold start = masa init environment + load code; teruk untuk VPC/package besar. Kurangkan dengan Provisioned Concurrency',
+              'PRICING: Free tier — 1M requests/mo + 400,000 GB-seconds/mo (forever). Selepas free tier: $0.20 per 1M requests + $0.0000166667 per GB-second. GB-second = memory allocated × duration. Provisioned Concurrency = $0.0000041667 per vCPU-hour + $0.000000111 per GB-hour (config + execution).',
+              'Exam: "1 million free requests per month forever" → Lambda free tier. "pay per request + duration" → Lambda pricing model. "Provisioned Concurrency has hourly cost" → yes, separate from execution.',
             ],
             scenario: 'Sebut "predictable spike, mesti respond cepat TANPA cold start" → Provisioned Concurrency. Sebut "satu function jangan habiskan semua kuota / jamin kuota function kritikal" → Reserved Concurrency. Sebut "job ambil masa lebih 15 minit" → Lambda TAK sesuai (guna Fargate/Batch/Step Functions).',
             keywords: ['serverless', 'event-driven', '15-min max', 'reserved concurrency', 'provisioned concurrency', 'cold start'],
@@ -2319,6 +2327,164 @@ export const domains: DomainData[] = [
             ],
             keywords: ['container registry', 'Docker images', 'private registry', 'IAM integration', 'image scanning', 'lifecycle policy', 'KMS', 'ECS', 'EKS'],
           },
+          {
+            shortName: 'Instance Store',
+            fullName: 'Amazon EC2 Instance Store',
+            ingat: '"Disk sementara dalam EC2 — laju tapi data hilang bila stop"',
+            gunaUntuk: 'Temporary block storage physically attached to the host server — highest IOPS, zero cost',
+            fungsi: 'Instance store adalah ephemeral disk yang FIZIKAL berada pada host server EC2. Performance paling tinggi (NVMe, IOPS jutaan) sebab tak melalui network macam EBS. TAPI data HILANG bila instance stop, terminate, atau fail — ia tak persistent. Tak boleh detach, tak boleh snapshot, tak boleh recover.',
+            contohGuna: 'Scratch disk untuk HPC/big data processing, temporary cache, buffer, shuffle space untuk Spark/Hadoop',
+            detailsLabel: 'Instance Store anatomy',
+            storageDetails: 'Disk fizikal pada HOST → tak boleh detach, tak boleh pindah ke instance lain\nEphemeral → data HILANG bila instance stop/terminate/fail\nNVMe atau SSD/HDD → IOPS jauh melebihi EBS (jutaan)\nKos → PERCUMA (termasuk dengan harga instance)\nSize → tetap ikut instance type (tak boleh resize)\nBoleh ditambah HANYA masa launch — tak boleh tambah lepas running',
+            compare: {
+              label: 'Instance Store vs EBS — the ephemeral vs persistent trap',
+              headers: ['Aspect', 'Instance Store', 'EBS'],
+              rows: [
+                ['Data persistence', '🔴 EPHEMERAL — hilang bila stop/terminate', '🟢 PERSISTENT — data kekal selepas stop/start'],
+                ['Performance', '🟢 Jutaan IOPS (fizikal NVMe)', 'Up to 256K IOPS (io2), 16K (gp3)'],
+                ['Kos', '🟢 Percuma (dalam harga instance)', 'Bayar per GB + IOPS per bulan'],
+                ['Snapshot', '❌ Tak boleh snapshot', '🟢 Boleh snapshot ke S3'],
+                ['Resize', '❌ Tetap ikut instance type', '🟢 Elastic Volumes (resize on the fly)'],
+                ['Attach', 'Fizikal pada host — tak boleh detach', 'Network-attached — boleh detach/attach'],
+                ['Multi-Attach', '❌', '🟢 io1/io2 sahaja'],
+              ],
+              takeaway: 'Nak performance maksimum + tak kisah data hilang (scratch, cache, temp) → Instance Store. Nak data kekal, boleh snapshot, boleh resize → EBS. Exam: "temporary high-IOPS storage, data can be lost" → Instance Store. "persistent storage survive reboot" → EBS.',
+            },
+            scenario: '"HPC workload perlu jutaan IOPS untuk scratch space, data boleh hilang takpe" → Instance Store. "Database storage mesti survive instance failure" → EBS (bukan Instance Store). "Cache yang boleh rebuild kalau hilang" → Instance Store.',
+            tips: [
+              'Instance Store = EPHEMERAL. Stop/start EC2 → data HILANG (instance mungkin pindah ke host fizikal lain). Reboot = data KEKAL (same host).',
+              'Tak boleh tambah instance store volume selepas instance running — mesti pilih instance type yang ada store SAAT launch.',
+              'Instance store ada HANYA pada instance types tertentu (cth m5d, r5d, i3, z1d). Bukan semua instance type ada disk fizikal.',
+              'Exam: "data mesti survive even if instance fails" → JANGAN guna Instance Store → EBS.',
+              'Instance Store data hilang bila: (1) instance stop/terminate, (2) instance underlying host fails, (3) instance dipindah ke host lain. Reboot = data KEKAL.',
+            ],
+            docs: [
+              { label: 'Amazon EC2 instance store', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/InstanceStorage.html' },
+            ],
+            keywords: ['ephemeral', 'temporary storage', 'high IOPS', 'NVMe', 'scratch disk', 'data lost on stop', 'physically attached', 'no snapshot', 'free', 'HPC', 'big data', 'shuffle space'],
+          },
+          {
+            shortName: 'ENI/ENA/EFA',
+            fullName: 'EC2 Network Interfaces — ENI · ENA · EFA',
+            ingat: '"ENI = kad network biasa. ENA = driver laju. EFA = kad network untuk HPC super-laju"',
+            gunaUntuk: 'Network connectivity dan performance — pilih ikut keperluan (standard vs high-throughput vs HPC)',
+            fungsi: 'Tiga jenis network "kad" pada EC2: ENI (Elastic Network Interface) = kad network virtual standard, ENA (Elastic Network Adapter) = driver untuk network performance tinggi, EFA (Elastic Fabric Adapter) = kad network special untuk HPC dengan OS-bypass.',
+            detailsLabel: 'ENI vs ENA vs EFA — anatomy',
+            storageDetails: 'ENI → Virtual network card (NIC). Boleh attach ke EC2 untuk network tambahan. Boleh ada IP private, public IP, security groups, MAC address. Boleh detach dari satu EC2 → attach ke EC2 lain (failover IP). Guna untuk: management network, NAT, bastion.\nENA → Elastic Network Adapter = driver/software untuk enable network performance tinggi pada instance yang support. Up to 100 Gbps. Dua versi: ENA (standard, sampai 25 Gbps) dan ENAv2 (sampai 100 Gbps).\nEFA → Elastic Fabric Adapter = NIC special untuk HPC. Ada ENA capabilities + OS-bypass (libfabric API). Instance boleh communicate terus (bypass OS network stack) → latency rendah + throughput tinggi untuk message passing (MPI, CUDA). Hanya Linux.',
+            compare: {
+              label: 'ENI vs ENA vs EFA — macam mana pilih',
+              headers: ['Aspect', 'ENI', 'ENA', 'EFA'],
+              rows: [
+                ['Apakah dia', 'Virtual NIC (network card)', 'Network driver/adapter', 'HPC network adapter + OS-bypass'],
+                ['Performance', 'Standard (1–10 Gbps)', 'High (up to 25 Gbps), ENAv2 up to 100 Gbps', 'Highest (up to 100 Gbps) + lowest latency'],
+                ['OS-bypass', '❌', '❌', '🟢 Ya (libfabric, MPI, CUDA direct)'],
+                ['Best untuk', 'Standard networking, management, NAT, failover IP', 'High-throughput apps, most modern instance types', 'HPC, ML distributed training, tightly-coupled cluster workloads'],
+                ['Platform', 'Semua instance types', 'Most modern instance types (c5, m5, r5…)', 'Hanya HPC-optimized (c5n, p4d, hpc6a…), Linux only'],
+              ],
+              takeaway: 'Standard networking + failover → ENI. Network performance tinggi untuk app biasa → ENA (dah default pada most modern instances). HPC + MPI + ML distributed training + lowest latency → EFA. Exam: "HPC cluster need lowest latency inter-node communication" → EFA.',
+            },
+            scenario: '"HPC cluster dengan MPI, perlu lowest latency inter-node" → EFA. "Failover IP — pindah ENI dari EC2 mati ke EC2 baru" → ENI. "App biasa perlukan network lebih laju dari standard" → instance dengan ENA (default on modern types).',
+            tips: [
+              'ENI boleh pindah antara instances — attach ENI ke EC2 baru untuk failover IP. Ini cara failover IP private dalam subnet.',
+              'ENA dah default pada hampir semua instance type moden (c5, m5, r5, dll). ENAv2 (up to 100 Gbps) pada select types.',
+              'EFA = ENA + OS-bypass. OS-bypass = app access network card TERUS tanpa OS overhead → latency paling rendah untuk HPC/MPI.',
+              'EFA hanya Linux (Windows tak support OS-bypass). EFA hanya pada HPC-optimized instance types.',
+              'Placement Group Cluster + EFA = combo untuk HPC (low latency + high throughput antara nodes dalam same AZ).',
+              'Exam: "MPI / distributed ML training / lowest latency / tightly-coupled HPC inter-node" → EFA (bukan ENA, bukan ENI).',
+            ],
+            docs: [
+              { label: 'Elastic Network Interfaces (ENI)', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html' },
+              { label: 'Elastic Fabric Adapter (EFA)', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/efa.html' },
+            ],
+            keywords: ['ENI', 'ENA', 'EFA', 'network interface', 'virtual NIC', 'OS-bypass', 'libfabric', 'MPI', 'HPC networking', 'low latency', 'failover IP', 'detach attach', '100 Gbps', 'placement group cluster'],
+          },
+          {
+            shortName: 'Lambda@Edge',
+            fullName: 'AWS Lambda@Edge',
+            ingat: '"Lambda yang jalan di CloudFront edge — code dekat dengan user, bukan di region"',
+            gunaUntuk: 'Run Lambda functions AT CloudFront edge locations — customize content delivery closer to users',
+            fungsi: 'Lambda@Edge jalankan Lambda function di CloudFront edge locations (600+ globally). Function execute dekat dengan user — bukan di AWS region. Empat trigger points: Viewer Request, Viewer Response, Origin Request, Origin Response. Boleh ubah request/response, custom auth, URL rewrite, A/B testing.',
+            contohGuna: 'Custom auth header check di edge, A/B testing redirect, rewrite URL dari old ke new path, inject custom HTTP headers',
+            detailsLabel: '4 trigger points — bila function jalan',
+            storageDetails: 'Viewer Request → bila user hantar request ke CloudFront (sebelum cache check). Boleh inspect/modify request, redirect.\nViewer Response → sebelum CloudFront hantar response ke user. Boleh modify headers, inject content.\nOrigin Request → bila cache MISS, sebelum CloudFront hantar request ke origin. Boleh rewrite path, pilih origin.\nOrigin Response → selepas origin reply, sebelum cache. Boleh modify response dari origin.',
+            compare: {
+              label: 'Lambda@Edge vs CloudFront Functions — dua-dua "code at edge"',
+              headers: ['Aspect', 'Lambda@Edge', 'CloudFront Functions'],
+              rows: [
+                ['Bahasa', 'Node.js, Python', 'JavaScript (lightweight)'],
+                ['Runtime', 'Full Lambda runtime (Node.js/Python)', 'Ultra-lightweight JS (subset)'],
+                ['Execution time', 'Up to 5 sec (viewer), 30 sec (origin)', 'Up to 1 ms (sub-millisecond)'],
+                ['Memory', '128 MB – 10 GB', '2 MB only'],
+                ['Boleh panggil AWS?', '🟢 Ya (S3, DynamoDB, dll)', '❌ Tak boleh (no network/file access)'],
+                ['Network access', '🟢 Ya', '❌ No'],
+                ['Kos', 'Bayar per request + duration', '🟢 Lebih murah — per invocation (flat)'],
+                ['Best untuk', 'Complex logic, AWS API calls, heavy transform', 'Simple header manipulation, URL rewrite, auth token check'],
+              ],
+              takeaway: 'Simple lightweight (header rewrite, token check) → CloudFront Functions. Complex logic + panggil AWS services + Node.js/Python → Lambda@Edge. "Inspect request, call DynamoDB, return custom response at edge" → Lambda@Edge.',
+            },
+            mermaid: {
+              label: '4 trigger points — di mana function intercept',
+              source: `flowchart LR
+  U["👤 User"] -->|"1. Request"| VR["🔍 Viewer Request<br/>(Lambda@Edge)"]
+  VR -->|"2. Check cache"| CF["📦 CloudFront Cache"]
+  CF -->|"MISS"| OR["🔄 Origin Request<br/>(Lambda@Edge)"]
+  OR --> O["🏠 Origin (S3/ALB)"]
+  O --> OR2["📤 Origin Response<br/>(Lambda@Edge)"]
+  OR2 --> CF
+  CF -->|"3. Response"| VR2["📤 Viewer Response<br/>(Lambda@Edge)"]
+  VR2 -->|"4. Reply"| U`,
+              caption: 'Viewer events = dekat dengan user (boleh di semua edge). Origin events = hanya di edge yang MISS cache. Empat chances untuk ubah request/response. INGAT exam: "modify HTTP headers at edge" → CloudFront Functions atau Lambda@Edge Viewer Request.',
+            },
+            scenario: '"Custom authentication check HTTP header bila user request CloudFront" → Lambda@Edge Viewer Request. "Simple rewrite URL from /old to /new at edge, no AWS API calls" → CloudFront Functions. "A/B test — redirect 10% users to new origin" → Lambda@Edge.',
+            tips: [
+              'Lambda@Edge function mesti di-deploy di us-east-1 (CloudFront manages replication to all edges).',
+              'Viewer Request/Response = jalan di SEMUA edge locations (close to user). Origin Request/Response = jalan hanya di edge yang MISS cache.',
+              'Lambda@Edge boleh guna IAM role → boleh panggil AWS services (DynamoDB, S3, SSM). CloudFront Functions TAK boleh.',
+              'CloudFront Functions: sub-millisecond, max 1ms, no network → untuk simple header manipulation, URL rewrite, token validation.',
+              'Exam: "run custom code at CloudFront edge, need to access DynamoDB" → Lambda@Edge (bukan CloudFront Functions).',
+              'Lambda@Edge vs standard Lambda: standard Lambda jalan di satu region; Lambda@Edge jalan secara global di semua edge locations. Function deploy di us-east-1, CloudFront auto-replicate.',
+            ],
+            docs: [
+              { label: 'Lambda@Edge overview', url: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-at-the-edge.html' },
+              { label: 'CloudFront Functions vs Lambda@Edge', url: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-functions.html' },
+            ],
+            keywords: ['Lambda@Edge', 'edge computing', 'CloudFront', 'Viewer Request', 'Viewer Response', 'Origin Request', 'Origin Response', 'CloudFront Functions', 'A/B testing', 'custom auth', 'URL rewrite', 'us-east-1', 'Node.js', 'Python', 'lightweight JS'],
+          },
+          {
+            shortName: 'EC2 Tenancy',
+            fullName: 'EC2 Tenancy & Dedicated Hosts',
+            ingat: '"Shared = ramai kongsi. Dedicated Instance = hardware sendiri tapi tak pilih physical. Dedicated Host = physical server sendiri, boleh lihat socket/core untuk lesen BYOL"',
+            gunaUntuk: 'Pilih tahap isolation hardware — shared vs dedicated instance vs dedicated host',
+            fungsi: 'Tiga tahap tenancy: (1) Shared (default) — instance jalan pada hardware shared dengan pelanggan lain. (2) Dedicated Instance — instance jalan pada hardware single-tenant (kau sahaja) tapi kau tak pilih server mana. (3) Dedicated Host — physical server penuh untuk kau, kau nampak socket/core, boleh guna untuk BYOL (bring-your-own-license) software.',
+            contohGuna: 'Oracle/SQL Server license guna BYOL — perlu nampak physical socket/core → Dedicated Host. Compliance perlu single-tenant hardware tapi tak kisah server mana → Dedicated Instance. Workload biasa → Shared (murah).',
+            compare: {
+              label: '3 tenancy levels — isolation vs kos',
+              headers: ['Aspect', 'Shared (default)', 'Dedicated Instance', 'Dicated Host'],
+              rows: [
+                ['Hardware', 'Shared dengan pelanggan lain', 'Single-tenant (kau sahaja)', 'Physical server penuh untuk kau'],
+                ['Boleh pilih server?', '❌', '❌ (AWS pilih)', '🟢 Ya — kau nampak socket, core, host ID'],
+                ['BYOL support', '❌', '❌', '🟢 Ya — audit socket/core untuk license compliance'],
+                ['Kos', '🟢 Standard On-Demand/RI/SP', '+ $2/jam region fee (per-instance)', '💰 Paling mahal — bayar per-host'],
+                ['Affinity', 'N/A', 'N/A', '🟢 Boleh set host affinity (instance sentiasa pada host yang sama)'],
+                ['Best untuk', 'Workload biasa, tak perlu isolation', 'Compliance perlu single-tenant, tak perlu audit', 'BYOL (Oracle, SQL Server), license compliance, audit socket/core'],
+              ],
+              takeaway: 'Biasa → Shared. Perlu single-tenant tapi tak perlu pilih server → Dedicated Instance. Perlu physical server + nampak socket/core + BYOL → Dedicated Host. Exam: "Oracle license BYOL, need to track physical cores" → Dedicated Host.',
+            },
+            scenario: '"Company guna Oracle database dengan BYOL license, perlu audit physical cores untuk compliance" → Dedicated Host. "Compliance policy: instances must be on single-tenant hardware, no sharing" → Dedicated Instance. "Just run a web server, cheapest option" → Shared (default tenancy).',
+            tips: [
+              'Dedicated Host: kau LIHAT physical attributes (sockets, cores, host ID) → essential untuk BYOL license audit (Oracle, SQL Server, Windows)',
+              'Dedicated Instance: single-tenant tapi AWS pilih hardware mana — kau tak nampak server fizikal. Ada $2/jam per-region fee.',
+              'Dedicated Host boleh set HOST AFFINITY — instance sentiasa attach ke physical host yang sama. Berguna untuk license yang tie ke hardware.',
+              'Dedicated Host juga boleh guna RI/SP → lebih jimat dari On-Demand Dedicated Host.',
+              'Exam keyword: "BYOL", "physical core/socket visibility", "existing license tied to physical hardware" → Dedicated Host.',
+              'Dedicated Host billing: per-host, bayar kadar jam untuk setiap host. Bukan per-instance.',
+            ],
+            docs: [
+              { label: 'Dedicated Hosts overview', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/dedicated-hosts-overview.html' },
+              { label: 'Dedicated Instances', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/dedicated-instance.html' },
+            ],
+            keywords: ['tenancy', 'shared', 'dedicated instance', 'dedicated host', 'single-tenant', 'BYOL', 'bring your own license', 'Oracle', 'SQL Server', 'socket', 'core', 'host affinity', 'license compliance', 'physical server'],
+          },
         ],
       },
       {
@@ -2341,8 +2507,10 @@ export const domains: DomainData[] = [
               'EBS Elastic Volumes: resize, retype, adjust IOPS/throughput TANPA detach atau downtime. Lepas resize, extend filesystem: growpart + resize2fs (Linux)',
               '"Volume running out of space, minimal config changes" → increase EBS volume size (Elastic Volumes). Bukan snapshot+new volume (extra steps).',
               'Unencrypted snapshot → encrypted volume: BOLEH. Pilih encrypt semasa create volume dari snapshot. Tak perlu enable account-level default encryption.',
+              'PRICING (us-east-1): gp3 = $0.08/GB-mo (base, includes 3K IOPS + 125 MB/s). io2 = $0.125/GB-mo + $0.065/provisioned-IOPS-mo. st1 = $0.045/GB-mo. sc1 = $0.015/GB-mo. Snapshots = $0.05/GB-mo (incremental, stored in S3). Data transfer IN = free. Cross-region snapshot copy = standard data transfer rates.',
+              'Exam: "cheapest EBS type" → sc1 ($0.015/GB). "default boot volume" → gp3. "mission-critical DB" → io2. "sequential log processing" → st1.',
             ],
-            keywords: ['block storage', 'single EC2', 'persistent disk', 'instance store', 'ephemeral', 'Elastic Volumes', 'resize', 'encryption', 'data in transit'],
+            keywords: ['block storage', 'single EC2', 'persistent disk', 'instance store', 'ephemeral', 'Elastic Volumes', 'resize', 'encryption', 'data in transit', 'pricing', 'gp3 cost', 'io2 cost', 'st1 cost', 'sc1 cost', 'snapshot cost'],
           },
           {
             shortName: 'EBS Volume Types',
@@ -2470,6 +2638,8 @@ export const domains: DomainData[] = [
               'Security: Block Public Access (account + bucket level, default ON) > bucket policy/ACL. Bucket policy (resource-based JSON) untuk grant cross-account / public; ACL = legacy, AWS galak matikan. "Bucket tak sengaja public" → hidupkan Block Public Access.',
               'Static website hosting: S3 boleh host static site (HTML/JS/CSS) tapi HTTP sahaja — nak HTTPS + custom domain → letak CloudFront depan.',
               'Event notification: S3 boleh trigger SNS / SQS / Lambda / EventBridge bila object dibuat/dipadam (cth auto-process gambar bila upload).',
+              'PRICING (us-east-1): Storage — Standard $0.023/GB-mo, Standard-IA $0.0125/GB-mo, One Zone-IA $0.01/GB-mo, Glacier Instant $0.004/GB-mo, Glacier Flexible $0.0036/GB-mo, Deep Archive $0.00099/GB-mo. Requests — PUT/POST/LIST $0.005/1K, GET $0.0004/1K. Data transfer OUT = free to CloudFront, $0.09/GB to internet (first 100GB free/mo). Intelligent-Tiering monitoring fee = $0.0025/GB-mo (free for objects <128KB).',
+              'Exam: "cheapest S3 storage" → Deep Archive ($0.00099/GB). "default S3 class" → Standard ($0.023/GB). "S3 data transfer to CloudFront" → free.',
             ],
             docs: [
               { label: 'S3 performance best practices', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/optimizing-performance.html' },
@@ -2537,6 +2707,181 @@ export const domains: DomainData[] = [
               { label: 'Archive retrieval options', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/restoring-objects-retrieval-options.html' },
             ],
             keywords: ['archiving', 'cold storage', 'Glacier Instant Retrieval', 'Glacier Flexible Retrieval', 'Glacier Deep Archive', 'restore job', 'Expedited', 'Standard', 'Bulk', 'min storage duration', 'lifecycle policy', 'WORM', '11 nines'],
+          },
+          {
+            shortName: 'S3 Storage Classes',
+            fullName: 'S3 Storage Classes — All 7 Tiers with Pricing',
+            ingat: '"7 tingkat storan — makin sejuk makin murah, makin lama nak cairkan"',
+            gunaUntuk: 'Pilih S3 class ikut access pattern + retrieval speed + kos (the THE exam storage decision)',
+            fungsi: 'S3 ada 7 storage classes untuk optimize kos ikut access frequency. Semua class ada 11 nines durability (99.999999999%). Beza adalah pada availability, retrieval speed, minimum duration, dan kos.',
+            detailsLabel: '7 Storage Classes — anatomy',
+            storageDetails: 'S3 Standard → Hot data, access frequent, default untuk most workloads\nS3 Standard-IA → Infrequent access TAPI masih perlu millisecond retrieval (contohnya: disaster recovery backup)\nS3 One Zone-IA → Infrequent access, data dalam 1 AZ sahaja (20% lebih murah dari Standard-IA, risiko AZ musnah)\nS3 Intelligent-Tiering → Auto-pindah object antara tiers ikut access pattern (monitoring fee)\nS3 Glacier Instant Retrieval → Arkib, jarang access, TAPI bila perlu kena millisecond (ms retrieval, tak perlu restore)\nS3 Glacier Flexible Retrieval → Arkib, boleh tunggu minit-jam untuk restore\nS3 Glacier Deep Archive → Paling murah, arkib jangka sangat panjang (compliance 7-10 tahun), retrieve 12-48 jam',
+            compare: {
+              label: 'All 7 S3 Storage Classes — pricing & key facts (us-east-1)',
+              headers: ['Class', 'Storage $/GB-mo', 'Retrieval', 'Min Duration', 'AZ', 'Best untuk'],
+              rows: [
+                ['Standard', '$0.023', 'ms (free)', 'None', 'Multi-AZ (≥3)', 'Hot data, frequent access — default'],
+                ['Standard-IA', '$0.0125', 'ms (retrieval fee)', '30 hari', 'Multi-AZ (≥3)', 'Infrequent access, long-lived data'],
+                ['One Zone-IA', '$0.01', 'ms (retrieval fee)', '30 hari', '1 AZ', 'Infrequent, re-creatable data — cheapest IA'],
+                ['Intelligent-Tiering', '$0.023 (hot tier)', 'ms (auto-tier)', 'None', 'Multi-AZ', 'Unknown/unpredictable access pattern'],
+                ['Glacier Instant', '$0.004', 'ms (no restore!)', '90 hari', 'Multi-AZ', 'Archive, rare access BUT ms needed'],
+                ['Glacier Flexible', '$0.0036', 'min–jam (restore)', '90 hari', 'Multi-AZ', 'Archive, boleh tunggu untuk restore'],
+                ['Deep Archive', '$0.00099', '12–48 jam (restore)', '180 hari', 'Multi-AZ', 'Compliance 7-10 thn, hampir tak pernah access'],
+              ],
+              takeaway: 'Hot data → Standard. Infrequent but ms retrieval → Standard-IA (multi-AZ) atau One Zone-IA (murah, 1 AZ). Unknown pattern → Intelligent-Tiering (auto-move). Archive + ms retrieval → Glacier Instant. Archive + boleh tunggu → Glacier Flexible. Cheapest long-term → Deep Archive.',
+            },
+            mermaid: {
+              label: 'Pilih S3 Storage Class (decision tree)',
+              source: `flowchart TD
+  A[Data masuk S3] --> B{Access frequency?}
+  B -->|Frequent / hot| C[S3 Standard<br/>$0.023/GB · ms retrieval]
+  B -->|Infrequent| D{Re-creatable? <br/>Risk of AZ loss OK?}
+  B -->|Unknown / unpredictable| E[Intelligent-Tiering<br/>auto-pindah ikut pattern<br/>$0.0025/GB monitoring fee]
+  D -->|"Ya, 1 AZ cukup"| F[One Zone-IA<br/>$0.01/GB · 1 AZ]
+  D -->|"Tak, perlu multi-AZ"| G[Standard-IA<br/>$0.0125/GB · multi-AZ]
+  B -->|Archive / rarely access| H{Berapa laju nak retrieve?}
+  H -->|Milliseconds, no restore| I[Glacier Instant Retrieval<br/>$0.004/GB · min 90 hari]
+  H -->|Minit–jam OK| J[Glacier Flexible Retrieval<br/>$0.0036/GB · min 90 hari]
+  H -->|"12–48 jam, paling murah"| K[Deep Archive<br/>$0.00099/GB · min 180 hari]`,
+              caption: 'Cara ingat: makin sejuk makin murah, makin lama nak "cair". Standard = panas (mahal, laju). Deep Archive = beku (murah, retrieve 12-48 jam). IA = sejuk sikit (murah dari Standard, retrieval fee). Intelligent-Tiering = auto thermostat. INGAT exam: One Zone-IA 20% lebih murah dari Standard-IA tapi data hilang kalau AZ musnah — guna untuk re-creatable data sahaja.',
+            },
+            scenario: '"Medical images rarely access but need ms retrieval when doctor requests" → Glacier Instant Retrieval (bukan Flexible). "Log files 90-day retention, infrequent access, re-creatable" → One Zone-IA. "Don\'t know access pattern yet" → Intelligent-Tiering. "Compliance records 7 years, petabytes, almost never access" → Deep Archive. "Active web content" → Standard.',
+            tips: [
+              'Intelligent-Tiering ada monitoring fee ($0.0025/GB/mo) tapi auto-pindah antara tiers → elak tebak access pattern salah. Free untuk objects <128KB (too small to monitor).',
+              'One Zone-IA = 20% lebih murah dari Standard-IA. TAPI hanya 1 AZ — kalau AZ musnah, data lenyap. Guna untuk re-creatable data atau backup yang ada copy di tempat lain.',
+              'Standard-IA dan One Zone-IA ada retrieval fee ($0.01/GB) + min 30 hari storage duration. Kalau access lebih frequent dari itu, Standard lebih murah.',
+              'Intelligent-Tiering = pindah ke IA automatically kalau object tak di-access selama 30 hari berturut-turut. Pindah balik ke Standard kalau di-access.',
+              'Glacier Instant Retrieval = ms retrieval, TAK PERLU restore job. Sama macam GET Standard-IA. Untuk data jarang access tapi bila perlu kena segera.',
+              'Min storage duration: delete sebelum tempoh minimum tetap kena bayar baki. Standard = no min. IA = 30 hari. Glacier = 90/90/180 hari.',
+              'Semua class ada 11 nines durability — beza adalah pada availability (Standard 99.99%, IA 99.9%, One Zone-IA 99.5%) dan retrieval speed.',
+              'Lifecycle Policy: auto-transition ikut umur — Standard → IA (30d) → Glacier Flexible (90d) → Deep Archive (365d). Letak Intelligent-Tiering kalau tak yakin pattern.',
+            ],
+            docs: [
+              { label: 'S3 storage classes overview', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-classes.html' },
+              { label: 'S3 storage class comparison', url: 'https://aws.amazon.com/s3/storage-classes/' },
+            ],
+            keywords: ['S3 Standard', 'Standard-IA', 'One Zone-IA', 'Intelligent-Tiering', 'Glacier Instant Retrieval', 'Glacier Flexible Retrieval', 'Deep Archive', 'pricing', 'storage class', 'retrieval fee', 'min storage duration', 'availability', '11 nines durability', 'lifecycle transition', 'auto-tiering'],
+          },
+          {
+            shortName: 'S3 Lifecycle',
+            fullName: 'S3 Lifecycle Management',
+            ingat: '"Auto-pindah object ke kelas murah ikut umur — macam roti: fresh → semalam → beku"',
+            gunaUntuk: 'Automatically transition objects to cheaper storage classes + expire old objects',
+            fungsi: 'Lifecycle rules automatik pindah object ke storage class yang lebih murah berdasarkan umur (days sejak creation), dan boleh auto-expire (delete) object lama. Dua jenis rule: Transition (pindah ke class lain) dan Expiration (padam object). Rules boleh untuk whole bucket atau specific prefix/tags.',
+            contohGuna: 'Log file masuk Standard → 30 hari pindah ke Standard-IA → 90 hari pindah ke Glacier Flexible → 365 hari pindah Deep Archive → 2555 hari (7 tahun) auto-delete.',
+            detailsLabel: 'Lifecycle rule anatomy',
+            storageDetails: 'Transition rule → "bila object umur X hari, pindah ke class Y" (cth: 30 hari → Standard-IA)\nExpiration rule → "bila object umur Z hari, delete permanently" (cth: 2555 hari → delete)\nFilter → boleh scope rule ikut prefix (folder), tags, atau object size\nCurrent versions vs Previous versions → boleh set rules berbeza untuk version aktif vs lama\nNoncurrent version expiration → auto-padam versi lama selepas X hari (clean up versioning clutter)\nNoncurrent version transition → pindah versi lama ke class murah',
+            compare: {
+              label: 'Lifecycle vs Intelligent-Tiering — dua cara auto-optimize kos',
+              headers: ['Aspect', 'Lifecycle Rules', 'Intelligent-Tiering'],
+              rows: [
+                ['Cara decide', 'AGE-based (umur object, X hari selepas creation)', 'ACCESS-based (auto-detect kalau tak di-access 30 hari)'],
+                ['Rule type', 'Manual: kau set transition + expiration schedule', 'Automatic: S3 auto-pindah ikut access pattern'],
+                ['Boleh delete?', '🟢 Ya — expiration rule auto-padam object lama', '❌ Tidak — auto-pindah sahaja, tak auto-delete'],
+                ['Granularity', 'Prefix, tag, size filter — rule per-prefix', 'Per-object automatic (semua object dalam class ni)'],
+                ['Best bila', 'Access pattern DIKETAHUI (log → IA → Glacier → delete)', 'Access pattern TAK DIKETAHUI (unpredictable)'],
+              ],
+              takeaway: 'Tahu bila data jadi sejuk (log, backup, compliance) → Lifecycle (age-based, boleh auto-delete). Tak tahu corak access → Intelligent-Tiering (auto-detect, tapi tak auto-delete). Selalu guna dua-dua: Intelligent-Tiering untuk unknown + Lifecycle expiration untuk auto-cleanup.',
+            },
+            mermaid: {
+              label: 'Analogi roti & beku — Lifecycle aging',
+              source: `flowchart LR
+  A["🍞 Fresh roti<br/>S3 Standard<br/>$0.023/GB<br/>(0–30 hari)"] -->|"30 hari"| B["🥖 Semalam<br/>Standard-IA<br/>$0.0125/GB<br/>(30–90 hari)"]
+  B -->|"90 hari"| C["❄️ Sejuk beku<br/>Glacier Flexible<br/>$0.0036/GB<br/>(90–365 hari)"]
+  C -->|"365 hari"| D["🧊 Deep freeze<br/>Deep Archive<br/>$0.00099/GB<br/>(365–2555 hari)"]
+  D -->|"7 tahun"| E["🗑️ Tong sampah<br/>Auto-delete<br/>(expiration)"]`,
+              caption: 'Analogi kilang roti: roti fresh (Standard) → selepas 30 hari jadi roti semalam (IA) → sejuk beku (Glacier) → deep freeze (Deep Archive) → tong sampah (auto-delete). Lifecycle automation = kau tetapkan jadual, AWS pindah sendiri. INGAT exam: "automatically transition S3 objects to cheaper tiers by age" → Lifecycle Rules. "auto-detect access pattern" → Intelligent-Tiering.',
+            },
+            scenario: '"Automatically move log files from Standard to IA after 30 days, to Glacier after 90 days, delete after 1 year" → S3 Lifecycle Policy. "Don\'t know access pattern, want S3 to auto-choose tier" → Intelligent-Tiering (bukan Lifecycle). "Clean up old versions of objects after 30 days" → Noncurrent version expiration rule.',
+            tips: [
+              'Lifecycle = age-based (umur object), Intelligent-Tiering = access-based (auto-detect). Pilih Lifecycle bila tahu corak access.',
+              'Expiration rule = auto-DELETE object lama. Berguna untuk compliance ("retain 7 years then delete") atau cleanup storage.',
+              'Noncurrent version rules: bila versioning ON, set rules untuk padam/pindah versi LAMA (previous versions) — bukan current version. Auto-cleanup versioning clutter.',
+              'Min transition days: Standard → Standard-IA minimum 30 hari (AWS require at least 30 days in Standard before transitioning to IA).',
+              'Lifecycle boleh combine dengan Intelligent-Tiering: Intelligent-Tiering untuk unknown pattern + Lifecycle expiration untuk auto-delete old data.',
+              'Exam: "automatically move objects to Glacier after 90 days" → Lifecycle Transition Rule. "auto-delete logs after 365 days" → Lifecycle Expiration Rule. "unknown access pattern, auto-optimize" → Intelligent-Tiering.',
+            ],
+            docs: [
+              { label: 'S3 Lifecycle configuration', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html' },
+            ],
+            keywords: ['lifecycle', 'transition rule', 'expiration rule', 'auto-move', 'auto-delete', 'age-based', 'storage class transition', 'noncurrent version', 'versioning cleanup', 'S3 lifecycle policy', 'cost optimization', 'prefix filter', 'tag filter'],
+          },
+          {
+            shortName: 'S3 CORS',
+            fullName: 'S3 Cross-Origin Resource Sharing (CORS)',
+            ingat: '"Browser block request dari domain lain — CORS rule bagi kebenaran"',
+            gunaUntuk: 'Allow web apps on one domain to access S3 resources on a different domain',
+            fungsi: 'CORS (Cross-Origin Resource Sharing) adalah mechanism browser yang control sama ada web app di domain A boleh akses resources di domain B. Untuk S3, kau set CORS configuration pada bucket untuk allow specific origins, methods, dan headers.',
+            contohGuna: 'Web app di https://app.example.com nak upload images terus ke S3 bucket (https://cdn.example.com) dari browser — CORS rule pada S3 bucket allow origin https://app.example.com.',
+            scenario: '"Browser app at www.example.com needs to GET/PUT objects in S3 bucket directly" → configure CORS on the S3 bucket to allow origin www.example.com. Bukan bucket policy (yang control IAM-level access). CORS = browser-level permission.',
+            compare: {
+              label: 'CORS vs Bucket Policy vs Pre-Signed URL — 3 S3 access mechanisms',
+              headers: ['Mechanism', 'Layer', 'Untuk apa'],
+              rows: [
+                ['CORS', 'Browser security', 'Allow browser app di domain A access resources di domain B'],
+                ['Bucket Policy', 'IAM / resource-level', 'Grant/deny access to principals (users, accounts, services)'],
+                ['Pre-Signed URL', 'Temporary credential', 'Give time-limited access to one object guna IAM creds'],
+              ],
+              takeaway: 'CORS = "boleh ke browser ni akses bucket domain lain?" (browser-level). Bucket Policy = "siapa boleh akses bucket ni?" (IAM-level). Pre-Signed URL = "berapa lama URL ni sah?" (object-level). CORS tak replace bucket policy — kau masih perlu allow IAM access SELAIN dari CORS.',
+            },
+            tips: [
+              'CORS = browser security policy, BUKAN IAM. Browser block cross-origin requests by default; CORS rule pada S3 bucket memberi kebenaran.',
+              'CORS configuration adalah XML/JSON pada S3 bucket: <CORSRule> dengan <AllowedOrigin>, <AllowedMethod>, <AllowedHeader>.',
+              'Error tipikal: "Access-Control-Allow-Origin" missing → browser block → kena set CORS rule pada S3 bucket tu.',
+              'CORS tak replace Bucket Policy — kau masih perlu IAM/permission allow access ke bucket. CORS cuma buka browser-level block.',
+              'Exam: "browser app di domain A tak boleh access S3 bucket di domain B" → configure CORS on S3 bucket (allow origin). Bukan tukar bucket policy.',
+              'S3 CORS boleh set via console atau API (PutBucketCors). Set per-bucket, bukan per-object.',
+            ],
+            docs: [
+              { label: 'S3 CORS configuration', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/ManageCorsUsing.html' },
+            ],
+            keywords: ['CORS', 'cross-origin', 'browser security', 'AllowedOrigin', 'Access-Control-Allow-Origin', 'web app', 'domain', 'bucket CORS', 'XML configuration'],
+          },
+          {
+            shortName: 'S3 Pre-Signed URL',
+            fullName: 'S3 Pre-Signed URLs',
+            ingat: '"URL dengan tiket sementara — siapa ada boleh access, tapi hanya untuk tempoh tertentu"',
+            gunaUntuk: 'Grant temporary time-limited access to a single S3 object without sharing credentials',
+            fungsi: 'Pre-signed URL adalah URL S3 yang ada signature + expiry time. Siapa punya URL tu boleh upload atau download object tersebut tanpa perlu AWS credentials. Permission ikut IAM user yang generate URL tersebut.',
+            contohGuna: 'Generate pre-signed URL valid 1 jam → hantar ke customer → customer download file besar dari S3 terus tanpa perlu AWS account/login.',
+            compare: {
+              label: 'S3 Pre-Signed URL vs CloudFront Signed URL — yang mana?',
+              headers: ['Aspect', 'S3 Pre-Signed URL', 'CloudFront Signed URL/Cookie'],
+              rows: [
+                ['Akses melalui', 'Direct ke S3 (tiada CDN)', 'Through CloudFront (edge cache, global)'],
+                ['Sign guna', 'IAM credentials pemberi', 'Trusted key group (public/private key)'],
+                ['Permission', 'Inherit IAM permission si-pemberi', 'Independent dari IAM'],
+                ['Skop', '1 object sahaja', 'URL = 1 file; Cookie = banyak files'],
+                ['Extra control', 'Expiry time sahaja', 'Restrict by IP, expiry, geo, caching'],
+                ['Kos', 'Free', 'CloudFront charges'],
+                ['Best untuk', 'One-off upload/download terus ke S3', 'Private content at scale via CDN (paid media)'],
+              ],
+              takeaway: 'One-off direct S3 access → Pre-Signed URL (simple, free, IAM creds). Private content at scale globally via CDN → CloudFront Signed URL/Cookie (IP restriction, edge cache, trusted key group). Exam: "give customer temporary access to download one file from S3" → Pre-Signed URL.',
+            },
+            mermaid: {
+              label: 'Analogi Tiket Konsert — Pre-Signed URL',
+              source: `flowchart TD
+  A["🎤 App kau<br/>(punya IAM creds)"] -->|"jana tiket<br/>dengan expiry"| B["🎫 Pre-Signed URL<br/>valid 1 jam"]
+  B -->|"hantar ke"| C["👥 Customer<br/>(tak ada AWS creds)"]
+  C -->|"tunjuk tiket"| D["📦 S3 Bucket"]
+  D -->|"check tiket sah?"| E{Valid?}
+  E -->|"Ya — dalam tempoh"| F["🟢 Download/Upload"]
+  E -->|"Tak — expired"| G["🔴 403 Forbidden"]`,
+              caption: 'Analogi: kau (penjual tiket) jana tiket dengan tarikh luput. Customer (pembeli) tunjuk tiket dekat pintu masuk S3. Tiket sah = masuk. Tiket expired = kena tolak. Permission tiket = ikut hak kau (IAM pemberi). INGAT exam: "temporary access to ONE S3 object without credentials" → Pre-Signed URL. "private content via CDN at scale" → CloudFront Signed URL.',
+            },
+            scenario: '"Give temporary download access to one S3 file for 1 hour, no AWS credentials needed" → S3 Pre-Signed URL. "Serve private video globally via CDN with IP restriction" → CloudFront Signed URL. "User uploads file to S3 from browser without credentials" → Pre-Signed URL for PUT operation.',
+            tips: [
+              'Pre-Signed URL = IAM credentials yang GENERATE URL menentukan permission. Kalau generator ada s3:GetObject permission → URL holder boleh download.',
+              'Expiry: default 7 hari (bila guna SDK), boleh set dari 1 saat hingga 7 hari maksima. Bila expired → 403 Forbidden.',
+              'Pre-signed URL BOLEH guna untuk PUT juga — bukan hanya GET. Generate PUT pre-signed URL untuk allow upload tanpa credentials.',
+              'Pre-signed URL TAK boleh restrict by IP — itu hanya CloudFront Signed URL. Pre-signed = expiry time sahaja.',
+              'Bila guna STS temporary credentials untuk generate → URL expiry TIDAK boleh melebihi credential expiry. Yang lebih pendek menang.',
+              'Exam: "give temporary access to download S3 object, no AWS account needed" → Pre-Signed URL. "private content via CDN with IP restriction" → CloudFront Signed URL.',
+            ],
+            docs: [
+              { label: 'S3 pre-signed URLs', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html' },
+            ],
+            keywords: ['presigned URL', 'temporary access', 'no credentials', 'IAM credentials', 'expiry time', 'download', 'upload', 'PUT', 'GET', '403', 'one object', 'vs CloudFront signed URL'],
           },
         ],
       },
@@ -2622,6 +2967,11 @@ export const domains: DomainData[] = [
               'CLB limitation: instance ID only, same VPC only — exam trap!',
               'SNI (Server Name Indication): ALB HTTPS listener boleh hold MULTIPLE TLS certificates serentak. Client sends hostname in TLS ClientHello → ALB picks the right cert. No extra ALB needed per domain!',
               '"two domains, same ALB, each with its own ACM cert, no combined cert" → Add both certs to ALB listener using SNI',
+              'Stickiness (session affinity): ALB boleh bind user session ke specific target guna cookie. Duration 1s–7 days. Guna untuk: stateful app yang tak support distributed session. ALB generates cookie (AWSALB) atau app provides custom cookie. NLB juga support stickiness (TCP, 1s–7 days).',
+              'Cross-Zone Load Balancing: ALB = ALWAYS ON (free, distributes traffic across all AZ targets). NLB = OFF by default (each AZ node only routes to targets dalam AZ yang sama; enable cross-zone = ada charge per-GB inter-AZ). CLB = OFF by default (enable at no charge).',
+              'Exam: "ALB cross-zone" → always enabled, free. "NLB cross-zone" → disabled by default, enable = inter-AZ data transfer charge. "stickiness for stateful app" → enable ALB stickiness (cookie-based).',
+              'PRICING (us-east-1): ALB = $0.0225/hour ($16.20/mo) + $0.008 per LCU-hour. NLB = $0.0225/hour + $0.006 per NLCU-hour. GWLB = $0.0135/hour + $0.0035 per GWLCU-hour. CLB = $0.025/hour + $0.008 per GB processed (legacy). LCU = Load Balancer Capacity Unit (new connections, active connections, bytes processed, rule evaluations).',
+              'Exam: "ALB pricing" → hourly + per-LCU. "NLB cheaper per unit" → yes ($0.006 vs $0.008 per LCU). "CLB most expensive per GB" → $0.008/GB. GWLB paling murah per hour.',
             ],
             docs: [
               { label: 'ALB IP Targets', url: 'https://aws.amazon.com/blogs/aws/new-application-load-balancing-via-ip-address-to-aws-on-premises-resources/' },
@@ -3181,8 +3531,11 @@ export const domains: DomainData[] = [
               'Nested Stacks: stack yang dipanggil dari dalam stack lain (parent stack) menggunakan AWS::CloudFormation::Stack resource type. Guna bila template dah terlalu besar atau ada reusable components (e.g. network layer, security layer yang dipakai oleh banyak stacks).',
               'Nested Stacks benefit: modularization — separate VPC stack, app stack, DB stack. Parent orchestrate semua. Setiap nested stack diupdate/rolledback independently.',
               'Exam: "reuse common infrastructure components (VPC, subnets) across multiple CloudFormation stacks" → Nested Stacks. "Share VPC ID between stacks" → Outputs + ImportValue (cross-stack ref).',
+              'PRICING: CloudFormation is FREE — kau bayar hanya untuk AWS resources yang ia create (EC2, RDS, S3, dll). Tiada charge untuk stacks, templates, changes, drift detection, StackSets. Designer & change sets juga free.',
+              'StackSets: deploy ke multiple accounts/regions sekali gus. Perlukan AWS Organizations atau self-managed permissions. Boleh auto-reconcile drift.',
+              'Exam: "no additional charge for using CloudFormation" → hanya bayar resources yang dibuat. Nested stacks & StackSets percuma.',
             ],
-            keywords: ['IaC', 'Infrastructure as Code', 'template', 'stack', 'rollback', 'repeatable deployment', 'Lambda-backed custom resource', 'AMI lookup', 'dynamic parameters', 'multi-region template', 'Mappings', 'Outputs', 'cross-stack reference', 'Fn::ImportValue', 'cfn-init', 'cfn-signal', 'cfn-hup', 'cfn-get-metadata', 'change set', 'drift detection', 'stack rollback', 'DeletionPolicy', 'nested stacks', 'AWS::CloudFormation::Stack', 'modular templates'],
+            keywords: ['IaC', 'Infrastructure as Code', 'template', 'stack', 'rollback', 'repeatable deployment', 'Lambda-backed custom resource', 'AMI lookup', 'dynamic parameters', 'multi-region template', 'Mappings', 'Outputs', 'cross-stack reference', 'Fn::ImportValue', 'cfn-init', 'cfn-signal', 'cfn-hup', 'cfn-get-metadata', 'change set', 'drift detection', 'stack rollback', 'DeletionPolicy', 'nested stacks', 'AWS::CloudFormation::Stack', 'modular templates', 'StackSets', 'free', 'pricing', 'no additional charge'],
           },
           {
             shortName: 'SSM',
@@ -3202,8 +3555,10 @@ export const domains: DomainData[] = [
               'Parameter Store vs Secrets Manager: Parameter Store = cheaper (free for standard), no auto-rotation. Secrets Manager = automatic rotation (supports RDS, Redshift, DocumentDB natively), cross-account access, costs ~$0.40/secret/month.',
               'Exam: "update 100 EC2 instances in parallel, no SSH allowed" → SSM Run Command. "Interactive shell access without opening port 22" → Session Manager. "Store DB password, auto-rotate every 30 days" → Secrets Manager (not Parameter Store).',
               'Exam: "store config values and DB passwords centrally, no rotation needed, minimize cost" → Parameter Store SecureString.',
+              'PRICING: Free tier — 2,000 activation registrations, 1,000 managed instances. Parameter Store Standard = FREE (up to 10,000 params). Advanced params = $0.05/param/mo + parameter policies. Session Manager = included (no additional charge). Run Command = included. Patch Manager = included. Only Advanced params + OpsCenter + State Manager associations ada charge.',
+              'Exam: "minimize cost for storing parameters" → Parameter Store Standard (free, up to 10,000). "advanced features (policies, expiration)" → Advanced ($0.05/param/mo). "Session Manager cost" → free (included in SSM).',
             ],
-            keywords: ['Run Command', 'Patch Manager', 'Parameter Store', 'Session Manager', 'no SSH', 'fleet management', 'parallel execution', 'AmazonSSMManagedInstanceCore', 'SecureString', 'KMS', 'Standard tier', 'Advanced tier', 'bastion-free', 'Secrets Manager', 'auto-rotation'],
+            keywords: ['Run Command', 'Patch Manager', 'Parameter Store', 'Session Manager', 'no SSH', 'fleet management', 'parallel execution', 'AmazonSSMManagedInstanceCore', 'SecureString', 'KMS', 'Standard tier', 'Advanced tier', 'bastion-free', 'Secrets Manager', 'auto-rotation', 'pricing', 'free tier', 'advanced params cost', 'session manager included'],
           },
           {
             shortName: 'AWS Config',
@@ -3222,8 +3577,10 @@ export const domains: DomainData[] = [
               'Config perlu IAM role dengan permissions untuk describe/record resources. Enable per-region — bukan global service (tapi boleh aggregate ke multi-account, multi-region Config aggregator).',
               'Exam: "ensure all EC2 instances are tagged" atau "enforce all S3 buckets encrypted" + "auto-fix violations" → Config rules + auto-remediation (bukan Lambda alone, bukan CloudTrail).',
               'Config Aggregator: view Config data across multiple accounts & regions dari satu central account — senang untuk compliance reporting org-wide.',
+              'PRICING: $0.003 per configuration item recorded per region. $0.001 per config rule evaluation per region. Conformance packs = $0.001 per rule evaluation. Bukan free — kau bayar untuk setiap config item yang direkod dan setiap rule yang di-evaluate.',
+              'Exam: "Config has per-item recording cost" → $0.003/configuration item. "conformance pack cost" → $0.001 per rule evaluation.',
             ],
-            keywords: ['compliance', 'audit', 'config changes', 'config rules', 'resource history', 'drift detection', 'auto-remediation', 'conformance packs', 'Config aggregator', 'SSM Automation', 'managed rules', 'custom rules'],
+            keywords: ['compliance', 'audit', 'config changes', 'config rules', 'resource history', 'drift detection', 'auto-remediation', 'conformance packs', 'Config aggregator', 'SSM Automation', 'managed rules', 'custom rules', 'pricing', 'per configuration item', 'per rule evaluation'],
           },
           {
             shortName: 'CodeCommit',
@@ -3264,8 +3621,10 @@ export const domains: DomainData[] = [
               'Standard monitoring = every 5 min (free). Detailed monitoring = every 1 min (additional cost)',
               'CloudWatch Logs Insights: interactive query language (SQL-like) untuk search dan analyze log data in CloudWatch Logs. Boleh query across multiple Log Groups. Guna untuk: "find all ERROR logs in last 1 hour from Lambda", "count request counts by status code". Bukan Athena (Athena untuk S3 data).',
               'Exam: "query and analyze CloudWatch Logs with an interactive query interface" → CloudWatch Logs Insights. "Analyze logs stored in S3" → Athena.',
+              'PRICING: Free tier — 10 custom metrics, 10 alarms, 5 GB log ingestion, 3 dashboards/month. Detailed monitoring (1-min) = $0.015/instance/hr. Custom metrics = $0.30/1,000 metrics/mo. Alarms = $0.10/alarm/mo. Logs ingestion = $0.50/GB. Logs archival = $0.03/GB/mo. Dashboards (3 free, then $3/dashboard/mo).',
+              'Exam: "free tier includes 10 alarms" → CloudWatch. "detailed monitoring cost" → $0.015/instance/hr on top of standard (free, 5-min).',
             ],
-            keywords: ['metrics', 'logs', 'alarms', 'dashboards', 'CPU monitoring', 'custom metrics', 'Log Groups', 'VPC Flow Logs', 'CloudWatch agent', 'unified agent', 'memory utilization', 'detailed monitoring', 'Logs Insights', 'query logs', 'SQL-like'],
+            keywords: ['metrics', 'logs', 'alarms', 'dashboards', 'CPU monitoring', 'custom metrics', 'Log Groups', 'VPC Flow Logs', 'CloudWatch agent', 'unified agent', 'memory utilization', 'detailed monitoring', 'Logs Insights', 'query logs', 'SQL-like', 'pricing', 'free tier', 'custom metrics cost', 'log ingestion cost'],
           },
           {
             shortName: 'X-Ray',
@@ -4137,18 +4496,31 @@ export const domains: DomainData[] = [
   F -->|Config tetap + capacity reservation| I[Reserved Instances]`,
               caption: 'Boleh interrupt → Spot. Tak predictable → On-Demand. Predictable + fleksibel (+Fargate/Lambda) → Compute SP. Predictable + lock family untuk diskaun max → EC2 Instance SP / Standard RI. Soalan tekan "flexibility" biasanya = Savings Plans (bukan RI).',
             },
-            compare: {
-              label: 'Compute SP vs EC2 Instance SP vs RI',
-              headers: ['Aspect', 'Compute SP', 'EC2 Instance SP', 'Reserved Instances'],
-              rows: [
-                ['Diskaun', 'Sampai 66%', '🟢 Sampai 72%', 'Sampai 72%'],
-                ['Komit pada', '$/jam (apa-apa compute)', '$/jam (1 family + region)', 'Instance config tertentu'],
-                ['Tukar family/region', '🟢 Bebas', 'Region & family terkunci', 'Exchange (Convertible) je'],
-                ['Fargate / Lambda', '🟢 Ya, termasuk', '❌ EC2 sahaja', '❌ EC2 sahaja'],
-                ['Capacity reservation', '❌ Tiada', '❌ Tiada', '🟢 Zonal RI ada'],
-              ],
-              takeaway: 'Paling fleksibel + cover Fargate/Lambda → Compute SP. Diskaun lebih besar tapi lock family/region → EC2 Instance SP. Perlu jaminan kapasiti AZ → Zonal RI. Billing apply order: RI → EC2 Instance SP → Compute SP (highest discount dulu).',
-            },
+            compare: [
+              {
+                label: '4 EC2 pricing models — pick per workload (overview)',
+                headers: ['Model', 'Komitmen', 'Diskaun', 'Boleh interrupt?', 'Guna bila'],
+                rows: [
+                  ['On-Demand', 'Tiada', 'Baseline (paling mahal)', 'Tak', 'Spiky / short-term / tak predictable / dev-test'],
+                  ['Spot', 'Tiada', '🟢 Sampai 90%', '🔴 Ya (notis 2 min)', 'Fault-tolerant batch, stateless, masa fleksibel'],
+                  ['Savings Plans', '$/jam · 1-3 thn', 'Sampai 66-72%', 'Tak', 'Steady spend + nak fleksibel (auto-apply, +Fargate/Lambda)'],
+                  ['Reserved Instances', 'Instance config · 1-3 thn', 'Sampai 72%', 'Tak', 'Steady 24/7 config tetap; perlu capacity reservation (Zonal)'],
+                ],
+                takeaway: 'Boleh interrupt + termurah → Spot. Tak predictable → On-Demand. Steady + fleksibel → Savings Plans. Steady config tetap / perlu capacity reservation → Reserved Instances. INGAT exam: "flexibility" → Savings Plans · "capacity reservation" → Zonal RI · "fault-tolerant + cheapest" → Spot · "spiky/unpredictable" → On-Demand.',
+              },
+              {
+                label: 'Compute SP vs EC2 Instance SP vs RI',
+                headers: ['Aspect', 'Compute SP', 'EC2 Instance SP', 'Reserved Instances'],
+                rows: [
+                  ['Diskaun', 'Sampai 66%', '🟢 Sampai 72%', 'Sampai 72%'],
+                  ['Komit pada', '$/jam (apa-apa compute)', '$/jam (1 family + region)', 'Instance config tertentu'],
+                  ['Tukar family/region', '🟢 Bebas', 'Region & family terkunci', 'Exchange (Convertible) je'],
+                  ['Fargate / Lambda', '🟢 Ya, termasuk', '❌ EC2 sahaja', '❌ EC2 sahaja'],
+                  ['Capacity reservation', '❌ Tiada', '❌ Tiada', '🟢 Zonal RI ada'],
+                ],
+                takeaway: 'Paling fleksibel + cover Fargate/Lambda → Compute SP. Diskaun lebih besar tapi lock family/region → EC2 Instance SP. Perlu jaminan kapasiti AZ → Zonal RI. Billing apply order: RI → EC2 Instance SP → Compute SP (highest discount dulu).',
+              },
+            ],
             tips: [
               'Compute Savings Plans = paling fleksibel: apa-apa instance family, saiz, OS, tenancy, region — DAN apply ke Fargate + Lambda. Sampai 66%.',
               'EC2 Instance Savings Plans = lock pada satu instance family dalam satu region (boleh tukar saiz/OS/AZ dalam family). Diskaun lebih besar (sampai 72%) tapi kurang fleksibel. EC2 sahaja.',
@@ -4187,21 +4559,30 @@ export const domains: DomainData[] = [
               ],
               takeaway: '"ML-based deep rightsizing for compute" → Compute Optimizer. "Broad checks across cost/security/performance/limits" → Trusted Advisor (5 categories).',
             },
-            keywords: ['rightsizing', 'ML recommendations', 'EC2 optimization', 'Lambda optimization', 'cost savings', 'underutilized', 'vs Trusted Advisor'],
+            docs: [
+              { label: 'What is AWS Compute Optimizer', url: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/what-is-compute-optimizer.html' },
+            ],
+            keywords: ['rightsizing', 'ML recommendations', 'EC2 optimization', 'Lambda optimization', 'cost savings', 'underutilized', 'vs Trusted Advisor', '14 days metrics'],
           },
           {
             shortName: 'Trusted Advisor',
             fullName: 'AWS Trusted Advisor',
             ingat: '"Penasihat jimat kos AWS"',
             gunaUntuk: 'Identify idle resources, cost optimization recommendations',
-            fungsi: 'Menganalisis persekitaran AWS dan memberikan cadangan untuk optimasi kos, security, dan performance',
-            scenario: 'CFO tanya "mana resources kita yang membazir?" — Trusted Advisor akan highlight EC2 yang underutilized, S3 buckets tak pakai, Elastic IPs yang idle, dan bagi estimate savings.',
+            fungsi: 'Menganalisis persekitaran AWS dan memberikan cadangan rule-based merentas LIMA kategori. Flag resources yang membazir, risiko security, bottleneck performance, kelemahan fault tolerance, dan service limits yang hampir penuh.',
+            scenario: 'CFO tanya "mana resources kita yang membazir?" — Trusted Advisor akan highlight EC2 yang underutilized, S3 buckets tak pakai, Elastic IPs yang idle, dan bagi estimate savings. "ML rightsizing untuk EC2/Lambda spesifik" pula → Compute Optimizer, BUKAN Trusted Advisor.',
+            detailsLabel: '5 kategori checks',
+            storageDetails: 'Cost Optimization → idle/underutilized resources, idle load balancers, unassociated Elastic IPs, RI/SP purchase opportunities\nPerformance → over-utilized instances, high-latency config, EBS throughput, service config yang melambatkan\nSecurity → open security groups, public S3 buckets, MFA on root, IAM key exposure, exposed access keys\nFault Tolerance → Multi-AZ, backup/snapshot coverage, ASG health, cross-AZ redundancy\nService Limits → resource usage hampir cecah service quota (cth bilangan VPC, EIP, EC2)',
             tips: [
-              'Lima kategori checks: Cost Optimization, Performance, Security, Fault Tolerance, Service Limits',
-              'Free tier: 7 core checks. Business/Enterprise support: semua checks + API access',
-              'Bukan Compute Optimizer (yang ML-based deep compute rightsizing). Trusted Advisor = broader, rule-based',
+              'Lima kategori checks: Cost Optimization, Performance, Security, Fault Tolerance, Service Limits (ingat: "CP-SFS")',
+              'Tahap akses: Basic/Developer support = set core checks terhad. Business/Enterprise support = SEMUA checks + API access (boleh automate via AWS Support API)',
+              'Bukan Compute Optimizer (yang ML-based deep compute rightsizing untuk EC2/ASG/EBS/Lambda/Fargate). Trusted Advisor = broader, rule-based, 5 kategori account-wide',
+              'Exam: "broad best-practice checks across cost/security/performance/limits" → Trusted Advisor. "ML rightsizing for EC2/Lambda" → Compute Optimizer. "alert before overspend" → Budgets',
             ],
-            keywords: ['cost recommendations', 'idle resources', 'rightsizing', 'underutilized', 'service limits', 'five categories'],
+            docs: [
+              { label: 'AWS Trusted Advisor', url: 'https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor.html' },
+            ],
+            keywords: ['cost recommendations', 'idle resources', 'rightsizing', 'underutilized', 'service limits', 'five categories', 'Cost Optimization', 'Performance', 'Security', 'Fault Tolerance', 'rule-based', 'vs Compute Optimizer'],
           },
           {
             shortName: 'AWS Budgets',
