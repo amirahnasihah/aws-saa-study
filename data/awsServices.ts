@@ -1407,11 +1407,37 @@ export const domains: DomainData[] = [
               ],
               caption: 'Sync replication Primary → Standby (sentiasa identical). AZ-a fail → AWS auto-flip DNS endpoint ke Standby (AZ-b) dalam ~60–120s; app guna endpoint yang SAMA, tak payah tukar config. Standby TAK serve reads — nak offload reads guna Read Replica.',
             },
+            mermaid: [
+              {
+                label: 'Multi-AZ vs Read Replica vs dua-dua — pilih yang mana (decision tree)',
+                source: `flowchart TD
+  Q["Masalah RDS apa?"] --> HA{"Nak SURVIVE outage<br/>AZ / instance?"}
+  HA -->|"Ya"| MAZ["✅ Multi-AZ<br/>standby SYNC, auto-failover ~60-120s<br/>standby TAK serve reads · same region"]
+  HA -->|"Tidak"| RD{"Read query<br/>bebankan primary?<br/>atau perlu read global?"}
+  RD -->|"Ya"| RR["✅ Read Replica<br/>ASYNC · up to 15 · same/cross-region<br/>boleh promote → DR"]
+  RD -->|"Perlu dua-dua"| COMBO["✅ Multi-AZ + Read Replica<br/>HA & offload reads serentak"]`,
+                caption: 'Tiga benda beza tujuan: Multi-AZ = tahan outage (HA). Read Replica = scale read / read global. Dua-dua boleh dipakai serentak. INGAT exam: "survive AZ outage / auto-failover" → Multi-AZ. "reporting slow down production / global read access" → Read Replica. Multi-AZ = SYNC same-region, Read Replica = ASYNC boleh cross-region.',
+              },
+              {
+                label: 'Analogi — Multi-AZ = genset standby · Read Replica = kaunter baca tambahan',
+                source: `flowchart LR
+  subgraph MAZ["🛡️ Multi-AZ = GENSET standby"]
+    P1["Kedai (primary)"] -.->|"elektrik putus"| G["Genset auto-hidup<br/>(AZ lain) ~60-120s<br/>standby idle masa normal"]
+  end
+  subgraph RR["📚 Read Replica = KAUNTER baca tambahan"]
+    P2["Kaunter utama<br/>baca + tulis"] --> K["Kaunter baca je<br/>(× up to 15 · boleh<br/>cawangan luar negara)"]
+  end`,
+                caption: 'Multi-AZ = genset standby: tunggu diam, auto-ganti bila primary mati — tujuan TAHAN bencana, bukan tambah laju (genset tak layan customer masa normal = standby idle, no reads). Read Replica = buka kaunter baca tambahan: kurangkan beban kaunter utama, boleh letak di cawangan jauh (cross-region) — tujuan SCALE baca. INGAT exam: outage → genset (Multi-AZ); reporting/global read → kaunter tambahan (Read Replica).',
+              },
+            ],
             tips: [
               'Automated backups: AWS backup daily (during backup window) + transaction logs — boleh restore ke ANY point-in-time dalam retention period (1-35 hari). Auto-deleted bila instance dipadam.',
               'Manual snapshots: kau trigger sendiri, bila-bila masa — KEKAL walaupun RDS instance dipadam. Guna untuk "before major upgrade" atau long-term retention.',
               'Restore dari snapshot/PITR = create instance BARU dengan endpoint BARU — bukan restore in-place',
               'Exam: "retain backup walaupun delete DB instance" → manual snapshot (automated backups deleted together with instance)',
+            ],
+            docs: [
+              { label: 'Multi-AZ deployments for high availability', url: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html' },
             ],
             keywords: ['automatic failover', 'standby', 'different AZ', 'sync replication', 'same endpoint', 'HA only', 'automated backups', 'manual snapshot', 'point-in-time restore', 'retention period'],
           },
@@ -1615,13 +1641,28 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Read-heavy DynamoDB workloads needing microsecond response times',
             fungsi: 'Fully managed, highly available in-memory cache khusus untuk DynamoDB. Drop-in compatible — tak perlu tukar application logic, cuma point ke DAX endpoint. Hanya cache READ operations (GetItem, Query, Scan).',
             scenario: '"DynamoDB read latency perlu microseconds, bukan milliseconds" → DAX. "Cache untuk RDS/Aurora" → ElastiCache, BUKAN DAX (DAX khusus DynamoDB sahaja).',
+            compare: {
+              label: 'DAX vs ElastiCache — bila guna cache yang mana',
+              headers: ['Aspect', 'DAX', 'ElastiCache'],
+              rows: [
+                ['Cache untuk', '🟢 DynamoDB SAHAJA', 'Apa-apa (RDS, Aurora, custom data)'],
+                ['Integrasi', 'Drop-in — guna DAX SDK, code tak ubah', 'Tulis cache logic sendiri di app'],
+                ['Cache apa', 'Read sahaja (GetItem/Query/Scan)', 'Apa-apa value yang kau letak'],
+                ['Latency', 'Microseconds', 'Sub-millisecond (Redis/Memcached)'],
+                ['Guna bila', 'Read-heavy DynamoDB perlu microsecond', 'Cache depan RDS/Aurora atau data am'],
+              ],
+              takeaway: 'Cache khusus DynamoDB + zero code change + microsecond → DAX. Cache untuk RDS/Aurora atau data am → ElastiCache. Exam trap: "cache untuk RDS" BUKAN DAX — DAX hanya cakap DynamoDB API.',
+            },
             tips: [
               'DAX = microsecond reads. DynamoDB sendiri = single-digit millisecond reads. Beza tu yang exam test.',
               'DAX hanya untuk READS — write masih terus ke DynamoDB (write-through cache pada writes yang lalu DAX API)',
               'Drop-in compatible: guna DAX SDK client, code logic tak berubah',
               'DAX ≠ ElastiCache: DAX khusus DynamoDB API. ElastiCache untuk general-purpose caching (RDS, custom data)',
             ],
-            keywords: ['DynamoDB Accelerator', 'microsecond latency', 'in-memory cache', 'read caching', 'drop-in compatible'],
+            docs: [
+              { label: 'In-memory acceleration with DynamoDB Accelerator (DAX)', url: 'https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/DAX.html' },
+            ],
+            keywords: ['DynamoDB Accelerator', 'microsecond latency', 'in-memory cache', 'read caching', 'drop-in compatible', 'DAX vs ElastiCache'],
           },
         ],
       },
