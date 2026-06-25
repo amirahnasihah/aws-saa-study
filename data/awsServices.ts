@@ -2561,6 +2561,8 @@ export const domains: DomainData[] = [
               'Connection timeout to EFS mount target = check: (1) SG inbound TCP 2049 from EC2 CIDR, (2) NACL allows TCP 2049. DNS failure → different error (not timeout).',
               'EFS backup: use AWS Backup natively. S3 File Gateway ≠ EFS backup.',
               'Storage classes: Standard (multi-AZ), Standard-IA (infrequent access), One Zone, One Zone-IA (cheapest — data in single AZ).',
+              'PRICING (us-east-1): Standard = $0.30/GB-mo. Standard-IA = $0.016/GB-mo (retrieval fee $0.01/GB). One Zone = $0.16/GB-mo. One Zone-IA = $0.016/GB-mo. Provisioned Throughput = $6.00/provisioned-MB/s-mo. Elastic Throughput = pay per throughput used. Infrequent Access (IA) lifecycle = auto-move to IA for savings.',
+              'Exam: "cheapest EFS class" → One Zone-IA ($0.016/GB). "multi-AZ EFS" → Standard ($0.30/GB). "infrequently accessed EFS data" → Standard-IA or One Zone-IA. EFS is MORE expensive than S3 ($0.023/GB) but cheaper than EBS for shared multi-instance.',
             ],
             docs: [
               { label: 'EFS Performance', url: 'https://docs.aws.amazon.com/efs/latest/ug/performance.html' },

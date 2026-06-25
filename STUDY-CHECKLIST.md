@@ -48,6 +48,8 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 
 ## 3. Compute — ✅ done · 28 lectures · 4 labs
 
+> **Pricing quick-reference (us-east-1):** EC2 On-Demand per-second (Linux, min 60s) · Reserved up to 72% off · Spot up to 90% off · Dedicated Instance +$2/hr · Dedicated Host per-host · **Lambda: 1M req + 400K GB-s free forever, then $0.20/1M req + $0.00001667/GB-s** · **ALB $0.0225/hr + $0.008/LCU-hr** · **NLB $0.0225/hr + $0.006/NLCU-hr** · **GWLB $0.0135/hr + $0.0035/GWLCU-hr** · **ASG free (pay for EC2)** · Instance Store free · Cross-zone: ALB always ON (free), NLB OFF by default ($0.02/GB inter-AZ to enable)
+
 ### Course outline
 
 - [x] [Amazon EC2 Fundamentals: Instance Types](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=26890) (6m 12s)
@@ -87,6 +89,8 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 ---
 
 ## 4. Storage — ✅ done · 34 lectures · 1 labs
+
+> **Pricing quick-reference (us-east-1):** **S3 Standard $0.023/GB** · Standard-IA $0.0125/GB · One Zone-IA $0.01/GB · Intelligent-Tiering $0.023/GB + $0.0025 monitoring · **Glacier Instant $0.004/GB (ms)** · Glacier Flexible $0.0036/GB (min-hr restore) · **Deep Archive $0.00099/GB (cheapest, 12-48hr)** · **EBS gp3 $0.08/GB** · io2 $0.125/GB + IOPS · st1 $0.045/GB · **sc1 $0.015/GB (cheapest EBS)** · Snapshots $0.05/GB · **EFS Standard $0.30/GB** · One Zone $0.16/GB · EFS IA $0.016/GB · Storage Gateway $0.06/GB cached
 
 ### Course outline
 
@@ -279,13 +283,14 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 
 ### Must be able to answer
 
-- [ ] Organizations: OUs, **SCPs (set boundaries — don't grant)**, consolidated billing
-- [ ] CloudWatch: standard (5min) vs detailed (1min) metrics; **EC2 memory/disk need the CloudWatch agent**; alarms, Logs Insights
-- [ ] **CloudTrail (API audit) vs CloudWatch (performance) vs Config (config state + compliance)** — the classic triad
+- [ ] Organizations: OUs, **SCPs (set boundaries — don't grant)**, consolidated billing — **FREE**
+- [ ] CloudWatch: standard (5min) vs detailed (1min) metrics; **EC2 memory/disk need the CloudWatch agent**; alarms, Logs Insights — **Free tier: 10 metrics, 10 alarms, 5GB logs, 3 dashboards/mo. Detailed $0.015/inst/hr. Custom metrics $0.30/1K/mo**
+- [ ] **CloudTrail (API audit) vs CloudWatch (performance) vs Config (config state + compliance)** — the classic triad — **CloudTrail mgmt events FREE. Data events $0.10/100K. Config $0.003/item + $0.001/rule eval**
 - [ ] Config rules + remediation; conformance packs
-- [ ] CloudFormation: change sets, drift detection, nested stacks, **StackSets (multi-account/region)**
-- [ ] Trusted Advisor 5 categories (cost, security, fault tolerance, performance, service limits)
-- [ ] Systems Manager: **Session Manager (no SSH/bastion)**, Parameter Store, Patch Manager, Run Command
+- [ ] CloudFormation: change sets, drift detection, nested stacks, **StackSets (multi-account/region)** — **FREE (pay for resources only)**
+- [ ] Trusted Advisor 5 categories (cost, security, fault tolerance, performance, service limits) — **7 free checks. Full checks need Business/Enterprise support**
+- [ ] Systems Manager: **Session Manager (no SSH/bastion)**, Parameter Store, Patch Manager, Run Command — **Free tier: 2K activations, 1K instances. Standard params free (10K). Advanced $0.05/param/mo. Session Manager free**
+- [ ] Compute Optimizer: ML rightsizing — **FREE**
 
 ---
 

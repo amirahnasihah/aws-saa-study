@@ -38,6 +38,47 @@ This repo is a SAA-C03 study app. When enriching a Deep Notes card (`data/awsSer
    - **Teach-it-back** → phrase the `caption`/`takeaway` as if explaining to a friend ("INGAT exam: …").
 5. **Exam triggers + traps** — `scenario` (keyword → service mapping, "X → service A, BUKAN service B") and `tips` (the gotchas, the "jangan keliru" pairs). State the discriminating keyword the exam uses.
 6. **Sources + searchability** — `docs[]` (official AWS doc links, fact-check claims against them), and a rich `keywords[]` so the AI hint/explain routes and internal-link finder can match the card.
+7. **Pricing** — include real AWS pricing in `tips[]` (prefixed with `PRICING:` for searchability). State the unit (per GB-month, per hour, per request, per 1K events…), the free tier if any, and the exam-relevant cost discriminator (e.g. "cheapest EBS = sc1 $0.015/GB", "ALB = $0.0225/hr + $0.008/LCU-hr"). Verify pricing against AWS pricing pages or docs. Add a `pricing` keyword to `keywords[]`. Exam loves cost-optimization questions — knowing approximate numbers helps pick the cheapest/most expensive option.
+
+**Pricing reference (us-east-1, approximate — verify before asserting):**
+
+| Service | Free tier | Key price points |
+|---|---|---|
+| EC2 On-Demand | No | Per-second (Linux, min 60s), per-hour (Windows). t3.medium ~$0.0416/hr |
+| EC2 Reserved | No | Up to 72% off (3yr All Upfront Standard RI) |
+| EC2 Spot | No | Up to 90% off. 2-min interruption notice |
+| EC2 Dedicated Instance | No | +$2/hr region surcharge |
+| EC2 Dedicated Host | No | Per-host billing (~$3.20/hr for t3 host) |
+| Lambda | 1M req + 400K GB-s/mo forever | $0.20/1M req + $0.00001667/GB-s. Provisioned Concurrency extra |
+| ALB | No | $0.0225/hr + $0.008/LCU-hr |
+| NLB | No | $0.0225/hr + $0.006/NLCU-hr |
+| GWLB | No | $0.0135/hr + $0.0035/GWLCU-hr |
+| CLB (legacy) | No | $0.025/hr + $0.008/GB processed |
+| ASG | Free | Pay for EC2 instances launched only |
+| S3 Standard | No | $0.023/GB-mo. PUT $0.005/1K, GET $0.0004/1K |
+| S3 Standard-IA | No | $0.0125/GB-mo + retrieval fee. Min 30 days |
+| S3 One Zone-IA | No | $0.01/GB-mo (20% cheaper than Standard-IA) |
+| S3 Intelligent-Tiering | No | $0.023/GB-mo + $0.0025/GB monitoring fee |
+| Glacier Instant Retrieval | No | $0.004/GB-mo. ms retrieval, no restore. Min 90 days |
+| Glacier Flexible Retrieval | No | $0.0036/GB-mo. Restore 1min-12hr. Min 90 days |
+| Glacier Deep Archive | No | $0.00099/GB-mo. Restore 12-48hr. Min 180 days |
+| EBS gp3 | No | $0.08/GB-mo (includes 3K IOPS + 125 MB/s) |
+| EBS io2 | No | $0.125/GB-mo + $0.065/provisioned-IOPS-mo |
+| EBS st1 | No | $0.045/GB-mo |
+| EBS sc1 | No | $0.015/GB-mo (cheapest EBS) |
+| EBS snapshots | No | $0.05/GB-mo (incremental, stored in S3) |
+| EFS Standard | No | $0.30/GB-mo (multi-AZ) |
+| EFS One Zone | No | $0.16/GB-mo (single AZ) |
+| EFS IA | No | $0.016/GB-mo + retrieval fee |
+| CloudWatch | 10 metrics, 10 alarms, 5GB logs, 3 dashboards/mo | Detailed monitoring $0.015/inst/hr. Custom metrics $0.30/1K/mo. Alarms $0.10/alarm/mo. Logs $0.50/GB ingested |
+| CloudTrail | First copy of mgmt events FREE | Data events $0.10/100K events. Lake $0.75/GB ingested |
+| AWS Config | No | $0.003/config item. $0.001/rule evaluation |
+| CloudFormation | FREE | Pay only for resources created. No charge for stacks, templates, StackSets |
+| Systems Manager | 2K activations, 1K instances free | Standard params free (10K). Advanced $0.05/param/mo. Session Manager free |
+| Trusted Advisor | 7 core checks (Basic/Developer) | Full checks need Business ($100+/mo) or Enterprise support |
+| Compute Optimizer | FREE | Uses CloudWatch metrics (pay for CW if custom) |
+| Organizations | FREE | Consolidated billing + volume discounts at no charge |
+| Health Dashboard | Service Health: free. Account: free | API access needs Business/Enterprise support |
 
 **Also:** whenever a card introduces a term, acronym, or internal component the learner won't know (HDFS, SPICE, shard, UltraWarn, DPU, partition pruning…), add it to `data/glossary.ts` — both the `glossaryCategories` list and a one-line `glossary` definition. Keep definitions plain-language and exam-focused.
 
