@@ -2051,10 +2051,12 @@ export const domains: DomainData[] = [
           {
             shortName: 'ECS',
             fullName: 'Elastic Container Service',
-            ingat: '"Docker manager"',
-            gunaUntuk: 'Run containers',
-            fungsi: 'Mengurus dan menjalankan Docker containers pada cluster',
+            ingat: '"Docker manager AWS-native — Cluster → Service → Task ikut Task Definition"',
+            gunaUntuk: 'Run & orchestrate Docker containers (AWS-native, bukan Kubernetes)',
+            fungsi: 'Mengurus dan menjalankan Docker containers pada cluster. Hierarki: Cluster (pool capacity) → Service (jaga desired count) → Task (satu running unit) yang dicetak dari Task Definition (blueprint JSON). Dua launch type: EC2 (kau urus instances) atau Fargate (serverless).',
             contohGuna: 'Run microservices dalam Docker, e-commerce modules',
+            detailsLabel: 'ECS — komponen & hierarki',
+            storageDetails: 'Cluster → pool logikal capacity (EC2 instances atau Fargate) tempat tasks jalan\nTask Definition → blueprint JSON: image, vCPU, memory, ports, env vars, volumes + Task Role + Task Execution Role. BUKAN benda yang "run" — ia resepi sahaja\nTask → satu running instance dari Task Definition (boleh ada 1+ container)\nService → pastikan desired count tasks SENTIASA running (restart kalau mati), boleh attach ke ALB + auto-scaling\nTask Role → IAM role yang APP DALAM container guna untuk panggil AWS (S3, DynamoDB) — per-task IAM\nTask Execution Role → IAM role yang ECS/Fargate AGENT guna untuk pull image dari ECR + tulis log ke CloudWatch (bukan untuk app code)',
             compare: [
               {
                 label: 'EC2 launch type vs Fargate',
@@ -2077,8 +2079,40 @@ export const domains: DomainData[] = [
                 ],
                 takeaway: 'Jimat duit / packing padat → binpack. Tahan failure / sebar across AZ → spread (selalu spread by AZ). Constraint pula: distinctInstance (satu task satu instance), memberOf (ikut syarat). NOTA: Fargate = best-effort AZ spread sahaja, TAK support strategy/constraint.',
               },
+              {
+                label: '3 IAM role dalam ECS — jangan keliru (selalu kena exam)',
+                headers: ['Role', 'Siapa guna', 'Untuk apa'],
+                rows: [
+                  ['Task Role', '🟢 APP kau dalam container', 'Panggil AWS API: S3, DynamoDB, SQS — per-task IAM, app-level'],
+                  ['Task Execution Role', 'ECS / Fargate AGENT', 'Pull image dari ECR + tulis log ke CloudWatch + amik secret. BUKAN app code'],
+                  ['EC2 Instance Role', 'EC2 host (EC2 launch type)', 'Benarkan ECS agent register instance ke cluster. Hanya wujud bila EC2 launch type'],
+                ],
+                takeaway: '"Container/app perlu akses S3/DynamoDB" → Task Role. "Task gagal pull image dari ECR / tak boleh tulis log" → fix Task Execution Role. Fargate = TIADA instance role (no host). NOTA: EC2 launch type tiada task isolation — container boleh capai credentials task lain di host sama; nak isolation ketat → Fargate.',
+              },
             ],
+            mermaid: [
+              {
+                label: 'Anatomi ECS — Cluster → Service → Task ← Task Definition',
+                source: `flowchart TD
+  TaskDef["📋 Task Definition (blueprint/resepi)<br/>image · vCPU · memory · port · env<br/>+ Task Role + Task Execution Role"] -.->|"dicetak jadi"| Task1
+  Cluster["🏢 Cluster — pool capacity<br/>(EC2 instances atau Fargate)"] --> Service["👨‍🍳 Service<br/>jaga desired count = N<br/>restart kalau task mati · attach ALB"]
+  Service --> Task1["🍽️ Task (running)"]
+  Service --> Task2["🍽️ Task (running)"]
+  Task1 --> C1["📦 Container(s)"]`,
+                caption: 'Cluster = bangunan, Service = ketua yang pastikan sentiasa ada N pinggan, Task = satu pinggan yang sedang dimasak, Task Definition = resepi (blueprint, bukan benda yang run). INGAT exam: "best describes a task definition" → JSON blueprint/template yang describe containers, BUKAN service/task yang running.',
+              },
+              {
+                label: 'Analogi — ECS = restoran mamak',
+                source: `flowchart LR
+  TD["📋 Task Definition = MENU/resepi<br/>(roti canai: tepung, berapa keping, harga)"] --> T["🍽️ Task = pinggan roti<br/>yang sedang dihidang"]
+  SVC["👨‍🍳 Service = ketua dapur<br/>'mesti ada 5 pinggan ready'<br/>(jatuh 1 → masak ganti)"] --> T
+  CL["🏢 Cluster = dapur restoran<br/>(EC2 = kau sewa dapur sendiri ·<br/>Fargate = guna dapur kongsi, datang masak je)"] --> SVC`,
+                caption: 'Kaitkan dengan familiar: menu = Task Definition (cuma kertas resepi), pinggan terhidang = Task, ketua dapur jaga stok = Service (desired count), dapur = Cluster. Sewa dapur sendiri = EC2 launch type; guna dapur kongsi tanpa urus = Fargate. INGAT exam: "least operational overhead / no servers" → Fargate; "kawal host (GPU/fleet murah)" → EC2.',
+              },
+            ],
+            scenario: '"Best describes a task definition" → JSON blueprint/template yang describe containers (image, CPU, memory, ports). "Container app perlu akses S3 dengan least privilege" → Task Role (per-task IAM). "Task tak boleh pull image dari ECR" → Task Execution Role rosak. "Maintain N running copies + auto-restart" → Service. "Run container least ops, no servers" → Fargate. "Pack tasks jimat kos" → binpack; "sebar AZ untuk HA" → spread.',
             tips: [
+              'Task Role vs Task Execution Role (SELALU kena exam): Task Role = IAM untuk APP DALAM container panggil AWS (S3, DynamoDB) — per-task least privilege. Task Execution Role = IAM untuk ECS/Fargate AGENT pull image dari ECR + tulis CloudWatch logs + amik Secrets Manager. Keliru dua ni = silap jawab.',
               'Task placement: binpack = jimat kos (padat), spread = HA (sebar AZ), random = rawak. Constraint: distinctInstance, memberOf',
               'Task Definition = JSON template yang describe containers untuk application (image, CPU, memory, ports, env vars, volumes)',
               'Task Definition BUKAN: IAM template, bukan service yang launch clusters, bukan program yang run — ia BLUEPRINT untuk containers',
@@ -2086,7 +2120,12 @@ export const domains: DomainData[] = [
               'Task = running instance of a Task Definition. Service = maintain desired number of running tasks',
               'Exam: "best describes a task definition" → JSON template that describes containers that form your application',
             ],
-            keywords: ['Docker', 'containers', 'microservices', 'task definition', 'JSON template', 'Fargate', 'EC2 launch type', 'service'],
+            docs: [
+              { label: 'ECS task IAM role (Task Role)', url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html' },
+              { label: 'ECS task execution IAM role', url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html' },
+              { label: 'ECS task placement strategies', url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-placement-strategies.html' },
+            ],
+            keywords: ['Docker', 'containers', 'microservices', 'task definition', 'JSON template', 'Fargate', 'EC2 launch type', 'service', 'task', 'cluster', 'Task Role', 'Task Execution Role', 'per-task IAM', 'binpack', 'spread', 'random', 'task placement', 'desired count'],
           },
           {
             shortName: 'EKS',
@@ -2114,7 +2153,12 @@ export const domains: DomainData[] = [
               'ConfigMaps = non-sensitive config data. NOT for secrets. Kubernetes Secrets + IRSA = proper pattern',
               'Exam: "EKS pods need access to Secrets Manager without credentials in container image" → IRSA + Kubernetes Secrets',
             ],
-            keywords: ['Kubernetes', 'K8s', 'container orchestration', 'IRSA', 'IAM Roles for Service Accounts', 'pod identity'],
+            scenario: '"Dah ada Kubernetes skill/YAML/Helm, nak portable across cloud" → EKS (bukan ECS). "Just run containers, AWS-only, least learning" → ECS. "EKS pods access AWS tanpa simpan credentials" → IRSA. "K8s control plane managed tapi nak run on-prem consistent" → EKS Anywhere. NOTA: control plane EKS ada kos (~$0.10/jam/cluster); ECS control plane percuma.',
+            docs: [
+              { label: 'Amazon EKS — what is it', url: 'https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html' },
+              { label: 'IAM Roles for Service Accounts (IRSA)', url: 'https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html' },
+            ],
+            keywords: ['Kubernetes', 'K8s', 'container orchestration', 'IRSA', 'IAM Roles for Service Accounts', 'pod identity', 'ECS vs EKS', 'control plane cost'],
           },
           {
             shortName: 'EKS Variants',
