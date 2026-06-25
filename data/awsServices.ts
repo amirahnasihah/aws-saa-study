@@ -3456,6 +3456,18 @@ export const domains: DomainData[] = [
                 takeaway: 'Crawler ISI katalog · Classifier kenal format · Job transform · Catalog simpan metadata. Soalan "apa populate Data Catalog?" → Crawler. "Convert CSV ke Parquet serverless?" → Glue ETL Job.',
               },
               {
+                label: 'Glue terminology — Data Store vs Data Source vs Data Target vs Catalog vs Table (jangan keliru)',
+                headers: ['Istilah', 'Maksud', 'Trigger exam'],
+                rows: [
+                  ['Data Store', 'Repository tempat data SEBENAR duduk (S3 bucket, RDS, DB). Ini yang Crawler CRAWL', '"repository for persistently storing the data", "data store yang di-crawl"'],
+                  ['Data Source', 'Data Store dalam peranan INPUT kepada job/transform', '"data store used as input to a transform" → Data Source'],
+                  ['Data Target', 'Data Store dalam peranan OUTPUT — tempat job TULIS hasil', '"a process/transform writes to" → Data Target'],
+                  ['Data Catalog', 'Persistent metadata store (1 per account/region) — simpan SEMUA metadata dari data store yang di-crawl', '"persistent metadata store", "central metadata store"'],
+                  ['Table', 'Metadata definition yang wakili data: nama column, jenis data, partition. Schema SAHAJA', '"metadata definition representing the data" → Table'],
+                ],
+                takeaway: 'Data Store = tempat data betul-betul duduk (yang di-CRAWL). Data Source/Target = Data Store yang SAMA, cuma beza peranan (input vs output). Data Catalog = kedai metadata pusat. Table = definisi schema dalam Catalog. PENTING: Table & Database simpan metadata SAHAJA — data sebenar kekal dalam data store asal. Ini trap terminology Glue yang exam suka uji.',
+              },
+              {
                 label: 'Glue vs EMR vs Athena — bila guna yang mana (ETL/query)',
                 headers: ['Aspect', 'Glue', 'EMR', 'Athena'],
                 rows: [
@@ -3476,12 +3488,14 @@ export const domains: DomainData[] = [
               'Glue Data Catalog = metadata sahaja (apa data wujud). Lake Formation = kawalan akses (siapa boleh akses) atas katalog yang sama',
               'Serverless analytics pattern: S3 (store) → Glue (crawl + catalog + ETL) → Athena (query) → QuickSight (visualize). Hafal urutan ni',
               'Glue = serverless (no cluster). Kalau soalan tekankan "full control" / "Hadoop/Spark cluster" → itu EMR, bukan Glue',
+              'Terminology trap: Data Store = repository simpan data (yang di-CRAWL). Data Source = Data Store sebagai INPUT job. Data Target = Data Store yang job TULIS hasil. Sama benda, beza peranan',
+              'Glue Table = metadata definition (column, jenis data, partition) dalam Data Catalog. PENTING: Table & Database simpan metadata SAHAJA — data sebenar kekal dalam data store asal (S3/RDS). Table ≠ data',
             ],
             docs: [
               { label: 'AWS Glue components', url: 'https://docs.aws.amazon.com/glue/latest/dg/components-key-concepts.html' },
               { label: 'Glue Crawlers', url: 'https://docs.aws.amazon.com/glue/latest/dg/add-crawler.html' },
             ],
-            keywords: ['ETL', 'data catalog', 'Spark', 'serverless', 'crawler', 'classifier', 'ETL job', 'DataBrew', 'Glue Studio', 'workflow', 'data lake', 'transform', 'Parquet', 'schema discovery', 'DynamoDB', 'schema inference', 'DPU'],
+            keywords: ['ETL', 'data catalog', 'Spark', 'serverless', 'crawler', 'classifier', 'ETL job', 'DataBrew', 'Glue Studio', 'workflow', 'data lake', 'transform', 'Parquet', 'schema discovery', 'DynamoDB', 'schema inference', 'DPU', 'data store', 'data source', 'data target', 'Glue table', 'metadata definition', 'database'],
           },
           {
             shortName: 'Lake Formation',
