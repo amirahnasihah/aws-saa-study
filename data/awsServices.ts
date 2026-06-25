@@ -155,6 +155,65 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Control who can access what AWS resources',
             fungsi: 'Mengurus identiti dan akses kepada perkhidmatan dan sumber AWS dengan policies',
             contohGuna: 'Create IAM Role untuk EC2 boleh read S3 — attach role ke EC2, bukan hardcode credentials dalam code',
+            detailsLabel: 'IAM — komponen utama',
+            storageDetails: 'Principal → entiti yang hantar request (User, Role, atau AWS service). Hanya Principal boleh "buat" sesuatu\nUser → identiti KEKAL untuk 1 orang/app. Ada credentials sendiri (password + access keys long-term)\nGroup → bakul untuk kumpul Users. BUKAN identity — tak boleh login, tak boleh jadi Principal. Attach policy kat sini (best practice)\nRole → identiti SEMENTARA yang di-assume. Tiada long-term creds — dapat temp creds via STS yang auto-expire\nPolicy → JSON Allow/Deny. Identity-based (attach kat User/Group/Role) atau Resource-based (attach kat S3/SQS/KMS)\nPermission Boundary → siling MAKSIMUM permission untuk satu entity (had, bukan bagi)\nMFA → faktor kedua (app/hardware token) selain password',
+            mermaid: [
+              {
+                label: 'Policy evaluation — request DIBENARKAN atau DITOLAK? (decision tree)',
+                source: `flowchart TD
+  REQ["📨 Principal hantar request"] --> CTX["Kumpul SEMUA policy berkaitan<br/>identity · resource · SCP · boundary · session"]
+  CTX --> DENY{"Ada EXPLICIT DENY<br/>mana-mana policy?"}
+  DENY -->|"Ya"| NO["❌ DENIED<br/>explicit deny SENTIASA menang"]
+  DENY -->|"Tidak"| GUARD{"SCP · Permission Boundary ·<br/>Session policy — semua BENARKAN?"}
+  GUARD -->|"Tidak (ada yg tak allow)"| NO2["❌ DENIED<br/>guardrail sekat (intersection)"]
+  GUARD -->|"Ya"| ALLOW{"Ada EXPLICIT ALLOW dalam<br/>identity ATAU resource policy?"}
+  ALLOW -->|"Ya"| YES["✅ ALLOWED"]
+  ALLOW -->|"Tidak"| IMP["❌ DENIED<br/>implicit deny = default"]`,
+                caption: 'Urutan: (1) Explicit DENY mana-mana policy → terus DENIED. (2) Guardrail (SCP/Boundary/Session) mesti BENARKAN — ini intersection, hanya boleh SEKAT. (3) Mesti ada explicit ALLOW dalam identity ATAU resource policy (union). (4) Kalau tiada allow → implicit deny. INGAT exam: explicit Deny > guardrail > explicit Allow > implicit Deny. Allow + Deny pada action sama = DENIED.',
+              },
+              {
+                label: 'Analogi — IAM = sekuriti bangunan pejabat',
+                source: `flowchart LR
+  subgraph B["🏢 AWS = bangunan pejabat"]
+    U["👤 User<br/>= staf tetap<br/>(kad akses sendiri)"]
+    G["👥 Group<br/>= jabatan<br/>(set kebenaran pintu)"]
+    R["🎫 Role<br/>= pas pelawat<br/>(pinjam, auto-luput)"]
+    P["📋 Policy<br/>= senarai pintu boleh buka"]
+    PB["🚧 Permission Boundary<br/>= aras tertinggi lif boleh naik"]
+  end
+  U --> G --> P
+  R --> P
+  PB -.->|"siling, tak boleh lepas"| U`,
+                caption: 'User = staf tetap dengan kad akses sendiri (long-term creds). Group = jabatan — kumpul staf & bagi kebenaran pintu sekali gus (attach policy kat Group). Role = pas pelawat sementara — sesiapa boleh pinjam & auto-luput (temp creds, no hardcode). Policy = senarai pintu mana boleh buka. Permission Boundary = aras tertinggi lif dibenarkan, walau kad kata boleh ke penthouse. INGAT exam: app dalam EC2 = bagi ia "pas pelawat" (Role), JANGAN salin kad staf masuk kod (hardcode access key).',
+              },
+            ],
+            compare: [
+              {
+                label: 'IAM User vs Group vs Role (jangan keliru)',
+                headers: ['Aspect', 'IAM User', 'IAM Group', 'IAM Role'],
+                rows: [
+                  ['Apa dia', 'Identiti KEKAL untuk 1 orang/app', 'Bakul kumpul Users', 'Identiti SEMENTARA yang di-assume'],
+                  ['Credentials', 'Password + access keys (long-term)', '❌ Tiada (bukan identity)', 'Temp creds via STS (auto-expire)'],
+                  ['Boleh login / jadi Principal?', '🟢 Ya', '❌ Tidak', 'Di-assume, bukan login terus'],
+                  ['Attach policy?', 'Boleh (tapi elak)', '🟢 Ya (cara terbaik)', '🟢 Ya'],
+                  ['Guna bila', 'Manusia / app tetap', 'Urus permission ramai user sekali gus', 'EC2 · Lambda · cross-account · federation'],
+                ],
+                takeaway: 'Group BUKAN identity — tak boleh login, tak boleh jadi Principal, cuma alat urus permission. Role = tiada long-term creds, sentiasa pilihan untuk EC2/Lambda/cross-account/federation. Hardcode access key dalam EC2 = SALAH → guna Role.',
+              },
+              {
+                label: 'Jenis Policy — mana boleh BAGI akses, mana cuma HAD',
+                headers: ['Jenis Policy', 'Attach kat', 'Fungsi', 'Boleh GRANT?'],
+                rows: [
+                  ['Identity-based', 'User / Group / Role', 'Apa identiti ni boleh buat', '🟢 Ya'],
+                  ['Resource-based', 'Resource (S3/SQS/KMS)', 'Siapa boleh akses resource ni', '🟢 Ya (+ cross-account tanpa assume role)'],
+                  ['SCP (Organizations)', 'OU / Account', 'Siling maksimum untuk account', '❌ Tak — hanya SEKAT'],
+                  ['Permission Boundary', 'User / Role', 'Siling maksimum untuk satu entity', '❌ Tak — hanya SEKAT'],
+                  ['Session Policy', 'Masa AssumeRole', 'Sekat lagi permission sesi tu', '❌ Tak — hanya SEKAT'],
+                ],
+                takeaway: 'Identity & Resource policy = boleh BAGI akses (union — allow mana-mana satu cukup). SCP/Boundary/Session = guardrail, hanya boleh SEKAT (intersection — semua mesti allow). Resource-based policy boleh bagi cross-account access TANPA assume role. Explicit deny dalam mana-mana satu menang atas semua.',
+              },
+            ],
+            scenario: '"App dalam EC2 perlu akses S3" → IAM Role (BUKAN hardcode access keys). "Account A akses resource Account B" → assume Role cross-account ATAU resource-based policy. "Hadkan permission MAKSIMUM developer walau admin bagi lebih" → Permissions Boundary. "Sekat semua account dalam OU dari guna region tertentu" → SCP. "Explicit Deny + Allow pada action sama" → DENIED. "User luar login Google/Facebook nak akses" → Cognito/federation (BUKAN cipta IAM user). Keywords: least privilege, temporary credentials, cross-account, explicit deny, permission boundary.',
             tips: [
               'IAM Principals: entity yang boleh buat request kat AWS — Users (individu), Groups (kumpulan users), atau Roles (identity sementara yang boleh di-assume)',
               'Users & Groups = permanent identities — perlu credentials (password untuk console, access keys untuk CLI) untuk login. Roles = temporary identities — bagi short-lived credentials yang di-assume oleh Users/Applications, tak perlu hardcode long-term credentials',
@@ -166,7 +225,11 @@ export const domains: DomainData[] = [
               'IAM Role types: (1) Service Role — role yang AWS service assume untuk buat actions on behalf of User (cth: Lambda execution role). (2) Service Role for EC2 — application dalam EC2 assume role ni untuk access resource lain (cth: S3) tanpa hardcode credentials. (3) Service-Linked Role — AWS Managed role yang predefined & linked terus ke satu service, permissions tak boleh edit oleh User. (4) Role Chaining — assume satu role, lepas tu guna credentials tu untuk assume role lain (cth: cross-account role → read-only role untuk S3)',
               'Exam: "Which is NOT a feature of IAM?" → "IAM Resource" is the trick option. Resource = target YANG DIKAWAL aksesnya oleh IAM (cth: S3 bucket, EC2), bukan komponen/feature IAM itu sendiri',
             ],
-            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation'],
+            docs: [
+              { label: 'IAM policy evaluation logic', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html' },
+              { label: 'Security best practices in IAM', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html' },
+            ],
+            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation', 'IAM Role', 'IAM User', 'IAM Group', 'identity-based policy', 'resource-based policy', 'permission boundary', 'SCP', 'explicit deny', 'implicit deny', 'policy evaluation', 'service-linked role', 'role chaining', 'session policy', 'cross-account access'],
           },
           {
             shortName: 'STS',
