@@ -2669,6 +2669,29 @@ export const domains: DomainData[] = [
             storageDetails: 'Visibility Timeout → Message invisible semasa diproses (max 12 jam). Jika consumer mati sebelum siap → message visible semula selepas timeout\nDelay Seconds → Delay sebelum message pertama kali visible dalam queue (max 15 minit)\nDead Letter Queue (DLQ) → Message yang gagal diproses N kali dihantar ke DLQ untuk debug\nMessage Retention → Default 4 hari, max 14 hari',
             detailsLabel: 'SQS Key Concepts',
             scenario: 'Spot instance terminated masa process SQS message → message TIDAK hilang. Ia akan visible semula selepas Visibility Timeout expired. Message hanya deleted bila consumer call DeleteMessage API selepas berjaya process.',
+            mermaid: [
+              {
+                label: 'Pilih messaging service — SQS vs SNS vs EventBridge vs Amazon MQ (decision tree)',
+                source: `flowchart TD
+  Start["📨 Nak hantar mesej / event<br/>antara service"] --> MQ{"App LAMA dah guna<br/>ActiveMQ / RabbitMQ?<br/>(AMQP, MQTT, STOMP, JMS)"}
+  MQ -->|"Ya — lift &amp; shift,<br/>tak nak ubah code"| AMQ["✅ Amazon MQ<br/>migrate broker sedia ada"]
+  MQ -->|"Tidak — cloud-native"| ROUTE{"Perlu ROUTE ikut ISI event,<br/>react ke event AWS / SaaS,<br/>atau jadual cron?"}
+  ROUTE -->|"Ya"| EB["✅ EventBridge<br/>content-based routing +<br/>event bus + scheduler"]
+  ROUTE -->|"Tidak"| FAN{"1 mesej → RAMAI<br/>penerima serentak?"}
+  FAN -->|"Ya (broadcast / fan-out)"| SNS["✅ SNS (push)<br/>SNS → banyak SQS = fan-out"]
+  FAN -->|"Tidak — buffer &amp; proses<br/>ikut kadar consumer sendiri"| SQS["✅ SQS (pull queue)<br/>decouple, retry, DLQ"]`,
+                caption: 'Tanya ikut urutan: (1) legacy broker? → Amazon MQ. (2) route ikut isi / event AWS / cron? → EventBridge. (3) satu-ke-ramai serentak? → SNS. (4) selainnya, buffer & pull → SQS. INGAT exam: SQS = pull & buffer · SNS = push & broadcast · EventBridge = route pintar · Amazon MQ = jambatan legacy.',
+              },
+              {
+                label: 'Analogi — 4 cara hantar mesej di pejabat',
+                source: `flowchart LR
+  SQS["📮 SQS = beratur kaunter pos<br/>amik nombor, staff layan<br/>SATU-SATU ikut kadar sendiri<br/>(pull · buffer · tak hilang)"]
+  SNS["📢 SNS = pembesar suara surau<br/>1 announcement → SEMUA<br/>dengar SERENTAK<br/>(push · fan-out)"]
+  EB["🚦 EventBridge = operator switchboard<br/>route panggilan ikut JENIS<br/>(content-based + event AWS/SaaS/cron)"]
+  MQ["🔌 Amazon MQ = adapter palam lama<br/>barang lama (ActiveMQ/RabbitMQ)<br/>masuk rumah baru tanpa tukar plug"]`,
+                caption: 'Kaitkan dengan familiar: pos = beratur & pull (SQS), pembesar suara surau = broadcast serentak (SNS), switchboard = route ikut jenis (EventBridge), adapter palam = sambung legacy ke cloud (Amazon MQ). INGAT exam: "decouple/buffer" → SQS, "notify many/fan-out" → SNS, "route by content/schedule" → EventBridge, "migrate existing broker" → Amazon MQ.',
+              },
+            ],
             compare: {
               label: 'Standard vs FIFO queue',
               headers: ['Aspect', 'Standard', 'FIFO'],
@@ -2692,7 +2715,12 @@ export const domains: DomainData[] = [
               'SNS→SQS→Lambda pattern: add SQS queue between SNS and Lambda for reliable async processing. If Lambda fails transiently, message waits in SQS and is retried — no message loss, no manual intervention.',
               'SQS FIFO + Lambda: message ordering within MessageGroupId guaranteed. Requires event source mapping (ESM) to connect Lambda to FIFO queue.',
             ],
-            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out'],
+            docs: [
+              { label: 'SQS — visibility timeout', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html' },
+              { label: 'SQS — short vs long polling', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html' },
+              { label: 'SQS — dead-letter queues', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html' },
+            ],
+            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push'],
           },
           {
             shortName: 'SNS',
@@ -2726,6 +2754,10 @@ export const domains: DomainData[] = [
               'SNS vs EventBridge: SNS = simple fan-out, high throughput. EventBridge = content-based routing with rules, schema registry, SaaS integration, archive & replay. EventBridge lebih flexible tapi SNS lebih simple untuk basic fan-out',
               'Cross-account SNS: guna SNS topic policy (resource-based) untuk allow other accounts subscribe atau publish. Same pattern as SQS cross-account',
               'Exam: "one event must trigger multiple independent processes" → SNS fan-out. "Route different events to different targets based on content" → EventBridge',
+            ],
+            docs: [
+              { label: 'SNS — fan-out to Amazon SQS queues', url: 'https://docs.aws.amazon.com/sns/latest/dg/sns-sqs-as-subscriber.html' },
+              { label: 'SNS — message filtering', url: 'https://docs.aws.amazon.com/sns/latest/dg/sns-message-filtering.html' },
             ],
             keywords: ['pub/sub', 'push notification', 'fan-out', 'broadcast', 'topic', 'subscription', 'filter policy', 'message filtering', 'SNS FIFO', 'cross-account SNS', 'S3 event notification', 'push-based'],
           },
@@ -2866,6 +2898,10 @@ export const domains: DomainData[] = [
               'Custom event bus: isolate events per application/team. Default event bus receives AWS service events. Custom bus for your app events + SaaS partner events',
               'Exam: "route events based on content to different targets" → EventBridge. "Simple broadcast to all subscribers" → SNS',
             ],
+            docs: [
+              { label: 'EventBridge — what is it (event bus & rules)', url: 'https://docs.aws.amazon.com/eventbridge/latest/userguide/eb-what-is.html' },
+              { label: 'EventBridge Scheduler', url: 'https://docs.aws.amazon.com/scheduler/latest/UserGuide/what-is-scheduler.html' },
+            ],
             keywords: ['event bus', 'event-driven', 'cron schedule', 'rule-based routing', 'decouple', 'SaaS integration', 'CloudWatch Events', 'schema registry', 'archive replay', 'EventBridge Pipes', 'EventBridge Scheduler'],
           },
           {
@@ -2957,14 +2993,52 @@ export const domains: DomainData[] = [
             ingat: '"SQS tapi untuk apps lama yang guna ActiveMQ/RabbitMQ"',
             gunaUntuk: 'Migrate existing ActiveMQ/RabbitMQ message brokers to AWS without code changes',
             fungsi: 'Managed message broker service yang support ActiveMQ dan RabbitMQ. Guna AMQP, MQTT, STOMP, OpenWire protocols. Untuk lift-and-shift apps yang dah guna standard protocols.',
+            detailsLabel: 'Amazon MQ — komponen utama',
+            storageDetails: 'Engine → ActiveMQ atau RabbitMQ (pilih ikut protokol app sedia ada)\nProtokol terbuka → AMQP, MQTT, STOMP, OpenWire, WebSocket, JMS — sebab itu app lama boleh sambung tanpa tukar code\nBroker → instance yang AWS urus (patching, HA). Bukan serverless macam SQS\nDeployment → single-instance (dev/test) atau active/standby multi-AZ (production HA, auto-failover guna EFS)\nQueue & Topic → satu broker boleh ada queues (point-to-point) DAN topics (pub/sub) sekali',
             scenario: '"Company ada on-premises app guna ActiveMQ, nak migrate ke AWS tanpa tukar code" → Amazon MQ. App baru? → guna SQS/SNS (simpler, cheaper, cloud-native). Amazon MQ = MIGRATION/LEGACY. SQS = cloud-native new apps.',
+            mermaid: {
+              label: 'Analogi — Amazon MQ = adapter palam lama',
+              source: `flowchart LR
+  OLD["🏭 App lama on-prem<br/>guna ActiveMQ / RabbitMQ<br/>(plug 3-pin lama)"] --> MQ["🔌 Amazon MQ<br/>adapter — terima plug lama<br/>tanpa ubah perkakas"]
+  MQ --> AWS["☁️ Jalan elok dalam AWS<br/>(managed broker, HA)"]
+  NEW["✨ App BARU?"] -.->|"jangan guna adapter —<br/>terus pakai soket baru"| SQSSNS["✅ SQS / SNS<br/>cloud-native, murah, auto-scale"]`,
+              caption: 'Kaitkan dengan familiar: app legacy = perkakas berplug lama; Amazon MQ = adapter yang biar ia masuk soket AWS tanpa beli perkakas baru. App baru tak payah adapter — terus SQS/SNS. INGAT exam: "migrate / existing broker / MQTT / AMQP / tanpa tukar code" → Amazon MQ; app baru → SQS/SNS.',
+            },
+            compare: [
+              {
+                label: 'Amazon MQ vs SQS + SNS — bila pilih yang mana',
+                headers: ['Aspect', 'Amazon MQ', 'SQS + SNS'],
+                rows: [
+                  ['Bila guna', '🟠 Lift-and-shift app SEDIA ADA', '🟢 App cloud-native BARU'],
+                  ['Protokol', 'Terbuka: AMQP, MQTT, STOMP, OpenWire, JMS', 'API AWS proprietary (SDK sahaja)'],
+                  ['Bentuk', 'Managed broker (instance)', 'Fully serverless (no broker)'],
+                  ['Skala', 'Terhad ikut saiz broker', '🟢 Hampir tanpa had, auto-scale'],
+                  ['Kos & urus', 'Mahal sikit, kena saiz broker', '🟢 Bayar ikut guna, no infra'],
+                ],
+                takeaway: '"migrate", "existing ActiveMQ/RabbitMQ", "MQTT/AMQP/STOMP", "tanpa tukar code" → Amazon MQ. App baru / nak scale / serverless → SQS + SNS. MQ = jambatan untuk legacy, BUKAN pilihan default.',
+              },
+              {
+                label: 'ActiveMQ vs RabbitMQ — engine mana untuk protokol apa',
+                headers: ['Aspect', 'ActiveMQ', 'RabbitMQ'],
+                rows: [
+                  ['Protokol', 'AMQP, MQTT, STOMP, OpenWire, WebSocket', 'AMQP terutamanya'],
+                  ['Pilih bila app guna', 'MQTT (IoT) / STOMP / OpenWire / JMS', 'AMQP standard, routing fleksibel'],
+                  ['Model', 'JMS-style queues & topics', 'Exchange → binding → queue routing'],
+                ],
+                takeaway: 'App guna MQTT atau STOMP → mesti ActiveMQ engine. App AMQP biasa → mana-mana, RabbitMQ popular untuk routing. Exam jarang masuk dalam, tapi "MQTT" condong ke ActiveMQ.',
+              },
+            ],
             tips: [
               'Amazon MQ vs SQS/SNS: Amazon MQ = lift-and-shift apps yang ALREADY use AMQP/MQTT/STOMP protocols. SQS/SNS = cloud-native new applications (simpler, cheaper, scales better)',
               'Supports both ActiveMQ and RabbitMQ engines. ActiveMQ supports more protocols (AMQP, MQTT, STOMP, OpenWire, WebSocket). RabbitMQ = AMQP + JMS sahaja. App guna MQTT/STOMP → mesti ActiveMQ engine',
               'Deployment: single-instance (dev/test) or active/standby (production HA). Active/standby uses EFS for shared storage — automatic failover',
               'Exam keyword: "migrate", "existing messaging system", "MQTT", "AMQP", "without changing application code" → Amazon MQ. Jangan pilih SQS/SNS untuk migration scenarios',
             ],
-            keywords: ['ActiveMQ', 'RabbitMQ', 'AMQP', 'MQTT', 'lift-and-shift', 'message broker', 'legacy migration', 'open protocols', 'STOMP', 'OpenWire'],
+            docs: [
+              { label: 'Amazon MQ — what is it', url: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/welcome.html' },
+              { label: 'Amazon MQ — broker engines & protocols', url: 'https://docs.aws.amazon.com/amazon-mq/latest/developer-guide/working-with-amazon-mq.html' },
+            ],
+            keywords: ['ActiveMQ', 'RabbitMQ', 'AMQP', 'MQTT', 'lift-and-shift', 'message broker', 'legacy migration', 'open protocols', 'STOMP', 'OpenWire', 'JMS', 'Amazon MQ vs SQS', 'managed broker'],
           },
           {
             shortName: 'Kinesis Data Firehose',

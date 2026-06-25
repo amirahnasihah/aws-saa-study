@@ -7,15 +7,19 @@
 🎯 **Remaining:** §5–§14 below (+ practice exams at the end)
 
 ### How to use this
+
 Tick items in **Course outline** as you complete each lecture, lab, or quiz on Whizlabs. The **Must be able to answer** items (§5–§14) are the real exam test — if you can't answer one out loud without notes, rewatch. Don't move on until that section's quiz is ≥80%.
 
 ### Exam domain weights (what to protect if time runs short)
-| Domain | Weight | Where it lives below |
-|--------|--------|----------------------|
-| 1 · Design Secure Architectures | **30%** | §5, IAM/KMS everywhere |
-| 2 · Design Resilient Architectures | **26%** | §6 DB, §9 Networking, Multi-AZ |
-| 3 · Design High-Performing Architectures | **24%** | §6, §9, §10, caching/scaling |
-| 4 · Design Cost-Optimized Architectures | **20%** | §14, purchasing options |
+
+
+| Domain                                   | Weight  | Where it lives below           |
+| ---------------------------------------- | ------- | ------------------------------ |
+| 1 · Design Secure Architectures          | **30%** | §5, IAM/KMS everywhere         |
+| 2 · Design Resilient Architectures       | **26%** | §6 DB, §9 Networking, Multi-AZ |
+| 3 · Design High-Performing Architectures | **24%** | §6, §9, §10, caching/scaling   |
+| 4 · Design Cost-Optimized Architectures  | **20%** | §14, purchasing options        |
+
 
 Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 know-what-it-does
 
@@ -24,6 +28,7 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 ## 1. Introduction — ✅ done · 2 lectures
 
 ### Course outline
+
 - [x] [Welcome to the Course](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24489) (3m 57s)
 - [x] [Why Cloud Computing?](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4475) (6m 44s)
 
@@ -32,6 +37,7 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 ## 2. Getting Started With AWS — ✅ done · 5 lectures
 
 ### Course outline
+
 - [x] [Why AWS?](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4476) (3m 55s)
 - [x] [Overview of the Exam](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24501) (9m 56s)
 - [x] [Overview of this Course](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24509) (11m 18s)
@@ -43,6 +49,7 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 ## 3. Compute — ✅ done · 28 lectures · 4 labs
 
 ### Course outline
+
 - [x] [Amazon EC2 Fundamentals: Instance Types](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=26890) (6m 12s)
 - [x] [Amazon EC2 Fundamentals: Purchasing Options, Saving plans and Tenancy](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=26891) (9m 51s)
 - [x] [Amazon EC2: Volumes and Encryption](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=25904) (5m 45s)
@@ -82,6 +89,7 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 ## 4. Storage — ✅ done · 34 lectures · 1 labs
 
 ### Course outline
+
 - [x] [Amazon Simple Storage Service Overview](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34325) (6m 48s)
 - [x] [Amazon Simple Storage Service: Versioning & Features](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34326) (3m 58s)
 - [x] [Amazon S3 - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34327) (6m 43s)
@@ -124,7 +132,8 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 ## 5. Security, Identity and Compliance — 🔴 Domain 1 (30%) · 23 lectures · 2 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS IAM: Users, Groups, Policies & MFA](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=40380) (6m 54s)
 - [ ] [IAM Users and IAM Groups - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=28476) (6m 8s)
@@ -154,6 +163,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Security, Identity, and Compliance (Quiz) (12Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] IAM policy evaluation: default deny, **explicit deny always wins** over allow
 - [ ] IAM role vs IAM user vs resource-based policy — and cross-account access via roles
 - [ ] IAM Identity Center (SSO) + permission sets — when over plain IAM users?
@@ -172,7 +182,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 6. Database — 🟠 Domains 2 & 3 · 17 lectures · 2 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [Amazon RDS Overview](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=40368) (8m 36s)
 - [ ] [Creating an Amazon RDS Instance](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=12820) (19m 17s)
@@ -196,6 +207,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Database Services (Quiz) (8Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] **Multi-AZ (sync, HA, auto-failover, same region) vs Read Replicas (async, read scaling, cross-region)** — and when you'd use both
 - [ ] RDS backups: automated vs manual snapshots; what RTO and RPO actually mean
 - [ ] RDS Proxy: connection pooling, the Lambda use case, faster failover
@@ -213,7 +225,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 7. Machine Learning — 🟢 know-what-it-does · 6 lectures
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [Amazon Polly](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24491) (5m 23s)
 - [ ] [Amazon Polly - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24492) (5m 56s)
@@ -224,6 +237,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Machine Learning (Quiz) (3Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] Polly = text→speech · Translate = language translation
 - [ ] Comprehend = NLP / sentiment / entities (Comprehend Medical)
 - [ ] Rekognition = image/video analysis, face detection, moderation
@@ -237,7 +251,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 8. Management and Governance — 🟡 · 17 lectures · 4 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS Organizations - Overview](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=7554) (6m 56s)
 - [ ] [AWS Organizations - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=7555) (7m 16s)
@@ -263,6 +278,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Management and Governance (Quiz) (5Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] Organizations: OUs, **SCPs (set boundaries — don't grant)**, consolidated billing
 - [ ] CloudWatch: standard (5min) vs detailed (1min) metrics; **EC2 memory/disk need the CloudWatch agent**; alarms, Logs Insights
 - [ ] **CloudTrail (API audit) vs CloudWatch (performance) vs Config (config state + compliance)** — the classic triad
@@ -278,7 +294,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 9. Networking & Content Delivery — 🔴 heavily tested · 27 lectures · 5 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] 🧪 [Build Amazon VPC with Public and Private Subnets from Scratch](https://business.whizlabs.com/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch) (30m)
 - [ ] [AWS VPC Overview: Subnets & CIDR](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=40373) (6m 58s)
@@ -293,7 +310,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] [AWS VPC - PrivateLink](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=10960) (7m 11s)
 - [ ] [AWS VPC - Transit Gateway](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=10962) (4m 49s)
 - [ ] [AWS VPN](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=11197) (5m 48s)
-- [ ] [AWS Direct Connect ](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=38131) (5m 53s)
+- [ ] [AWS Direct Connect](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=38131)  (5m 53s)
 - [ ] [AWS API Gateway](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=38132) (7m)
 - [ ] 🧪 [Peer VPC with Transit Gateway and its components](https://business.whizlabs.com/labs/peer-vpc-with-transit-gateway-and-its-components) (1h 15m)
 - [ ] [Amazon CloudFront and Edge locations Overview](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=36591) (4m 9s)
@@ -315,6 +332,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Networking and Content Delivery (Quiz) (10Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] VPC CIDR sizing; public vs private subnet (= route to IGW or not); 5 reserved IPs per subnet
 - [ ] **Security Groups (stateful, allow-only, instance) vs NACLs (stateless, allow+deny, subnet, ordered)**
 - [ ] IGW vs **NAT Gateway** (managed, AZ-resilient, outbound for private) vs NAT Instance
@@ -334,7 +352,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 10. Analytics — 🟢/🟡 · 16 lectures · 2 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [Amazon Redshift](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4752) (8m 52s)
 - [ ] [Amazon EMR](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34333) (9m 23s)
@@ -357,6 +376,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Analytics (Quiz) (5Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] **Kinesis Data Streams** (real-time, shards, custom consumers) vs **Firehose** (near-real-time, managed delivery, no code)
 - [ ] Redshift — data warehouse / OLAP / columnar; Redshift Spectrum (query S3)
 - [ ] Glue — serverless ETL + Data Catalog + Crawlers
@@ -369,7 +389,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 11. Application Integration — 🟠 SQS/SNS tested · 10 lectures
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS Step Functions](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=11560) (16m 36s)
 - [ ] [Amazon MQ](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=11549) (9m 32s)
@@ -384,6 +405,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Application Integration (Quiz) (6Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] SQS **Standard** (at-least-once, best-effort order) vs **FIFO** (exactly-once, ordered)
 - [ ] Visibility timeout, dead-letter queue, long polling — what each solves
 - [ ] **SQS vs SNS vs EventBridge** — when to reach for each
@@ -397,7 +419,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 12. Containers — 🟡 · 7 lectures · 2 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS ECS](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=11551) (5m 24s)
 - [ ] [Amazon ECS - Creating an ECS Cluster](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34339) (8m 25s)
@@ -411,6 +434,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Containers (Quiz) (5Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] ECS **EC2 launch type (you manage instances) vs Fargate (serverless)**
 - [ ] Task definition vs service vs task
 - [ ] Task placement strategies: binpack, spread, random
@@ -423,7 +447,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 13. Migration & Transfer — 🟢 · 5 lectures
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS Snow Family](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24840) (5m 10s)
 - [ ] [AWS Database Migration Service](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=7826) (17m 6s)
@@ -433,6 +458,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Migration & Transfer (Quiz) (5Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] Snow Family: Snowcone (8-14TB) / Snowball Edge Storage (210TB) / Compute (28TB, 104 vCPUs) — pick by data size + compute need; >1 week via internet → Snow
 - [ ] **DMS**: homogeneous vs heterogeneous (+ Schema Conversion Tool); CDC for continuous replication; Multi-AZ replication instance
 - [ ] **DataSync**: online on-prem (NFS/SMB/HDFS) → S3/EFS/FSx; EFS cross-region replication via private network; scheduled + auto-verify
@@ -445,7 +471,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 14. AWS Cost Management — 🟠 Domain 4 (20%) · 2 lectures · 1 reading
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS Cost Explorer](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34343) (9m 20s)
 - [ ] [AWS Cost Explorer - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=29306) (9m 51s)
@@ -453,6 +480,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] 📄 AWS SAA-C03 Exam-Prep Cheat Sheet
 
 ### Must be able to answer
+
 - [ ] Cost Explorer (visualize/forecast up to 12 months, anomaly detection, RI/SP recommendations) vs AWS Budgets (ALERT on cost/usage threshold, Budget Actions)
 - [ ] Cost allocation tags (user-defined + AWS-generated, activate in billing console)
 - [ ] **On-Demand vs Reserved Instances vs Savings Plans vs Spot** — pick per workload
