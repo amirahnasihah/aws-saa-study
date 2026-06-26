@@ -301,6 +301,21 @@ export const domains: DomainData[] = [
             ingat: '"Active Directory dalam AWS — tiga jenis, pilih ikut use case"',
             gunaUntuk: 'Managed Microsoft Active Directory, AD Connector, or Simple AD for AWS workloads',
             fungsi: 'AWS Directory Service ada tiga pilihan: (1) AWS Managed Microsoft AD — full AD dalam AWS. (2) AD Connector — proxy ke on-premises AD. (3) Simple AD — Samba-based, lightweight, bukan full AD.',
+            sebabApa: 'Wujud sebab banyak syarikat dah ada Active Directory on-prem (uruskan user Windows, Group Policy, login domain) dan bila pindah workload ke AWS, mereka tak nak buang AD tu atau cipta sistem user baru. Directory Service bagi AWS "cakap bahasa AD" — EC2 Windows boleh join domain, app boleh authenticate guna AD sedia ada. Tiga rasa: bawa AD penuh ke cloud (Managed Microsoft AD), kekalkan AD on-prem & cuma proxy (AD Connector), atau AD ringkas murah untuk workload kecil (Simple AD).',
+            sifir: [
+              'Full AD dalam cloud / perlu trust ke on-prem → Managed Microsoft AD',
+              'AD KEKAL on-prem, AWS cuma proxy auth (data tak masuk cloud) → AD Connector',
+              'Kecil + murah + basic LDAP/Kerberos, no on-prem → Simple AD',
+              'User external (Google/Facebook) → Cognito, BUKAN Directory Service',
+              'SSO ke banyak AWS account guna AD → IAM Identity Center + Managed Microsoft AD',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat ada on-prem Active Directory dan nak EC2 dalam AWS authenticate guna AD tu, TAPI dasar keselamatan TAK BENARKAN sebarang directory data disimpan/replicate dalam cloud. Pilih apa?',
+                jebakan: 'AWS Managed Microsoft AD dengan two-way trust ke on-prem AD. Nampak betul sebab dia "managed AD" dan boleh trust on-prem.',
+                betul: 'AD Connector. Ia cuma PROXY/redirect request authentication ke on-prem AD — tiada directory data disimpan dalam cloud. Managed Microsoft AD sebenarnya cipta directory DALAM AWS (langgar dasar "no data in cloud"). Keyword "AD stays on-prem / no directory data in cloud" → AD Connector.',
+              },
+            ],
             compare: {
               label: 'Managed Microsoft AD vs AD Connector vs Simple AD',
               headers: ['Aspect', 'Managed Microsoft AD', 'AD Connector', 'Simple AD'],
@@ -330,6 +345,22 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Centralized SSO untuk multiple AWS accounts',
             fungsi: 'Membolehkan pengguna login sekali dan access multiple AWS accounts dan business applications',
             contohGuna: 'Staff login dengan corporate email (Microsoft AD / Okta), dapat access semua 10 AWS accounts yang dibenarkan tanpa login semula',
+            sebabApa: 'Wujud sebab bila syarikat ada banyak AWS account (Organizations), buat IAM user dalam SETIAP account = mimpi ngeri: 50 staff × 10 account = 500 user nak urus, 500 password, susah revoke bila staff resign. IAM Identity Center bagi satu identity (dari corporate AD/Okta/Entra) → assign sekali → staff masuk semua account yang dibenarkan dengan temporary creds. Bila staff keluar, matikan SATU identity, terus hilang akses semua account. Tujuan: central workforce access + temp creds + tak payah IAM user per-account.',
+            sifir: [
+              '"Workforce SSO across many accounts" → IAM Identity Center, BUKAN IAM user per account',
+              'Permission Set = role template → render jadi IAM role dalam tiap assigned account',
+              'Creds yang dikeluarkan TEMPORARY (auto-expire via STS), bukan long-term access key',
+              'Identity source: built-in / Managed Microsoft AD / external IdP (Okta, Entra) via SAML 2.0',
+              'SSO ke SaaS (Salesforce, M365) → IAM Identity Center. Public social login → Cognito',
+              'IAM Identity Center = FREE (bayar Managed AD je kalau guna sebagai source)',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat ada 15 AWS account dalam Organizations dan nak staff guna corporate credentials sedia ada untuk akses account yang dibenarkan, dengan central management. Cara terbaik?',
+                jebakan: 'Cipta IAM user dalam setiap account untuk setiap staff, kumpulkan dalam Group dan attach policy. Nampak betul sebab IAM user memang cara login standard.',
+                betul: 'AWS IAM Identity Center disambung ke corporate IdP. Buat IAM user per-account = ratusan user, susah urus & revoke, dan guna long-term creds. Identity Center = satu identity, central assignment, temp creds. Keyword "many accounts + workforce + central + existing corporate credentials" → IAM Identity Center.',
+              },
+            ],
             detailsLabel: 'IAM Identity Center — anatomy',
             storageDetails: 'Identity source → dari mana user datang: built-in directory, AWS Managed Microsoft AD, atau external IdP (Okta, Entra ID/Azure AD) via SAML 2.0.\nPermission Set → koleksi IAM policies (macam "role template") yang define apa user boleh buat. Contoh: AdministratorAccess, ReadOnly, atau custom. Permission set ni dirender jadi IAM role dalam tiap assigned account.\nAccount assignment → map (User/Group) × (Permission Set) × (AWS Account). Ni yang tentukan siapa boleh masuk account mana dengan kebenaran apa.\nAccess portal → satu URL login; user nampak semua accounts + roles yang dia boleh masuk. Creds yang dikeluarkan TEMPORARY (auto-expire via STS).',
             compare: {
@@ -450,6 +481,21 @@ export const domains: DomainData[] = [
             ingat: '"Share AWS resources antara accounts tanpa copy"',
             gunaUntuk: 'Share subnets, Transit Gateway, Route 53 resolver rules cross-account',
             fungsi: 'Membenarkan perkongsian resources AWS merentasi akaun tanpa pendua.',
+            sebabApa: 'Wujud sebab dalam setup multi-account, banyak account selalu perlu guna infrastruktur yang SAMA — satu Transit Gateway, satu set subnet, satu Route 53 Resolver rule. Kalau setiap account buat sendiri = pendua mahal + huru-hara. RAM bagi kau cipta resource SEKALI dalam satu account, lepas tu kongsi (bukan copy) ke account lain dalam Organization. Account lain guna resource sebenar tu terus. Tujuan: hapus duplikasi infrastruktur + central management + jimat kos.',
+            sifir: [
+              'Kongsi resource SEBENAR cross-account tanpa pendua → RAM',
+              'Cuma nak connectivity antara 2 VPC → VPC Peering, BUKAN RAM',
+              'Bagi akses 1 resource (S3/SQS/KMS) ke account tertentu → resource-based policy',
+              'Shareable: subnet, Transit Gateway, Route 53 Resolver rule, License Manager, prefix list',
+              'RAM + Organizations = create sekali, auto-share ke semua member account',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat ada 12 account dan mahu semua deploy resource ke dalam set subnet/VPC yang SAMA dan dikongsi (shared VPC), urus secara central. Servis mana?',
+                jebakan: 'Setup VPC Peering antara VPC tiap account supaya semua boleh capai subnet pusat. Nampak betul sebab peering "sambung" VPC.',
+                betul: 'AWS RAM — kongsi subnet dari account pusat ke semua member account (shared VPC). VPC Peering cuma bagi connectivity rangkaian antara VPC berasingan, bukan benarkan account lain DEPLOY ke subnet yang sama. Keyword "share subnet / shared VPC across accounts" → RAM.',
+              },
+            ],
             scenario: '"Company ada 10 AWS accounts, semua perlu access sama subnet" → AWS RAM share the subnet. Bukan VPC Peering untuk ni.',
             compare: {
               label: 'RAM vs VPC Peering vs Resource-based policy',
@@ -477,6 +523,26 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Manage multiple AWS accounts centrally with guardrails',
             fungsi: 'Mengurus pelbagai AWS accounts dalam satu organisasi dengan Service Control Policies (SCPs) sebagai guardrails',
             contohGuna: 'Prevent semua dev accounts dari disable CloudTrail — SCP: Deny cloudtrail:StopLogging. Control Tower automate setup multi-account environment',
+            sebabApa: 'Wujud sebab bila syarikat membesar, satu AWS account jadi huru-hara — dev, prod, billing semua bercampur, susah nak asingkan blast radius & kawal kos. Organizations bagi kau pisah jadi banyak account (prod terpisah dari dev) tapi urus dari SATU tempat: satu bil (consolidated billing + volume discount), dan SCP sebagai "guardrail" yang halang admin account anak buat benda bahaya (cth disable CloudTrail) walau dia admin penuh dalam account dia. Tujuan: isolation + central guardrail + jimat bil.',
+            sifir: [
+              'SCP = RESTRICT je, TAK PERNAH grant. Kena ada IAM Allow juga (intersection)',
+              'SCP TAK apply ke management/root account — member accounts sahaja',
+              'Satu bil + volume discount across accounts → Consolidated Billing (free)',
+              'Auto setup landing zone / multi-account baseline → Control Tower',
+              'Organizations + SCP + Consolidated Billing = FREE (bayar resource je)',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat nak halang SEMUA account (termasuk yang akan datang) daripada guna region selain ap-southeast-1, secara org-wide. Cara paling scalable?',
+                jebakan: 'Tulis IAM policy "Deny" region lain dan attach kat setiap user dalam setiap account. Nampak betul sebab IAM kawal permission.',
+                betul: 'Guna SCP pada root OU / Organizations. SCP apply automatik ke semua member account (sekarang & masa depan) tanpa sentuh IAM setiap user. IAM-per-user = tak scalable & senang terlepas. Keyword "org-wide guardrail / all accounts" → SCP.',
+              },
+              {
+                soalan: 'Selepas attach SCP yang "Allow" S3 pada satu OU, developer dalam account tu masih tak boleh akses S3. Kenapa?',
+                jebakan: 'SCP tu salah configure / belum propagate. Cuba tunggu atau re-attach. Nampak betul sebab SCP dah Allow.',
+                betul: 'SCP TAK GRANT akses — ia cuma tetapkan had maksimum. Developer masih perlu explicit Allow dalam IAM policy dia. SCP Allow cuma "tak disekat di peringkat OU". Keyword: SCP = guardrail, IAM = pemberi akses sebenar.',
+              },
+            ],
             scenario: '"Restrict apa member accounts boleh buat org-wide, exempt management account" → SCP (member accounts only). "Enforce guardrails + auto setup landing zone / multi-account baseline" → Control Tower. "Satu bil + kongsi diskaun" → Consolidated Billing (bukan SCP). Ingat: SCP RESTRICT sahaja, tak GRANT.',
             mermaid: {
               label: 'Adakah action ni dibenarkan? (SCP + IAM evaluation)',
