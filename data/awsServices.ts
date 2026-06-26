@@ -298,18 +298,46 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Centralized SSO untuk multiple AWS accounts',
             fungsi: 'Membolehkan pengguna login sekali dan access multiple AWS accounts dan business applications',
             contohGuna: 'Staff login dengan corporate email (Microsoft AD / Okta), dapat access semua 10 AWS accounts yang dibenarkan tanpa login semula',
+            detailsLabel: 'IAM Identity Center — anatomy',
+            storageDetails: 'Identity source → dari mana user datang: built-in directory, AWS Managed Microsoft AD, atau external IdP (Okta, Entra ID/Azure AD) via SAML 2.0.\nPermission Set → koleksi IAM policies (macam "role template") yang define apa user boleh buat. Contoh: AdministratorAccess, ReadOnly, atau custom. Permission set ni dirender jadi IAM role dalam tiap assigned account.\nAccount assignment → map (User/Group) × (Permission Set) × (AWS Account). Ni yang tentukan siapa boleh masuk account mana dengan kebenaran apa.\nAccess portal → satu URL login; user nampak semua accounts + roles yang dia boleh masuk. Creds yang dikeluarkan TEMPORARY (auto-expire via STS).',
+            compare: {
+              label: 'Plain IAM Users vs IAM Identity Center (SSO)',
+              headers: ['Aspect', 'Plain IAM Users', 'IAM Identity Center'],
+              rows: [
+                ['Credentials', 'Per-account, per-user (banyak password)', '🟢 Satu identity → semua accounts'],
+                ['Skala multi-account', 'Susah — create user tiap account', '🟢 Central — assign permission set ke accounts'],
+                ['Access keys', 'Long-term (kekal sampai di-rotate)', '🟢 Temporary (auto-expire via STS)'],
+                ['Sumber identity', 'IAM directory sahaja', 'Built-in / Managed AD / external IdP (Okta, Entra)'],
+                ['SaaS SSO (Salesforce, M365)', '❌', '🟢 Ya (SAML 2.0)'],
+                ['Guna bila', '1 account, sikit user, programmatic/service', 'Banyak account (Organizations), workforce SSO'],
+              ],
+              takeaway: 'Satu account + service/programmatic access → IAM users/roles. Banyak AWS accounts + ramai staff + nak central SSO + temporary creds → IAM Identity Center. Exam: "centrally manage workforce access across many accounts" → IAM Identity Center, BUKAN create IAM users tiap account.',
+            },
+            mermaid: {
+              label: 'Satu badge → banyak account (corporate access card)',
+              source: `flowchart TD
+  U["👤 Staff login sekali<br/>(corporate badge)"] --> P["🚪 Access Portal<br/>(satu URL)"]
+  P --> PS["📋 Permission Set<br/>(role template:<br/>Admin / ReadOnly)"]
+  PS --> A1["🏢 AWS Account A"]
+  PS --> A2["🏢 AWS Account B"]
+  PS --> A3["🏢 AWS Account C"]`,
+              caption: 'Satu identity → permission set (template kebenaran) → assign ke banyak account; creds temporary, auto-expire hujung session. Lawan plain IAM users = buat kunci berasingan untuk setiap pintu setiap cawangan. INGAT exam: "workforce SSO across many accounts + temporary creds" → IAM Identity Center.',
+            },
             tips: [
               'IAM Identity Center + SAML 2.0: untuk SSO dari on-premises Active Directory ke AWS + third-party SaaS (Salesforce, etc.)',
               'SAML 2.0 IAM roles alone (tanpa Identity Center) = tak ada SSO portal, tak integrate SaaS apps',
               'Web identity federation = untuk PUBLIC providers (Google, Amazon, Facebook) — bukan enterprise AD',
               'Exam: "on-premises AD + SSO to AWS + SaaS apps" → IAM Identity Center with SAML 2.0',
               'IAM Identity Center features: (1) Multi-account access — centralized access ke multiple AWS accounts dalam Organization, elak repeat config Users per account. (2) SSO ke AWS applications — satu login, tak payah ingat password berasingan. (3) SSO ke Cloud-based/SaaS apps (Salesforce, Microsoft 365) via SAML 2.0. (4) SSO ke EC2 — TAPI khusus untuk EC2 WINDOWS instances (via Fleet Manager, guna existing corporate credentials, elak share admin RDP credentials) — BUKAN Linux',
+              'Permission Set = "role template" — koleksi IAM policies yang Identity Center render jadi IAM role dalam setiap assigned account. Tukar permission set sekali → apply merentas semua account. Ni beza utama dari buat IAM role manual tiap account.',
+              'PRICING: IAM Identity Center PERCUMA — tiada caj untuk SSO, permission sets, atau account assignments. Bayar hanya untuk Managed Microsoft AD kalau guna sebagai identity source.',
             ],
             docs: [
               { label: 'IAM Identity Center Features', url: 'https://aws.amazon.com/iam/identity-center/features/' },
+              { label: 'Permission sets', url: 'https://docs.aws.amazon.com/singlesignon/latest/userguide/permissionsetsconcept.html' },
               { label: 'Seamless SSO to EC2 Windows instances', url: 'https://aws.amazon.com/blogs/security/how-to-enable-secure-seamless-single-sign-on-to-amazon-ec2-windows-instances-with-aws-sso/' },
             ],
-            keywords: ['SSO', 'single sign-on', 'multiple accounts', 'federation', 'SAML 2.0', 'Active Directory', 'SaaS integration', 'EC2 Windows', 'Fleet Manager'],
+            keywords: ['SSO', 'single sign-on', 'multiple accounts', 'federation', 'SAML 2.0', 'Active Directory', 'SaaS integration', 'EC2 Windows', 'Fleet Manager', 'permission set', 'account assignment', 'access portal', 'temporary credentials', 'workforce identity', 'Okta', 'Entra ID', 'pricing'],
           },
           {
             shortName: 'Penetration Testing',
@@ -942,13 +970,35 @@ export const domains: DomainData[] = [
             ingat: '"SSL cert percuma untuk HTTPS"',
             gunaUntuk: 'Provision free SSL/TLS certificates for ALB, CloudFront, API Gateway',
             fungsi: 'Menyediakan, mengurus dan auto-renew SSL/TLS certificates secara percuma. Attach terus ke ALB, CloudFront, atau API Gateway. Cert tidak boleh di-export dari ACM untuk install sendiri dalam EC2.',
-            scenario: '"Website perlu HTTPS" → request ACM cert, attach ke ALB atau CloudFront (free). Ingat: ACM certs tak boleh export untuk pakai dalam EC2 sendiri — untuk tu kena beli cert luar.',
+            detailsLabel: 'ACM — 3 jenis cert',
+            storageDetails: 'ACM Public Certificate → cert percuma untuk public-facing HTTPS (browser-trusted). Auto-renew selagi DNS validation. Tak boleh export.\nACM Private CA (Private Certificate Authority) → private PKI untuk internal resources/IoT devices — TAK browser-trusted. Berbayar ($400/bln per CA). Boleh export private certs.\nImported Certificate → cert kau beli dari pihak ketiga (DigiCert dll), import masuk ACM untuk guna kat ALB/CloudFront. ACM TAK auto-renew imported cert — kau jaga renewal sendiri.',
+            compare: {
+              label: 'ACM Public vs Private CA vs Imported',
+              headers: ['Aspect', 'ACM Public', 'ACM Private CA', 'Imported Cert'],
+              rows: [
+                ['Kos', '🟢 FREE (+ auto-renew)', '$400/bln per CA + $0.75/cert', 'Free guna — beli cert luar'],
+                ['Auto-renew', '🟢 Ya (DNS validation)', '🟢 Ya (internal)', '❌ Manual — kau jaga sendiri'],
+                ['Trust', 'Public CA (browser percaya)', 'Private/internal sahaja', 'Ikut issuer'],
+                ['Export private key?', '❌ Tak boleh', '🟢 Boleh (private cert)', 'N/A (kau dah ada)'],
+                ['Guna untuk', 'Public HTTPS (ALB/CloudFront/API GW)', 'Internal services, private PKI, IoT', 'Existing cert nak attach kat ALB/CloudFront'],
+              ],
+              takeaway: 'Public website HTTPS percuma → ACM Public. Internal/private PKI (no public trust) → ACM Private CA (bayar). Dah ada cert luar → import (tapi kau jaga renewal). CloudFront → cert MESTI di us-east-1.',
+            },
+            scenario: '"Website perlu HTTPS percuma + auto-renew" → ACM Public cert, attach ke ALB/CloudFront/API GW. "CloudFront cert tak muncul dalam dropdown" → cert bukan di us-east-1. "Internal microservices perlu mutual TLS / private trust" → ACM Private CA. "Dah beli cert dari DigiCert nak guna kat ALB" → import ke ACM. Ingat: ACM Public certs tak boleh export untuk EC2 sendiri.',
             tips: [
+              'PALING PENTING (exam trap): untuk CloudFront, cert MESTI di-request/import di region us-east-1 (N. Virginia) — CloudFront global tapi hanya baca ACM dari us-east-1. Cert betul tapi di region lain → CloudFront tak nampak. Untuk ALB/API Gateway: cert di region yang SAMA dengan resource.',
               'ACM auto-renews certs HANYA bila DNS validation digunakan. Email-validated certs = kena manual re-validate semasa renewal → status "Pending Validation"',
-              'Exam trap: "ACM manages renewal automatically" adalah HANYA betul untuk DNS-validated certs. Email validation = manual action required',
-              'ACM certs cannot be exported/installed on EC2 directly — for EC2, buy third-party cert or use ACM with ALB/CloudFront',
+              'Exam trap: "ACM manages renewal automatically" adalah HANYA betul untuk DNS-validated public certs. Email validation + imported certs = manual action required',
+              'ACM Public vs Private: Public = browser-trusted untuk public website. Private CA = internal/private trust sahaja (private PKI, IoT device certs), no public trust',
+              'ACM certs cannot be exported/installed on EC2 directly — for EC2, buy third-party cert or use ACM with ALB/CloudFront/API Gateway',
+              'Analogi: ACM = pejabat pos bagi & perbaharui "pasport HTTPS" percuma — auto-renew selagi guna DNS validation, tapi pasport ni hanya boleh guna kat kaunter AWS (ALB/CloudFront/API GW), tak boleh bawa balik (export) untuk EC2 sendiri.',
+              'PRICING: ACM Public certs PERCUMA termasuk auto-renew. ACM Private CA = $400/bulan per CA + $0.75/cert (first 1,000, turun lepas tu). Imported certs free guna tapi kau urus renewal sendiri.',
             ],
-            keywords: ['SSL', 'TLS', 'HTTPS', 'free certificate', 'auto-renewal', 'ALB', 'CloudFront', 'API Gateway', 'DNS validation', 'email validation', 'pending validation'],
+            docs: [
+              { label: 'ACM — issuing & managing certs', url: 'https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html' },
+              { label: 'CloudFront — require cert in us-east-1', url: 'https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cnames-and-https-requirements.html' },
+            ],
+            keywords: ['SSL', 'TLS', 'HTTPS', 'free certificate', 'auto-renewal', 'ALB', 'CloudFront', 'API Gateway', 'DNS validation', 'email validation', 'pending validation', 'us-east-1', 'N. Virginia', 'ACM Private CA', 'private PKI', 'imported certificate', 'cannot export', 'pricing'],
           },
           {
             shortName: 'CloudHSM',
