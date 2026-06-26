@@ -4705,6 +4705,7 @@ export const domains: DomainData[] = [
               'Supported resources: EC2 instances, EC2 Auto Scaling Groups, EBS volumes, Lambda functions, ECS on Fargate',
               'Requires CloudWatch metrics — needs at least 14 days of usage data for recommendations',
               'Exam: "get ML-based rightsizing recommendations for EC2/Lambda" → Compute Optimizer. "General cost recommendations across many services" → Trusted Advisor',
+              'PRICING: Compute Optimizer is FREE — tiada charge untuk recommendations. Ia guna CloudWatch metrics sedia ada (kau hanya bayar kalau enable enhanced CloudWatch metrics/custom metrics). Opt-in per account atau org-wide via Organizations.',
             ],
             compare: {
               label: 'Compute Optimizer vs Trusted Advisor',
@@ -4721,7 +4722,7 @@ export const domains: DomainData[] = [
             docs: [
               { label: 'What is AWS Compute Optimizer', url: 'https://docs.aws.amazon.com/compute-optimizer/latest/ug/what-is-compute-optimizer.html' },
             ],
-            keywords: ['rightsizing', 'ML recommendations', 'EC2 optimization', 'Lambda optimization', 'cost savings', 'underutilized', 'vs Trusted Advisor', '14 days metrics'],
+            keywords: ['rightsizing', 'ML recommendations', 'EC2 optimization', 'Lambda optimization', 'cost savings', 'underutilized', 'vs Trusted Advisor', '14 days metrics', 'free', 'pricing'],
           },
           {
             shortName: 'Trusted Advisor',
@@ -4734,14 +4735,15 @@ export const domains: DomainData[] = [
             storageDetails: 'Cost Optimization → idle/underutilized resources, idle load balancers, unassociated Elastic IPs, RI/SP purchase opportunities\nPerformance → over-utilized instances, high-latency config, EBS throughput, service config yang melambatkan\nSecurity → open security groups, public S3 buckets, MFA on root, IAM key exposure, exposed access keys\nFault Tolerance → Multi-AZ, backup/snapshot coverage, ASG health, cross-AZ redundancy\nService Limits → resource usage hampir cecah service quota (cth bilangan VPC, EIP, EC2)',
             tips: [
               'Lima kategori checks: Cost Optimization, Performance, Security, Fault Tolerance, Service Limits (ingat: "CP-SFS")',
-              'Tahap akses: Basic/Developer support = set core checks terhad. Business/Enterprise support = SEMUA checks + API access (boleh automate via AWS Support API)',
+              'Tahap akses: Basic/Developer support = 7 core checks SAHAJA (mostly security + service limits). Business/Enterprise support = SEMUA checks (5 kategori penuh) + API access (boleh automate via AWS Support API)',
+              'PRICING: Trusted Advisor sendiri tiada caj langsung — tapi akses penuh DIKUNCI di belakang support plan. Basic/Developer (free/$29) = 7 core checks. Full 5-category checks perlu Business ($100/bln atau 10% usage) atau Enterprise support. Exam: "all Trusted Advisor checks" → perlu Business/Enterprise support.',
               'Bukan Compute Optimizer (yang ML-based deep compute rightsizing untuk EC2/ASG/EBS/Lambda/Fargate). Trusted Advisor = broader, rule-based, 5 kategori account-wide',
               'Exam: "broad best-practice checks across cost/security/performance/limits" → Trusted Advisor. "ML rightsizing for EC2/Lambda" → Compute Optimizer. "alert before overspend" → Budgets',
             ],
             docs: [
               { label: 'AWS Trusted Advisor', url: 'https://docs.aws.amazon.com/awssupport/latest/user/trusted-advisor.html' },
             ],
-            keywords: ['cost recommendations', 'idle resources', 'rightsizing', 'underutilized', 'service limits', 'five categories', 'Cost Optimization', 'Performance', 'Security', 'Fault Tolerance', 'rule-based', 'vs Compute Optimizer'],
+            keywords: ['cost recommendations', 'idle resources', 'rightsizing', 'underutilized', 'service limits', 'five categories', 'Cost Optimization', 'Performance', 'Security', 'Fault Tolerance', 'rule-based', 'vs Compute Optimizer', '7 core checks', 'Business support', 'Enterprise support', 'pricing'],
           },
           {
             shortName: 'AWS Budgets',
