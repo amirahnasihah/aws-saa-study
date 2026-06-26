@@ -2034,6 +2034,17 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Reserved = "RESERVE seat + cap" (jamin & hadkan kuota, masih cold start, percuma). Provisioned = "PRE-warm" (bayar untuk buang cold start). Default account = 1,000 concurrent execution per region (soft limit — boleh mohon naik ke puluhan ribu).',
             },
+            mermaid: {
+              label: 'Cara ingat — Lambda = Food Truck 🚚, EC2 = kedai 24 jam 🏪',
+              source: `flowchart TD
+  REQ["Ada permintaan masuk"] --> TYPE{"Server kena sentiasa hidup?"}
+  TYPE -->|"Tak — datang bila<br/>ada order je"| L["🚚 Lambda (Food Truck)<br/>hidup bila dipanggil,<br/>tutup bila siap → bayar bila guna je"]
+  TYPE -->|"Ya — kena standby 24/7"| E["🏪 EC2 (Kedai 24 jam)<br/>buka walau takda pelanggan<br/>→ bayar walau idle"]
+  L --> CHK{"Kerja lebih 15 minit?"}
+  CHK -->|"Ya"| LONG["❌ Lambda tak boleh<br/>→ Fargate / AWS Batch"]
+  CHK -->|"Tak, pendek + event-driven"| OK["✅ Lambda sesuai<br/>(scale to zero, cold start risk)"]`,
+              caption: 'Analogi: Lambda = Food Truck (hidup bila ada order, tutup bila habis — kalau takda orang, kos = RM0). EC2 = kedai makan 24 jam (kena bayar sewa + gaji walaupun pukul 3 pagi takda pelanggan). INGAT exam: "pay only when running / scale to zero / event-driven" → Lambda. "lebih 15 minit" → Lambda GAGAL, guna Fargate atau AWS Batch.',
+            },
             tips: [
               'Had penting: maks 15 minit (900s) per invocation. Job lebih lama → guna ECS/Fargate, AWS Batch, atau Step Functions',
               'Memory 128 MB–10,240 MB (step 1 MB). CPU naik IKUT memory — 1,769 MB = 1 vCPU penuh. Nak laju? naik memory, CPU auto naik',
@@ -2259,17 +2270,46 @@ export const domains: DomainData[] = [
           {
             shortName: 'AWS Batch',
             fullName: 'AWS Batch',
-            ingat: '"Managed batch jobs — tak payah manage EC2 fleet sendiri"',
-            gunaUntuk: 'Run batch computing jobs at scale without managing EC2 infrastructure',
-            fungsi: 'AWS Batch menguruskan semua infrastruktur untuk batch jobs: provision compute resources yang sesuai, schedule jobs dalam queues, monitor dan scale EC2 fleet secara automatik. Menggantikan third-party batch software seperti PBS, Slurm, LSF.',
-            scenario: '"Company guna third-party software untuk manage EC2 fleet untuk batch jobs, nak switch ke AWS managed service" → AWS Batch.',
+            ingat: '"Mandor batch jobs — submit kerja, AWS upah & bubar pekerja (compute) sendiri"',
+            gunaUntuk: 'Run batch / long-running compute jobs at scale without managing EC2 infrastructure',
+            fungsi: 'AWS Batch menguruskan semua infrastruktur untuk batch jobs: provision compute resources yang sesuai, schedule jobs dalam queues, monitor dan scale fleet secara automatik, kemudian BUBAR bila kerja habis. Tiada had masa macam Lambda — sesuai untuk job berjam-jam (rendering, genomics, ETL berat, simulation). Menggantikan third-party batch software seperti PBS, Slurm, LSF.',
+            detailsLabel: 'AWS Batch — 4 komponen',
+            storageDetails: 'Job → satu unit kerja (container/script) yang kau submit\nJob Definition → blueprint: image mana, vCPU, memory, IAM role\nJob Queue → tempat job beratur ikut priority sebelum dijalankan\nCompute Environment → EC2 atau Fargate resources yang Batch provision (boleh guna Spot untuk jimat)',
+            compare: {
+              label: 'Job lama / berat — Batch vs Fargate vs Lambda vs EC2',
+              headers: ['Service', 'Sesuai bila', 'Had masa', 'Siapa urus compute'],
+              rows: [
+                ['AWS Batch', '🟢 Banyak batch job / array job berjadual, perlu queue + priority + Spot', 'Tiada had', 'AWS provision & bubar fleet auto'],
+                ['ECS/EKS Fargate', 'Satu app/job container run lama atau 24/7, no queue needed', 'Tiada had', 'AWS (serverless container)'],
+                ['Lambda', 'Tugas pendek event-driven', '🔴 Maks 15 minit', 'AWS (serverless function)'],
+                ['EC2 (sendiri/ASG)', 'Perlu kawalan penuh OS / GPU / fleet steady murah', 'Tiada had', '🔴 Kau patch & scale sendiri'],
+              ],
+              takeaway: 'Exam keyword "batch processing", "queue of jobs", "run to completion at scale", "scientific/rendering/genomics" → AWS Batch (queue + auto Spot). Satu container long-running tanpa queue → Fargate. "Lebih 15 minit" je → BUKAN Lambda. Batch SENDIRI percuma — bayar hanya EC2/Fargate di bawahnya.',
+            },
+            mermaid: {
+              label: 'Cara ingat — "Job ambil masa berapa lama?"',
+              source: `flowchart TD
+  Q["Ada kerja compute nak run.<br/>Berapa lama?"] --> T{"Lebih 15 minit?"}
+  T -->|"Tak — tugas pendek<br/>event cetus"| L["⚡ Lambda<br/>(scale to zero)"]
+  T -->|"Ya, lama / berat"| BATCH{"Banyak job beratur<br/>+ perlu priority/Spot?"}
+  BATCH -->|"Ya — pukal 'batch'"| B["🧑‍🏭 AWS Batch<br/>queue + auto fleet + Spot"]
+  BATCH -->|"Tak, satu app je<br/>run berterusan"| F["📦 Fargate<br/>(serverless container)"]
+  BATCH -->|"Perlu kawal OS/GPU,<br/>fleet steady murah"| E["🖥️ EC2 / ASG<br/>(kau urus)"]`,
+              caption: 'Analogi: AWS Batch = MANDOR projek — kau hantar senarai kerja (jobs) dalam baris (queue), mandor upah pekerja (EC2/Fargate, boleh upah pekerja kontrak murah = Spot) ikut keperluan, siap kerja terus bubar. Macam "basuh 100 helai baju": Lambda = tangan tapi kena berhenti lepas 15 min; Batch = upah ramai pekerja basuh serentak ikut baris kerja. INGAT exam: "batch", "queue of jobs", "run-to-completion at scale" → AWS Batch.',
+            },
+            scenario: '"Company guna third-party software (Slurm/LSF/PBS) untuk manage EC2 fleet untuk batch jobs, nak switch ke AWS managed service" → AWS Batch. "Job genomics/rendering/simulation berjam-jam, banyak job beratur" → AWS Batch. "Lebih 15 minit tapi satu container je" → Fargate (bukan Lambda).',
             tips: [
-              'Batch = untuk jobs yang run sampai habis (start-to-finish), bukan continuous workloads',
-              'AWS Batch auto-provision EC2 (termasuk Spot untuk jimat kos)',
-              'Ingat: Batch ≠ SSM (SSM = manage existing infra). Batch ≠ Athena (Athena = query S3 data)',
+              'Batch = untuk jobs yang run sampai habis (start-to-finish) di skala besar dengan queue, BUKAN continuous web workloads (itu Fargate/EC2)',
+              'AWS Batch auto-provision compute (EC2 atau Fargate) — termasuk Spot untuk jimat sampai 90%',
+              'Tiada had masa 15 minit macam Lambda — sebab tu Batch/Fargate jadi jawapan untuk "long-running job"',
+              'Ingat: Batch ≠ SSM (SSM = manage existing infra). Batch ≠ Athena (Athena = query S3 data). Batch ≠ Step Functions (SF = orchestrate workflow, bukan provision compute)',
+              'PRICING: AWS Batch SENDIRI percuma — tiada caj tambahan. Kau bayar HANYA resources di bawahnya (EC2/Fargate + EBS). Guna Spot dalam Compute Environment untuk diskaun besar.',
             ],
-            docs: [{ label: 'AWS Batch', url: 'https://aws.amazon.com/batch/' }],
-            keywords: ['AWS Batch', 'batch computing', 'managed', 'job queue', 'EC2 fleet', 'replace third-party'],
+            docs: [
+              { label: 'What Is AWS Batch?', url: 'https://docs.aws.amazon.com/batch/latest/userguide/what-is-batch.html' },
+              { label: 'AWS Batch', url: 'https://aws.amazon.com/batch/' },
+            ],
+            keywords: ['AWS Batch', 'batch computing', 'long-running job', 'managed', 'job queue', 'job definition', 'compute environment', 'EC2 fleet', 'Fargate', 'Spot', 'run to completion', 'replace third-party', 'pricing'],
           },
           {
             shortName: 'Fargate',
