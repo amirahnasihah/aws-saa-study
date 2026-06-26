@@ -633,6 +633,7 @@ export const domains: DomainData[] = [
               'NACL = subnet level, STATELESS, boleh ALLOW & DENY, numbered rules',
               'Stateless = return traffic TAK auto-allow → kena rule inbound DAN outbound',
               'First match menang: rule nombor kecil baca dulu, lepas match terus stop',
+              'Nombor rule (100, 200…) = priority/urutan baca, BUKAN kod. Guna increment 100 supaya senang selit rule baru di tengah',
               'Return reply guna ephemeral ports 1024-65535 → kena allow outbound',
               'Block satu IP jahat → NACL (SG tak boleh deny). SG = stateful, allow-only, instance level',
             ],
