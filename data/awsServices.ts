@@ -3966,7 +3966,27 @@ export const domains: DomainData[] = [
             ingat: '"Baris gilir message"',
             gunaUntuk: 'Decouple services, async queue',
             fungsi: 'Mengurus queue untuk menghantar mesej antara komponen aplikasi secara asynchronous. Standard queue: at-least-once delivery, best-effort ordering. FIFO queue: exactly-once, strict order.',
-            contohGuna: 'Order processing queue — EC2/Lambda poll SQS, proses order, delete message bila siap.',
+            sebabApa: 'Wujud sebab kalau service A panggil service B terus (synchronous), bila B sibuk/down → A tersekat/gagal, dan bila trafik melonjak B kena hentam terus sampai pengsan. SQS letak "baris gilir" di tengah: A campak mesej masuk queue & teruskan kerja, B amik (pull) ikut kadar SENDIRI. Kalau B mati, mesej tunggu dalam queue (tak hilang) sampai B sihat balik. Tujuan: decouple service + serap lonjakan (buffer) + tahan kegagalan (retry/DLQ).',
+            sifir: [
+              'SQS = PULL queue, satu mesej diproses oleh SATU consumer. SNS = PUSH ke ramai',
+              'Standard = at-least-once (boleh duplicate) + best-effort order. FIFO = exactly-once + strict order',
+              'Order penting / no duplicate → FIFO (.fifo, 300/s atau 3000 batch)',
+              'Visibility Timeout < masa proses → mesej muncul balik → DUPLICATE. Naikkan timeout',
+              'Cross-account hantar ke queue → SQS queue policy (resource-based), bukan IAM je',
+              'Long polling (WaitTime>0, max 20s) → kurangkan empty response & kos API',
+            ],
+            perangkap: [
+              {
+                soalan: 'Sistem pembayaran proses mesej dua kali kadang-kadang, dan susunan transaksi mesti tepat. Queue SQS sedia ada Standard. Pembetulan minimum?',
+                jebakan: 'Tambah logik dedup & susun semula dalam kod aplikasi consumer. Nampak betul sebab "betulkan dalam kod".',
+                betul: 'Tukar ke SQS FIFO queue — ia bagi exactly-once (deduplication) + strict ordering per MessageGroupId secara built-in, perubahan kod minimum. Standard memang at-least-once + best-effort order. Keyword "no duplicates / order preserved" → FIFO.',
+              },
+              {
+                soalan: 'Consumer EC2 (Spot) ditamatkan separuh jalan semasa memproses mesej SQS. Adakah mesej hilang?',
+                jebakan: 'Ya, hilang — sebab consumer dah amik mesej tu dari queue dan mati sebelum siap. Nampak betul sebab "dah diambil".',
+                betul: 'TIDAK hilang. Mesej cuma jadi INVISIBLE semasa Visibility Timeout; sebab consumer tak panggil DeleteMessage, ia jadi VISIBLE semula lepas timeout dan consumer lain proses. Mesej hanya hilang bila DeleteMessage dipanggil selepas berjaya. Keyword "consumer dies mid-processing" → mesej selamat (visibility timeout).',
+              },
+            ],
             storageDetails: 'Visibility Timeout → Message invisible semasa diproses (max 12 jam). Jika consumer mati sebelum siap → message visible semula selepas timeout\nDelay Seconds → Delay sebelum message pertama kali visible dalam queue (max 15 minit)\nDead Letter Queue (DLQ) → Message yang gagal diproses N kali dihantar ke DLQ untuk debug\nMessage Retention → Default 4 hari, max 14 hari',
             detailsLabel: 'SQS Key Concepts',
             scenario: 'Spot instance terminated masa process SQS message → message TIDAK hilang. Ia akan visible semula selepas Visibility Timeout expired. Message hanya deleted bila consumer call DeleteMessage API selepas berjaya process.',
@@ -4029,7 +4049,22 @@ export const domains: DomainData[] = [
             ingat: '"Broadcast message ke ramai sekaligus — push, bukan pull"',
             gunaUntuk: 'Push notification ke many subscribers (fan-out)',
             fungsi: 'Pub/sub messaging service — publisher hantar message ke SNS topic, semua subscribers terima serentak. Subscribers boleh jadi SQS, Lambda, HTTP/S endpoints, email, SMS. Push-based (SNS hantar ke subscriber), bukan pull-based macam SQS.',
-            contohGuna: 'S3 upload → SNS topic → fan-out ke 3 SQS queues (thumbnail, metadata, archive) sekaligus.',
+            sebabApa: 'Wujud sebab kadang SATU event perlu cetuskan BANYAK tindakan berasingan serentak — cth gambar di-upload perlu buat thumbnail + index metadata + arkib, semua sekali gus. Kalau publisher kena panggil setiap downstream satu-satu, dia jadi coupled & rapuh. SNS = pembesar suara: publisher campak SATU mesej ke topic, SNS PUSH salinan ke SEMUA subscriber (fan-out) serentak. Tujuan: pub/sub broadcast — satu-ke-ramai tanpa publisher kenal siapa subscriber.',
+            sifir: [
+              'SNS = PUSH pub/sub, satu mesej → SEMUA subscriber serentak (fan-out)',
+              'Fan-out klasik: SNS → banyak SQS queue (tiap queue proses & scale sendiri)',
+              'SNS→SQS perlu queue policy (resource-based) allow SNS SendMessage, kalau tak senyap gagal',
+              'Message filtering (filter policy) → subscriber terima yang match je, tak filter dalam code',
+              'SNS = fan-out ringkas. Route ikut ISI/peraturan/SaaS/cron → EventBridge',
+              'Order + exactly-once → SNS FIFO topic + SQS FIFO queue',
+            ],
+            perangkap: [
+              {
+                soalan: 'Satu objek upload ke S3 perlu mencetuskan TIGA proses bebas (thumbnail, metadata, arkib) serentak, setiap satu proses ikut kadar sendiri & boleh retry. Seni bina mana?',
+                jebakan: 'S3 event notification terus ke satu SQS queue, dan satu consumer buat ketiga-tiga tugas. Nampak betul sebab "satu queue boleh handle semua".',
+                betul: 'S3 → SNS topic → fan-out ke 3 SQS queue (satu per proses). SNS broadcast event ke semua, tiap SQS bagi retry/buffer bebas & scale sendiri. (Bonus: S3 hanya boleh hantar 1 notifikasi per prefix/suffix ke 1 destinasi — SNS fan-out atasi had ni.) Keyword "one event → multiple independent processes" → SNS fan-out (+SQS).',
+              },
+            ],
             diagram: {
               label: 'Fan-out anatomy',
               steps: [
@@ -4068,7 +4103,27 @@ export const domains: DomainData[] = [
             ingat: '"Streaming pipe — Streams = real-time + code, Firehose = auto-deliver no code"',
             gunaUntuk: 'Ingest & process real-time streaming data (logs, clickstream, IoT, metrics)',
             fungsi: 'Kinesis Data Streams (KDS): real-time, data dalam shards, custom consumers baca dengrn code (Lambda/KCL). Retention default 24 jam, boleh extend sampai 365 hari. Kinesis Data Firehose: near-real-time (buffer ~60s/MB), fully managed, ZERO code — auto-deliver ke S3, Redshift, OpenSearch, Splunk, boleh transform guna Lambda.',
-            contohGuna: 'Live clickstream/IoT telemetry yang perlu custom real-time processing → Data Streams. "Just load streaming logs into S3/Redshift tanpa manage apa-apa" → Firehose.',
+            sebabApa: 'Wujud sebab data streaming (clickstream, IoT telemetry, log) datang TERUS-MENERUS & laju — SQS sesuai untuk task discrete tapi tak direka untuk replay atau ramai consumer baca aliran SAMA. Kinesis = paip streaming: tampung jutaan rekod/saat, simpan sekejap (retention) supaya BANYAK consumer boleh baca & main semula (replay). Data Streams bila kau nak proses sendiri (code, real-time, replay); Firehose bila kau cuma nak HANTAR aliran ke store (S3/Redshift) tanpa kod. Tujuan: ingest & proses data streaming berskala besar.',
+            sifir: [
+              'Data Streams = real-time (~200ms) + code (Lambda/KCL) + replay + ramai consumer',
+              'Firehose = near-real-time (buffer ~60s) + ZERO code + auto-deliver ke S3/Redshift/OpenSearch/Splunk',
+              'Firehose TIADA replay/storage (deliver lepas tu hilang). Streams retention 24j→365hari',
+              'Streams: kau urus shards (1 shard = 1MB/s in, 2MB/s out). Firehose auto-scale',
+              'Transform/analisa stream guna SQL/Flink → Managed Service for Apache Flink (dulu Kinesis Data Analytics)',
+              'Bukan streaming (task discrete, decouple) → SQS, bukan Kinesis',
+            ],
+            perangkap: [
+              {
+                soalan: 'Pasukan cuma nak muatkan log streaming ke S3 dan Redshift untuk analisa, tanpa urus server atau tulis kod consumer. Servis mana?',
+                jebakan: 'Kinesis Data Streams + Lambda consumer yang tulis ke S3/Redshift. Nampak betul sebab "Kinesis untuk streaming".',
+                betul: 'Kinesis Data Firehose. Ia fully managed, ZERO code, auto-deliver terus ke S3/Redshift/OpenSearch/Splunk (boleh transform guna Lambda kalau perlu). Data Streams perlukan kau urus shards + tulis consumer. Keyword "just load/deliver streaming data, no code, no servers" → Firehose, bukan Data Streams.',
+              },
+              {
+                soalan: 'Berbilang aplikasi berbeza perlu membaca aliran data SAMA secara real-time, dan boleh main semula (replay) data sehingga beberapa hari lalu untuk pemprosesan semula. Servis mana?',
+                jebakan: 'SQS — letak mesej dalam queue dan biar setiap app baca. Nampak betul sebab SQS pun "hantar mesej antara komponen".',
+                betul: 'Kinesis Data Streams. SQS: satu mesej diproses oleh SATU consumer lepas tu hilang (tiada replay, tiada banyak consumer baca rekod sama). Streams simpan rekod (retention sampai 365 hari) supaya banyak consumer baca & replay. Keyword "multiple consumers same stream + replay + real-time" → Data Streams, bukan SQS.',
+              },
+            ],
             diagram: {
               label: 'Streaming pipeline anatomy',
               steps: [
