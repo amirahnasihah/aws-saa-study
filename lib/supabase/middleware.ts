@@ -2,7 +2,12 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export function createSupabaseMiddlewareClient(request: NextRequest) {
-  let response = NextResponse.next({ request })
+  // Next 16 validates that `request.headers` is a genuine Headers instance.
+  // Wrap in `new Headers(...)` so it passes regardless of the runtime's shape
+  // (Turbopack/Node proxy runtime can hand back a non-Headers object).
+  let response = NextResponse.next({
+    request: { headers: new Headers(request.headers) },
+  })
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
