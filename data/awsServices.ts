@@ -478,7 +478,27 @@ export const domains: DomainData[] = [
             ingat: '"Bodyguard EC2 — stateful, allow only, ingat connections"',
             gunaUntuk: 'Instance-level firewall — control inbound/outbound per EC2/ENI',
             fungsi: 'Mengawal inbound dan outbound traffic pada peringkat EC2 secara stateful. Custom SG baru: tiada inbound rules (semua inbound ditolak secara implicit), ada satu default outbound rule yang allow semua traffic ke 0.0.0.0/0. Default SG (yang auto-create bersama VPC): ada inbound allow dari dalam group yang sama.',
+            sebabApa: 'Wujud sebab setiap EC2 perlu firewall sendiri di pintu instance — kalau bergantung pada NACL (subnet) je, semua instance dalam subnet sama dapat rule yang sama, tak boleh tailor per-server. SG bagi kau "web boleh kena 443, DB cuma kena 3306 dari web je". Dia STATEFUL supaya kau tak payah fikir return traffic — bagi masuk = auto bagi balik, kurang silap manusia (lupa allow ephemeral port macam NACL).',
             contohGuna: 'Web server SG: allow port 443 dari 0.0.0.0/0. DB SG: allow port 3306 dari Web-SG je — DB hanya boleh diakses dari web servers, bukan dari internet.',
+            sifir: [
+              'SG = STATEFUL (ingat connection, reply auto-allow). NACL = stateless',
+              'SG = ALLOW only — tak boleh deny IP. Nak block IP → NACL',
+              'SG level = instance/ENI. NACL level = subnet',
+              'Custom SG baru: inbound KOSONG (deny all), outbound allow all',
+              'SG boleh reference SG lain sebagai source — "allow FROM web-sg", bukan hardcode IP',
+            ],
+            perangkap: [
+              {
+                soalan: 'EC2 punya SG: inbound allow 443, TIADA outbound rule yang allow balik ke client. Boleh ke user dapat response web?',
+                jebakan: 'Tak boleh — sebab outbound kena ada rule untuk reply keluar (cara fikir NACL/stateless).',
+                betul: 'BOLEH. SG stateful — sekali inbound 443 dibenarkan, reply keluar auto dibenarkan tanpa outbound rule. (Kalau ni NACL, baru kena allow ephemeral port balik.)',
+              },
+              {
+                soalan: 'Nak BLOCK satu IP penyerang (1.2.3.4) sahaja daripada reach EC2. Guna apa?',
+                jebakan: 'Add DENY rule untuk 1.2.3.4 dalam Security Group. SALAH: SG takde konsep DENY langsung.',
+                betul: 'Guna NACL — letak Deny rule untuk 1.2.3.4 (nombor rule kecil). SG allow-only, jadi tak boleh block IP tertentu.',
+              },
+            ],
             scenario: 'Exam: "New custom SG, no rules — what is default state?" → Inbound: NO rules = ALL DENIED. Outbound: default rule = ALL ALLOWED to 0.0.0.0/0. Jangan confuse dengan default SG (berbeza).',
             tips: [
               'Custom SG default: NO inbound rules (deny all) + 1 outbound rule (allow all to 0.0.0.0/0)',
@@ -1215,7 +1235,26 @@ export const domains: DomainData[] = [
             ingat: '"Pintu pagar utama — dua arah, free, satu per VPC"',
             gunaUntuk: 'Connect VPC to internet (bidirectional) — kena ada untuk public subnet',
             fungsi: 'IGW enable komunikasi dua arah antara VPC dan internet. Highly available, horizontally scaled, free. Satu VPC = satu IGW sahaja. Sebuah subnet baru jadi "public" bila ada 3 syarat: (1) IGW attached ke VPC, (2) route table ada 0.0.0.0/0 → IGW, (3) EC2 ada public/Elastic IP.',
+            sebabApa: 'Wujud sebab VPC by default TERTUTUP — takde apa boleh masuk/keluar internet. IGW = pintu pagar rasmi yang AWS urus (HA, auto-scale, free) supaya kau tak payah bina router sendiri. Sebab dia bidirectional (internet boleh initiate masuk), dia hanya patut dipakai untuk resource yang memang nak expose (web/bastion) — itu sebab ada NAT Gateway berasingan untuk yang nak keluar SAHAJA.',
             contohGuna: 'Web server EC2 dalam public subnet — route table ada 0.0.0.0/0 → igw-xxx. EC2 dapat public IP, users dari internet boleh reach web server.',
+            sifir: [
+              'IGW = bidirectional (in + out). NAT GW = outbound ONLY',
+              'Satu VPC = satu IGW. Free, HA, auto-scale',
+              'Subnet "public" = 3 syarat: IGW attach + route 0.0.0.0/0→IGW + EC2 ada public IP',
+              'Takde public IP pada EC2 = walaupun route betul, tetap tak boleh keluar via IGW',
+            ],
+            perangkap: [
+              {
+                soalan: 'EC2 dalam subnet, route table ada 0.0.0.0/0 → IGW, IGW attached ke VPC. Tapi EC2 tetap tak boleh reach internet. Kenapa?',
+                jebakan: 'Mesti NACL atau SG block — tukar firewall rules. Mungkin betul, tapi exam selalunya nak benda lebih asas.',
+                betul: 'EC2 takde public/Elastic IP. 3 syarat public subnet: IGW + route + PUBLIC IP. Tanpa public IP, IGW takde alamat untuk reply ke instance tu.',
+              },
+              {
+                soalan: 'Nak private subnet EC2 download patches dari internet tapi JANGAN biar internet initiate connection masuk. Route ke IGW?',
+                jebakan: 'Route 0.0.0.0/0 → IGW. SALAH: IGW bidirectional, jadi internet boleh initiate masuk = subnet jadi public, instance terdedah.',
+                betul: 'Route 0.0.0.0/0 → NAT Gateway (outbound only). IGW untuk yang nak expose; NAT untuk yang nak keluar je.',
+              },
+            ],
             scenario: '"Public subnet boleh access internet" → Internet Gateway. Route table mesti ada 0.0.0.0/0 → IGW untuk subnet jadi public.',
             tips: [
               'IGW = free, highly available, satu per VPC — tak boleh ada 2 IGW dalam satu VPC',
@@ -1233,7 +1272,29 @@ export const domains: DomainData[] = [
             ingat: '"Keluar boleh, masuk tak boleh — untuk private subnet"',
             gunaUntuk: 'Private subnet instances download patches/call APIs without being exposed to internet',
             fungsi: 'NAT GW allow instances dalam private subnet buat OUTBOUND connection ke internet (download packages, call external APIs) tanpa exposed kepada inbound connections. NAT GW duduk dalam PUBLIC subnet (bukan private!), ada Elastic IP. Private subnet route: 0.0.0.0/0 → NAT GW.',
+            sebabApa: 'Wujud sebab private subnet ada dilema: server (RDS, app) perlu keluar internet untuk patch/update/call API, TAPI kau tak nak internet boleh masuk balik (kalau guna IGW + public IP, instance jadi terdedah). NAT GW selesai ni — dia satu hala je (outbound), pakai Elastic IP dia sendiri jadi instance kau tak pernah dedah IP. AWS urus HA + auto-scale supaya kau tak payah maintain NAT Instance (EC2) sendiri.',
             contohGuna: 'RDS dalam private subnet perlu download security patches. Traffic: RDS → NAT GW (public subnet) → IGW → internet. Internet tak boleh initiate connection masuk ke RDS.',
+            sifir: [
+              'NAT GW DUDUK DALAM PUBLIC subnet (bukan private!) — trap paling kerap',
+              'NAT GW = OUTBOUND only. Internet TAK boleh initiate masuk',
+              'NAT GW = STATEFUL (ingat jalan balik, SNAT) + serverless/managed — auto-scale 5→100 Gbps, tak boleh SSH masuk',
+              'NAT GW perlukan IGW untuk sampai internet — dia bukan ganti IGW',
+              'Default exam = NAT Gateway (managed). NAT Instance hanya bila perlu SG/bastion/port-forward',
+              'Multi-AZ HA = deploy 1 NAT GW per AZ; elak cross-AZ data charge',
+              'Banyak traffic ke S3/DynamoDB? Gateway VPC Endpoint (FREE) lagi murah dari NAT GW per-GB',
+            ],
+            perangkap: [
+              {
+                soalan: 'Letak NAT Gateway dalam mana untuk private subnet EC2 boleh keluar internet?',
+                jebakan: 'Dalam PRIVATE subnet — sebab dia "untuk" private subnet, logik kan? Itu jebakan paling popular.',
+                betul: 'Dalam PUBLIC subnet. NAT GW sendiri kena boleh sampai IGW (route 0.0.0.0/0→IGW). Private subnet route 0.0.0.0/0 → nat-xxx.',
+              },
+              {
+                soalan: 'App private subnet upload beratus GB/hari ke S3 lalu NAT Gateway. Bil membengkak. Macam mana jimat?',
+                jebakan: 'Tukar ke NAT Instance kecil supaya murah. Boleh jimat sikit, tapi masih bayar per-GB + kau maintain EC2.',
+                betul: 'S3 Gateway VPC Endpoint (FREE, no per-GB) — traffic terus dalam AWS network, langsung tak sentuh NAT GW. Keyword: "private subnet → S3 → reduce cost" = Gateway Endpoint.',
+              },
+            ],
             scenario: '"Private subnet EC2 perlu access internet tapi tak nak exposed" → NAT Gateway. Letak NAT GW dalam public subnet, route private subnet 0.0.0.0/0 → NAT GW.',
             compare: {
               label: 'NAT Gateway vs NAT Instance',
@@ -1412,7 +1473,27 @@ export const domains: DomainData[] = [
             ingat: '"Highway terus ke AWS services — tanpa internet, tanpa NAT fees"',
             gunaUntuk: 'Access S3/DynamoDB (free) atau AWS services lain (paid) dari private subnet secara private',
             fungsi: 'Dua jenis: Gateway Endpoint (S3 + DynamoDB, free, guna route table) dan Interface Endpoint (services lain via PrivateLink, ada ENI dalam subnet, berbayar). Traffic tak keluar ke internet langsung — lebih selamat dan murah (jimat NAT GW data fees).',
+            sebabApa: 'Wujud sebab tanpa endpoint, private subnet nak cakap dengan S3/DynamoDB/SSM kena lalu NAT Gateway → IGW → internet (public path) → bayar NAT per-GB + traffic keluar internet (kurang selamat). VPC Endpoint bagi laluan PRIVATE terus ke AWS service dalam network AWS — Gateway Endpoint (S3/DynamoDB) percuma jimat NAT fees, Interface Endpoint (PrivateLink) untuk service lain. Bonus: boleh kunci S3 bucket supaya HANYA terima dari endpoint ni (compliance).',
             contohGuna: 'EC2 private subnet banyak upload ke S3. Tanpa endpoint: bayar NAT GW per GB. Dengan S3 Gateway Endpoint (free): traffic terus dalam AWS network.',
+            sifir: [
+              '"GD Free" → Gateway Endpoint = S3 + DynamoDB SAHAJA, percuma, guna route table',
+              'Interface Endpoint = semua service lain (ECR/SSM/KMS/SQS…), ada ENI, berbayar (PrivateLink)',
+              'Gateway Endpoint = in-VPC only. Interface Endpoint = boleh dari on-prem (VPN/DX) sebab ada DNS+ENI',
+              'aws:sourceVpce dalam bucket policy = kunci S3 terima dari satu endpoint je',
+              'Connectivity ≠ Authorization: route betul ≠ S3 terima; bucket policy boleh DENY walaupun network sampai',
+            ],
+            perangkap: [
+              {
+                soalan: 'Nak access SSM Parameter Store + ECR secara private dari private subnet. Gateway Endpoint?',
+                jebakan: 'Gateway Endpoint — sebab dia free, kenapa tak guna. SALAH: Gateway Endpoint sokong S3 + DynamoDB SAHAJA.',
+                betul: 'Interface Endpoint (PrivateLink). SSM, ECR, KMS, SQS dll semua Interface Endpoint. Gateway Endpoint cuma S3 & DynamoDB ("GD Free").',
+              },
+              {
+                soalan: 'Bucket policy ada Condition aws:sourceVpce = vpce-123. EC2 reach S3 lalu NAT Gateway (network route OK). Request berjaya?',
+                jebakan: 'Berjaya — sebab NAT Gateway secara teknikal boleh route sampai S3, connectivity ada.',
+                betul: 'GAGAL (Access Denied). Request lalu NAT→IGW (public path), bukan via vpce-123, jadi bucket policy DENY. Connectivity (boleh sampai) ≠ Authorization (dibenarkan).',
+              },
+            ],
             scenario: '"Access S3/DynamoDB dari private subnet tanpa internet" → Gateway VPC Endpoint (free). "Access ECR, SSM, atau services lain privately" → Interface Endpoint (PrivateLink).',
             compare: {
               label: 'Gateway vs Interface Endpoint',
