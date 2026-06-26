@@ -4446,6 +4446,25 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Pre-built API (Polly/Transcribe/Translate/Comprehend/Lex/Rekognition/Textract) = no training, call API terus. SageMaker = bina/latih model sendiri. Pipeline klasik: Transcribe → Translate → Comprehend → Polly. CCTV real-time = Rekognition + Kinesis VIDEO Streams.',
             },
+            scenario: '"Baca soalan kuiz dengan suara" → Polly. "Transkrip meeting jadi nota" → Transcribe. "Chatbot customer service / Alexa" → Lex. "Detect muka dalam CCTV real-time" → Rekognition + Kinesis Video Streams. "Extract data dari invois/borang scan" → Textract. "Analisa sentiment review pelanggan" → Comprehend. "Translate app ke banyak bahasa" → Translate. "Latih model ramalan sendiri" → SageMaker.',
+            mermaid: {
+              label: 'Pilih AI service — input apa → output apa (decision tree)',
+              source: `flowchart TD
+  Q["Input apa &rarr; nak output apa?"] --> AUDIO{"Audio / suara?"}
+  AUDIO -->|"Text &rarr; suara"| POLLY["🔊 Polly<br/>(text-to-speech)"]
+  AUDIO -->|"Suara &rarr; text"| TRANS["📝 Transcribe<br/>(speech-to-text)"]
+  Q --> IMG{"Gambar / video?"}
+  IMG -->|"Muka, objek, moderation"| REKOG["👁️ Rekognition<br/>(+ Kinesis Video utk real-time)"]
+  Q --> TEXT{"Text / dokumen?"}
+  TEXT -->|"Tukar bahasa"| TL["🌐 Translate"]
+  TEXT -->|"Sentiment, entiti, NLP"| COMP["🧠 Comprehend<br/>(Medical utk klinikal)"]
+  TEXT -->|"Scan dokumen &rarr; data (OCR)"| TX["📄 Textract"]
+  Q --> CHAT{"Chatbot / dialog?"}
+  CHAT -->|"Intent + conversation"| LEX["💬 Lex<br/>(powers Alexa)"]
+  Q --> CUSTOM{"Nak latih model sendiri?"}
+  CUSTOM -->|"Ya"| SM["⚙️ SageMaker"]`,
+              caption: 'Pre-built API (no training) untuk audio/imej/text/chatbot; nak model custom → SageMaker. Pipeline klasik multilingual: Transcribe → Translate → Comprehend → Polly. INGAT exam: padankan input→output dengan keyword soalan.',
+            },
             tips: [
               'Polly = text → speech. Transcribe = speech → text. INGAT: P=produce speech, T=transcribe speech',
               'Lex = chatbot dengan context awareness. Kalau soalan sebut "chatbot", "natural language", "conversation turns" → Lex',
@@ -4457,13 +4476,20 @@ export const domains: DomainData[] = [
               '"scanned PDFs → audiobook" = Textract (extract text) + Polly (text → audio)',
               'Kinesis Video Streams = INGESTION layer (secure ingest from cameras/devices). Rekognition Video = ANALYSIS layer. You need both for a real-time surveillance pipeline.',
               'Comprehend = NLP text ANALYSIS (sentiment, entities, key phrases, topic modeling). Use for support tickets, social media, reviews. NOT for document OCR (use Textract) and NOT for chatbots (use Lex).',
+              'Comprehend Medical = versi khusus perubatan — extract medical entities (penyakit, ubat, dosage, PHI) dari clinical text (nota doktor, rekod pesakit), HIPAA-eligible. Soalan sebut "medical records / clinical notes / extract PHI" → Comprehend Medical, bukan Comprehend biasa.',
               'Textract = EXTRACT structured data from scanned documents. Key-value pairs from forms, data from tables, dates and amounts from invoices/contracts. Goes beyond basic OCR.',
               'Lex = CONVERSATIONAL chatbot with multi-turn dialogue, intent recognition, slot filling. Powers Amazon Alexa. Manages conversation state.',
               'Enterprise search across PDFs/Word/email with natural language? → Amazon Kendra (see Kendra card). Product search with spell-check/synonyms? → OpenSearch.',
               'Translate = neural machine translation (text → text, different language). NOT speech (combine with Transcribe/Polly for audio) dan NOT sentiment analysis (use Comprehend)',
               '"Multilingual chatbot/support ticket pipeline": Transcribe (speech→text) → Translate (translate text) → Comprehend (analyze sentiment) → Polly (text→speech in target language)',
             ],
-            keywords: ['Polly', 'Transcribe', 'Lex', 'Rekognition', 'Comprehend', 'Textract', 'Translate', 'Kinesis Video Streams', 'text-to-speech', 'speech-to-text', 'chatbot', 'image analysis', 'StartSpeechSynthesisTask', 'audiobook', 'OCR', 'NLP', 'sentiment analysis', 'entity recognition', 'document extraction', 'machine translation'],
+            docs: [
+              { label: 'Amazon Polly — text to speech', url: 'https://docs.aws.amazon.com/polly/latest/dg/what-is.html' },
+              { label: 'Amazon Comprehend (& Comprehend Medical)', url: 'https://docs.aws.amazon.com/comprehend/latest/dg/what-is.html' },
+              { label: 'Amazon Rekognition', url: 'https://docs.aws.amazon.com/rekognition/latest/dg/what-is.html' },
+              { label: 'Amazon Lex V2', url: 'https://docs.aws.amazon.com/lexv2/latest/dg/what-is.html' },
+            ],
+            keywords: ['Polly', 'Transcribe', 'Lex', 'Rekognition', 'Comprehend', 'Comprehend Medical', 'Textract', 'Translate', 'Kinesis Video Streams', 'text-to-speech', 'speech-to-text', 'chatbot', 'image analysis', 'StartSpeechSynthesisTask', 'audiobook', 'OCR', 'NLP', 'sentiment analysis', 'entity recognition', 'document extraction', 'machine translation', 'PHI', 'HIPAA'],
           },
           {
             shortName: 'SageMaker',
