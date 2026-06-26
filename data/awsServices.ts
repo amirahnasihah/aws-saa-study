@@ -1345,6 +1345,27 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Private dedicated connection from on-premises to AWS',
             fungsi: 'Menyediakan sambungan jaringan peribadi yang berdedikasi antara data center on-premises dengan AWS melalui fiber-optic cable di Direct Connect location (bypass internet/ISP). Private VIF → access VPC. Public VIF → access public AWS services (S3) guna private line. NOTA: DX TIDAK encrypted by default — kalau perlu encryption, run VPN over DX (IPSec).',
             contohGuna: 'Company transfer 100TB data sebulan dari on-prem ke AWS — Direct Connect lebih murah (no internet data transfer charges), consistent latency berbanding internet',
+            sebabApa: 'Wujud sebab traffic melalui public internet tak menentu — latency naik-turun, bandwidth tak terjamin, dan data transfer mahal bila volume besar. Untuk syarikat yang kerap pindah TB data atau jalankan app sensitif latency (trading, video), itu tak boleh pakai. DX bagi kabel fiber PRIBADI yang berdedikasi terus ke AWS (langkau internet/ISP) → latency konsisten, bandwidth terjamin, dan data transfer lebih murah pada skala. Tujuan: sambungan hybrid yang predictable & high-bandwidth.',
+            sifir: [
+              'DX = private dedicated fiber, BUKAN over internet. VPN = IPSec over internet',
+              'DX TAK encrypted by default — perlu encrypted+private → DX + VPN (IPSec over DX)',
+              'DX provisioning ambil minggu-bulan → soalan "quickly/immediately" = VPN, BUKAN DX',
+              'Resilient murah: DX primary + Site-to-Site VPN backup (bukan dual-DX)',
+              'Public VIF → akses S3/DynamoDB. Private VIF → akses VPC. Transit VIF → akses TGW',
+              'Satu DX → banyak VPC merentas region/account → Direct Connect Gateway',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat perlu sambungan ke AWS dengan latency konsisten & bandwidth tinggi, dan perlu LIVE secepat mungkin (dalam beberapa hari) untuk migrasi mendesak. Pilih?',
+                jebakan: 'Direct Connect — sebab ia memang untuk latency konsisten + bandwidth tinggi. Nampak betul sebab soalan sebut dua syarat tu.',
+                betul: 'Site-to-Site VPN dulu (boleh siap dalam minit/jam), kemudian migrasi ke DX bila kabel fizikal siap (minggu-bulan). DX provisioning fizikal terlalu lambat untuk "secepat mungkin". Keyword "quickly / immediately / urgent" mengatasi syarat latency → VPN. Boleh sebut DX sebagai fasa kedua.',
+              },
+              {
+                soalan: 'Pematuhan memerlukan SEMUA data antara on-prem dan AWS disulitkan dalam transit, dengan sambungan private berlatency rendah. Penyelesaian?',
+                jebakan: 'Direct Connect sahaja — sebab ia private dedicated line, jadi dah selamat. Nampak betul sebab "private line = selamat".',
+                betul: 'Direct Connect + Site-to-Site VPN (jalankan IPSec over DX). DX TIDAK encrypted by default — private ≠ encrypted. Untuk penuhi syarat encryption-in-transit + private low-latency, lapis VPN di atas DX. Keyword "encrypted + private/low-latency" → DX + VPN.',
+              },
+            ],
             scenario: '"Steady high-volume transfer + consistent low latency + predictable bandwidth" → Direct Connect. "DX kena encrypted juga (compliance)" → DX + Site-to-Site VPN (run IPSec over DX). "Connect DX ke banyak VPC merentas region/account" → Direct Connect Gateway (global resource).',
             compare: {
               label: 'Direct Connect vs Site-to-Site VPN',
@@ -1381,6 +1402,22 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Encrypted IPSec tunnel from on-premises network to VPC over internet',
             fungsi: 'Mewujudkan sambungan IPSec yang disulitkan antara seluruh on-premises NETWORK dengan AWS VPC menggunakan internet sedia ada. Dua komponen: Customer Gateway (CGW = device/info kat sebelah kau) + target gateway kat AWS — sama ada Virtual Private Gateway (VGW, attach ke 1 VPC) atau Transit Gateway (banyak VPC). Setiap VPN connection ada 2 tunnels untuk high availability. Routing: static atau dynamic (BGP).',
             contohGuna: 'Small office nak access resources dalam VPC secara selamat — setup Site-to-Site VPN. Lebih murah dan cepat setup dari Direct Connect tapi latency tak konsisten (ikut internet)',
+            sebabApa: 'Wujud sebab kau nak sambung SELURUH rangkaian office/data center ke VPC dengan selamat, TANPA tunggu berbulan & bayar mahal untuk Direct Connect. Site-to-Site VPN guna internet sedia ada tapi bungkus traffic dalam terowong IPSec yang disulitkan — siap dalam minit/jam. Tujuan: hybrid network yang cepat, murah & encrypted (atau jadi backup untuk DX).',
+            sifir: [
+              'Site-to-Site = NETWORK ke NETWORK (office/DC). Client VPN = USER (laptop) ke VPC',
+              'Encrypted by default (IPSec) → bagus bila soalan nak "encrypted + cepat/murah"',
+              '2 komponen: Customer Gateway (sebelah kau) + VGW/Transit Gateway (sebelah AWS)',
+              'Setiap VPN connection = 2 tunnels auto untuk HA',
+              'VGW = 1 VPC je. Banyak VPC / nak ECMP throughput → Transit Gateway',
+              'Classic resilient combo: DX primary + Site-to-Site VPN backup',
+            ],
+            perangkap: [
+              {
+                soalan: 'Sebuah cawangan office (seluruh rangkaian, ramai pekerja) perlu akses selamat ke VPC, perlu siap cepat dan kos rendah. Penyelesaian?',
+                jebakan: 'AWS Client VPN — sebab pekerja office nak akses, jadi guna Client VPN per user. Nampak betul sebab "pekerja akses".',
+                betul: 'Site-to-Site VPN. Yang perlu disambung ialah SELURUH RANGKAIAN office (via Customer Gateway), bukan setiap laptop satu-satu. Client VPN untuk individual remote user (WFH/vendor). Keyword "office/branch/network connect to VPC" → Site-to-Site, bukan Client VPN.',
+              },
+            ],
             scenario: '"Connect entire branch/office NETWORK ke VPC, encrypted, cepat & murah" → Site-to-Site VPN. "Backup untuk Direct Connect" → Site-to-Site VPN as failover. "Individual remote workers (laptop) nak access VPC" → itu Client VPN, BUKAN Site-to-Site.',
             compare: {
               label: 'Site-to-Site VPN vs Client VPN — siapa yang connect?',
@@ -1427,6 +1464,21 @@ export const domains: DomainData[] = [
             ingat: '"VPN untuk individual users — bukan network-to-network"',
             gunaUntuk: 'Allow individual users to authenticate and connect to a VPC from their devices',
             fungsi: 'Managed VPN endpoint yang individual users install client (OpenVPN-compatible) and authenticate via AD, SAML, or mutual certificate auth. Each user\'s connection is governed by authorization rules that restrict access to specific subnets.',
+            sebabApa: 'Wujud sebab pekerja WFH / vendor sementara guna laptop sendiri dari rumah perlu akses selamat ke resource dalam VPC — tapi mereka BUKAN satu rangkaian office yang tetap (jadi Site-to-Site tak sesuai). Client VPN bagi setiap user pasang software client + authenticate (AD/SAML/cert) → dapat akses peribadi yang disulitkan, dan authorization rules hadkan setiap user ke subnet tertentu sahaja. Tujuan: remote access peringkat INDIVIDU dengan least-privilege.',
+            sifir: [
+              'Client VPN = USER (laptop) ke VPC. Site-to-Site = NETWORK (office) ke VPC',
+              'User pasang OpenVPN-compatible client; auth via AD / SAML / mutual cert',
+              'Authorization rules = hadkan tiap user/group ke subnet tertentu (least privilege)',
+              'Caj per endpoint-hour + per client connection-hour → jimat untuk team kecil',
+              '"remote/WFH/vendor individual access" → Client VPN, bukan Site-to-Site',
+            ],
+            perangkap: [
+              {
+                soalan: 'Pasukan vendor kecil (5 orang, kerja dari lokasi masing-masing) perlu akses sementara yang dibenarkan ke subnet tertentu dalam VPC, dengan kos efektif. Servis mana?',
+                jebakan: 'Site-to-Site VPN dengan Customer Gateway di lokasi vendor. Nampak betul sebab "VPN ke VPC".',
+                betul: 'AWS Client VPN. Mereka individu yang bertaburan (bukan satu rangkaian office dengan router tetap), perlu auth per-user dan had ke subnet tertentu (authorization rules). Site-to-Site perlukan Customer Gateway device per-site & sambung seluruh network. Keyword "individual users / per-user auth / specific subnets / temporary" → Client VPN.',
+              },
+            ],
             scenario: '"Small vendor team needs temporary authenticated access to specific VPC subnets, cost-efficient" → Client VPN. Site-to-Site VPN = entire on-premises NETWORK connects to AWS (not per-user). Client VPN = INDIVIDUAL USER level access.',
             tips: [
               'Authorization rules: restrict each user/group to specific subnets — principle of least privilege at the user level',
@@ -1625,6 +1677,26 @@ export const domains: DomainData[] = [
             ingat: '"SG = Smart/Stateful (instance). NACL = Needs-both-ways/stateless (subnet)"',
             gunaUntuk: 'Two-layer defence: SG guards each EC2, NACL guards each subnet',
             fungsi: 'SG dan NACL bekerja bersama sebagai firewall berlapis. SG (stateful) bekerja pada peringkat EC2 — ingat connections, reply auto dibenarkan, allow-only rules. NACL (stateless) bekerja pada peringkat subnet — check tiap packet, perlu explicit rules untuk inbound DAN outbound, boleh deny IPs.',
+            sebabApa: 'Dua lapisan wujud sebab satu firewall tak cukup untuk semua keperluan. SG jaga setiap instance secara pintar (stateful — ingat siapa kau, reply auto-lepas) tapi dia ALLOW-only, tak boleh block IP penyerang tertentu. NACL jaga sempadan subnet, boleh DENY (block IP/range), tapi stateless (cek setiap packet dua hala — kena allow ephemeral port balik). Guna dua-dua = defense-in-depth: SG kawal "siapa boleh cakap dengan siapa", NACL block ancaman di sempadan.',
+            sifir: [
+              'SG = Stateful (reply auto-allow) + level INSTANCE. NACL = Stateless + level SUBNET',
+              'SG = ALLOW only. Nak DENY/block IP tertentu → NACL',
+              'NACL stateless → kena allow outbound ephemeral port (1024-65535) untuk reply',
+              'SG boleh reference SG lain sebagai source. NACL = CIDR je',
+              'Custom SG: inbound deny-all. Custom NACL: deny-all (kena tambah rule sendiri)',
+            ],
+            perangkap: [
+              {
+                soalan: 'Kau tambah inbound NACL rule allow SSH (port 22), tapi SSH ke EC2 masih GAGAL/timeout. SG dah allow 22. Apa puncanya?',
+                jebakan: 'Inbound NACL salah priority / kena tambah lagi satu inbound rule. Nampak betul sebab fokus pada inbound (port 22).',
+                betul: 'NACL stateless — reply server keluar guna ephemeral port (1024-65535), tapi outbound NACL tak allow port tu → reply tersekat, SSH gagal. Tambah outbound NACL allow 1024-65535. (Kalau ni SG je, dah jalan sebab stateful.) Keyword "inbound allowed tapi connection gagal" → outbound ephemeral NACL.',
+              },
+              {
+                soalan: 'Perlu BLOK satu julat IP penyerang (203.0.113.0/24) daripada mencapai keseluruhan subnet. Guna apa?',
+                jebakan: 'Security Group — tambah rule untuk deny IP tu. Nampak betul sebab SG = firewall instance.',
+                betul: 'NACL Deny rule (nombor rule rendah menang). SG TAK BOLEH deny — ia allow-only, jadi mustahil block IP tertentu dengan SG. Keyword "block/deny specific IP range" → NACL.',
+              },
+            ],
             mermaid: [
               {
                 label: 'Cara mudah ingat — NACL = Kastam 🛂, SG = Pengawal Pejabat 👮',
@@ -1680,6 +1752,26 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Connect 2 VPCs privately — same account, cross-account, atau cross-region',
             fungsi: 'VPC Peering allow dua VPC communicate menggunakan private IPs seolah-olah dalam network yang sama. NON-transitive — kalau A↔B dan B↔C, A TIDAK boleh reach C secara automatik. Kena buat A↔C peering berasingan.',
             contohGuna: 'Production VPC (172.16.0.0/16) peer dengan Shared Services VPC (10.0.0.0/16) — team boleh access shared tools secara private.',
+            sebabApa: 'Wujud sebab dua VPC by default terpencil sepenuhnya — tak boleh cakap antara satu sama lain walaupun dalam akaun sama. VPC Peering buat "jambatan" private terus antara dua VPC supaya resource boleh guna private IP tanpa lalu internet. Ringkas & murah (takde hourly fee) untuk sambungan 1-ke-1. Tapi dia NON-transitive (jambatan A-B + B-C tak buat A nampak C) — itu yang buat dia tak sesuai bila VPC dah ramai.',
+            sifir: [
+              '2 VPC sahaja → Peering (murah, no hourly fee, data transfer je)',
+              'NON-transitive: A↔B + B↔C TAK buat A↔C. Kena peering A↔C sendiri',
+              'IP CIDR WAJIB tak overlap — overlap = tak boleh peer',
+              'Edge-to-edge TAK disokong: VPC B tak boleh guna NAT/IGW/VPN/DX milik VPC A',
+              '3+ VPC all-to-all atau perlu connect on-prem → Transit Gateway',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat ada 6 VPC dan semua perlu boleh cakap antara satu sama lain (full mesh). Mereka mula buat VPC Peering. Pendekatan terbaik?',
+                jebakan: 'Teruskan VPC Peering antara setiap pasangan VPC. Nampak betul sebab peering memang untuk sambung VPC dan lebih murah per-link.',
+                betul: 'AWS Transit Gateway. Peering non-transitive, jadi 6 VPC full-mesh = 15 peering link (n(n-1)/2) untuk urus — tak scalable & mimpi ngeri routing. TGW = hub transitive, 6 attachment je. Keyword "3+ VPC all-to-all / mesh / banyak VPC" → Transit Gateway.',
+              },
+              {
+                soalan: 'VPC A ada NAT Gateway. VPC B di-peer dengan A. Boleh ke instance dalam B keluar internet melalui NAT Gateway milik A?',
+                jebakan: 'Boleh — dah peered, jadi B boleh guna resource A termasuk NAT Gateway. Nampak betul sebab "peered = berkongsi".',
+                betul: 'TAK BOLEH. VPC Peering tak sokong edge-to-edge routing — B tak boleh guna NAT/IGW/VPN/DX milik A. VPC B kena ada NAT Gateway sendiri. Keyword "peered VPC share NAT/IGW" → tidak.',
+              },
+            ],
             scenario: '"Connect dua VPC" → VPC Peering. Ingat: IP ranges TAK BOLEH overlap! Non-transitive — A reach C kena buat A↔C peering sendiri. 3+ VPCs all-to-all = guna Transit Gateway.',
             tips: [
               'Non-transitive: A↔B dan B↔C, tapi A TIDAK reach C. Macam "kawan kawan bukan kawan aku"',
@@ -1701,6 +1793,22 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Connect 3+ VPCs dan on-premises networks melalui satu hub yang transitive',
             fungsi: 'TGW bertindak sebagai network transit hub yang boleh connect ribuan VPCs, VPNs, dan Direct Connect. Menggantikan peering mesh yang kompleks. TRANSITIVE — VPC A boleh reach VPC C melalui TGW tanpa A↔C peering. Tanpa TGW, 10 VPCs = n*(n-1)/2 = 45 peering connections.',
             contohGuna: 'Company ada 10 VPCs dari pelbagai teams + 2 on-premises data centers → satu TGW connect semua. Kos naik tapi operationally jauh lebih simple.',
+            sebabApa: 'Wujud sebab VPC Peering jadi mimpi ngeri bila VPC ramai — non-transitive, jadi 20 VPC full-mesh = 190 peering link untuk urus & route. TGW jadi HUB tengah: setiap VPC/VPN/Direct Connect "attach" sekali ke hub, dan hub uruskan routing transitif (A boleh capai C melalui hub tanpa link langsung). Tambah on-prem pun senang (attach VPN/DX ke hub). Tujuan: ganti peering mesh kompleks dengan satu hub yang scalable + sambung hybrid.',
+            sifir: [
+              'TGW = hub-and-spoke TRANSITIVE. Peering = 1-to-1 non-transitive',
+              '10 VPC: TGW = 10 attachment; Peering mesh = 45 link',
+              'TGW boleh attach VPN + Direct Connect → sambung on-prem ke hub (peering tak boleh)',
+              'TGW ada hourly fee per attachment + data processing. Peering takde hourly fee',
+              'ECMP untuk aggregate throughput VPN → TGW sahaja (VGW tak support ECMP)',
+              '2 VPC je → Peering (murah). 3+ all-to-all / hybrid → TGW',
+            ],
+            perangkap: [
+              {
+                soalan: 'Perlu naikkan throughput Site-to-Site VPN melebihi had ~1.25 Gbps satu tunnel, dengan agregat beberapa tunnel. Setup mana?',
+                jebakan: 'Sambung multiple VPN ke Virtual Private Gateway (VGW) dan biar ia agregat tunnel. Nampak betul sebab VGW memang endpoint VPN standard.',
+                betul: 'Multiple Site-to-Site VPN ke Transit Gateway dengan ECMP enabled. VGW TIDAK menyokong ECMP, jadi tak boleh agregat tunnel. Hanya TGW boleh ECMP untuk gabungkan bandwidth beberapa tunnel. Keyword "aggregate VPN throughput / ECMP" → Transit Gateway, bukan VGW.',
+              },
+            ],
             scenario: '"Many VPCs perlu communicate dengan satu sama lain" → Transit Gateway. "Hanya 2 VPCs" → VPC Peering (simpler, lebih murah). TGW = transitive, VPC Peering = non-transitive.',
             compare: {
               label: 'VPC Peering vs Transit Gateway',
