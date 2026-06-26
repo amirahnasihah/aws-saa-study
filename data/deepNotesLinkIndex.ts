@@ -5,14 +5,14 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "IAM & Identity",
     "sectionIcon": "🔑",
     "shortName": "IAM",
-    "searchBlob": "iam aws identity and access management users groups roles policies least privilege mfa principals identity federation mengurus identiti dan akses kepada perkhidmatan dan sumber aws dengan policies create iam role untuk ec2 boleh read s3 — attach role ke ec2, bukan hardcode credentials dalam code  iam & identity"
+    "searchBlob": "iam aws identity and access management users groups roles policies least privilege mfa principals identity federation iam role iam user iam group identity-based policy resource-based policy permission boundary scp explicit deny implicit deny policy evaluation service-linked role role chaining session policy cross-account access mengurus identiti dan akses kepada perkhidmatan dan sumber aws dengan policies create iam role untuk ec2 boleh read s3 — attach role ke ec2, bukan hardcode credentials dalam code \"app dalam ec2 perlu akses s3\" → iam role (bukan hardcode access keys). \"account a akses resource account b\" → assume role cross-account atau resource-based policy. \"hadkan permission maksimum developer walau admin bagi lebih\" → permissions boundary. \"sekat semua account dalam ou dari guna region tertentu\" → scp. \"explicit deny + allow pada action sama\" → denied. \"user luar login google/facebook nak akses\" → cognito/federation (bukan cipta iam user). keywords: least privilege, temporary credentials, cross-account, explicit deny, permission boundary. iam & identity"
   },
   {
     "sectionId": "d1-iam",
     "sectionTitle": "IAM & Identity",
     "sectionIcon": "🔑",
     "shortName": "STS",
-    "searchBlob": "sts aws security token service temporary credentials assumerole cross-account federation menyediakan credentials sementara (access key, secret key, session token) untuk access aws resources developer nak test dengan aws account lain — assumerole via sts, dapat temp credentials tanpa perlu iam user baru  iam & identity"
+    "searchBlob": "sts aws security token service temporary credentials assumerole assumerolewithsaml assumerolewithwebidentity getsessiontoken getfederationtoken cross-account role chaining session policy federation auto-expire bagi short-lived credentials (access key + secret key + session token) yang auto-expire. pilih api ikut siapa yang minta: assumerole (cross-account / ec2 role), assumerolewithsaml (enterprise ad/saml), assumerolewithwebidentity (google/facebook/cognito/oidc). tak perlu cipta iam user baru. app dalam account a nak akses s3 dalam account b — assumerole ke role dalam b, dapat temp credentials, tak perlu hardcode long-term keys  iam & identity"
   },
   {
     "sectionId": "d1-iam",
@@ -26,21 +26,21 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "IAM & Identity",
     "sectionIcon": "🔑",
     "shortName": "IAM Identity Center",
-    "searchBlob": "iam identity center aws iam identity center (sso) sso single sign-on multiple accounts federation saml 2.0 active directory saas integration ec2 windows fleet manager membolehkan pengguna login sekali dan access multiple aws accounts dan business applications staff login dengan corporate email (microsoft ad / okta), dapat access semua 10 aws accounts yang dibenarkan tanpa login semula  iam & identity"
+    "searchBlob": "iam identity center aws iam identity center (sso) sso single sign-on multiple accounts federation saml 2.0 active directory saas integration ec2 windows fleet manager permission set account assignment access portal temporary credentials workforce identity okta entra id pricing membolehkan pengguna login sekali dan access multiple aws accounts dan business applications staff login dengan corporate email (microsoft ad / okta), dapat access semua 10 aws accounts yang dibenarkan tanpa login semula  iam & identity"
   },
   {
     "sectionId": "d1-iam",
     "sectionTitle": "IAM & Identity",
     "sectionIcon": "🔑",
     "shortName": "Penetration Testing",
-    "searchBlob": "penetration testing aws penetration testing policy penetration testing security assessment acceptable use policy aup no prior approval 8 services prohibited activities aws membenarkan pelanggan menjalankan security assessments atau penetration tests terhadap infrastruktur aws mereka sendiri tanpa kelulusan awal untuk 8 perkhidmatan yang dibenarkan. activities yang dilarang termasuk dos/ddos simulation, port flooding, dan dns zone walking. security team nak test ec2 instances atau rds databases untuk vulnerabilities — dibenarkan tanpa minta izin aws terlebih dahulu. \"aws acceptable use policy\", \"penetration testing position\", \"security assessments on aws\" → aws allow for some resources without prior authorization (not all, not none). 8 permitted services include ec2, rds, cloudfront, aurora, api gateways, lambda, lightsail, elastic beanstalk. iam & identity"
+    "searchBlob": "penetration testing aws penetration testing policy penetration testing security assessment acceptable use policy aup no prior approval 8 services prohibited activities dos ddos prohibited dns zone walking aws membenarkan pelanggan menjalankan security assessments atau penetration tests terhadap infrastruktur aws mereka sendiri tanpa kelulusan awal untuk 8 perkhidmatan yang dibenarkan. activities yang dilarang termasuk dos/ddos simulation, port flooding, dan dns zone walking. security team nak test ec2 instances atau rds databases untuk vulnerabilities — dibenarkan tanpa minta izin aws terlebih dahulu. \"aws acceptable use policy\", \"penetration testing position\", \"security assessments on aws\" → aws allow for some resources without prior authorization (not all, not none). 8 permitted services include ec2, rds, cloudfront, aurora, api gateways, lambda, lightsail, elastic beanstalk. iam & identity"
   },
   {
     "sectionId": "d1-iam",
     "sectionTitle": "IAM & Identity",
     "sectionIcon": "🔑",
     "shortName": "Cognito",
-    "searchBlob": "cognito amazon cognito user pools identity pools oauth jwt federated identity mfa user auth untuk web/mobile apps. user pools (authentication) vs identity pools (aws credentials).  \"web app perlu user registration dan login\" → cognito user pools. \"mobile app user perlu access s3 directly\" → identity pool untuk temp aws credentials. iam & identity"
+    "searchBlob": "cognito amazon cognito user pools identity pools oauth jwt federated identity mfa sts temp credentials oidc saml authentication authorization guest access identity platform untuk web/mobile apps. dua komponen yang operate independent atau bersama: user pools (authentication — siapa user, issue jwt) vs identity pools (authorization — tukar token jadi temp aws credentials via sts).   iam & identity"
   },
   {
     "sectionId": "d1-iam",
@@ -54,7 +54,7 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "IAM & Identity",
     "sectionIcon": "🔑",
     "shortName": "AWS Organizations",
-    "searchBlob": "aws organizations aws organizations + control tower + scps multi-account scps guardrails control tower management account ou management account exemption scp cannot grant s3 block public access scp mengurus pelbagai aws accounts dalam satu organisasi dengan service control policies (scps) sebagai guardrails prevent semua dev accounts dari disable cloudtrail — scp: deny cloudtrail:stoplogging. control tower automate setup multi-account environment  iam & identity"
+    "searchBlob": "aws organizations aws organizations + control tower + scps multi-account scps guardrails control tower management account ou management account exemption scp cannot grant s3 block public access scp pricing free consolidated billing volume discount mengurus pelbagai aws accounts dalam satu organisasi dengan service control policies (scps) sebagai guardrails prevent semua dev accounts dari disable cloudtrail — scp: deny cloudtrail:stoplogging. control tower automate setup multi-account environment \"restrict apa member accounts boleh buat org-wide, exempt management account\" → scp (member accounts only). \"enforce guardrails + auto setup landing zone / multi-account baseline\" → control tower. \"satu bil + kongsi diskaun\" → consolidated billing (bukan scp). ingat: scp restrict sahaja, tak grant. iam & identity"
   },
   {
     "sectionId": "d1-netsec",
@@ -68,7 +68,7 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Network Security",
     "sectionIcon": "🛡️",
     "shortName": "NACLs",
-    "searchBlob": "nacls network access control lists stateless subnet-level allow & deny numbered rules explicit both ways mengawal traffic masuk dan keluar subnet secara stateless — kena ada rule eksplisit untuk inbound dan outbound block ip range 192.168.1.0/24 dari masuk subnet — tambah deny rule dalam nacl (security groups tak boleh explicitly deny)  network security"
+    "searchBlob": "nacls network access control lists stateless subnet-level allow & deny numbered rules explicit both ways ephemeral ports explicit deny block ip sg vs nacl mengawal traffic masuk dan keluar subnet secara stateless — kena ada rule eksplisit untuk inbound dan outbound. rules diproses ikut nombor (rendah → tinggi); rule pertama yang match terus apply. boleh allow dan deny (tak macam sg yang allow-only). custom nacl: deny all by default. default nacl: allow all. block ip range 192.168.1.0/24 dari masuk subnet — tambah deny rule dalam nacl (security groups tak boleh explicitly deny). \"block satu malicious ip daripada akses semua instance dalam subnet\" → nacl deny rule (sg tak boleh deny). \"allow/deny per ec2 ikut role\" → security group. exam keyword \"explicit deny\" atau \"block specific ip\" hampir selalu = nacl. network security"
   },
   {
     "sectionId": "d1-netsec",
@@ -89,14 +89,21 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Network Security",
     "sectionIcon": "🛡️",
     "shortName": "Network Firewall",
-    "searchBlob": "network firewall aws network firewall deep packet inspection stateful vpc-level intrusion prevention domain filtering menyediakan firewall managed untuk inspect dan filter traffic dalam vpc dengan stateful rules dan intrusion prevention company policy semua outbound traffic kena inspect untuk block malicious domains — deploy network firewall kat centralized vpc, route semua traffic melaluinya  network security"
+    "searchBlob": "network firewall aws network firewall deep packet inspection stateful stateless vpc-level intrusion prevention ids/ips domain filtering suricata egress filtering firewall subnet managed firewall managed network firewall + ids/ips untuk vpc. ada dua engine: stateless engine (macam nacl, nilai packet sorang-sorang ikut priority) dan stateful engine (guna suricata-compatible rules, nilai dalam konteks traffic flow). boleh buat domain/url filtering, intrusion prevention, dan filter traffic layer 3 sampai 7. deploy dalam dedicated firewall subnet, route traffic vpc melaluinya. company policy: semua outbound traffic kena inspect dan block malicious/unapproved domains — deploy network firewall kat centralized inspection vpc, route semua traffic melaluinya guna stateful domain-list rules. \"filter outbound traffic ikut domain name (allow *.amazonaws.com je), vpc-wide, managed\" → aws network firewall. \"block sqli/xss pada http request ke website\" → waf (bukan network firewall). \"ddos volumetric\" → shield. network firewall = traffic dalam/keluar vpc, bukan khusus web app. network security"
+  },
+  {
+    "sectionId": "d1-netsec",
+    "sectionTitle": "Network Security",
+    "sectionIcon": "🛡️",
+    "shortName": "VPC Flow Logs",
+    "searchBlob": "vpc flow logs vpc flow logs vpc flow logs network monitoring accept reject metadata cloudwatch logs s3 data firehose athena troubleshoot sg nacl security analysis traffic mirroring aggregation interval eni subnet level guardduty source rakam metadata traffic (srcaddr, dstaddr, src/dst port, protocol, packets, bytes, action accept/reject, log-status) untuk traffic masuk/keluar network interfaces — bukan isi packet (payload). boleh enable pada 3 level: vpc (semua eni), subnet, atau satu eni. dihantar ke cloudwatch logs, s3, atau data firehose. dikumpul di luar path network → tiada kesan pada throughput/latency.  \"ec2 dalam private subnet tak boleh terima traffic, nak tahu sg atau nacl yang block\" → enable vpc flow logs, cari record dengan action = reject. inbound reject = sesuatu blocking. nak actual packet content (ids/forensics deep inspection)? → traffic mirroring, bukan flow logs. network security"
   },
   {
     "sectionId": "d1-netsec",
     "sectionTitle": "Network Security",
     "sectionIcon": "🛡️",
     "shortName": "GuardDuty",
-    "searchBlob": "guardduty amazon guardduty threat detection ml cloudtrail logs vpc flow logs no agents findings s3 protection management events data events object-level api pengesanan ancaman menggunakan ml pada cloudtrail, vpc flow logs, dns logs.  \"ec2 buat unusual api calls ke cryptocurrency mining\" → guardduty detect and alert. tak perlu install agents. network security"
+    "searchBlob": "guardduty amazon guardduty threat detection ml cloudtrail logs vpc flow logs no agents findings s3 protection management events data events object-level api security hub detective cspm pengesanan ancaman menggunakan ml pada cloudtrail, vpc flow logs, dns logs.  \"ec2 buat unusual api calls ke cryptocurrency mining\" → guardduty detect and alert. tak perlu install agents. network security"
   },
   {
     "sectionId": "d1-netsec",
@@ -110,7 +117,7 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Network Security",
     "sectionIcon": "🛡️",
     "shortName": "Inspector",
-    "searchBlob": "inspector amazon inspector vulnerability scanning cve ec2 ecr automated security findings pengimbasan kelemahan automatik untuk ec2 dan container images.  \"audit ec2 instances untuk known cves dan security misconfigurations\" → amazon inspector. bukan guardduty (yang untuk active threats). network security"
+    "searchBlob": "inspector amazon inspector vulnerability scanning cve ec2 ecr lambda continuous network reachability package vulnerability automated security findings ssm agent agentless pengimbasan kelemahan automatik dan berterusan untuk ec2, ecr container images, dan lambda. detect cves, os + programming-language package vulnerabilities, dan unintended network exposure / network reachability. auto re-scan bila cve baru keluar atau image/function berubah. aktif sekali → semua scan type auto-on (lambda code scanning optional).  \"audit ec2 instances untuk known cves dan security misconfigurations\" → amazon inspector. \"scan container image dalam ecr sebelum deploy untuk vulnerability\" → inspector ecr scanning. bukan guardduty (yang untuk active threats dari logs). network security"
   },
   {
     "sectionId": "d1-netsec",
@@ -131,28 +138,28 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Data Protection",
     "sectionIcon": "🔐",
     "shortName": "KMS",
-    "searchBlob": "kms aws key management service encryption at rest cmk key rotation sse-kms envelope encryption cloudtrail audit asymmetric keys digital signing multi-region keys aws:sourcevpce mencipta dan mengurus cryptographic keys untuk encrypt/decrypt data di pelbagai aws services encrypt s3, rds, ebs — enable sse-kms. semua penggunaan key di-audit dalam cloudtrail. kms key rotation auto setahun sekali  data protection"
+    "searchBlob": "kms aws key management service encryption at rest cmk key rotation sse-kms envelope encryption cloudtrail audit asymmetric keys digital signing multi-region keys aws:sourcevpce cloudhsm fips 140-2 single-tenant custom key store mencipta dan mengurus cryptographic keys untuk encrypt/decrypt data di pelbagai aws services encrypt s3, rds, ebs — enable sse-kms. semua penggunaan key di-audit dalam cloudtrail. kms key rotation auto setahun sekali  data protection"
   },
   {
     "sectionId": "d1-data",
     "sectionTitle": "Data Protection",
     "sectionIcon": "🔐",
     "shortName": "Secrets Manager",
-    "searchBlob": "secrets manager aws secrets manager auto-rotation credentials api keys no hardcoded secrets lambda integration menyimpan, mendapatkan semula dan memutar rahsia secara automatik tanpa perlu update aplikasi lambda function perlu db password — jangan letak dalam env var atau code. store dalam secrets manager, lambda retrieve masa runtime. auto-rotate setiap 30 hari  data protection"
+    "searchBlob": "secrets manager aws secrets manager auto-rotation credentials api keys no hardcoded secrets lambda integration parameter store securestring cross-region replication kms menyimpan, mendapatkan semula dan memutar rahsia secara automatik tanpa perlu update aplikasi lambda function perlu db password — jangan letak dalam env var atau code. store dalam secrets manager, lambda retrieve masa runtime. auto-rotate setiap 30 hari  data protection"
   },
   {
     "sectionId": "d1-data",
     "sectionTitle": "Data Protection",
     "sectionIcon": "🔐",
     "shortName": "S3 Object Lock",
-    "searchBlob": "s3 object lock amazon s3 object lock worm compliance retention period governance mode compliance mode legal hold menghalang objek s3 dari dihapuskan atau diubah suai dalam tempoh tertentu untuk pematuhan kawal selia financial records kena simpan 7 tahun tak boleh diubah — enable object lock compliance mode. governance mode untuk internal policy yang admin boleh override  data protection"
+    "searchBlob": "s3 object lock amazon s3 object lock worm compliance retention period governance mode compliance mode legal hold versioning required bypassgovernanceretention immutable sec 17a-4 finra retain until date menghalang objek s3 dari dipadam atau di-overwrite untuk tempoh tetap (retention period) atau selamanya (legal hold) — worm model untuk pematuhan kawal selia. wajib versioning on pada bucket. financial records kena simpan 7 tahun tak boleh diubah — enable object lock compliance mode + retention period 7 tahun. governance mode untuk internal policy yang admin boleh override. \"records mesti immutable, takde sesiapa termasuk root boleh padam dalam tempoh retention\" → compliance mode. \"admin tertentu masih perlu boleh override/padam\" → governance mode (perlu s3:bypassgovernanceretention). \"hold tanpa tarikh tamat sampai siasatan selesai\" → legal hold. data protection"
   },
   {
     "sectionId": "d1-data",
     "sectionTitle": "Data Protection",
     "sectionIcon": "🔐",
     "shortName": "S3 Glacier Vault",
-    "searchBlob": "s3 glacier vault amazon s3 glacier vault lock & access policy vault lock vault access policy worm compliance immutable retention glacier archive dua policies berbeza: (1) vault lock policy = immutable selepas locked, enforce compliance controls (worm, retention). cannot be changed. (2) vault access policy = mutable, untuk access control (siapa boleh access). untuk compliance = vault lock.   data protection"
+    "searchBlob": "s3 glacier vault amazon s3 glacier vault lock & access policy vault lock vault access policy worm compliance immutable retention glacier archive in-progress state 24-hour window lock id two-step lock dua policies berbeza: (1) vault lock policy = immutable selepas locked, enforce compliance controls (worm, retention). cannot be changed. (2) vault access policy = mutable, untuk access control (siapa boleh access). untuk compliance = vault lock. nota: glacier vault (standalone) sekarang legacy — aws galak guna s3 glacier storage classes untuk arkib baru.  \"lock retention policy supaya takde sesiapa boleh ubah/padam archive untuk compliance\" → vault lock policy. \"grant business partner read access yang boleh berubah-ubah\" → vault access policy. \"legal hold tanpa tarikh tamat\" → bukan glacier, itu s3 object lock feature. data protection"
   },
   {
     "sectionId": "d1-data",
@@ -166,14 +173,14 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Data Protection",
     "sectionIcon": "🔐",
     "shortName": "CloudTrail",
-    "searchBlob": "cloudtrail aws cloudtrail api audit who did what compliance forensics account activity 90-day retention cloudtrail lake sql query long-term retention 7 years management events data events control plane data plane s3 object-level lambda invocations multi-region trail insight events merekod setiap api call dalam aws account: siapa buat, bila, dari mana, apa hasilnya. default simpan 90 hari. boleh hantar ke s3 untuk long-term retention. security team nak tau siapa delete s3 bucket semalam — cloudtrail log ada: user, timestamp, source ip, action. \"who deleted this resource?\", \"compliance audit log of all api activity\" → cloudtrail. bukan cloudwatch (yang untuk metrics/logs dari apps). cloudtrail = who did what. cloudwatch = what is happening now. data protection"
+    "searchBlob": "cloudtrail aws cloudtrail api audit who did what compliance forensics account activity 90-day retention cloudtrail lake sql query long-term retention 7 years management events data events control plane data plane s3 object-level lambda invocations multi-region trail insight events vs cloudwatch vs config merekod setiap api call dalam aws account: siapa buat, bila, dari mana, apa hasilnya. default simpan 90 hari. boleh hantar ke s3 untuk long-term retention. security team nak tau siapa delete s3 bucket semalam — cloudtrail log ada: user, timestamp, source ip, action. \"who deleted this resource?\", \"compliance audit log of all api activity\" → cloudtrail. bukan cloudwatch (yang untuk metrics/logs dari apps). cloudtrail = who did what. cloudwatch = what is happening now. data protection"
   },
   {
     "sectionId": "d1-data",
     "sectionTitle": "Data Protection",
     "sectionIcon": "🔐",
     "shortName": "ACM",
-    "searchBlob": "acm aws certificate manager ssl tls https free certificate auto-renewal alb cloudfront api gateway dns validation email validation pending validation menyediakan, mengurus dan auto-renew ssl/tls certificates secara percuma. attach terus ke alb, cloudfront, atau api gateway. cert tidak boleh di-export dari acm untuk install sendiri dalam ec2.  \"website perlu https\" → request acm cert, attach ke alb atau cloudfront (free). ingat: acm certs tak boleh export untuk pakai dalam ec2 sendiri — untuk tu kena beli cert luar. data protection"
+    "searchBlob": "acm aws certificate manager ssl tls https free certificate auto-renewal alb cloudfront api gateway dns validation email validation pending validation us-east-1 n. virginia acm private ca private pki imported certificate cannot export pricing menyediakan, mengurus dan auto-renew ssl/tls certificates secara percuma. attach terus ke alb, cloudfront, atau api gateway. cert tidak boleh di-export dari acm untuk install sendiri dalam ec2.  \"website perlu https percuma + auto-renew\" → acm public cert, attach ke alb/cloudfront/api gw. \"cloudfront cert tak muncul dalam dropdown\" → cert bukan di us-east-1. \"internal microservices perlu mutual tls / private trust\" → acm private ca. \"dah beli cert dari digicert nak guna kat alb\" → import ke acm. ingat: acm public certs tak boleh export untuk ec2 sendiri. data protection"
   },
   {
     "sectionId": "d1-data",
@@ -187,14 +194,14 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Connectivity",
     "sectionIcon": "🔗",
     "shortName": "Direct Connect",
-    "searchBlob": "direct connect aws direct connect dedicated connection private consistent latency 1gbps/10gbps no internet menyediakan sambungan jaringan peribadi yang berdedikasi antara data center on-premises dengan aws company transfer 100tb data sebulan dari on-prem ke aws — direct connect lebih murah (no internet data transfer charges), consistent latency berbanding internet  connectivity"
+    "searchBlob": "direct connect aws direct connect dedicated connection private consistent latency 1gbps/10gbps no internet vs vpn ipsec backup data transfer cost direct connect gateway not encrypted vpn over dx public vif private vif menyediakan sambungan jaringan peribadi yang berdedikasi antara data center on-premises dengan aws melalui fiber-optic cable di direct connect location (bypass internet/isp). private vif → access vpc. public vif → access public aws services (s3) guna private line. nota: dx tidak encrypted by default — kalau perlu encryption, run vpn over dx (ipsec). company transfer 100tb data sebulan dari on-prem ke aws — direct connect lebih murah (no internet data transfer charges), consistent latency berbanding internet \"steady high-volume transfer + consistent low latency + predictable bandwidth\" → direct connect. \"dx kena encrypted juga (compliance)\" → dx + site-to-site vpn (run ipsec over dx). \"connect dx ke banyak vpc merentas region/account\" → direct connect gateway (global resource). connectivity"
   },
   {
     "sectionId": "d1-connect",
     "sectionTitle": "Connectivity",
     "sectionIcon": "🔗",
     "shortName": "Site-to-Site VPN",
-    "searchBlob": "site-to-site vpn aws site-to-site vpn ipsec encrypted internet-based virtual private gateway quick setup cost-effective mewujudkan sambungan vpn yang disulitkan antara on-premises network dengan aws vpc menggunakan internet sedia ada small office nak access resources dalam vpc secara selamat — setup site-to-site vpn. lebih murah dan cepat setup dari direct connect tapi latency tak konsisten  connectivity"
+    "searchBlob": "site-to-site vpn aws site-to-site vpn ipsec encrypted internet-based virtual private gateway customer gateway transit gateway two tunnels quick setup cost-effective network to network dx backup bgp vs client vpn mewujudkan sambungan ipsec yang disulitkan antara seluruh on-premises network dengan aws vpc menggunakan internet sedia ada. dua komponen: customer gateway (cgw = device/info kat sebelah kau) + target gateway kat aws — sama ada virtual private gateway (vgw, attach ke 1 vpc) atau transit gateway (banyak vpc). setiap vpn connection ada 2 tunnels untuk high availability. routing: static atau dynamic (bgp). small office nak access resources dalam vpc secara selamat — setup site-to-site vpn. lebih murah dan cepat setup dari direct connect tapi latency tak konsisten (ikut internet) \"connect entire branch/office network ke vpc, encrypted, cepat & murah\" → site-to-site vpn. \"backup untuk direct connect\" → site-to-site vpn as failover. \"individual remote workers (laptop) nak access vpc\" → itu client vpn, bukan site-to-site. connectivity"
   },
   {
     "sectionId": "d1-connect",
@@ -264,7 +271,7 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "VPC & Networking",
     "sectionIcon": "🏘️",
     "shortName": "VPC Endpoints",
-    "searchBlob": "vpc endpoints vpc endpoints (gateway & interface) vpc endpoint gateway endpoint interface endpoint privatelink s3 dynamodb no internet free dua jenis: gateway endpoint (s3 + dynamodb, free, guna route table) dan interface endpoint (services lain via privatelink, ada eni dalam subnet, berbayar). traffic tak keluar ke internet langsung — lebih selamat dan murah (jimat nat gw data fees). ec2 private subnet banyak upload ke s3. tanpa endpoint: bayar nat gw per gb. dengan s3 gateway endpoint (free): traffic terus dalam aws network. \"access s3/dynamodb dari private subnet tanpa internet\" → gateway vpc endpoint (free). \"access ecr, ssm, atau services lain privately\" → interface endpoint (privatelink). vpc & networking"
+    "searchBlob": "vpc endpoints vpc endpoints (gateway & interface) vpc endpoint gateway endpoint interface endpoint privatelink s3 dynamodb no internet free aws:sourcevpce bucket policy nat gateway denied aws:sourcevpc dua jenis: gateway endpoint (s3 + dynamodb, free, guna route table) dan interface endpoint (services lain via privatelink, ada eni dalam subnet, berbayar). traffic tak keluar ke internet langsung — lebih selamat dan murah (jimat nat gw data fees). ec2 private subnet banyak upload ke s3. tanpa endpoint: bayar nat gw per gb. dengan s3 gateway endpoint (free): traffic terus dalam aws network. \"access s3/dynamodb dari private subnet tanpa internet\" → gateway vpc endpoint (free). \"access ecr, ssm, atau services lain privately\" → interface endpoint (privatelink). vpc & networking"
   },
   {
     "sectionId": "d2-ha",
@@ -292,7 +299,7 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "High Availability & Scaling",
     "sectionIcon": "⚡",
     "shortName": "RDS Proxy",
-    "searchBlob": "rds proxy amazon rds proxy connection pooling too many connections lambda scaling idle connections connection multiplexing rds proxy duduk antara application dan rds, multiplex connections. bila lambda scale up kepada 1000 instances, rds proxy pool connections — rds hanya nampak bilangan connections yang manageable. mengatasi \"too many connections\" errors.  \"lambda functions causing too many rds connections\" → rds proxy. \"idle connections from auto scaling ec2\" → rds proxy. read replicas = read scaling. multi-az = ha. rds proxy = connection management. high availability & scaling"
+    "searchBlob": "rds proxy amazon rds proxy connection pooling too many connections lambda scaling idle connections connection multiplexing faster failover iam authentication secrets manager rds proxy duduk antara application dan rds, multiplex connections. bila lambda scale up kepada 1000 instances, rds proxy pool connections — rds hanya nampak bilangan connections yang manageable. mengatasi \"too many connections\" errors.  \"lambda functions causing too many rds connections\" → rds proxy. \"idle connections from auto scaling ec2\" → rds proxy. read replicas = read scaling. multi-az = ha. rds proxy = connection management. high availability & scaling"
   },
   {
     "sectionId": "d2-ha",
@@ -327,14 +334,14 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "High Availability & Scaling",
     "sectionIcon": "⚡",
     "shortName": "DAX",
-    "searchBlob": "dax amazon dynamodb accelerator (dax) dynamodb accelerator microsecond latency in-memory cache read caching drop-in compatible fully managed, highly available in-memory cache khusus untuk dynamodb. drop-in compatible — tak perlu tukar application logic, cuma point ke dax endpoint. hanya cache read operations (getitem, query, scan).  \"dynamodb read latency perlu microseconds, bukan milliseconds\" → dax. \"cache untuk rds/aurora\" → elasticache, bukan dax (dax khusus dynamodb sahaja). high availability & scaling"
+    "searchBlob": "dax amazon dynamodb accelerator (dax) dynamodb accelerator microsecond latency in-memory cache read caching drop-in compatible dax vs elasticache fully managed, highly available in-memory cache khusus untuk dynamodb. drop-in compatible — tak perlu tukar application logic, cuma point ke dax endpoint. hanya cache read operations (getitem, query, scan).  \"dynamodb read latency perlu microseconds, bukan milliseconds\" → dax. \"cache untuk rds/aurora\" → elasticache, bukan dax (dax khusus dynamodb sahaja). high availability & scaling"
   },
   {
     "sectionId": "d2-dr",
     "sectionTitle": "Disaster Recovery Patterns",
     "sectionIcon": "🔄",
     "shortName": "Backup & Restore",
-    "searchBlob": "backup & restore dr pattern: backup & restore rpo: hours/days rto: hours lowest cost no standby infra s3/glacier backup strategi dr paling asas — backup data ke s3/glacier, restore bila diperlukan. tiada infrastruktur standby di dr region  non-critical archival system — backup snapshots ke s3/glacier regularly. rpo: hours/days. rto: hours. paling murah tapi paling lambat recover. guna bila downtime beberapa jam boleh diterima. disaster recovery patterns"
+    "searchBlob": "backup & restore dr pattern: backup & restore rpo: hours/days rto: hours lowest cost no standby infra s3/glacier backup dr spectrum pilot light warm standby multi-site strategi dr paling asas — backup data ke s3/glacier, restore bila diperlukan. tiada infrastruktur standby di dr region  non-critical archival system — backup snapshots ke s3/glacier regularly. rpo: hours/days. rto: hours. paling murah tapi paling lambat recover. guna bila downtime beberapa jam boleh diterima. disaster recovery patterns"
   },
   {
     "sectionId": "d2-dr",
@@ -446,35 +453,35 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Compute",
     "sectionIcon": "🖥️",
     "shortName": "EC2",
-    "searchBlob": "ec2 elastic compute cloud full control custom os lift and shift menyediakan kapasiti compute yang boleh diubah saiz dalam cloud host web server, run database, legacy app migration  compute"
+    "searchBlob": "ec2 elastic compute cloud full control custom os lift and shift placement groups cluster/partition/spread pricing per-second billing per-hour windows on-demand cost reserved discount dedicated host billing menyediakan kapasiti compute yang boleh diubah saiz dalam cloud host web server, run database, legacy app migration  compute"
   },
   {
     "sectionId": "d3-compute",
     "sectionTitle": "Compute",
     "sectionIcon": "🖥️",
     "shortName": "Lambda",
-    "searchBlob": "lambda aws lambda serverless event-driven no server management melaksanakan kod tanpa perlu mengurus server resize image bila upload ke s3, webhook handler, scheduled tasks  compute"
+    "searchBlob": "lambda aws lambda serverless event-driven 15-min max reserved concurrency provisioned concurrency cold start melaksanakan kod tanpa perlu mengurus server resize image bila upload ke s3, webhook handler, scheduled tasks sebut \"predictable spike, mesti respond cepat tanpa cold start\" → provisioned concurrency. sebut \"satu function jangan habiskan semua kuota / jamin kuota function kritikal\" → reserved concurrency. sebut \"job ambil masa lebih 15 minit\" → lambda tak sesuai (guna fargate/batch/step functions). compute"
   },
   {
     "sectionId": "d3-compute",
     "sectionTitle": "Compute",
     "sectionIcon": "🖥️",
     "shortName": "Elastic Beanstalk",
-    "searchBlob": "elastic beanstalk aws elastic beanstalk paas deploy app developer friendly mengurus deployment, scaling dan monitoring aplikasi secara automatik deploy node.js / python app tanpa urus ec2 sendiri  compute"
+    "searchBlob": "elastic beanstalk aws elastic beanstalk paas deploy app developer friendly auto ec2+alb+asg free service mengurus deployment, scaling dan monitoring aplikasi secara automatik deploy node.js / python app tanpa urus ec2 sendiri sebut \"developer nak deploy web app cepat, ada ci/cd, tak nak urus infra tapi masih nak kawalan ke atas ec2/scaling\" → elastic beanstalk. \"fully serverless, no server langsung\" → lambda/fargate. \"attach disk ke ec2\" → itu ebs, bukan beanstalk. compute"
   },
   {
     "sectionId": "d3-compute",
     "sectionTitle": "Compute",
     "sectionIcon": "🖥️",
     "shortName": "ECS",
-    "searchBlob": "ecs elastic container service docker containers microservices task definition json template fargate ec2 launch type service mengurus dan menjalankan docker containers pada cluster run microservices dalam docker, e-commerce modules  compute"
+    "searchBlob": "ecs elastic container service docker containers microservices task definition json template fargate ec2 launch type service task cluster task role task execution role per-task iam binpack spread random task placement desired count mengurus dan menjalankan docker containers pada cluster. hierarki: cluster (pool capacity) → service (jaga desired count) → task (satu running unit) yang dicetak dari task definition (blueprint json). dua launch type: ec2 (kau urus instances) atau fargate (serverless). run microservices dalam docker, e-commerce modules \"best describes a task definition\" → json blueprint/template yang describe containers (image, cpu, memory, ports). \"container app perlu akses s3 dengan least privilege\" → task role (per-task iam). \"task tak boleh pull image dari ecr\" → task execution role rosak. \"maintain n running copies + auto-restart\" → service. \"run container least ops, no servers\" → fargate. \"pack tasks jimat kos\" → binpack; \"sebar az untuk ha\" → spread. compute"
   },
   {
     "sectionId": "d3-compute",
     "sectionTitle": "Compute",
     "sectionIcon": "🖥️",
     "shortName": "EKS",
-    "searchBlob": "eks elastic kubernetes service kubernetes k8s container orchestration irsa iam roles for service accounts pod identity mengurus kubernetes cluster untuk container orchestration large-scale containerized apps yang guna k8s  compute"
+    "searchBlob": "eks elastic kubernetes service kubernetes k8s container orchestration irsa iam roles for service accounts pod identity ecs vs eks control plane cost mengurus kubernetes cluster untuk container orchestration large-scale containerized apps yang guna k8s \"dah ada kubernetes skill/yaml/helm, nak portable across cloud\" → eks (bukan ecs). \"just run containers, aws-only, least learning\" → ecs. \"eks pods access aws tanpa simpan credentials\" → irsa. \"k8s control plane managed tapi nak run on-prem consistent\" → eks anywhere. nota: control plane eks ada kos (~$0.10/jam/cluster); ecs control plane percuma. compute"
   },
   {
     "sectionId": "d3-compute",
@@ -516,28 +523,56 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Compute",
     "sectionIcon": "🖥️",
     "shortName": "AWS Batch",
-    "searchBlob": "aws batch aws batch aws batch batch computing managed job queue ec2 fleet replace third-party aws batch menguruskan semua infrastruktur untuk batch jobs: provision compute resources yang sesuai, schedule jobs dalam queues, monitor dan scale ec2 fleet secara automatik. menggantikan third-party batch software seperti pbs, slurm, lsf.  \"company guna third-party software untuk manage ec2 fleet untuk batch jobs, nak switch ke aws managed service\" → aws batch. compute"
+    "searchBlob": "aws batch aws batch aws batch batch computing long-running job managed job queue job definition compute environment ec2 fleet fargate spot run to completion replace third-party pricing aws batch menguruskan semua infrastruktur untuk batch jobs: provision compute resources yang sesuai, schedule jobs dalam queues, monitor dan scale fleet secara automatik, kemudian bubar bila kerja habis. tiada had masa macam lambda — sesuai untuk job berjam-jam (rendering, genomics, etl berat, simulation). menggantikan third-party batch software seperti pbs, slurm, lsf.  \"company guna third-party software (slurm/lsf/pbs) untuk manage ec2 fleet untuk batch jobs, nak switch ke aws managed service\" → aws batch. \"job genomics/rendering/simulation berjam-jam, banyak job beratur\" → aws batch. \"lebih 15 minit tapi satu container je\" → fargate (bukan lambda). compute"
   },
   {
     "sectionId": "d3-compute",
     "sectionTitle": "Compute",
     "sectionIcon": "🖥️",
     "shortName": "Fargate",
-    "searchBlob": "fargate aws fargate serverless containers ecs eks no ec2 management pay per vcpu/memory zero infra fargate adalah serverless compute engine untuk ecs dan eks. kau define cpu/memory per task, fargate provision dan manage compute automatically. bayar per vcpu/memory per second.  \"run containers without managing ec2 instances\" → fargate. ecs on ec2 = kau manage ec2 (patching, scaling). ecs/eks on fargate = aws manage compute. fargate lagi mahal tapi zero infra management. compute"
+    "searchBlob": "fargate aws fargate serverless containers ecs eks no ec2 management pay per vcpu/memory fargate spot vs lambda no time limit fargate = serverless compute engine untuk container (ecs & eks). kau bungkus app dalam docker image, set cpu + memory per task, define networking + iam — fargate yang provision, run, patch & scale compute secara automatik. tiada ec2 instance untuk kau urus. tiap task ada isolation sendiri (tak kongsi kernel/cpu/memory/eni dengan task lain). bayar per vcpu + memory per saat masa task running.  \"migrate docker app ke aws, run berterusan, tak nak urus ec2 langsung\" → ecs/eks on fargate. \"job ambil masa >15 minit\" → fargate (bukan lambda). \"resize image bila upload s3\" → lambda (event pendek). \"perlu gpu / fleet besar 24/7 paling murah\" → ecs on ec2. compute"
   },
   {
     "sectionId": "d3-compute",
     "sectionTitle": "Compute",
     "sectionIcon": "🖥️",
     "shortName": "ECR",
-    "searchBlob": "ecr amazon elastic container registry container registry docker images private registry iam integration vulnerability scanning ecs eks fully managed private container registry. integrated dengan iam untuk access control. images boleh di-scan secara automatik untuk vulnerabilities. native integration dengan ecs, eks, dan fargate.  \"store container images untuk ecs/eks deployment\" → ecr. bukan docker hub (public). ecr = private, iam-controlled, vulnerability scanning built-in. images auto-encrypt at rest dengan kms. compute"
+    "searchBlob": "ecr amazon elastic container registry container registry docker images private registry iam integration image scanning lifecycle policy kms ecs eks fully managed private container registry. simpan & version docker/oci images. integrate dengan iam untuk access control, auto-scan vulnerability, encrypt at rest (kms). native dengan ecs, eks, dan fargate.  \"store container images untuk ecs/eks deployment\" → ecr. bukan docker hub (public). ecr = private, iam-controlled, vulnerability scanning built-in. images auto-encrypt at rest dengan kms. compute"
+  },
+  {
+    "sectionId": "d3-compute",
+    "sectionTitle": "Compute",
+    "sectionIcon": "🖥️",
+    "shortName": "Instance Store",
+    "searchBlob": "instance store amazon ec2 instance store ephemeral temporary storage high iops nvme scratch disk data lost on stop physically attached no snapshot free hpc big data shuffle space instance store adalah ephemeral disk yang fizikal berada pada host server ec2. performance paling tinggi (nvme, iops jutaan) sebab tak melalui network macam ebs. tapi data hilang bila instance stop, terminate, atau fail — ia tak persistent. tak boleh detach, tak boleh snapshot, tak boleh recover. scratch disk untuk hpc/big data processing, temporary cache, buffer, shuffle space untuk spark/hadoop \"hpc workload perlu jutaan iops untuk scratch space, data boleh hilang takpe\" → instance store. \"database storage mesti survive instance failure\" → ebs (bukan instance store). \"cache yang boleh rebuild kalau hilang\" → instance store. compute"
+  },
+  {
+    "sectionId": "d3-compute",
+    "sectionTitle": "Compute",
+    "sectionIcon": "🖥️",
+    "shortName": "ENI/ENA/EFA",
+    "searchBlob": "eni/ena/efa ec2 network interfaces — eni · ena · efa eni ena efa network interface virtual nic os-bypass libfabric mpi hpc networking low latency failover ip detach attach 100 gbps placement group cluster tiga jenis network \"kad\" pada ec2: eni (elastic network interface) = kad network virtual standard, ena (elastic network adapter) = driver untuk network performance tinggi, efa (elastic fabric adapter) = kad network special untuk hpc dengan os-bypass.  \"hpc cluster dengan mpi, perlu lowest latency inter-node\" → efa. \"failover ip — pindah eni dari ec2 mati ke ec2 baru\" → eni. \"app biasa perlukan network lebih laju dari standard\" → instance dengan ena (default on modern types). compute"
+  },
+  {
+    "sectionId": "d3-compute",
+    "sectionTitle": "Compute",
+    "sectionIcon": "🖥️",
+    "shortName": "Lambda@Edge",
+    "searchBlob": "lambda@edge aws lambda@edge lambda@edge edge computing cloudfront viewer request viewer response origin request origin response cloudfront functions a/b testing custom auth url rewrite us-east-1 node.js python lightweight js lambda@edge jalankan lambda function di cloudfront edge locations (600+ globally). function execute dekat dengan user — bukan di aws region. empat trigger points: viewer request, viewer response, origin request, origin response. boleh ubah request/response, custom auth, url rewrite, a/b testing. custom auth header check di edge, a/b testing redirect, rewrite url dari old ke new path, inject custom http headers \"custom authentication check http header bila user request cloudfront\" → lambda@edge viewer request. \"simple rewrite url from /old to /new at edge, no aws api calls\" → cloudfront functions. \"a/b test — redirect 10% users to new origin\" → lambda@edge. compute"
+  },
+  {
+    "sectionId": "d3-compute",
+    "sectionTitle": "Compute",
+    "sectionIcon": "🖥️",
+    "shortName": "EC2 Tenancy",
+    "searchBlob": "ec2 tenancy ec2 tenancy & dedicated hosts tenancy shared dedicated instance dedicated host single-tenant byol bring your own license oracle sql server socket core host affinity license compliance physical server tiga tahap tenancy: (1) shared (default) — instance jalan pada hardware shared dengan pelanggan lain. (2) dedicated instance — instance jalan pada hardware single-tenant (kau sahaja) tapi kau tak pilih server mana. (3) dedicated host — physical server penuh untuk kau, kau nampak socket/core, boleh guna untuk byol (bring-your-own-license) software. oracle/sql server license guna byol — perlu nampak physical socket/core → dedicated host. compliance perlu single-tenant hardware tapi tak kisah server mana → dedicated instance. workload biasa → shared (murah). \"company guna oracle database dengan byol license, perlu audit physical cores untuk compliance\" → dedicated host. \"compliance policy: instances must be on single-tenant hardware, no sharing\" → dedicated instance. \"just run a web server, cheapest option\" → shared (default tenancy). compute"
   },
   {
     "sectionId": "d3-storage",
     "sectionTitle": "Storage",
     "sectionIcon": "💾",
     "shortName": "EBS",
-    "searchBlob": "ebs elastic block store block storage single ec2 persistent disk instance store ephemeral elastic volumes resize encryption data in transit menyediakan block-level storage yang boleh di-attach kepada ec2 instance os drive untuk ec2, database storage  storage"
+    "searchBlob": "ebs elastic block store block storage single ec2 persistent disk instance store ephemeral elastic volumes resize encryption data in transit pricing gp3 cost io2 cost st1 cost sc1 cost snapshot cost menyediakan block-level storage yang boleh di-attach kepada ec2 instance os drive untuk ec2, database storage  storage"
   },
   {
     "sectionId": "d3-storage",
@@ -558,21 +593,49 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Storage",
     "sectionIcon": "💾",
     "shortName": "S3",
-    "searchBlob": "s3 simple storage service object storage static website backup unlimited menyimpan dan mendapatkan semula sebarang jumlah data sebagai objects store images, videos, backups, static website hosting  storage"
+    "searchBlob": "s3 simple storage service object storage 11 nines durability strong consistency bucket policy block public access versioning crr srr sse-s3 sse-kms sse-c multipart upload 5tb transfer acceleration 503 slow down prefix static website event notification object storage tanpa had — simpan apa-apa jenis fail sebagai object dalam bucket. bukan block (ebs) bukan file system (efs). tiap object ada key (nama penuh), value (data), metadata, version id. bucket nama global unik. max 1 object = 5tb. 11 nines durability (99.999999999%) sebab tiap object auto-replicate across ≥3 az. store images/video, backup & restore, data lake untuk athena/redshift, static website hosting, log storage, distribute software app tetiba dapat banyak http 503 \"slow down\" masa upload laju → bukan kena scale apa-apa, s3 tengah auto-scale; agih objek across multiple prefix (3,500 put / 5,500 get per prefix/saat, prefix tak terhad). nak hantar fail besar laju merentas benua → s3 transfer acceleration (guna edge cloudfront). fail >100mb → guna multipart upload (wajib >5gb). storage"
   },
   {
     "sectionId": "d3-storage",
     "sectionTitle": "Storage",
     "sectionIcon": "💾",
     "shortName": "S3 Glacier",
-    "searchBlob": "s3 glacier amazon s3 glacier archiving long-term storage infrequent access cold storage menyediakan arkib data jangka panjang dengan kos yang rendah store old financial records, compliance archives, log archives  storage"
+    "searchBlob": "s3 glacier amazon s3 glacier (storage classes) archiving cold storage glacier instant retrieval glacier flexible retrieval glacier deep archive restore job expedited standard bulk min storage duration lifecycle policy worm 11 nines glacier = kelas storan s3 paling murah untuk arkib. tiga jenis ikut berapa laju kau perlu data balik: instant retrieval (ms), flexible retrieval (minit–jam), deep archive (jam). makin sejuk makin murah, tapi makin lama nak \"cairkan\" (restore). nota: servis lama \"glacier vault\" yang berasingan dah legacy — exam & aws sekarang guna s3 glacier storage classes. rekod kewangan 7 tahun, arkib perubatan, log compliance, backup yang mungkin tak pernah dibuka hospital simpan imej x-ray jarang dibuka tapi bila doktor minta kena dapat dalam milisaat → s3 glacier instant retrieval (bukan flexible — flexible kena tunggu minit-jam). firma guaman simpan rekod 10 tahun, petabytes, hampir tak pernah buka, nak paling murah → s3 glacier deep archive. auto-pindah guna s3 lifecycle policy (standard → ia → glacier ikut umur object). storage"
+  },
+  {
+    "sectionId": "d3-storage",
+    "sectionTitle": "Storage",
+    "sectionIcon": "💾",
+    "shortName": "S3 Storage Classes",
+    "searchBlob": "s3 storage classes s3 storage classes — all 7 tiers with pricing s3 standard standard-ia one zone-ia intelligent-tiering glacier instant retrieval glacier flexible retrieval deep archive pricing storage class retrieval fee min storage duration availability 11 nines durability lifecycle transition auto-tiering s3 ada 7 storage classes untuk optimize kos ikut access frequency. semua class ada 11 nines durability (99.999999999%). beza adalah pada availability, retrieval speed, minimum duration, dan kos.  \"medical images rarely access but need ms retrieval when doctor requests\" → glacier instant retrieval (bukan flexible). \"log files 90-day retention, infrequent access, re-creatable\" → one zone-ia. \"don't know access pattern yet\" → intelligent-tiering. \"compliance records 7 years, petabytes, almost never access\" → deep archive. \"active web content\" → standard. storage"
+  },
+  {
+    "sectionId": "d3-storage",
+    "sectionTitle": "Storage",
+    "sectionIcon": "💾",
+    "shortName": "S3 Lifecycle",
+    "searchBlob": "s3 lifecycle s3 lifecycle management lifecycle transition rule expiration rule auto-move auto-delete age-based storage class transition noncurrent version versioning cleanup s3 lifecycle policy cost optimization prefix filter tag filter lifecycle rules automatik pindah object ke storage class yang lebih murah berdasarkan umur (days sejak creation), dan boleh auto-expire (delete) object lama. dua jenis rule: transition (pindah ke class lain) dan expiration (padam object). rules boleh untuk whole bucket atau specific prefix/tags. log file masuk standard → 30 hari pindah ke standard-ia → 90 hari pindah ke glacier flexible → 365 hari pindah deep archive → 2555 hari (7 tahun) auto-delete. \"automatically move log files from standard to ia after 30 days, to glacier after 90 days, delete after 1 year\" → s3 lifecycle policy. \"don't know access pattern, want s3 to auto-choose tier\" → intelligent-tiering (bukan lifecycle). \"clean up old versions of objects after 30 days\" → noncurrent version expiration rule. storage"
+  },
+  {
+    "sectionId": "d3-storage",
+    "sectionTitle": "Storage",
+    "sectionIcon": "💾",
+    "shortName": "S3 CORS",
+    "searchBlob": "s3 cors s3 cross-origin resource sharing (cors) cors cross-origin browser security allowedorigin access-control-allow-origin web app domain bucket cors xml configuration cors (cross-origin resource sharing) adalah mechanism browser yang control sama ada web app di domain a boleh akses resources di domain b. untuk s3, kau set cors configuration pada bucket untuk allow specific origins, methods, dan headers. web app di https://app.example.com nak upload images terus ke s3 bucket (https://cdn.example.com) dari browser — cors rule pada s3 bucket allow origin https://app.example.com. \"browser app at www.example.com needs to get/put objects in s3 bucket directly\" → configure cors on the s3 bucket to allow origin www.example.com. bukan bucket policy (yang control iam-level access). cors = browser-level permission. storage"
+  },
+  {
+    "sectionId": "d3-storage",
+    "sectionTitle": "Storage",
+    "sectionIcon": "💾",
+    "shortName": "S3 Pre-Signed URL",
+    "searchBlob": "s3 pre-signed url s3 pre-signed urls presigned url temporary access no credentials iam credentials expiry time download upload put get 403 one object vs cloudfront signed url pre-signed url adalah url s3 yang ada signature + expiry time. siapa punya url tu boleh upload atau download object tersebut tanpa perlu aws credentials. permission ikut iam user yang generate url tersebut. generate pre-signed url valid 1 jam → hantar ke customer → customer download file besar dari s3 terus tanpa perlu aws account/login. \"give temporary download access to one s3 file for 1 hour, no aws credentials needed\" → s3 pre-signed url. \"serve private video globally via cdn with ip restriction\" → cloudfront signed url. \"user uploads file to s3 from browser without credentials\" → pre-signed url for put operation. storage"
   },
   {
     "sectionId": "d3-network",
     "sectionTitle": "Networking & Delivery",
     "sectionIcon": "🌐",
     "shortName": "CloudFront",
-    "searchBlob": "cloudfront amazon cloudfront cdn edge location low latency static content oac origin access control lambda@edge sse-kms private s3 menghantar content kepada pengguna melalui edge locations global dengan latency rendah deliver images & videos untuk global users, static website laju  networking & delivery"
+    "searchBlob": "cloudfront amazon cloudfront cdn edge location low latency static content oac origin access control lambda@edge cloudfront functions sse-kms private s3 signed url signed cookie s3 presigned url ttl caching invalidation geo restriction geo blocking price class menghantar content kepada pengguna melalui 600+ edge locations global dengan latency rendah. cache content dekat dengan user, restrict access (signed url/cookie, oac, geo), dan offload origin. deliver images & videos untuk global users, static website laju, stream private paid media serve private paid video globally dengan low latency → cloudfront signed urls/cookies (cache kat edge + restrict access). bukan s3 presigned url — presigned = direct s3, takde edge caching, takde ip restriction. untuk serve private s3 objects → oac + bucket policy (bucket kekal private). networking & delivery"
   },
   {
     "sectionId": "d3-network",
@@ -586,7 +649,7 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Networking & Delivery",
     "sectionIcon": "🌐",
     "shortName": "NLB",
-    "searchBlob": "nlb network load balancer tcp udp layer 4 static ip ip targets cross-vpc low latency mengagihkan traffic tcp/udp pada layer 4 dengan latency sangat rendah. seperti alb, nlb juga boleh route ke instances dalam peered vpcs menggunakan ip address targets. gaming servers, iot, voip. cross-vpc: nlb dengan ip targets route ke instances dalam peered vpcs. nlb diperlukan bila: (1) perlukan static ip atau elastic ip untuk load balancer, (2) tcp/udp traffic bukan http, (3) extreme performance/low latency. untuk cross-vpc dengan ip targets, both nlb dan alb boleh digunakan. networking & delivery"
+    "searchBlob": "nlb network load balancer tcp udp layer 4 static ip ip targets cross-vpc low latency mengagihkan traffic tcp/udp pada layer 4 dengan latency sangat rendah. seperti alb, nlb juga boleh route ke instances dalam peered vpcs menggunakan ip address targets. gaming servers, iot, voip. cross-vpc: nlb dengan ip targets route ke instances dalam peered vpcs.  networking & delivery"
   },
   {
     "sectionId": "d3-network",
@@ -607,28 +670,28 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Messaging & Serverless",
     "sectionIcon": "📨",
     "shortName": "SQS",
-    "searchBlob": "sqs simple queue service queue decouple async pull-based visibility timeout fifo dlq at-least-once exactly-once long polling short polling batch operations duplicate messages queue policy cross-account sqs resource-based policy sns sqs lambda fan-out mengurus queue untuk menghantar mesej antara komponen aplikasi secara asynchronous. standard queue: at-least-once delivery, best-effort ordering. fifo queue: exactly-once, strict order. order processing queue — ec2/lambda poll sqs, proses order, delete message bila siap. spot instance terminated masa process sqs message → message tidak hilang. ia akan visible semula selepas visibility timeout expired. message hanya deleted bila consumer call deletemessage api selepas berjaya process. messaging & serverless"
+    "searchBlob": "sqs simple queue service queue decouple async pull-based visibility timeout fifo dlq at-least-once exactly-once long polling short polling batch operations duplicate messages queue policy cross-account sqs resource-based policy sns sqs lambda fan-out sqs vs sns vs eventbridge pilih messaging service pull vs push mengurus queue untuk menghantar mesej antara komponen aplikasi secara asynchronous. standard queue: at-least-once delivery, best-effort ordering. fifo queue: exactly-once, strict order.  spot instance terminated masa process sqs message → message tidak hilang. ia akan visible semula selepas visibility timeout expired. message hanya deleted bila consumer call deletemessage api selepas berjaya process. messaging & serverless"
   },
   {
     "sectionId": "d3-messaging",
     "sectionTitle": "Messaging & Serverless",
     "sectionIcon": "📨",
     "shortName": "SNS",
-    "searchBlob": "sns simple notification service pub/sub push notification fan-out broadcast topic subscription filter policy message filtering sns fifo cross-account sns s3 event notification push-based pub/sub messaging service — publisher hantar message ke sns topic, semua subscribers terima serentak. subscribers boleh jadi sqs, lambda, http/s endpoints, email, sms. push-based (sns hantar ke subscriber), bukan pull-based macam sqs. s3 upload → sns topic → fan-out ke 3 sqs queues (thumbnail, metadata, archive) sekaligus. \"s3 event perlu trigger multiple downstream processes simultaneously\" → sns fan-out. s3 event notification → sns topic → multiple sqs queues. s3 hanya boleh hantar 1 event notification per prefix+suffix combination ke 1 destination — sns fan-out bypasses this limitation. messaging & serverless"
+    "searchBlob": "sns simple notification service pub/sub push notification fan-out broadcast topic subscription filter policy message filtering sns fifo cross-account sns s3 event notification push-based pub/sub messaging service — publisher hantar message ke sns topic, semua subscribers terima serentak. subscribers boleh jadi sqs, lambda, http/s endpoints, email, sms. push-based (sns hantar ke subscriber), bukan pull-based macam sqs.  \"s3 event perlu trigger multiple downstream processes simultaneously\" → sns fan-out. s3 event notification → sns topic → multiple sqs queues. s3 hanya boleh hantar 1 event notification per prefix+suffix combination ke 1 destination — sns fan-out bypasses this limitation. messaging & serverless"
   },
   {
     "sectionId": "d3-messaging",
     "sectionTitle": "Messaging & Serverless",
     "sectionIcon": "📨",
     "shortName": "Kinesis",
-    "searchBlob": "kinesis amazon kinesis real-time streaming data pipeline analytics memproses dan menganalisis data streaming secara real-time real-time analytics, live dashboard, clickstream data  messaging & serverless"
+    "searchBlob": "kinesis amazon kinesis (data streams vs firehose) real-time streaming data pipeline analytics data streams firehose shards retention clickstream iot replay serverless delivery kinesis data streams (kds): real-time, data dalam shards, custom consumers baca dengrn code (lambda/kcl). retention default 24 jam, boleh extend sampai 365 hari. kinesis data firehose: near-real-time (buffer ~60s/mb), fully managed, zero code — auto-deliver ke s3, redshift, opensearch, splunk, boleh transform guna lambda.  \"real-time, sub-second, multiple consumers, replay data\" → data streams (shards + retention up to 365 days). \"load streaming data ke s3/redshift/opensearch with no servers and no code\" → firehose. \"analisa/transform streaming data guna sql atau apache flink real-time\" → managed service for apache flink (bekas kinesis data analytics). messaging & serverless"
   },
   {
     "sectionId": "d3-messaging",
     "sectionTitle": "Messaging & Serverless",
     "sectionIcon": "📨",
     "shortName": "API Gateway",
-    "searchBlob": "api gateway amazon api gateway rest api websocket api management throttling mapping templates backward compatibility vtl response transformation cache key cors vpc link cross-account lambda mencipta, mengurus dan mendedahkan api pada mana-mana skala frontend → api gateway → lambda → dynamodb  messaging & serverless"
+    "searchBlob": "api gateway amazon api gateway rest api http api websocket real-time bidirectional api management throttling usage plans api keys request validation aws waf jwt authorizer cognito lambda authorizer iam authorizer edge-optimized regional endpoint private endpoint mapping templates backward compatibility vtl response transformation cache key cors vpc link cross-account lambda mencipta, mengurus dan mendedahkan api pada mana-mana skala. handle auth, throttling, caching, request validation, dan integrate ke lambda / http backend / vpc resources. frontend → api gateway → lambda → dynamodb real-time multiplayer game / chat → websocket api (server boleh push ke client, two-way). simple low-cost serverless proxy ke lambda tanpa api keys/waf → http api (~70% lebih murah, lower latency). enterprise api perlu api keys, usage plans, request validation, waf, atau private endpoint → rest api. messaging & serverless"
   },
   {
     "sectionId": "d3-messaging",
@@ -642,14 +705,14 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Messaging & Serverless",
     "sectionIcon": "📨",
     "shortName": "Step Functions",
-    "searchBlob": "step functions aws step functions workflow state machine orchestration retry logic error handling lambda orchestration visual workflow distributed map parallel processing visual workflow orchestration. setiap step boleh timeout, retry, atau branch ikut result. integrate dengan lambda, ecs, glue, dynamodb, dan 200+ services. state machine dengan json definition.  \"order processing: validate → charge card → notify warehouse → send email, dengan error handling pada setiap step\" → step functions. bukan lambda je (lambda tak ada built-in retry/branching logic across services). messaging & serverless"
+    "searchBlob": "step functions aws step functions workflow state machine orchestration retry logic error handling lambda orchestration visual workflow distributed map parallel processing standard workflow express workflow exactly-once at-least-once idempotent callback pattern waitfortasktoken sync integration asl amazon states language choice state map state activities swf visual workflow orchestration. setiap step boleh timeout, retry, atau branch ikut result. integrate dengan lambda, ecs, glue, dynamodb, dan 200+ services. state machine dengan json definition.  \"order processing: validate → charge card → notify warehouse → send email, dengan error handling pada setiap step\" → step functions. bukan lambda je (lambda tak ada built-in retry/branching logic across services). \"payment / non-idempotent / berjam-jam / perlu audit trail penuh\" → standard. \"iot ingestion / streaming transform / high-volume, idempotent, <5 min\" → express. \"workflow kena tunggu kelulusan manusia dulu sebelum sambung\" → standard + callback pattern (.waitfortasktoken). messaging & serverless"
   },
   {
     "sectionId": "d3-messaging",
     "sectionTitle": "Messaging & Serverless",
     "sectionIcon": "📨",
     "shortName": "Amazon MQ",
-    "searchBlob": "amazon mq amazon mq activemq rabbitmq amqp mqtt lift-and-shift message broker legacy migration open protocols stomp openwire managed message broker service yang support activemq dan rabbitmq. guna amqp, mqtt, stomp, openwire protocols. untuk lift-and-shift apps yang dah guna standard protocols.  \"company ada on-premises app guna activemq, nak migrate ke aws tanpa tukar code\" → amazon mq. app baru? → guna sqs/sns (simpler, cheaper, cloud-native). amazon mq = migration/legacy. sqs = cloud-native new apps. messaging & serverless"
+    "searchBlob": "amazon mq amazon mq activemq rabbitmq amqp mqtt lift-and-shift message broker legacy migration open protocols stomp openwire jms amazon mq vs sqs managed broker managed message broker service yang support activemq dan rabbitmq. guna amqp, mqtt, stomp, openwire protocols. untuk lift-and-shift apps yang dah guna standard protocols.  \"company ada on-premises app guna activemq, nak migrate ke aws tanpa tukar code\" → amazon mq. app baru? → guna sqs/sns (simpler, cheaper, cloud-native). amazon mq = migration/legacy. sqs = cloud-native new apps. messaging & serverless"
   },
   {
     "sectionId": "d3-messaging",
@@ -684,21 +747,21 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Infrastructure",
     "sectionIcon": "🏗️",
     "shortName": "CloudFormation",
-    "searchBlob": "cloudformation aws cloudformation iac infrastructure as code template stack rollback repeatable deployment lambda-backed custom resource ami lookup dynamic parameters multi-region template mappings outputs cross-stack reference fn::importvalue cfn-init cfn-signal cfn-hup cfn-get-metadata change set drift detection stack rollback deletionpolicy nested stacks aws::cloudformation::stack modular templates mengurus dan menyediakan infrastruktur aws secara automatik menggunakan template (iac) deploy ec2 + s3 + rds sekaligus dari satu template yaml/json, replicate environment dev/staging/prod  infrastructure"
+    "searchBlob": "cloudformation aws cloudformation iac infrastructure as code template stack rollback repeatable deployment lambda-backed custom resource ami lookup dynamic parameters multi-region template mappings outputs cross-stack reference fn::importvalue cfn-init cfn-signal cfn-hup cfn-get-metadata change set drift detection stack rollback deletionpolicy nested stacks aws::cloudformation::stack modular templates stacksets free pricing no additional charge mengurus dan menyediakan infrastruktur aws secara automatik menggunakan template (iac) deploy ec2 + s3 + rds sekaligus dari satu template yaml/json, replicate environment dev/staging/prod  infrastructure"
   },
   {
     "sectionId": "d3-infra",
     "sectionTitle": "Infrastructure",
     "sectionIcon": "🏗️",
     "shortName": "SSM",
-    "searchBlob": "ssm aws systems manager run command patch manager parameter store session manager no ssh fleet management parallel execution amazonssmmanagedinstancecore securestring kms standard tier advanced tier bastion-free secrets manager auto-rotation suite alat untuk visibility dan kawalan ke atas infrastruktur aws. run command jalankan commands pada existing instances tanpa ssh. patch manager automate os patching. parameter store simpan config/secrets. perlu patch 500 ec2 instances serentak — ssm patch manager buat semua tanpa perlu ssh satu-satu. run command untuk restart service pada semua app servers. \"manage existing instances remotely, run commands without ssh, patch fleet at scale\" → ssm run command. bukan user data (user data hanya masa launch sahaja). infrastructure"
+    "searchBlob": "ssm aws systems manager run command patch manager parameter store session manager no ssh fleet management parallel execution amazonssmmanagedinstancecore securestring kms standard tier advanced tier bastion-free secrets manager auto-rotation pricing free tier advanced params cost session manager included suite alat untuk visibility dan kawalan ke atas infrastruktur aws. run command jalankan commands pada existing instances tanpa ssh. patch manager automate os patching. parameter store simpan config/secrets. perlu patch 500 ec2 instances serentak — ssm patch manager buat semua tanpa perlu ssh satu-satu. run command untuk restart service pada semua app servers. \"manage existing instances remotely, run commands without ssh, patch fleet at scale\" → ssm run command. bukan user data (user data hanya masa launch sahaja). infrastructure"
   },
   {
     "sectionId": "d3-infra",
     "sectionTitle": "Infrastructure",
     "sectionIcon": "🏗️",
     "shortName": "AWS Config",
-    "searchBlob": "aws config aws config compliance audit config changes config rules resource history drift detection auto-remediation conformance packs config aggregator ssm automation managed rules custom rules memantau dan merekod konfigurasi aws resources dari masa ke masa. boleh set rules untuk enforce compliance — contoh: \"semua s3 mesti ada encryption\". bukan untuk run scripts. security team nak tau siapa yang ubah security group semalam dan bila — aws config simpan history semua config changes. \"audit config changes, check compliance, who changed what and when\" → aws config. keyword: configuration changes, compliance, audit trail, resource history. infrastructure"
+    "searchBlob": "aws config aws config compliance audit config changes config rules resource history drift detection auto-remediation conformance packs config aggregator ssm automation managed rules custom rules pricing per configuration item per rule evaluation memantau dan merekod konfigurasi aws resources dari masa ke masa. boleh set rules untuk enforce compliance — contoh: \"semua s3 mesti ada encryption\". bukan untuk run scripts. security team nak tau siapa yang ubah security group semalam dan bila — aws config simpan history semua config changes. \"audit config changes, check compliance, who changed what and when\" → aws config. keyword: configuration changes, compliance, audit trail, resource history. infrastructure"
   },
   {
     "sectionId": "d3-infra",
@@ -719,7 +782,7 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Infrastructure",
     "sectionIcon": "🏗️",
     "shortName": "CloudWatch",
-    "searchBlob": "cloudwatch amazon cloudwatch metrics logs alarms dashboards cpu monitoring custom metrics log groups vpc flow logs cloudwatch agent unified agent memory utilization detailed monitoring logs insights query logs sql-like cloudwatch metrics (cpu, network, custom app metrics). cloudwatch logs (lambda logs, ec2 app logs, vpc flow logs — set retention). cloudwatch alarms (trigger sns/auto scaling bila threshold exceeded). dashboards untuk visualize. ec2 cpu >80% → cloudwatch alarm → sns notification ke team. lambda error logs → cloudwatch logs untuk debug. \"cpu ec2 melebihi 80%, send alert\" → cloudwatch alarm. \"view logs dari lambda\" → cloudwatch logs. \"custom app metric\" → cloudwatch custom metrics. cloudwatch = metrics & logs. cloudtrail = api audit. ingat perbezaan! infrastructure"
+    "searchBlob": "cloudwatch amazon cloudwatch metrics logs alarms dashboards cpu monitoring custom metrics log groups vpc flow logs cloudwatch agent unified agent memory utilization detailed monitoring logs insights query logs sql-like pricing free tier custom metrics cost log ingestion cost cloudwatch metrics (cpu, network, custom app metrics). cloudwatch logs (lambda logs, ec2 app logs, vpc flow logs — set retention). cloudwatch alarms (trigger sns/auto scaling bila threshold exceeded). dashboards untuk visualize. ec2 cpu >80% → cloudwatch alarm → sns notification ke team. lambda error logs → cloudwatch logs untuk debug. \"cpu ec2 melebihi 80%, send alert\" → cloudwatch alarm. \"view logs dari lambda\" → cloudwatch logs. \"custom app metric\" → cloudwatch custom metrics. cloudwatch = metrics & logs. cloudtrail = api audit. ingat perbezaan! infrastructure"
   },
   {
     "sectionId": "d3-infra",
@@ -734,6 +797,13 @@ export const deepNotesLinkIndex = [
     "sectionIcon": "🏗️",
     "shortName": "AWS Health Dashboard",
     "searchBlob": "aws health dashboard aws health dashboard service health personal health dashboard scheduled changes account events eventbridge operational issues maintenance notification dua bahagian: (1) service health dashboard — overall aws service status (public, semua org boleh tengok). (2) aws health dashboard (account-specific) — personalized view of operational issues, scheduled maintenance/changes, dan event yang affect resources dalam account kau.  \"aws region kau experiencing issue — adakah resources saya affected?\" → aws health dashboard (account view), bukan general service health page. boleh integrate dengan eventbridge untuk auto-notify (e.g. lambda → slack) bila ada event affecting your resources. infrastructure"
+  },
+  {
+    "sectionId": "d3-db",
+    "sectionTitle": "Databases",
+    "sectionIcon": "🗄️",
+    "shortName": "Pilih Database",
+    "searchBlob": "pilih database which aws database? — purpose-built selector purpose-built database oltp vs olap relational nosql key-value document graph wide-column time-series database selection which database aws galak \"purpose-built database\" — pilih ikut bentuk data dan cara access, bukan satu db untuk semua. relational (sql, transaksi) → rds/aurora. key-value laju → dynamodb. cache → elasticache. document/mongo → documentdb. graph → neptune. wide-column → keyspaces. analytics/warehouse → redshift. in-memory durable → memorydb.   databases"
   },
   {
     "sectionId": "d3-db",
@@ -760,22 +830,29 @@ export const deepNotesLinkIndex = [
     "sectionId": "d3-analytics",
     "sectionTitle": "Analytics & Streaming",
     "sectionIcon": "📊",
+    "shortName": "Redshift",
+    "searchBlob": "redshift amazon redshift data warehouse olap columnar mpp ra3 managed storage rms redshift spectrum redshift serverless concurrency scaling zero-etl cluster leader node compute node node slices distribution key distkey sort key sortkey zone maps petabyte bi analytics petabyte-scale data warehouse untuk olap (analytics), bukan oltp (transaksi → guna rds). simpan data secara columnar + compress → query aggregate (sum, group by) atas berbilion baris jadi laju. massively parallel processing (mpp): leader node agih query ke banyak compute node. spectrum boleh query s3 terus tanpa load. bi/reporting atas data berkumpul (sales, finance), join besar merentas berjuta baris, dashboard berulang yang sama tiap hari \"dashboard bi berulang atas berbilion baris sales, perlu join kompleks laju & konsisten\" → redshift. \"banyak analyst query serentak waktu puncak, jangan beratur\" → concurrency scaling. \"nak query data dalam redshift dan data lake s3 dalam satu sql\" → redshift spectrum. \"beban analytics tak menentu, tak nak urus cluster\" → redshift serverless. bukan athena (ad-hoc/jarang), bukan rds (oltp). analytics & streaming"
+  },
+  {
+    "sectionId": "d3-analytics",
+    "sectionTitle": "Analytics & Streaming",
+    "sectionIcon": "📊",
     "shortName": "QuickSight",
-    "searchBlob": "quicksight amazon quicksight quicksight bi dashboard forecasting ml insights visualization s3 direct spice iot analytics serverless bi service. connect directly to s3, rds, redshift, athena, or other sources. build dashboards and visualizations. ml insights feature includes anomaly detection, forecasting (seasonality, trends), and auto-narratives — no separate ml infrastructure needed.  \"executive dashboards dari iot data dalam s3 dengan forecasting, no data warehouse\" → quicksight + s3 direct. quicksight bukan untuk ad-hoc sql (→ athena), bukan untuk etl (→ glue). keywords: dashboard, forecast, trend, bi, visualization. analytics & streaming"
+    "searchBlob": "quicksight amazon quicksight quicksight bi dashboard forecasting ml insights visualization s3 direct spice direct query row-level security enterprise edition embedded analytics anomaly detection auto-narrative iot analytics active directory serverless bi service. connect terus ke s3, rds, redshift, athena, atau sumber lain. bina dashboard & visualisasi tanpa server. spice = enjin in-memory yang cache data import → query dashboard laju & berulang tanpa pukul sumber tiap kali. ml insights bagi anomaly detection, forecasting (seasonality/trend), dan auto-narratives — tiada infrastruktur ml berasingan. edition enterprise tambah row-level security, akses ad/sso, dan embedded analytics.  \"executive dashboards dari iot data dalam s3 dengan forecasting, no data warehouse\" → quicksight + s3 direct + ml insights. \"dashboard laju untuk ramai user, data tak perlu real-time\" → spice. \"setiap analyst nampak hanya baris data region dia\" → quicksight enterprise + row-level security. quicksight bukan untuk ad-hoc sql (→ athena), bukan untuk etl (→ glue). keywords: dashboard, forecast, trend, bi, visualization. analytics & streaming"
   },
   {
     "sectionId": "d3-analytics",
     "sectionTitle": "Analytics & Streaming",
     "sectionIcon": "📊",
     "shortName": "Athena",
-    "searchBlob": "athena amazon athena serverless sql s3 queries pay per scan parquet orc glue catalog log analysis ad-hoc serverless interactive query service. point ke s3, tulis sql, dapat results. bayar per tb data yang di-scan. sokong csv, json, parquet, orc. pair dengan glue data catalog sebagai metadata store.  \"analyse cloudtrail logs atau alb access logs dalam s3 guna sql\" → athena. \"ad-hoc analysis tanpa setup database\" → athena. bukan redshift (yang untuk structured, recurring analytics dengan dedicated cluster). analytics & streaming"
+    "searchBlob": "athena amazon athena serverless sql s3 queries pay per scan parquet orc glue catalog log analysis ad-hoc partition columnar quicksight serverless analytics pattern serverless interactive query service. point ke s3, tulis sql, dapat results. bayar per tb data yang di-scan. sokong csv, json, parquet, orc. pair dengan glue data catalog sebagai metadata store.  \"analyse cloudtrail logs atau alb access logs dalam s3 guna sql\" → athena. \"ad-hoc analysis tanpa setup database\" → athena. \"kurangkan kos query s3\" → convert ke parquet + partition. bukan redshift (yang untuk structured, recurring analytics dengan dedicated cluster). analytics & streaming"
   },
   {
     "sectionId": "d3-analytics",
     "sectionTitle": "Analytics & Streaming",
     "sectionIcon": "📊",
     "shortName": "Glue",
-    "searchBlob": "glue aws glue etl data catalog spark serverless crawler data lake transform parquet schema discovery dynamodb schema inference glue data catalog = metadata store untuk semua data assets (s3, rds, redshift). glue etl = serverless spark jobs untuk transform data. glue crawler = auto-discover dan catalog schema dari s3/databases.  \"transform raw csv dalam s3 ke parquet format untuk athena\" → glue etl job. \"auto-catalog all data sources for data lake\" → glue crawler + data catalog. keywords: etl, data lake, data catalog, transform, spark. analytics & streaming"
+    "searchBlob": "glue aws glue etl data catalog spark serverless crawler classifier etl job databrew glue studio workflow data lake transform parquet schema discovery dynamodb schema inference dpu data store data source data target glue table metadata definition database glue = serverless etl + metadata layer untuk data lake. glue data catalog = kedai metadata pusat (table/column) untuk semua data assets (s3, rds, redshift) — athena, emr, redshift spectrum semua baca katalog yang sama. glue crawler = auto-endus (discover) schema dari sumber dan isi data catalog. glue etl job = serverless spark job untuk transform data (cth csv → parquet). bayar per dpu-hour, tiada cluster untuk diurus.  \"transform raw csv dalam s3 ke parquet format untuk athena\" → glue etl job. \"auto-catalog all data sources for data lake\" → glue crawler + data catalog. \"determine schema dari dynamodb & populate data catalog\" → crawler. \"clean & prep data tanpa tulis kod\" → databrew. keywords: etl, data lake, data catalog, transform, spark, serverless. analytics & streaming"
   },
   {
     "sectionId": "d3-analytics",
@@ -789,14 +866,14 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Analytics & Streaming",
     "sectionIcon": "📊",
     "shortName": "EMR",
-    "searchBlob": "emr amazon emr hadoop spark hive presto big data cluster petabyte managed spot instances managed cluster platform untuk big data frameworks. kau choose cluster size, instance types, frameworks. spot instances untuk cost saving. lebih control dari glue — untuk complex custom jobs.  \"process petabytes of log data using custom spark jobs\" → emr. \"machine learning training on large datasets\" → emr. glue = serverless etl (simpler, less control). emr = full cluster (more control, more complex). keywords: hadoop, spark, big data cluster. analytics & streaming"
+    "searchBlob": "emr amazon emr hadoop spark hive presto hbase big data cluster petabyte managed spot instances master node core node task node hdfs namenode datanode block replication emrfs etl pipeline transient cluster emr serverless emr on eks managed cluster platform untuk big data frameworks (spark, hadoop, hive, presto, hbase). kau choose cluster size, instance types, frameworks. cluster ada 3 jenis node: master (urus cluster), core (run task + simpan hdfs), task (run task sahaja, no hdfs). emrfs benarkan emr guna s3 sebagai storage layer → decouple compute dari storage. lebih control dari glue — untuk complex/custom big-data jobs.  \"process petabytes of log data using custom spark jobs\" → emr. \"migrate on-prem hadoop/spark cluster ke aws\" → emr. \"jimatkan kos batch processing yang fault-tolerant\" → task nodes atas spot. glue = serverless etl (simpler, less control). emr = full cluster (more control). keywords: hadoop, spark, big data cluster, full control. analytics & streaming"
   },
   {
     "sectionId": "d3-analytics",
     "sectionTitle": "Analytics & Streaming",
     "sectionIcon": "📊",
     "shortName": "OpenSearch",
-    "searchBlob": "opensearch amazon opensearch service search engine log analytics elasticsearch compatible kibana real-time analytics full-text search fuzzy managed opensearch (elasticsearch fork) cluster. ingestion via kinesis firehose atau lambda. visualise dengan opensearch dashboards (kibana). guna untuk search yang perlu ranking, fuzzy matching, atau aggregations.  \"e-commerce product search dengan fuzzy matching\" → opensearch. \"ingest dan search application logs real-time dengan visualisation\" → opensearch. dynamodb = exact key lookups. opensearch = full-text search. keywords: search engine, log analytics, elasticsearch. analytics & streaming"
+    "searchBlob": "opensearch amazon opensearch service search engine log analytics elasticsearch compatible kibana opensearch dashboards real-time analytics full-text search fuzzy ultrawarm cold storage dedicated master firehose ingestion relevance ranking managed opensearch (elasticsearch fork) cluster. ingestion via amazon data firehose, opensearch ingestion, atau lambda. visualise dengan opensearch dashboards (kibana). guna untuk search yang perlu relevance ranking, fuzzy matching, atau aggregations real-time. storage tiers (hot / ultrawarm / cold) untuk imbang kos vs kelajuan.  \"e-commerce product search dengan fuzzy matching dan relevance ranking\" → opensearch. \"ingest dan search application logs real-time dengan visualisation\" → opensearch + firehose + dashboards. \"natural-language search atas dokumen korporat\" → kendra (bukan opensearch). dynamodb = exact key lookups. keywords: search engine, log analytics, elasticsearch. analytics & streaming"
   },
   {
     "sectionId": "d3-analytics",
@@ -824,7 +901,7 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Analytics & Streaming",
     "sectionIcon": "📊",
     "shortName": "AWS AI/ML Services",
-    "searchBlob": "aws ai/ml services aws ai services — polly, rekognition, lex, comprehend, textract, transcribe, translate polly transcribe lex rekognition comprehend textract translate kinesis video streams text-to-speech speech-to-text chatbot image analysis startspeechsynthesistask audiobook ocr nlp sentiment analysis entity recognition document extraction machine translation aws menyediakan pelbagai ai services ready-to-use: speech, vision, nlp, document processing.   analytics & streaming"
+    "searchBlob": "aws ai/ml services aws ai services — polly, rekognition, lex, comprehend, textract, transcribe, translate polly transcribe lex rekognition comprehend comprehend medical textract translate kinesis video streams text-to-speech speech-to-text chatbot image analysis startspeechsynthesistask audiobook ocr nlp sentiment analysis entity recognition document extraction machine translation phi hipaa aws menyediakan pelbagai ai services ready-to-use: speech, vision, nlp, document processing.  \"baca soalan kuiz dengan suara\" → polly. \"transkrip meeting jadi nota\" → transcribe. \"chatbot customer service / alexa\" → lex. \"detect muka dalam cctv real-time\" → rekognition + kinesis video streams. \"extract data dari invois/borang scan\" → textract. \"analisa sentiment review pelanggan\" → comprehend. \"translate app ke banyak bahasa\" → translate. \"latih model ramalan sendiri\" → sagemaker. analytics & streaming"
   },
   {
     "sectionId": "d3-analytics",
@@ -845,35 +922,35 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "EC2 Pricing Models",
     "sectionIcon": "💰",
     "shortName": "Reserved Instances",
-    "searchBlob": "reserved instances ec2 reserved instances 1 or 3 year up to 72% discount predictable steady state menyediakan diskaun sehingga 72% berbanding on-demand dengan komitmen 1 atau 3 tahun  e-commerce company yang dah established, database server mesti run 24/7 sepanjang tahun. jimat besar kalau commit 1-3 tahun. ec2 pricing models"
+    "searchBlob": "reserved instances ec2 reserved instances (ri) 1 or 3 year up to 72% discount standard ri convertible ri exchange modify all upfront partial upfront no upfront regional ri zonal ri capacity reservation ri marketplace komitmen 1 atau 3 tahun pada konfigurasi instance tertentu → diskaun sampai 72% vs on-demand. dua kelas: standard (diskaun besar, boleh modify az/saiz dalam family, boleh jual di ri marketplace) dan convertible (diskaun kurang, boleh exchange tukar family/os/tenancy). scope: regional (fleksibel az, no capacity reservation) atau zonal (lock 1 az + capacity reservation).  \"database 24/7 sepanjang tahun, instance type takkan berubah, nak diskaun maksimum\" → standard ri (3-tahun all upfront). \"steady tapi mungkin tukar instance family tahun depan\" → convertible ri. \"perlu jaminan kapasiti dalam az tertentu\" → zonal ri (regional ri tidak reserve capacity). ec2 pricing models"
   },
   {
     "sectionId": "d4-pricing",
     "sectionTitle": "EC2 Pricing Models",
     "sectionIcon": "💰",
     "shortName": "Spot Instances",
-    "searchBlob": "spot instances ec2 spot instances up to 90% discount interruptible batch jobs fault-tolerant menggunakan kapasiti ec2 yang tidak digunakan pada harga sehingga 90% lebih murah  data science team nak process big dataset — tak kisah kalau interrupted. atau render farm untuk video yang boleh resume. jangan guna untuk critical production server. ec2 pricing models"
+    "searchBlob": "spot instances ec2 spot instances up to 90% discount interruptible 2-minute interruption notice eventbridge instance metadata rebalance recommendation terminate stop hibernate persistent request spot fleet ec2 fleet mixed instances policy capacity-optimized price-capacity-optimized capacity rebalancing fault-tolerant batch jobs guna kapasiti ec2 yang tidak digunakan pada harga sehingga 90% lebih murah dari on-demand. tukaran-nya: aws boleh interrupt (ambil balik) instance bila perlukan kapasiti semula, dengan notis 2 minit sahaja. sebab tu sesuai untuk beban yang fault-tolerant / boleh resume, bukan untuk server kritikal yang stateful.  \"batch processing / big data / render farm yang boleh interrupt & resume\" → spot, jimat besar. \"production database / stateful app / payment service yang tak boleh putus\" → jangan spot, guna on-demand atau ri/savings plans. soalan tekan \"fault-tolerant + lowest cost\" hampir mesti = spot. ec2 pricing models"
   },
   {
     "sectionId": "d4-pricing",
     "sectionTitle": "EC2 Pricing Models",
     "sectionIcon": "💰",
     "shortName": "Savings Plans",
-    "searchBlob": "savings plans aws savings plans flexible hourly commitment up to 66% discount compute savings menawarkan diskaun sehingga 66% dengan komitmen penggunaan dalam usd/jam tanpa terikat instance type  company yang nak jimat macam reserved tapi plan nak tukar instance type atau region dalam masa terdekat. lebih flexible dari reserved instances. ec2 pricing models"
+    "searchBlob": "savings plans aws savings plans (sp) flexible hourly commitment up to 66% discount compute savings plans ec2 instance savings plans fargate lambda auto-apply vs reserved instances billing apply order komitmen pada jumlah belanja compute ($/jam) untuk 1 atau 3 tahun → diskaun auto-apply. dua jenis: compute savings plans (paling fleksibel — apply ke mana-mana instance family, saiz, os, tenancy, region, dan termasuk fargate & lambda; sampai 66%) dan ec2 instance savings plans (commit pada satu instance family dalam satu region; diskaun lebih besar sampai 72% tapi kurang fleksibel).  \"nak jimat tapi mungkin tukar instance type/region/os, dan ada beban fargate + lambda sekali\" → compute savings plans (auto-apply tanpa exchange manual). \"komited pada family tertentu (cth m5) dalam satu region, nak diskaun lebih besar dari compute sp\" → ec2 instance savings plans. \"beban batch boleh interrupt\" → spot (bukan sp). ec2 pricing models"
   },
   {
     "sectionId": "d4-pricing",
     "sectionTitle": "EC2 Pricing Models",
     "sectionIcon": "💰",
     "shortName": "Compute Optimizer",
-    "searchBlob": "compute optimizer aws compute optimizer rightsizing ml recommendations ec2 optimization lambda optimization cost savings underutilized compute optimizer analyse historical utilization metrics (14 days) menggunakan ml untuk recommend optimal resource configurations. bagi projected cost savings, performance risk, dan comparison antara current vs recommended.  \"ec2 instances consistently underutilized, nak reduce cost without manual analysis\" → compute optimizer untuk get rightsizing recommendations. ec2 pricing models"
+    "searchBlob": "compute optimizer aws compute optimizer rightsizing ml recommendations ec2 optimization lambda optimization cost savings underutilized vs trusted advisor 14 days metrics free pricing compute optimizer analyse historical utilization metrics (14 days) menggunakan ml untuk recommend optimal resource configurations. bagi projected cost savings, performance risk, dan comparison antara current vs recommended.  \"ec2 instances consistently underutilized, nak reduce cost without manual analysis\" → compute optimizer untuk get rightsizing recommendations. ec2 pricing models"
   },
   {
     "sectionId": "d4-pricing",
     "sectionTitle": "EC2 Pricing Models",
     "sectionIcon": "💰",
     "shortName": "Trusted Advisor",
-    "searchBlob": "trusted advisor aws trusted advisor cost recommendations idle resources rightsizing underutilized service limits five categories menganalisis persekitaran aws dan memberikan cadangan untuk optimasi kos, security, dan performance  cfo tanya \"mana resources kita yang membazir?\" — trusted advisor akan highlight ec2 yang underutilized, s3 buckets tak pakai, elastic ips yang idle, dan bagi estimate savings. ec2 pricing models"
+    "searchBlob": "trusted advisor aws trusted advisor cost recommendations idle resources rightsizing underutilized service limits five categories cost optimization performance security fault tolerance rule-based vs compute optimizer 7 core checks business support enterprise support pricing menganalisis persekitaran aws dan memberikan cadangan rule-based merentas lima kategori. flag resources yang membazir, risiko security, bottleneck performance, kelemahan fault tolerance, dan service limits yang hampir penuh.  cfo tanya \"mana resources kita yang membazir?\" — trusted advisor akan highlight ec2 yang underutilized, s3 buckets tak pakai, elastic ips yang idle, dan bagi estimate savings. \"ml rightsizing untuk ec2/lambda spesifik\" pula → compute optimizer, bukan trusted advisor. ec2 pricing models"
   },
   {
     "sectionId": "d4-pricing",
@@ -887,7 +964,28 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "EC2 Pricing Models",
     "sectionIcon": "💰",
     "shortName": "Cost Explorer",
-    "searchBlob": "cost explorer aws cost explorer cost analysis spending visualization ri recommendations usage patterns rightsizing forecast hourly granularity anomaly detection interactive ui untuk analyse aws spending by service, account, tag, region. bagi ri dan savings plans recommendations. boleh forecast future costs. granular hingga hourly.  \"nak tengok mana service paling banyak cost bulan lepas\" → cost explorer. \"dapat recommendations untuk beli reserved instances\" → cost explorer. bukan trusted advisor (general recommendations). bukan budgets (alerts). cost explorer = visualization & analysis. ec2 pricing models"
+    "searchBlob": "cost explorer aws cost explorer cost analysis spending visualization ri recommendations usage patterns rightsizing forecast hourly granularity anomaly detection vs budgets cur interactive ui untuk analyse aws spending by service, account, tag, region. bagi ri dan savings plans recommendations. boleh forecast future costs. granular hingga hourly.  \"nak tengok mana service paling banyak cost bulan lepas\" → cost explorer. \"dapat recommendations untuk beli reserved instances\" → cost explorer. bukan trusted advisor (general recommendations). bukan budgets (alerts). cost explorer = visualization & analysis. ec2 pricing models"
+  },
+  {
+    "sectionId": "d4-pricing",
+    "sectionTitle": "EC2 Pricing Models",
+    "sectionIcon": "💰",
+    "shortName": "Cost & Usage Report",
+    "searchBlob": "cost & usage report aws cost and usage report (cur) cost and usage report cur line-item billing most granular s3 delivery csv parquet athena redshift quicksight per-resource hourly raw billing data report billing paling terperinci yang aws ada — setiap line item kos & usage (per jam, per resource, per tag, termasuk ri & savings plans utilization). dihantar automatik ke s3 bucket kau dalam format csv (atau parquet untuk athena). lepas tu boleh query guna amazon athena (sql terus atas s3), load ke redshift, atau visualize dalam quicksight.  \"nak data billing mentah paling detail untuk buat custom report / query sendiri guna sql\" → cost & usage report → s3 + athena. bukan cost explorer (itu untuk visualize dalam ui siap). bukan budgets (itu untuk alert). cur = raw data, kau yang olah sendiri. ec2 pricing models"
+  },
+  {
+    "sectionId": "d4-pricing",
+    "sectionTitle": "EC2 Pricing Models",
+    "sectionIcon": "💰",
+    "shortName": "Cost Allocation Tags",
+    "searchBlob": "cost allocation tags aws cost allocation tags cost allocation tags aws-generated user-defined activate in billing track cost by tag cost center tag (key-value) yang kau aktifkan di billing console supaya aws kumpulkan kos ikut label dalam cost explorer, budgets, dan cost & usage report. boleh tag ikut cost center, nama app, owner, atau environment.  \"nak tahu berapa kos setiap department/projek dalam satu account\" → tag resource (cth project=alpha) → activate tag → group/filter dalam cost explorer. tanpa tag, semua kos bercampur jadi satu. ec2 pricing models"
+  },
+  {
+    "sectionId": "d4-pricing",
+    "sectionTitle": "EC2 Pricing Models",
+    "sectionIcon": "💰",
+    "shortName": "Consolidated Billing",
+    "searchBlob": "consolidated billing aws organizations consolidated billing consolidated billing management account member accounts volume discount shared ri shared savings plans one bill free ciri aws organizations: management (payer) account bayar untuk semua member account. usage semua account digabung → kongsi volume pricing discount, reserved instance discount, dan savings plans merentas account. percuma.  \"syarikat ada 10 aws account, nak satu bil je + maksimumkan diskaun\" → organizations consolidated billing. usage digabung sampai naik tier diskaun lebih tinggi (cth s3 tiered pricing), dan ri/savings plans yang tak terpakai di satu account auto-apply ke account lain. ec2 pricing models"
   },
   {
     "sectionId": "d4-storage",
