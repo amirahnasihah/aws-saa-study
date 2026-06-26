@@ -1,4 +1,4 @@
-import { ServiceCard, CompareTable, FlowDiagram, MermaidSpec, CardImage, DiagramTone, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
+import { ServiceCard, CompareTable, FlowDiagram, MermaidSpec, CardImage, TrapQuestion, DiagramTone, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
 import GlossaryText from './GlossaryText'
 import MermaidDiagram from './ai/MermaidDiagram'
 
@@ -155,6 +155,37 @@ function CardImageView({ image }: { image: CardImage }) {
   )
 }
 
+// Trap-question block — baited stem, the tempting wrong answer (why it's bait),
+// and the correct pick with the discriminating keyword. Trains pattern-matching
+// against the exam's deliberate misdirection.
+function PerangkapBlock({ traps }: { traps: TrapQuestion[] }) {
+  return (
+    <div className="rounded-lg px-3 py-2.5 border border-rose-400/20 bg-rose-400/[0.04]">
+      <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-rose-300/80 mb-2">
+        🪤 Perangkap Soalan
+      </p>
+      <div className="space-y-3">
+        {traps.map((t) => (
+          <div key={t.soalan} className="space-y-1">
+            <p className="text-[0.82rem] text-aws-text leading-snug">
+              <span className="text-rose-300/80 font-bold">Q: </span>
+              <GlossaryText text={t.soalan} />
+            </p>
+            <p className="text-[0.8rem] text-aws-muted leading-snug">
+              <span className="text-rose-400/70 font-bold">⚠ Jebakan: </span>
+              <GlossaryText text={t.jebakan} />
+            </p>
+            <p className="text-[0.8rem] text-aws-text leading-snug">
+              <span className="text-emerald-400/80 font-bold">✓ Betul: </span>
+              <GlossaryText text={t.betul} />
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  )
+}
+
 export default function LearnCard({ service, category, sectionId }: LearnCardProps) {
   const styles = categoryStyles[category]
 
@@ -177,6 +208,15 @@ export default function LearnCard({ service, category, sectionId }: LearnCardPro
 
         {/* explanation prose */}
         <div className="space-y-3">
+          {service.sebabApa && (
+            <div className="rounded-lg px-3 py-2.5 border border-sky-400/15 bg-sky-400/[0.04]">
+              <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-sky-300/70 mb-1.5">🎯 Sebab Apa Wujud</p>
+              <p className="text-[0.85rem] text-aws-text leading-relaxed">
+                <GlossaryText text={service.sebabApa} />
+              </p>
+            </div>
+          )}
+
           <div>
             <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-aws-muted mb-1">Apa Dia</p>
             <p className="text-[0.85rem] text-aws-text leading-relaxed">
@@ -230,6 +270,22 @@ export default function LearnCard({ service, category, sectionId }: LearnCardPro
               <ComparisonTable key={c.label ?? i} compare={c} />
             ))}
 
+          {service.sifir && service.sifir.length > 0 && (
+            <div className="rounded-lg px-3 py-2.5 border border-c2/20 bg-c2/5">
+              <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-c2/80 mb-1.5">
+                ⚡ Quick Sifir — hafal ni
+              </p>
+              <ul className="space-y-1">
+                {service.sifir.map((s) => (
+                  <li key={s} className="text-[0.82rem] text-aws-text leading-snug flex gap-2">
+                    <span className="text-c2/60 shrink-0">▪</span>
+                    <GlossaryText text={s} />
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
           {service.scenario && (
             <div className={`rounded-lg px-3 py-2.5 border ${styles.scenario}`}>
               <p className="font-space-mono text-[0.58rem] uppercase tracking-[0.12em] text-c6/70 mb-1.5">
@@ -239,6 +295,10 @@ export default function LearnCard({ service, category, sectionId }: LearnCardPro
                 <GlossaryText text={service.scenario} />
               </p>
             </div>
+          )}
+
+          {service.perangkap && service.perangkap.length > 0 && (
+            <PerangkapBlock traps={service.perangkap} />
           )}
 
           {service.tips && service.tips.length > 0 && (

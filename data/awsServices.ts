@@ -71,12 +71,21 @@ export interface MermaidSpec {
   caption?: string
 }
 
+// One exam-style trap question: the baited stem, the wrong-but-tempting answer
+// (and why it's bait), and the correct pick (with the discriminating keyword).
+export interface TrapQuestion {
+  soalan: string  // the question stem, phrased like the real exam
+  jebakan: string // the tempting wrong answer + why it's a trap
+  betul: string   // the correct answer + the keyword that gives it away
+}
+
 export interface ServiceCard {
   shortName: string
   fullName: string
   ingat: string
   gunaUntuk: string
   fungsi: string
+  sebabApa?: string // WHY it exists — the problem it solves (rationale)
   contohGuna?: string
   scenario?: string
   storageDetails?: string
@@ -85,6 +94,8 @@ export interface ServiceCard {
   mermaid?: MermaidSpec | MermaidSpec[]
   image?: CardImage | CardImage[]
   compare?: CompareTable | CompareTable[]
+  sifir?: string[] // quick cheat-sheet — crisp recall lines to memorize
+  perangkap?: TrapQuestion[] // example exam-trap questions
   tips?: string[]
   docs?: Array<{ label: string; url: string }>
   keywords: string[]
@@ -488,7 +499,27 @@ export const domains: DomainData[] = [
             ingat: '"Guard kat pintu masuk subnet — check both ways"',
             gunaUntuk: 'Subnet-level firewall, stateless, boleh block IP',
             fungsi: 'Mengawal traffic masuk dan keluar subnet secara stateless — kena ada rule eksplisit untuk inbound DAN outbound. Rules diproses ikut nombor (rendah → tinggi); rule pertama yang match terus apply. Boleh ALLOW dan DENY (tak macam SG yang allow-only). Custom NACL: deny all by default. Default NACL: allow all.',
+            sebabApa: 'Security Group jaga setiap instance & allow-only — tak boleh block satu IP jahat, dan tak boleh tapis di peringkat subnet. NACL wujud sebagai firewall peringkat SUBNET yang boleh DENY (block IP range) & dinilai ikut nombor. Sebab dia STATELESS (tak ingat connection), dia jadi "Kastam" yang cek tiap packet dua hala — bukan "pengawal" yang ingat muka.',
             contohGuna: 'Block IP range 192.168.1.0/24 dari masuk subnet — tambah DENY rule dalam NACL (Security Groups tak boleh explicitly deny).',
+            sifir: [
+              'NACL = subnet level, STATELESS, boleh ALLOW & DENY, numbered rules',
+              'Stateless = return traffic TAK auto-allow → kena rule inbound DAN outbound',
+              'First match menang: rule nombor kecil baca dulu, lepas match terus stop',
+              'Return reply guna ephemeral ports 1024-65535 → kena allow outbound',
+              'Block satu IP jahat → NACL (SG tak boleh deny). SG = stateful, allow-only, instance level',
+            ],
+            perangkap: [
+              {
+                soalan: 'NACL: Inbound 100 "allow all", Outbound 200 "deny SSH(22)". Statement: "effectively allows SSH connectivity" — True/False?',
+                jebakan: 'TRUE — sebab inbound dah allow all, nampak macam SSH boleh masuk = OK. Itu cara fikir STATEFUL (Security Group).',
+                betul: 'FALSE. NACL stateless — server reply SSH kena keluar ikut outbound, tapi outbound DENY SSH → reply tersekat, connection mati. Stateless = kena allow DUA hala.',
+              },
+              {
+                soalan: 'Outbound NACL: rule 100 "DENY all traffic", rule 200 "ALLOW SSH". SSH reply boleh keluar?',
+                jebakan: 'Boleh — sebab ada rule 200 Allow SSH. SALAH: rule 200 tak pernah dibaca.',
+                betul: 'TAK boleh. First-match: rule 100 (nombor kecil) baca dulu, "DENY all" terus match & stop. Letak ALLOW di nombor lebih KECIL dari DENY kalau nak ia menang.',
+              },
+            ],
             scenario: '"Block satu malicious IP daripada akses semua instance dalam subnet" → NACL DENY rule (SG tak boleh deny). "Allow/deny per EC2 ikut role" → Security Group. Exam keyword "explicit deny" atau "block specific IP" hampir selalu = NACL.',
             compare: {
               label: 'Security Group vs NACL — THE classic exam trap',
@@ -1464,6 +1495,26 @@ export const domains: DomainData[] = [
             ingat: '"Backup database sedia tunggu dalam AZ lain"',
             gunaUntuk: 'High availability for RDS — automatic failover',
             fungsi: 'Menyimpan satu salinan database standby dalam Availability Zone berbeza yang akan take over secara automatik jika primary fail',
+            sebabApa: 'Kalau primary DB mati (AZ outage, hardware rosak, masa patching), normally app down sampai kau restore manual — boleh berjam. Multi-AZ wujud supaya ada standby IDENTICAL dalam AZ lain yang AWS auto-promote. Downtime turun dari jam → ~1-2 minit, tanpa kau buat apa-apa. Tujuan dia TAHAN bencana (HA), bukan buat laju.',
+            sifir: [
+              'Multi-AZ = HIGH AVAILABILITY, BUKAN read scaling',
+              'Replication SYNC; standby IDLE (tak serve read langsung)',
+              'Failover auto ~60-120s, endpoint SAMA (DNS flip) — app tak tukar config',
+              'Same region je (across AZ). Cross-region → Read Replica / Aurora Global DB',
+              '1 standby sahaja',
+            ],
+            perangkap: [
+              {
+                soalan: 'Reporting queries tengah perlahankan production RDS. Solution paling sesuai?',
+                jebakan: 'Enable Multi-AZ — nampak macam "tambah satu lagi DB jadi laju". SALAH: standby Multi-AZ IDLE, tak serve read langsung.',
+                betul: 'Read Replica (offload read traffic). Keyword "reporting / read queries slow down prod" → Read Replica.',
+              },
+              {
+                soalan: 'Database kena survive AZ outage dengan downtime minimum & auto recovery. Pilih satu.',
+                jebakan: 'Read Replica + promote — boleh, tapi "promote" tu MANUAL = bukan auto, RTO lama.',
+                betul: 'Multi-AZ (synchronous standby, auto-failover ~1-2 min). Keyword "survive AZ outage / automatic failover" → Multi-AZ.',
+              },
+            ],
             scenario: 'Production RDS kat AZ-1 fail — automatic failover ke standby kat AZ-2 dalam 1-2 minit. Same connection endpoint, app tak perlu tukar config. BUKAN untuk scale reads — guna Read Replicas untuk tu.',
             compare: {
               label: 'Multi-AZ vs Read Replicas — THE classic exam comparison',
@@ -1527,6 +1578,21 @@ export const domains: DomainData[] = [
             ingat: '"Photocopy database untuk baca je — boleh cross-region"',
             gunaUntuk: 'Scale read traffic, reporting queries, multi-region read access',
             fungsi: 'Mencipta salinan database read-only untuk mengagihkan beban queries baca. Async replication dari primary. Boleh cross-region — master kat Frankfurt, replicas kat US, Singapore, Tokyo untuk serve local users laju. Up to 15 read replicas. Boleh promoted to master untuk DR.',
+            sebabApa: 'Satu primary DB ada had — terlalu banyak read (reporting, analytics, global users) boleh cekik dia, dan write pun jadi slow. Read Replica wujud untuk offload semua read ke salinan read-only (boleh letak region lain dekat user) supaya primary fokus pada write je. Bonus: replica boleh dipromote jadi standalone = pilihan DR.',
+            sifir: [
+              'Read Replica = READ SCALING (+ cross-region read), BUKAN HA',
+              'Replication ASYNC (boleh lag sikit, eventual)',
+              'Up to 15 per primary; boleh buat replica-of-replica',
+              'Boleh PROMOTE → standalone DB (option DR)',
+              'Cross-region replica = local read laju + DR region lain',
+            ],
+            perangkap: [
+              {
+                soalan: 'Nak DR untuk RDS (bukan Aurora): kalau region utama down, ada DB region lain boleh ambil alih. Guna apa?',
+                jebakan: 'Multi-AZ — ramai ingat Multi-AZ = DR. SALAH: Multi-AZ same-region je, tak lindung kalau SELURUH region outage.',
+                betul: 'Cross-region Read Replica, promote jadi standalone bila region utama down. (Aurora → Global Database.)',
+              },
+            ],
             contohGuna: 'Multinational company: master DB kat EU-Frankfurt, cross-region read replicas kat US, AP, SA — local users baca dari nearest replica tanpa hantar semua traffic ke Frankfurt.',
             scenario: 'Multi-region database design → RDS cross-region Read Replicas. Reporting queries slow down production → create Read Replica in same/different region, point reporting app ke replica. INGAT: Multi-AZ = same region HA (failover). Read Replicas = read scaling + cross-region reads.',
             tips: [
@@ -1546,6 +1612,21 @@ export const domains: DomainData[] = [
             ingat: '"Perantara yang pool connections — jimat RDS dari connection tsunami"',
             gunaUntuk: 'Connection pooling for RDS — handle too many connections from Lambda/Auto Scaling',
             fungsi: 'RDS Proxy duduk antara application dan RDS, multiplex connections. Bila Lambda scale up kepada 1000 instances, RDS Proxy pool connections — RDS hanya nampak bilangan connections yang manageable. Mengatasi "too many connections" errors.',
+            sebabApa: 'Lambda / Auto Scaling boleh buka beribu connection serentak — tapi RDS ada had connection & tiap connection makan memory. Akibatnya "too many connections" error & DB pengsan. RDS Proxy wujud sebagai orang tengah yang pool & reuse connection, supaya RDS nampak bilangan kecil je walaupun beribu app instance.',
+            sifir: [
+              'RDS Proxy = CONNECTION POOLING, BUKAN read scaling / query speed',
+              'Selesai: "too many connections", idle connections, connection exhaustion',
+              'Power combo dengan Lambda (scale drastik, buka/tutup connection laju)',
+              'Failover lagi laju (~66% kurang), tahan connection masa DB flip',
+              'Sokong IAM auth + Secrets Manager untuk credentials',
+            ],
+            perangkap: [
+              {
+                soalan: 'Lambda app bila scale tinggi keluar error "too many connections" ke RDS. Fix?',
+                jebakan: 'Tambah Read Replica — nampak macam "agih beban". SALAH: masalah ni bilangan CONNECTION, bukan read load.',
+                betul: 'RDS Proxy (pool & multiplex connections). Keyword "too many connections + Lambda/RDS" → RDS Proxy.',
+              },
+            ],
             scenario: '"Lambda functions causing too many RDS connections" → RDS Proxy. "Idle connections from Auto Scaling EC2" → RDS Proxy. Read Replicas = read scaling. Multi-AZ = HA. RDS Proxy = connection management.',
             tips: [
               'RDS Proxy solves: "too many connections", "idle connections", "connection exhaustion"',
@@ -1592,6 +1673,27 @@ export const domains: DomainData[] = [
             ingat: '"RDS tapi 5x laju, 6 copies auto, failover 30 saat"',
             gunaUntuk: 'High-performance relational DB, MySQL/PostgreSQL compatible, enterprise HA',
             fungsi: 'Aurora simpan 6 salinan data merentasi 3 AZs secara automatik. Storage auto-grow hingga 256 TiB. Up to 15 Read Replicas dengan lag <10ms. Failover automatik dalam <30 saat.',
+            sebabApa: 'Orang nak kuasa & HA peringkat enterprise tapi tak nak urus replication/storage sendiri macam RDS biasa. Aurora wujud dengan pisahkan compute & storage — storage layer auto simpan 6 copy merentas 3 AZ, auto-grow, failover <30s. Kau dapat MySQL/PostgreSQL yang 3-5x laju & tahan lasak tanpa kerja manual.',
+            sifir: [
+              'Aurora = 6 copies / 3 AZ auto (2 per AZ); RDS Multi-AZ = 1 standby je',
+              'Failover Aurora <30s; RDS Multi-AZ 1-2 min',
+              'Semua instance SHARE satu cluster volume (bukan copy sendiri) → tambah replica laju',
+              'Up to 15 Aurora Replicas (read), lag <10ms',
+              'MySQL & PostgreSQL compatible; storage auto-grow → 128 TiB',
+              'Global Database = 1 primary + up to 5 region; RTO <1min, RPO ~1s',
+            ],
+            perangkap: [
+              {
+                soalan: 'Perlu cross-region DR: downtime <1 min, data loss minimum, minimal manual ops. Pilih.',
+                jebakan: 'RDS Multi-AZ — "kan ni HA?". SALAH: Multi-AZ same-region je, tak lindung kalau SELURUH region down.',
+                betul: 'Aurora Global Database (RTO <1min, RPO ~1s, auto-promote secondary region).',
+              },
+              {
+                soalan: 'Nak HA relational DB dengan failover lebih laju & lebih banyak salinan dari RDS Multi-AZ.',
+                jebakan: 'RDS Multi-AZ — nampak cukup. Tapi soalan tekan "lebih laju + lebih banyak copy".',
+                betul: 'Aurora (6 copies/3 AZ, failover <30s vs RDS Multi-AZ 1 standby/1-2 min).',
+              },
+            ],
             contohGuna: 'Replace RDS MySQL production — Aurora bagi HA automatik, 6 copies, failover <30s, storage auto-scale, tanpa manage sendiri.',
             scenario: '"High availability relational DB, auto-failover, multiple copies" → Aurora. Bukan RDS Multi-AZ (Aurora lebih canggih: 6 copies vs 1 standby, failover 30s vs 1-2 minit). Aurora Serverless untuk unpredictable/intermittent workloads.',
             diagram: [
@@ -1644,6 +1746,21 @@ export const domains: DomainData[] = [
             ingat: '"Database yang tidur bila tak pakai, scale sendiri"',
             gunaUntuk: 'Unpredictable/intermittent workloads — auto-scale DB capacity, pay per second',
             fungsi: 'Aurora Serverless v2 auto-scale capacity dalam fractions of seconds dari minimum hingga ratusan ACUs, dalam increments 0.5 ACU. Boleh scale to near-zero (auto-pause/resume) bila idle.',
+            sebabApa: 'Workload on-off / tak menentu (dev-test office hours, app baru, traffic spiky) — kau tak nak bayar instance penuh 24/7 sedangkan DB selalu idle. Aurora Serverless wujud supaya capacity auto naik-turun ikut demand & boleh pause ke near-zero bila tiada traffic. Bayar per second, bukan per instance 24/7.',
+            sifir: [
+              'Aurora Serverless = auto-scale COMPUTE (ACU), bayar per second',
+              'v2 = default sekarang: fine-grained 0.5 ACU, NO connection drop, boleh MIX dgn provisioned',
+              'v1 = legacy: scale step-step, connection boleh DROP',
+              'Min 0 ACU → auto-pause/resume (scale to ~zero bila idle)',
+              'Keyword: intermittent / variable / dev-test / unpredictable',
+            ],
+            perangkap: [
+              {
+                soalan: 'Nak instant scaling tanpa putus connection, DAN mix serverless + provisioned dalam SATU cluster.',
+                jebakan: 'Aurora Serverless v1 — orang main pilih "Serverless". SALAH: v1 boleh drop connection masa scale & tak boleh mix dgn provisioned.',
+                betul: 'Aurora Serverless v2 (no connection drop, boleh campur dgn provisioned instances).',
+              },
+            ],
             scenario: '"Dev/test database hanya pakai waktu office hours", "app traffic sangat unpredictable, nak zero DB cost masa idle" → Aurora Serverless. Keywords: intermittent, variable traffic, dev/test, scale to zero.',
             compare: {
               label: 'Aurora Serverless v1 vs v2',
@@ -1677,6 +1794,28 @@ export const domains: DomainData[] = [
             ingat: '"NoSQL yang tak pernah slow — milliseconds at any scale"',
             gunaUntuk: 'Serverless key-value/document store, single-digit ms latency at any scale',
             fungsi: 'Fully managed NoSQL database. Auto-scale, no servers. DynamoDB Streams capture changes untuk event-driven patterns. DAX (DynamoDB Accelerator) untuk microsecond reads. Global Tables untuk multi-region active-active.',
+            sebabApa: 'Bila kau perlu NoSQL yang laju KONSISTEN (single-digit ms) pada apa-apa scale tanpa urus server/sharding sendiri. Relational DB (RDS/Aurora) kena scale up & boleh jadi bottleneck untuk key-value workload besar. DynamoDB wujud serverless, auto-partition data — latency tetap stabil walau traffic meletup (Black Friday, viral game).',
+            sifir: [
+              'DynamoDB = NoSQL serverless, single-digit ms, any scale',
+              'On-Demand = bayar per request (spiky/baru); Provisioned = RCU/WCU (stabil, murah)',
+              'LSI = SAME partition key, beza sort key, MESTI masa create table, max 5, share throughput',
+              'GSI = beza partition/sort key, bila-bila masa, max 20, OWN throughput',
+              'Streams (INSERT/MODIFY/REMOVE) kekal 24 jam → trigger Lambda',
+              'Global Tables = multi-region active-active; DAX = microsecond read',
+              'Partition key high-cardinality elak hot partition',
+            ],
+            perangkap: [
+              {
+                soalan: 'App dah live & running, tetiba perlu query pattern baru (cari by attribute lain). Tambah apa?',
+                jebakan: 'LSI — sebab "index". SALAH: LSI MESTI dicipta MASA create table; tak boleh tambah lepas table dah wujud.',
+                betul: 'GSI (boleh dicipta bila-bila masa, own capacity, partition key boleh lain).',
+              },
+              {
+                soalan: 'DynamoDB read perlu microsecond (bukan millisecond). Pilih cache.',
+                jebakan: 'ElastiCache — cache umum. Boleh secara teori tapi kena tulis cache logic sendiri & bukan jawapan exam.',
+                betul: 'DAX (drop-in, microsecond, khusus DynamoDB). Keyword "microsecond + DynamoDB" → DAX.',
+              },
+            ],
             contohGuna: 'Shopping cart, user sessions, real-time leaderboards, gaming scores — workloads yang perlu high throughput, low latency, dan serverless.',
             scenario: '"Serverless NoSQL millisecond latency at any scale" → DynamoDB. "Microsecond reads for DynamoDB" → DAX. "Multi-region active-active database" → DynamoDB Global Tables. "Capture DynamoDB changes → trigger Lambda" → DynamoDB Streams.',
             compare: [
@@ -1735,6 +1874,21 @@ export const domains: DomainData[] = [
             ingat: '"Cache depan DynamoDB — baca dalam microseconds"',
             gunaUntuk: 'Read-heavy DynamoDB workloads needing microsecond response times',
             fungsi: 'Fully managed, highly available in-memory cache khusus untuk DynamoDB. Drop-in compatible — tak perlu tukar application logic, cuma point ke DAX endpoint. Hanya cache READ operations (GetItem, Query, Scan).',
+            sebabApa: 'DynamoDB sendiri dah laju (single-digit ms), tapi sesetengah read-heavy app (banyak repeat read item sama, contoh leaderboard / product hot) perlu lagi laju — MICROSECOND. DAX wujud sebagai in-memory cache depan DynamoDB, drop-in (code tak ubah), supaya read berulang tak pukul table & jimat RCU.',
+            sifir: [
+              'DAX = microsecond read; DynamoDB sendiri = single-digit ms',
+              'DAX cache DynamoDB SAHAJA (cakap DynamoDB API je)',
+              'Drop-in: guna DAX SDK, code logic tak berubah',
+              'Cache READ je (GetItem/Query/Scan); write tetap terus ke DynamoDB',
+              'Cache untuk RDS/Aurora/data am → ElastiCache, BUKAN DAX',
+            ],
+            perangkap: [
+              {
+                soalan: 'Read-heavy app atas RDS perlu cache laju. Pilih.',
+                jebakan: 'DAX — sebab "cache AWS untuk DB". SALAH: DAX hanya cakap DynamoDB API, tak boleh cache RDS langsung.',
+                betul: 'ElastiCache (Redis/Memcached) — cache untuk apa-apa termasuk RDS/Aurora.',
+              },
+            ],
             scenario: '"DynamoDB read latency perlu microseconds, bukan milliseconds" → DAX. "Cache untuk RDS/Aurora" → ElastiCache, BUKAN DAX (DAX khusus DynamoDB sahaja).',
             compare: {
               label: 'DAX vs ElastiCache — bila guna cache yang mana',
@@ -4950,6 +5104,21 @@ export const domains: DomainData[] = [
             ingat: '"Cache depan database, kurangkan DB load"',
             gunaUntuk: 'Cache frequent queries, reduce RDS cost',
             fungsi: 'Menyediakan in-memory caching untuk mengurangkan beban dan kos pada database utama',
+            sebabApa: 'Pukul database berkali-kali untuk data SAMA (product listing, user session, leaderboard) mahal & lambat — DB kena scale up (mahal). ElastiCache wujud untuk simpan data panas dalam memory (sub-ms read) supaya DB tak terbeban, latency turun & kos turun. Kalau data sama diminta berjuta kali, cache je.',
+            sifir: [
+              'Redis = rich data + persistence + replication + Multi-AZ (default exam answer)',
+              'Memcached = simple key-value, multi-threaded, NO persistence/replication',
+              'Lazy Loading = isi masa cache MISS (jimat memory, boleh stale → fix TTL)',
+              'Write-Through = isi masa WRITE (sentiasa fresh, tapi boros memory)',
+              'Session store / leaderboard / pub-sub → Redis',
+            ],
+            perangkap: [
+              {
+                soalan: 'Perlu cache dengan persistence, replication & Multi-AZ failover (session store tak boleh hilang bila node fail). Pilih engine.',
+                jebakan: 'Memcached — sebab "multi-threaded laju". SALAH: Memcached takda persistence/replication, data HILANG bila node restart/fail.',
+                betul: 'ElastiCache for Redis (persistence + replication + Multi-AZ auto-failover).',
+              },
+            ],
             scenario: 'E-commerce app — product listing query kena berjuta kali sehari. Tanpa cache, RDS kena scale up (mahal). Dengan ElastiCache (Redis), query popular disimpan dalam memory — RDS tak terlalu terbeban, kos lebih rendah.',
             compare: [
               {

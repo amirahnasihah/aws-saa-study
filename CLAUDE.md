@@ -26,7 +26,7 @@ When working in this repository, follow these standards:
 
 This repo is a SAA-C03 study app. When enriching a Deep Notes card (`data/awsServices.ts`), a scenario (`data/scenarios.ts`), or any learning content, ALWAYS aim for the full recipe below — don't just write a paragraph. The goal is recall under exam pressure, not reference docs. Apply every ingredient that genuinely fits the service (skip one only when it adds nothing, and say why).
 
-**The 6 ingredients of a good card:**
+**The ingredients of a good card:**
 
 1. **Anatomy / breakdown** — split the service into its parts and say what each does. In `ServiceCard` use `detailsLabel` + `storageDetails` (one component per line) and/or a `diagram` (`steps[]`) showing the internal pieces. Example: Redshift → Cluster → Leader/Compute nodes → slices → managed storage.
 2. **Comparison table(s)** — `compare: [...]` with `{ label, headers, rows, takeaway }`. At least one table that pits the service against the 2–3 services it's confused with on the exam (e.g. Athena vs Redshift Spectrum vs Redshift), and a `takeaway` line that states the discriminator + exam keyword mapping.
@@ -39,6 +39,15 @@ This repo is a SAA-C03 study app. When enriching a Deep Notes card (`data/awsSer
 5. **Exam triggers + traps** — `scenario` (keyword → service mapping, "X → service A, BUKAN service B") and `tips` (the gotchas, the "jangan keliru" pairs). State the discriminating keyword the exam uses.
 6. **Sources + searchability** — `docs[]` (official AWS doc links, fact-check claims against them), and a rich `keywords[]` so the AI hint/explain routes and internal-link finder can match the card.
 7. **Pricing** — include real AWS pricing in `tips[]` (prefixed with `PRICING:` for searchability). State the unit (per GB-month, per hour, per request, per 1K events…), the free tier if any, and the exam-relevant cost discriminator (e.g. "cheapest EBS = sc1 $0.015/GB", "ALB = $0.0225/hr + $0.008/LCU-hr"). Verify pricing against AWS pricing pages or docs. Add a `pricing` keyword to `keywords[]`. Exam loves cost-optimization questions — knowing approximate numbers helps pick the cheapest/most expensive option.
+
+**Recall scaffold (the "buku sifir" layer — apply to EVERY card, not just database):** the ingredients above build the reference; these make it stick. The card type already has homes for most of them — fill them, don't skip:
+
+8. **Maksud mudah + sebab apa wujud (plain meaning + the WHY)** — the `fungsi` field ("Apa Dia") must open in dead-simple Manglish: what is this thing if you explain it to a friend who's never seen AWS. Then the `sebabApa` field answers **why it exists / what pain it removes** (e.g. "RDS Proxy wujud sebab Lambda buka beribu connection → RDS pengsan; proxy pool connection supaya RDS tak kena banjir"). WHY beats WHAT for recall — a learner who knows the problem remembers the fix.
+9. **Bila guna (when) + exam keywords** — already covered: `gunaUntuk` renders as "Guna Bila" (the trigger), and `keywords[]` + the `scenario` field carry the exam keyword→service mapping. Make the keyword list rich so the AI hint/explain + internal-link finder match the card. State the discriminating keyword the exam uses ("survive AZ outage" → Multi-AZ, "reporting slow down prod" → Read Replica).
+10. **Quick sifir (cheat-sheet to memorize)** — `sifir: string[]`. 3–6 crisp one-line facts a learner can rote-memorize and recite the morning of the exam. Each line = a hard discriminator or number ("Multi-AZ = HA, BUKAN scaling", "Aurora = 6 copies / 3 AZ", "DAX = microsecond, DynamoDB sendiri = millisecond", "GSI = bila-bila masa + own capacity; LSI = creation time je + max 5"). Tight, no prose. Think times-table.
+11. **Contoh perangkap soalan (trap questions)** — `perangkap: TrapQuestion[]` with `{ soalan, jebakan, betul }`. Write 1–3 questions phrased like the real SAA-C03: `soalan` = the baited stem; `jebakan` = the answer that *looks* right + why the exam baits it; `betul` = the correct pick + the keyword that gives it away. This is the highest-value exam-prep ingredient — it rehearses the misdirection the exam actually uses (e.g. "cache untuk RDS → DAX?" jebakan: DAX nampak macam cache DB; betul: ElastiCache, sebab DAX cakap DynamoDB API je).
+
+**Voice:** write all of the above in the user's Manglish study voice (casual Malay-English mix) — `sebabApa`, `sifir`, `perangkap` especially. Keep AWS service names, technical terms, units, and code in English. Don't over-Malay-ify technical wording (the user has complained "jangan melayu sgt, susah nak agak dalam English") — keep the English keyword visible so it maps to the exam.
 
 **Pricing reference (us-east-1, approximate — verify before asserting):**
 
