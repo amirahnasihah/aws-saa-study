@@ -447,6 +447,7 @@ export const domains: DomainData[] = [
               'Stateful = SG ingat connections. Outbound reply auto dibenarkan — tak perlu explicit outbound rule',
               'SG = allow only. Nak deny specific IP? → Guna NACL',
               'SG boleh reference SG lain sebagai source — "allow 3306 FROM web-sg" bukan hardcode IP',
+              'Analogi: SG = Pengawal pejabat 👮 (stateful — ingat muka, dah bagi masuk auto bagi keluar). Lawan NACL = Kastam 🛂 (stateless — cek pasport tiap kali)',
             ],
             docs: [
               { label: 'Security Groups', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html' },
@@ -481,6 +482,7 @@ export const domains: DomainData[] = [
               'Outbound replies perlu allow ephemeral ports 1024–65535 (Linux 32768–60999, Windows 49152–65535) — sebab NACL stateless, return traffic guna random high port',
               'SG = allow only. Nak EXPLICITLY DENY satu IP/range? → NACL je yang boleh',
               'Mnemonic: NACL = Numbered + Allow/deny + Check both ways + subnet Level. SG = Stateful + allow-only + instance-level',
+              'Analogi: NACL = Kastam 🛂 (stateless — cek pasport tiap kali lalu, cepat lupa, jaga sempadan subnet). SG = Pengawal pejabat 👮 (stateful — ingat muka, auto lepas balik, jaga pintu instance)',
             ],
             docs: [
               { label: 'Network ACLs', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html' },
@@ -1217,6 +1219,27 @@ export const domains: DomainData[] = [
             ingat: '"SG = Smart/Stateful (instance). NACL = Needs-both-ways/stateless (subnet)"',
             gunaUntuk: 'Two-layer defence: SG guards each EC2, NACL guards each subnet',
             fungsi: 'SG dan NACL bekerja bersama sebagai firewall berlapis. SG (stateful) bekerja pada peringkat EC2 — ingat connections, reply auto dibenarkan, allow-only rules. NACL (stateless) bekerja pada peringkat subnet — check tiap packet, perlu explicit rules untuk inbound DAN outbound, boleh deny IPs.',
+            mermaid: [
+              {
+                label: 'Cara mudah ingat — NACL = Kastam 🛂, SG = Pengawal Pejabat 👮',
+                source: `flowchart TD
+  T["📦 Trafik nak masuk EC2"] --> NACL{"NACL = KASTAM 🛂<br/>jaga sempadan SUBNET"}
+  NACL -->|"Stateless = cepat lupa.<br/>Cek pasport SETIAP kali lalu"| SG{"Security Group = PENGAWAL PEJABAT 👮<br/>jaga pintu INSTANCE"}
+  SG -->|"Stateful = ingat muka.<br/>Dah bagi masuk = auto bagi keluar"| EC2["✅ Sampai EC2"]
+  EC2 -.->|"Trafik balik (reply)"| SGB["SG: 'aku ingat kau tadi' → terus lepas ✅"]
+  SGB -.->|"sampai Kastam balik"| NACLB["NACL: 'sapa kau?' → cek balik 🛂<br/>kena ADA outbound rule allow<br/>ephemeral port 1024-65535"]`,
+                caption: 'Analogi yang kau sendiri jumpa: NACL = Kastam (stateless — cerewet, cepat lupa, cek pasport tiap-tiap kali kau lintas sempadan). Security Group = Pengawal pejabat (stateful — ingat muka kau, dah kenal terus lepas). INGAT exam: sebab NACL "cepat lupa", trafik BALIK (reply) pun kena ada outbound rule allow port ephemeral 1024-65535 — kalau tak, sambungan mati separuh jalan.',
+              },
+              {
+                label: 'Kenapa SSH gagal walaupun inbound allow — perangkap stateless',
+                source: `flowchart LR
+  USER["💻 Kau SSH ke server"] -->|"port 22 masuk"| I1["Inbound NACL<br/>100: Allow SSH:22 ✅"]
+  I1 --> SRV["🖥️ EC2 terima request ✅"]
+  SRV -->|"server reply guna<br/>ephemeral port 1024-65535"| O1["Outbound NACL<br/>100: Deny all ❌"]
+  O1 --> X["🚫 Reply TERSEKAT<br/>→ SSH connection GAGAL"]`,
+                caption: 'Inbound benarkan SSH masuk, server pun terima — tapi bila server nak HANTAR BALIK reply (guna random high port 1024-65535), outbound NACL sekat. Sebab NACL stateless, return traffic tak auto-allow macam SG. INGAT exam: "Inbound allow tapi connection tetap gagal" → fikir outbound ephemeral ports. Kalau ini Security Group, dah jalan (stateful, reply auto-allow).',
+              },
+            ],
             compare: {
               label: 'Security Group vs NACL',
               headers: ['Aspect', 'Security Group', 'Network ACL'],
