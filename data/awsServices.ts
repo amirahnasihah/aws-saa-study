@@ -1987,6 +1987,26 @@ export const domains: DomainData[] = [
             ingat: '"Highway AWS untuk user seluruh dunia"',
             gunaUntuk: 'Route global users to nearest healthy endpoint via AWS backbone',
             fungsi: 'Menggunakan AWS global network untuk route traffic ke endpoint yang paling dekat dan sihat, bukan melalui internet awam',
+            sebabApa: 'Wujud sebab traffic yang melalui public internet melintasi banyak ISP/router yang slow & tak menentu — latency naik turun, kadang putus. Global Accelerator bagi user masuk AWS backbone secepat mungkin di edge terdekat, lepas tu jalan dalam "lebuhraya peribadi" AWS yang laju & stabil ke region. Lebih dari itu: dia bagi 2 STATIC anycast IP (tak berubah) supaya IoT/firewall boleh whitelist sekali, dan failover cross-region <30s tanpa tunggu DNS propagate. Tujuan: routing TCP/UDP global laju + static IP + failover pantas.',
+            sifir: [
+              'GA = optimize ROUTING via AWS backbone (TCP/UDP). CloudFront = CACHE content (HTTP) — beza tujuan',
+              'GA bagi 2 STATIC anycast IP — tak berubah, bagus untuk whitelist & IoT hard-coded IP',
+              'GA TIADA caching — proxy traffic terus ke ALB/NLB/EC2/EIP',
+              'Cross-region failover GA <30s (tak tunggu DNS TTL/propagation)',
+              'Non-HTTP / gaming / VoIP / IoT / perlu static IP global → GA. Web content cache → CloudFront',
+            ],
+            perangkap: [
+              {
+                soalan: 'Beribu IoT device ada IP endpoint HARD-CODED dan tak boleh update senang. Backend pindah region kadang-kadang, dan device perlu sentiasa sampai ke endpoint sihat dengan latency rendah. Servis mana?',
+                jebakan: 'Route 53 dengan latency/failover routing — tukar DNS record point ke backend baru. Nampak betul sebab Route 53 memang untuk arah traffic.',
+                betul: 'AWS Global Accelerator. Device yang hard-code IP tak hormat perubahan DNS (cache IP lama / tak buat DNS lookup). GA bagi 2 static IP yang KEKAL — device sentiasa hubungi IP sama, GA route ke endpoint sihat di belakang. Keyword "hard-coded/static IP + global + failover" → Global Accelerator.',
+              },
+              {
+                soalan: 'Aplikasi web (HTTP) nak laju untuk user global dengan banyak imej/video statik. GA atau CloudFront?',
+                jebakan: 'Global Accelerator — sebab dia guna AWS backbone "laju global". Nampak betul sebab GA = "global + laju".',
+                betul: 'CloudFront. Untuk content HTTP yang boleh di-CACHE, CloudFront simpan salinan di edge (offload origin + laju). GA tiada caching — dia cuma optimize routing, sesuai untuk TCP/UDP / non-cacheable. Keyword "cacheable HTTP content global" → CloudFront, bukan GA.',
+              },
+            ],
             scenario: 'App dengan users dari US dan Asia — Global Accelerator route via AWS backbone (bukan public internet), lagi laju. Kalau satu region fail, auto-failover ke region lain dalam <30 saat. Beza dengan CloudFront: GA untuk TCP/UDP apps, bukan static content caching.',
             compare: {
               label: 'Global Accelerator vs CloudFront — dua-dua guna AWS edge, tapi beza tujuan',
@@ -3527,6 +3547,27 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Deliver content laju via edge locations + serve private content securely',
             fungsi: 'Menghantar content kepada pengguna melalui 600+ edge locations global dengan latency rendah. Cache content dekat dengan user, restrict access (signed URL/cookie, OAC, geo), dan offload origin.',
             contohGuna: 'Deliver images & videos untuk global users, static website laju, stream private paid media',
+            sebabApa: 'Wujud sebab kalau user di Jepun ambil gambar dari S3 bucket di Virginia, setiap request kena pergi balik separuh dunia → lambat + origin kena hentam beribu request sama. CloudFront letak salinan content (cache) di 600+ edge location dekat user → request dijawab dari edge terdekat (laju) dan origin kau bernafas (offload). Bonus: dia jadi pintu masuk selamat — boleh kunci content (signed URL/cookie, OAC), block ikut negara, dan jadi tempat WAF/Shield jaga.',
+            sifir: [
+              'CDN, cache di edge → laju untuk global user + offload origin',
+              'Private content VIA CloudFront → Signed URL (1 file) / Signed Cookie (banyak file)',
+              'Kunci S3 bucket supaya kekal private tapi serve via CF → OAC (ganti OAI; OAC support SSE-KMS)',
+              'CloudFront cert untuk HTTPS → MESTI di us-east-1',
+              'Block ikut negara → Geo Restriction. Jimat kos → Price Class (100 = paling murah)',
+              'Transform request di edge: ringkas/laju → CloudFront Functions; berat/panggil AWS → Lambda@Edge',
+            ],
+            perangkap: [
+              {
+                soalan: 'Aplikasi nak bagi pelanggan berbayar download SATU installer file secara selamat, expire selepas 1 jam, dan content perlu disampaikan laju ke user global. Pilih apa?',
+                jebakan: 'S3 Presigned URL — sebab ia memang untuk bagi akses sementara ke satu S3 object dengan expiry. Nampak betul sebab "satu file + expiry".',
+                betul: 'CloudFront Signed URL. Presigned URL pergi DIRECT ke S3 (tiada edge cache, tiada penyampaian global laju, tiada restrict IP). Keyword "laju ke global user / at scale via CDN + private" → CloudFront Signed URL. (Presigned URL betul cuma untuk one-off direct-to-S3 upload/download.)',
+              },
+              {
+                soalan: 'Nak serve objek S3 PRIVATE melalui CloudFront, dan bucket guna SSE-KMS encryption. Bucket mesti kekal block-public-access. Setup mana?',
+                jebakan: 'Guna OAI (Origin Access Identity) + bucket policy bagi akses ke OAI. Nampak betul sebab OAI memang cara klasik kunci bucket untuk CloudFront.',
+                betul: 'OAC (Origin Access Control) + bucket policy ke CloudFront service principal. OAI TAK support SSE-KMS — kena OAC. Keyword "S3 origin + SSE-KMS / private bucket via CloudFront" → OAC, bukan OAI.',
+              },
+            ],
             scenario: 'Serve private paid video globally dengan low latency → CloudFront signed URLs/cookies (cache kat edge + restrict access). BUKAN S3 presigned URL — presigned = direct S3, takde edge caching, takde IP restriction. Untuk serve private S3 objects → OAC + bucket policy (bucket kekal private).',
             detailsLabel: 'Signed URL vs S3 Presigned URL',
             storageDetails: 'CloudFront Signed URL/Cookie → access private content MELALUI CloudFront (edge-cached, global low latency, boleh restrict by IP range + expiry, guna trusted key group). Untuk serve at scale via CDN.\nS3 Presigned URL → direct access ke SATU S3 object, signed dengan IAM credentials orang yang generate (inherit permission dia), takde CDN caching. Untuk one-off upload/download terus ke S3.',
@@ -3577,6 +3618,27 @@ export const domains: DomainData[] = [
             gunaUntuk: 'HTTP/HTTPS path-based routing, microservices, containers',
             fungsi: 'Mengagihkan traffic HTTP/HTTPS berdasarkan path atau host rules (Layer 7). Boleh route ke instances dalam peered VPCs menggunakan IP address sebagai target — bukan hanya dalam satu VPC.',
             contohGuna: 'myshop.com/products → service A, myshop.com/cart → service B. Cross-VPC: route ke EC2 instances dalam peered VPCs guna IP targets.',
+            sebabApa: 'Wujud sebab kalau kau ada banyak server web/microservice, kau tak nak user kena tahu IP setiap server, dan kau nak elak satu server mati = website down. ALB jadi "satu pintu masuk" yang sebarkan request ke server yang sihat. Lebih dari NLB: ALB faham HTTP, jadi dia boleh baca path/host/header dan hantar /cart ke service A, /video ke service B — satu LB untuk banyak microservice. Tujuan: HA + scaling + routing pintar di Layer 7.',
+            sifir: [
+              'ALB = Layer 7 (HTTP/HTTPS), routing by path/host/header. NLB = Layer 4 (TCP/UDP)',
+              'ALB takde static IP (DNS name je). Perlu static IP → NLB',
+              'Banyak domain satu ALB, cert berasingan → SNI (multi-cert pada satu listener)',
+              'ALB cross-zone = SENTIASA ON & free. NLB cross-zone = OFF default (enable = caj inter-AZ)',
+              'Stateful app perlu session sama → enable ALB stickiness (cookie AWSALB)',
+              'ALB & NLB boleh IP targets (cross-VPC / on-prem). CLB = instance-ID + same-VPC je (legacy)',
+            ],
+            perangkap: [
+              {
+                soalan: 'Aplikasi perlu host DUA domain berbeza (shop.com & blog.com) di belakang SATU load balancer, setiap satu dengan ACM cert sendiri, tanpa gabungkan jadi satu cert. Macam mana?',
+                jebakan: 'Buat DUA ALB berasingan, satu per domain dengan certnya. Atau guna satu SAN/wildcard cert yang cover dua-dua domain. Nampak betul sebab "satu cert satu listener".',
+                betul: 'Satu ALB, tambah kedua-dua ACM cert pada HTTPS listener guna SNI (Server Name Indication). Client hantar hostname dalam TLS handshake → ALB pilih cert betul. Tak perlu ALB berasingan atau combined cert. Keyword "multiple domains/certs on one ALB" → SNI.',
+              },
+              {
+                soalan: 'Beban kerja TCP gaming latency-sensitif perlu satu STATIC IP untuk whitelisting firewall pelanggan. Load balancer mana?',
+                jebakan: 'ALB — sebab ia load balancer paling popular & feature-rich. Nampak betul sebab ALB selalu jadi default.',
+                betul: 'NLB. ALB tiada static IP (DNS name sahaja) dan ia Layer 7 HTTP, bukan untuk raw TCP gaming. NLB = Layer 4, ultra-low latency, dan bagi Elastic/static IP per AZ. Keyword "static IP + TCP/UDP + extreme low latency" → NLB.',
+              },
+            ],
             scenario: 'Cross-VPC load balancing: company ada 3 VPCs peered. Guna satu ALB dengan IP address targets untuk route ke instances dalam semua 3 VPCs. Classic Load Balancer (CLB) tak boleh buat ni — CLB hanya support instance ID targets dalam same VPC.',
             compare: {
               label: 'ELB types — pilih load balancer ikut layer & keperluan',
@@ -3615,7 +3677,21 @@ export const domains: DomainData[] = [
             gunaUntuk: 'TCP/UDP, low latency, static IP, cross-VPC with IP targets',
             fungsi: 'Mengagihkan traffic TCP/UDP pada Layer 4 dengan latency sangat rendah. Seperti ALB, NLB juga boleh route ke instances dalam peered VPCs menggunakan IP address targets.',
             contohGuna: 'Gaming servers, IoT, VoIP. Cross-VPC: NLB dengan IP targets route ke instances dalam peered VPCs.',
-            scenario: 'NLB diperlukan bila: (1) perlukan static IP atau Elastic IP untuk load balancer, (2) TCP/UDP traffic bukan HTTP, (3) extreme performance/low latency. Untuk cross-VPC dengan IP targets, both NLB dan ALB boleh digunakan.',
+            sebabApa: 'Wujud sebab ada workload yang BUKAN HTTP (game server, VoIP, IoT, database protocol) dan perlukan kelajuan ekstrem + satu static IP yang firewall pelanggan boleh whitelist. ALB tak boleh — dia HTTP-only dan takde static IP. NLB beroperasi di Layer 4 (TCP/UDP), boleh handle berjuta connection per saat dengan latency super rendah, dan bagi Elastic IP tetap. Tujuan: load balancing untuk protocol bukan-HTTP, performance ekstrem, dan static IP.',
+            sifir: [
+              'NLB = Layer 4 (TCP/UDP/TLS), ultra-low latency, jutaan req/s',
+              'NLB = ada static / Elastic IP per AZ. ALB = takde (DNS name je)',
+              'NLB preserve client IP terus. ALB guna X-Forwarded-For header',
+              'NLB cross-zone OFF by default (enable = caj data inter-AZ). ALB sentiasa ON & free',
+              'Bukan HTTP / perlu static IP / extreme perf → NLB. HTTP routing pintar → ALB',
+            ],
+            perangkap: [
+              {
+                soalan: 'Aplikasi backend perlu tahu alamat IP SEBENAR client untuk logging & rate-limiting, dan guna TCP. Load balancer & cara mana paling mudah?',
+                jebakan: 'ALB dan baca header X-Forwarded-For untuk dapat client IP. Nampak betul sebab XFF memang cara biasa dapat client IP belakang LB.',
+                betul: 'NLB — ia preserve source/client IP secara native (target nampak IP client sebenar terus), tanpa perlu parse header. Plus client guna TCP, jadi NLB (L4) lebih sesuai dari ALB (L7 HTTP). Keyword "preserve client IP + TCP" → NLB.',
+              },
+            ],
             tips: [
               'NLB = static IP/Elastic IP support. ALB = tiada static IP (guna static IP alias CloudFront/Global Accelerator)',
               'NLB dan ALB BOLEH route cross-VPC via IP targets. CLB TIDAK boleh',
@@ -3633,6 +3709,21 @@ export const domains: DomainData[] = [
             gunaUntuk: 'DNS management, domain routing',
             fungsi: 'Mengurus DNS dan mengarahkan traffic kepada endpoint yang betul',
             contohGuna: 'Point domain ke server, failover ke backup region',
+            sebabApa: 'Wujud sebab manusia ingat "myshop.com", bukan "54.x.x.x". DNS = buku telefon internet yang tukar nama → IP. Route 53 bukan sekadar buku telefon — dia GPS pintar: boleh hantar user ke region paling laju (latency), ke backup bila primary mati (failover via health check), atau ikut negara user (geolocation). Nama "53" dari port DNS (port 53). Tujuan: terjemah domain + arah traffic secara pintar berdasarkan kesihatan & lokasi.',
+            sifir: [
+              'APEX/root domain (example.com) → MESTI Alias record, CNAME TAK BOLEH',
+              'Subdomain (www) → CNAME atau Alias dua-dua boleh',
+              'Alias = AWS-only, FREE query, point ke ALB/CloudFront/S3/Route53 record',
+              'Route 53 = DNS + domain registration + health check + routing policy',
+              '"53" = port DNS. Routing pintar (latency/failover/geo) → guna routing policy',
+            ],
+            perangkap: [
+              {
+                soalan: 'Nak point root domain example.com terus ke sebuah ALB. Rekod DNS mana yang digunakan?',
+                jebakan: 'CNAME record yang point ke DNS name ALB. Nampak betul sebab ALB bagi DNS name, dan CNAME memang untuk point nama ke nama.',
+                betul: 'Alias record (type A) ke ALB. Spec DNS LARANG CNAME pada apex/root domain (example.com) — CNAME cuma boleh untuk subdomain (www). Alias = sambungan AWS yang benarkan apex point ke ALB/CloudFront/S3, dan query percuma. Keyword "root/apex domain → AWS resource" → Alias.',
+              },
+            ],
             tips: [
               'Alias record: AWS-specific DNS extension. Boleh guna untuk APEX/root domain (e.g. example.com). Points ke ALB, CloudFront, S3 website, other Route 53 records',
               'CNAME record: standard DNS. TIDAK BOLEH guna untuk apex/root domain (DNS spec prohibition)',
@@ -3647,6 +3738,22 @@ export const domains: DomainData[] = [
             ingat: '"Cara Route 53 decide siapa dapat traffic"',
             gunaUntuk: 'Control how DNS traffic is routed to resources',
             fungsi: 'Pelbagai routing policies untuk optimize availability, performance, failover, dan geolocation berdasarkan health checks dan rules',
+            sebabApa: 'Wujud sebab "satu nama → satu IP" tak cukup bila kau ada server di banyak region. Kau nak DNS itu sendiri buat keputusan pintar: hantar user ke region paling LAJU (latency), tukar ke backup bila primary MATI (failover), bahagi traffic 70/30 untuk A/B test (weighted), atau patuh undang-undang dengan hantar user ikut NEGARA (geolocation). Routing policy = otak Route 53 yang decide siapa dapat jawapan DNS mana. Tujuan: optimize availability, performance & compliance di lapisan DNS.',
+            sifir: [
+              'Latency-based = LAJU (performance). Geolocation = LOKASI user (compliance/bahasa) — JANGAN keliru',
+              'A/B test / split % / gradual shift → Weighted',
+              'Active-passive / DR / failover ke backup → Failover (+ health check)',
+              'Return banyak IP sihat untuk client pilih (bukan LB betul) → Multivalue Answer (max 8)',
+              'Geoproximity = jarak + bias (boleh "tarik" traffic ke satu region)',
+              'AWS alias target → Evaluate Target Health auto. On-prem/non-alias → kena attach health check sendiri',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat global nak user disambung ke region AWS yang bagi response PALING PANTAS untuk mereka. Routing policy mana?',
+                jebakan: 'Geolocation routing — hantar user ikut lokasi geografi mereka ke region terdekat. Nampak betul sebab "dekat = laju".',
+                betul: 'Latency-based routing. Geolocation route ikut LOKASI user (untuk compliance/bahasa), bukan ikut kelajuan sebenar — region terdekat secara geografi tak semestinya latency terendah (network path berbeza). Keyword "fastest / lowest latency" → Latency-based. "by country / comply" → Geolocation.',
+              },
+            ],
             detailsLabel: 'Routing Policies',
             storageDetails: 'Simple → 1 resource, no health check, no failover\nWeighted → split traffic by % (A=70%, B=30%)\nLatency-based → route to lowest latency AWS region\nFailover → primary (active) + secondary (passive) via health check\nGeolocation → route by user\'s country/continent\nGeoproximity → route by geographic distance + bias\nMulti-Value → up to 8 healthy records, random selection',
             compare: {
