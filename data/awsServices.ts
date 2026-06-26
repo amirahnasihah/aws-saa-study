@@ -1916,6 +1916,27 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Automatically scale EC2 instances based on load',
             fungsi: 'Menambah atau mengurangkan bilangan EC2 instances secara automatik berdasarkan policies, schedules, atau metrics',
             scenario: 'E-commerce traffic spike masa sale event — ASG scale out bila CPU >70%, tambah EC2 instances automatik. Bila traffic turun, scale in untuk jimat kos. Set minimum=2 untuk high availability.',
+            sebabApa: 'Wujud sebab kalau kau provision server tetap (fixed), dua masalah: bila traffic spike (sale event) server tak cukup → website hang; bila traffic sepi server idle → bayar lebih sia-sia. ASG selesaikan dua-dua: auto TAMBAH instance bila beban naik (elastic, jimat masa sysadmin), auto KURANG bila sepi (jimat kos). Bonus HA: kalau instance mati / AZ jatuh, ASG auto ganti & sebar across AZ supaya min capacity sentiasa dijaga. Tujuan: elasticity + cost saving + self-healing.',
+            sifir: [
+              'ASG = horizontal scaling (tambah/kurang instance), BUKAN vertical (besarkan saiz)',
+              'Default & paling senang → Target Tracking (kekal metric pada target, cth CPU 50%)',
+              'Tahu jadual (Isnin 9am) → Scheduled. Corak berulang/cyclical → Predictive (scale awal)',
+              'min = HA floor (set ≥2 across AZ), desired = sekarang, max = siling',
+              'Phase out AMI lama masa scale-in → OldestLaunchTemplate termination policy',
+              'ASG sendiri FREE — bayar EC2 yang dilancarkan je',
+            ],
+            perangkap: [
+              {
+                soalan: 'Aplikasi web makin perlahan bila traffic naik. Pasukan nak guna instance lebih besar (vertical) secara automatik bila CPU tinggi. Pendekatan AWS yang betul?',
+                jebakan: 'Konfigur Auto Scaling untuk auto-tukar ke instance type lebih besar (scale UP) bila CPU tinggi. Nampak betul sebab "scale automatik bila CPU tinggi".',
+                betul: 'ASG buat HORIZONTAL scaling — tambah lebih banyak instance (scale out), bukan besarkan instance sedia ada. Letak instance di belakang ELB + ASG dengan Target Tracking pada CPU. Vertical scaling (tukar saiz) perlukan stop/restart, bukan apa yang ASG buat. Keyword "scale automatically with load" → ASG scale out (horizontal).',
+              },
+              {
+                soalan: 'Traffic melonjak setiap hari jam 8 malam (corak yang DIKETAHUI & berulang), dan ASG yang reaktif sentiasa lambat sikit sampai user kena lag awal-awal lonjakan. Penambahbaikan?',
+                jebakan: 'Turunkan threshold Target Tracking (cth CPU 30%) supaya scale lebih awal. Nampak betul sebab "scale lebih awal".',
+                betul: 'Guna Scheduled scaling (kerana masa diketahui) atau Predictive scaling (ML forecast corak berulang) untuk tambah kapasiti SEBELUM lonjakan. Target Tracking sentiasa reaktif (tunggu metric naik dulu). Keyword "known schedule / recurring pattern / scale ahead of spike" → Scheduled / Predictive.',
+              },
+            ],
             compare: {
               label: 'Scaling policies — pilih cara scale ikut corak traffic',
               headers: ['Policy', 'Macam mana ia scale', 'Guna bila'],
@@ -2398,6 +2419,27 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Non-critical systems, lowest cost DR strategy',
             fungsi: 'Strategi DR paling asas — backup data ke S3/Glacier, restore bila diperlukan. Tiada infrastruktur standby di DR region',
             scenario: 'Non-critical archival system — backup snapshots ke S3/Glacier regularly. RPO: hours/days. RTO: hours. Paling murah tapi paling lambat recover. Guna bila downtime beberapa jam boleh diterima.',
+            sebabApa: 'Wujud sebab bencana region/data corruption MEMANG akan jadi suatu hari, dan tak semua sistem mampu (atau perlu) bayar untuk standby panas. Backup & Restore = strategi DR paling murah: simpan backup je (S3/Glacier), TIADA infra berjalan di DR region. Bila bencana, baru bina semula dari backup. Tujuan: perlindungan DR minimum untuk sistem yang downtime beberapa jam OK — bayar storage je, bukan duplicate infra.',
+            sifir: [
+              'RPO = data boleh hilang (berapa kerap backup). RTO = masa pulih (downtime tolerance)',
+              'Backup & Restore: RPO jam-hari, RTO jam, kos PALING RENDAH, takde standby',
+              'Pilot Light: DB on, app OFF. RPO minit, RTO minit-jam',
+              'Warm Standby: full stack scaled-DOWN running. RPO saat-minit, RTO minit',
+              'Multi-Site Active/Active: full capacity dua region live. RPO~0, RTO saat, PALING MAHAL',
+              'Kiri→kanan = laju & mahal naik. Pilih ikut RTO/RPO vs bajet',
+            ],
+            perangkap: [
+              {
+                soalan: 'Aplikasi mission-critical perbanking perlu RTO beberapa saat dan RPO hampir sifar (hampir tiada data loss, hampir tiada downtime). Strategi DR mana?',
+                jebakan: 'Warm Standby — full stack dah berjalan (scaled-down) di DR, jadi failover laju. Nampak betul sebab "ada infra berjalan = laju".',
+                betul: 'Multi-Site Active/Active. Warm Standby masih perlu masa SCALE UP semasa failover (RTO minit, bukan saat). Untuk RTO saat + RPO~0, perlu full capacity LIVE di dua region serentak. Keyword "near-zero RPO + seconds RTO + mission-critical / zero downtime" → Multi-Site Active/Active.',
+              },
+              {
+                soalan: 'Sistem arkib dalaman, bukan kritikal, downtime beberapa jam OK. Mahu kos DR PALING RENDAH. Pilih?',
+                jebakan: 'Pilot Light — DB sentiasa replicate, jadi recovery cepat dan masih agak murah. Nampak betul sebab Pilot Light dikenali sebagai murah.',
+                betul: 'Backup & Restore. Pilot Light masih jalankan core DB (kos berterusan). Untuk kos PALING RENDAH bila downtime jam OK, cukup simpan backup di S3/Glacier tanpa infra berjalan langsung. Keyword "lowest cost / downtime hours acceptable / non-critical" → Backup & Restore.',
+              },
+            ],
             compare: [
               {
                 label: 'RTO vs RPO — jangan keliru!',
@@ -2430,6 +2472,13 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Core DB running in DR region, app servers off until needed',
             fungsi: 'Hanya core components (database) yang running kat DR region scaled down. App servers dilancarkan hanya bila disaster berlaku',
             scenario: 'Core DB replicated ke DR region (running minimal). App servers OFF. Disaster berlaku — turn on app servers, scale up, point DNS ke DR. RPO: minutes, RTO: minutes to hours. Lebih murah dari Warm Standby.',
+            sebabApa: 'Wujud sebab Backup & Restore terlalu lambat (kena bina DB dari kosong + restore = jam), tapi kau tak nak bayar full standby. Pilot Light = nyalakan "api kecil": core DB sentiasa replicate & berjalan minimal di DR, tapi app server MATI (tak bayar compute). Bila bencana, kau cuma "bakar" — hidupkan & scale app server, point DNS. Tujuan: recovery lebih laju dari backup (DB dah sedia) pada kos sederhana.',
+            sifir: [
+              'Pilot Light = DB ON (replicate), app server OFF sampai bencana',
+              'RPO minit, RTO minit-jam. Lebih laju dari Backup&Restore, lebih murah dari Warm Standby',
+              'Beza utama vs Warm Standby: Pilot Light app OFF; Warm Standby app ON (scaled-down)',
+              '"DB sentiasa sedia tapi tak nak bayar app compute idle" → Pilot Light',
+            ],
             keywords: ['RPO: minutes', 'RTO: minutes-hours', 'core DB running', 'app servers off', 'medium cost'],
           },
           {
@@ -2439,6 +2488,13 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Scaled-down full stack running in DR, quick scale up',
             fungsi: 'Versi scaled-down penuh dari aplikasi running di DR region. Boleh handle traffic pada kapasiti rendah, scale up bila failover diperlukan',
             scenario: 'DR region running dengan 2 EC2 (vs 20 in prod). Disaster — scale up ASG, Route 53 failover ke DR. RPO: seconds/minutes, RTO: minutes. Lebih mahal dari Pilot Light tapi lagi cepat recover.',
+            sebabApa: 'Wujud sebab Pilot Light masih perlu masa hidupkan & konfigur app server semasa bencana. Warm Standby = FULL stack (app + DB) dah BERJALAN di DR tapi saiz kecil (cth 2 EC2 vs 20 prod) — sentiasa hidup & boleh terima traffic sikit. Bila bencana, kau cuma SCALE UP yang sedia ada (laju) + failover DNS. Tujuan: recovery lebih laju dari Pilot Light (semua dah berjalan, cuma kena besarkan) dengan kos lebih rendah dari full active/active.',
+            sifir: [
+              'Warm Standby = full stack scaled-DOWN, sentiasa BERJALAN (app ON, kecil)',
+              'RPO saat-minit, RTO minit. Recovery = scale up + DNS failover',
+              'Beza vs Pilot Light: Warm Standby app ON (kecil); Pilot Light app OFF',
+              'Beza vs Multi-Site: Warm Standby kena scale up dulu (RTO minit); Multi-Site dah full (RTO saat)',
+            ],
             keywords: ['RPO: seconds/minutes', 'RTO: minutes', 'scaled-down active', 'quick scale up', 'higher cost'],
           },
           {
@@ -2448,6 +2504,13 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Mission-critical — full capacity in both regions simultaneously',
             fungsi: 'Kedua-dua regions running full capacity serentak dengan traffic diagihkan. Tiada downtime bila satu region fail',
             scenario: 'Banking app yang tak boleh ada downtime — full production environment kat dua regions. Route 53 weighted routing 50/50. Satu region fail → 100% traffic ke region sihat automatik. RPO: near-zero, RTO: seconds. Paling mahal tapi paling reliable.',
+            sebabApa: 'Wujud sebab ada sistem (banking, trading, kesihatan) yang downtime walau beberapa minit = bencana bes(rugi/jiwa). Semua strategi lain ada masa "recover". Multi-Site Active/Active = takde recovery langsung — DUA region jalan full capacity serentak, traffic dibahagi. Satu region mati, region lain dah pun melayan 100%, user tak perasan. Tujuan: zero-downtime, near-zero data loss untuk mission-critical — dengan harga paling mahal (bayar 2× infra penuh).',
+            sifir: [
+              'Multi-Site = dua region FULL capacity, LIVE serentak (Route 53 weighted/latency)',
+              'RPO near-zero, RTO saat. Region fail = takde scale up, terus serap traffic',
+              'PALING MAHAL (2× full infra) — guna HANYA untuk mission-critical/zero-downtime',
+              'Bukan "near-zero/seconds"? Strategi lebih murah cukup (Warm Standby/Pilot Light)',
+            ],
             keywords: ['RPO: near-zero', 'RTO: seconds', 'full capacity both', 'highest cost', 'mission-critical', 'zero downtime'],
           },
         ],
