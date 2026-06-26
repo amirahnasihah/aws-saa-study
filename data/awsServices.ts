@@ -166,6 +166,27 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Control who can access what AWS resources',
             fungsi: 'Mengurus identiti dan akses kepada perkhidmatan dan sumber AWS dengan policies',
             contohGuna: 'Create IAM Role untuk EC2 boleh read S3 — attach role ke EC2, bukan hardcode credentials dalam code',
+            sebabApa: 'IAM wujud sebab tanpa dia, semua orang yang ada akses akaun = root (boleh buat APA SAJA — padam DB, buka bil ribu dollar). IAM bagi kau pecahkan akses ikut "least privilege" — setiap user/app dapat HANYA apa yang dia perlu. Dan Role wujud khas untuk selesaikan masalah besar: macam mana app dalam EC2/Lambda nak akses S3 tanpa kita HARDCODE access key dalam code (yang nanti bocor masuk GitHub)? Jawapan: attach Role → app dapat temp creds auto-expire, takde rahsia tersimpan.',
+            sifir: [
+              'Explicit DENY menang atas SEMUA — Allow + Deny pada action sama = DENIED',
+              'Identity & Resource policy = boleh BAGI akses (union). SCP / Permission Boundary / Session = guardrail, hanya boleh SEKAT (intersection), tak boleh bagi',
+              'EC2/Lambda akses AWS service → IAM Role, BUKAN hardcode access keys',
+              'Group = bakul untuk Users, BUKAN identity — tak boleh login, tak boleh jadi Principal',
+              'User/Group = permanent creds. Role = temp creds (STS, auto-expire)',
+              'Default = implicit DENY. Kena ada explicit Allow baru boleh buat',
+            ],
+            perangkap: [
+              {
+                soalan: 'Sebuah application berjalan dalam EC2 perlu read/write objek dalam S3 bucket. Cara PALING SELAMAT untuk bagi akses?',
+                jebakan: 'Create IAM User, generate access key + secret key, simpan dalam environment variable / config file aplikasi tu. Nampak senang sebab access key memang cara biasa app authenticate.',
+                betul: 'Attach IAM Role kepada EC2 instance (instance profile). Keyword "running on EC2 / running on AWS compute" → Role, BUKAN access keys. Access key dalam code/config = long-term secret yang boleh bocor; Role bagi temp creds auto-rotate.',
+              },
+              {
+                soalan: 'Satu SCP pada OU ada Allow untuk S3, tapi IAM policy user tu takde sebut S3 langsung. User boleh akses S3?',
+                jebakan: 'Boleh — SCP dah Allow S3, jadi user dapat akses. Nampak logik sebab SCP "bagi" permission.',
+                betul: 'TAK BOLEH. SCP cuma guardrail — ia SEKAT, tak pernah BAGI. User masih perlu explicit Allow dalam IAM (identity) atau resource policy. SCP Allow cuma maksud "tak disekat di peringkat OU", bukan "dibenarkan". Keyword: SCP/Boundary = had maksimum, bukan pemberi akses.',
+              },
+            ],
             detailsLabel: 'IAM — komponen utama',
             storageDetails: 'Principal → entiti yang hantar request (User, Role, atau AWS service). Hanya Principal boleh "buat" sesuatu\nUser → identiti KEKAL untuk 1 orang/app. Ada credentials sendiri (password + access keys long-term)\nGroup → bakul untuk kumpul Users. BUKAN identity — tak boleh login, tak boleh jadi Principal. Attach policy kat sini (best practice)\nRole → identiti SEMENTARA yang di-assume. Tiada long-term creds — dapat temp creds via STS yang auto-expire\nPolicy → JSON Allow/Deny. Identity-based (attach kat User/Group/Role) atau Resource-based (attach kat S3/SQS/KMS)\nPermission Boundary → siling MAKSIMUM permission untuk satu entity (had, bukan bagi)\nMFA → faktor kedua (app/hardware token) selain password',
             mermaid: [
@@ -372,6 +393,7 @@ export const domains: DomainData[] = [
             ingat: '"Login untuk user apps — User Pool = siapa kau, Identity Pool = boleh buat apa"',
             gunaUntuk: 'User sign-up/sign-in, federated identity (Google/Facebook), mobile app auth',
             fungsi: 'Identity platform untuk web/mobile apps. Dua komponen yang operate independent atau bersama: User Pools (authentication — siapa user, issue JWT) vs Identity Pools (authorization — tukar token jadi temp AWS credentials via STS).',
+            sebabApa: 'Wujud sebab setiap app perlu sistem login (sign-up, password, MFA, "log in with Google") — kalau kau bina sendiri, banyak kerja + risiko security. Dan lepas login, app mobile selalu nak akses S3/DynamoDB terus, tapi kau TAK boleh letak AWS access key dalam app (bocor terus). Cognito selesai dua-dua: User Pool handle login & bagi JWT (siapa kau), Identity Pool tukar JWT jadi temp AWS credentials via STS (boleh buat apa) — jadi app akses AWS dengan selamat tanpa hardcode key.',
             diagram: {
               label: 'User Pool + Identity Pool flow',
               steps: [
@@ -402,6 +424,20 @@ export const domains: DomainData[] = [
               'Cognito User Pools support federated identity — users TAK PERLU di-create dalam AWS, boleh authenticate guna external IdPs (Facebook, Google, Apple, SAML, OIDC)',
               'Identity Pool guna IAM roles (role-based + attribute-based access control) untuk decide apa user boleh access. Boleh issue credentials untuk guest/unauthenticated users juga',
               'Exam: "exchange social/SAML login for temporary AWS credentials to access S3" → Identity Pool. "Managed user directory with sign-up, MFA, password policies" → User Pool',
+            ],
+            sifir: [
+              'User Pool = AUTHENTICATION ("siapa kau") → issue JWT',
+              'Identity Pool = AUTHORIZATION ("boleh akses apa AWS") → issue temp AWS creds via STS',
+              'Login social/SAML tukar jadi temp AWS creds untuk S3/DynamoDB → Identity Pool',
+              'Managed user directory + sign-up + MFA + password policy → User Pool',
+              'Selalu pair: User Pool authenticate → Identity Pool bagi AWS creds',
+            ],
+            perangkap: [
+              {
+                soalan: 'App mobile dah login (social). Sekarang nak akses S3 terus dengan temp AWS credentials. Komponen Cognito mana?',
+                jebakan: 'User Pool — sebab dia yang handle login & user, mesti dia bagi akses. SALAH: User Pool bagi JWT je, bukan AWS credentials.',
+                betul: 'Identity Pool — tukar JWT/social token jadi temp AWS credentials (STS). Keyword "temp AWS credentials untuk akses S3/DynamoDB" = Identity Pool.',
+              },
             ],
             docs: [
               { label: 'What is Amazon Cognito (User vs Identity pools)', url: 'https://docs.aws.amazon.com/cognito/latest/developerguide/what-is-amazon-cognito.html' },
@@ -575,7 +611,22 @@ export const domains: DomainData[] = [
             ingat: '"Penapis website dari serangan Layer 7"',
             gunaUntuk: 'Protect against SQL injection, XSS, rate limiting',
             fungsi: 'Menapis requests HTTP/HTTPS berbahaya sebelum sampai ke aplikasi dengan rules dan managed rule groups',
+            sebabApa: 'Wujud sebab penyerang hantar request HTTP yang nampak normal tapi ada niat jahat — SQL injection (curi DB), XSS (curi session user), atau bot spam ribuan request. Security Group/NACL tak boleh tengok ISI request HTTP (mereka Layer 3/4 je). WAF duduk depan ALB/CloudFront/API GW, baca setiap HTTP request Layer 7, dan block ikut rules (managed rule groups untuk CVE/OWASP, rate-based untuk throttle bot) SEBELUM ia sampai app.',
             contohGuna: 'API kena SQL injection attack — deploy WAF dengan AWS Managed Rules kat ALB atau CloudFront. Boleh rate limit 1000 req/IP per minit',
+            sifir: [
+              'WAF = Layer 7 (HTTP/S) — block SQLi, XSS, bad bots, rate limit',
+              'Pasang kat: CloudFront, ALB, API Gateway, AppSync, Cognito',
+              'Rate-based rule = throttle IP lebih threshold. URI-specific = throttle endpoint mahal je',
+              'WAF = web exploit (L7). Shield = DDoS (L3/4). Network Firewall = traffic VPC (L3-7)',
+              'Managed rule groups = auto block known exploit/CVE/OWASP Top 10',
+            ],
+            perangkap: [
+              {
+                soalan: 'API endpoint /api/report (computationally expensive) kena spam, tapi endpoint lain elok. Nak throttle yang mahal je.',
+                jebakan: 'Rate-based rule biasa untuk seluruh web ACL. SALAH: itu limit SEMUA endpoint, termasuk yang ringan = pengguna sah pun kena.',
+                betul: 'URI-specific rate-based rule — scope rate limit pada /api/report je. Keyword "throttle specific expensive endpoint" = URI-specific rate-based rule.',
+              },
+            ],
             tips: [
               'Rate-based rule: throttle requests dari satu IP yang melebihi threshold',
               'URI-specific rate-based rule → throttle ONLY heavy/expensive endpoints (e.g. /api/compute) sambil biarkan lightweight endpoints unrestricted',
@@ -591,7 +642,26 @@ export const domains: DomainData[] = [
             ingat: '"Pelindung DDoS — Standard free, Advanced bayar"',
             gunaUntuk: 'DDoS protection Layer 3/4 (Standard) and Layer 7 (Advanced)',
             fungsi: 'Melindungi dari serangan DDoS — Standard free untuk semua, Advanced untuk protection 24/7 + DDoS Response Team',
+            sebabApa: 'Wujud sebab DDoS = penyerang banjirkan service kau dengan jutaan request/packet sampai server tumbang (pengguna sah tak boleh masuk). Kau seorang tak mampu lawan trafik berjuta — kena infrastruktur besar. Shield Standard auto-lindung semua pelanggan AWS dari DDoS L3/4 (SYN flood, UDP reflection) PERCUMA tanpa setup. Shield Advanced tambah lindungan L7 berskala besar + DDoS Response Team (DRT) + cost protection (bil tak melonjak masa diserang) untuk yang high-risk.',
             contohGuna: 'Website kena volumetric DDoS — Shield Standard protect automatically. Enterprise nak protection + cost protection + DRT = Shield Advanced',
+            sifir: [
+              'Shield Standard = FREE, auto, L3/4 DDoS — takyah buat apa-apa',
+              'Shield Advanced = $3000/bulan: L3/4/7, DRT 24/7, cost protection, WAF percuma',
+              'WAF = web exploit L7 (SQLi/XSS). Shield = DDoS. Jangan campur',
+              'Keyword Shield Advanced: "DRT", "cost protection", "real-time visibility", "maximum DDoS"',
+            ],
+            perangkap: [
+              {
+                soalan: 'Website kena SQL injection + XSS. Pasang Shield untuk block?',
+                jebakan: 'Shield Advanced — sebab dia maximum protection, mesti cover semua serangan. SALAH: Shield untuk DDoS, bukan web exploit macam SQLi/XSS.',
+                betul: 'AWS WAF — block SQLi/XSS (Layer 7 web exploit). Shield = DDoS sahaja. Keyword "SQL injection/XSS" = WAF.',
+              },
+              {
+                soalan: 'Filter SEMUA outbound traffic VPC ikut domain name (allow *.amazonaws.com je), IDS/IPS. WAF?',
+                jebakan: 'WAF — sebab dia firewall, mesti boleh filter traffic. SALAH: WAF Layer 7 HTTP request je, bukan traffic VPC umum.',
+                betul: 'AWS Network Firewall — inspect/filter semua traffic VPC (L3-7), domain filtering, Suricata IDS/IPS. Keyword "egress/domain filter VPC-wide" = Network Firewall.',
+              },
+            ],
             compare: {
               label: 'WAF vs Shield Standard vs Shield Advanced — yang mana untuk apa',
               headers: ['Aspect', 'AWS WAF', 'Shield Standard', 'Shield Advanced'],
@@ -706,7 +776,27 @@ export const domains: DomainData[] = [
             ingat: '"Mata-mata AWS — detect threats auto guna ML"',
             gunaUntuk: 'Automated threat detection: crypto-mining, unusual API calls, compromised instances',
             fungsi: 'Pengesanan ancaman menggunakan ML pada CloudTrail, VPC Flow Logs, DNS logs.',
+            sebabApa: 'Wujud sebab serangan jahat tersembunyi dalam jutaan baris log (CloudTrail, VPC Flow, DNS) — manusia takkan perasan EC2 tiba-tiba call ke IP crypto-mining atau API calls pelik dari negara asing. GuardDuty baca semua log tu guna ML + threat intel feeds, detect anomali, dan alert — TANPA kau install agent atau setup apa-apa. Jadi kau dapat "mata-mata" automatik yang jaga 24/7.',
             scenario: '"EC2 buat unusual API calls ke cryptocurrency mining" → GuardDuty detect and alert. Tak perlu install agents.',
+            sifir: [
+              'GuardDuty = DETECT threat dari LOGS (CloudTrail/VPC Flow/DNS), ML, NO agent',
+              'GuardDuty = detect. Detective = investigate (forensics). Beza ni selalu kena tanya',
+              'Inspector = CVE/vuln scan. Macie = PII dalam S3. GuardDuty = aktiviti jahat dari logs',
+              'Security Hub = central dashboard kumpul semua finding + compliance score (bukan dia detect)',
+              'Keyword GuardDuty: "unusual activity", "crypto-mining", "compromised instance", "no agent"',
+            ],
+            perangkap: [
+              {
+                soalan: 'EC2 tiba-tiba sambung ke IP crypto-mining + buat API calls luar biasa. Service mana detect?',
+                jebakan: 'Inspector — sebab dia security scan untuk EC2, mesti dia jumpa. SALAH: Inspector scan CVE/vuln software, bukan aktiviti masa nyata.',
+                betul: 'GuardDuty — detect aktiviti jahat (crypto-mining, unusual API) dari logs guna ML. Keyword "unusual activity/compromised" = GuardDuty.',
+              },
+              {
+                soalan: 'GuardDuty dah flag satu finding. Sekarang nak SIASAT scope & root cause serangan, visualize relationship. Guna apa?',
+                jebakan: 'GuardDuty sendiri — sebab dia yang detect, mesti dia ada detail. SALAH: GuardDuty detect je, bukan tool siasatan.',
+                betul: 'Amazon Detective — behavior graph untuk investigate finding & root cause. GuardDuty = detect, Detective = investigate.',
+              },
+            ],
             mermaid: {
               label: 'Pilih security service yang betul',
               source: `flowchart TD
@@ -761,7 +851,22 @@ export const domains: DomainData[] = [
             ingat: '"Scanner kelemahan — CVE/vuln untuk EC2, ECR, Lambda (continuous, automatic)"',
             gunaUntuk: 'Find OS/software vulnerabilities, CVEs, unintended network exposure in EC2, ECR images, Lambda',
             fungsi: 'Pengimbasan kelemahan automatik dan BERTERUSAN untuk EC2, ECR container images, dan Lambda. Detect CVEs, OS + programming-language package vulnerabilities, dan unintended network exposure / network reachability. Auto re-scan bila CVE baru keluar atau image/function berubah. Aktif sekali → semua scan type auto-on (Lambda code scanning optional).',
+            sebabApa: 'Wujud sebab software kau ada ribuan package/library — mana satu ada known vulnerability (CVE)? Tak mungkin check manual, dan CVE baru keluar setiap hari. Inspector scan EC2/ECR/Lambda secara BERTERUSAN — auto re-scan bila CVE baru keluar atau code berubah — jadi kau tahu "package X versi Y aku ada lsubang" sebelum penyerang jumpa. Beza dengan GuardDuty: Inspector cari LUBANG (potensi), GuardDuty cari PENCEROBOH (sedang berlaku).',
             scenario: '"Audit EC2 instances untuk known CVEs dan security misconfigurations" → Amazon Inspector. "Scan container image dalam ECR sebelum deploy untuk vulnerability" → Inspector ECR scanning. Bukan GuardDuty (yang untuk active threats dari logs).',
+            sifir: [
+              'Inspector = CVE/vulnerability scan, target EC2 + ECR images + Lambda',
+              'CONTINUOUS — auto re-scan bila CVE baru atau resource berubah',
+              'Inspector cari LUBANG (vuln/CVE). GuardDuty cari PENCEROBOH (aktiviti jahat)',
+              'Scan ECR image SEBELUM deploy = Inspector. Keyword "CVE/patch/vulnerability" = Inspector',
+              'Bukan Macie (PII S3), bukan Detective (siasat finding)',
+            ],
+            perangkap: [
+              {
+                soalan: 'Nak scan container image dalam ECR untuk known CVE sebelum deploy ke production. Guna apa?',
+                jebakan: 'GuardDuty — sebab dia threat detection, mesti detect benda bahaya dalam image. SALAH: GuardDuty baca logs runtime, tak scan image untuk CVE.',
+                betul: 'Amazon Inspector (ECR scanning). Keyword "CVE/vulnerability/scan image" = Inspector. GuardDuty untuk aktiviti jahat masa nyata.',
+              },
+            ],
             tips: [
               'Inspector = vulnerability/CVE scan (software lemah). GuardDuty = threat detection (aktiviti jahat dari logs). Beza ni THE exam trap',
               '3 target: EC2, ECR container images, Lambda functions. Aktif sekali → auto enroll semua (Lambda CODE scanning optional, enable bila-bila)',
@@ -782,7 +887,21 @@ export const domains: DomainData[] = [
             ingat: '"Pemburu data sensitif dalam S3 — ML scan PII, credentials, financial data"',
             gunaUntuk: 'Discover and protect sensitive data in S3: PII, credentials, financial data, compliance',
             fungsi: 'Macie adalah data security service yang guna machine learning dan pattern matching untuk discover sensitive data dalam S3. Ia maintain inventory semua S3 buckets, monitor access control, dan alert bila bucket jadi publicly accessible atau ada sensitive data terdetect.',
+            sebabApa: 'Wujud sebab orang tersilap upload data sensitif (IC, credit card, passport, credentials) ke S3 tanpa sedar — dan kalau bucket tu public, habis bocor + langgar GDPR/PCI. Kau ada beribu bucket, mustahil check manual setiap object. Macie guna ML + pattern matching scan S3 cari PII, dan alert bila bucket jadi public atau ada data sensitif. Jadi kau jumpa kebocoran SEBELUM jadi insiden.',
             scenario: '"Audit S3 buckets untuk cari data sensitif yang ter-upload secara tak sengaja" → Amazon Macie. Keyword: PII, sensitive data, S3 data discovery.',
+            sifir: [
+              'Macie = cari PII/sensitive data dalam S3 SAHAJA (bukan RDS/EBS)',
+              'Detect: PII (IC, passport), financial (credit card), credentials, IP',
+              'Keyword Macie: "PII", "sensitive data", "GDPR", "S3 data discovery"',
+              'Macie = data dalam S3. GuardDuty = threat dari logs. Inspector = CVE software',
+            ],
+            perangkap: [
+              {
+                soalan: 'Compliance nak pastikan takde credit card / IC tersilap upload ke S3 buckets syarikat. Guna apa?',
+                jebakan: 'GuardDuty — sebab dia monitor S3 (S3 Protection) untuk benda mencurigakan. SALAH: GuardDuty detect AKSES jahat, bukan KANDUNGAN PII.',
+                betul: 'Amazon Macie — scan KANDUNGAN object S3 cari PII/sensitive data guna ML. Keyword "PII/sensitive data dalam S3" = Macie.',
+              },
+            ],
             tips: [
               'Macie KHUSUS untuk S3 — bukan untuk RDS, EBS, atau services lain',
               'Detect: PII (nama, IC, passport), financial data (credit card), credentials, intellectual property',
@@ -825,7 +944,28 @@ export const domains: DomainData[] = [
             ingat: '"Simpan dan urus kunci enkripsi"',
             gunaUntuk: 'Encrypt data at rest, manage encryption keys',
             fungsi: 'Mencipta dan mengurus cryptographic keys untuk encrypt/decrypt data di pelbagai AWS services',
+            sebabApa: 'Wujud sebab encrypt data sendiri = mimpi ngeri: kau kena simpan kunci di mana? Kalau kunci bocor, habis semua data. Kalau kunci hilang, data tak boleh baca selamanya. KMS pegang kunci master dalam hardware AWS (kunci master TAK PERNAH keluar KMS), audit setiap guna dalam CloudTrail, dan buat envelope encryption (kunci data di-encrypt dengan kunci master) supaya kau encrypt data besar laju tanpa hantar semua ke KMS. Jadi kau dapat encryption tanpa pening urus kunci.',
             contohGuna: 'Encrypt S3, RDS, EBS — enable SSE-KMS. Semua penggunaan key di-audit dalam CloudTrail. KMS key rotation auto setahun sekali',
+            sifir: [
+              'Envelope encryption = data key encrypt data, KMS master key encrypt data key (master tak pernah keluar KMS)',
+              'CMK (Customer Managed) = full control: custom policy + rotation + audit. Exam keyword "lifecycle/rotation/access control"',
+              'AWS Managed key = auto, terhad 1 service, TAK boleh customize. AWS Owned = free, tak boleh audit',
+              'Symmetric = encrypt+decrypt (default, AWS services). Asymmetric = digital signing / public-private',
+              'Multi-Region key = same key material across regions, elak cross-region API call',
+              'FIPS 140-2 Level 3 + dedicated hardware + AWS tak boleh access = CloudHSM, BUKAN KMS',
+            ],
+            perangkap: [
+              {
+                soalan: 'Perlu "comprehensive lifecycle management, key rotation, auditing & access control" untuk encryption key. Guna apa?',
+                jebakan: 'AWS Managed Key — sebab dia pun auto-rotate & ada dalam account kau. SALAH: AWS Managed Key TAK boleh customize policy/rotation.',
+                betul: 'Customer Managed Key (CMK). Keyword "lifecycle/custom rotation/access control" = CMK. AWS Managed key restricted, tak boleh kau kawal.',
+              },
+              {
+                soalan: 'Regulatory wajib dedicated single-tenant hardware, FIPS 140-2 Level 3, AWS langsung tak boleh akses kunci. KMS?',
+                jebakan: 'KMS dengan CMK — sebab CMK kau yang kawal penuh. SALAH: KMS multi-tenant, FIPS Level 2, AWS still urus HSM.',
+                betul: 'CloudHSM — single-tenant dedicated hardware, FIPS 140-2 Level 3, AWS tak boleh access. Keyword "dedicated HW + Level 3 + exclusive control" = CloudHSM.',
+              },
+            ],
             tips: [
               'Symmetric KMS keys: satu 256-bit key untuk encrypt + decrypt; never leaves KMS unencrypted; AWS services pakai symmetric',
               'Asymmetric KMS keys: public/private key pair; untuk digital signing atau asymmetric encryption; hanya public key boleh export',
@@ -869,7 +1009,27 @@ export const domains: DomainData[] = [
             ingat: '"Simpan password apps, auto-rotate"',
             gunaUntuk: 'Store dan auto-rotate credentials, API keys, DB passwords',
             fungsi: 'Menyimpan, mendapatkan semula dan memutar rahsia secara automatik tanpa perlu update aplikasi',
+            sebabApa: 'Wujud sebab developer suka hardcode password dalam code/env var → bila code bocor (GitHub leak), password bocor. Dan tukar password manual = kena update semua app, leceh, jadi orang malas rotate. Secrets Manager simpan secret encrypted, app retrieve masa runtime (tak pernah dalam code), dan AUTO-ROTATE (Lambda tukar password di RDS + update secret serentak) tanpa downtime — jadi rotation jadi senang, orang buat betul-betul.',
             contohGuna: 'Lambda function perlu DB password — jangan letak dalam env var atau code. Store dalam Secrets Manager, Lambda retrieve masa runtime. Auto-rotate setiap 30 hari',
+            sifir: [
+              'Secrets Manager = AUTO-ROTATE built-in (Lambda). Parameter Store = TAKDE native rotation',
+              'Auto-rotate DB credentials (RDS/Redshift) → Secrets Manager. Itu keyword pembeza',
+              'Parameter Store Standard = FREE. Secrets Manager = bayar per secret + per API call',
+              'Config murah / tak perlu rotate (AMI ID, license) → Parameter Store (SecureString utk encrypt)',
+              'Secrets Manager always KMS-encrypted + cross-region replicate built-in',
+            ],
+            perangkap: [
+              {
+                soalan: 'Nak simpan DB password dan AUTO-ROTATE setiap 30 hari tanpa ubah app. Parameter Store SecureString?',
+                jebakan: 'Parameter Store SecureString — sebab dia free & encrypted dengan KMS, jimat. SALAH: Parameter Store takde native rotation.',
+                betul: 'Secrets Manager — satu-satunya yang ada built-in auto-rotation (Lambda). Keyword "auto-rotate credentials" = Secrets Manager.',
+              },
+              {
+                soalan: 'Nak simpan AMI ID, config value, license code yang jarang berubah, kos serendah mungkin. Secrets Manager?',
+                jebakan: 'Secrets Manager — sebab dia memang untuk simpan benda rahsia, selamat. SALAH: bayar per secret, mahal untuk config biasa.',
+                betul: 'SSM Parameter Store (Standard tier FREE). Config + tak perlu rotation → Parameter Store. Pakai SecureString kalau perlu encrypt.',
+              },
+            ],
             compare: {
               label: 'Secrets Manager vs Parameter Store',
               headers: ['Aspect', 'Secrets Manager', 'SSM Parameter Store'],
@@ -1023,6 +1183,26 @@ export const domains: DomainData[] = [
             ingat: '"SSL cert percuma untuk HTTPS"',
             gunaUntuk: 'Provision free SSL/TLS certificates for ALB, CloudFront, API Gateway',
             fungsi: 'Menyediakan, mengurus dan auto-renew SSL/TLS certificates secara percuma. Attach terus ke ALB, CloudFront, atau API Gateway. Cert tidak boleh di-export dari ACM untuk install sendiri dalam EC2.',
+            sebabApa: 'ACM wujud sebab urus SSL cert secara manual = sakit kepala: beli cert, install, lepas tu LUPA renew → cert expire → website tetiba "Not Secure", customer lari. Setiap renewal kena buat manual sebelum tarikh luput. ACM bagi cert PERCUMA dan auto-renew dia sendiri (selagi DNS validation) — kau set sekali, lupakan. Tujuan utama: hilangkan risiko "cert expired" outage + jimat duit beli cert.',
+            sifir: [
+              'CloudFront → cert MESTI di us-east-1 (N. Virginia), walau resource kau region lain',
+              'ALB / API Gateway → cert di region SAMA dengan resource tu',
+              'Auto-renew HANYA untuk DNS-validated public cert. Email-validated + imported = manual renew',
+              'ACM Public cert TAK BOLEH export → tak boleh install dalam EC2 sendiri',
+              'Public HTTPS percuma → ACM Public. Internal/private PKI → ACM Private CA ($400/bln)',
+            ],
+            perangkap: [
+              {
+                soalan: 'Kau dah request ACM cert dan attach ke ALB elok-elok. Tapi bila nak guna cert sama untuk CloudFront distribution, cert tu tak muncul langsung dalam dropdown CloudFront. Kenapa?',
+                jebakan: 'Cert tu belum fully validated / belum issued, jadi CloudFront tak nampak. Atau perlu request cert baru khas untuk CloudFront. Nampak munasabah sebab cert kena "issued" dulu.',
+                betul: 'Cert berada di region yang salah. CloudFront HANYA baca ACM cert dari us-east-1 (N. Virginia), tak kira di mana resource lain berada. Request/import cert di us-east-1. Keyword: "CloudFront cert not showing in dropdown" → us-east-1.',
+              },
+              {
+                soalan: 'Aplikasi legacy berjalan terus atas EC2 (bukan belakang ALB) perlu HTTPS. Boleh guna ACM Public cert percuma untuk install dalam EC2?',
+                jebakan: 'Boleh — ACM bagi cert percuma, jadi request je dan install dalam EC2. Nampak betul sebab ACM = "free SSL cert".',
+                betul: 'TAK BOLEH. ACM Public cert tak boleh di-EXPORT, jadi mustahil install terus dalam EC2. Pilihan: (1) letak EC2 belakang ALB/CloudFront dan attach ACM di situ, ATAU (2) beli cert third-party / guna ACM Private CA (yang boleh export). Keyword: "install cert on EC2 directly" → ACM Public tak boleh.',
+              },
+            ],
             detailsLabel: 'ACM — 3 jenis cert',
             storageDetails: 'ACM Public Certificate → cert percuma untuk public-facing HTTPS (browser-trusted). Auto-renew selagi DNS validation. Tak boleh export.\nACM Private CA (Private Certificate Authority) → private PKI untuk internal resources/IoT devices — TAK browser-trusted. Berbayar ($400/bln per CA). Boleh export private certs.\nImported Certificate → cert kau beli dari pihak ketiga (DigiCert dll), import masuk ACM untuk guna kat ALB/CloudFront. ACM TAK auto-renew imported cert — kau jaga renewal sendiri.',
             compare: {
@@ -1059,6 +1239,21 @@ export const domains: DomainData[] = [
             ingat: '"KMS tapi kau fully control dedicated hardware"',
             gunaUntuk: 'FIPS 140-2 Level 3 compliance, customer-exclusive HSM hardware',
             fungsi: 'Hardware Security Module yang dedicated untuk kau sahaja — bukan shared infrastructure macam KMS. Kau control dan manage keys sendiri. AWS tak boleh access keys kau.',
+            sebabApa: 'CloudHSM wujud sebab ada compliance/regulasi (bank, kerajaan, FIPS 140-2 Level 3) yang TAK BENARKAN keys dikongsi atas infrastruktur shared, dan TAK BENARKAN cloud provider ada apa-apa kemungkinan akses keys kau. KMS pun selamat, tapi ia multi-tenant + AWS yang manage HSM. CloudHSM bagi kau hardware HSM SINGLE-TENANT — kau sorang je guna, kau pegang kunci, AWS langsung tak boleh masuk. Tujuan: penuhi keperluan "customer-exclusive / dedicated hardware / FIPS Level 3".',
+            sifir: [
+              'CloudHSM = single-tenant dedicated hardware. KMS = multi-tenant, AWS managed',
+              'FIPS 140-2 Level 3 → CloudHSM. Level 2 (default) → KMS',
+              '"AWS must have NO access to keys" / "customer-exclusive control" → CloudHSM',
+              'Kau urus sendiri (patching, HA, backup). KMS = AWS urus semua',
+              'Oracle RDS TDE + dedicated HSM → CloudHSM (SQL Server RDS tak support langsung)',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat kewangan perlu encryption keys di mana AWS DIJAMIN tiada cara untuk akses key material, dengan pematuhan FIPS 140-2 Level 3 dan kawalan hardware eksklusif pelanggan. Servis mana?',
+                jebakan: 'AWS KMS dengan customer managed key (CMK) + key policy ketat. Nampak betul sebab CMK = "customer managed" dan kau kawal key policy.',
+                betul: 'AWS CloudHSM. Walaupun KMS CMK dipanggil "customer managed", ia masih multi-tenant dan AWS yang urus HSM (FIPS 140-2 Level 3 untuk single-tenant HSM = CloudHSM). Keyword "dedicated/single-tenant hardware", "AWS no access", "FIPS 140-2 Level 3" → CloudHSM, BUKAN KMS.',
+              },
+            ],
             scenario: '"Compliance requires customer-exclusive control of encryption keys with dedicated hardware" → CloudHSM. Bukan KMS (KMS = shared, AWS-managed). CloudHSM = dedicated hardware, kau control. KMS = multi-tenant, AWS managed. FIPS 140-2 Level 3 = CloudHSM. Level 2 = KMS.',
             tips: [
               'Transparent Data Encryption (TDE) support: Oracle RDS + CloudHSM = supported. SQL Server RDS + CloudHSM = NOT directly supported',
