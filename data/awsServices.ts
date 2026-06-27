@@ -4703,6 +4703,11 @@ export const domains: DomainData[] = [
                 umpan: 'CNAME record yang point ke DNS name ALB. Nampak betul sebab ALB bagi DNS name, dan CNAME memang untuk point nama ke nama.',
                 betul: 'Alias record (type A) ke ALB. Spec DNS LARANG CNAME pada apex/root domain (example.com) — CNAME cuma boleh untuk subdomain (www). Alias = sambungan AWS yang benarkan apex point ke ALB/CloudFront/S3, dan query percuma. Keyword "root/apex domain → AWS resource" → Alias.',
               },
+              {
+                soalan: 'E-commerce ALB perlu dilayan dari root (myshoppingweb.com) DAN subdomain (www.myshoppingweb.com). Konfig Route 53 mana? (A) CNAME untuk root + Alias untuk www, (B) CNAME untuk root + CNAME untuk www, (C) Alias untuk root + CNAME untuk www, (D) A record untuk root + AAAA record untuk www.',
+                umpan: 'D nampak "betul secara teknikal" sebab A/AAAA record memang record DNS sah — tapi A/AAAA point ke IP TETAP, sedangkan ALB takde static IP (IP dia berubah-ubah), jadi tak boleh hardcode. A & B pula letak CNAME kat ROOT/apex → DNS spec larang, salah terus.',
+                betul: 'C — Alias untuk root + CNAME untuk www. Root/apex MESTI Alias (CNAME haram kat apex). Subdomain www boleh CNAME (atau Alias). Alias = point ke ALB tanpa perlu IP (auto-track IP ALB yang berubah) + query FREE. INGAT: apex → Alias; www → CNAME/Alias; JANGAN A-record-dengan-IP untuk ALB sebab ALB takde IP tetap.',
+              },
             ],
             scenario: '"Point root/apex domain (example.com) ke ALB/CloudFront/S3" → Alias record (type A), BUKAN CNAME (DNS spec larang CNAME kat apex). "Subdomain (www) ke hostname luar AWS" → CNAME. "Smart routing (failover/latency/geo/weighted)" → lihat card Route 53 Routing Policies.',
             compare: {
