@@ -2847,6 +2847,20 @@ export const domains: DomainData[] = [
             scenario: '"Serverless NoSQL millisecond latency at any scale" → DynamoDB. "Microsecond reads for DynamoDB" → DAX. "Multi-region active-active database" → DynamoDB Global Tables. "Capture DynamoDB changes → trigger Lambda" → DynamoDB Streams.',
             compare: [
               {
+                label: 'SQL vs NoSQL — RDS vs DynamoDB (foundational!)',
+                headers: ['Ciri', 'Amazon RDS (SQL / Relational)', 'DynamoDB (NoSQL)'],
+                rows: [
+                  ['Model data', 'Jadual berpetak — baris & lajur, ada relationship (JOIN)', 'Key-value / document (JSON), schema fleksibel'],
+                  ['Sambungan app', 'DB connection string (engine driver)', 'AWS SDK / API'],
+                  ['Scaling', 'Scale UP (vertical) + Read Replica untuk read', '🟢 Scale OUT auto (horizontal), serverless'],
+                  ['Latency', 'Bergantung saiz instance & query', '🟢 Single-digit ms konsisten at any scale'],
+                  ['Query', '🟢 SQL penuh — JOIN, aggregate, ad-hoc complex query', 'Akses by key; query pattern kena design awal (GSI/LSI)'],
+                  ['Analogi', 'Buku akaun bank berpetak (data ada hubungan)', 'Buku nota conteng ringkas, tulis laju'],
+                  ['Exam keyword', '"OLTP / relational / JOIN / MySQL/PostgreSQL / ACID transaction"', '"serverless / millisecond / NoSQL / key-value / any scale"'],
+                ],
+                takeaway: 'Perlu relationship + JOIN + SQL kompleks + transaction → RDS/Aurora (relational). Perlu serverless, latency tetap walau traffic meletup, key-value/document → DynamoDB. Soalan "millisecond at any scale / serverless NoSQL" → DynamoDB; "traditional app / MySQL / complex query / JOIN" → RDS.',
+              },
+              {
                 label: 'Capacity modes — On-Demand vs Provisioned',
                 headers: ['Aspect', 'On-Demand', 'Provisioned'],
                 rows: [
@@ -3661,17 +3675,29 @@ export const domains: DomainData[] = [
             perangkap: [{"soalan": "Company guna Slurm untuk manage EC2 fleet jalankan ribuan genomics job berjam-jam dengan queue & priority. Nak switch ke AWS managed service, jimat guna Spot. Pilih?", "umpan": "Lambda — sebab 'managed, no server' bunyi menarik & serverless.", "betul": "AWS Batch — keyword 'queue of jobs + run-to-completion at scale + Spot'. Lambda ada had 15 minit (job berjam-jam tak muat), dan tiada concept job queue/priority macam Batch."}, {"soalan": "Satu container processing job yang ambil 40 minit, run satu-satu bila ada request, tiada queue banyak job. Pilih?", "umpan": "AWS Batch — sebab '40 minit > 15 minit jadi bukan Lambda, mesti Batch'.", "betul": "Fargate — keyword 'satu container, tiada queue of jobs'. Batch sesuai bila ada MANY jobs beratur + priority. Satu long-running container tanpa queue = Fargate."}],
             detailsLabel: 'AWS Batch — 4 komponen',
             storageDetails: 'Job → satu unit kerja (container/script) yang kau submit\nJob Definition → blueprint: image mana, vCPU, memory, IAM role\nJob Queue → tempat job beratur ikut priority sebelum dijalankan\nCompute Environment → EC2 atau Fargate resources yang Batch provision (boleh guna Spot untuk jimat)',
-            compare: {
-              label: 'Job lama / berat — Batch vs Fargate vs Lambda vs EC2',
-              headers: ['Service', 'Sesuai bila', 'Had masa', 'Siapa urus compute'],
-              rows: [
-                ['AWS Batch', '🟢 Banyak batch job / array job berjadual, perlu queue + priority + Spot', 'Tiada had', 'AWS provision & bubar fleet auto'],
-                ['ECS/EKS Fargate', 'Satu app/job container run lama atau 24/7, no queue needed', 'Tiada had', 'AWS (serverless container)'],
-                ['Lambda', 'Tugas pendek event-driven', '🔴 Maks 15 minit', 'AWS (serverless function)'],
-                ['EC2 (sendiri/ASG)', 'Perlu kawalan penuh OS / GPU / fleet steady murah', 'Tiada had', '🔴 Kau patch & scale sendiri'],
-              ],
-              takeaway: 'Exam keyword "batch processing", "queue of jobs", "run to completion at scale", "scientific/rendering/genomics" → AWS Batch (queue + auto Spot). Satu container long-running tanpa queue → Fargate. "Lebih 15 minit" je → BUKAN Lambda. Batch SENDIRI percuma — bayar hanya EC2/Fargate di bawahnya.',
-            },
+            compare: [
+              {
+                label: 'Job lama / berat — Batch vs Fargate vs Lambda vs EC2',
+                headers: ['Service', 'Sesuai bila', 'Had masa', 'Siapa urus compute'],
+                rows: [
+                  ['AWS Batch', '🟢 Banyak batch job / array job berjadual, perlu queue + priority + Spot', 'Tiada had', 'AWS provision & bubar fleet auto'],
+                  ['ECS/EKS Fargate', 'Satu app/job container run lama atau 24/7, no queue needed', 'Tiada had', 'AWS (serverless container)'],
+                  ['Lambda', 'Tugas pendek event-driven', '🔴 Maks 15 minit', 'AWS (serverless function)'],
+                  ['EC2 (sendiri/ASG)', 'Perlu kawalan penuh OS / GPU / fleet steady murah', 'Tiada had', '🔴 Kau patch & scale sendiri'],
+                ],
+                takeaway: 'Exam keyword "batch processing", "queue of jobs", "run to completion at scale", "scientific/rendering/genomics" → AWS Batch (queue + auto Spot). Satu container long-running tanpa queue → Fargate. "Lebih 15 minit" je → BUKAN Lambda. Batch SENDIRI percuma — bayar hanya EC2/Fargate di bawahnya.',
+              },
+              {
+                label: 'Penjadualan & automation — EventBridge vs Lambda vs AWS Batch',
+                headers: ['Service', 'Peranan', 'Bila pakai'],
+                rows: [
+                  ['Amazon EventBridge', 'Cron SEBENAR AWS — TRIGGER ikut jadual/event (cth setiap Ahad 1 pagi). Dia sendiri tak buat kerja, cuma cetus servis lain', 'Nak mulakan sesuatu ikut masa/event'],
+                  ['AWS Lambda', 'Run automation RINGAN & cepat (🔴 max 15 min)', 'Skrip pendek event-driven: cleanup temp file, resize image, hantar notification'],
+                  ['AWS Batch', 'Run job BERAT/lama/pukal (Docker, tiada had masa)', 'Tugasan berjadual yang berat: big-data analysis, rendering, genomics berjam-jam'],
+                ],
+                takeaway: 'EventBridge = jam loceng (cetus ikut masa) — BUKAN dia yang buat kerja. Lambda = kerja ringan <15 min. Batch = kerja berat berjam-jam. Senario gabungan klasik: "Setiap Ahad 1 pagi, EventBridge cetus AWS Batch jalankan analisis big-data 5 jam (Compute-Optimized C5)" → EventBridge (cron) + Batch (heavy lifter), BUKAN Lambda (15-min tak muat).',
+              },
+            ],
             mermaid: {
               label: 'Cara ingat — "Job ambil masa berapa lama?"',
               source: `flowchart TD
@@ -4095,6 +4121,18 @@ export const domains: DomainData[] = [
               caption: 'Default sejak 2023: semua bucket auto SSE-S3. Nak audit siapa decrypt + rotate key → SSE-KMS (tapi kena ingat KMS ada request limit). Compliance pegang key sendiri → SSE-C atau client-side.',
             },
             compare: [
+              {
+                label: 'Block vs File vs Object — EBS vs EFS vs S3 (foundational!)',
+                headers: ['Ciri', 'EBS (Block)', 'EFS (File)', 'S3 (Object)'],
+                rows: [
+                  ['Jenis storage', 'Block (hard disk)', 'File (shared folder)', 'Object (cloud drive)'],
+                  ['Sambungan', '🔴 1 EC2 je (kecuali io1/io2 Multi-Attach)', '🟢 Banyak EC2 serentak (NFS)', 'Akses guna URL/API dari mana-mana'],
+                  ['Skop', '1 AZ (kena attach instance sama AZ)', 'Multi-AZ (regional)', 'Regional, auto ≥3 AZ'],
+                  ['Analogi', 'Pendrive/external HDD cucuk laptop', 'Google Drive / shared network folder pejabat', 'Dropbox / web drive'],
+                  ['Exam keyword', '"EC2 root volume / boot disk / Provisioned IOPS"', '"shared storage / banyak EC2 / POSIX / Linux"', '"static website / unstructured / data lake / presigned URL"'],
+                ],
+                takeaway: 'Block = satu disk untuk satu server (EBS). File = satu folder dikongsi ramai server serentak (EFS). Object = simpan fail akses guna URL/API tanpa server (S3). Soalan "banyak EC2 access folder sama serentak" → EFS, BUKAN EBS. "root/boot volume satu instance" → EBS. "unstructured / web-accessible / data lake" → S3.',
+              },
               {
                 label: 'S3 Encryption — 4 pilihan',
                 headers: ['Aspect', 'SSE-S3', 'SSE-KMS', 'SSE-C', 'Client-Side'],
@@ -6513,16 +6551,28 @@ export const domains: DomainData[] = [
             scenario: '"Batch processing / big data / render farm yang boleh interrupt & resume" → Spot, jimat besar. "Production database / stateful app / payment service yang TAK boleh putus" → JANGAN Spot, guna On-Demand atau RI/Savings Plans. Soalan tekan "fault-tolerant + lowest cost" hampir mesti = Spot.',
             storageDetails: 'Notis interrupt 2 minit datang melalui DUA saluran: (1) EventBridge event "EC2 Spot Instance Interruption Warning" (detail-type), dan (2) instance metadata pada instance itu sendiri. Best practice: poll metadata setiap 5 saat. Ada juga Rebalance Recommendation — signal AWAL sebelum notis 2 minit, bagi peluang pindahkan beban lebih cepat. NOTA: kalau interruption behavior = hibernate, kau dapat notis tapi BUKAN 2 minit awal (hibernate mula serta-merta).',
             detailsLabel: 'Macam mana dapat notis interrupt',
-            compare: {
-              label: 'Spot interruption behaviors + bila guna apa',
-              headers: ['Behavior', 'Apa jadi bila interrupt', 'Syarat / nota'],
-              rows: [
-                ['Terminate (default)', 'Instance ditamatkan terus', 'Default. Beban stateless / boleh start fresh'],
-                ['Stop', 'Instance di-stop, EBS dikekalkan', 'Request type mesti persistent (Fleet: maintain). Hanya AWS boleh restart bila kapasiti ada balik'],
-                ['Hibernate', 'RAM disimpan ke EBS, resume balik', 'Dapat notis tapi TIADA 2-minit awal (hibernate mula serta-merta)'],
-              ],
-              takeaway: 'Default = terminate. Nak simpan EBS & sambung kerja → stop (persistent/maintain). Nak resume state RAM → hibernate. Soalan "resume work after interruption" → stop/hibernate, bukan terminate.',
-            },
+            compare: [
+              {
+                label: 'Spot interruption behaviors + bila guna apa',
+                headers: ['Behavior', 'Apa jadi bila interrupt', 'Syarat / nota'],
+                rows: [
+                  ['Terminate (default)', 'Instance ditamatkan terus', 'Default. Beban stateless / boleh start fresh'],
+                  ['Stop', 'Instance di-stop, EBS dikekalkan', 'Request type mesti persistent (Fleet: maintain). Hanya AWS boleh restart bila kapasiti ada balik'],
+                  ['Hibernate', 'RAM disimpan ke EBS, resume balik', 'Dapat notis tapi TIADA 2-minit awal (hibernate mula serta-merta)'],
+                ],
+                takeaway: 'Default = terminate. Nak simpan EBS & sambung kerja → stop (persistent/maintain). Nak resume state RAM → hibernate. Soalan "resume work after interruption" → stop/hibernate, bukan terminate.',
+              },
+              {
+                label: 'Fleet — EC2 Fleet vs Spot Fleet vs ASG Mixed Instances Policy',
+                headers: ['Pilihan', 'Apa dia ("Fleet" = sekumpulan instance diurus jadi satu)', 'Bila guna'],
+                rows: [
+                  ['EC2 Fleet', 'Satu request minta kombinasi On-Demand + Spot merentas BANYAK instance type/saiz/AZ. Kawalan penuh, TIADA auto-scaling sendiri', 'Nak provision kapasiti gabungan sekali-shot (cth HPC/batch besar), tak perlu scale ikut trafik'],
+                  ['Spot Fleet', 'Versi lama/awal — fokus urus kumpulan Spot (boleh campur sikit On-Demand) ikut target capacity/bajet', 'Legacy — AWS sekarang sorong ke EC2 Fleet. Elak untuk projek baru'],
+                  ['ASG Mixed Instances Policy', 'Auto Scaling Group campur On-Demand (baseline stabil) + Spot (jimat), naik/turun ikut trafik', '🟢 Paling biasa & disyorkan: nak AUTO-SCALING + jimat Spot serentak'],
+                ],
+                takeaway: 'Semua tujuan sama: sebar banyak instance type/AZ supaya tahan interrupt. Nak auto-scaling + campur Spot → ASG Mixed Instances Policy. Nak satu-shot kapasiti gabungan tanpa scaling → EC2 Fleet. Spot Fleet = legacy (EC2 Fleet ganti). INGAT: "Fleet" = pakej borong sekumpulan server campuran diurus sebagai satu.',
+              },
+            ],
             mermaid: {
               label: 'Provision Spot dengan resilien (Fleet & Auto Scaling)',
               source: `flowchart TD
