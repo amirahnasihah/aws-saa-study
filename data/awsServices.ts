@@ -1643,6 +1643,9 @@ export const domains: DomainData[] = [
               'Banyak traffic ke S3/DynamoDB? Gateway VPC Endpoint (FREE) lagi murah dari NAT GW per-GB',
               'IPv6 + outbound-only → Egress-Only IGW (EIGW), BUKAN NAT GW (NAT GW=IPv4; NAT64 cuma IPv6→IPv4)',
               'Had connection = 55,000 per unique destination per IP → ErrorPortAllocation. Tambah IP (max 8) / split subnet, BUKAN upgrade bandwidth',
+              'NAT GW TAKDE Stop/Start (lain dari EC2) — nak matikan kena DELETE, nak hidup CREATE semula. Automate jadual: Lambda + EventBridge',
+              'Check kos: Cost Explorer → Service = EC2-Other → Group by Usage Type → NatGateway-Hours (sewa) + NatGateway-Bytes (data)',
+              'Kos NAT GW SEMUA account org → Cost Explorer di MANAGEMENT account, Group by Linked Account (tak payah login satu-satu)',
             ],
             perangkap: [
               {
@@ -1670,6 +1673,11 @@ export const domains: DomainData[] = [
                 umpan: 'NAT GW dah max bandwidth, scale ke yang lebih besar — tapi NAT GW auto-scale bandwidth sendiri (5→100 Gbps), ni bukan isu bandwidth.',
                 betul: 'Had 55,000 simultaneous connection PER unique destination per IP. Fix: associate lebih IP pada NAT GW (sampai 8), atau sebar resource ke banyak subnet + NAT GW. Keyword: "ErrorPortAllocation" / "many connections to same destination".',
               },
+              {
+                soalan: 'Syarikat ada banyak AWS account bawah satu Organization. Finance nak SATU laporan kos NAT Gateway tiap account tanpa login satu-satu. Cara paling mudah?',
+                umpan: 'Login setiap member account, buka Cost Explorer satu-satu, lepas tu jumlah manual dalam Excel. Penat + senang silap — ini yang exam nak kau ELAK.',
+                betul: 'Buka Cost Explorer di MANAGEMENT (payer) account → Group by Linked Account → Filter Service = EC2-Other + Usage Type "NatGateway". Satu skrin nampak kos tiap account. Keyword: "combined/consolidated cost across all accounts / per linked account" → Cost Explorer di Management Account. Nak emel amaran auto → AWS Budgets. Nak data mentah utk BI → CUR/Data Exports → S3 → Athena/QuickSight.',
+              },
             ],
             scenario: '"Private subnet EC2 perlu access internet tapi tak nak exposed" → NAT Gateway. Letak NAT GW dalam public subnet, route private subnet 0.0.0.0/0 → NAT GW.',
             compare: {
@@ -1686,9 +1694,10 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Default jawapan exam = NAT Gateway (managed, HA, auto-scale). Pilih NAT Instance HANYA bila perlu SG/bastion/port-forwarding atau nak jimat untuk traffic sangat kecil. Source/destination check MESTI disable untuk NAT Instance.',
             },
-            mermaid: {
-              label: 'Analogi Grab — NAT Gateway vs NAT Instance',
-              source: `flowchart TD
+            mermaid: [
+              {
+                label: 'Analogi Grab — NAT Gateway vs NAT Instance',
+                source: `flowchart TD
   Q["EC2 private subnet<br/>nak keluar internet"] --> PILIH{Nak urus sendiri?}
   PILIH -->|"Tak nak pening<br/>🛵 macam naik Grab"| GW["NAT Gateway<br/>(managed)"]
   PILIH -->|"Nak kawalan penuh<br/>🚗 macam bawa kereta sendiri"| INST["NAT Instance<br/>(EC2 sendiri)"]
@@ -1696,8 +1705,36 @@ export const domains: DomainData[] = [
   GW1 --> ANS["✅ Default exam:<br/>NAT Gateway"]
   INST --> IN1["Kau maintain:<br/>saiz, patch, scaling, baiki sendiri"]
   IN1 --> ANS2["Pilih HANYA bila perlu<br/>SG / bastion / port-forward"]`,
-              caption: 'Analogi Grab: NAT Gateway = naik Grab — bayar sikit lebih tapi orang lain (AWS) yang bawa & jaga kereta, kau duduk diam (managed, auto-scale, HA). NAT Instance = bawa kereta sendiri — boleh jimat / kawalan penuh, tapi kau kena beli, isi minyak, dan baiki sendiri bila rosak (EC2 yang kau urus). Default exam = NAT Gateway.',
-            },
+                caption: 'Analogi Grab: NAT Gateway = naik Grab — bayar sikit lebih tapi orang lain (AWS) yang bawa & jaga kereta, kau duduk diam (managed, auto-scale, HA). NAT Instance = bawa kereta sendiri — boleh jimat / kawalan penuh, tapi kau kena beli, isi minyak, dan baiki sendiri bila rosak (EC2 yang kau urus). Default exam = NAT Gateway.',
+              },
+              {
+                label: 'Kongsi vs Asing — 1 NAT GW untuk semua AZ, atau 1 per AZ?',
+                source: `flowchart TD
+  subgraph KONGSI["❌ KONGSI: 1 NAT GW share semua AZ"]
+    A1["EC2 di AZ-a"] -->|"sama AZ ✅ free"| N1["NAT GW<br/>(AZ-a sahaja)"]
+    A2["EC2 di AZ-b"] -->|"CROSS-AZ 💸<br/>$0.01/GB extra"| N1
+    N1 --> IGW1["IGW → 🌐"]
+  end
+  subgraph ASING["✅ ASING: 1 NAT GW per AZ"]
+    B1["EC2 di AZ-a"] -->|"sama AZ ✅ free"| M1["NAT GW (AZ-a)"]
+    B2["EC2 di AZ-b"] -->|"sama AZ ✅ free"| M2["NAT GW (AZ-b)"]
+    M1 --> IGW2["IGW → 🌐"]
+    M2 --> IGW2
+  end`,
+                caption: 'KONGSI 1 NAT GW = jimat sewa jam, TAPI EC2 di AZ lain kena bayar cross-AZ data charge ($0.01/GB) + kalau AZ NAT GW tu tumbang, SEMUA AZ lain putus internet (single point of failure). ASING 1 NAT GW per AZ = takde cross-AZ charge + HA (satu AZ jatuh, lain tak terjejas). INGAT exam: "cross-AZ cost" + "highly available" → 1 NAT Gateway PER AZ (public subnet AZ tu sendiri).',
+              },
+              {
+                label: 'Finance nak kos NAT GW SEMUA account dalam Organization — guna apa?',
+                source: `flowchart TD
+  Q["💰 Finance nak kos NAT GW<br/>SEMUA AWS account org<br/>(tak nak login satu-satu)"] --> HOW{Nak macam mana?}
+  HOW -->|"Tengok cepat + visual,<br/>pecah ikut account"| CE["Cost Explorer<br/>di MANAGEMENT (payer) account"]
+  HOW -->|"Nak EMEL amaran<br/>bila kos melambung"| BUD["AWS Budgets<br/>(set threshold + alert)"]
+  HOW -->|"Nak data MENTAH<br/>untuk SQL / BI dashboard"| CUR["Data Exports / CUR<br/>→ S3 → Athena / QuickSight"]
+  CE --> CE1["Group by: Linked Account<br/>+ Filter: Service = EC2-Other<br/>+ Usage Type = 'NatGateway'"]
+  CE1 --> OUT["✅ Kos NAT GW tiap account<br/>dalam 1 skrin"]`,
+                caption: 'Bila dah masuk AWS Organizations (banyak account), Finance tak payah login satu-satu — semua kos berkumpul di MANAGEMENT (payer) account. INGAT exam: "combined/consolidated cost across all accounts" → Cost Explorer di Management Account, Group by Linked Account. Nak amaran auto = AWS Budgets. Nak analisis BI mendalam (SQL/QuickSight) = Cost and Usage Report (CUR)/Data Exports → S3 → Athena/QuickSight.',
+              },
+            ],
             tips: [
               'NAT GW DUDUK DALAM PUBLIC SUBNET — bukan private! Ini exam trap paling common',
               'Private subnet route: 0.0.0.0/0 → nat-xxx. Public subnet route: 0.0.0.0/0 → igw-xxx',
@@ -1712,12 +1749,16 @@ export const domains: DomainData[] = [
               'Connection limit: 55,000 simultaneous per unique destination per IP. Hit limit → ErrorPortAllocation metric. Tambah sampai 8 IP atau split subnet',
               'Tak boleh route ke NAT GW dari VPN/Direct Connect via VGW — guna Transit Gateway (TGW) instead',
               'PRICING: NAT Gateway = $0.045/jam + $0.045/GB processed (us-east-1, no free tier). Per-AZ → darab bilangan AZ. Heavy S3/DynamoDB traffic → Gateway VPC Endpoint (FREE) jauh lebih murah',
+              'NAT GW TAKDE butang Stop/Start (lain dari EC2). Nak jimat luar waktu kerja → DELETE then CREATE semula. Automate: Lambda + EventBridge (cron) — delete malam, recreate pagi (NOTE: EIP & route table kena re-associate bila recreate)',
+              'Check SEMUA kos NAT GW dalam 1 tempat: Cost Explorer → Filter Service = EC2-Other → Group by Usage Type → cari NatGateway-Hours (sewa jam) + NatGateway-Bytes (data processed). Bukan bawah service "EC2-Instances"',
+              'ORG-LEVEL (Finance): kos NAT GW gabungan SEMUA account dalam AWS Organizations → buka Cost Explorer di MANAGEMENT (payer) account, Group by Linked Account → nampak kos tiap account 1 skrin. Tak payah login satu-satu member account',
+              'Amaran kos auto (Finance malas belek dashboard) → AWS Budgets: set threshold (cth $2,000/bulan), emel bila lepas 80%. Analisis BI mendalam (SQL/dashboard) → AWS Cost and Usage Report (CUR)/Data Exports → S3 → Athena / QuickSight',
             ],
             docs: [
               { label: 'NAT Gateways', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html' },
               { label: 'NAT gateway basics', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-basics.html' },
             ],
-            keywords: ['NAT', 'outbound only', 'private subnet', 'Elastic IP', 'paid', 'no inbound', 'bastion host', 'cross-AZ cost', 'per-AZ NAT Gateway', 'data transfer charges', 'IPv6', 'Egress-Only Internet Gateway', 'EIGW', 'NAT64', 'ErrorPortAllocation', 'connection limit', '55000 connections', 'pricing'],
+            keywords: ['NAT', 'outbound only', 'private subnet', 'Elastic IP', 'paid', 'no inbound', 'bastion host', 'cross-AZ cost', 'per-AZ NAT Gateway', 'data transfer charges', 'IPv6', 'Egress-Only Internet Gateway', 'EIGW', 'NAT64', 'ErrorPortAllocation', 'connection limit', '55000 connections', 'pricing', 'Stop Start', 'delete recreate', 'Lambda EventBridge', 'Cost Explorer', 'EC2-Other', 'NatGateway-Hours', 'NatGateway-Bytes', 'Linked Account', 'Management Account', 'payer account', 'AWS Budgets', 'Cost and Usage Report', 'CUR', 'Data Exports', 'QuickSight', 'Athena', 'Organizations cost', 'consolidated cost', 'kongsi vs asing'],
           },
           {
             shortName: 'Route Tables',
