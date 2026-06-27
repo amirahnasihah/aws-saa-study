@@ -161,6 +161,15 @@ export const triggerRows: TriggerRow[] = [
     slug: 'd1-iam-aws-organizations',
   },
   {
+    id: 'aws-config',
+    keywords: ['ensure resources stay compliant', 'config drift / configuration history', 'enforce encryption/tagging + auto-fix violations', 'what changed on this resource & when'],
+    service: 'AWS Config',
+    why: 'Rekod config STATE resource over time + Config Rules semak compliant/non-compliant + auto-remediation (SSM). "WHO call API" tu CloudTrail; Config = "WHAT state + comply ke tak".',
+    accent: 'c3',
+    domain: 'D1 · Secure',
+    slug: 'd3-infra-aws-config',
+  },
+  {
     id: 'redshift-warehouse',
     keywords: ['complex SQL + BI on structured data', 'data warehouse', 'analyze structured data, recurring reports'],
     service: 'Amazon Redshift',
