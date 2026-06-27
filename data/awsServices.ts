@@ -1062,6 +1062,11 @@ export const domains: DomainData[] = [
                 umpan: 'KMS dengan CMK — sebab CMK kau yang kawal penuh. SALAH: KMS multi-tenant, FIPS Level 2, AWS still urus HSM.',
                 betul: 'CloudHSM — single-tenant dedicated hardware, FIPS 140-2 Level 3, AWS tak boleh access. Keyword "dedicated HW + Level 3 + exclusive control" = CloudHSM.',
               },
+              {
+                soalan: 'App e-commerce multinasional simpan data encrypted merentas banyak region. Latency naik bila data diakses di LUAR region tempat KMS key dicipta. Cara terbaik kurangkan latency tapi kekal encrypted ikut region?',
+                umpan: 'Anggap single-Region KMS key globally available (D), atau re-encrypt data dengan key region destinasi setiap kali, atau simpan semua data dalam SATU region (A). Nampak betul sebab "guna key region tu". SALAH: single-Region key TERIKAT region ciptaan (cross-region call = punca latency tu); re-encrypt = overhead besar; satu region = kalahkan tujuan multinasional.',
+                betul: 'Multi-Region KMS Keys — replicate primary key ke region tempat data diakses. Replica share SAME key ID + key material, jadi decrypt jadi LOCAL dalam region itu → hapus cross-region KMS API call. Keyword "cross-region latency + kekal secure region-specific encryption" → Multi-Region keys. (Disable encryption = NEVER jawapan.)',
+              },
             ],
             tips: [
               'Symmetric KMS keys: satu 256-bit key untuk encrypt + decrypt; never leaves KMS unencrypted; AWS services pakai symmetric',
