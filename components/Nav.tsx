@@ -54,13 +54,13 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
         {/* Zone 2 — primary nav */}
         <div className="flex items-center gap-1 min-w-0">
           <PageLink pathname={pathname} href="/" label="Cheat Sheet" active={activePage === 'cheatsheet'} />
-          <PageLink pathname={pathname} href="/trigger-words" label="Triggers" active={activePage === 'triggers'} />
           <PageLink pathname={pathname} href="/learn" label="Deep Notes" active={activePage === 'learn'} />
           {userEmail && <PageLink pathname={pathname} href="/practice" label="Practice" active={activePage === 'practice'} />}
           {userEmail && <PageLink pathname={pathname} href="/scenarios" label="Scenarios" active={activePage === 'scenarios'} />}
           <PageLink pathname={pathname} href="/visual" label="Visual" active={activePage === 'visual'} />
           <PageLink pathname={pathname} href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
           {userEmail && <PageLink pathname={pathname} href="/labs" label="Labs" active={activePage === 'labs'} />}
+          <PageLink pathname={pathname} href="/trigger-words" label="Triggers" active={activePage === 'triggers'} />
         </div>
 
         {/* Zone 3 — account */}
@@ -145,7 +145,6 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
             <div className="px-4 py-3 border-b border-aws-border/60 space-y-1">
               {[
                 { href: '/',             label: 'Cheat Sheet', icon: '📋', active: activePage === 'cheatsheet' },
-                { href: '/trigger-words', label: 'Triggers',   icon: '🎯', active: activePage === 'triggers' },
                 { href: '/learn',        label: 'Deep Notes',  icon: '📖', active: activePage === 'learn' },
                 ...(userEmail
                   ? [
@@ -162,6 +161,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                   ? [{ href: '/ai', label: 'Ask AI', icon: '✦', active: activePage === 'ai' }]
                   : []),
                 { href: '/bookmarks', label: 'Bookmarks', icon: '📌', active: activePage === 'bookmarks' },
+                { href: '/trigger-words', label: 'Triggers', icon: '🎯', active: activePage === 'triggers' },
               ].map((p) => (
                 <Link
                   key={p.href}

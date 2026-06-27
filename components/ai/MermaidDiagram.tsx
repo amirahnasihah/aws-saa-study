@@ -38,6 +38,12 @@ function getMermaid() {
     mermaidInitPromise = import('mermaid').then(({ default: mermaid }) => {
       mermaid.initialize({
         startOnLoad: false,
+        // On a parse failure mermaid otherwise renders its "Syntax error in
+        // text" bomb SVG into a temp DOM node and throws BEFORE cleaning it up,
+        // leaving the bomb orphaned and visible on the page. Suppressing it makes
+        // render() take the clean branch (remove temp nodes + throw), so our own
+        // retry + fallback box is what the user sees instead.
+        suppressErrorRendering: true,
         theme: 'base',
         themeVariables: {
           background: '#111827',
