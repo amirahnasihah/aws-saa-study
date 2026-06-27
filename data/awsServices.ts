@@ -4784,6 +4784,11 @@ export const domains: DomainData[] = [
                 umpan: 'Ya, hilang — sebab consumer dah amik mesej tu dari queue dan mati sebelum siap. Nampak betul sebab "dah diambil".',
                 betul: 'TIDAK hilang. Mesej cuma jadi INVISIBLE semasa Visibility Timeout; sebab consumer tak panggil DeleteMessage, ia jadi VISIBLE semula lepas timeout dan consumer lain proses. Mesej hanya hilang bila DeleteMessage dipanggil selepas berjaya. Keyword "consumer dies mid-processing" → mesej selamat (visibility timeout).',
               },
+              {
+                soalan: 'App ECS ingest file (PDF/JPEG/DOCX) async & upload ke DMS. Masa campaign trafik naik 500%, kadang upload gagal → file HILANG sebab tak disimpan sementara. Pilih redesign: (A) S3 simpan file + SQS queue request, (B) RDS simpan file + SNS notify, (C) DynamoDB simpan metadata file + Lambda proses upload, (D) EFS simpan file + Amazon MQ.',
+                umpan: 'C (DynamoDB + Lambda) paling menipu — Lambda nampak "auto-scale untuk burst" & DynamoDB nampak "tempat simpan". TAPI DynamoDB simpan METADATA je (nama/saiz/status), BUKAN file sebenar — ada had 400 KB per item, PDF/DOCX tak muat. Jadi root cause "file tak disimpan" MASIH tak selesai → file tetap hilang. B (RDS) salah: RDS bukan untuk binary blob besar + mahal; SNS = notify, bukan buffer. D (EFS+MQ) salah: EFS mahal vs S3, Amazon MQ untuk legacy broker — bukan cost-efficient.',
+                betul: 'A — S3 simpan FILE sebenar (durable 11 nines, murah, scale auto → file tak hilang walau upload ke DMS gagal) + SQS buffer/decouple request masa burst 500% (DMS sibuk → mesej tunggu dalam queue, proses ikut kadar DMS). Keyword: "file hilang sebab tak disimpan" → simpan file kat S3 (BUKAN RDS/DynamoDB); "burst + async + jangan hilang" → SQS. INGAT: simpan FILE = S3; simpan METADATA = DynamoDB.',
+              },
             ],
             storageDetails: 'Visibility Timeout → Message invisible semasa diproses (max 12 jam). Jika consumer mati sebelum siap → message visible semula selepas timeout\nDelay Seconds → Delay sebelum message pertama kali visible dalam queue (max 15 minit)\nDead Letter Queue (DLQ) → Message yang gagal diproses N kali dihantar ke DLQ untuk debug\nMessage Retention → Default 4 hari, max 14 hari',
             detailsLabel: 'SQS Key Concepts',
@@ -4839,7 +4844,7 @@ export const domains: DomainData[] = [
               { label: 'SQS — short vs long polling', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html' },
               { label: 'SQS — dead-letter queues', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html' },
             ],
-            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push'],
+            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push', 'S3 SQS decouple', 'async file upload', 'burst traffic buffer', 'store file S3 not DynamoDB', 'temporary file storage'],
           },
           {
             shortName: 'SNS',
