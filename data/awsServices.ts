@@ -2209,6 +2209,32 @@ export const domains: DomainData[] = [
             ],
             contohGuna: 'Multinational company: master DB kat EU-Frankfurt, cross-region read replicas kat US, AP, SA — local users baca dari nearest replica tanpa hantar semua traffic ke Frankfurt.',
             scenario: 'Multi-region database design → RDS cross-region Read Replicas. Reporting queries slow down production → create Read Replica in same/different region, point reporting app ke replica. INGAT: Multi-AZ = same region HA (failover). Read Replicas = read scaling + cross-region reads.',
+            compare: {
+              label: 'Multi-AZ vs Read Replica — beza paling kerap kena tanya',
+              headers: ['Aspect', 'Multi-AZ', 'Read Replica'],
+              rows: [
+                ['Tujuan', '🟢 HA / auto-failover', 'Read scaling + cross-region read'],
+                ['Replication', 'Synchronous (sync)', 'Asynchronous (boleh lag)'],
+                ['Region', 'Same region (standby di AZ lain)', '🟢 Same ATAU cross-region'],
+                ['Boleh dibaca?', '❌ Standby PASIF (tak boleh baca)', '🟢 Aktif — read-only, layan query'],
+                ['Failover', '🟢 Automatik (1-2 min)', 'Manual — kena PROMOTE jadi standalone'],
+                ['Bilangan', '1 standby je', '🟢 Up to 15'],
+                ['Guna bila', 'Survive AZ outage', 'Reporting/analytics cekik prod, global read'],
+              ],
+              takeaway: 'Keyword "survive AZ outage / HA / auto-failover" → Multi-AZ (standby PASIF, tak boleh baca). Keyword "reporting slow down production / scale reads / global low-latency read" → Read Replica (aktif, async). Multi-AZ ≠ scaling; Read Replica ≠ auto-HA. Mission-critical + busy reads → guna DUA-DUA sekali (Multi-AZ untuk HA + Read Replicas untuk read).',
+            },
+            mermaid: {
+              label: 'Analogi kedai mamak — chef simpanan vs tambah pelayan',
+              source: `flowchart TD
+  Q["RDS aku ada masalah —<br/>nak selesai apa?"] --> PILIH{Masalah jenis apa?}
+  PILIH -->|"Takut chef utama tumbang<br/>(AZ outage) → nak ada ganti"| MAZ["Multi-AZ<br/>= chef simpanan 👨‍🍳"]
+  PILIH -->|"Kaunter sesak sebab<br/>terlalu ramai nak BACA (report)"| RR["Read Replica<br/>= tambah pelayan 🧑‍🍳"]
+  PILIH -->|"Pelanggan jauh (global)<br/>nak baca laju / DR region lain"| RRX["Cross-region<br/>Read Replica 🌏"]
+  MAZ --> M1["Duduk diam, sync je.<br/>TAK layan order masa normal.<br/>Chef utama jatuh → auto ambil alih ✅"]
+  RR --> R1["Aktif layan BACA je (read-only).<br/>Async — boleh lag sikit.<br/>Sampai 15 pelayan"]
+  RRX --> X1["Boleh PROMOTE jadi<br/>kedai sendiri = DR ✅"]`,
+              caption: 'Analogi kedai mamak: Multi-AZ = chef simpanan — gaji tetap tapi DUDUK DIAM (standby pasif, tak boleh dibaca), cuma ambil alih bila chef utama tumbang (auto-failover, HA). Read Replica = tambah pelayan untuk ambil order BACA (read) supaya kaunter utama (write) tak sesak — aktif, async, sampai 15 orang. INGAT exam: "survive AZ outage" → Multi-AZ; "reporting slow down prod / global read" → Read Replica. Jangan terbalik.',
+            },
             tips: [
               'Multi-AZ = HIGH AVAILABILITY (same region, synchronous, auto-failover). Read Replica = READ SCALING (async, can be cross-region)',
               'Cross-region Read Replica untuk: (1) local read access untuk global users, (2) DR in another region',
@@ -2242,6 +2268,19 @@ export const domains: DomainData[] = [
               },
             ],
             scenario: '"Lambda functions causing too many RDS connections" → RDS Proxy. "Idle connections from Auto Scaling EC2" → RDS Proxy. Read Replicas = read scaling. Multi-AZ = HA. RDS Proxy = connection management.',
+            mermaid: {
+              label: 'Analogi operator telefon — pool connection supaya RDS tak banjir',
+              source: `flowchart LR
+  subgraph LAMB["🔢 Beribu Lambda / EC2"]
+    L1["Lambda 1"]
+    L2["Lambda 2"]
+    L3["Lambda ...1000"]
+  end
+  LAMB -->|"beribu connection<br/>serentak 😱"| PX["📞 RDS Proxy<br/>(operator telefon)<br/>pool + reuse connection"]
+  PX -->|"sikit je connection<br/>yang RDS nampak ✅"| DB[("RDS / Aurora")]
+  PX -.->|"DB failover →<br/>Proxy tahan connection<br/>(~66% lagi laju)"| DB`,
+              caption: 'Analogi operator telefon: tanpa RDS Proxy, beribu Lambda call terus CEO (RDS) → "too many connections", DB pengsan. RDS Proxy = operator yang POOL & reuse talian terhad — CEO nampak sikit connection je walaupun beribu caller. Bonus: masa DB failover, Proxy tahan connection (app tak nampak putus penuh, ~66% lagi laju). INGAT exam: "too many connections" + Lambda/Auto Scaling → RDS Proxy (BUKAN Read Replica — itu untuk read load, bukan connection count).',
+            },
             tips: [
               'RDS Proxy solves: "too many connections", "idle connections", "connection exhaustion"',
               'Bukan untuk slow query performance — guna Read Replicas atau upgrade instance untuk query scaling',
@@ -2358,6 +2397,45 @@ export const domains: DomainData[] = [
                 caption: '1 primary region + up to 5 secondary read-only regions, replicate di peringkat storage (typical <1s lag). Region utama down → promote secondary jadi primary (RTO <1 min). Exam: "cross-region DR, downtime <1 min, low data loss" → Aurora Global Database (bukan Multi-AZ yang same-region je).',
               },
             ],
+            compare: {
+              label: 'Aurora vs RDS Multi-AZ — bila pilih yang mana',
+              headers: ['Aspect', 'RDS Multi-AZ', 'Aurora'],
+              rows: [
+                ['Salinan data', '1 standby (sync)', '🟢 6 copies / 3 AZ auto (2/AZ)'],
+                ['Failover', '1-2 minit', '🟢 <30 saat'],
+                ['Read replicas', 'Up to 5 (async)', '🟢 Up to 15, lag <10ms'],
+                ['Storage', 'Provision saiz, per-instance', '🟢 Shared volume auto-grow 128 TiB'],
+                ['Engine', 'MySQL/Postgres/MariaDB/Oracle/SQL Server', 'MySQL & PostgreSQL compatible SAHAJA'],
+                ['Cross-region DR', 'Cross-region replica (manual promote)', '🟢 Global Database (RTO<1min, RPO~1s)'],
+                ['Kos', '🟢 Murah sikit', '~20% lebih, tapi 3-5x laju + HA terbaik'],
+              ],
+              takeaway: 'Engine MySQL/PostgreSQL + nak HA enterprise (6 copy, failover <30s) atau global DR → Aurora. Engine Oracle / SQL Server / MariaDB → RDS biasa (Aurora TAK support engine tu). Workload on-off / spiky → Aurora Serverless v2. Keyword "failover <30s / 6 copies / cross-region <1s" = Aurora; "1 standby" = RDS Multi-AZ.',
+            },
+            mermaid: [
+              {
+                label: 'Analogi gudang pusat — Aurora kongsi storage, RDS gudang sendiri',
+                source: `flowchart TD
+  subgraph AUR["☁️ Aurora — gudang pusat DIKONGSI"]
+    W["Writer (1 je)"] --> VOL[("📦 SATU cluster volume<br/>6 salinan · 3 AZ · auto-grow")]
+    R1["Reader 1"] --> VOL
+    R2["Reader ...sampai 15"] --> VOL
+  end
+  subgraph RDSM["🖥️ RDS Multi-AZ — gudang SENDIRI"]
+    P["Primary"] -->|"sync copy"| S["Standby (pasif,<br/>tak boleh dibaca)"]
+  end`,
+                caption: 'Aurora = gudang pusat berkongsi: semua instance (1 writer + sampai 15 reader) ambil dari SATU cluster volume yang auto simpan 6 salinan merentas 3 AZ. Tambah reader = laju sebab tak payah pindah data (share volume). RDS Multi-AZ = tiap instance ada gudang sendiri; primary hantar sync copy ke standby PASIF (tak boleh dibaca). INGAT exam: "6 copies / 3 AZ / shared storage / failover <30s" = Aurora; "1 standby" = RDS Multi-AZ.',
+              },
+              {
+                label: 'Pokok keputusan — pilih flavor relational DB',
+                source: `flowchart TD
+  Q["Nak relational DB —<br/>flavor mana?"] --> E{Engine apa?}
+  E -->|"Oracle / SQL Server /<br/>MariaDB"| RDS["RDS biasa<br/>+ Multi-AZ untuk HA"]
+  E -->|"MySQL / PostgreSQL"| A{Corak traffic?}
+  A -->|"Steady + nak HA terbaik<br/>+ failover laju / global DR"| AURO["Aurora<br/>6 copy/3 AZ · <30s · Global DB"]
+  A -->|"On-off / spiky / dev-test<br/>nak scale near-zero"| SRV["Aurora Serverless v2"]`,
+                caption: 'INGAT exam: engine Oracle / SQL Server / MariaDB → RDS biasa je (Aurora HANYA MySQL & PostgreSQL compatible). MySQL/Postgres + nak HA terbaik atau cross-region DR → Aurora. Traffic on-off / tak menentu → Aurora Serverless v2 (scale near-zero, bayar per second).',
+              },
+            ],
             tips: [
               'Aurora = 6 copies across 3 AZs auto. RDS Multi-AZ = 1 standby copy sahaja',
               'Aurora failover <30 saat. RDS Multi-AZ failover 1-2 minit',
@@ -2408,6 +2486,16 @@ export const domains: DomainData[] = [
                 ['Guna bila', 'Legacy / simple intermittent', 'Current default — variable traffic, no connection drops'],
               ],
               takeaway: 'v2 = current default (fine-grained, no connection drops, boleh mix dgn provisioned, full features). v1 = legacy. Exam: "instant scaling tanpa drop connection" atau "mix serverless + provisioned dalam satu cluster" → Aurora Serverless v2.',
+            },
+            mermaid: {
+              label: 'Analogi aircond inverter — auto naik-turun, padam bila takde orang',
+              source: `flowchart TD
+  T["Traffic DB naik-turun<br/>tak menentu 📈📉"] --> SRV["Aurora Serverless v2<br/>= aircond inverter ❄️"]
+  SRV -->|"ramai orang masuk"| UP["Auto scale UP<br/>0.5 ACU steps · NO connection drop"]
+  SRV -->|"bilik kosong (idle)"| DOWN["Scale near-ZERO<br/>(auto-pause)"]
+  UP --> PAY["💰 Bayar per SECOND<br/>ikut guna sebenar"]
+  DOWN --> PAY`,
+              caption: 'Aurora Serverless = aircond inverter: auto naik bila ramai (scale fine-grained 0.5 ACU, tanpa putus connection di v2), turun near-zero bila bilik kosong (auto-pause). Bayar per second ikut guna sebenar — bukan bayar instance penuh 24/7. INGAT exam: "intermittent / unpredictable / dev-test / scale to zero / variable traffic" → Aurora Serverless (v2 = default sekarang).',
             },
             tips: [
               'v1 (legacy): scale dalam STEPS (whole capacity unit jumps), connections boleh DROP semasa scaling, limited engine versions',
@@ -2479,6 +2567,18 @@ export const domains: DomainData[] = [
                 takeaway: '"Alternate sort order, must define at creation, same partition key" → LSI. "New query pattern, create anytime, own capacity" → GSI.',
               },
             ],
+            mermaid: {
+              label: 'Pokok keputusan — LSI atau GSI? (soalan paling kerap)',
+              source: `flowchart TD
+  Q["Nak query guna attribute<br/>BUKAN primary key asal"] --> WHEN{Bila kau sedar perlu index ni?}
+  WHEN -->|"Table DAH live —<br/>perlu query pattern BARU"| GSI["GSI ✅<br/>boleh create bila-bila masa"]
+  WHEN -->|"Masih design table<br/>(belum create)"| SK{Partition key nak SAMA?}
+  SK -->|"Ya — cuma nak<br/>SORT key lain"| LSI["LSI<br/>max 5 · share throughput"]
+  SK -->|"Tak — partition key<br/>pun lain"| GSI
+  GSI --> G1["Own RCU/WCU · max 20 · eventual je"]
+  LSI --> L1["Strong/eventual · define masa CREATE JE"]`,
+              caption: 'INGAT exam: table DAH wujud + perlu query pattern baru → GSI (boleh tambah bila-bila masa, partition key bebas, own capacity, max 20). Masa create table + nak sort key alternatif dengan partition key SAMA → LSI (max 5, MESTI define awal, tak boleh tambah lepas table jadi). Keyword "create anytime / new access pattern" = GSI; "must define at creation / same partition key" = LSI.',
+            },
             tips: [
               'DynamoDB = NoSQL (key-value/document). Aurora/RDS = SQL (relational)',
               'DAX = DynamoDB Accelerator = microsecond reads (in-memory cache for DynamoDB)',
@@ -2535,6 +2635,16 @@ export const domains: DomainData[] = [
                 ['Guna bila', 'Read-heavy DynamoDB perlu microsecond', 'Cache depan RDS/Aurora atau data am'],
               ],
               takeaway: 'Cache khusus DynamoDB + zero code change + microsecond → DAX. Cache untuk RDS/Aurora atau data am → ElastiCache. Exam trap: "cache untuk RDS" BUKAN DAX — DAX hanya cakap DynamoDB API.',
+            },
+            mermaid: {
+              label: 'Pokok keputusan — DAX atau ElastiCache?',
+              source: `flowchart TD
+  Q["Nak cache untuk DB —<br/>pilih yang mana?"] --> DB{Cache untuk apa?}
+  DB -->|"DynamoDB +<br/>nak MICROSECOND read"| DAX["DAX ✅<br/>drop-in (code tak ubah)"]
+  DB -->|"RDS / Aurora /<br/>data am"| EC["ElastiCache<br/>(Redis / Memcached)"]
+  DAX --> D1["Cakap DynamoDB API JE<br/>cache READ (GetItem/Query/Scan)"]
+  EC --> E1["General-purpose —<br/>tulis cache logic sendiri"]`,
+              caption: 'INGAT exam: "microsecond + DynamoDB" → DAX (drop-in, code tak berubah, cache read sahaja). "cache untuk RDS/Aurora atau data am" → ElastiCache. TRAP klasik: "cache untuk RDS → DAX?" SALAH — DAX cakap DynamoDB API SAHAJA, langsung tak boleh sentuh RDS. Cache am = ElastiCache.',
             },
             tips: [
               'DAX = microsecond reads. DynamoDB sendiri = single-digit millisecond reads. Beza tu yang exam test.',
@@ -6221,6 +6331,33 @@ export const domains: DomainData[] = [
                   ['Kelemahan', 'First read lambat', 'Cache penuh data tak pernah dibaca + write latency naik'],
                 ],
                 takeaway: 'Lazy Loading = isi bila diminta (jimat memory, boleh stale). Write-Through = isi masa tulis (fresh, tapi boros). Pattern paling common di exam: Lazy Loading + TTL untuk imbang freshness vs saiz cache.',
+              },
+            ],
+            mermaid: [
+              {
+                label: 'Pokok keputusan — Redis atau Memcached?',
+                source: `flowchart TD
+  Q["Nak in-memory cache —<br/>engine mana?"] --> NEED{Perlu apa?}
+  NEED -->|"Persistence / replication /<br/>Multi-AZ / data structure kaya<br/>(leaderboard, session, pub-sub)"| RED["Redis ✅<br/>default exam answer"]
+  NEED -->|"Simple key-value je,<br/>multi-threaded, scale out senang"| MEM["Memcached"]
+  MEM --> M1["⚠️ NO persistence/replication —<br/>data HILANG bila node restart"]
+  RED --> R1["Snapshot + auto-failover<br/>session tak hilang"]`,
+                caption: 'INGAT exam: perlu persistence / replication / Multi-AZ / data structure kaya (leaderboard, session store, pub-sub) → Redis (default answer). Cuma perlu simple key-value, multi-threaded, horizontal scale → Memcached. TRAP: "session store tak boleh hilang" → Redis, BUKAN Memcached (Memcached data lenyap bila node fail).',
+              },
+              {
+                label: 'Lazy Loading vs Write-Through — bila cache di-isi',
+                source: `flowchart LR
+  subgraph LL["Lazy Loading — isi bila DIMINTA"]
+    A1["App READ"] --> C1{Ada dlm cache?}
+    C1 -->|"Hit ✅"| FAST1["Terus pulang (laju)"]
+    C1 -->|"Miss"| DB1[("DB")]
+    DB1 --> W1["Tulis ke cache,<br/>baru pulang"]
+  end
+  subgraph WT["Write-Through — isi masa TULIS"]
+    A2["App WRITE"] --> DB2[("DB")]
+    A2 --> CC["Update cache serentak<br/>(sentiasa fresh)"]
+  end`,
+                caption: 'Lazy Loading = isi cache hanya bila cache MISS (jimat memory — simpan data yang pernah diminta je; risiko stale → fix dengan TTL; miss = 3 trips). Write-Through = update cache setiap kali WRITE ke DB (sentiasa fresh, takde miss penalty untuk data baru ditulis; tapi boros memory + write lambat sikit). INGAT exam: pattern paling common = Lazy Loading + TTL untuk imbang freshness vs saiz cache.',
               },
             ],
             tips: [
