@@ -1911,6 +1911,7 @@ export const domains: DomainData[] = [
               'NACL stateless → kena allow outbound ephemeral port (1024-65535) untuk reply',
               'SG boleh reference SG lain sebagai source. NACL = CIDR je',
               'Custom SG: inbound deny-all. Custom NACL: deny-all (kena tambah rule sendiri)',
+              'NACL TAK nampak traffic dalam subnet SAMA (intra-subnet) → hanya SG kawal komunikasi 2 instance sesama subnet',
             ],
             perangkap: [
               {
@@ -1922,6 +1923,16 @@ export const domains: DomainData[] = [
                 soalan: 'Perlu BLOK satu julat IP penyerang (203.0.113.0/24) daripada mencapai keseluruhan subnet. Guna apa?',
                 umpan: 'Security Group — tambah rule untuk deny IP tu. Nampak betul sebab SG = firewall instance.',
                 betul: 'NACL Deny rule (nombor rule rendah menang). SG TAK BOLEH deny — ia allow-only, jadi mustahil block IP tertentu dengan SG. Keyword "block/deny specific IP range" → NACL.',
+              },
+              {
+                soalan: 'Dua EC2 dalam subnet yang SAMA perlu bercakap sesama sendiri. Apa yang kawal traffic antara mereka?',
+                umpan: 'NACL — sebab NACL jaga subnet, dan dua-dua instance dalam subnet yang sama. Nampak betul tapi terbalik.',
+                betul: 'Security Group sahaja. NACL beroperasi di SEMPADAN subnet (subnet boundary) — traffic yang tak keluar/masuk subnet TAK lalu NACL langsung, jadi NACL tak nampak komunikasi intra-subnet. Keyword "same subnet / instance-to-instance dalam subnet sama" → SG.',
+              },
+              {
+                soalan: 'SG inbound benarkan HTTPS (443) dari 0.0.0.0/0, tapi outbound dibiar default. Client komplen reply HTTPS tak sampai balik. Kena tambah outbound rule untuk port 443 atau ephemeral ports?',
+                umpan: 'Ya, tambah outbound allow ephemeral ports (1024-65535) supaya reply boleh keluar. Nampak betul sebab itu betul untuk NACL.',
+                betul: 'Tak perlu tambah apa-apa. SG = STATEFUL — return traffic untuk connection masuk auto-dibenarkan keluar tanpa kira outbound rule. Cara fikir "tambah outbound ephemeral" tu untuk NACL (stateless), BUKAN SG. Keyword "stateful + return traffic" → auto-allow.',
               },
             ],
             mermaid: [
