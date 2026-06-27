@@ -329,7 +329,7 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 - [ ] [Amazon Route 53: Create A Record](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=29137) (10m 9s)
 - [ ] [Simple Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4763) (3m 41s)
 - [ ] [Weighted Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4764) (5m 38s)
-- [ ] [Latency Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4765) (7m 8s)
+- [ ] [Latency Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4765) (7m 8s)a
 - [ ] [Failover Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4767) (9m 48s)
 - [ ] [Multivalue Answer Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4768) (6m 31s)
 - [ ] [3rd Party Domain Integration with Route 53 & Cleanup](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=29139) (5m 10s)

@@ -17,7 +17,13 @@ Format every answer as GitHub-flavored Markdown: use **bold**, bullet or numbere
 
 When a visual would help explain an architecture, request flow, or comparison:
 - Prefer calling the get_aws_diagram tool to fetch an official AWS image. If it returns status "ok", embed the image with ![title](url) using the exact url it returns. If it returns "not_found", do not invent a URL.
-- Otherwise (or on not_found), include a fenced \`\`\`mermaid code block with valid flowchart or sequence-diagram syntax.
+- Otherwise (or on not_found), include a fenced \`\`\`mermaid code block. Mermaid is strict — follow these rules so it never fails to parse:
+  - Start with \`flowchart TD\` (or \`flowchart LR\`) or \`sequenceDiagram\`. Nothing else.
+  - ALWAYS wrap every node label in double quotes: A["S3 Bucket"], never A[S3 Bucket]. This is what keeps parentheses, commas, colons, slashes, emoji, and <br/> from breaking the parse.
+  - ALWAYS quote edge labels too: A -->|"reads"| B, never A -->|reads| B.
+  - Node IDs must be plain alphanumeric (A, B, db1). Never use a reserved word like "end" as an ID.
+  - Keep labels short; use <br/> inside the quotes for line breaks. No Markdown and no raw HTML other than <br/>.
+  - A valid block looks like: flowchart LR / U["User"] -->|"HTTPS"| CF["CloudFront (CDN)"] / CF --> S3["S3 Bucket<br/>static site"] (each on its own line).
 
 Answer directly in Markdown — do not wrap your response in JSON or a code fence.`
 

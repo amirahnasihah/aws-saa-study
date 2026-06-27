@@ -1632,6 +1632,8 @@ export const domains: DomainData[] = [
               'Default exam = NAT Gateway (managed). NAT Instance hanya bila perlu SG/bastion/port-forward',
               'Multi-AZ HA = deploy 1 NAT GW per AZ; elak cross-AZ data charge',
               'Banyak traffic ke S3/DynamoDB? Gateway VPC Endpoint (FREE) lagi murah dari NAT GW per-GB',
+              'IPv6 + outbound-only → Egress-Only IGW (EIGW), BUKAN NAT GW (NAT GW=IPv4; NAT64 cuma IPv6→IPv4)',
+              'Had connection = 55,000 per unique destination per IP → ErrorPortAllocation. Tambah IP (max 8) / split subnet, BUKAN upgrade bandwidth',
             ],
             perangkap: [
               {
@@ -1648,6 +1650,16 @@ export const domains: DomainData[] = [
                 soalan: 'Satu Public NAT GW dalam AZ-A je, tapi EC2 tersebar multi-AZ. Cross-AZ traffic naikkan kos. Paling cost-effective + kekal internet access?',
                 jebakan: 'Create PRIVATE NAT Gateway (option C/D) — sebab "private" bunyi macam murah/jimat. Salah: Private NAT GW langsung TAK boleh keluar internet (no IGW route), dia untuk VPC-to-VPC / on-prem private routing je.',
                 betul: 'Deploy SATU Public NAT Gateway PER AZ dalam PUBLIC subnet AZ tu sendiri. Traffic stay dalam AZ → eliminate cross-AZ data charge + kekal internet. Keyword: "cross-AZ cost" + "maintain internet access" → NAT GW per AZ (public), BUKAN private NAT GW.',
+              },
+              {
+                soalan: 'EC2 IPv6 dalam private subnet perlu OUTBOUND internet sahaja (tak nak inbound). Guna apa?',
+                jebakan: 'NAT Gateway — sebab "private subnet nak keluar internet" = reflex NAT GW. Tapi NAT GW untuk IPv4 (NAT64 dia cuma untuk IPv6→IPv4). Untuk IPv6 ke internet IPv6, NAT GW bukan jawapan.',
+                betul: 'Egress-Only Internet Gateway (EIGW). IPv6 address global-routable (takde private IPv6), jadi tak perlu NAT — EIGW bagi outbound-only sambil block inbound. Keyword: "IPv6" + "outbound only" → Egress-Only IGW, BUKAN NAT GW.',
+              },
+              {
+                soalan: 'App belakang NAT GW buat ribuan connection ke SATU endpoint (API/DB). Mula nampak ErrorPortAllocation, connection fail. Fix?',
+                jebakan: 'NAT GW dah max bandwidth, scale ke yang lebih besar — tapi NAT GW auto-scale bandwidth sendiri (5→100 Gbps), ni bukan isu bandwidth.',
+                betul: 'Had 55,000 simultaneous connection PER unique destination per IP. Fix: associate lebih IP pada NAT GW (sampai 8), atau sebar resource ke banyak subnet + NAT GW. Keyword: "ErrorPortAllocation" / "many connections to same destination".',
               },
             ],
             scenario: '"Private subnet EC2 perlu access internet tapi tak nak exposed" → NAT Gateway. Letak NAT GW dalam public subnet, route private subnet 0.0.0.0/0 → NAT GW.',
@@ -1687,11 +1699,16 @@ export const domains: DomainData[] = [
               'Cross-AZ cost reduction: instances dalam AZ-B routing melalui NAT GW di AZ-A kena bayar cross-AZ transfer charges',
               'Fix: deploy NAT Gateway SATU PER AZ dalam public subnet yang sama AZ dengan EC2 instances — eliminates cross-AZ fees',
               'Public NAT Gateway MESTI dalam PUBLIC subnet (bukan private). Private NAT Gateway = untuk private routing, tak perlu IGW',
+              'IPv6 outbound-only → Egress-Only Internet Gateway (EIGW), bukan NAT GW. NAT GW IPv6 = NAT64 (IPv6→IPv4) sahaja',
+              'Connection limit: 55,000 simultaneous per unique destination per IP. Hit limit → ErrorPortAllocation metric. Tambah sampai 8 IP atau split subnet',
+              'Tak boleh route ke NAT GW dari VPN/Direct Connect via VGW — guna Transit Gateway (TGW) instead',
+              'PRICING: NAT Gateway = $0.045/jam + $0.045/GB processed (us-east-1, no free tier). Per-AZ → darab bilangan AZ. Heavy S3/DynamoDB traffic → Gateway VPC Endpoint (FREE) jauh lebih murah',
             ],
             docs: [
               { label: 'NAT Gateways', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html' },
+              { label: 'NAT gateway basics', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/nat-gateway-basics.html' },
             ],
-            keywords: ['NAT', 'outbound only', 'private subnet', 'Elastic IP', 'paid', 'no inbound', 'bastion host', 'cross-AZ cost', 'per-AZ NAT Gateway', 'data transfer charges'],
+            keywords: ['NAT', 'outbound only', 'private subnet', 'Elastic IP', 'paid', 'no inbound', 'bastion host', 'cross-AZ cost', 'per-AZ NAT Gateway', 'data transfer charges', 'IPv6', 'Egress-Only Internet Gateway', 'EIGW', 'NAT64', 'ErrorPortAllocation', 'connection limit', '55000 connections', 'pricing'],
           },
           {
             shortName: 'Route Tables',
