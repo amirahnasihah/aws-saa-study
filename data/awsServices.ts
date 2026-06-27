@@ -1098,11 +1098,14 @@ export const domains: DomainData[] = [
             contohGuna: 'Lambda function perlu DB password — jangan letak dalam env var atau code. Store dalam Secrets Manager, Lambda retrieve masa runtime. Auto-rotate setiap 30 hari',
             sifir: [
               'Secrets Manager = AUTO-ROTATE built-in (Lambda). Parameter Store = TAKDE native rotation',
-              'Auto-rotate DB credentials (RDS/Redshift) → Secrets Manager. Itu keyword pembeza',
+              'Auto-rotate DB credentials (RDS/Aurora/Redshift/DocumentDB) → Secrets Manager. Itu keyword pembeza',
+              'DB luar/on-prem/3rd-party? Masih Secrets Manager — tulis CUSTOM Lambda rotation function',
               'Parameter Store Standard = FREE. Secrets Manager = bayar per secret + per API call',
               'Config murah / tak perlu rotate (AMI ID, license) → Parameter Store (SecureString utk encrypt)',
               'Secrets Manager always KMS-encrypted + cross-region replicate built-in',
+              'PRICING: $0.40/secret/bulan + $0.05/10,000 API call (us-east-1). Free 30-hari trial. Parameter Store Standard FREE — itu sebab config biasa letak Parameter Store',
             ],
+            scenario: 'Formula poket: "store password / API key / DB credentials" + "rotate automatically / rotate regularly / every N days" + "least operational overhead" → AWS Secrets Manager (configure automatic rotation). BUKAN Parameter Store (takde native rotation, kena code sendiri). Config biasa tak rahsia (AMI ID, URL, license) + kos rendah → SSM Parameter Store Standard (FREE).',
             perangkap: [
               {
                 soalan: 'Nak simpan DB password dan AUTO-ROTATE setiap 30 hari tanpa ubah app. Parameter Store SecureString?',
@@ -1113,6 +1116,11 @@ export const domains: DomainData[] = [
                 soalan: 'Nak simpan AMI ID, config value, license code yang jarang berubah, kos serendah mungkin. Secrets Manager?',
                 jebakan: 'Secrets Manager — sebab dia memang untuk simpan benda rahsia, selamat. SALAH: bayar per secret, mahal untuk config biasa.',
                 betul: 'SSM Parameter Store (Standard tier FREE). Config + tak perlu rotation → Parameter Store. Pakai SecureString kalau perlu encrypt.',
+              },
+              {
+                soalan: 'Database on-premises (bukan RDS) perlu credentials di-rotate auto setiap 90 hari, least operational overhead. Boleh guna Secrets Manager ke?',
+                jebakan: 'Tak boleh — Secrets Manager rotation untuk RDS/Aurora je, jadi pilih Parameter Store + cron sendiri. SALAH: itu lagi banyak kerja.',
+                betul: 'Boleh — Secrets Manager + CUSTOM Lambda rotation function untuk database non-AWS/on-prem. Native rotation untuk RDS/Aurora/Redshift/DocumentDB; selain tu tulis Lambda. Tetap "least operational overhead" vs build sistem rotation dari kosong.',
               },
             ],
             compare: {
@@ -1130,8 +1138,9 @@ export const domains: DomainData[] = [
             },
             docs: [
               { label: 'Secrets Manager vs Parameter Store', url: 'https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/AWSHowTo.secrets.Secrets-Manager-and-Parameter-Store.html' },
+              { label: 'Rotate secrets (custom Lambda)', url: 'https://docs.aws.amazon.com/secretsmanager/latest/userguide/rotating-secrets.html' },
             ],
-            keywords: ['auto-rotation', 'credentials', 'API keys', 'no hardcoded secrets', 'Lambda integration', 'Parameter Store', 'SecureString', 'cross-region replication', 'KMS'],
+            keywords: ['auto-rotation', 'credentials', 'API keys', 'no hardcoded secrets', 'Lambda integration', 'custom rotation', 'on-premises database', 'Parameter Store', 'SecureString', 'cross-region replication', 'KMS', 'RDS', 'Aurora', 'DocumentDB', 'pricing', 'least operational overhead'],
           },
           {
             shortName: 'S3 Object Lock',
