@@ -2379,6 +2379,11 @@ export const domains: DomainData[] = [
                 umpan: 'Turunkan threshold Target Tracking (cth CPU 30%) supaya scale lebih awal. Nampak betul sebab "scale lebih awal".',
                 betul: 'Guna Scheduled scaling (kerana masa diketahui) atau Predictive scaling (ML forecast corak berulang) untuk tambah kapasiti SEBELUM lonjakan. Target Tracking sentiasa reaktif (tunggu metric naik dulu). Keyword "known schedule / recurring pattern / scale ahead of spike" → Scheduled / Predictive.',
               },
+              {
+                soalan: 'Masa campaign, trafik web naik 500%. Pasukan nak handle lonjakan tapi kekalkan kos rendah DAN app mesti kekal fault-tolerant walau instance kena ambil balik. Konfigurasi ASG mana?',
+                umpan: 'Set ASG guna Spot Instances 100% sebab 90% lebih murah. Nampak betul sebab "kos rendah + scale". TAPI kalau AWS rampas balik semua Spot serentak masa burst, app crash — bukan fault-tolerant.',
+                betul: 'ASG dengan Mixed Instances Policy: baseline On-Demand (cth min 2-3 instance yang AWS tak rampas = jaminan tak mati) + selebihnya Spot (jimat 90% masa burst). Spot kena rampas → On-Demand tahan app + ASG auto cari Spot type lain ganti. Keyword "lowest cost + fault-tolerant + handle spike" → ASG Mixed Instances Policy (On-Demand baseline + Spot), BUKAN Spot 100%.',
+              },
             ],
             compare: {
               label: 'Scaling policies — pilih cara scale ikut corak traffic',
@@ -2401,7 +2406,7 @@ export const domains: DomainData[] = [
               'Default policy: OldestLaunchConfiguration → OldestInstance → ClosestToNextInstanceHour',
               'Exam: "phase out old AMI, replace with new" → OldestLaunchTemplate termination policy',
             ],
-            keywords: ['horizontal scaling', 'scale out/in', 'launch template', 'scaling policies', 'desired capacity', 'min/max', 'OldestLaunchTemplate', 'termination policy', 'AMI rollout'],
+            keywords: ['horizontal scaling', 'scale out/in', 'launch template', 'scaling policies', 'desired capacity', 'min/max', 'OldestLaunchTemplate', 'termination policy', 'AMI rollout', 'Mixed Instances Policy', 'On-Demand baseline', 'Spot', 'fault-tolerant', 'cost optimization spike'],
           },
           {
             shortName: 'RDS Multi-AZ',
@@ -6573,9 +6578,21 @@ export const domains: DomainData[] = [
                 takeaway: 'Semua tujuan sama: sebar banyak instance type/AZ supaya tahan interrupt. Nak auto-scaling + campur Spot → ASG Mixed Instances Policy. Nak satu-shot kapasiti gabungan tanpa scaling → EC2 Fleet. Spot Fleet = legacy (EC2 Fleet ganti). INGAT: "Fleet" = pakej borong sekumpulan server campuran diurus sebagai satu.',
               },
             ],
-            mermaid: {
-              label: 'Provision Spot dengan resilien (Fleet & Auto Scaling)',
-              source: `flowchart TD
+            mermaid: [
+              {
+                label: 'Analogi — Spot = tiket kapal terbang "standby"',
+                source: `flowchart TD
+  K["✈️ 20 kerusi kosong<br/>10 min sebelum berlepas"] --> Q{Beli tiket jenis apa?}
+  Q -->|"Bayar penuh RM500"| OD["💺 On-Demand = tiket biasa<br/>kerusi hak kau,<br/>takde sapa boleh halau"]
+  Q -->|"Lelong RM50 (90% murah)"| SP["🎟️ Spot = tiket standby<br/>naik gembira & murah gila"]
+  SP --> VIP{VIP datang beli<br/>harga penuh?}
+  VIP -->|"Ya"| OUT["⏱️ Pramugari: 'Encik ada 2 minit<br/>kemas barang, kena turun'<br/>= 2-min interruption notice"]
+  VIP -->|"Tak"| STAY["😎 Duduk selesa, jimat 90%"]`,
+                caption: 'Spot = tiket standby kapal terbang: kerusi kosong dilelong 90% murah, tapi kalau VIP (pelanggan On-Demand bayar penuh) datang, kau kena turun dengan notis 2 minit. On-Demand = tiket biasa: kerusi hak kau, takde sapa halau. INGAT exam: "fault-tolerant + lowest cost" → Spot (sanggup kena halau); "critical/stateful tak boleh putus" → On-Demand/RI (kerusi terjamin).',
+              },
+              {
+                label: 'Provision Spot dengan resilien (Fleet & Auto Scaling)',
+                source: `flowchart TD
   A[Nak Spot tapi kurang risiko interrupt] --> B{Macam mana nak provision?}
   B -->|Satu group, banyak instance type/AZ| C[EC2 Fleet / Spot Fleet]
   B -->|Auto Scaling group| D[Mixed Instances Policy<br/>campur On-Demand + Spot]
@@ -6585,8 +6602,9 @@ export const domains: DomainData[] = [
   E -->|Nak imbang kos + interruption| G[price-capacity-optimized<br/>disyorkan AWS]
   F --> H[Capacity Rebalancing<br/>ganti instance berisiko awal]
   G --> H`,
-              caption: 'EC2 Fleet/Spot Fleet atau ASG Mixed Instances Policy = sebar merentas banyak instance type & AZ supaya kalau satu pool kena ambil balik, yang lain sambung. capacity-optimized = ambil dari pool paling banyak kapasiti (kurang interrupt). price-capacity-optimized = pilihan default disyorkan (imbang murah + kurang interrupt).',
-            },
+                caption: 'EC2 Fleet/Spot Fleet atau ASG Mixed Instances Policy = sebar merentas banyak instance type & AZ supaya kalau satu pool kena ambil balik, yang lain sambung. capacity-optimized = ambil dari pool paling banyak kapasiti (kurang interrupt). price-capacity-optimized = pilihan default disyorkan (imbang murah + kurang interrupt).',
+              },
+            ],
             tips: [
               'Notis interrupt = 2 MINIT, dihantar via EventBridge event DAN instance metadata. Poll metadata setiap ~5 saat. (Exam selalu tanya angka 2 minit ni.)',
               'Interruption behaviors: terminate (default), stop, hibernate. Stop perlu request persistent / Fleet maintain. Hibernate dapat notis tapi tak ada 2-minit awal.',
