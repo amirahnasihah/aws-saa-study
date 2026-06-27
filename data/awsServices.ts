@@ -2413,8 +2413,14 @@ export const domains: DomainData[] = [
                 umpan: 'Set ASG guna Spot Instances 100% sebab 90% lebih murah. Nampak betul sebab "kos rendah + scale". TAPI kalau AWS rampas balik semua Spot serentak masa burst, app crash — bukan fault-tolerant.',
                 betul: 'ASG dengan Mixed Instances Policy: baseline On-Demand (cth min 2-3 instance yang AWS tak rampas = jaminan tak mati) + selebihnya Spot (jimat 90% masa burst). Spot kena rampas → On-Demand tahan app + ASG auto cari Spot type lain ganti. Keyword "lowest cost + fault-tolerant + handle spike" → ASG Mixed Instances Policy (On-Demand baseline + Spot), BUKAN Spot 100%.',
               },
+              {
+                soalan: 'Sistem mission-critical kena ZERO downtime — walau satu komponen rosak, user langsung tak boleh perasan apa-apa gangguan. Konsep mana paling tepat?',
+                umpan: 'High Availability (Multi-AZ). Nampak betul sebab HA memang pasal "sistem tak mati" + failover automatik.',
+                betul: 'Fault Tolerance. HA masih ada GAP failover sekejap (~minit) — user mungkin rasa sangkut. FT = takeover REAL-TIME, sifar saat gangguan. Keyword "zero downtime / no interruption / mission-critical" = Fault Tolerance, BUKAN HA. (Contoh FT: Aurora replicas + Route 53 active-active.)',
+              },
             ],
-            compare: {
+            compare: [
+              {
               label: 'Scaling policies — pilih cara scale ikut corak traffic',
               headers: ['Policy', 'Macam mana ia scale', 'Guna bila'],
               rows: [
@@ -2425,7 +2431,20 @@ export const domains: DomainData[] = [
                 ['Predictive', 'ML forecast beban, scale AWAL sebelum spike', 'Traffic berulang / cyclical (proactive)'],
               ],
               takeaway: 'Senang + default → Target Tracking. Tahu jadual → Scheduled. Corak berulang → Predictive (scale dulu sebelum spike). Reaksi ikut keterukan → Step. Cooldown elak scale berulang terlalu cepat; warm-up bagi instance baru "matang" sebelum dikira dalam metric.',
-            },
+              },
+              {
+                label: 'Konsep asas: HA vs Fault Tolerance vs Scalability vs Elasticity vs Throughput',
+                headers: ['Konsep', 'Maksud mudah', 'Keyword exam'],
+                rows: [
+                  ['High Availability (HA)', 'Sistem kekal hidup, tapi failover ambil masa sekejap (~minit). Ada gap kecil.', 'minimize downtime · failover · multi-AZ · eliminate SPOF'],
+                  ['Fault Tolerance (FT)', 'ZERO downtime — backup ambil alih real-time, user tak perasan langsung.', 'zero downtime · no interruption · mission-critical · continuous'],
+                  ['Scalability', 'Boleh tampung beban makin besar (manual/auto). Up (vertical) atau out (horizontal).', 'handle growth · increase capacity · scale up / scale out'],
+                  ['Elasticity', 'Auto tambah server bila sibuk + auto buang bila lengang (cost-optimize).', 'dynamic demand · auto scale up AND down · cost optimization'],
+                  ['Throughput', 'Berapa banyak data/request lalu per saat (Mbps/Gbps).', 'high throughput · bandwidth · transfer large files · Mbps/Gbps'],
+                ],
+                takeaway: 'HA = downtime MINIMUM (ada failover gap); FT = downtime SIFAR (real-time takeover). Scalability = boleh besar; Elasticity = auto besar+kecik. Throughput = laju aliran data. Exam: "zero downtime / no interruption" → FT; "minimize downtime / failover" → HA; "auto scale up AND down to match demand" → Elasticity; "handle more load" → Scalability. Vertical = upgrade saiz (Scale Up, perlu restart); Horizontal = tambah instance (Scale Out, pilihan AWS).',
+              },
+            ],
             tips: [
               'Termination Policies — menentukan instance MANA yang ditamatkan semasa scale in:',
               'OldestLaunchTemplate → terminate instances guna launch template LAMA (guna ni untuk rolling AMI updates — pastikan instances lama diganti dengan yang baru)',
@@ -2435,7 +2454,7 @@ export const domains: DomainData[] = [
               'Default policy: OldestLaunchConfiguration → OldestInstance → ClosestToNextInstanceHour',
               'Exam: "phase out old AMI, replace with new" → OldestLaunchTemplate termination policy',
             ],
-            keywords: ['horizontal scaling', 'scale out/in', 'launch template', 'scaling policies', 'desired capacity', 'min/max', 'OldestLaunchTemplate', 'termination policy', 'AMI rollout', 'Mixed Instances Policy', 'On-Demand baseline', 'Spot', 'fault-tolerant', 'cost optimization spike'],
+            keywords: ['horizontal scaling', 'scale out/in', 'launch template', 'scaling policies', 'desired capacity', 'min/max', 'OldestLaunchTemplate', 'termination policy', 'AMI rollout', 'Mixed Instances Policy', 'On-Demand baseline', 'Spot', 'fault-tolerant', 'cost optimization spike', 'high availability', 'fault tolerance', 'scalability', 'elasticity', 'throughput', 'vertical scaling', 'scale up', 'zero downtime', 'eliminate single point of failure'],
           },
           {
             shortName: 'RDS Multi-AZ',
