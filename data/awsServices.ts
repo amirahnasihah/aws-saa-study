@@ -562,6 +562,18 @@ export const domains: DomainData[] = [
   E -- Ya --> G[ALLOWED]`,
               caption: 'Effective permission = intersection SCP ∩ IAM policy. SCP tak grant apa-apa — kena ADA Allow dalam IAM policy juga. Management account tak terkena SCP langsung.',
             },
+            compare: {
+              label: 'SCP vs IAM Policy',
+              headers: ['Aspect', 'SCP (Organizations)', 'IAM Policy'],
+              rows: [
+                ['Boleh GRANT akses?', '❌ Tak — RESTRICT je (guardrail)', '✅ Ya — pemberi akses sebenar'],
+                ['Skop', 'Whole account / OU (semua principal dalam account)', 'User / role / group tertentu'],
+                ['Apply ke management account?', '❌ Tidak', '✅ Ya'],
+                ['Effective permission', 'Intersection: SCP ∩ IAM (kedua-dua kena Allow)', 'Union semua IAM policy attached'],
+                ['Keyword', '"org-wide guardrail / max permission"', '"bagi user ni akses ke X"'],
+              ],
+              takeaway: 'SCP = had MAKSIMUM (pagar), tak pernah bagi akses. IAM = pemberi akses sebenar. SCP Allow ≠ akses; kena ADA Allow dalam IAM JUGA. "org-wide guardrail / restrict all accounts" → SCP; "grant this user" → IAM.',
+            },
             tips: [
               'SCP TIDAK apply ke management (root) account by default — SCPs hanya restrict MEMBER accounts',
               'Kalau soalan tanya "prevent actions org-wide tapi exempt management account" → answer specify "member accounts only"',
@@ -1421,6 +1433,18 @@ export const domains: DomainData[] = [
               ],
               takeaway: '"Consistent low latency + high bandwidth + private" → Direct Connect. "Quick, cheap, encrypted over internet" → Site-to-Site VPN. Best resilience = DX primary + VPN backup (encrypted DX = run VPN over DX).',
             },
+            mermaid: {
+              label: 'Decision tree: DX vs VPN vs DX+VPN',
+              source: `flowchart TD
+    Q["Sambung on-prem ke AWS?"] --> A{Perlu LIVE cepat?}
+    A -->|"Ya — minit/jam (urgent)"| VPN["🔐 Site-to-Site VPN<br/>IPSec over internet<br/>(encrypted, murah, cepat)"]
+    A -->|"Boleh tunggu minggu-bulan"| DX["🛣️ Direct Connect<br/>fiber dedicated<br/>(latency konsisten, bandwidth tinggi)"]
+    DX --> C{Perlu encrypted juga?<br/>compliance?}
+    C -->|"Ya"| DXVPN["Direct Connect + VPN<br/>(IPSec over DX)"]
+    C -->|"Tak"| DXok["DX je cukup"]
+    VPN -.->|"boleh jadi backup murah"| DX`,
+              caption: 'Analogi: VPN = jalan awam tapi naik kereta berperisai (encrypted, sambungan cepat). DX = highway tol PRIBADI sendiri (laju konsisten tapi kena bina dulu, lama). INGAT exam: "quickly/urgent" → VPN; "consistent low latency + high bandwidth" → DX; "private + encrypted/compliance" → DX + VPN (sebab DX tak encrypted by default).',
+            },
             tips: [
               'DX = "Dedicated eXpensive" — physical fiber, weeks-months to provision. Tak suitable bila jawapan perlu "quickly/immediately" → itu VPN',
               'DX NOT encrypted by default — exam trap! Perlu private + encrypted = DX + Site-to-Site VPN (IPSec over DX)',
@@ -1615,6 +1639,31 @@ export const domains: DomainData[] = [
               },
             ],
             scenario: '"Public subnet boleh access internet" → Internet Gateway. Route table mesti ada 0.0.0.0/0 → IGW untuk subnet jadi public.',
+            compare: {
+              label: 'IGW vs NAT Gateway vs Egress-Only IGW',
+              headers: ['Aspect', 'Internet Gateway', 'NAT Gateway', 'Egress-Only IGW'],
+              rows: [
+                ['Arah', '🟢 Dua arah (in + out)', 'Outbound only', 'Outbound only'],
+                ['IP version', 'IPv4 + IPv6', 'IPv4 sahaja', '🟢 IPv6 sahaja'],
+                ['Letak kat', 'Attach ke VPC', 'Dalam public subnet', 'Attach ke VPC'],
+                ['Subnet sasaran', 'Public subnet', 'Private subnet (IPv4)', 'Private subnet (IPv6)'],
+                ['Cost', '🟢 Free', '$0.045/hr + $0.045/GB', '🟢 Free'],
+                ['Internet boleh initiate masuk?', 'Ya (terdedah)', 'Tidak', 'Tidak'],
+              ],
+              takeaway: 'Nak expose ke internet (web/bastion) → IGW (dua arah). Private IPv4 keluar je (patch/update) → NAT Gateway. Private IPv6 keluar je → Egress-Only IGW (sebab NAT GW IPv4 sahaja). Discriminator exam: "IPv6 + outbound only" → Egress-Only IGW, BUKAN NAT Gateway.',
+            },
+            mermaid: {
+              label: 'Analogi: Pintu pagar rumah',
+              source: `flowchart LR
+    NET["🌐 Internet"]
+    IGW["🚪 IGW<br/>pintu utama 2-arah<br/>orang masuk + keluar"]
+    NAT["🚪 NAT GW<br/>pintu belakang sehala<br/>orang dalam keluar je"]
+    EIGW["🚪 Egress-Only IGW<br/>pintu sehala IPv6"]
+    NET <-->|"masuk + keluar"| IGW
+    NAT -->|"keluar je (IPv4)"| NET
+    EIGW -->|"keluar je (IPv6)"| NET`,
+              caption: 'IGW = pintu utama dua arah (expose). NAT = pintu belakang sehala IPv4. Egress-Only IGW = pintu sehala IPv6. INGAT exam: private subnet IPv6 nak keluar internet → Egress-Only IGW, sebab NAT Gateway tak handle IPv6.',
+            },
             tips: [
               'IGW = free, highly available, satu per VPC — tak boleh ada 2 IGW dalam satu VPC',
               '3 syarat subnet "public": (1) IGW attach ke VPC, (2) route 0.0.0.0/0 → IGW, (3) EC2 ada public/Elastic IP',
@@ -1885,6 +1934,30 @@ export const domains: DomainData[] = [
               },
             ],
             scenario: '"Connect dua VPC" → VPC Peering. Ingat: IP ranges TAK BOLEH overlap! Non-transitive — A reach C kena buat A↔C peering sendiri. 3+ VPCs all-to-all = guna Transit Gateway.',
+            compare: {
+              label: 'VPC Peering vs Transit Gateway',
+              headers: ['Aspect', 'VPC Peering', 'Transit Gateway'],
+              rows: [
+                ['Topology', '🟢 1-to-1 link antara 2 VPC', 'Hub-and-spoke (hub tengah)'],
+                ['Transitive', 'No — A↔B + B↔C tapi A✗C', '🟢 Yes — A reach C via hub'],
+                ['Scale (10 VPC)', '45 link [n(n-1)/2] 😵', '🟢 10 attachment je'],
+                ['On-prem (VPN/DX)', 'Tak boleh attach', '🟢 Attach VPN + Direct Connect ke hub'],
+                ['Edge-to-edge', 'TAK sokong (B tak boleh guna NAT/IGW A)', 'Routing via hub'],
+                ['Cost', '🟢 No hourly fee (data transfer je)', 'Hourly per attachment + data processing'],
+              ],
+              takeaway: '2 VPC sahaja → Peering (murah, simple, no hourly fee). 3+ VPC all-to-all atau perlu connect on-prem → Transit Gateway. Discriminator exam: "non-transitive / overlap CIDR / 2 VPC" → Peering; "mesh / banyak VPC / hybrid / ECMP" → TGW.',
+            },
+            mermaid: {
+              label: 'Analogi: Jambatan rumah-ke-rumah (non-transitive)',
+              source: `flowchart TD
+    subgraph PEER["🌉 VPC Peering = jambatan terus rumah-ke-rumah"]
+      RA["🏠 Rumah A<br/>VPC A"] --- RB["🏠 Rumah B<br/>VPC B"]
+      RB --- RC["🏠 Rumah C<br/>VPC C"]
+      RA -.->|"A nak ke C?<br/>TAK BOLEH pinjam jambatan B 🚫"| RC
+    end
+    PEER --> NOTE["Nak semua rumah sambung?<br/>Kena bina jambatan SETIAP pasangan<br/>6 rumah = 15 jambatan 😵<br/><br/>Guna 1 roundabout tengah =<br/>Transit Gateway (hub transitive)"]`,
+              caption: 'Peering NON-transitive: jambatan A-B + B-C tak buatkan A nampak C. Ramai VPC → terlalu banyak jambatan (mesh). INGAT exam: 3+ VPC mesh / hybrid on-prem → Transit Gateway (roundabout tengah).',
+            },
             tips: [
               'Non-transitive: A↔B dan B↔C, tapi A TIDAK reach C. Macam "kawan kawan bukan kawan aku"',
               'IP ranges WAJIB tak overlap — 172.16.0.0/16 dengan 172.16.0.0/24 = KONFLIK, tak boleh peer',
@@ -1935,6 +2008,18 @@ export const domains: DomainData[] = [
               ],
               takeaway: '2 VPCs → Peering (cheaper, simple). 3+ VPCs all-to-all atau perlu connect on-prem → Transit Gateway (transitive hub, elak peering mesh). Peering non-transitive, TGW transitive.',
             },
+            mermaid: {
+              label: 'Analogi: Roundabout tengah (hub transitive)',
+              source: `flowchart TD
+    TGW(("🔄 Transit Gateway<br/>roundabout tengah"))
+    VA["VPC A"] <--> TGW
+    VB["VPC B"] <--> TGW
+    VC["VPC C"] <--> TGW
+    VPN["🏢 On-prem<br/>(Site-to-Site VPN)"] <--> TGW
+    DX["🏢 On-prem<br/>(Direct Connect)"] <--> TGW
+    TGW -.->|"A nak ke C?<br/>lalu roundabout je ✅<br/>(transitive)"| VC`,
+              caption: 'TGW = satu roundabout: semua VPC + on-prem attach SEKALI ke hub, hub route semua (transitive). 10 VPC = 10 attachment je, bukan 45 jambatan. INGAT exam: "banyak VPC mesh / sambung on-prem / ECMP aggregate VPN" → Transit Gateway.',
+            },
             tips: [
               '2 VPCs = Peering (cheaper). 3+ VPCs all-to-all = Transit Gateway (simpler)',
               'TGW support TRANSITIVE routing — ini perbezaan utama dari VPC Peering',
@@ -1953,7 +2038,7 @@ export const domains: DomainData[] = [
             fullName: 'VPC Endpoints (Gateway & Interface)',
             ingat: '"Highway terus ke AWS services — tanpa internet, tanpa NAT fees"',
             gunaUntuk: 'Access S3/DynamoDB (free) atau AWS services lain (paid) dari private subnet secara private',
-            fungsi: 'Dua jenis: Gateway Endpoint (S3 + DynamoDB, free, guna route table) dan Interface Endpoint (services lain via PrivateLink, ada ENI dalam subnet, berbayar). Traffic tak keluar ke internet langsung — lebih selamat dan murah (jimat NAT GW data fees).',
+            fungsi: 'Tiga jenis: Gateway Endpoint (S3 + DynamoDB, free, guna route table), Interface Endpoint (services lain via PrivateLink, ada ENI dalam subnet, berbayar), dan Gateway Load Balancer Endpoint/GWLBe (salurkan traffic ke inline security appliance). Traffic tak keluar ke internet langsung — lebih selamat dan murah (jimat NAT GW data fees). PENTING: PrivateLink bukan saja untuk GUNA service orang — kau pun boleh DEDAH service sendiri ke VPC/customer lain (Endpoint Service + NLB) tanpa VPC Peering.',
             sebabApa: 'Wujud sebab tanpa endpoint, private subnet nak cakap dengan S3/DynamoDB/SSM kena lalu NAT Gateway → IGW → internet (public path) → bayar NAT per-GB + traffic keluar internet (kurang selamat). VPC Endpoint bagi laluan PRIVATE terus ke AWS service dalam network AWS — Gateway Endpoint (S3/DynamoDB) percuma jimat NAT fees, Interface Endpoint (PrivateLink) untuk service lain. Bonus: boleh kunci S3 bucket supaya HANYA terima dari endpoint ni (compliance).',
             contohGuna: 'EC2 private subnet banyak upload ke S3. Tanpa endpoint: bayar NAT GW per GB. Dengan S3 Gateway Endpoint (free): traffic terus dalam AWS network.',
             sifir: [
@@ -1962,6 +2047,9 @@ export const domains: DomainData[] = [
               'Gateway Endpoint = in-VPC only. Interface Endpoint = boleh dari on-prem (VPN/DX) sebab ada DNS+ENI',
               'aws:sourceVpce dalam bucket policy = kunci S3 terima dari satu endpoint je',
               'Connectivity ≠ Authorization: route betul ≠ S3 terima; bucket policy boleh DENY walaupun network sampai',
+              'PrivateLink 2 hala: CONSUMER = Interface Endpoint (guna service orang); PROVIDER = Endpoint Service + NLB (dedah service aku)',
+              'Expose app sendiri ke VPC/customer lain tanpa peering → PrivateLink Endpoint Service (BUKAN VPC Peering/TGW)',
+              'Jenis ke-3: GWLBe (Gateway Load Balancer Endpoint) → salurkan traffic ke inline firewall/IDS appliance, pun PrivateLink',
             ],
             perangkap: [
               {
@@ -1979,21 +2067,40 @@ export const domains: DomainData[] = [
                 umpan: 'NAT Gateway dalam public subnet (D) — atau Gateway Endpoint (C) sebab "VPC Endpoint untuk private access". SALAH dua-dua: NAT GW tetap lalu internet (tak selesai), Gateway Endpoint sokong S3/DynamoDB SAHAJA.',
                 betul: 'Interface VPC Endpoint (PrivateLink) untuk Secrets Manager. Letak ENI private IP dalam subnet → traffic terus dalam network AWS, tak sentuh internet. Keyword: "access AWS service (selain S3/DynamoDB) privately / tanpa internet" → Interface Endpoint.',
               },
+              {
+                soalan: 'Syarikat SaaS nak biar customer (VPC/akaun lain) akses aplikasi mereka secara private — tanpa expose ke internet dan tanpa VPC Peering. Cara terbaik?',
+                umpan: 'VPC Peering atau Transit Gateway antara provider dan setiap customer. Nampak betul sebab "sambung VPC". SALAH: peering/TGW buka network penuh dua-hala + kena urus CIDR tak overlap untuk setiap customer = tak scalable & kurang selamat.',
+                betul: 'AWS PrivateLink — provider daftar Endpoint Service (belakang NLB), customer connect guna Interface Endpoint. Dedah SATU service je, one-directional, CIDR boleh overlap. Keyword "expose my own app/SaaS to other VPCs privately, no peering" → PrivateLink Endpoint Service.',
+              },
             ],
             scenario: '"Access S3/DynamoDB dari private subnet tanpa internet" → Gateway VPC Endpoint (free). "Access ECR, SSM, Secrets Manager, KMS atau services lain privately / tanpa internet" → Interface Endpoint (PrivateLink). Jangan terpedaya NAT Gateway — NAT GW tetap lalu public internet.',
-            compare: {
-              label: 'Gateway vs Interface Endpoint',
-              headers: ['Aspect', 'Gateway Endpoint', 'Interface Endpoint'],
-              rows: [
-                ['Supports', '🟢 S3 + DynamoDB only', 'Most AWS services (ECR, SSM, KMS, SQS…) + PrivateLink'],
-                ['How it works', 'Route table entry (prefix list)', 'ENI with private IP in your subnet'],
-                ['Cost', '🟢 Free', 'Hourly per-ENI + data processing'],
-                ['Access from on-prem', 'No (route-table based, in-VPC only)', '🟢 Yes via VPN/Direct Connect (DNS)'],
-                ['DNS', 'No private DNS', 'Private DNS — service name resolves to ENI'],
-                ['Use when', 'S3/DynamoDB from private subnet, save NAT cost', 'Any other service privately, or from on-prem'],
-              ],
-              takeaway: '"GD Free" → Gateway endpoint = S3 + DynamoDB sahaja, percuma, guna route table. Semua service lain (atau access from on-prem) → Interface endpoint (PrivateLink, ENI, berbayar).',
-            },
+            compare: [
+              {
+                label: 'Gateway vs Interface vs Gateway LB Endpoint (3 jenis)',
+                headers: ['Aspect', 'Gateway Endpoint', 'Interface Endpoint', 'GWLBe'],
+                rows: [
+                  ['Teknologi', 'Route table (prefix list)', '🟢 PrivateLink (ENI + private IP)', '🟢 PrivateLink'],
+                  ['Sokong', 'S3 + DynamoDB SAHAJA', 'Hampir semua AWS service + SaaS', 'Inline security appliance (firewall/IDS)'],
+                  ['Cost', '🟢 Free', '~$0.01/hr/AZ + $0.01/GB', 'Per-hour + GWLCU'],
+                  ['Akses dari on-prem', '❌ In-VPC je', '🟢 Ya (VPN/DX, ada private IP)', 'Via routing ke appliance'],
+                  ['DNS', 'No private DNS', 'Private DNS → resolve ke ENI', 'N/A (routing-based)'],
+                  ['Guna bila', 'S3/DynamoDB, jimat NAT', 'Service lain / SaaS / from on-prem', 'Salurkan traffic ke 3rd-party firewall'],
+                ],
+                takeaway: '"GD Free" → Gateway = S3 + DynamoDB sahaja, route table, percuma. Service lain / SaaS / from on-prem → Interface (PrivateLink, ENI, berbayar). Inline firewall/IDS appliance → GWLBe. Interface & GWLBe dua-dua PrivateLink-powered; Gateway TIDAK.',
+              },
+              {
+                label: 'PrivateLink: Consumer side vs Provider side (selalu terlepas!)',
+                headers: ['Aspect', 'Consumer (guna service orang)', 'Provider (dedah service aku)'],
+                rows: [
+                  ['Komponen', 'Interface Endpoint (ENI dalam subnet aku)', '🟢 Endpoint Service + NLB (atau GWLB)'],
+                  ['Tujuan', 'Aku nak GUNA AWS/SaaS service privately', 'Aku nak EXPOSE app aku ke VPC/customer lain'],
+                  ['Arah', 'Consumer → Provider (one-directional)', 'Provider terima dari consumer'],
+                  ['Vs Peering/TGW', 'N/A', '🟢 Dedah SATU service je (bukan whole network), CIDR boleh overlap'],
+                  ['Guna bila', 'Access Secrets Manager/KMS/SSM tanpa internet', 'Jual/kongsi app sendiri privately tanpa peering'],
+                ],
+                takeaway: 'PrivateLink ada DUA hala: CONSUMER = Interface Endpoint (guna service orang); PROVIDER = Endpoint Service + NLB (dedah service sendiri). INGAT exam: "expose my own app to another VPC/customer privately tanpa peering/internet" → PrivateLink Endpoint Service + NLB, BUKAN VPC Peering/TGW.',
+              },
+            ],
             mermaid: [
               {
                 label: 'Soalan exam: EC2 akses Secrets Manager tanpa internet',
@@ -2019,6 +2126,23 @@ export const domains: DomainData[] = [
   IF --> ANS["Soalan Secrets Manager<br/>→ Interface Endpoint (jawapan A)"]`,
                 caption: 'Cara cepat: hanya DUA service guna Gateway Endpoint — S3 & DynamoDB ("GD Free"). Apa-apa service lain yang nak diakses private = Interface Endpoint (PrivateLink). Secrets Manager bukan S3/DynamoDB → mesti Interface.',
               },
+              {
+                label: 'PrivateLink provider → consumer (dedah service tanpa peering)',
+                source: `flowchart LR
+  subgraph PROV["🏭 Provider VPC (service aku)"]
+    APP["🖥️ App / backend"]
+    NLB["⚖️ Network Load Balancer"]
+    ES["📡 Endpoint Service<br/>(PrivateLink)"]
+    APP --> NLB --> ES
+  end
+  subgraph CONS["☁️ Consumer VPC (customer)"]
+    C["🖥️ Client"]
+    IE["🔌 Interface Endpoint<br/>ENI + private IP"]
+    C --> IE
+  end
+  IE -->|"PrivateLink: one-directional<br/>no peering · CIDR boleh overlap"| ES`,
+                caption: 'Provider letak app belakang NLB → daftar sebagai Endpoint Service. Consumer cucuk Interface Endpoint → connect terus ke SATU service tu sahaja. Tiada VPC Peering, tiada IGW, CIDR tak perlu unik. INGAT exam: "expose/share my own application privately to other VPCs or SaaS customers" → AWS PrivateLink (Endpoint Service + NLB), BUKAN VPC Peering/TGW.',
+              },
             ],
             tips: [
               '"GD Free" — Gateway Endpoint untuk S3 + DynamoDB = PERCUMA',
@@ -2033,7 +2157,7 @@ export const domains: DomainData[] = [
               { label: 'Gateway Endpoints', url: 'https://docs.aws.amazon.com/vpc/latest/privatelink/gateway-endpoints.html' },
               { label: 'Restrict S3 bucket access to a VPC endpoint', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/example-bucket-policies-vpc-endpoint.html' },
             ],
-            keywords: ['VPC endpoint', 'Gateway endpoint', 'Interface endpoint', 'PrivateLink', 'S3', 'DynamoDB', 'no internet', 'free', 'aws:sourceVpce', 'bucket policy', 'NAT Gateway denied', 'aws:sourceVpc'],
+            keywords: ['VPC endpoint', 'Gateway endpoint', 'Interface endpoint', 'PrivateLink', 'S3', 'DynamoDB', 'no internet', 'free', 'aws:sourceVpce', 'bucket policy', 'NAT Gateway denied', 'aws:sourceVpc', 'Endpoint Service', 'GWLBe', 'Gateway Load Balancer Endpoint', 'NLB', 'expose own service', 'Marketplace SaaS', 'provider consumer', 'no peering'],
           },
         ],
       },
@@ -3825,6 +3949,85 @@ export const domains: DomainData[] = [
             keywords: ['object storage', '11 nines durability', 'strong consistency', 'bucket policy', 'block public access', 'versioning', 'CRR', 'SRR', 'SSE-S3', 'SSE-KMS', 'SSE-C', 'multipart upload', '5TB', 'transfer acceleration', '503 slow down', 'prefix', 'static website', 'event notification'],
           },
           {
+            shortName: 'S3 Access Control',
+            fullName: 'S3 Access Control & Policies (IAM · Bucket Policy · ACL · BPA)',
+            ingat: '"Banyak \'policy\' tu sebenarnya 2 famili: SIAPA boleh sentuh vs APA jadi kat data"',
+            gunaUntuk: 'Kawal siapa boleh access bucket/object — pilih antara IAM Policy, Bucket Policy, ACL, atau Block Public Access',
+            fungsi: 'Punca orang confused: perkataan "policy" dalam S3 dipakai untuk DUA benda berlainan. (A) ACCESS CONTROL = siapa boleh sentuh data: IAM Policy (attach ke user/role), Bucket Policy (attach ke bucket, resource-based JSON), ACL (legacy per-object/bucket), Block Public Access (master safety switch). (B) DATA MANAGEMENT = apa jadi kat data ikut masa: Lifecycle, Replication (CRR/SRR), Object Lock / Vault Lock — itu BUKAN access control. Card ni fokus famili (A).',
+            sebabApa: "Wujud sebab satu bucket boleh kena access dari banyak sudut — user dalam akaun kau, account luar, public internet, app. Tiap satu ada cara kawal sendiri: IAM untuk 'user aku', Bucket Policy untuk 'whole bucket / cross-account / force HTTPS', ACL legacy yang AWS dah galak matikan, dan Block Public Access sebagai safety net last line supaya tak tersilap expose. Sebab ramai mechanism inilah yang buat rasa 'banyak sangat policy' — padahal kalau asingkan ikut SIAPA yang kau nak kawal, ia jadi simple.",
+            sifir: [
+              "2 famili: (A) ACCESS = siapa sentuh; (B) DATA MGMT = apa jadi (Lifecycle/Replication/Lock)",
+              "IAM Policy = identity-based (user/role aku). Bucket Policy = resource-based (whole bucket, cross-account)",
+              "Cross-account / public / force HTTPS / force encryption → BUCKET POLICY",
+              "ACL = legacy, coarse — AWS recommend DISABLE (Bucket owner enforced jadi default)",
+              "Block Public Access (default ON) MENANG atas bucket policy + ACL",
+              "Bila clash: EXPLICIT DENY sentiasa menang atas mana-mana Allow",
+            ],
+            perangkap: [
+              {
+                soalan: "Nak grant satu AWS account LAIN read access ke bucket kau. Policy mana paling betul?",
+                umpan: "Tambah IAM policy — nampak betul sebab IAM memang untuk grant permission. SALAH: IAM policy hanya untuk identity dalam akaun KAU; tak boleh terus bagi account lain access bucket kau.",
+                betul: "Bucket Policy (resource-based) — boleh sebut Principal account lain terus. Keyword 'grant another account / cross-account access' → Bucket Policy, BUKAN IAM.",
+              },
+              {
+                soalan: "Bucket Policy dah Allow public read, tapi objek tetap tak boleh diakses public. Kenapa?",
+                umpan: "Mesti salah tulis JSON Bucket Policy — betulkan Principal/Action. Mungkin, tapi exam selalu nak benda lebih asas yang override.",
+                betul: "Block Public Access masih ON — ia OVERRIDE bucket policy/ACL. Matikan BPA dulu (atau settle dengan CloudFront OAC kalau nak kekal private). Keyword 'bucket policy allow public tapi masih private' → Block Public Access.",
+              },
+              {
+                soalan: "Satu IAM policy Allow s3:GetObject, tapi bucket policy ada Deny untuk action sama. User boleh GET ke tak?",
+                umpan: "Boleh — sebab IAM dah Allow, jadi access diberi. SALAH: anggapan 'Allow di mana-mana = boleh'.",
+                betul: "TAK BOLEH. Explicit Deny (di bucket policy) sentiasa menang atas mana-mana Allow. Keyword 'Allow vs Deny clash' → Explicit Deny wins.",
+              },
+            ],
+            contohGuna: 'Web app share fail dengan partner account → Bucket Policy. Pasukan internal akses bucket → IAM Policy. Pastikan bucket tak tersilap public → Block Public Access ON. Distribute private content via CDN → keep bucket private + CloudFront OAC (bukan bucket public).',
+            detailsLabel: 'Famili "policy" S3 — pecahan',
+            storageDetails: 'IAM Policy → attach ke USER/ROLE (identity-based). "Apa user aku boleh buat" dalam akaun sama\nBucket Policy → attach ke BUCKET (resource-based JSON). Cross-account, public, force HTTPS/encryption\nACL → legacy, per-object/bucket, coarse. AWS galak DISABLE (Bucket owner enforced)\nBlock Public Access → master switch account/bucket level (default ON). Override semua di atas\n— — — (famili lain, BUKAN access control) — — —\nLifecycle / Replication / Object Lock → famili DATA MANAGEMENT (apa jadi kat data), lihat card masing-masing',
+            scenario: '"Grant another AWS account access" → Bucket Policy. "Control my own users" → IAM Policy. "Bucket tak sengaja jadi public" → enable Block Public Access. "Bucket policy allow public tapi tetap private" → BPA masih ON. "Allow vs Deny clash" → Explicit Deny wins. "Force semua request guna HTTPS / encryption" → Bucket Policy condition (aws:SecureTransport / s3:x-amz-server-side-encryption).',
+            compare: {
+              label: 'IAM Policy vs Bucket Policy vs ACL vs Block Public Access',
+              headers: ['Aspect', 'IAM Policy', 'Bucket Policy', 'ACL (legacy)', 'Block Public Access'],
+              rows: [
+                ['Attach kat', 'User / Role (identity)', 'Bucket (resource)', 'Object / Bucket', 'Account / Bucket'],
+                ['Cross-account?', 'Tak terus', '🟢 Ya (sebut Principal)', 'Terhad', 'N/A (safety switch)'],
+                ['Format', 'JSON identity policy', 'JSON resource policy', 'Grant list (coarse)', 'On/Off toggles'],
+                ['Granularity', 'Per-action, per-resource halus', 'Whole bucket / prefix + condition', 'Kasar (read/write/full)', 'Master override'],
+                ['Status 2024+', '🟢 Recommended', '🟢 Recommended', 'AWS galak DISABLE', '🟢 Default ON'],
+                ['Guna bila', 'Kawal user dalam akaun aku', 'Cross-account / public / force HTTPS', 'Elak — guna kalau terpaksa', 'Pastikan tak tersilap public'],
+              ],
+              takeaway: 'SIAPA dalam akaun aku → IAM. Account LAIN / whole bucket / force HTTPS/encryption → Bucket Policy. Legacy coarse → ACL (elak). Safety net → Block Public Access (override semua). Bila clash → EXPLICIT DENY menang. Ni famili "siapa access" — jangan campur dengan Lifecycle/Replication/Lock (famili "apa jadi kat data").',
+            },
+            mermaid: {
+              label: 'Decision tree: "policy" mana aku guna?',
+              source: `flowchart TD
+    Q["Soalan sebut 'policy' S3"] --> F{Kawal SIAPA access<br/>atau APA jadi kat data?}
+    F -->|"SIAPA boleh sentuh"| A["🅰️ Access Control"]
+    F -->|"APA jadi (masa/auto)"| B["🅱️ Data Management<br/>Lifecycle · Replication<br/>Object Lock · Vault Lock"]
+    A --> A1{Sapa nak kawal?}
+    A1 -->|"User dalam akaun aku"| IAM["IAM Policy<br/>identity-based"]
+    A1 -->|"Account LAIN / whole bucket<br/>force HTTPS / public"| BP["Bucket Policy<br/>resource-based JSON"]
+    A1 -->|"Legacy per-object"| ACL["ACL<br/>(AWS galak DISABLE)"]
+    A1 -->|"Master safety switch"| BPA["Block Public Access<br/>override semua"]`,
+              caption: 'Step 1: asingkan famili — "siapa access" (A) vs "apa jadi kat data" (B). Step 2 dalam famili A: user aku → IAM; account lain/public/force HTTPS → Bucket Policy; legacy → ACL; safety net → BPA. INGAT exam: "grant another account" → Bucket Policy; "bucket policy allow public tapi tetap private" → BPA ON; "Allow vs Deny" → Explicit Deny menang.',
+            },
+            tips: [
+              'IAM Policy = identity-based ("apa user/role aku boleh buat"). Bucket Policy = resource-based ("apa boleh jadi kat bucket ni, termasuk account lain").',
+              'Cross-account access ke bucket → Bucket Policy (sebut Principal account lain). IAM sahaja TAK boleh grant account lain access bucket kau.',
+              'Block Public Access (default ON, account + bucket level) OVERRIDE bucket policy + ACL. "Bucket policy allow public tapi masih private" = BPA masih ON.',
+              'ACL legacy & coarse — AWS recommend "Bucket owner enforced" (ACL disabled) sebagai default. Kalau ACL muncul sebagai jawapan moden, selalunya umpan.',
+              'Evaluation: Explicit DENY > Allow. Kalau bucket policy Deny + IAM Allow → Deny menang. Default semua = implicit deny.',
+              'Force HTTPS → bucket policy condition aws:SecureTransport=false → Deny. Force encryption upload → condition s3:x-amz-server-side-encryption.',
+              'Nak distribute private content via CDN → JANGAN public-kan bucket; keep private + CloudFront OAC (Origin Access Control). Bucket policy bagi access ke OAC sahaja.',
+              'PRICING: IAM, Bucket Policy, ACL, Block Public Access semua FREE — kau bayar untuk storage + request je, bukan untuk mechanism access control.',
+            ],
+            docs: [
+              { label: 'S3 access control overview', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-overview.html' },
+              { label: 'Bucket policies', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/bucket-policies.html' },
+              { label: 'Blocking public access', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-control-block-public-access.html' },
+            ],
+            keywords: ['S3 access control', 'IAM policy', 'bucket policy', 'ACL', 'access control list', 'block public access', 'BPA', 'cross-account', 'resource-based policy', 'identity-based policy', 'explicit deny', 'aws:SecureTransport', 'force HTTPS', 'OAC', 'CloudFront OAC', 'public bucket', 'principal', 'pricing'],
+          },
+          {
             shortName: 'S3 Glacier',
             fullName: 'Amazon S3 Glacier (storage classes)',
             ingat: '"S3 sejuk beku — murah, tapi tunggu lama nak retrieve"',
@@ -4266,6 +4469,30 @@ export const domains: DomainData[] = [
                 betul: 'Alias record (type A) ke ALB. Spec DNS LARANG CNAME pada apex/root domain (example.com) — CNAME cuma boleh untuk subdomain (www). Alias = sambungan AWS yang benarkan apex point ke ALB/CloudFront/S3, dan query percuma. Keyword "root/apex domain → AWS resource" → Alias.',
               },
             ],
+            scenario: '"Point root/apex domain (example.com) ke ALB/CloudFront/S3" → Alias record (type A), BUKAN CNAME (DNS spec larang CNAME kat apex). "Subdomain (www) ke hostname luar AWS" → CNAME. "Smart routing (failover/latency/geo/weighted)" → lihat card Route 53 Routing Policies.',
+            compare: {
+              label: 'Alias vs CNAME',
+              headers: ['Aspect', 'Alias record', 'CNAME record'],
+              rows: [
+                ['Apex/root (example.com)', '🟢 Boleh', '❌ TAK boleh (DNS spec larang)'],
+                ['Subdomain (www)', '🟢 Boleh', '🟢 Boleh'],
+                ['Point ke apa', 'AWS resource (ALB/CloudFront/S3/R53 record)', 'Mana-mana hostname'],
+                ['Query cost', '🟢 FREE', 'Dikenakan caj (standard DNS query)'],
+                ['Record type', 'Type A/AAAA (alias flag)', 'Type CNAME'],
+                ['Auto-track target IP?', '🟢 Ya — IP AWS resource berubah, alias ikut', 'Tidak (point ke nama je)'],
+              ],
+              takeaway: 'Apex/root domain → MESTI Alias (CNAME haram kat apex). Subdomain → dua-dua boleh tapi Alias lebih baik (FREE + auto-track IP). INGAT exam: "point root/apex domain ke ALB/CloudFront/S3" → Alias, BUKAN CNAME.',
+            },
+            mermaid: {
+              label: 'Decision: Alias atau CNAME?',
+              source: `flowchart TD
+    Q["Nak point domain ke resource"] --> A{Apex/root<br/>atau subdomain?}
+    A -->|"Apex — example.com"| AL["✅ Alias record je<br/>(CNAME HARAM kat apex)"]
+    A -->|"Subdomain — www"| B{Target apa?}
+    B -->|"AWS resource<br/>ALB / CloudFront / S3"| AL2["Alias<br/>(FREE + auto-track IP)"]
+    B -->|"Hostname luar AWS"| CN["CNAME<br/>(standard DNS, ada caj)"]`,
+              caption: 'Apex/root domain takde pilihan — MESTI Alias (CNAME dilarang oleh DNS spec kat apex). Subdomain ke AWS resource pun lebih elok guna Alias (percuma + ikut IP target automatik). INGAT exam: "root/apex → ALB/CloudFront/S3" → Alias record.',
+            },
             tips: [
               'Alias record: AWS-specific DNS extension. Boleh guna untuk APEX/root domain (e.g. example.com). Points ke ALB, CloudFront, S3 website, other Route 53 records',
               'CNAME record: standard DNS. TIDAK BOLEH guna untuk apex/root domain (DNS spec prohibition)',
@@ -4311,6 +4538,19 @@ export const domains: DomainData[] = [
                 ['"Client-side HA", "return multiple healthy IPs"', 'Multivalue Answer', 'Sampai 8 record sihat, random — bukan LB betul'],
               ],
               takeaway: 'Latency-based ≠ Geolocation! Latency = laju (performance). Geolocation = lokasi user (compliance/bahasa). "Fastest" → Latency. "By country/comply" → Geolocation. Active-passive DR → Failover.',
+            },
+            mermaid: {
+              label: 'Decision tree: routing policy mana?',
+              source: `flowchart TD
+    Q["Pilih Route 53 routing policy"] --> A{Apa matlamat?}
+    A -->|"Satu resource je"| S["Simple"]
+    A -->|"Split % / A-B test / gradual"| W["Weighted"]
+    A -->|"Paling LAJU (lowest latency)"| L["Latency-based"]
+    A -->|"Active-passive / DR backup"| F["Failover<br/>+ health check"]
+    A -->|"Ikut NEGARA user (compliance/bahasa)"| G["Geolocation"]
+    A -->|"Jarak + bias tarik traffic"| GP["Geoproximity"]
+    A -->|"Return banyak IP sihat,<br/>client pilih sendiri"| MV["Multivalue Answer<br/>(max 8)"]`,
+              caption: 'Jangan keliru Latency vs Geolocation: Latency = paling LAJU (performance, region terbaik network); Geolocation = ikut NEGARA user (compliance/bahasa) walaupun bukan paling laju. INGAT exam: "fastest/lowest latency" → Latency-based; "by country/comply/serve language" → Geolocation; "active-passive DR" → Failover.',
             },
             scenario: 'ALB (primary) unhealthy → Route 53 Failover policy auto-redirect ke S3 static error page (secondary). Health check detect ALB down, traffic pindah ke secondary automatik. BUKAN CloudFront — CF cache content tapi tak handle active-passive failover.',
             tips: [
@@ -4573,6 +4813,31 @@ export const domains: DomainData[] = [
               caption: 'API Gateway = pintu masuk: handle auth (Cognito/IAM/Lambda authorizer), throttling (429 bila exceed), caching, request validation — backend (Lambda) fokus logic je.',
             },
             scenario: 'Real-time multiplayer game / chat → WebSocket API (server boleh push ke client, two-way). Simple low-cost serverless proxy ke Lambda tanpa API keys/WAF → HTTP API (~70% lebih murah, lower latency). Enterprise API perlu API keys, usage plans, request validation, WAF, atau private endpoint → REST API.',
+            compare: {
+              label: 'REST vs HTTP vs WebSocket API',
+              headers: ['Aspect', 'REST API', 'HTTP API', 'WebSocket API'],
+              rows: [
+                ['Model', 'Request-response', 'Request-response', '🟢 Bidirectional (server push)'],
+                ['Cost', 'Paling mahal', '🟢 ~70% lebih murah', 'Per-message + connection'],
+                ['Latency', 'Higher', '🟢 Lower', 'Real-time'],
+                ['API keys + usage plans', '🟢 Ya', '❌ Tak', '❌ Tak'],
+                ['AWS WAF', '🟢 Ya', '❌ Tak', '❌ Tak'],
+                ['Request validation', '🟢 Ya', '❌ Tak', '❌ Tak'],
+                ['Private endpoint (VPC)', '🟢 Ya', '❌ (regional je)', '❌'],
+                ['Authorizer', 'IAM / Cognito / Lambda', 'JWT (OIDC/OAuth2) + IAM/Lambda', 'IAM / Lambda'],
+              ],
+              takeaway: 'Real-time two-way push → WebSocket. Simple & murah serverless proxy → HTTP API. Perlu API keys / usage plans / WAF / request validation / private endpoint → REST API. INGAT exam: "low-cost simple proxy" → HTTP; "API keys/WAF/private VPC" → REST; "real-time push/bidirectional" → WebSocket.',
+            },
+            mermaid: {
+              label: 'Decision tree: REST vs HTTP vs WebSocket',
+              source: `flowchart TD
+    Q["Pilih API Gateway type"] --> A{Server perlu PUSH ke client?<br/>(two-way real-time)}
+    A -->|"Ya — chat / game / trading"| WS["WebSocket API"]
+    A -->|"Tak — request-response"| B{Perlu API keys / usage plans /<br/>WAF / request validation /<br/>private VPC endpoint?}
+    B -->|"Ya"| REST["REST API<br/>(full features, mahal)"]
+    B -->|"Tak — simple & murah"| HTTP["HTTP API<br/>(~70% murah, lower latency)"]`,
+              caption: 'Mula dengan: server perlu push ke client tak? Ya → WebSocket. Tak → kalau perlu API keys/WAF/request validation/private endpoint → REST; kalau tak (cuma proxy ringkas ke Lambda) → HTTP API (lebih murah + laju). INGAT exam: HTTP = default murah; REST = bila perlu extras; WebSocket = real-time dua-arah.',
+            },
             detailsLabel: 'REST vs HTTP vs WebSocket',
             storageDetails: 'REST API → full features: API keys + usage plans (per-client throttling), request validation, AWS WAF, resource policies, private endpoint, endpoint types edge-optimized/regional/private\nHTTP API → minimal features, ~70% lebih murah, lower latency, JWT (OIDC/OAuth2) authorizer, regional sahaja — pilih bila tak perlu REST extras\nWebSocket API → bidirectional real-time (chat, games, trading, live dashboard) — server push ke client',
             tips: [
@@ -4867,6 +5132,29 @@ export const domains: DomainData[] = [
             sifir: ["CloudFormation FREE — bayar hanya resource yang dibuat (EC2/RDS/S3), stacks & StackSets percuma", "Change Set = PREVIEW perubahan sebelum apply; Drift Detection = detect perubahan manual luar CFN", "Mappings = static lookup (region→AMI); Outputs+Fn::ImportValue = cross-stack ref; Parameters = user input", "cfn-init = install packages dari metadata; cfn-signal = hantar SUCCESS/FAIL; cfn-hup = re-run bila metadata berubah", "DeletionPolicy: Retain = resource KEKAL walau stack dipadam (untuk RDS/S3)", "Nested Stacks = reusable component (VPC/security layer); StackSets = deploy multi-account/region", "Stack update gagal → auto-ROLLBACK ke state lama (default)"],
             perangkap: [{"soalan": "Satu CloudFormation template untuk banyak region, auto-pilih AMI ID betul ikut region. Guna apa?", "umpan": "Parameters — sangka user kena input AMI ID setiap region.", "betul": "Mappings (static region→AMI lookup) atau Lambda-backed custom resource (dynamic lookup SSM). Bukan Parameters (manual). Keyword: 'region-specific AMI' → Mappings/custom resource."}, {"soalan": "Nak detect kalau ada orang ubah resource stack secara MANUAL via console. Feature?", "umpan": "Change Set — sangka ia tunjuk perubahan yang dah berlaku.", "betul": "Drift Detection. Change Set = preview perubahan SEBELUM apply; Drift = detect perubahan manual yang dah terjadi di luar CFN. Keyword: 'manual console changes' → Drift Detection."}, {"soalan": "Padam stack tapi nak data RDS/S3 KEKAL (jangan lenyap). Macam mana?", "umpan": "Backup manual dulu sebelum delete stack — leceh + boleh terlupa.", "betul": "Set DeletionPolicy: Retain pada resource tu. Stack dipadam, resource kekal. Keyword: 'retain data on stack deletion' → DeletionPolicy: Retain."}],
             contohGuna: 'Deploy EC2 + S3 + RDS sekaligus dari satu template YAML/JSON, replicate environment dev/staging/prod',
+            compare: {
+              label: 'CloudFormation vs Terraform vs Elastic Beanstalk',
+              headers: ['Aspect', 'CloudFormation', 'Terraform', 'Elastic Beanstalk'],
+              rows: [
+                ['Jenis', 'AWS-native IaC', 'Multi-cloud IaC (HashiCorp)', 'PaaS — deploy app, infra auto'],
+                ['Skop', 'AWS resources sahaja', 'AWS + GCP + Azure + dll', 'App platform (EC2/ASG/ELB auto)'],
+                ['Bahasa', 'YAML / JSON template', 'HCL', 'Tak tulis infra — push code je'],
+                ['State', 'Managed by AWS', 'tfstate file (kau urus sendiri)', 'Managed by AWS'],
+                ['Keyword', '"AWS-only IaC, no extra cost"', '"multi-cloud / satu tool semua"', '"deploy web app cepat, jangan urus infra"'],
+              ],
+              takeaway: 'AWS-only IaC + percuma → CloudFormation. Multi-cloud satu tool → Terraform. Deploy app tanpa fikir infra → Elastic Beanstalk (dia sebenarnya guna CloudFormation di bawah hood).',
+            },
+            mermaid: {
+              label: 'CloudFormation = manual IKEA untuk infra (analogi)',
+              source: `flowchart TD
+  A["📄 Template YAML/JSON<br/>(senarai perabot + cara pasang)"] --> B["CloudFormation Stack<br/>(tukang ikut manual)"]
+  B --> C["🏗️ EC2 + RDS + S3 + VPC<br/>siap sama setiap kali"]
+  B --> D{Update template?}
+  D -->|"Preview dulu"| E["Change Set<br/>tengok apa berubah sebelum apply"]
+  D -->|"Ada org ubah manual?"| F["Drift Detection<br/>kesan lari dari template"]
+  C -->|"Gagal tengah jalan"| G["Auto-rollback ke state lama"]`,
+              caption: 'Macam manual IKEA: template sama → perabot sama setiap kali, takda silap manusia. INGAT exam: preview = Change Set; kesan ubah manual = Drift Detection; deploy multi-account/region = StackSets; kekalkan data masa delete = DeletionPolicy: Retain.',
+            },
             tips: [
               'Lambda-backed Custom Resources: guna Lambda untuk perform logic masa CloudFormation create/update/delete — contoh: lookup AMI ID dynamically',
               'AMI IDs berbeza tiap region + instance type → Lambda custom resource query SSM Parameter Store atau EC2 API untuk get correct AMI ID masa stack creation',
@@ -4908,6 +5196,28 @@ export const domains: DomainData[] = [
             perangkap: [{"soalan": "Update 100 EC2 instances serentak, policy LARANG SSH/port 22. Guna apa?", "umpan": "User Data script — sangka boleh re-run untuk update.", "betul": "SSM Run Command. User Data hanya jalan masa LAUNCH, tak boleh re-run on existing fleet. Keyword: 'existing instances' + 'no SSH' + 'at scale' → Run Command."}, {"soalan": "Simpan DB password yang kena auto-rotate setiap 30 hari. Parameter Store?", "umpan": "Parameter Store SecureString — sangka SecureString = auto-rotate.", "betul": "Secrets Manager. Parameter Store tiada auto-rotation; Secrets Manager rotate native (RDS/Redshift/DocumentDB). Keyword: 'auto-rotate' → Secrets Manager, BUKAN Parameter Store."}, {"soalan": "Nak interactive shell access ke EC2 tanpa buka port 22 atau bastion host. Service?", "umpan": "Run Command — sangka command execution = shell access.", "betul": "Session Manager (browser-based interactive shell, no port 22, full audit). Run Command = non-interactive script je. Keyword: 'interactive shell' + 'no port 22/bastion' → Session Manager."}],
             contohGuna: 'Perlu patch 500 EC2 instances serentak — SSM Patch Manager buat semua tanpa perlu SSH satu-satu. Run Command untuk restart service pada semua app servers.',
             scenario: '"Manage existing instances remotely, run commands without SSH, patch fleet at scale" → SSM Run Command. Bukan User Data (User Data hanya masa launch sahaja).',
+            compare: {
+              label: 'Parameter Store vs Secrets Manager',
+              headers: ['Aspect', 'Parameter Store', 'Secrets Manager'],
+              rows: [
+                ['Auto-rotation', '❌ Tiada (kena buat sendiri)', '✅ Native (RDS / Redshift / DocumentDB)'],
+                ['Kos', '🟢 Standard FREE (10K params)', '~$0.40/secret/mo + $0.05/10K API calls'],
+                ['Encrypt', 'SecureString (KMS, opt-in)', 'Sentiasa encrypted (KMS)'],
+                ['Cross-account', 'Advanced tier sahaja', '✅ Resource policy'],
+                ['Guna bila', 'Config + secret, no rotation, jimat', 'Secret yang WAJIB auto-rotate'],
+                ['Keyword', '"store config, minimize cost"', '"auto-rotate DB password"'],
+              ],
+              takeaway: 'Jimat + tak perlu rotation → Parameter Store (Standard percuma, SecureString untuk encrypt). Perlu auto-rotation native → Secrets Manager. Exam trap: "auto-rotate" = Secrets Manager, BUKAN Parameter Store SecureString.',
+            },
+            mermaid: {
+              label: 'SSM: akses EC2 cara mana? (Run Command vs Session Manager vs User Data)',
+              source: `flowchart TD
+  A[Nak buat sesuatu kat EC2] --> B{Nak apa?}
+  B -->|"Jalan command/script<br/>banyak instance serentak"| C["Run Command<br/>no SSH, at scale"]
+  B -->|"Interactive shell<br/>tanpa port 22 / bastion"| D["Session Manager<br/>audit ke S3 / CloudWatch"]
+  B -->|"Setup sekali masa<br/>instance LAUNCH"| E["User Data<br/>boot script je"]`,
+              caption: 'INGAT exam: User Data = masa LAUNCH sahaja (tak boleh re-run on existing fleet). Existing fleet + no SSH → Run Command. Shell interactive tanpa port 22/bastion → Session Manager.',
+            },
             tips: [
               'SSM Run Command: jalankan commands pada EC2 instances AT SCALE tanpa SSH. Requirement: SSM Agent installed + instance profile ada AmazonSSMManagedInstanceCore policy',
               'SSM Agent dah pre-installed pada Amazon Linux 2 dan Windows Server. Custom AMI mungkin perlu install sendiri',
@@ -4934,6 +5244,27 @@ export const domains: DomainData[] = [
             perangkap: [{"soalan": "Company nak tahu siapa yang ubah Security Group dan bila API call dibuat untuk audit. Service mana?", "umpan": "AWS Config — sebab Config memang track perubahan resource, nampak macam betul.", "betul": "CloudTrail — keyword 'siapa call API & bila' = WHO/API audit = CloudTrail. Config jawab 'apa state config', bukan 'siapa call API'. (Selalunya guna dua-dua sekali.)"}, {"soalan": "Pastikan SEMUA S3 buckets encrypted dan auto-fix mana-mana yang tak comply. Pilihan terbaik?", "umpan": "Lambda function scan bucket + fix — boleh jalan tapi kau bina & maintain sendiri.", "betul": "AWS Config Rule (managed 's3-bucket-server-side-encryption-enabled') + auto-remediation via SSM Automation. Keyword 'enforce compliance + auto-fix violations' = Config rules, bukan Lambda alone, bukan CloudTrail."}],
             contohGuna: 'Security team nak tau siapa yang ubah Security Group semalam dan bila — AWS Config simpan history semua config changes.',
             scenario: '"Audit config changes, check compliance, who changed what and when" → AWS Config. Keyword: configuration changes, compliance, audit trail, resource history.',
+            compare: {
+              label: 'AWS Config vs CloudTrail (WHAT vs WHO)',
+              headers: ['Aspect', 'AWS Config', 'CloudTrail'],
+              rows: [
+                ['Soalan dijawab', 'Apa STATE config resource (kini & dulu)? Compliant?', 'SIAPA call API, bila, dari IP mana?'],
+                ['Rekod', 'Snapshot config resource over time', 'Setiap API call (user / time / IP / hasil)'],
+                ['Boleh enforce rule?', '✅ Config Rules + auto-remediation', '❌ Audit sahaja, tak enforce'],
+                ['Contoh', '"semua S3 mesti encrypted, auto-fix yang langgar"', '"siapa buka SG port 22 semalam"'],
+                ['Keyword', '"compliance, config drift, resource history"', '"who did what, API audit"'],
+              ],
+              takeaway: 'Config = WHAT/STATE + compliance (boleh auto-fix). CloudTrail = WHO/API audit. Selalu guna sekali. Exam: "compliance + configuration over time / drift" → AWS Config, BUKAN CloudTrail. (3-way penuh dgn CloudWatch ada di card CloudTrail.)',
+            },
+            mermaid: {
+              label: 'AWS Config = album gambar config resource (analogi)',
+              source: `flowchart LR
+  A["📸 Config snap setiap kali<br/>resource berubah"] --> B["🗂️ Timeline config history<br/>(S3 encrypted? tag? SG rule?)"]
+  B --> C{Config Rule semak<br/>comply?}
+  C -->|"Tak comply<br/>(S3 tak encrypted)"| D["⚙️ Auto-remediation<br/>SSM Automation fix"]
+  C -->|Comply| E["✅ Compliant"]`,
+              caption: 'Macam CCTV ambil gambar setiap kali bilik berubah → boleh banding "semalam vs hari ni" + auto-kemas bila bersepah. INGAT exam: "compliance + apa config berubah + auto-fix violations" → AWS Config (Rules + remediation).',
+            },
             tips: [
               'Config Rules: managed rules (AWS pre-built) atau custom rules (Lambda). Evaluate resources against rules continuously or on change. Non-compliant = flagged, boleh trigger remediation.',
               'Auto-remediation: link Config rule ke SSM Automation document. E.g. rule "S3-bucket-public-read-prohibited" violated → auto remediation revoke public access. Tak perlu manual fix.',
@@ -4987,6 +5318,26 @@ export const domains: DomainData[] = [
             perangkap: [{"soalan": "Kau perlu monitor MEMORY utilization EC2 instance dan alert bila lebih 90%. Apa kena buat?", "umpan": "Terus buat CloudWatch alarm atas memory metric — sebab CloudWatch memang monitor EC2.", "betul": "Install/configure (unified) CloudWatch agent DULU, baru boleh alarm. Keyword: memory & disk space BUKAN default metric — default cuma CPU/network/disk I/O."}, {"soalan": "Team nak query & analyze log Lambda secara interactive guna SQL-like query. Service?", "umpan": "Amazon Athena — sebab Athena guna SQL untuk analyze logs, nampak betul.", "betul": "CloudWatch Logs Insights — keyword 'query CloudWatch Logs interactively' = Logs Insights. Athena = untuk log yang dah dalam S3, bukan dalam CloudWatch Logs."}],
             contohGuna: 'EC2 CPU >80% → CloudWatch Alarm → SNS notification ke team. Lambda error logs → CloudWatch Logs untuk debug.',
             scenario: '"CPU EC2 melebihi 80%, send alert" → CloudWatch Alarm. "View logs dari Lambda" → CloudWatch Logs. "Custom app metric" → CloudWatch custom metrics. CloudWatch = METRICS & LOGS. CloudTrail = API AUDIT. Ingat perbezaan!',
+            compare: {
+              label: 'CloudWatch vs CloudTrail vs Config vs X-Ray (observability 4-way)',
+              headers: ['Aspect', 'CloudWatch', 'CloudTrail', 'AWS Config', 'X-Ray'],
+              rows: [
+                ['Soalan dijawab', 'Apa berlaku SEKARANG?', 'SIAPA call API?', 'Resource compliant? apa BERUBAH?', 'KENAPA lambat / mana gagal?'],
+                ['Data', 'Metrics, logs, alarms, dashboard', 'API call audit history', 'Config state history + rules', 'End-to-end request trace + service map'],
+                ['Keyword', '"CPU > 80% alarm, monitor logs"', '"who deleted resource"', '"compliance, config drift"', '"bottleneck merentas microservices"'],
+              ],
+              takeaway: 'NOW (metrics/alarm) → CloudWatch · WHO (API audit) → CloudTrail · COMPLIANT/CHANGED → Config · WHY SLOW (trace) → X-Ray. Confusion paling kerap di exam: CloudWatch vs CloudTrail vs Config.',
+            },
+            mermaid: {
+              label: 'CloudWatch = doktor pantau vital signs (analogi)',
+              source: `flowchart TD
+  A["🏥 EC2 / Lambda = pesakit"] --> B["CloudWatch Agent = wayar monitor"]
+  B --> C["📊 Metrics: CPU, memory*, disk<br/>(*memory & disk space perlu agent)"]
+  C --> D{Vital lepas threshold?}
+  D -->|"CPU > 80%"| E["🚨 Alarm → SNS / Auto Scaling"]
+  D -->|"Normal"| F["Dashboard hijau"]`,
+              caption: 'Macam doktor pantau jantung & tekanan darah → bunyi alarm bila bacaan bahaya, terus bertindak (SNS/Auto Scaling). INGAT exam: memory & disk SPACE BUKAN default metric — kena pasang (unified) CloudWatch agent dulu.',
+            },
             tips: [
               'Default EC2 metrics (CPU, network, disk I/O, status checks) = "host-level" metrics dari hypervisor — tak perlu install apa-apa',
               'EC2 MEMORY usage dan DISK SPACE usage = BUKAN default metric — kena install CloudWatch agent untuk collect ni',
@@ -5011,6 +5362,26 @@ export const domains: DomainData[] = [
             sifir: ["X-Ray = distributed tracing / service map — WHY slow & WHERE fail.", "CloudWatch = metrics/alarms. CloudTrail = WHO call API. X-Ray = trace request path.", "Works dengan Lambda, EC2, ECS, API Gateway, SQS — end-to-end.", "X-Ray Insights = auto-detect anomaly (latency/error spike) + notify via SNS/EventBridge.", "Service map = peta visual tunjuk node mana paling lambat / paling banyak error."],
             perangkap: [{"soalan": "App microservices (API Gateway → Lambda → DynamoDB) jadi lambat tapi team tak tahu komponen mana punca latency. Service untuk identify bottleneck?", "umpan": "CloudWatch — sebab dia kumpul metrics latency tiap service, nampak boleh diagnose.", "betul": "AWS X-Ray — keyword 'distributed tracing / mana bottleneck merentas microservices' = X-Ray service map. CloudWatch bagi angka per-service, tapi tak jahit jadi satu trace end-to-end."}, {"soalan": "Message kadang tak sampai destinasi dalam sistem SQS + Lambda + API Gateway. Nak debug aliran message. Service?", "umpan": "CloudTrail — sebab nak audit apa jadi, nampak macam jejak aktiviti.", "betul": "X-Ray — keyword 'trace message path / mana message hilang dalam distributed system' = X-Ray. CloudTrail jejak API call, bukan aliran message dalam app."}],
             scenario: '"API lambat, tak tahu kat mana bottleneck dalam 10 microservices" → X-Ray service map. Trace request dari API Gateway → Lambda → DynamoDB dan nampak mana paling slow. Keywords: distributed tracing, latency, microservices debugging.',
+            compare: {
+              label: 'CloudWatch vs CloudTrail vs X-Ray',
+              headers: ['Aspect', 'CloudWatch', 'CloudTrail', 'X-Ray'],
+              rows: [
+                ['Soalan dijawab', 'Apa berlaku sekarang? (metrics/logs)', 'Siapa call API bila?', 'Kenapa lambat / mana gagal?'],
+                ['Data', 'Metrics, logs, alarms', 'API call history (audit)', 'End-to-end request trace + service map'],
+                ['Guna untuk', 'Monitoring + alert', 'Audit + forensics', 'Debug latency merentas microservices'],
+                ['Keyword', '"CPU > 80% alarm"', '"who deleted resource"', '"mana bottleneck dalam 10 microservices"'],
+              ],
+              takeaway: 'Metrics/alarm → CloudWatch. WHO did WHAT → CloudTrail. WHY slow / WHERE fail merentas service → X-Ray service map. Exam: "distributed tracing / find bottleneck across microservices" → X-Ray, BUKAN CloudWatch.',
+            },
+            mermaid: {
+              label: 'X-Ray = GPS jejak perjalanan request (analogi)',
+              source: `flowchart LR
+  A["📱 Request masuk<br/>(API Gateway)"] --> B["λ Lambda<br/>(20ms)"]
+  B --> C["🗄️ DynamoDB<br/>(5ms)"]
+  B --> D["📨 SQS<br/>(SLOW 800ms ⚠️)"]
+  D --> E["🗺️ X-Ray Service Map<br/>nampak SQS punca lambat"]`,
+              caption: 'Macam GPS tunjuk highway mana jam — X-Ray trace setiap hop & highlight node paling lambat. INGAT exam: "mana bottleneck / message hilang merentas microservices" → X-Ray service map; auto anomaly + notify → X-Ray Insights.',
+            },
             tips: [
               'X-Ray traces message paths end-to-end melalui SQS, Lambda, API Gateway — identify bottlenecks atau missing messages',
               'CloudTrail = WHO DID WHAT (API audit). CloudWatch = metrics/alarms. X-Ray = WHY IS IT SLOW / WHERE IS IT FAILING (distributed trace)',
@@ -5030,6 +5401,27 @@ export const domains: DomainData[] = [
             sifir: ["Service Health Dashboard = status AWS global (public). AWS Health Dashboard = personalized, akaun kau.", "Health = REACTIVE (event/maintenance/outage affect resource kau). Trusted Advisor = PROACTIVE (cadangan cost/security/perf).", "Route Health events ke EventBridge → Lambda/SNS untuk auto-alert (cth Slack notify).", "Full Health API access perlu Business/Enterprise Support plan."],
             perangkap: [{"soalan": "Ada isu di satu region — team nak tahu adakah resource SPESIFIK syarikat mereka yang terkesan, dan nak auto-notify Slack. Penyelesaian?", "umpan": "Pantau Service Health Dashboard (status.aws) — sebab dia tunjuk isu region, nampak relevan.", "betul": "AWS Health Dashboard (account view) + EventBridge → Lambda → Slack. Keyword 'resource SAYA terkesan / personalized event' = account Health Dashboard, bukan public Service Health page."}],
             scenario: '"AWS region kau experiencing issue — adakah resources SAYA affected?" → AWS Health Dashboard (account view), bukan general Service Health page. Boleh integrate dengan EventBridge untuk auto-notify (e.g. Lambda → Slack) bila ada event affecting your resources.',
+            compare: {
+              label: 'Service Health vs Account Health vs Trusted Advisor',
+              headers: ['Aspect', 'Service Health Dashboard', 'AWS Health (account view)', 'Trusted Advisor'],
+              rows: [
+                ['Skop', 'AWS global status (public)', 'Event affecting RESOURCE KAU', 'Best-practice checks akaun kau'],
+                ['Reactive / Proactive', 'Reactive — outage global', 'Reactive — event/maintenance resource kau', 'Proactive — recommendations'],
+                ['Personalized?', '❌ Semua orang nampak sama', '✅ Ikut resource dalam akaun kau', '✅ Ikut akaun kau'],
+                ['Auto-notify', '❌ Manual check page', '✅ EventBridge → Lambda / SNS', 'Weekly email (Business+)'],
+                ['Keyword', '"is AWS down globally?"', '"is MY resource affected / scheduled retirement"', '"am I following best practice?"'],
+              ],
+              takeaway: '"AWS global down?" → Service Health (public page). "Resource SAYA kena / scheduled maintenance + auto-notify Slack" → AWS Health account view + EventBridge. "Best-practice review" → Trusted Advisor.',
+            },
+            mermaid: {
+              label: 'Service Health vs Account Health — pilih ikut soalan',
+              source: `flowchart TD
+  A[Soalan pasal status AWS?] --> B{Fokus?}
+  B -->|"AWS down secara global?<br/>public status page"| C["Service Health Dashboard<br/>(semua org sama)"]
+  B -->|"Resource SAYA terkesan?<br/>scheduled maintenance/retirement"| D["AWS Health Dashboard<br/>(account view, personalized)"]
+  D --> E["Route ke EventBridge<br/>Lambda / SNS auto-notify Slack"]`,
+              caption: '"Adakah AWS down?" = Service Health (public). "Adakah RESOURCE SAYA kena + nak auto-alert" = AWS Health account view → EventBridge. INGAT: Health = REACTIVE (event), Trusted Advisor = PROACTIVE (cadangan).',
+            },
             tips: [
               'Service Health Dashboard = general AWS-wide status (public). AWS Health Dashboard = PERSONALIZED, account-specific events/scheduled changes affecting YOUR resources',
               'Boleh route AWS Health events ke EventBridge → Lambda/SNS untuk automated alerting (e.g. notify team bila ada scheduled EC2 retirement)',
@@ -6047,6 +6439,28 @@ export const domains: DomainData[] = [
             scenario: 'CFO tanya "mana resources kita yang membazir?" — Trusted Advisor akan highlight EC2 yang underutilized, S3 buckets tak pakai, Elastic IPs yang idle, dan bagi estimate savings. "ML rightsizing untuk EC2/Lambda spesifik" pula → Compute Optimizer, BUKAN Trusted Advisor.',
             detailsLabel: '5 kategori checks',
             storageDetails: 'Cost Optimization → idle/underutilized resources, idle load balancers, unassociated Elastic IPs, RI/SP purchase opportunities\nPerformance → over-utilized instances, high-latency config, EBS throughput, service config yang melambatkan\nSecurity → open security groups, public S3 buckets, MFA on root, IAM key exposure, exposed access keys\nFault Tolerance → Multi-AZ, backup/snapshot coverage, ASG health, cross-AZ redundancy\nService Limits → resource usage hampir cecah service quota (cth bilangan VPC, EIP, EC2)',
+            compare: {
+              label: 'Trusted Advisor vs Compute Optimizer vs Budgets',
+              headers: ['Aspect', 'Trusted Advisor', 'Compute Optimizer', 'AWS Budgets'],
+              rows: [
+                ['Job', 'Broad best-practice checks (5 kategori)', 'ML rightsizing compute', 'Alert sebelum overspend'],
+                ['Method', 'Rule-based', '🟢 ML on 14 days metrics', 'Threshold on cost/usage'],
+                ['Scope', 'Cost + Security + Perf + FaultTol + Limits', 'EC2 / ASG / EBS / Lambda / Fargate', 'Cost / Usage / RI / SP budget'],
+                ['Output', 'Flag risky/idle + recommendations', 'Optimal config + projected savings', 'Email/SNS alert + Budget Actions'],
+                ['Keyword', '"broad account review"', '"ML rightsizing EC2/Lambda"', '"alert at 80% spend"'],
+              ],
+              takeaway: 'Broad 5-category review → Trusted Advisor. ML deep compute rightsizing → Compute Optimizer. Proactive spend alert → Budgets. Jangan keliru: TA = broad rule-based; CO = compute-only ML.',
+            },
+            mermaid: {
+              label: 'Cost / optimization tool mana? (decision tree)',
+              source: `flowchart TD
+  A[Nak optimize / review akaun?] --> B{Apa fokus?}
+  B -->|"Broad best-practice<br/>cost+security+perf+limits"| C["Trusted Advisor<br/>5 kategori rule-based"]
+  B -->|"ML rightsizing compute<br/>EC2/Lambda/EBS"| D["Compute Optimizer<br/>optimal config + savings"]
+  B -->|"Alert sebelum cecah bajet"| E["AWS Budgets<br/>threshold alert"]
+  B -->|"Tengok duit dah pergi mana"| F["Cost Explorer<br/>visualize trends"]`,
+              caption: 'INGAT exam: broad 5-kategori (CP-SFS) → Trusted Advisor; ML rightsizing EC2/Lambda → Compute Optimizer; alert sebelum overspend → Budgets; visualize trend → Cost Explorer. Full TA checks perlu Business/Enterprise support.',
+            },
             tips: [
               'Lima kategori checks: Cost Optimization, Performance, Security, Fault Tolerance, Service Limits (ingat: "CP-SFS")',
               'Tahap akses: Basic/Developer support = 7 core checks SAHAJA (mostly security + service limits). Business/Enterprise support = SEMUA checks (5 kategori penuh) + API access (boleh automate via AWS Support API)',
