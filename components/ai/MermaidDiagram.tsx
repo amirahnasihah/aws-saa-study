@@ -10,10 +10,13 @@ let mermaidInitPromise: Promise<typeof import('mermaid')['default']> | null = nu
 
 // Best-effort repair for the most common Mermaid parse failure: node and edge
 // labels that contain characters the parser rejects unless the label is wrapped
-// in double quotes — parentheses, commas, colons, slashes, emoji, <br/>. We
-// re-quote any *unquoted* rectangle label (A[text]) and edge label (|text|),
-// the two shapes the chat model emits most, then retry once. Labels that already
-// contain a quote are left untouched so we never corrupt a valid diagram.
+// in double quotes — parentheses, commas, colons, slashes, question marks,
+// emoji, <br/>. We re-quote any *unquoted* label across the shapes the chat
+// model emits most — edge labels (|text|), rectangles ([text]), decision
+// diamonds ({text}), circles (((text))) and rounded nodes ((text)) — then
+// retry once. The diamond shape in particular is what breaks AI-generated
+// decision trees (e.g. B{Individual users<br/>or whole network?}). Labels that
+// already contain a quote are left untouched so we never corrupt a valid one.
 function repairMermaidLabels(source: string): string {
   const quote = (inner: string): string => {
     const trimmed = inner.trim()
@@ -23,6 +26,11 @@ function repairMermaidLabels(source: string): string {
   return source
     .replace(/\|([^|\n]+)\|/g, (_m, inner: string) => `|${quote(inner)}|`)
     .replace(/\[([^\][\n]+)\]/g, (_m, inner: string) => `[${quote(inner)}]`)
+    // Circle ((text)) must run before the rounded (text) rule below so the
+    // double parens match as one shape, not two nested ones.
+    .replace(/\(\(([^()\n]+)\)\)/g, (_m, inner: string) => `((${quote(inner)}))`)
+    .replace(/\{([^{}\n]+)\}/g, (_m, inner: string) => `{${quote(inner)}}`)
+    .replace(/\(([^()\n]+)\)/g, (_m, inner: string) => `(${quote(inner)})`)
 }
 
 function getMermaid() {
