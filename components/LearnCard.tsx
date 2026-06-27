@@ -172,7 +172,7 @@ function PerangkapBlock({ traps }: { traps: TrapQuestion[] }) {
               <GlossaryText text={t.soalan} />
             </p>
             <p className="text-[0.8rem] text-aws-muted leading-snug">
-              <span className="text-rose-400/70 font-bold">⚠ Jebakan: </span>
+              <span className="text-rose-400/70 font-bold">⚠ Umpan: </span>
               <GlossaryText text={t.jebakan} />
             </p>
             <p className="text-[0.8rem] text-aws-text leading-snug">
