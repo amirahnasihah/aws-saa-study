@@ -3653,7 +3653,7 @@ export const domains: DomainData[] = [
           {
             shortName: 'AWS Batch',
             fullName: 'AWS Batch',
-            ingat: '"Mandor batch jobs — submit kerja, AWS upah & bubar pekerja (compute) sendiri"',
+            ingat: '"Ketua pekerja batch jobs — submit kerja, AWS upah & bubar pekerja (compute) sendiri"',
             gunaUntuk: 'Run batch / long-running compute jobs at scale without managing EC2 infrastructure',
             fungsi: 'AWS Batch menguruskan semua infrastruktur untuk batch jobs: provision compute resources yang sesuai, schedule jobs dalam queues, monitor dan scale fleet secara automatik, kemudian BUBAR bila kerja habis. Tiada had masa macam Lambda — sesuai untuk job berjam-jam (rendering, genomics, ETL berat, simulation). Menggantikan third-party batch software seperti PBS, Slurm, LSF.',
             sebabApa: "AWS Batch wujud sebab kalau kau ada beribu job berat (rendering, genomics, simulation, ETL berjam-jam) yang perlu beratur ikut priority, dulu kau kena urus sendiri EC2 fleet + scheduler third-party (Slurm/LSF/PBS) — provision, scale, bubar, semua manual & menyakitkan. Batch ambil alih: kau hantar job ke queue, Batch provision compute sesuai (boleh Spot untuk jimat), run sampai habis, lepas tu BUBAR fleet auto. Tiada had masa 15 minit macam Lambda.",
@@ -3681,7 +3681,7 @@ export const domains: DomainData[] = [
   BATCH -->|"Ya — pukal 'batch'"| B["🧑‍🏭 AWS Batch<br/>queue + auto fleet + Spot"]
   BATCH -->|"Tak, satu app je<br/>run berterusan"| F["📦 Fargate<br/>(serverless container)"]
   BATCH -->|"Perlu kawal OS/GPU,<br/>fleet steady murah"| E["🖥️ EC2 / ASG<br/>(kau urus)"]`,
-              caption: 'Analogi: AWS Batch = MANDOR projek — kau hantar senarai kerja (jobs) dalam baris (queue), mandor upah pekerja (EC2/Fargate, boleh upah pekerja kontrak murah = Spot) ikut keperluan, siap kerja terus bubar. Macam "basuh 100 helai baju": Lambda = tangan tapi kena berhenti lepas 15 min; Batch = upah ramai pekerja basuh serentak ikut baris kerja. INGAT exam: "batch", "queue of jobs", "run-to-completion at scale" → AWS Batch.',
+              caption: 'Analogi: AWS Batch = KETUA PEKERJA projek — kau hantar senarai kerja (jobs) dalam baris (queue), ketua upah pekerja (EC2/Fargate, boleh upah pekerja kontrak murah = Spot) ikut keperluan, siap kerja terus bubar. Macam "basuh 100 helai baju": Lambda = tangan tapi kena berhenti lepas 15 min; Batch = upah ramai pekerja basuh serentak ikut baris kerja. INGAT exam: "batch", "queue of jobs", "run-to-completion at scale" → AWS Batch.',
             },
             scenario: '"Company guna third-party software (Slurm/LSF/PBS) untuk manage EC2 fleet untuk batch jobs, nak switch ke AWS managed service" → AWS Batch. "Job genomics/rendering/simulation berjam-jam, banyak job beratur" → AWS Batch. "Lebih 15 minit tapi satu container je" → Fargate (bukan Lambda).',
             tips: [
@@ -5107,7 +5107,7 @@ export const domains: DomainData[] = [
             fungsi: 'Visual workflow orchestration. Setiap step boleh timeout, retry, atau branch ikut result. Integrate dengan Lambda, ECS, Glue, DynamoDB, dan 200+ services. State machine dengan JSON definition.',
             sebabApa: "Step Functions wujud sebab chain banyak Lambda/service manual (Lambda panggil Lambda panggil Lambda) jadi mimpi ngeri bila kena handle retry, timeout, branching, dan error pada SETIAP langkah — code jadi spaghetti + susah debug. Step Functions jadi 'flowchart yang run sendiri': retry/catch/branch terbina dalam, visual console tunjuk state tiap langkah. Buang glue code rapuh + bagi resilience automatik.",
             sifir: ["Standard = max 1 tahun, exactly-once, audit penuh; Express = max 5 min, at-least-once, murah", "Non-idempotent (payment, start EMR) → Standard; high-volume idempotent (IoT/stream) → Express", "Callback (.waitForTaskToken), .sync job-run, Distributed Map, Activities → STANDARD SAHAJA", "Workflow type IMMUTABLE — tak boleh tukar Standard↔Express lepas create", "Choice=branch · Parallel=serentak · Map=loop array · Distributed Map=dataset besar", "Error handling ASL: Retry (backoff) + Catch (route ke fallback)"],
-            perangkap: [{"soalan": "Workflow charge payment + start EMR cluster, kena exactly-once + audit trail penuh. Standard atau Express?", "umpan": "Express — sebab 'laju & murah', anggap workflow pendek.", "betul": "Standard. Express = at-least-once (boleh run 2x → double charge!) + max 5 min. Non-idempotent/payment/audit → Standard. Keyword: 'payment' + 'exactly-once' + 'audit'."}, {"soalan": "Workflow kena PAUSE tunggu kelulusan manusia dulu sebelum sambung. Macam mana?", "umpan": "Express workflow dengan wait state — sangka Express boleh tunggu callback.", "betul": "Standard + Callback pattern (.waitForTaskToken). Express TAK support .waitForTaskToken. Keyword: 'human approval' + 'wait for callback' → Standard."}],
+            perangkap: [{"soalan": "Workflow charge payment + start EMR cluster, kena exactly-once + audit trail penuh. Standard atau Express?", "umpan": "Express — sebab 'laju & murah', anggap workflow pendek.", "betul": "Standard. Express = at-least-once (boleh run 2x → double charge!) + max 5 min. Non-idempotent/payment/audit → Standard. Keyword: 'payment' + 'exactly-once' + 'audit'."}, {"soalan": "Workflow kena PAUSE tunggu kelulusan manusia dulu sebelum sambung. Macam mana?", "umpan": "Express workflow dengan wait state — sangka Express boleh tunggu callback.", "betul": "Standard + Callback pattern (.waitForTaskToken). Express TAK support .waitForTaskToken. Keyword: 'human approval' + 'wait for callback' → Standard."}, {"soalan": "App serverless guna Lambda + SNS coordinate order processing (notify restaurant, accept/reject). Dah kompleks; team nak (1) orchestrate semua step secara VISUAL & maintainable, (2) track status setiap step & event, (3) ELAK tulis custom logic untuk failure tracking / state transition. Pilih: (A) AWS Batch, (B) Step Functions, (C) SQS, (D) Glue.", "umpan": "C (SQS) menipu sebab dah ada SNS → orang sambung 'tambah queue'. TAPI SQS cuma decouple/buffer mesej — dia TAK orchestrate langkah, takde visual console, takde state tracking; kau kena tulis sendiri logic transition. A (Batch) = jalankan batch compute jobs (HPC/render), bukan coordinate workflow. D (Glue) = ETL transform data, bukan orchestrate business steps.", "betul": "B — Step Functions. State machine = visual workflow + track state tiap step automatik + retry/catch terbina dalam (tak payah tulis custom failure/state logic). Keyword: 'orchestrate steps visually + track each step + avoid custom state/failure logic' → Step Functions. INGAT: SQS = decouple (bukan orchestrate); Batch = batch compute; Glue = ETL."}],
             diagram: {
               label: 'Order workflow (state machine)',
               steps: [
@@ -5166,6 +5166,17 @@ export const domains: DomainData[] = [
                   ['Legacy / perlu external "deciders" & "workers" sendiri', 'SWF (lama — elak untuk projek baru)'],
                 ],
                 takeaway: 'Step Functions = orchestrator moden (state machine + visual + built-in retry/catch). Lambda-sahaja kalau takde langkah nak coordinate. SWF legacy — Step Functions ganti dia.',
+              },
+              {
+                label: 'Step Functions vs SQS vs Batch vs Glue — jangan keliru "orchestrate"',
+                headers: ['Service', 'Sebenarnya buat apa', 'Keyword exam'],
+                rows: [
+                  ['🟢 Step Functions', 'ORCHESTRATE workflow berlangkah (visual + track state tiap step + retry/catch terbina)', '"coordinate steps visually / track each step / state machine / avoid custom failure logic"'],
+                  ['SQS', 'DECOUPLE & buffer mesej antara service (queue je — takde orchestrate/visual/state)', '"decouple / buffer burst / async queue"'],
+                  ['AWS Batch', 'Jalankan BATCH compute jobs ramai (HPC, render, simulation)', '"batch jobs / array of compute / HPC"'],
+                  ['AWS Glue', 'ETL — extract/transform/load data (serverless Spark + Data Catalog)', '"ETL / transform data / data catalog"'],
+                ],
+                takeaway: 'Orchestrate langkah business secara visual + track setiap step + elak tulis custom state/failure logic → Step Functions. Hantar mesej decouple → SQS. Jalankan banyak compute job → Batch. Transform data (ETL) → Glue. Soalan "Lambda+SNS dah kompleks, nak orchestrate visual & maintainable" = Step Functions, BUKAN SQS/Batch/Glue.',
               },
             ],
             tips: [
@@ -6106,7 +6117,7 @@ export const domains: DomainData[] = [
           {
             shortName: 'EMR',
             fullName: 'Amazon EMR',
-            ingat: '"EMR = Energetik Mandor Ramai-pekerja: Elastic cluster, Mandor (Master node), Ramai pekerja (Core/Task). Hadoop/Spark, kau urus cluster (BUKAN serverless)."',
+            ingat: '"EMR = Elastic + Master node + Ramai-pekerja: Elastic cluster, Master node (ketua agih kerja), Ramai pekerja (Core/Task). Hadoop/Spark, kau urus cluster (BUKAN serverless)."',
             gunaUntuk: 'Process petabyte-scale data with Spark, Hadoop, Hive, Presto — full control',
             fungsi: 'Managed cluster platform untuk big data frameworks (Spark, Hadoop, Hive, Presto, HBase). Kau choose cluster size, instance types, frameworks. Cluster ada 3 jenis node: Master (urus cluster), Core (run task + simpan HDFS), Task (run task sahaja, no HDFS). EMRFS benarkan EMR guna S3 sebagai storage layer → decouple compute dari storage. Lebih control dari Glue — untuk complex/custom big-data jobs.',
             sebabApa: "EMR wujud sebab proses data berskala petabyte (log, ML, transform berat) guna satu EC2 mustahil — kau perlu cluster Spark/Hadoop, tapi setup & urus cluster Hadoop sendiri (provision, config, scale, patch) itu sangat susah. EMR managed-kan cluster big-data tu: kau pilih saiz/framework, AWS handle setup, dan boleh guna Spot + transient cluster (mati lepas job, data kekal di S3) untuk jimat besar.",
@@ -6133,12 +6144,12 @@ export const domains: DomainData[] = [
                 label: 'Analogi Kilang Kerupuk Lekor — EMR cluster nodes',
                 source: `flowchart TD
   JOB["🐟 10 tan ikan nak proses<br/>(big data — 1 EC2 tak larat)"] --> CLUSTER["🏭 Kilang EMR (Cluster)<br/>ramai pekerja, satu pasukan"]
-  CLUSTER --> M["👷 Mandor = Master Node<br/>pegang klipbod, agih kerja,<br/>tak potong ikan sendiri"]
+  CLUSTER --> M["👷 Ketua = Master Node<br/>pegang klipbod, agih kerja,<br/>tak potong ikan sendiri"]
   M -->|"agih tugas"| C["🔪 Pekerja Tetap = Core Node<br/>potong ikan + ada meja sendiri<br/>(proses + simpan HDFS)"]
   M -->|"upah bila sibuk"| T["🧑‍🍳 Pekerja Sambilan = Task Node<br/>tolong potong je, pinjam meja<br/>(compute only) → halau bila siap (Spot)"]
   C --> S3["🪣 Gudang S3 (EMRFS)<br/>simpan hasil walau kilang tutup"]
   T --> S3`,
-                caption: 'EMR = kilang besar proses ikan pukal (big data) sebab satu blender rumah (1 EC2) tak larat. Mandor (Master) agih kerja, tak potong sendiri. Pekerja Tetap (Core) potong + ada meja simpan ikan (HDFS) → jangan Spot, hilang meja = hilang ikan. Pekerja Sambilan (Task) tolong potong je, pinjam meja → selamat & jimat atas Spot, halau bila siap. Gudang S3 (EMRFS) simpan hasil walau kilang dah tutup (transient cluster).',
+                caption: 'EMR = kilang besar proses ikan pukal (big data) sebab satu blender rumah (1 EC2) tak larat. Ketua pekerja (Master) agih kerja, tak potong sendiri. Pekerja Tetap (Core) potong + ada meja simpan ikan (HDFS) → jangan Spot, hilang meja = hilang ikan. Pekerja Sambilan (Task) tolong potong je, pinjam meja → selamat & jimat atas Spot, halau bila siap. Gudang S3 (EMRFS) simpan hasil walau kilang dah tutup (transient cluster).',
               },
               {
                 label: 'HDFS dalaman — NameNode vs DataNode (Stor Ikan kilang)',
