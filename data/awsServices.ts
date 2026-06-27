@@ -3643,7 +3643,7 @@ export const domains: DomainData[] = [
           {
             shortName: 'ENI/ENA/EFA',
             fullName: 'EC2 Network Interfaces — ENI · ENA · EFA',
-            ingat: '"ENI = kad network biasa. ENA = driver laju. EFA = kad network untuk HPC super-laju"',
+            ingat: '"Huruf belakang main peranan: Interface (biasa) · Adapter (laju) · Fabric (ekstrem HPC). Macam enjin kereta: Kancil → Sports Turbo → Formula 1"',
             gunaUntuk: 'Network connectivity dan performance — pilih ikut keperluan (standard vs high-throughput vs HPC)',
             fungsi: 'Tiga jenis network "kad" pada EC2: ENI (Elastic Network Interface) = kad network virtual standard, ENA (Elastic Network Adapter) = driver untuk network performance tinggi, EFA (Elastic Fabric Adapter) = kad network special untuk HPC dengan OS-bypass.',
             sebabApa: "Tiga jenis ni wujud sebab keperluan network EC2 berbeza-beza. ENI wujud supaya satu IP/security-group/MAC boleh dipindah antara instance (failover IP dalam subnet). ENA wujud sebab driver network biasa tak cukup untuk app moden yang perlu throughput tinggi (sampai 100 Gbps). EFA wujud sebab workload HPC/ML distributed (MPI) perlu latency super-rendah antara node — EFA bagi OS-bypass (app cakap terus dengan NIC, langkau OS network stack) untuk latency paling rendah.",
@@ -3663,6 +3663,16 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Standard networking + failover → ENI. Network performance tinggi untuk app biasa → ENA (dah default pada most modern instances). HPC + MPI + ML distributed training + lowest latency → EFA. Exam: "HPC cluster need lowest latency inter-node communication" → EFA.',
             },
+            mermaid: {
+              label: 'Analogi: Jenis enjin kereta (Kancil → Sports → F1)',
+              source: `flowchart TD
+    Start["🚗 Pilih 'kad network' EC2<br/>(huruf belakang = peranan)"] --> Q1{"Nak pindah IP/SG/MAC<br/>antara instance?<br/>(failover dalam subnet)"}
+    Q1 -->|"Ya"| ENI["🚙 ENI — Interface<br/>Kereta Kancil biasa<br/>detach → attach = IP private ikut<br/>📌 'basic networking, detach &amp; move IP'"]
+    Q1 -->|"Tak — nak laju"| Q2{"HPC / MPI / ML training<br/>tightly-coupled, perlu<br/>ultra-low latency inter-node?"}
+    Q2 -->|"Tak — app biasa<br/>nak throughput tinggi"| ENA["🏎️ ENA — Adapter<br/>Kereta Sports Turbo<br/>Enhanced Networking 10–100 Gbps<br/>default most modern types<br/>📌 'high throughput / high PPS'"]
+    Q2 -->|"Ya — tightly-coupled"| EFA["🚀 EFA — Fabric<br/>Kereta Formula 1 (litar HPC)<br/>ENA + OS-bypass (libfabric/MPI)<br/>Linux only + Cluster Placement Group<br/>📌 'HPC, ultra-low latency, OS bypass'"]`,
+              caption: 'INGAT exam: huruf belakang main peranan — Interface (biasa, pindah IP) · Adapter (laju, 10–100 Gbps) · Fabric (ekstrem HPC, OS-bypass). Soalan sebut HPC / MPI / ultra-low latency / OS bypass → EFA, JANGAN tertipu pilih ENA.',
+            },
             scenario: '"HPC cluster dengan MPI, perlu lowest latency inter-node" → EFA. "Failover IP — pindah ENI dari EC2 mati ke EC2 baru" → ENI. "App biasa perlukan network lebih laju dari standard" → instance dengan ENA (default on modern types).',
             tips: [
               'ENI boleh pindah antara instances — attach ENI ke EC2 baru untuk failover IP. Ini cara failover IP private dalam subnet.',
@@ -3671,12 +3681,13 @@ export const domains: DomainData[] = [
               'EFA hanya Linux (Windows tak support OS-bypass). EFA hanya pada HPC-optimized instance types.',
               'Placement Group Cluster + EFA = combo untuk HPC (low latency + high throughput antara nodes dalam same AZ).',
               'Exam: "MPI / distributed ML training / lowest latency / tightly-coupled HPC inter-node" → EFA (bukan ENA, bukan ENI).',
+              'PRICING: ENI, ENA, dan EFA semua FREE — takde caj tambahan untuk adapter itu sendiri. Kau bayar untuk EC2 instance + data transfer macam biasa. (Note: ENI ada had IP private/instance ikut instance type; secondary ENI yang attach guna IP dalam VPC kau, bukan caj berasingan.)',
             ],
             docs: [
               { label: 'Elastic Network Interfaces (ENI)', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-eni.html' },
               { label: 'Elastic Fabric Adapter (EFA)', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/efa.html' },
             ],
-            keywords: ['ENI', 'ENA', 'EFA', 'network interface', 'virtual NIC', 'OS-bypass', 'libfabric', 'MPI', 'HPC networking', 'low latency', 'failover IP', 'detach attach', '100 Gbps', 'placement group cluster'],
+            keywords: ['ENI', 'ENA', 'EFA', 'network interface', 'virtual NIC', 'OS-bypass', 'libfabric', 'MPI', 'HPC networking', 'low latency', 'ultra-low latency', 'enhanced networking', 'high throughput', 'failover IP', 'detach attach', '100 Gbps', 'placement group cluster', 'machine learning training', 'tightly-coupled', 'pricing'],
           },
           {
             shortName: 'Lambda@Edge',
