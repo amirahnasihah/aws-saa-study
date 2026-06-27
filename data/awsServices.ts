@@ -2548,6 +2548,11 @@ export const domains: DomainData[] = [
                 umpan: 'Tambah Read Replica — nampak macam "agih beban". SALAH: masalah ni bilangan CONNECTION, bukan read load.',
                 betul: 'RDS Proxy (pool & multiplex connections). Keyword "too many connections + Lambda/RDS" → RDS Proxy.',
               },
+              {
+                soalan: 'App atas EC2 Auto Scaling guna RDS MySQL. Bila ASG scale out, banyak idle connection bertimbun, RDS hampir cecah connection limit & query jadi lembab. Pilih: (A) RDS Proxy, (B) naikkan instance class RDS untuk lebih CPU/RAM, (C) tukar Multi-AZ, (D) tambah Read Replica.',
+                umpan: 'B (instance lebih besar) & D (Read Replica) nampak betul sebab query "lembab" → org ingat masalah compute/read. C (Multi-AZ) umpan untuk yang baca "hampir limit" sebagai isu availability. Semua SALAH puncanya: punca = bilangan CONNECTION dari ASG yang naik-turun, bukan CPU, bukan read load, bukan HA.',
+                betul: 'A — RDS Proxy. Dia POOL & reuse connection, jadi walaupun ASG tambah/buang EC2, RDS nampak sikit connection je → idle connection hilang, limit tak cecah. Keyword: "Auto Scaling + idle/too many connections" → RDS Proxy.',
+              },
             ],
             scenario: '"Lambda functions causing too many RDS connections" → RDS Proxy. "Idle connections from Auto Scaling EC2" → RDS Proxy. Read Replicas = read scaling. Multi-AZ = HA. RDS Proxy = connection management.',
             mermaid: {
