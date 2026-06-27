@@ -473,7 +473,7 @@ export const glossary: Record<string, string> = {
   'Explicit Deny': 'A policy statement with "Effect": "Deny". Always wins — overrides any Allow in any policy type (identity, resource, SCP, boundary, session). The strongest force in IAM evaluation. Exam: Allow + Deny on the same action = DENIED.',
   'Implicit Deny': 'The default outcome when no policy explicitly Allows an action (and nothing explicitly Denies it either). Every request starts as an implicit Deny; you need an explicit Allow to permit it. Weaker than an explicit Deny.',
   'Session Policy': 'An inline policy passed at the moment you AssumeRole (or get federation token) to further RESTRICT that session. Effective permissions = intersection of the role policy and the session policy — it can only narrow, never expand, the role’s permissions.',
-  'OU (Organizational Unit)': 'Organizational Unit — a container for AWS accounts within AWS Organizations. SCPs can be applied to OUs to restrict all accounts within. OUs can be nested. Management account is at the root.',
+  'OU (Organizational Unit)': 'Organizational Unit — a container for AWS accounts within AWS Organizations (macam folder dalam laptop — kumpul akaun serupa supaya senang tampal SCP pukal). SCPs can be applied to OUs to restrict all accounts within (termasuk akaun baru yang masuk kemudian). OUs can be nested. Management account is at the root.',
   'Permission denied': 'When IAM evaluation results in Deny. Explicit Deny always overrides Allow. A missing Allow = implicit Deny. Order: explicit Deny → SCP limit → permissions boundary → resource policy → identity policy.',
 
   // Networking (batch2)
