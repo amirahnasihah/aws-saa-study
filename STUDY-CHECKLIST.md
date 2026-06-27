@@ -44,6 +44,12 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 - [x] [Setting up free-tier AWS account](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24549) (9m 54s)
 - [x] [Getting Familiar with AWS Console](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=26889) (9m 25s)
 
+### Must be able to answer
+
+- [x] SAA-C03 format: **65 questions / 130 min**; pass = **720/1000**; multiple-choice + multiple-response
+- [x] The 4 domains + weights: **Secure 30% · Resilient 26% · High-Performing 24% · Cost-Optimized 20%**
+- [x] Free-tier account setup, the AWS Console, regions vs AZs basics
+
 ---
 
 ## 3. Compute — ✅ done · 28 lectures · 4 labs
@@ -85,6 +91,21 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 - [x] [AWS Elastic Beanstalk - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=30054) (9m 59s)
 - [x] [AWS Outposts](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24490) (7m 49s)
 - [x] Compute (Quiz) (15Q) — ≥80%
+
+### Must be able to answer
+
+- [x] EC2 instance families: General (M/T) vs Compute (C) vs Memory (R/X) vs Storage (I/D) vs Accelerated (P/G) — match family to workload
+- [x] Purchasing: On-Demand vs **Reserved (Standard ≤72% vs Convertible)** vs Savings Plans vs **Spot (≤90%, 2-min interrupt)** vs Dedicated Host/Instance — pick per workload
+- [x] Tenancy: Shared vs Dedicated Instance (isolated HW) vs **Dedicated Host (BYOL + socket/core visibility, compliance)**
+- [x] **Instance Store (ephemeral, lost on stop/terminate, highest IOPS)** vs EBS-backed (persistent, survives stop)
+- [x] Placement Groups: **Cluster (low latency, 1 AZ, HPC)** vs **Spread (max 7/AZ, critical HA)** vs **Partition (big data, HDFS/Kafka)**
+- [x] Public vs Private vs **Elastic IP (static, charged when NOT attached)**
+- [x] **ENI** (move IP/failover) vs **ENA** (enhanced networking, 10–100 Gbps) vs **EFA** (HPC, OS-bypass, ultra-low latency)
+- [x] ELB: **ALB (L7 HTTP, path/host)** vs **NLB (L4 TCP/UDP, static IP, millions req/s)** vs **GWLB (L3, security appliances)** vs CLB (legacy)
+- [x] Cross-zone load balancing: **ALB always ON + free**; **NLB OFF by default** (data charge if on)
+- [x] ELB stickiness (session affinity); health checks; SSL termination
+- [x] ASG: launch template, scaling policies (**target tracking / step / scheduled**), cooldown, termination policy, health-check replace
+- [x] Lambda (event-driven, 15-min max, cold start, concurrency) · **Lambda@Edge** (CloudFront edge) · **Beanstalk** (PaaS) · **Outposts** (AWS HW on-prem)
 
 ---
 
@@ -130,6 +151,21 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 - [x] [Amazon Elastic Block Storage: TroubleShooting Common Issues](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=27424) (3m 14s)
 - [x] [AWS Backup](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=23023) (5m 45s)
 - [x] Storage (Quiz) (10Q) — ≥80%
+
+### Must be able to answer
+
+- [x] S3 storage classes: Standard vs Standard-IA vs One Zone-IA vs Intelligent-Tiering vs Glacier Instant/Flexible/Deep Archive — by access pattern + **min-duration (IA 30d, Glacier 90d, Deep 180d)**
+- [x] S3 lifecycle: transition rules + expiration; auto-move cold data down the tiers
+- [x] S3 **versioning (+ MFA delete)** — required before replication works
+- [x] S3 replication: **CRR (cross-region, DR/latency)** vs **SRR (same-region)** — async, needs versioning both sides
+- [x] S3 encryption: **SSE-S3** vs **SSE-KMS (audit/rotation)** vs SSE-C vs client-side; enforce HTTPS via **aws:SecureTransport**
+- [x] S3 access control: **IAM** (identity) vs **Bucket Policy** (cross-account/resource) vs ACL (legacy) vs **Block Public Access**
+- [x] S3 CORS · **Pre-Signed URL** (temporary object access without making it public)
+- [x] EBS volume types: **gp3/gp2 (general SSD)** vs **io1/io2 (high IOPS, Multi-Attach)** vs **st1 (throughput HDD)** vs **sc1 (cold HDD, cheapest)**
+- [x] EBS snapshots (incremental → S3, cross-region copy), encryption, **resizing live (Elastic Volumes)**, DeleteOnTermination
+- [x] **EFS (managed NFS, multi-AZ, Linux)** vs **EBS (single-AZ block, 1 instance)** vs **S3 (object)** — when each
+- [x] Storage Gateway: **File (NFS/SMB→S3)** vs **Volume (iSCSI cached/stored)** vs **Tape (VTL backup)** — hybrid bridge
+- [x] AWS Backup: centralized cross-service backup plans, scheduling, retention, cross-region/account copy
 
 ---
 
