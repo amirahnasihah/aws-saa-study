@@ -555,6 +555,8 @@ export const domains: DomainData[] = [
               'SCP TAK apply ke management/root account — member accounts sahaja',
               'Satu bil + volume discount across accounts → Consolidated Billing (free)',
               'Auto setup landing zone / multi-account baseline → Control Tower',
+              'Organizations = building block manual; Control Tower = automated landing zone + guardrail siap-pakai DI ATAS Organizations',
+              'Control Tower guardrail: Mandatory (wajib) · Strongly-recommended · Elective. Drift detection bagitau bila config terpesong dari baseline',
               'Organizations + SCP + Consolidated Billing = FREE (bayar resource je)',
             ],
             perangkap: [
@@ -567,6 +569,11 @@ export const domains: DomainData[] = [
                 soalan: 'Selepas attach SCP yang "Allow" S3 pada satu OU, developer dalam account tu masih tak boleh akses S3. Kenapa?',
                 umpan: 'SCP tu salah configure / belum propagate. Cuba tunggu atau re-attach. Nampak betul sebab SCP dah Allow.',
                 betul: 'SCP TAK GRANT akses — ia cuma tetapkan had maksimum. Developer masih perlu explicit Allow dalam IAM policy dia. SCP Allow cuma "tak disekat di peringkat OU". Keyword: SCP = guardrail, IAM = pemberi akses sebenar.',
+              },
+              {
+                soalan: 'Syarikat nak roll-out 50+ AWS account baru dengan baseline security yang konsisten (logging, guardrails, SSO, network) secara automatik & boleh self-service oleh team. Cara terbaik?',
+                umpan: 'Guna AWS Organizations + tulis SCP + manual create setiap account + setup CloudTrail/Config satu-satu. Nampak betul sebab Organizations memang urus multi-account.',
+                betul: 'AWS Control Tower — dia automate "landing zone" (baseline siap-pakai) + Account Factory untuk provision account baru secara self-service + pre-built guardrails + drift detection, semua DI ATAS Organizations. Keyword "automated landing zone / governed baseline / provision many accounts at scale" = Control Tower, BUKAN Organizations mentah (tu building block manual).',
               },
             ],
             scenario: '"Restrict apa member accounts boleh buat org-wide, exempt management account" → SCP (member accounts only). "Enforce guardrails + auto setup landing zone / multi-account baseline" → Control Tower. "Satu bil + kongsi diskaun" → Consolidated Billing (bukan SCP). Ingat: SCP RESTRICT sahaja, tak GRANT.',
@@ -582,7 +589,8 @@ export const domains: DomainData[] = [
   E -- Ya --> G[ALLOWED]`,
               caption: 'Effective permission = intersection SCP ∩ IAM policy. SCP tak grant apa-apa — kena ADA Allow dalam IAM policy juga. Management account tak terkena SCP langsung.',
             },
-            compare: {
+            compare: [
+              {
               label: 'SCP vs IAM Policy',
               headers: ['Aspect', 'SCP (Organizations)', 'IAM Policy'],
               rows: [
@@ -593,7 +601,21 @@ export const domains: DomainData[] = [
                 ['Keyword', '"org-wide guardrail / max permission"', '"bagi user ni akses ke X"'],
               ],
               takeaway: 'SCP = had MAKSIMUM (pagar), tak pernah bagi akses. IAM = pemberi akses sebenar. SCP Allow ≠ akses; kena ADA Allow dalam IAM JUGA. "org-wide guardrail / restrict all accounts" → SCP; "grant this user" → IAM.',
-            },
+              },
+              {
+                label: 'AWS Organizations vs Control Tower (jangan keliru)',
+                headers: ['Aspect', 'AWS Organizations', 'AWS Control Tower'],
+                rows: [
+                  ['Apa dia', 'Building block mentah — OU, SCP, consolidated billing', 'Automation DI ATAS Organizations — landing zone siap-pakai'],
+                  ['Setup', 'Manual — kau pasang sendiri SCP, logging, baseline', 'Automated — landing zone + baseline auto-deploy'],
+                  ['Account baru', 'Create manual satu-satu', 'Account Factory — self-service, provision konsisten'],
+                  ['Guardrails', 'Tulis SCP sendiri', 'Pre-built: Mandatory · Strongly-recommended · Elective'],
+                  ['Drift detection', '❌ Tiada', '🟢 Ada — bagitau bila config terpesong dari baseline'],
+                  ['Guna bila', 'Nak kawalan penuh / setup ringkas', 'Roll-out banyak account dengan governance konsisten, laju'],
+                ],
+                takeaway: 'Organizations = LEGO blocks (kau bina sendiri). Control Tower = LEGO set siap-bina dengan arahan (landing zone + Account Factory + guardrail + drift detection) di atas Organizations. Keyword "automated landing zone / provision many accounts at scale / governed baseline" → Control Tower; "consolidated billing / SCP guardrail manual" → Organizations.',
+              },
+            ],
             tips: [
               'SCP TIDAK apply ke management (root) account by default — SCPs hanya restrict MEMBER accounts',
               'Kalau soalan tanya "prevent actions org-wide tapi exempt management account" → answer specify "member accounts only"',
@@ -602,7 +624,7 @@ export const domains: DomainData[] = [
               'PRICING: AWS Organizations is FREE — tiada charge untuk OUs, SCPs, atau consolidated billing. Yang kau bayar adalah resources dalam setiap account. Consolidated billing percuma dan boleh dapat volume discounts (S3, EC2 reserved, dll) kerana aggregate usage.',
               'Exam: "no charge for Organizations" → free. "consolidated billing discount" → volume pricing benefit dari aggregate usage across all member accounts.',
             ],
-            keywords: ['multi-account', 'SCPs', 'guardrails', 'Control Tower', 'management account', 'OU', 'management account exemption', 'SCP cannot grant', 'S3 Block Public Access SCP', 'pricing', 'free', 'consolidated billing', 'volume discount'],
+            keywords: ['multi-account', 'SCPs', 'guardrails', 'Control Tower', 'management account', 'OU', 'management account exemption', 'SCP cannot grant', 'S3 Block Public Access SCP', 'pricing', 'free', 'consolidated billing', 'volume discount', 'landing zone', 'Account Factory', 'drift detection', 'governed baseline', 'mandatory guardrail', 'elective guardrail', 'provision accounts at scale'],
           },
         ],
       },

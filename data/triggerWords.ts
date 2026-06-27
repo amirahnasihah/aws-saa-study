@@ -152,6 +152,15 @@ export const triggerRows: TriggerRow[] = [
     slug: 'd1-iam-aws-organizations',
   },
   {
+    id: 'control-tower',
+    keywords: ['automated landing zone', 'set up multi-account baseline / governance at scale', 'provision many accounts self-service', 'pre-built guardrails + drift detection'],
+    service: 'AWS Control Tower',
+    why: 'Automated landing zone + Account Factory + pre-built guardrails + drift detection DI ATAS Organizations. Organizations = building block manual; Control Tower = setup laju & konsisten.',
+    accent: 'c3',
+    domain: 'D1 · Secure',
+    slug: 'd1-iam-aws-organizations',
+  },
+  {
     id: 'redshift-warehouse',
     keywords: ['complex SQL + BI on structured data', 'data warehouse', 'analyze structured data, recurring reports'],
     service: 'Amazon Redshift',
