@@ -187,6 +187,8 @@ export const domains: DomainData[] = [
               'Group = bakul untuk Users, BUKAN identity — tak boleh login, tak boleh jadi Principal',
               'User/Group = permanent creds. Role = temp creds (STS, auto-expire)',
               'Default = implicit DENY. Kena ada explicit Allow baru boleh buat',
+              'Baca policy macam ayat: Principal=SIAPA · Action=NAK BUAT APA · Resource=DEKAT MANA · Effect=BOLEH/TAK · Condition=BILA',
+              '"Principal":"*" dalam resource policy = SESIAPA (anonymous/public) boleh akses — ni punca #1 S3 bucket bocor. Identity-based policy TAKDE Principal (dah tau siapa); resource-based WAJIB ada Principal',
             ],
             perangkap: [
               {
@@ -198,6 +200,11 @@ export const domains: DomainData[] = [
                 soalan: 'Satu SCP pada OU ada Allow untuk S3, tapi IAM policy user tu takde sebut S3 langsung. User boleh akses S3?',
                 umpan: 'Boleh — SCP dah Allow S3, jadi user dapat akses. Nampak logik sebab SCP "bagi" permission.',
                 betul: 'TAK BOLEH. SCP cuma guardrail — ia SEKAT, tak pernah BAGI. User masih perlu explicit Allow dalam IAM (identity) atau resource policy. SCP Allow cuma maksud "tak disekat di peringkat OU", bukan "dibenarkan". Keyword: SCP/Boundary = had maksimum, bukan pemberi akses.',
+              },
+              {
+                soalan: 'Security audit jumpa satu S3 bucket policy ada "Principal": "*" dengan Effect Allow untuk s3:GetObject. Apa maksud & risiko?',
+                umpan: '"*" tu wildcard untuk semua IAM user dalam account aku je — selamat sebab orang luar account tetap kena ada IAM creds. Nampak munasabah sebab "*" selalu maksud "semua dalam scope".',
+                betul: 'BAHAYA — "Principal": "*" dalam resource-based policy = SESIAPA di internet (anonymous, tanpa login) boleh akses. Ni punca #1 S3 data leak. Keyword "Principal":"*" + public/anonymous = buang atau ganti dengan ARN spesifik + Block Public Access ON. (Nota: identity-based policy TAKDE Principal langsung — dah tahu siapa.)',
               },
             ],
             detailsLabel: 'IAM — komponen utama',
@@ -274,7 +281,7 @@ export const domains: DomainData[] = [
               { label: 'IAM policy evaluation logic', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html' },
               { label: 'Security best practices in IAM', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html' },
             ],
-            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation', 'IAM Role', 'IAM User', 'IAM Group', 'identity-based policy', 'resource-based policy', 'permission boundary', 'SCP', 'explicit deny', 'implicit deny', 'policy evaluation', 'service-linked role', 'role chaining', 'session policy', 'cross-account access'],
+            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation', 'IAM Role', 'IAM User', 'IAM Group', 'identity-based policy', 'resource-based policy', 'permission boundary', 'SCP', 'explicit deny', 'implicit deny', 'policy evaluation', 'service-linked role', 'role chaining', 'session policy', 'cross-account access', 'Principal', 'Principal *', 'anonymous access', 'public access', 'policy anatomy', 'Effect Action Resource'],
           },
           {
             shortName: 'STS',
