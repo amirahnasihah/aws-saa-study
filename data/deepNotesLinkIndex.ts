@@ -502,7 +502,7 @@ export const deepNotesLinkIndex = [
     "sectionTitle": "Compute",
     "sectionIcon": "🖥️",
     "shortName": "EC2 Hibernation",
-    "searchBlob": "ec2 hibernation amazon ec2 hibernation hibernation ram save ebs root fast resume in-memory state encrypted root volume hibernation saves seluruh ram contents ke ebs root volume. bila resume, os dan app state adalah exactly sama seperti sebelum — tiada re-initialization. berbeza dengan stop/start (yang lose ram state) dan reboot (yang restart os).   compute"
+    "searchBlob": "ec2 hibernation amazon ec2 hibernation hibernation ram save ebs root fast resume in-memory state encrypted root volume hibernation saves seluruh ram contents ke ebs root volume. bila resume, os dan app state adalah exactly sama seperti sebelum — tiada re-initialization. berbeza dengan stop/start (yang lose ram state) dan reboot (yang restart os).  formula poket: \"memory-intensive app\" + \"long initialization / warm-up time\" + \"preserve application state across restart\" → ec2 hibernation. bukan stop/start (ram cleared, kena warm-up balik), bukan ami/launch baru (disk snapshot je, cold boot, ram kosong), bukan reboot (tak simpan ram state). compute"
   },
   {
     "sectionId": "d3-compute",
