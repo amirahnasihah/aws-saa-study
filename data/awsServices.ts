@@ -310,6 +310,19 @@ export const domains: DomainData[] = [
             sifir: ["STS = TEMPORARY credentials, auto-expire (15 min → max session role)", "Cross-account / EC2 role / role chaining → AssumeRole", "Enterprise SAML/AD IdP → AssumeRoleWithSAML", "Public login Google/Facebook/Cognito (OIDC) → AssumeRoleWithWebIdentity", "Role chaining = sesi auto-cap 1 jam (DurationSeconds > 1 jam akan gagal)", "Session policy = SEKAT lagi (intersection), tak boleh TAMBAH permission lebih dari role"],
             perangkap: [{"soalan": "Mobile app perlu user login guna akaun Google, lepas tu app nak akses S3 & DynamoDB terus dari device. Macam mana bagi temp AWS credentials dengan selamat?", "umpan": "Cipta IAM user untuk app + embed access key dalam app. Nampak senang sebab terus boleh sign API call. SALAH: access key dalam app mobile = bocor terus (boleh decompile), dan ia long-term tak expire.", "betul": "STS AssumeRoleWithWebIdentity (selalu via Cognito Identity Pool). Keyword 'login Google/Facebook + temp AWS creds untuk mobile' = web identity federation, BUKAN IAM user access key."}, {"soalan": "App dalam Account A perlu baca S3 bucket dalam Account B sekali-sekala. Cara paling selamat?", "umpan": "Buat IAM user dalam Account B, share access key ke Account A. Nampak betul sebab terus dapat akses. SALAH: long-term key kongsi merentas account = susah audit + rotate, dan kekal hidup kalau bocor.", "betul": "Buat IAM role dalam Account B, Account A panggil STS AssumeRole ke role tu → dapat temp creds yang auto-expire. Keyword 'cross-account access' = AssumeRole."}],
             contohGuna: 'App dalam Account A nak akses S3 dalam Account B — AssumeRole ke role dalam B, dapat temp credentials, tak perlu hardcode long-term keys',
+            mermaid: [
+              {
+                label: 'Analogi — Kaunter Pengawal cetak Pas Pelawat sementara (AssumeRole)',
+                source: `flowchart TD
+  ALI["👨‍💼 Ali (User / EC2 / Lambda)<br/>nak masuk tingkat 3 Syarikat B"] -->|"tunjuk IC: aku dari Syarikat A"| GUARD["💂 Kaunter Pengawal = AWS STS<br/>(AssumeRole)"]
+  GUARD --> CHK{"Semak buku peraturan<br/>= Trust Policy<br/>Syarikat A dibenarkan?"}
+  CHK -->|"❌ Tak dalam senarai"| DENY["🚫 Access Denied"]
+  CHK -->|"✅ Ada"| PRINT["🖨️ Cetak Pas Pelawat = Temp Credentials<br/>AccessKeyId + SecretAccessKey + SessionToken"]
+  PRINT --> PASS["🪪 Pas hanya buka tingkat 3<br/>(role permission je, bukan semua pintu)<br/>+ MATI jam 5 / auto-expire (15min–12hr)"]
+  PASS --> WORK["🚪 Ali buat kerja di Syarikat B<br/>guna pas sementara — TANPA password kekal"]`,
+                caption: 'Kaitkan dengan familiar: STS = kaunter pengawal yang cetak Pas Pelawat plastik. Pengawal semak buku peraturan (Trust Policy) dulu, baru cetak pas. Pas tu (1) buka pintu tertentu je (role permission), (2) mati sendiri lepas jam tutup (auto-expire). INGAT exam: "temporary credentials / short-term access / cross-account tanpa hardcode key" → STS AssumeRole; pas TAK kekal, jadi walau bocor pun mati sendiri.',
+              },
+            ],
             compare: {
               label: 'STS API — pilih ikut SIAPA yang call',
               headers: ['API', 'Siapa boleh call', 'Guna bila', 'Lifetime'],
