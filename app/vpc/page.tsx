@@ -48,6 +48,35 @@ function SidebarTOC({ activeId }: { activeId: string }) {
   )
 }
 
+// Floating sticky TOC bar for below-xl — mirrors the Deep Notes / learn page
+// (`OnThisPage`) horizontal bar. Stays pinned under the Nav and highlights the
+// active section, replacing the static hero pills that used to scroll away.
+function FloatingTOCBar({ activeId }: { activeId: string }) {
+  return (
+    <nav
+      aria-label="On this page"
+      className="xl:hidden sticky top-14 z-30 -mx-4 mb-8 border-b border-aws-border/60 bg-aws-bg/85 backdrop-blur-md"
+    >
+      <div className="nav-scroll flex items-center gap-1.5 overflow-x-auto px-4 py-2.5">
+        {tocSections.map((s) => (
+          <a
+            key={s.id}
+            href={`#${s.id}`}
+            aria-current={activeId === s.id ? 'location' : undefined}
+            className={`shrink-0 whitespace-nowrap rounded-full border px-2.5 py-1 font-space-mono text-[0.6rem] transition-all ${
+              activeId === s.id
+                ? 'border-c4/50 bg-c4/15 text-c4 font-semibold'
+                : 'border-aws-border/50 text-aws-muted hover:text-aws-text hover:bg-white/6'
+            }`}
+          >
+            {s.label}
+          </a>
+        ))}
+      </div>
+    </nav>
+  )
+}
+
 export default function VpcPage() {
   const [activeId, setActiveId] = useState('mental-model')
   const observerRef = useRef<IntersectionObserver | null>(null)
@@ -79,6 +108,8 @@ export default function VpcPage() {
 
       <main id="top" className="max-w-[860px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
 
+        <FloatingTOCBar activeId={activeId} />
+
         {/* Hero */}
         <div className="text-center mb-10">
           <span className="font-space-mono text-[0.65rem] uppercase tracking-[0.15em] text-aws-muted">VPC Study Guide</span>
@@ -88,17 +119,6 @@ export default function VpcPage() {
           <p className="font-space-mono text-[0.78rem] text-aws-muted max-w-lg mx-auto leading-relaxed">
             Topic paling banyak keluar dalam SAA-C03. Faham konsep ni dan banyak soalan lain akan jadi senang.
           </p>
-          <div className="flex flex-wrap justify-center gap-2 mt-4 xl:hidden">
-            {tocSections.map((s) => (
-              <a
-                key={s.id}
-                href={`#${s.id}`}
-                className="font-space-mono text-[0.6rem] uppercase tracking-widest px-2.5 py-1 rounded-full border border-c4/30 text-c4 hover:bg-c4/10 transition-colors"
-              >
-                {s.label}
-              </a>
-            ))}
-          </div>
         </div>
 
         {/* Mental Model */}

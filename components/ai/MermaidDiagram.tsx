@@ -8,6 +8,23 @@ interface MermaidDiagramProps {
 
 let mermaidInitPromise: Promise<typeof import('mermaid')['default']> | null = null
 
+// Best-effort repair for the most common Mermaid parse failure: node and edge
+// labels that contain characters the parser rejects unless the label is wrapped
+// in double quotes — parentheses, commas, colons, slashes, emoji, <br/>. We
+// re-quote any *unquoted* rectangle label (A[text]) and edge label (|text|),
+// the two shapes the chat model emits most, then retry once. Labels that already
+// contain a quote are left untouched so we never corrupt a valid diagram.
+function repairMermaidLabels(source: string): string {
+  const quote = (inner: string): string => {
+    const trimmed = inner.trim()
+    if (!trimmed || trimmed.includes('"')) return inner
+    return `"${trimmed}"`
+  }
+  return source
+    .replace(/\|([^|\n]+)\|/g, (_m, inner: string) => `|${quote(inner)}|`)
+    .replace(/\[([^\][\n]+)\]/g, (_m, inner: string) => `[${quote(inner)}]`)
+}
+
 function getMermaid() {
   if (!mermaidInitPromise) {
     mermaidInitPromise = import('mermaid').then(({ default: mermaid }) => {
@@ -43,14 +60,27 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
     let cancelled = false
 
     void (async () => {
+      const mermaid = await getMermaid()
+      // Mermaid can return an error SVG instead of throwing on parse failures,
+      // so treat that as a throw too and funnel both into the retry path.
+      const tryRender = async (src: string, id: string): Promise<string> => {
+        const { svg } = await mermaid.render(id, src)
+        if (svg.includes('Syntax error')) throw new Error('mermaid syntax error')
+        return svg
+      }
+
       try {
-        const mermaid = await getMermaid()
-        const { svg } = await mermaid.render(`mermaid-${reactId}`, source)
-        if (!cancelled) {
-          // Mermaid can return an error SVG instead of throwing on parse failures.
-          if (svg.includes('Syntax error')) setFailedSource(source)
-          else setRendered({ source, svg })
+        let svg: string
+        try {
+          svg = await tryRender(source, `mermaid-${reactId}`)
+        } catch (firstError) {
+          // Retry once with auto-quoted labels — the most common breakage. Skip
+          // if the repair changed nothing (it would fail identically).
+          const repaired = repairMermaidLabels(source)
+          if (repaired === source) throw firstError
+          svg = await tryRender(repaired, `mermaid-${reactId}-r`)
         }
+        if (!cancelled) setRendered({ source, svg })
       } catch {
         if (!cancelled) setFailedSource(source)
       }
