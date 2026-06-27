@@ -4984,8 +4984,25 @@ export const domains: DomainData[] = [
   DEV -->|"lepas fix → DLQ Redrive"| MAIN`,
                 caption: 'Analogi: posmen (consumer) cuba hantar surat rosak 3 kali (maxReceiveCount), asyik gagal → ketua pos lempar masuk Kotak Surat Mati (DLQ) supaya surat lain tak tersekat; pegawai siasat (developer) buka kotak kaji punca, lepas betul tekan Redrive hantar balik. INGAT exam: "mesej corrupt/poison pill blok queue, nak isolate & debug" → DLQ + maxReceiveCount; "hantar balik lepas fix" → Redrive.',
               },
+              {
+                label: 'Cross-account SQS — "Dua Kunci" (analogi Ali hantar surat ke Peti Syarikat B)',
+                source: `flowchart LR
+  subgraph A["🏢 SOURCE Account 1111 (Syarikat A)"]
+    ALI["👨‍💼 Ali (IAM User / Lambda / EC2)"]
+    K1["🔑 KUNCI 1 — IAM Policy<br/>Allow sqs:SendMessage<br/>Resource: ...:2222:Peti-SQS<br/>(pas keluar untuk Ali)"]
+    ALI --- K1
+  end
+  subgraph B["🏢 DESTINATION Account 2222 (Syarikat B)"]
+    K2["🔑 KUNCI 2 — SQS Queue Policy (resource-based)<br/>Principal: ...:1111:root<br/>Allow sqs:SendMessage<br/>(memo: terima orang Syarikat A)"]
+    Q["📮 Peti-SQS (SQS Queue)"]
+    K2 --- Q
+  end
+  K1 -->|"hantar mesej merentas akaun"| K2`,
+                caption: 'Kaitkan dengan familiar: Ali (Syarikat A) nak masuk surat ke Peti-SQS (Syarikat B). Syarikat A bagi Ali pas keluar (IAM Policy, Resource = ID akaun B). Syarikat B tulis memo kat pengawal peti (Queue Policy, Principal = ID akaun A:root). Dua-dua belah WAJIB izin — set satu belah je → pintu tutup, Access Denied. INGAT exam: cross-account SQS = IAM policy (source) AND SQS queue policy (destination, ada Principal).',
+              },
             ],
-            compare: {
+            compare: [
+              {
               label: 'Standard vs FIFO queue',
               headers: ['Aspect', 'Standard', 'FIFO'],
               rows: [
@@ -4996,7 +5013,21 @@ export const domains: DomainData[] = [
                 ['Use when', 'Max throughput, dupes OK', 'Order + no duplicates matter'],
               ],
               takeaway: '"Duplicate processing must be eliminated" or "order must be preserved" → FIFO. Default high-throughput decoupling → Standard.',
-            },
+              },
+              {
+                label: 'Cross-account SQS — rupa JSON Kunci 1 (IAM, source) vs Kunci 2 (Queue Policy, destination)',
+                headers: ['Aspect', 'Kunci 1 — IAM Policy', 'Kunci 2 — SQS Queue Policy'],
+                rows: [
+                  ['Lekat di mana', 'Source Account 1111 (pada user/role Ali)', 'Destination Account 2222 (pada queue itu sendiri)'],
+                  ['Jenis policy', 'Identity-based', 'Resource-based'],
+                  ['Ada "Principal"?', '❌ Tiada (dah tahu siapa — Ali)', '🟢 WAJIB ada → "AWS": "arn:aws:iam::1111:root"'],
+                  ['Effect / Action', 'Allow · sqs:SendMessage', 'Allow · sqs:SendMessage'],
+                  ['"Resource" ID', 'arn:...:2222:Peti-SQS (ID akaun DESTINATION)', 'arn:...:2222:Peti-SQS (queue sendiri)'],
+                  ['Maksud', '"Ali dibenarkan hantar KELUAR ke queue akaun 2222"', '"Aku (queue) percaya root akaun 1111 hantar masuk"'],
+                ],
+                takeaway: 'Cara baca cepat: Principal HANYA wujud di resource-based policy (Kunci 2) — itu cara nak kenal mana satu. IAM (Kunci 1) sebut ID akaun destination dalam Resource; Queue Policy (Kunci 2) sebut ID akaun source dalam Principal. Silang ID = corak cross-account. Set satu belah je → Access Denied. Exam: pangkah jawapan "IAM policy sahaja" atau "queue policy sahaja".',
+              },
+            ],
             tips: [
               'Cross-account SQS access: guna SQS RESOURCE-BASED policy (queue policy) pada queue — bukan IAM policy dalam source account',
               'IAM policy dalam target account SAHAJA tidak cukup untuk cross-account SQS access. Queue policy mesti explicitly allow source account principal',
@@ -5019,7 +5050,7 @@ export const domains: DomainData[] = [
               { label: 'SQS — short vs long polling', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html' },
               { label: 'SQS — dead-letter queues', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html' },
             ],
-            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push', 'S3 SQS decouple', 'async file upload', 'burst traffic buffer', 'store file S3 not DynamoDB', 'temporary file storage', 'maxReceiveCount', 'RedrivePolicy', 'DLQ redrive', 'poison pill', 'failed messages', 'isolate corrupted messages', 'dead-letter queue'],
+            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push', 'S3 SQS decouple', 'async file upload', 'burst traffic buffer', 'store file S3 not DynamoDB', 'temporary file storage', 'maxReceiveCount', 'RedrivePolicy', 'DLQ redrive', 'poison pill', 'failed messages', 'isolate corrupted messages', 'dead-letter queue', 'Principal', 'source account', 'destination account', 'two keys', 'dua kunci', 'SendMessage cross-account', 'aws:PrincipalOrgID', 'queue policy JSON'],
           },
           {
             shortName: 'SNS',
