@@ -1644,6 +1644,11 @@ export const domains: DomainData[] = [
                 jebakan: 'Tukar ke NAT Instance kecil supaya murah. Boleh jimat sikit, tapi masih bayar per-GB + kau maintain EC2.',
                 betul: 'S3 Gateway VPC Endpoint (FREE, no per-GB) — traffic terus dalam AWS network, langsung tak sentuh NAT GW. Keyword: "private subnet → S3 → reduce cost" = Gateway Endpoint.',
               },
+              {
+                soalan: 'Satu Public NAT GW dalam AZ-A je, tapi EC2 tersebar multi-AZ. Cross-AZ traffic naikkan kos. Paling cost-effective + kekal internet access?',
+                jebakan: 'Create PRIVATE NAT Gateway (option C/D) — sebab "private" bunyi macam murah/jimat. Salah: Private NAT GW langsung TAK boleh keluar internet (no IGW route), dia untuk VPC-to-VPC / on-prem private routing je.',
+                betul: 'Deploy SATU Public NAT Gateway PER AZ dalam PUBLIC subnet AZ tu sendiri. Traffic stay dalam AZ → eliminate cross-AZ data charge + kekal internet. Keyword: "cross-AZ cost" + "maintain internet access" → NAT GW per AZ (public), BUKAN private NAT GW.',
+              },
             ],
             scenario: '"Private subnet EC2 perlu access internet tapi tak nak exposed" → NAT Gateway. Letak NAT GW dalam public subnet, route private subnet 0.0.0.0/0 → NAT GW.',
             compare: {
