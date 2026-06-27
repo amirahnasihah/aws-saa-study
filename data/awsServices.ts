@@ -2102,14 +2102,14 @@ export const domains: DomainData[] = [
           {
             shortName: 'VPC Endpoints',
             fullName: 'VPC Endpoints (Gateway & Interface)',
-            ingat: '"Highway terus ke AWS services — tanpa internet, tanpa NAT fees"',
+            ingat: 'Sepasang akronim poket: "GD Free" = Gateway → DynamoDB + S3, FREE, Route Table | "IP Paid" = Interface → PrivateLink/Pelbagai servis, PAID, ENI. Habis 100% skop VPC Endpoints.',
             gunaUntuk: 'Access S3/DynamoDB (free) atau AWS services lain (paid) dari private subnet secara private',
             fungsi: 'Tiga jenis: Gateway Endpoint (S3 + DynamoDB, free, guna route table), Interface Endpoint (services lain via PrivateLink, ada ENI dalam subnet, berbayar), dan Gateway Load Balancer Endpoint/GWLBe (salurkan traffic ke inline security appliance). Traffic tak keluar ke internet langsung — lebih selamat dan murah (jimat NAT GW data fees). PENTING: PrivateLink bukan saja untuk GUNA service orang — kau pun boleh DEDAH service sendiri ke VPC/customer lain (Endpoint Service + NLB) tanpa VPC Peering.',
             sebabApa: 'Wujud sebab tanpa endpoint, private subnet nak cakap dengan S3/DynamoDB/SSM kena lalu NAT Gateway → IGW → internet (public path) → bayar NAT per-GB + traffic keluar internet (kurang selamat). VPC Endpoint bagi laluan PRIVATE terus ke AWS service dalam network AWS — Gateway Endpoint (S3/DynamoDB) percuma jimat NAT fees, Interface Endpoint (PrivateLink) untuk service lain. Bonus: boleh kunci S3 bucket supaya HANYA terima dari endpoint ni (compliance).',
             contohGuna: 'EC2 private subnet banyak upload ke S3. Tanpa endpoint: bayar NAT GW per GB. Dengan S3 Gateway Endpoint (free): traffic terus dalam AWS network.',
             sifir: [
               '"GD Free" → Gateway Endpoint = S3 + DynamoDB SAHAJA, percuma, guna route table',
-              'Interface Endpoint = semua service lain (ECR/SSM/KMS/SQS…), ada ENI, berbayar (PrivateLink)',
+              '"IP Paid" → Interface Endpoint = PrivateLink, Pelbagai service (ECR/SSM/KMS/SQS…), ada ENI, berbayar (per-jam + per-GB)',
               'Gateway Endpoint = in-VPC only. Interface Endpoint = boleh dari on-prem (VPN/DX) sebab ada DNS+ENI',
               'aws:sourceVpce dalam bucket policy = kunci S3 terima dari satu endpoint je',
               'Connectivity ≠ Authorization: route betul ≠ S3 terima; bucket policy boleh DENY walaupun network sampai',
