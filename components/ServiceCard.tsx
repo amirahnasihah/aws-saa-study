@@ -1,6 +1,6 @@
 'use client'
 
-import { ServiceCard as ServiceCardData, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
+import { ServiceCard as ServiceCardData, ColorCategory, categoryStyles, domainPill, serviceSlug } from '@/data/awsServices'
 import Link from 'next/link'
 import { useBookmarksCtx } from './BookmarksContext'
 
@@ -8,10 +8,12 @@ interface ServiceCardProps {
   service: ServiceCardData
   category: ColorCategory
   sectionId: string
+  domainId: string
 }
 
-export default function ServiceCard({ service, category, sectionId }: ServiceCardProps) {
+export default function ServiceCard({ service, category, sectionId, domainId }: ServiceCardProps) {
   const styles = categoryStyles[category]
+  const pill = domainPill[domainId]
   const { isBookmarked, toggle } = useBookmarksCtx()
   const bookmarked = isBookmarked(service.shortName)
 
@@ -23,8 +25,15 @@ export default function ServiceCard({ service, category, sectionId }: ServiceCar
       {/* top row: name + mnemonic + bookmark */}
       <div className="flex items-start justify-between gap-3 flex-wrap mb-2">
         <div>
-          <span className={`font-space-mono text-[1rem] font-bold ${styles.title}`}>{service.shortName}</span>
-          <span className="font-space-mono text-[0.68rem] text-aws-muted ml-2">{service.fullName}</span>
+          {pill && (
+            <span className={`inline-block font-space-mono text-[0.55rem] uppercase tracking-[0.1em] border rounded-full px-2 py-0.5 mb-1 ${pill.cls}`}>
+              {pill.label}
+            </span>
+          )}
+          <div>
+            <span className={`font-space-mono text-[1rem] font-bold ${styles.title}`}>{service.shortName}</span>
+            <span className="font-space-mono text-[0.68rem] text-aws-muted ml-2">{service.fullName}</span>
+          </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
           <span className="text-[0.72rem] text-aws-muted italic">{service.ingat}</span>

@@ -64,7 +64,7 @@ export default function LearnPage() {
                   </div>
 
                   {section.services.map((service) => (
-                    <LearnCard key={service.shortName} service={service} category={section.category} sectionId={section.id} />
+                    <LearnCard key={service.shortName} service={service} category={section.category} sectionId={section.id} domainId={domain.id} />
                   ))}
                 </div>
               )

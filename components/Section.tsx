@@ -4,9 +4,10 @@ import ServiceCard from './ServiceCard'
 
 interface SectionProps {
   section: SectionData
+  domainId: string
 }
 
-export default function Section({ section }: SectionProps) {
+export default function Section({ section, domainId }: SectionProps) {
   const styles = categoryStyles[section.category]
 
   return (
@@ -25,7 +26,7 @@ export default function Section({ section }: SectionProps) {
       </div>
 
       {section.services.map((service) => (
-        <ServiceCard key={service.shortName} service={service} category={section.category} sectionId={section.id} />
+        <ServiceCard key={service.shortName} service={service} category={section.category} sectionId={section.id} domainId={domainId} />
       ))}
     </section>
   )

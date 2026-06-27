@@ -145,6 +145,19 @@ export const categoryStyles: Record<
   tools:       { title: 'text-c5', accent: 'bg-c5',  keyword: 'text-c5 border-c5/20 bg-c5/5',   nav: 'text-c5 border-c5/20',   scenario: 'bg-c5/5 border-c5/15' },
 }
 
+// SAA-C03 exam-domain pill shown on every card. The domain is known structurally
+// (each card lives under domains[].sections[].services[]) so renderers derive the
+// badge from the domain id rather than storing it on all 150+ cards. Colours cue
+// the four exam pillars; framework/extras get a muted neutral.
+export const domainPill: Record<string, { label: string; cls: string }> = {
+  domain1: { label: 'D1 · Secure', cls: 'text-rose-300 border-rose-400/30 bg-rose-400/10' },
+  domain2: { label: 'D2 · Resilient', cls: 'text-sky-300 border-sky-400/30 bg-sky-400/10' },
+  domain3: { label: 'D3 · High-Performing', cls: 'text-emerald-300 border-emerald-400/30 bg-emerald-400/10' },
+  domain4: { label: 'D4 · Cost-Optimized', cls: 'text-amber-300 border-amber-400/30 bg-amber-400/10' },
+  'domain-well-architected': { label: 'Framework · all domains', cls: 'text-violet-300 border-violet-400/30 bg-violet-400/10' },
+  'domain-extras': { label: 'Extra · not in exam', cls: 'text-aws-muted border-white/15 bg-white/5' },
+}
+
 export const domains: DomainData[] = [
   {
     id: 'domain1',
@@ -5306,7 +5319,8 @@ export const domains: DomainData[] = [
             sifir: ["CloudFormation FREE — bayar hanya resource yang dibuat (EC2/RDS/S3), stacks & StackSets percuma", "Change Set = PREVIEW perubahan sebelum apply; Drift Detection = detect perubahan manual luar CFN", "Mappings = static lookup (region→AMI); Outputs+Fn::ImportValue = cross-stack ref; Parameters = user input", "cfn-init = install packages dari metadata; cfn-signal = hantar SUCCESS/FAIL; cfn-hup = re-run bila metadata berubah", "DeletionPolicy: Retain = resource KEKAL walau stack dipadam (untuk RDS/S3)", "Nested Stacks = reusable component (VPC/security layer); StackSets = deploy multi-account/region", "Stack update gagal → auto-ROLLBACK ke state lama (default)"],
             perangkap: [{"soalan": "Satu CloudFormation template untuk banyak region, auto-pilih AMI ID betul ikut region. Guna apa?", "umpan": "Parameters — sangka user kena input AMI ID setiap region.", "betul": "Mappings (static region→AMI lookup) atau Lambda-backed custom resource (dynamic lookup SSM). Bukan Parameters (manual). Keyword: 'region-specific AMI' → Mappings/custom resource."}, {"soalan": "Nak detect kalau ada orang ubah resource stack secara MANUAL via console. Feature?", "umpan": "Change Set — sangka ia tunjuk perubahan yang dah berlaku.", "betul": "Drift Detection. Change Set = preview perubahan SEBELUM apply; Drift = detect perubahan manual yang dah terjadi di luar CFN. Keyword: 'manual console changes' → Drift Detection."}, {"soalan": "Padam stack tapi nak data RDS/S3 KEKAL (jangan lenyap). Macam mana?", "umpan": "Backup manual dulu sebelum delete stack — leceh + boleh terlupa.", "betul": "Set DeletionPolicy: Retain pada resource tu. Stack dipadam, resource kekal. Keyword: 'retain data on stack deletion' → DeletionPolicy: Retain."}],
             contohGuna: 'Deploy EC2 + S3 + RDS sekaligus dari satu template YAML/JSON, replicate environment dev/staging/prod',
-            compare: {
+            compare: [
+              {
               label: 'CloudFormation vs Terraform vs Elastic Beanstalk',
               headers: ['Aspect', 'CloudFormation', 'Terraform', 'Elastic Beanstalk'],
               rows: [
@@ -5317,7 +5331,19 @@ export const domains: DomainData[] = [
                 ['Keyword', '"AWS-only IaC, no extra cost"', '"multi-cloud / satu tool semua"', '"deploy web app cepat, jangan urus infra"'],
               ],
               takeaway: 'AWS-only IaC + percuma → CloudFormation. Multi-cloud satu tool → Terraform. Deploy app tanpa fikir infra → Elastic Beanstalk (dia sebenarnya guna CloudFormation di bawah hood).',
-            },
+              },
+              {
+                label: 'Anatomy template — 4 bahagian (Parameters vs Mappings vs Outputs vs Conditions)',
+                headers: ['Bahagian', 'Apa dia', 'Nilai datang dari mana', 'Exam keyword'],
+                rows: [
+                  ['Parameters', 'Input DINAMIK masa launch stack (user pilih env/saiz)', 'User taip/pilih masa deploy', '"user chooses env / instance size"'],
+                  ['Mappings', 'Lookup table STATIC dalam template (region → AMI ID)', 'Hardcoded dalam template, no input', '"region-specific AMI / static lookup"'],
+                  ['Outputs', 'EXPORT value keluar stack untuk stack lain guna', 'Dari resource yang stack ni cipta', '"share value between stacks → Fn::ImportValue"'],
+                  ['Conditions', 'Cipta resource SECARA bersyarat (if prod → buat X)', 'Dinilai dari Parameters/Mappings', '"create resource only if / conditional"'],
+                ],
+                takeaway: 'Parameters = INPUT masa launch · Mappings = LOOKUP static (region→AMI) · Outputs = EXPORT keluar (Fn::ImportValue) · Conditions = IF/bersyarat. INGAT exam: "region-specific AMI" → Mappings; "share between stacks" → Outputs; "user picks env" → Parameters; "create only when prod" → Conditions.',
+              },
+            ],
             mermaid: {
               label: 'CloudFormation = manual IKEA untuk infra (analogi)',
               source: `flowchart TD

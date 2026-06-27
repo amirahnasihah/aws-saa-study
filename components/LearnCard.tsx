@@ -1,4 +1,4 @@
-import { ServiceCard, CompareTable, FlowDiagram, MermaidSpec, CardImage, TrapQuestion, DiagramTone, ColorCategory, categoryStyles, serviceSlug } from '@/data/awsServices'
+import { ServiceCard, CompareTable, FlowDiagram, MermaidSpec, CardImage, TrapQuestion, DiagramTone, ColorCategory, categoryStyles, domainPill, serviceSlug } from '@/data/awsServices'
 import GlossaryText from './GlossaryText'
 import MermaidDiagram from './ai/MermaidDiagram'
 
@@ -6,6 +6,7 @@ interface LearnCardProps {
   service: ServiceCard
   category: ColorCategory
   sectionId: string
+  domainId: string
 }
 
 // Box border/text per tone — literal classes so Tailwind keeps them at build time.
@@ -186,8 +187,9 @@ function PerangkapBlock({ traps }: { traps: TrapQuestion[] }) {
   )
 }
 
-export default function LearnCard({ service, category, sectionId }: LearnCardProps) {
+export default function LearnCard({ service, category, sectionId, domainId }: LearnCardProps) {
   const styles = categoryStyles[category]
+  const pill = domainPill[domainId]
 
   return (
     <article id={serviceSlug(sectionId, service.shortName)} className="relative bg-aws-card border border-aws-border rounded-xl mb-4 scroll-mt-20 transition-all duration-200 hover:border-white/12 target:ring-2 target:ring-c1/50">
@@ -198,6 +200,11 @@ export default function LearnCard({ service, category, sectionId }: LearnCardPro
         {/* heading row */}
         <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
           <div>
+            {pill && (
+              <span className={`inline-block font-space-mono text-[0.55rem] uppercase tracking-[0.1em] border rounded-full px-2 py-0.5 mb-1.5 ${pill.cls}`}>
+                {pill.label}
+              </span>
+            )}
             <h3 className={`font-space-mono text-base font-bold ${styles.title}`}>{service.shortName}</h3>
             <p className="font-space-mono text-[0.7rem] text-aws-muted">{service.fullName}</p>
           </div>

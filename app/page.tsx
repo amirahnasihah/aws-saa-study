@@ -35,7 +35,7 @@ export default function Home() {
             <DomainHeader domain={domain} />
 
             {domain.sections.map((section) => (
-              <Section key={section.id} section={section} />
+              <Section key={section.id} section={section} domainId={domain.id} />
             ))}
           </div>
         ))}
