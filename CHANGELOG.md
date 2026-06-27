@@ -5,6 +5,39 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 
 ---
 
+## 2026-06-27
+
+- **refactor** Trap-question field renamed jebakan → umpan (proper Bahasa Melayu) across awsServices data model + LearnCard
+- **feat** Recall scaffold on all Deep Notes cards — sebabApa, sifir, perangkap on every service card for exam-pressure recall
+- **feat** Deep Notes §6 Database gap-fill — compare tables + analogy mermaids (Aurora, DynamoDB, RDS, ElastiCache, etc.)
+- **feat** Deep Notes §9 Networking — NAT GW (shared vs dedicated, no Stop/Start, IPv6/EIGW, conn limits, pricing), VPC Endpoints/PrivateLink mermaid, SG vs NACL intra-subnet traps, VPC Packet Journey card, EC2 IP types + networking analogies
+- **feat** Deep Notes §8 Mgmt + S3 Access Control; Secrets Manager (custom Lambda rotation, private VPC endpoint trap)
+- **feat** Foundational comparison tables — EC2 Fleet types, scheduling, block/file/object storage, SQL vs NoSQL; Step Functions vs SQS/Batch/Glue
+- **feat** Practice scenarios: KMS multi-region, RDS Proxy + Lambda, ACM cert validation, async S3 file upload, e-commerce ALB configuration
+- **feat** EC2 cards — Hibernation Stop/Start trap + sizing formula; Spot standby analogy; ASG Mixed Instances perangkap
+- **feat** Cheat Sheet/LearnCard: D1–D4 domain pills on ServiceCard + LearnCard via domainId props
+- **feat** deepNotesLinkIndex searchBlob expanded — richer AI internal-link matching for IAM, NAT GW, hibernation topics
+- **feat** STUDY-CHECKLIST.md — detailed SAA-C03 exam requirements and AWS concept cross-references
+- **chore** CLAUDE.md — Mermaid syntax rules for Deep Notes authoring; NACL rule numbers clarified as priorities not codes
+- **feat** Glossary: ECMP, VGW, TGW, Private NAT GW, ephemeral ports, Fault tolerance terms
+- **fix** Mermaid label parsing for edge cases in LearnCard renderer
+
+## 2026-06-26
+
+- **feat** Recall scaffold (sebabApa/sifir/perangkap) on §5 Security, Networking, multi-account, §9 routing/VPC, D2 resilience, SQS/SNS/Kinesis cards
+- **feat** §7 ML — AI services decision-tree mermaid; §8 Mgmt — Compute Optimizer FREE, Trusted Advisor 7-check/support-tier pricing
+- **feat** §5 Security analogies — Inspector, Macie, CloudHSM; ACM + IAM Identity Center enrichment
+- **feat** §6 Aurora Serverless enrichment; AWS Batch full recipe + Lambda Food Truck analogy
+- **feat** NACL/SG visual analogies + ephemeral ports glossary
+- **fix** Next 16 middleware — valid Headers instance for Supabase auth (fixes edge runtime crash on protected routes)
+
+## 2026-06-25
+
+- **feat** Deep Notes §11 App Integration, §12 Containers (ECS anatomy), §14 Cost Mgmt enrichments
+- **feat** CLAUDE.md + STUDY-CHECKLIST — expanded AWS pricing reference table for exam cost-optimization questions
+- **feat** STUDY-CHECKLIST + awsServices formatting — enhanced diagrams and section structure
+- **fix** OnThisPage responsive classes on Cheat Sheet TOC
+
 ## 2026-06-23
 
 - **chore** Deep Notes authoring standard codified in CLAUDE.md — 6-ingredient recipe (anatomy, comparison tables, mermaid, memory aids, exam traps, sources + glossary) for every awsServices/scenarios enrichment

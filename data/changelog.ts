@@ -15,6 +15,48 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    id: '2026-06-27',
+    date: '2026-06-27',
+    changes: [
+      { type: 'refactor', text: 'Trap-question field renamed jebakan → umpan (proper Bahasa Melayu) across awsServices data model + LearnCard' },
+      { type: 'feat', text: 'Recall scaffold on all Deep Notes cards — sebabApa, sifir, perangkap on every service card for exam-pressure recall' },
+      { type: 'feat', text: 'Deep Notes §6 Database gap-fill — compare tables + analogy mermaids (Aurora, DynamoDB, RDS, ElastiCache, etc.)' },
+      { type: 'feat', text: 'Deep Notes §9 Networking — NAT GW (shared vs dedicated, no Stop/Start, IPv6/EIGW, conn limits, pricing), VPC Endpoints/PrivateLink mermaid, SG vs NACL intra-subnet traps, VPC Packet Journey card, EC2 IP types + networking analogies' },
+      { type: 'feat', text: 'Deep Notes §8 Mgmt + S3 Access Control; Secrets Manager (custom Lambda rotation, private VPC endpoint trap)' },
+      { type: 'feat', text: 'Foundational comparison tables — EC2 Fleet types, scheduling, block/file/object storage, SQL vs NoSQL; Step Functions vs SQS/Batch/Glue' },
+      { type: 'feat', text: 'Practice scenarios: KMS multi-region, RDS Proxy + Lambda, ACM cert validation, async S3 file upload, e-commerce ALB configuration' },
+      { type: 'feat', text: 'EC2 cards — Hibernation Stop/Start trap + sizing formula; Spot standby analogy; ASG Mixed Instances perangkap' },
+      { type: 'feat', text: 'Cheat Sheet/LearnCard: D1–D4 domain pills on ServiceCard + LearnCard via domainId props' },
+      { type: 'feat', text: 'deepNotesLinkIndex searchBlob expanded — richer AI internal-link matching for IAM, NAT GW, hibernation topics' },
+      { type: 'feat', text: 'STUDY-CHECKLIST.md — detailed SAA-C03 exam requirements and AWS concept cross-references' },
+      { type: 'chore', text: 'CLAUDE.md — Mermaid syntax rules for Deep Notes authoring; NACL rule numbers clarified as priorities not codes' },
+      { type: 'feat', text: 'Glossary: ECMP, VGW, TGW, Private NAT GW, ephemeral ports, Fault tolerance terms' },
+      { type: 'fix', text: 'Mermaid label parsing for edge cases in LearnCard renderer' },
+    ],
+  },
+  {
+    id: '2026-06-26',
+    date: '2026-06-26',
+    changes: [
+      { type: 'feat', text: 'Recall scaffold (sebabApa/sifir/perangkap) on §5 Security, Networking, multi-account, §9 routing/VPC, D2 resilience, SQS/SNS/Kinesis cards' },
+      { type: 'feat', text: '§7 ML — AI services decision-tree mermaid; §8 Mgmt — Compute Optimizer FREE, Trusted Advisor 7-check/support-tier pricing' },
+      { type: 'feat', text: '§5 Security analogies — Inspector, Macie, CloudHSM; ACM + IAM Identity Center enrichment' },
+      { type: 'feat', text: '§6 Aurora Serverless enrichment; AWS Batch full recipe + Lambda Food Truck analogy' },
+      { type: 'feat', text: 'NACL/SG visual analogies + ephemeral ports glossary' },
+      { type: 'fix', text: 'Next 16 middleware — valid Headers instance for Supabase auth (fixes edge runtime crash on protected routes)' },
+    ],
+  },
+  {
+    id: '2026-06-25',
+    date: '2026-06-25',
+    changes: [
+      { type: 'feat', text: 'Deep Notes §11 App Integration, §12 Containers (ECS anatomy), §14 Cost Mgmt enrichments' },
+      { type: 'feat', text: 'CLAUDE.md + STUDY-CHECKLIST — expanded AWS pricing reference table for exam cost-optimization questions' },
+      { type: 'feat', text: 'STUDY-CHECKLIST + awsServices formatting — enhanced diagrams and section structure' },
+      { type: 'fix', text: 'OnThisPage responsive classes on Cheat Sheet TOC' },
+    ],
+  },
+  {
     id: '2026-06-23',
     date: '2026-06-23',
     changes: [
