@@ -222,6 +222,11 @@ export const domains: DomainData[] = [
                 umpan: 'Bagi developer kuasa iam:CreateRole je, kemudian audit manual lepas tu / harap mereka tak silap. Atau guna SCP. Nampak betul sebab "had kuasa". SALAH: tanpa cap, developer boleh attach AdministratorAccess pada role ciptaan dia → escalate. SCP pula apply ke SELURUH account, bukan cap role ciptaan developer secara spesifik.',
                 betul: 'Permissions Boundary — attach managed policy sebagai boundary, dan guna IAM condition (iam:PermissionsBoundary) supaya developer WAJIB attach boundary tu pada mana-mana role dia cipta. Role ciptaan tak boleh lebih kuasa dari boundary, walau policy kata Admin. Keyword "delegate role/permission creation safely / cap max permission of created entities" → Permissions Boundary, BUKAN SCP (itu siling account), BUKAN audit manual.',
               },
+              {
+                soalan: 'Kau bagi satu AWS service (cth SNS / CloudWatch / SES) satu role untuk akses bucket S3 kau. Tapi kau risau service tu "tertipu" hantar data ke / baca dari bucket pihak ketiga yang menyamar guna ARN kau. Macam mana halang silap-pegang merentas-service ni (Confused Deputy)?',
+                umpan: 'Buat role berasingan untuk tiap pemanggil, atau harap ARN je dah cukup unik. Nampak betul sebab "asingkan role". SALAH: tanpa syarat, AWS service (si deputy) boleh diperdaya guna kuasa kau bagi pihak ketiga — ARN sahaja tak buktikan SIAPA account yang betul-betul memanggil.',
+                betul: 'Confused Deputy protection — dalam ROLE TRUST POLICY, tambah condition aws:SourceArn (resource spesifik yang dibenarkan trigger) dan/atau aws:SourceAccount (account ID yang dibenarkan). Service cuma boleh assume role bila request betul-betul datang dari ARN/account kau. Keyword "prevent confused deputy / cross-service impersonation / restrict which account/resource can use this role" → aws:SourceArn + aws:SourceAccount dalam trust policy.',
+              },
             ],
             detailsLabel: 'IAM — komponen utama',
             storageDetails: 'Principal → entiti yang hantar request (User, Role, atau AWS service). Hanya Principal boleh "buat" sesuatu\nUser → identiti KEKAL untuk 1 orang/app. Ada credentials sendiri (password + access keys long-term)\nGroup → bakul untuk kumpul Users. BUKAN identity — tak boleh login, tak boleh jadi Principal. Attach policy kat sini (best practice)\nRole → identiti SEMENTARA yang di-assume. Tiada long-term creds — dapat temp creds via STS yang auto-expire\nPolicy → JSON Allow/Deny. Identity-based (attach kat User/Group/Role) atau Resource-based (attach kat S3/SQS/KMS)\nPermission Boundary → siling MAKSIMUM permission untuk satu entity (had, bukan bagi)\nMFA → faktor kedua (app/hardware token) selain password',
@@ -316,12 +321,17 @@ export const domains: DomainData[] = [
               'Policy evaluation logic: (1) Bila User baru created, semua request implicitly DENIED by default (kecuali ROOT). (2) Explicit Allow dalam Identity-based atau Resource-based Policy overrides implicit Deny tu. (3) Tapi explicit Deny SENTIASA override explicit Allow — Allow + Deny dalam policy = DENIED. (4) Permission Boundary, SCP, atau Session Policy boleh override (restrict) Allow dengan implicit Deny mereka sendiri — even kalau IAM Policy bagi Allow',
               'IAM Role types: (1) Service Role — role yang AWS service assume untuk buat actions on behalf of User (cth: Lambda execution role). (2) Service Role for EC2 — application dalam EC2 assume role ni untuk access resource lain (cth: S3) tanpa hardcode credentials. (3) Service-Linked Role — AWS Managed role yang predefined & linked terus ke satu service, permissions tak boleh edit oleh User. (4) Role Chaining — assume satu role, lepas tu guna credentials tu untuk assume role lain (cth: cross-account role → read-only role untuk S3)',
               'Exam: "Which is NOT a feature of IAM?" → "IAM Resource" is the trick option. Resource = target YANG DIKAWAL aksesnya oleh IAM (cth: S3 bucket, EC2), bukan komponen/feature IAM itu sendiri',
+              'Confused Deputy: bila kau bagi satu AWS service (deputy) kuasa akses resource kau, pihak ketiga boleh perdaya service tu guna kuasa kau. Lindung dengan condition aws:SourceArn (resource spesifik) + aws:SourceAccount (account ID) dalam ROLE TRUST POLICY → service cuma assume role bila request betul-betul dari ARN/account kau. Keyword "cross-service confused deputy" → aws:SourceArn/aws:SourceAccount',
+              'Least-privilege tooling — Credential Report: CSV semua IAM users + status credential (password age, access key age/last-used, MFA on/tak) → audit & buang creds lapuk, satu account satu report. Access Advisor (Last Accessed): tab pada user/role/group/policy yang tunjuk service mana TERAKHIR diakses & bila → buang permission yang tak pernah dipakai. Keyword "identify unused permissions / which services has this role actually used / audit stale credentials" → Access Advisor (last accessed) + Credential Report',
+              'PRICING: IAM sendiri PERCUMA (users, groups, roles, policies, Credential Report, Access Advisor, MFA semua tiada caj). Bayar hanya resource AWS yang diakses. (IAM Access Analyzer External = free; Unused Access = bayar per resource.)',
             ],
             docs: [
               { label: 'IAM policy evaluation logic', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html' },
               { label: 'Security best practices in IAM', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html' },
+              { label: 'Confused deputy problem (cross-service)', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/confused-deputy.html' },
+              { label: 'Credential reports & last accessed', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_getting-report.html' },
             ],
-            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation', 'IAM Role', 'IAM User', 'IAM Group', 'identity-based policy', 'resource-based policy', 'permission boundary', 'SCP', 'explicit deny', 'implicit deny', 'policy evaluation', 'service-linked role', 'role chaining', 'session policy', 'cross-account access', 'Principal', 'Principal *', 'anonymous access', 'public access', 'policy anatomy', 'Effect Action Resource', 'source account', 'destination account', 'two keys', 'double-check', 'bucket policy', 'queue policy', 'key policy', 'ABAC', 'RBAC', 'attribute-based access control', 'tag-based access', 'aws:PrincipalTag', 'aws:ResourceTag', 'scale permissions', 'permissions boundary delegate', 'iam:PermissionsBoundary', 'privilege escalation', 'delegate role creation'],
+            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation', 'IAM Role', 'IAM User', 'IAM Group', 'identity-based policy', 'resource-based policy', 'permission boundary', 'SCP', 'explicit deny', 'implicit deny', 'policy evaluation', 'service-linked role', 'role chaining', 'session policy', 'cross-account access', 'Principal', 'Principal *', 'anonymous access', 'public access', 'policy anatomy', 'Effect Action Resource', 'source account', 'destination account', 'two keys', 'double-check', 'bucket policy', 'queue policy', 'key policy', 'ABAC', 'RBAC', 'attribute-based access control', 'tag-based access', 'aws:PrincipalTag', 'aws:ResourceTag', 'scale permissions', 'permissions boundary delegate', 'iam:PermissionsBoundary', 'privilege escalation', 'delegate role creation', 'confused deputy', 'aws:SourceArn', 'aws:SourceAccount', 'cross-service', 'trust policy condition', 'credential report', 'access advisor', 'last accessed', 'unused permissions', 'stale credentials', 'pricing'],
           },
           {
             shortName: 'STS',
@@ -477,6 +487,119 @@ export const domains: DomainData[] = [
               { label: 'Seamless SSO to EC2 Windows instances', url: 'https://aws.amazon.com/blogs/security/how-to-enable-secure-seamless-single-sign-on-to-amazon-ec2-windows-instances-with-aws-sso/' },
             ],
             keywords: ['SSO', 'single sign-on', 'multiple accounts', 'federation', 'SAML 2.0', 'Active Directory', 'SaaS integration', 'EC2 Windows', 'Fleet Manager', 'permission set', 'account assignment', 'access portal', 'temporary credentials', 'workforce identity', 'Okta', 'Entra ID', 'pricing'],
+          },
+          {
+            shortName: 'IAM Access Analyzer',
+            fullName: 'AWS IAM Access Analyzer',
+            ingat: '"Pengawal yang jerit bila ada pintu kau terbuka ke luar"',
+            gunaUntuk: 'Detect resources yang ter-expose ke public / account luar / Org luar',
+            fungsi: 'Servis yang scan resource-based policy kau (S3 bucket, IAM role trust, KMS key, SQS queue, Lambda, Secrets Manager) dan bagitau mana satu boleh diakses oleh entiti LUAR zon kepercayaan kau (public internet, account lain, Org lain). Dia guna automated reasoning (bukti matematik) untuk pastikan, jadi bukan tekaan. Juga ada Unused Access Analyzer (cari role/permission tak guna) dan policy validation/generation.',
+            sebabApa: 'Wujud sebab bila kau dah set banyak resource-based policy (corak "Dua Kunci" tu), SENANG terlepas pandang satu bucket atau role yang ter-set Principal terlalu luas (cth "Principal":"*" → bocor ke seluruh internet, atau tertinggal account ID lama). Manusia tak larat audit ratusan policy satu-satu. Access Analyzer audit automatik & jerit "findings" bila ada akses keluar zon kau — supaya kau tutup sebelum kena leak. Tujuan: jaring keselamatan untuk silap konfigurasi cross-account/public.',
+            sifir: [
+              'Access Analyzer = CARI resource yang ter-expose ke LUAR (public / cross-account / cross-Org) — dia DETECT, bukan block',
+              'Zone of trust = account kau (atau Organization kau kalau set di peringkat Org). Apa-apa akses dari luar zon = "finding"',
+              'External Access Analyzer = FREE. Unused Access Analyzer (cari role/key/permission tak guna) = BAYAR per resource/bulan',
+              'Guna automated reasoning (provable security) — bukti matematik, bukan sekadar pattern match',
+              'Boleh validate policy (semasa tulis) + generate policy dari CloudTrail activity (least privilege)',
+              'Lawan: GuardDuty = detect ANCAMAN aktif (threat). Access Analyzer = detect POLICY ter-expose (config). Macie = cari data sensitif dalam S3',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat ada ratusan S3 bucket & IAM role merentas banyak account. Security mahu tahu mana satu resource yang TER-EXPOSE ke public atau account luar, secara berterusan & automatik. Servis mana?',
+                umpan: 'AWS Config dengan rules custom, atau scan manual semua bucket policy. Config nampak betul sebab "audit compliance". SALAH: Config semak STATE/compliance ikut rules yang KAU tulis, ia tak buktikan secara matematik sama ada policy itu benar-benar boleh diakses dari luar.',
+                betul: 'IAM Access Analyzer — direka khusus kenal pasti resource yang dikongsi dengan entiti luar zone of trust (public/cross-account/cross-Org), guna automated reasoning. Keyword "identify resources shared/exposed to external/public/other accounts" → IAM Access Analyzer, BUKAN Config, BUKAN GuardDuty (itu threat aktif).',
+              },
+              {
+                soalan: 'Audit jumpa banyak IAM role lama yang mungkin ada permission lebih dari keperluan (over-permissioned) & tak pernah dipakai. Nak kemas ikut least privilege. Tooling mana paling sesuai?',
+                umpan: 'Baca CloudTrail satu-satu cari role mana tak aktif. Nampak betul sebab CloudTrail ada log. SALAH: meleret & manual — CloudTrail rekod event, bukan rumuskan "role ni / permission ni tak pernah guna".',
+                betul: 'IAM Access Analyzer — Unused Access findings (kenal pasti role/permission/key tak guna) + policy generation dari aktiviti CloudTrail untuk hasilkan policy least-privilege. Keyword "find unused permissions / right-size to least privilege" → Access Analyzer Unused Access.',
+              },
+            ],
+            detailsLabel: 'IAM Access Analyzer — apa dia cari',
+            storageDetails: 'External Access findings → resource (S3/role/KMS/SQS/Lambda/Secrets) yang boleh diakses dari LUAR zone of trust (public / account lain / Org lain). FREE.\nUnused Access findings → IAM role/user, access key, atau permission yang tak digunakan dalam tempoh tertentu — untuk right-size ke least privilege. BAYAR per resource.\nPolicy validation → semak policy lawan IAM best practice + grammar semasa kau tulis (>100 checks).\nPolicy generation → jana IAM policy dari sejarah CloudTrail (apa yang principal betul-betul guna) → least privilege siap.',
+            compare: {
+              label: 'Access Analyzer vs GuardDuty vs Config vs Macie (jangan keliru — semua "security" tapi beza tugas)',
+              headers: ['Servis', 'Dia jawab soalan', 'Jenis'],
+              rows: [
+                ['IAM Access Analyzer', '"Resource mana TER-EXPOSE ke luar / permission mana tak guna?"', 'Config/policy exposure'],
+                ['Amazon GuardDuty', '"Ada ANCAMAN aktif? (mining, recon, creds curi)"', 'Threat detection (aktif)'],
+                ['AWS Config', '"Resource ni patuh rules aku & apa berubah?"', 'Compliance/config state'],
+                ['Amazon Macie', '"Ada data SENSITIF (PII) dalam S3 aku?"', 'Data classification'],
+              ],
+              takeaway: 'Access Analyzer = pintu mana terbuka ke luar (policy exposure) + permission tak guna. GuardDuty = ada penceroboh aktif. Config = patuh peraturan + sejarah perubahan. Macie = data sensitif dalam S3. Keyword "exposed/shared with external account or public" → Access Analyzer; "active threat/anomaly" → GuardDuty; "compliance/drift" → Config; "PII in S3" → Macie.',
+            },
+            mermaid: {
+              label: 'Analogi — pemeriksa keselamatan rumah cari pintu/tingkap tak berkunci',
+              source: `flowchart TD
+  ZONE["🏠 Zone of Trust<br/>(account / Organization kau)"] --> SCAN["🔦 IAM Access Analyzer<br/>periksa SEMUA policy"]
+  SCAN --> R1["🪟 S3 bucket Principal:*<br/>→ FINDING: terbuka ke PUBLIC"]
+  SCAN --> R2["🚪 IAM role trust account luar<br/>→ FINDING: cross-account access"]
+  SCAN --> R3["🔒 KMS key · SQS · Lambda<br/>policy sebut account luar<br/>→ FINDING"]
+  R1 --> FIX["🛠️ Security review setiap finding<br/>→ archive (memang sengaja)<br/>atau tutup (silap config)"]
+  R2 --> FIX
+  R3 --> FIX`,
+              caption: 'Kaitkan dengan familiar: macam upah pemeriksa keselamatan pusing rumah, dia senaraikan tiap pintu/tingkap yang terbuka ke luar (findings). Kau tengok satu-satu: kalau memang sengaja (cth memang nak share dengan vendor) → archive; kalau silap → tutup. INGAT exam: "continuously identify resources shared with external entities / public" → IAM Access Analyzer.',
+            },
+            tips: [
+              'Access Analyzer kenal pasti akses LUAR untuk: S3 buckets, IAM roles (trust policy), KMS keys, Lambda functions/layers, SQS queues, Secrets Manager secrets, dan lagi',
+              'Set analyzer di peringkat ORGANIZATION (bukan account) supaya zone of trust = seluruh Org → apa-apa akses dari luar Org baru jadi finding (akses antara account dalam Org sama tak dikira ancaman)',
+              'Findings boleh di-ARCHIVE (kalau memang sengaja expose, cth public website bucket) supaya tak asyik muncul — archive rules automate ni',
+              'Policy generation: jana IAM policy least-privilege dari CloudTrail history — jawapan bila exam tanya "right-size an over-permissioned role based on actual usage"',
+              'PRICING: External Access Analyzer = PERCUMA. Unused Access Analyzer = bayar ~$0.20 per resource dianalisis sebulan. Policy validation/generation = free.',
+              'Exam discriminator: "shared with / accessible from EXTERNAL account or public" → IAM Access Analyzer. Jangan keliru dengan GuardDuty (threat aktif) atau Config (compliance rules).',
+            ],
+            docs: [
+              { label: 'IAM Access Analyzer', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html' },
+              { label: 'Access Analyzer findings', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-findings.html' },
+            ],
+            keywords: ['IAM Access Analyzer', 'external access', 'unused access', 'zone of trust', 'public access', 'cross-account exposure', 'resource shared external', 'automated reasoning', 'provable security', 'policy validation', 'policy generation', 'least privilege', 'findings', 'archive findings', 'Access Analyzer vs GuardDuty', 'Access Analyzer vs Config', 'pricing'],
+          },
+          {
+            shortName: 'AWS RAM',
+            fullName: 'AWS Resource Access Manager',
+            ingat: '"Kongsi resource antara account — tak payah buat salinan"',
+            gunaUntuk: 'Share AWS resources merentas account / OU dalam Organization',
+            fungsi: 'Membolehkan kau KONGSI satu resource (VPC subnet, Transit Gateway, Route 53 Resolver rules, License Manager config, Aurora cluster, dll) dengan account AWS lain — tanpa buat salinan & tanpa setup IAM role per account. Owner kekal owner; account yang dikongsi (consumer) boleh GUNA resource tu terus dalam VPC mereka.',
+            sebabApa: 'Wujud sebab dalam Organizations dengan banyak account, kalau setiap account kena bina VPC + subnet + Transit Gateway sendiri = duplikasi banyak, mahal, & susah urus rangkaian. Dengan RAM, networking team buat SATU VPC/subnet/TGW di account pusat, lepas tu SHARE ke account Dev/Prod/Finance — mereka deploy EC2 terus dalam subnet kongsi tu (VPC Sharing). Tujuan: elak duplikasi infra + central network management + jimat.',
+            sifir: [
+              'RAM = SHARE resource sedia ada ke account lain (tak salin, tak duplicate)',
+              'Owner kekal owner & kawal; consumer cuma GUNA',
+              'Share dalam Organization → boleh share ke whole OU/account terus (no invite). Luar Org → consumer kena ACCEPT invitation',
+              'Boleh share: VPC subnets (VPC Sharing), Transit Gateway, Route 53 Resolver rules, License Manager, Aurora, Outposts, dll',
+              'RAM = FREE (bayar resource underlying je)',
+              'VPC Sharing (subnet kongsi) → guna RAM. Sambung 2 VPC berasingan → VPC Peering / Transit Gateway (beza konsep)',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat ada 30 account dalam Organizations. Networking team nak SEMUA account deploy EC2 ke dalam subnet yang DIURUS BERPUSAT (central VPC), tak nak tiap account bina VPC sendiri. Cara terbaik?',
+                umpan: 'Buat VPC Peering dari setiap account ke central VPC. Nampak betul sebab "sambung ke VPC pusat". SALAH: peering cuma SAMBUNG dua VPC berasingan (route antara mereka), bukan benarkan account lain deploy EC2 TERUS dalam subnet kau; 30 account = 30 peering, meleret.',
+                betul: 'AWS RAM — share subnet central VPC ke account-account tu (VPC Sharing). Mereka launch EC2 terus dalam subnet kongsi, networking team kawal central. Keyword "share subnets / centrally managed VPC / multiple accounts deploy into same VPC" → AWS RAM, BUKAN VPC Peering.',
+              },
+            ],
+            detailsLabel: 'AWS RAM — apa boleh dikongsi',
+            storageDetails: 'Resource share → bekas yang kau letak resource + senarai principal (account/OU/Org) yang dibenarkan.\nOwner account → yang MEMILIKI & urus resource; kekal kawal penuh.\nConsumer/participant account → yang dikongsikan; boleh GUNA resource (cth launch EC2 dalam subnet kongsi) tapi tak boleh ubah/padam resource.\nLazim dikongsi → VPC subnets (VPC Sharing), Transit Gateway, Route 53 Resolver rules, License Manager, Aurora, Outposts, Image Builder.',
+            compare: {
+              label: 'AWS RAM vs Resource-based policy vs VPC Peering (tiga cara "cross-account", beza tujuan)',
+              headers: ['Mekanik', 'Untuk apa', 'Contoh'],
+              rows: [
+                ['AWS RAM', 'KONGSI guna resource sedia ada ke account lain', 'Subnet, Transit Gateway, Resolver rules'],
+                ['Resource-based policy', 'BAGI account lain panggil API resource kau', 'S3 GetObject, SQS SendMessage, KMS Decrypt'],
+                ['VPC Peering / TGW', 'SAMBUNG rangkaian 2+ VPC supaya route antara mereka', 'EC2 di VPC A cakap dengan EC2 di VPC B'],
+              ],
+              takeaway: 'RAM = "guna barang aku sama-sama" (share resource). Resource-based policy = "panggil API barang aku" (grant access). Peering/TGW = "sambung wayar antara network". Keyword "share subnets/TGW/Resolver across accounts" → RAM; "let account X call my S3/SQS/KMS" → resource-based policy; "connect two VPCs" → peering/TGW.',
+            },
+            tips: [
+              'VPC Sharing (via RAM): owner share subnet, participant account launch resource (EC2, RDS, ALB) terus dalam subnet tu. Networking dikawal central, billing resource ikut account masing-masing',
+              'Dalam Organizations: enable resource sharing dengan Organizations → boleh share ke OU/account tanpa invitation. Luar Org: consumer mesti ACCEPT resource share invitation dulu',
+              'Transit Gateway selalu dikongsi via RAM supaya banyak account attach VPC mereka ke satu TGW hub central',
+              'PRICING: AWS RAM PERCUMA — tiada caj untuk berkongsi. Bayar hanya resource underlying (data transfer, TGW attachment, dll)',
+              'Exam discriminator: "centrally manage & share subnets/TGW/Resolver across many accounts" → AWS RAM. Jangan keliru: "connect separate VPCs" → Peering/TGW; "grant API access to my bucket/queue" → resource-based policy.',
+            ],
+            docs: [
+              { label: 'What is AWS RAM', url: 'https://docs.aws.amazon.com/ram/latest/userguide/what-is.html' },
+              { label: 'VPC sharing', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html' },
+            ],
+            keywords: ['AWS RAM', 'Resource Access Manager', 'share resources', 'VPC sharing', 'shared subnets', 'Transit Gateway sharing', 'Route 53 Resolver rules', 'cross-account sharing', 'resource share', 'Organizations sharing', 'central VPC', 'owner consumer', 'pricing', 'free'],
           },
           {
             shortName: 'Penetration Testing',
