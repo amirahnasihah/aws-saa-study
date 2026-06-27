@@ -1613,6 +1613,72 @@ export const domains: DomainData[] = [
             keywords: ['CIDR', 'subnet mask', 'IP addressing', '/24', '/26', '/27', '5 reserved IPs', 'usable hosts'],
           },
           {
+            shortName: 'Private/Public/Elastic IP',
+            fullName: 'EC2 IP Addresses — Private vs Public vs Elastic',
+            ingat: '"Private = borak dalam rumah (kekal). Public = alamat sewa (tukar bila Stop/Start). Elastic = alamat beli tetap (statik, boleh alih)"',
+            gunaUntuk: 'Tentukan macam mana EC2 dialamatkan — internal (Private), internet sementara (Public), atau internet statik yang tak berubah (Elastic)',
+            fungsi: 'Tiga jenis alamat IP pada EC2. Private IP = alamat dalaman auto-assign dari CIDR subnet, untuk komunikasi DALAM VPC (EC2↔EC2, EC2↔RDS) — bukan internet. Public IP = alamat internet sementara dari pool AWS, BERUBAH setiap kali Stop/Start. Elastic IP (EIP) = Public IPv4 statik yang kau "tempah & pegang" untuk akaun kau — tak berubah langsung, boleh cabut & alih ke instance lain (mask failure).',
+            sebabApa: "Tiga ni wujud sebab keperluan alamat berbeza. Private IP wujud sebab setiap EC2 perlu alamat untuk bercakap dalam VPC tanpa terdedah ke internet (DB, app server). Public IP wujud supaya instance boleh dicapai dari internet — tapi ia ephemeral (AWS recycle balik ke pool), sebab tu ia BERUBAH bila Stop/Start → tak boleh harap untuk DNS/whitelist. Elastic IP wujud untuk selesaikan masalah tu: kau perlukan alamat internet yang KEKAL (point DNS, firewall whitelist pihak ketiga) DAN boleh dialih masa server rosak — cabut EIP dari EC2 mati, cucuk ke EC2 backup, user di internet tak perasan apa-apa.",
+            sifir: ["Private IP = internal VPC, kekal sepanjang hayat EC2 (hilang bila Terminate je, BUKAN Stop/Start)", "Public IP = ephemeral, BERUBAH setiap Stop/Start (perangkap exam #1)", "Elastic IP = static public IPv4, milik akaun kau, tak berubah, boleh alih ke EC2 lain", "Nak IP internet konsisten (DNS A-record / firewall whitelist / least ops overhead) → Elastic IP, BUKAN Public IP", "EIP limit 5 per region (default; boleh minta naik)", "EIP = IPv4 sahaja (no Elastic IP untuk IPv6)", "Failover: cabut EIP dari EC2 rosak → attach ke EC2 backup (user tak perasan server bertukar)"],
+            perangkap: [{"soalan": "Aplikasi di EC2 kerap di-Stop/Start setiap hujung minggu, dan perlu alamat IP awam yang KONSISTEN untuk di-whitelist oleh firewall pihak ketiga. Pilihan dengan least operational overhead?", "umpan": "Public IP biasa + update firewall setiap kali server start — nampak 'cukup' sebab Public IP pun boleh akses internet. SALAH: Public IP BERUBAH bila Stop/Start, jadi firewall whitelist pecah setiap minggu.", "betul": "Elastic IP — keyword 'consistent/static public IP + Stop/Start + least operational overhead' = EIP. Sekali attach, IP tak berubah walau berapa kali Stop/Start."}, {"soalan": "Kau allocate beberapa Elastic IP tapi sebahagiannya tak attach ke mana-mana instance. Apa kesan?", "umpan": "Free je sebab EIP percuma bila kau ada akaun — nampak betul ikut 'rule lama' (free bila attached). SALAH: idle EIP memang dicaj, dan sejak Feb 2024 SEMUA public IPv4 dicaj.", "betul": "Kena caj $0.005/jam tiap public IPv4 (idle EIP pun kena; dulu idle je kena, sekarang semua). Fix: release EIP yang tak guna. Keyword 'idle/unattached Elastic IP' = cost waste."}],
+            detailsLabel: 'Private vs Public vs Elastic IP — anatomy',
+            storageDetails: 'Private IP → Auto-assign dari CIDR subnet masa launch (wajib ada minimum satu). Internal VPC sahaja. Kekal melekat selagi EC2 wujud; hanya lepas bila Terminate. Stop/Start TAK ubah private IP.\nPublic IP → Optional, auto-assign dari pool awam AWS bila EC2 dalam public subnet (setting "auto-assign public IP"). BERUBAH setiap Stop/Start (lepas balik ke pool, dapat baru bila start). Tak boleh dialih manual. IPv4.\nElastic IP → Allocate ke akaun kau, kekal milik kau sampai release. Associate ke instance/ENI. Static — tak berubah walau Stop/Start. Boleh disassociate & re-associate ke EC2 lain (failover). Property of ENI. Limit 5/region. IPv4 sahaja.',
+            compare: {
+              label: 'Private IP vs Public IP vs Elastic IP',
+              headers: ['Ciri', 'Private IP', 'Public IP', 'Elastic IP'],
+              rows: [
+                ['Akses', 'Internal VPC sahaja', 'Internet awam', 'Internet awam'],
+                ['Statik / kekal?', 'Ya (sepanjang hayat EC2)', '❌ Berubah bila Stop/Start', '🟢 Ya (100% statik)'],
+                ['Boleh alih ke EC2 lain?', '❌', '❌', '🟢 Boleh (disassociate → associate)'],
+                ['IPv6?', 'Ya (boleh IPv6 dalam VPC)', 'IPv4 (+ IPv6 auto)', '❌ IPv4 sahaja'],
+                ['Sesuai untuk DNS A-record?', 'Tidak (private)', '❌ Pecah bila IP berubah', '🟢 Ya — alamat tetap'],
+                ['Kos', 'Free', '$0.005/jam (sejak Feb 2024)', '$0.005/jam (attached/idle sama)'],
+              ],
+              takeaway: 'Internal je → Private IP. Internet sementara/test → Public IP (tapi ingat ia BERUBAH bila Stop/Start). Internet KEKAL (DNS, firewall whitelist, failover, least ops overhead) → Elastic IP. Discriminator exam: "consistent/static public IP across Stop/Start" → Elastic IP, BUKAN Public IP.',
+            },
+            mermaid: [
+              {
+                label: 'Decision: IP mana aku perlu?',
+                source: `flowchart TD
+    Start["🏠 EC2 perlu alamat IP — yang mana?"] --> Q1{"Perlu dicapai<br/>dari INTERNET?"}
+    Q1 -->|"Tak — internal je<br/>(EC2↔RDS, EC2↔EC2)"| PRIV["🏠 Private IP<br/>auto dari CIDR subnet<br/>kekal sepanjang hayat EC2<br/>📌 'internal VPC communication'"]
+    Q1 -->|"Ya — public-facing"| Q2{"Perlu IP yang SAMA<br/>walau Stop/Start?<br/>(DNS, firewall whitelist)"}
+    Q2 -->|"Tak — sekadar demo/test"| PUB["🏷️ Public IP<br/>auto-assign dari pool AWS<br/>BERUBAH bila Stop/Start ⚠️<br/>📌 'temporary public access'"]
+    Q2 -->|"Ya — mesti konsisten"| EIP["📌 Elastic IP (EIP)<br/>static public IPv4, milik akaun kau<br/>boleh cabut &amp; alih ke EC2 lain<br/>📌 'consistent / static public IP'"]`,
+                caption: 'INGAT exam: Public IP BERUBAH bila Stop/Start. Soalan minta "consistent / static public IP" (DNS, firewall whitelist, least operational overhead) → Elastic IP, JANGAN Public IP biasa.',
+              },
+              {
+                label: 'Analogi: alamat rumah (sewa vs beli)',
+                source: `flowchart LR
+    subgraph DALAM["🏠 Dalam rumah (VPC)"]
+      P["Private IP<br/>= nombor bilik<br/>borak sesama ahli rumah<br/>kekal selagi rumah ada"]
+    end
+    subgraph LUAR["🌍 Alamat internet"]
+      PUB["🏷️ Public IP<br/>= alamat SEWA<br/>tukar bila pindah (Stop/Start)"]
+      EIP["📌 Elastic IP<br/>= alamat BELI tetap<br/>kekal, boleh bawa pindah rumah"]
+    end
+    P -.->|"nak keluar internet (sementara)"| PUB
+    P -.->|"nak alamat tetap"| EIP`,
+                caption: 'Private = borak dalam rumah (internal). Public = alamat sewa yang berubah. Elastic = alamat beli yang tetap & boleh bawa pindah. INGAT: nak IP internet yang TAK BERUBAH → Elastic IP.',
+              },
+            ],
+            scenario: '"Consistent/static public IP walau Stop/Start (DNS, firewall whitelist)" → Elastic IP. "EC2 ke RDS dalam VPC sama" → Private IP. "Public IP hilang/tukar lepas reboot" → memang sifat Public IP, guna Elastic IP kalau nak kekal. "Idle Elastic IP membazir kos" → release EIP yang tak attach.',
+            tips: [
+              'Private IP TAK berubah bila Stop/Start — hanya hilang bila Terminate. Public IP pula BERUBAH setiap Stop/Start.',
+              'Public IP biasa TAK boleh point DNS A-record dengan selamat (link pecah bila server reboot/stop). Untuk DNS guna Elastic IP, atau lagi baik guna ALB + Route 53 Alias.',
+              'Elastic IP boleh dialih: disassociate dari EC2 rosak → associate ke EC2 sihat dalam beberapa saat = mask failure tanpa user perasan.',
+              'Associate EIP ke primary ENI → public IP sedia ada dilepas ke pool. Disassociate → dapat public IP baru automatik.',
+              'Elastic IP = IPv4 sahaja. Tiada konsep Elastic IP untuk IPv6 (IPv6 dalam AWS global-routable terus).',
+              'Limit default 5 EIP per region — kalau perlu banyak public IP statik, fikir guna NAT/ALB/NLB dulu sebelum minta naik limit.',
+              'PRICING: Sejak 1 Feb 2024, SEMUA public IPv4 dicaj $0.005/jam (~$3.60/bulan) — termasuk auto-assign Public IP DAN Elastic IP, sama ada attached atau idle. (Rule LAMA, masih kadang diuji exam: EIP free bila attached, denda bila idle.) Free tier: 750 jam public IPv4/bulan untuk 12 bulan pertama akaun baru. Private IP percuma.',
+            ],
+            docs: [
+              { label: 'Elastic IP address concepts and rules', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-eip-overview.html' },
+              { label: 'Public IPv4 addresses (EC2)', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-instance-addressing.html' },
+            ],
+            keywords: ['Private IP', 'Public IP', 'Elastic IP', 'EIP', 'static IP', 'consistent public IP', 'Stop Start IP change', 'failover IP', 'whitelist', 'DNS A record', 'internal communication', 'IPv4', 'idle Elastic IP', 'least operational overhead', 'public IPv4 charge', 'pricing'],
+          },
+          {
             shortName: 'Internet Gateway',
             fullName: 'VPC Internet Gateway (IGW)',
             ingat: '"Pintu pagar utama — dua arah, free, satu per VPC"',
