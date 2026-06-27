@@ -1933,8 +1933,13 @@ export const domains: DomainData[] = [
                 jebakan: 'Berjaya — sebab NAT Gateway secara teknikal boleh route sampai S3, connectivity ada.',
                 betul: 'GAGAL (Access Denied). Request lalu NAT→IGW (public path), bukan via vpce-123, jadi bucket policy DENY. Connectivity (boleh sampai) ≠ Authorization (dibenarkan).',
               },
+              {
+                soalan: 'EC2 perlu akses Secrets Manager secara PRIVATE (tak nak lalu public internet). Security team risau Secrets Manager perlu internet. Recommend apa?',
+                jebakan: 'NAT Gateway dalam public subnet (D) — atau Gateway Endpoint (C) sebab "VPC Endpoint untuk private access". SALAH dua-dua: NAT GW tetap lalu internet (tak selesai), Gateway Endpoint sokong S3/DynamoDB SAHAJA.',
+                betul: 'Interface VPC Endpoint (PrivateLink) untuk Secrets Manager. Letak ENI private IP dalam subnet → traffic terus dalam network AWS, tak sentuh internet. Keyword: "access AWS service (selain S3/DynamoDB) privately / tanpa internet" → Interface Endpoint.',
+              },
             ],
-            scenario: '"Access S3/DynamoDB dari private subnet tanpa internet" → Gateway VPC Endpoint (free). "Access ECR, SSM, atau services lain privately" → Interface Endpoint (PrivateLink).',
+            scenario: '"Access S3/DynamoDB dari private subnet tanpa internet" → Gateway VPC Endpoint (free). "Access ECR, SSM, Secrets Manager, KMS atau services lain privately / tanpa internet" → Interface Endpoint (PrivateLink). Jangan terpedaya NAT Gateway — NAT GW tetap lalu public internet.',
             compare: {
               label: 'Gateway vs Interface Endpoint',
               headers: ['Aspect', 'Gateway Endpoint', 'Interface Endpoint'],
@@ -1948,6 +1953,32 @@ export const domains: DomainData[] = [
               ],
               takeaway: '"GD Free" → Gateway endpoint = S3 + DynamoDB sahaja, percuma, guna route table. Semua service lain (atau access from on-prem) → Interface endpoint (PrivateLink, ENI, berbayar).',
             },
+            mermaid: [
+              {
+                label: 'Soalan exam: EC2 akses Secrets Manager tanpa internet',
+                source: `flowchart TD
+  subgraph VPC["☁️ VPC kau (private network)"]
+    EC2["🖥️ EC2<br/>app perlu DB password"]
+    ENI["🔌 Interface VPC Endpoint<br/>ENI + private IP<br/>(powered by PrivateLink)"]
+  end
+  SM["🔐 AWS Secrets Manager<br/>simpan DB credentials"]
+  NET["🌐 Public Internet"]
+  EC2 -->|"1. panggil guna private IP"| ENI
+  ENI -->|"2. PrivateLink — kabel dalaman AWS<br/>(TAK keluar internet)"| SM
+  SM -->|"3. pulangkan secret"| EC2
+  EC2 -.->|"❌ cara lama: NAT GW lalu internet<br/>(security team tak nak)"| NET`,
+                caption: 'INGAT exam: Secrets Manager API memang public endpoint, jadi tanpa endpoint EC2 kena keluar internet (lalu NAT GW/IGW). Interface VPC Endpoint letak ENI (private IP) dalam subnet kau → traffic terus ke Secrets Manager dalam network AWS, tak pernah sentuh internet. Itu jawapan A. NAT Gateway (D) tetap lalu internet = tak selesai masalah; Site-to-Site VPN (B) untuk on-prem; Gateway Endpoint (C) hanya S3/DynamoDB.',
+              },
+              {
+                label: 'Decision: Gateway vs Interface Endpoint',
+                source: `flowchart TD
+  Q["Nak akses AWS service<br/>dari VPC secara PRIVATE?"] --> T{"Service apa?"}
+  T -->|"S3 atau DynamoDB"| GW["✅ Gateway Endpoint<br/>FREE · guna route table"]
+  T -->|"Selain tu: Secrets Manager,<br/>KMS, SSM, ECR, SQS…"| IF["✅ Interface Endpoint<br/>PrivateLink · ENI · berbayar"]
+  IF --> ANS["Soalan Secrets Manager<br/>→ Interface Endpoint (jawapan A)"]`,
+                caption: 'Cara cepat: hanya DUA service guna Gateway Endpoint — S3 & DynamoDB ("GD Free"). Apa-apa service lain yang nak diakses private = Interface Endpoint (PrivateLink). Secrets Manager bukan S3/DynamoDB → mesti Interface.',
+              },
+            ],
             tips: [
               '"GD Free" — Gateway Endpoint untuk S3 + DynamoDB = PERCUMA',
               'Interface Endpoint = semua services lain (ECR, SSM, KMS...) = berbayar (ada ENI)',
