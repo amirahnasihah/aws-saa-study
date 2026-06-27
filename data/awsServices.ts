@@ -4825,6 +4825,10 @@ export const domains: DomainData[] = [
               'Visibility Timeout < masa proses → mesej muncul balik → DUPLICATE. Naikkan timeout',
               'Cross-account hantar ke queue → SQS queue policy (resource-based), bukan IAM je',
               'Long polling (WaitTime>0, max 20s) → kurangkan empty response & kos API',
+              'DLQ = SQS queue asing untuk mesej gagal. Cetus bila ReceiveCount > maxReceiveCount',
+              'Poison pill (data corrupt) → DLQ, kalau tak server pusing proses sampai bil melambung',
+              'DLQ source FIFO → DLQ kena FIFO juga; source Standard → DLQ kena Standard',
+              'Lepas fix bug → DLQ Redrive tolak balik mesej ke queue utama, tak payah tulis kod',
             ],
             perangkap: [
               {
@@ -4846,6 +4850,11 @@ export const domains: DomainData[] = [
                 soalan: 'Data lake terpusat dalam Analytics Account ada satu SQS queue. App dalam BANYAK account lain perlu hantar (SendMessage) ke queue terpusat tu. Cara paling efficient & scalable? (A) IAM policy dalam Analytics Account bagi SendMessage ke account lain, (B) SQS queue policy bagi SendMessage ke account lain, (C) IAM role dalam Analytics Account, account lain assume role tu untuk hantar, (D) Both B and C valid & sama efficient.',
                 umpan: 'D "Both B and C valid" paling menipu — sebab C (assume role) MEMANG boleh jadi (account lain assume role → dapat temp creds → SendMessage), jadi nampak "dua-dua betul". TAPI exam tanya paling EFFICIENT & SCALABLE: C paksa setiap account buat STS AssumeRole dulu (extra hop + kena urus trust setiap account) → meleret bila account makin ramai. A pula salah konsep: IAM policy dalam Analytics Account urus apa principal Analytics SENDIRI boleh buat — ia TAK boleh "bagi" account lain akses; cross-account grant kena datang dari sisi resource.',
                 betul: 'B — SQS queue policy (resource-based) pada queue, terus sebut Principal account lain + Allow SendMessage. Satu policy kat queue cover semua account (boleh guna kondisi aws:PrincipalOrgID untuk seluruh Org sekali gus), takde assume-role hop. Keyword "allow OTHER accounts to send to centralized SQS" → SQS queue policy (resource-based), BUKAN IAM policy sahaja, BUKAN assume-role (over-engineered untuk hantar mesej je).',
+              },
+              {
+                soalan: 'Satu mesej dalam queue ada data corrupt — consumer cuba proses, crash, mesej balik queue, cuba lagi, crash lagi… berulang sampai blok mesej lain & bil naik. Kau nak isolate mesej bermasalah tu untuk debug tanpa ganggu trafik live. Apa setup terbaik?',
+                umpan: 'Naikkan Visibility Timeout supaya mesej tu "rehat" lama-lama, atau tambah logik retry + try/catch dalam kod consumer. Nampak betul sebab "uruskan mesej gagal". SALAH: naikkan visibility timeout cuma LAMBATKAN mesej muncul balik — ia tetap balik & crash lagi (loop tak putus). Retry dalam kod pun masih pusing benda corrupt yang sama (poison pill) selamanya.',
+                betul: 'Setup Dead-Letter Queue (DLQ) + set maxReceiveCount (cth 3) pada source queue. Lepas mesej gagal diproses 3 kali (ReceiveCount > maxReceiveCount), SQS AUTO pindahkan ia keluar dari queue utama masuk DLQ → trafik live jalan semula, developer bedah mesej dalam DLQ asingan. Keyword "corrupt/poison message blok queue + isolate untuk debug" → DLQ + maxReceiveCount, BUKAN visibility timeout, BUKAN retry dalam kod.',
               },
             ],
             storageDetails: 'Visibility Timeout → Message invisible semasa diproses (max 12 jam). Jika consumer mati sebelum siap → message visible semula selepas timeout\nDelay Seconds → Delay sebelum message pertama kali visible dalam queue (max 15 minit)\nDead Letter Queue (DLQ) → Message yang gagal diproses N kali dihantar ke DLQ untuk debug\nMessage Retention → Default 4 hari, max 14 hari',
@@ -4873,6 +4882,20 @@ export const domains: DomainData[] = [
   MQ["🔌 Amazon MQ = adapter palam lama<br/>barang lama (ActiveMQ/RabbitMQ)<br/>masuk rumah baru tanpa tukar plug"]`,
                 caption: 'Kaitkan dengan familiar: pos = beratur & pull (SQS), pembesar suara surau = broadcast serentak (SNS), switchboard = route ikut jenis (EventBridge), adapter palam = sambung legacy ke cloud (Amazon MQ). INGAT exam: "decouple/buffer" → SQS, "notify many/fan-out" → SNS, "route by content/schedule" → EventBridge, "migrate existing broker" → Amazon MQ.',
               },
+              {
+                label: 'DLQ — aliran mesej gagal + analogi Kotak Surat Mati',
+                source: `flowchart TD
+  APP["📤 Producer hantar mesej"] --> MAIN["📮 Queue Utama"]
+  MAIN -->|"consumer amik"| PROC["⚙️ Consumer proses<br/>(ReceiveCount++)"]
+  PROC -->|"✅ berjaya → DeleteMessage"| DONE["🗑️ Mesej hilang (selesai)"]
+  PROC -->|"❌ crash / error → mesej balik queue"| MAIN
+  MAIN --> CHK{"ReceiveCount &gt;<br/>maxReceiveCount?<br/>(cth 3)"}
+  CHK -->|"Belum"| PROC
+  CHK -->|"Dah cecah"| DLQ["☠️ Dead-Letter Queue<br/>(Kotak Surat Mati)"]
+  DLQ --> DEV["🔍 Developer bedah mesej<br/>cari punca bug"]
+  DEV -->|"lepas fix → DLQ Redrive"| MAIN`,
+                caption: 'Analogi: posmen (consumer) cuba hantar surat rosak 3 kali (maxReceiveCount), asyik gagal → ketua pos lempar masuk Kotak Surat Mati (DLQ) supaya surat lain tak tersekat; pegawai siasat (developer) buka kotak kaji punca, lepas betul tekan Redrive hantar balik. INGAT exam: "mesej corrupt/poison pill blok queue, nak isolate & debug" → DLQ + maxReceiveCount; "hantar balik lepas fix" → Redrive.',
+              },
             ],
             compare: {
               label: 'Standard vs FIFO queue',
@@ -4896,13 +4919,19 @@ export const domains: DomainData[] = [
               'Batch operations: ReceiveMessage gets up to 10 messages per call; DeleteMessageBatch deletes up to 10 per call. Use batching to reduce API call count and costs.',
               'SNS→SQS→Lambda pattern: add SQS queue between SNS and Lambda for reliable async processing. If Lambda fails transiently, message waits in SQS and is retried — no message loss, no manual intervention.',
               'SQS FIFO + Lambda: message ordering within MessageGroupId guaranteed. Requires event source mapping (ESM) to connect Lambda to FIFO queue.',
+              'DLQ (Dead-Letter Queue): setup via RedrivePolicy pada SOURCE queue, set maxReceiveCount. Bila ReceiveCount > maxReceiveCount → SQS auto-move mesej ke DLQ. DLQ sendiri queue SQS biasa.',
+              'Poison pill = mesej corrupt yang asyik gagal proses. Tanpa DLQ → consumer pusing proses benda sama berulang → kos & throughput terbakar. DLQ keluarkan ia supaya queue utama jalan semula.',
+              'DLQ jenis mesti SAMA dengan source: source FIFO → DLQ FIFO; source Standard → DLQ Standard. Salah jenis = tak boleh attach.',
+              'DLQ Redrive: lepas developer fix bug, guna Redrive (console / StartMessageMoveTask API) tolak balik mesej dari DLQ ke queue utama untuk reproses — tak perlu tulis kod pindah manual.',
+              'DLQ retention: kira dari masa mesej MASUK queue ASAL (bukan masa masuk DLQ). Set retention DLQ lebih panjang (cth 14 hari) supaya ada masa debug sebelum mesej luput.',
+              'Exam trigger: "messages failing repeatedly block the queue" / "isolate & analyze corrupted messages separately" → Dead-Letter Queue + tune maxReceiveCount (BUKAN naikkan visibility timeout, BUKAN retry dalam kod).',
             ],
             docs: [
               { label: 'SQS — visibility timeout', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html' },
               { label: 'SQS — short vs long polling', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html' },
               { label: 'SQS — dead-letter queues', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html' },
             ],
-            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push', 'S3 SQS decouple', 'async file upload', 'burst traffic buffer', 'store file S3 not DynamoDB', 'temporary file storage'],
+            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push', 'S3 SQS decouple', 'async file upload', 'burst traffic buffer', 'store file S3 not DynamoDB', 'temporary file storage', 'maxReceiveCount', 'RedrivePolicy', 'DLQ redrive', 'poison pill', 'failed messages', 'isolate corrupted messages', 'dead-letter queue'],
           },
           {
             shortName: 'SNS',
