@@ -5443,6 +5443,18 @@ export const domains: DomainData[] = [
             perangkap: [{"soalan": "Team nak deploy React app cepat dengan CI/CD + auth + GraphQL backend tanpa urus infra. Service?", "umpan": "Elastic Beanstalk — sangka 'deploy app = Beanstalk'.", "betul": "Amplify. Beanstalk untuk backend server app (Node/Java/Docker), bukan frontend/fullstack JS. Keyword: 'React/Next.js' + 'CI/CD' + 'fullstack' → Amplify."}, {"soalan": "Host static website paling murah, tak perlu CI/CD atau backend. Amplify?", "umpan": "Amplify — sangka Amplify = cara standard host web.", "betul": "S3 + CloudFront. Untuk static murah tanpa pipeline/backend, S3+CF cukup. Amplify bila perlu CI/CD + backend. Keyword: 'static website' + 'cheap' → S3+CloudFront."}],
             contohGuna: 'React/Next.js app → connect GitHub repo ke Amplify → auto build + deploy ke CDN. Add auth dengan Cognito, API dengan AppSync, storage dengan S3 — semua managed.',
             scenario: '"Developer team wants to quickly deploy a React web app with CI/CD, authentication, and a GraphQL backend without managing infrastructure" → Amplify. Bukan EC2 + manual setup. Bukan Elastic Beanstalk (yang untuk traditional server apps).',
+            compare: {
+              label: 'Firebase ↔ Amplify — kembar BaaS (kaitkan untuk ingat)',
+              headers: ['Fungsi app', 'Google Firebase', 'AWS Amplify', 'AWS sebenar di belakang'],
+              rows: [
+                ['Login user', 'Firebase Authentication', 'Amplify Auth', 'Amazon Cognito'],
+                ['DB laju (NoSQL)', 'Firestore / Realtime DB', 'Amplify Data (GraphQL/REST)', 'DynamoDB + AppSync'],
+                ['Simpan fail/gambar', 'Firebase Storage', 'Amplify Storage', 'Amazon S3'],
+                ['Host laman web', 'Firebase Hosting', 'Amplify Hosting', 'CloudFront + S3'],
+                ['Run kod serverless', 'Cloud Functions', 'Amplify Functions', 'AWS Lambda'],
+              ],
+              takeaway: 'Amplify = jawapan AWS kepada Firebase — dua-dua BaaS (Backend-as-a-Service) untuk dev frontend/mobile bina app laju tanpa manage infra. Beza utama: Amplify cuma "wrapper" atas servis AWS sebenar (Cognito/S3/DynamoDB) — kalau app membesar boleh "cabut" Amplify, servis tu kekal hidup & boleh urus manual. Firebase lebih terkunci dalam ekosistem Google. Exam: "developer nak mobile app cepat, Auth + NoSQL, tak nak manage cloud" (bunyi macam Firebase) → pilih Amplify.',
+            },
             tips: [
               'Amplify Hosting: Git-based CI/CD (GitHub, GitLab, Bitbucket). Supports SSR (Next.js, Nuxt), SSG, SPA. Instant cache invalidation via CloudFront CDN. Custom domains + HTTPS automatic',
               'Amplify vs Elastic Beanstalk: Amplify = frontend/fullstack apps (React, Next.js, mobile). Beanstalk = backend server apps (Node.js, Python, Java, Docker). Different use cases',
@@ -5450,7 +5462,7 @@ export const domains: DomainData[] = [
               'Backend: Amplify uses Cognito (auth), AppSync/API Gateway (API), DynamoDB (data), S3 (file storage), Lambda (functions) under the hood. Abstracts away the complexity',
               'Exam: "quickly build and deploy fullstack web application" or "frontend hosting with CI/CD" → Amplify. "Host static website cheaply" → S3 + CloudFront',
             ],
-            keywords: ['fullstack', 'CI/CD', 'frontend hosting', 'mobile', 'React', 'Next.js', 'Cognito', 'AppSync', 'backend-as-a-service', 'Git deploy', 'CDN'],
+            keywords: ['fullstack', 'CI/CD', 'frontend hosting', 'mobile', 'React', 'Next.js', 'Cognito', 'AppSync', 'backend-as-a-service', 'BaaS', 'Firebase', 'Firebase alternative', 'Amplify Auth', 'Amplify Storage', 'Git deploy', 'CDN'],
           },
         ],
       },
