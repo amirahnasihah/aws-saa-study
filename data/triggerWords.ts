@@ -81,9 +81,9 @@ export const triggerRows: TriggerRow[] = [
   },
   {
     id: 'resource-policy',
-    keywords: ['cross-account send to SQS/S3', 'other accounts access', 'centralized queue/bucket'],
-    service: 'Resource-based policy',
-    why: 'Cross-account grant kena datang dari sisi RESOURCE (queue/bucket policy) — IAM policy urus akaun sendiri je.',
+    keywords: ['cross-account send to SQS/S3', 'cross-account KMS decrypt', 'other accounts access', 'set IAM + bucket/queue/key policy'],
+    service: 'IAM (source) + Resource-based policy (dest)',
+    why: 'Cross-account = DUA kunci: IAM policy belah source (bagi user/app keluar) AND resource-based policy belah destination (bucket/queue/key policy sebut Principal). Set satu belah je → Access Denied. Member account → IAM + SCP.',
     accent: 'c4',
     domain: 'D1 · Secure',
     slug: 'd3-messaging-sqs',
@@ -198,8 +198,12 @@ export const trapRows: TrapRow[] = [
     fix: 'ALB takde static IP (IP berubah). Jangan hardcode IP — guna Alias yang auto-track ALB.',
   },
   {
-    bait: 'IAM policy untuk bagi akaun lain akses',
-    fix: 'IAM policy urus apa principal AKU boleh buat — tak boleh grant akaun lain. Cross-account → resource-based policy.',
+    bait: 'Set IAM policy SAHAJA untuk cross-account S3/SQS/KMS',
+    fix: 'Cross-account = DUA kunci. IAM (source) bagi user keluar, TAPI resource-based policy (bucket/queue/key) di destination mesti sebut Principal source acct juga. Satu belah je → Access Denied.',
+  },
+  {
+    bait: 'Set resource-based policy SAHAJA untuk cross-account akses',
+    fix: 'Resource policy izin source masuk, tapi user/app di source masih perlu IAM policy bagi dia buat action keluar. Dua-dua pintu kena buka.',
   },
   {
     bait: 'Spot 100% untuk fault-tolerant + murah',

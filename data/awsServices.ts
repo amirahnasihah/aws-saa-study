@@ -189,6 +189,7 @@ export const domains: DomainData[] = [
               'Default = implicit DENY. Kena ada explicit Allow baru boleh buat',
               'Baca policy macam ayat: Principal=SIAPA · Action=NAK BUAT APA · Resource=DEKAT MANA · Effect=BOLEH/TAK · Condition=BILA',
               '"Principal":"*" dalam resource policy = SESIAPA (anonymous/public) boleh akses — ni punca #1 S3 bucket bocor. Identity-based policy TAKDE Principal (dah tau siapa); resource-based WAJIB ada Principal',
+              'Cross-account S3/SQS/KMS = DUA kunci: IAM policy (source acct) AND resource-based policy yang ada Principal (destination acct). Satu belah je → Access Denied. Member account → IAM + SCP',
             ],
             perangkap: [
               {
@@ -205,6 +206,11 @@ export const domains: DomainData[] = [
                 soalan: 'Security audit jumpa satu S3 bucket policy ada "Principal": "*" dengan Effect Allow untuk s3:GetObject. Apa maksud & risiko?',
                 umpan: '"*" tu wildcard untuk semua IAM user dalam account aku je — selamat sebab orang luar account tetap kena ada IAM creds. Nampak munasabah sebab "*" selalu maksud "semua dalam scope".',
                 betul: 'BAHAYA — "Principal": "*" dalam resource-based policy = SESIAPA di internet (anonymous, tanpa login) boleh akses. Ni punca #1 S3 data leak. Keyword "Principal":"*" + public/anonymous = buang atau ganti dengan ARN spesifik + Block Public Access ON. (Nota: identity-based policy TAKDE Principal langsung — dah tahu siapa.)',
+              },
+              {
+                soalan: 'App dalam Account A (Dev) nak hantar mesej ke SQS queue dalam Account B (Prod). Admin dah set IAM policy dalam Account A bagi sqs:SendMessage, tapi masih "Access Denied". Kenapa?',
+                umpan: 'IAM policy dah ada kat source, patutnya cukup. Orang ingat satu belah (IAM) dah memadai sebab itu cara biasa bagi izin dalam-account.',
+                betul: 'Cross-account = WAJIB DUA kunci: IAM policy (source acct) AND resource-based policy pada queue (destination acct). SQS Queue Policy belum sebut Principal Account A → ditolak. Keyword "cross-account S3/SQS/KMS" → IAM Policy + Resource-based policy serentak; set satu belah je = SALAH. (Sama logik: member account = IAM + SCP.)',
               },
             ],
             detailsLabel: 'IAM — komponen utama',
@@ -264,6 +270,17 @@ export const domains: DomainData[] = [
                 ],
                 takeaway: 'Identity & Resource policy = boleh BAGI akses (union — allow mana-mana satu cukup). SCP/Boundary/Session = guardrail, hanya boleh SEKAT (intersection — semua mesti allow). Resource-based policy boleh bagi cross-account access TANPA assume role. Explicit deny dalam mana-mana satu menang atas semua.',
               },
+              {
+                label: 'Cross-Account "Dua Kunci" — kedua-dua belah WAJIB allow',
+                headers: ['Senario', 'Kunci 1 — Source Account', 'Kunci 2 — Destination / HQ', 'Logik'],
+                rows: [
+                  ['S3 cross-account', 'IAM policy bagi user/role s3:PutObject', 'S3 Bucket Policy (resource-based) sebut Principal = Source acct', '🟢 IAM AND Bucket Policy'],
+                  ['SQS cross-account', 'IAM policy bagi sqs:SendMessage', 'SQS Queue Policy (resource-based) sebut Principal = Source acct', '🟢 IAM AND Queue Policy'],
+                  ['KMS decrypt cross-account', 'IAM policy bagi kms:Decrypt', 'KMS Key Policy (resource-based) sebut Principal = Source acct', '🟢 IAM AND Key Policy'],
+                  ['Akaun anak bawah Organizations', 'IAM policy dalam member account', 'SCP di OU/Management = siling maksimum', '🟢 IAM AND SCP (intersection)'],
+                ],
+                takeaway: 'Cross-account = sistem DOUBLE-CHECK: dua-dua pintu kena buka. Set satu belah je → BLOCKED. S3/SQS/KMS: IAM (source) + Resource-based policy (destination, ada Principal). Member account: IAM + SCP. Pangkah mana-mana jawapan exam yang kata "set IAM sahaja" atau "set resource policy sahaja". Resource-based policy = satu-satunya yang boleh bagi cross-account TANPA assume role.',
+              },
             ],
             scenario: '"App dalam EC2 perlu akses S3" → IAM Role (BUKAN hardcode access keys). "Account A akses resource Account B" → assume Role cross-account ATAU resource-based policy. "Hadkan permission MAKSIMUM developer walau admin bagi lebih" → Permissions Boundary. "Sekat semua account dalam OU dari guna region tertentu" → SCP. "Explicit Deny + Allow pada action sama" → DENIED. "User luar login Google/Facebook nak akses" → Cognito/federation (BUKAN cipta IAM user). Keywords: least privilege, temporary credentials, cross-account, explicit deny, permission boundary.',
             tips: [
@@ -281,7 +298,7 @@ export const domains: DomainData[] = [
               { label: 'IAM policy evaluation logic', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html' },
               { label: 'Security best practices in IAM', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html' },
             ],
-            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation', 'IAM Role', 'IAM User', 'IAM Group', 'identity-based policy', 'resource-based policy', 'permission boundary', 'SCP', 'explicit deny', 'implicit deny', 'policy evaluation', 'service-linked role', 'role chaining', 'session policy', 'cross-account access', 'Principal', 'Principal *', 'anonymous access', 'public access', 'policy anatomy', 'Effect Action Resource'],
+            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation', 'IAM Role', 'IAM User', 'IAM Group', 'identity-based policy', 'resource-based policy', 'permission boundary', 'SCP', 'explicit deny', 'implicit deny', 'policy evaluation', 'service-linked role', 'role chaining', 'session policy', 'cross-account access', 'Principal', 'Principal *', 'anonymous access', 'public access', 'policy anatomy', 'Effect Action Resource', 'source account', 'destination account', 'two keys', 'double-check', 'bucket policy', 'queue policy', 'key policy'],
           },
           {
             shortName: 'STS',
@@ -558,6 +575,7 @@ export const domains: DomainData[] = [
               'Organizations = building block manual; Control Tower = automated landing zone + guardrail siap-pakai DI ATAS Organizations',
               'Control Tower guardrail: Mandatory (wajib) · Strongly-recommended · Elective. Drift detection bagitau bila config terpesong dari baseline',
               'Organizations + SCP + Consolidated Billing = FREE (bayar resource je)',
+              'Hierarki: Management Account (HQ, ada Root user, payer) → OU (folder) → Member accounts (Finance/Dev/Prod). Asingkan account = kurung blast radius (Dev meletup tak jejas Prod)',
             ],
             perangkap: [
               {
@@ -577,9 +595,23 @@ export const domains: DomainData[] = [
               },
             ],
             scenario: '"Restrict apa member accounts boleh buat org-wide, exempt management account" → SCP (member accounts only). "Enforce guardrails + auto setup landing zone / multi-account baseline" → Control Tower. "Satu bil + kongsi diskaun" → Consolidated Billing (bukan SCP). Ingat: SCP RESTRICT sahaja, tak GRANT.',
-            mermaid: {
-              label: 'Adakah action ni dibenarkan? (SCP + IAM evaluation)',
-              source: `flowchart TD
+            mermaid: [
+              {
+                label: 'Struktur Organizations — HQ → OU (folder) → Member accounts',
+                source: `flowchart TD
+  ROOT["🏢 Management Account (HQ)<br/>Root user · Payer (consolidated billing)<br/>tulis SCP — tapi SCP TAK kena dia sendiri"]
+  ROOT --> SEC["📁 OU: Security"]
+  ROOT --> WL["📁 OU: Workloads"]
+  ROOT --> FINOU["📁 OU: Finance"]
+  SEC --> LOG["💼 Log Archive acct<br/>(member)"]
+  WL --> DEV["🧪 Dev acct (member)<br/>budak IT test — blast radius terkurung"]
+  WL --> PROD["🔒 Prod acct (member)<br/>sistem live pelanggan"]
+  FINOU --> FINA["💰 Finance acct (member)<br/>audit kos, bayar bil"]`,
+                caption: 'INGAT exam: Management Account = HQ (ada Root user, jadi payer consolidated billing, tulis SCP — tapi SCP TAK kena dia sendiri). OU = folder susun member accounts. Finance/Dev/Prod = SEMUANYA Member Account, sengaja diasingkan supaya Dev meletup/kena godam tak jejas Prod atau Finance (isolation blast radius). "Centralized management many accounts / consolidated billing" → Organizations; "restrict member accounts org-wide" → SCP.',
+              },
+              {
+                label: 'Adakah action ni dibenarkan? (SCP + IAM evaluation)',
+                source: `flowchart TD
   A[Request dari IAM user/role member account] --> B{Akaun management?}
   B -- Ya --> Z[SCP tak apply<br/>ikut IAM policy sahaja]
   B -- Tidak --> C{SCP benarkan action?}
@@ -587,8 +619,9 @@ export const domains: DomainData[] = [
   C -- Ya --> E{IAM identity policy benarkan?}
   E -- Tidak --> F[DENIED<br/>SCP tak GRANT, IAM kena Allow]
   E -- Ya --> G[ALLOWED]`,
-              caption: 'Effective permission = intersection SCP ∩ IAM policy. SCP tak grant apa-apa — kena ADA Allow dalam IAM policy juga. Management account tak terkena SCP langsung.',
-            },
+                caption: 'Effective permission = intersection SCP ∩ IAM policy. SCP tak grant apa-apa — kena ADA Allow dalam IAM policy juga. Management account tak terkena SCP langsung.',
+              },
+            ],
             compare: [
               {
               label: 'SCP vs IAM Policy',
@@ -624,7 +657,7 @@ export const domains: DomainData[] = [
               'PRICING: AWS Organizations is FREE — tiada charge untuk OUs, SCPs, atau consolidated billing. Yang kau bayar adalah resources dalam setiap account. Consolidated billing percuma dan boleh dapat volume discounts (S3, EC2 reserved, dll) kerana aggregate usage.',
               'Exam: "no charge for Organizations" → free. "consolidated billing discount" → volume pricing benefit dari aggregate usage across all member accounts.',
             ],
-            keywords: ['multi-account', 'SCPs', 'guardrails', 'Control Tower', 'management account', 'OU', 'management account exemption', 'SCP cannot grant', 'S3 Block Public Access SCP', 'pricing', 'free', 'consolidated billing', 'volume discount', 'landing zone', 'Account Factory', 'drift detection', 'governed baseline', 'mandatory guardrail', 'elective guardrail', 'provision accounts at scale'],
+            keywords: ['multi-account', 'SCPs', 'guardrails', 'Control Tower', 'management account', 'OU', 'management account exemption', 'SCP cannot grant', 'S3 Block Public Access SCP', 'pricing', 'free', 'consolidated billing', 'volume discount', 'landing zone', 'Account Factory', 'drift detection', 'governed baseline', 'mandatory guardrail', 'elective guardrail', 'provision accounts at scale', 'member account', 'Finance account', 'Dev account', 'Prod account', 'blast radius', 'account hierarchy', 'Root user', 'payer account'],
           },
         ],
       },
@@ -1092,6 +1125,8 @@ export const domains: DomainData[] = [
               'Symmetric = encrypt+decrypt (default, AWS services). Asymmetric = digital signing / public-private',
               'Multi-Region key = same key material across regions, elak cross-region API call',
               'FIPS 140-2 Level 3 + dedicated hardware + AWS tak boleh access = CloudHSM, BUKAN KMS',
+              'Key Policy = ROOT of trust KMS. By default WAJIB key policy bagi akses (atau delegate ke IAM lewat Principal=account-root). IAM Allow SAHAJA tak cukup kalau key policy tak izin — even admin kena blok',
+              'Cross-account KMS = DUA kunci (macam S3/SQS): IAM policy (source) AND KMS Key Policy sebut Principal source acct (destination). Set satu belah je → Access Denied',
             ],
             perangkap: [
               {
@@ -1108,6 +1143,11 @@ export const domains: DomainData[] = [
                 soalan: 'App e-commerce multinasional simpan data encrypted merentas banyak region. Latency naik bila data diakses di LUAR region tempat KMS key dicipta. Cara terbaik kurangkan latency tapi kekal encrypted ikut region?',
                 umpan: 'Anggap single-Region KMS key globally available (D), atau re-encrypt data dengan key region destinasi setiap kali, atau simpan semua data dalam SATU region (A). Nampak betul sebab "guna key region tu". SALAH: single-Region key TERIKAT region ciptaan (cross-region call = punca latency tu); re-encrypt = overhead besar; satu region = kalahkan tujuan multinasional.',
                 betul: 'Multi-Region KMS Keys — replicate primary key ke region tempat data diakses. Replica share SAME key ID + key material, jadi decrypt jadi LOCAL dalam region itu → hapus cross-region KMS API call. Keyword "cross-region latency + kekal secure region-specific encryption" → Multi-Region keys. (Disable encryption = NEVER jawapan.)',
+              },
+              {
+                soalan: 'User dalam Account A perlu decrypt S3 object dalam Account B yang di-encrypt guna KMS CMK Account B. Admin dah bagi IAM policy kms:Decrypt + s3:GetObject dalam Account A. Masih "Access Denied" pada decrypt. Apa yang tertinggal?',
+                umpan: 'IAM dah bagi kms:Decrypt, jadi patut boleh. Anggap key boleh diguna selagi IAM Allow — sama macam akses S3/SQS dalam account sendiri.',
+                betul: 'KMS Key Policy (di Account B) belum sebut Principal Account A. Key policy = ROOT of trust — IAM Allow sahaja tak cukup merentas account; key policy WAJIB delegate/izin Principal source acct. Keyword "cross-account KMS decrypt" → IAM policy (source) + Key Policy (destination) serentak.',
               },
             ],
             tips: [
@@ -1145,7 +1185,7 @@ export const domains: DomainData[] = [
   F -->|Langsung tak nak urus| I[AWS Owned Key<br/>free, tak boleh audit]`,
               caption: 'Dedicated HW + FIPS Level 3 + kawalan eksklusif → CloudHSM. Sign/asymmetric → Asymmetric CMK. Nak custom policy + rotation + audit penuh → Customer Managed Key. Terhad satu service, tak nak customize → AWS Managed Key. Zero management → AWS Owned Key.',
             },
-            keywords: ['encryption at rest', 'CMK', 'key rotation', 'SSE-KMS', 'envelope encryption', 'CloudTrail audit', 'asymmetric keys', 'digital signing', 'multi-region keys', 'aws:SourceVpce', 'CloudHSM', 'FIPS 140-2', 'single-tenant', 'custom key store'],
+            keywords: ['encryption at rest', 'CMK', 'key rotation', 'SSE-KMS', 'envelope encryption', 'CloudTrail audit', 'asymmetric keys', 'digital signing', 'multi-region keys', 'aws:SourceVpce', 'CloudHSM', 'FIPS 140-2', 'single-tenant', 'custom key store', 'key policy', 'cross-account KMS', 'root of trust', 'cross-account decrypt'],
           },
           {
             shortName: 'Secrets Manager',
