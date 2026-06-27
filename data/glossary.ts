@@ -183,7 +183,7 @@ export const glossary: Record<string, string> = {
   'PBK': 'Persistent Backup Key — long-lived key stored in CloudHSM that wraps (encrypts) the EBK; encrypted backup is stored in S3 in the same region as the cluster',
 
   // IAM / access control
-  'ABAC': 'Attribute-Based Access Control — IAM policy technique that uses resource tags (e.g. aws:ResourceTag/Environment) to grant or deny access dynamically without hard-coding ARNs',
+  'ABAC': 'Attribute-Based Access Control — IAM policy technique that grants access by MATCHING tags: a condition like aws:PrincipalTag/Project = aws:ResourceTag/Project means a user tagged Project=X can only touch resources tagged Project=X. Wujud sebab RBAC (satu policy per team/projek) meletup bila projek makin banyak — dengan ABAC, projek baru cuma perlu tag, TAK perlu tulis policy baru. Exam keyword: "scale permissions across many teams/projects without writing a new policy each time" / "tag-based access" → ABAC (vs [[Permission Set]]/RBAC for a small fixed set of roles).',
   'NotPrincipal': 'IAM policy element that matches all principals EXCEPT those listed; used with Deny to restrict a resource to only a specified set of users/roles',
 
   // Web / S3

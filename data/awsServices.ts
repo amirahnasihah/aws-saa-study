@@ -212,6 +212,16 @@ export const domains: DomainData[] = [
                 umpan: 'IAM policy dah ada kat source, patutnya cukup. Orang ingat satu belah (IAM) dah memadai sebab itu cara biasa bagi izin dalam-account.',
                 betul: 'Cross-account = WAJIB DUA kunci: IAM policy (source acct) AND resource-based policy pada queue (destination acct). SQS Queue Policy belum sebut Principal Account A → ditolak. Keyword "cross-account S3/SQS/KMS" → IAM Policy + Resource-based policy serentak; set satu belah je = SALAH. (Sama logik: member account = IAM + SCP.)',
               },
+              {
+                soalan: 'Syarikat ada 200+ projek, tiap projek ada team & resource sendiri (EC2, S3) yang ditag Project=X. Bila projek baru lahir, team kena akses HANYA resource projek dia. Admin penat tulis IAM policy baru tiap kali projek lahir. Cara paling scalable?',
+                umpan: 'Buat satu IAM Group + policy per projek (RBAC), tambah policy baru bila projek baru lahir. Nampak betul sebab Group memang cara urus permission. SALAH: 200 projek = 200 policy, projek ke-201 lahir → tulis policy lagi. Tak scale, meletup bila projek makin banyak.',
+                betul: 'ABAC (Attribute-Based Access Control) — tag user/role dengan Project=X, tag resource dengan Project=X, tulis SATU policy guna kondisi aws:PrincipalTag/Project = aws:ResourceTag/Project. Projek baru? Cuma tag — TAK perlu policy baru. Keyword "scale permissions across many teams/projects without writing new policy each time" → ABAC, BUKAN RBAC (role/policy per kumpulan).',
+              },
+              {
+                soalan: 'Syarikat nak benarkan developer cipta IAM role sendiri untuk Lambda mereka (self-service), TAPI takut developer bagi role tu AdministratorAccess (privilege escalation). Macam mana benarkan create role tapi cap kuasa maksimum?',
+                umpan: 'Bagi developer kuasa iam:CreateRole je, kemudian audit manual lepas tu / harap mereka tak silap. Atau guna SCP. Nampak betul sebab "had kuasa". SALAH: tanpa cap, developer boleh attach AdministratorAccess pada role ciptaan dia → escalate. SCP pula apply ke SELURUH account, bukan cap role ciptaan developer secara spesifik.',
+                betul: 'Permissions Boundary — attach managed policy sebagai boundary, dan guna IAM condition (iam:PermissionsBoundary) supaya developer WAJIB attach boundary tu pada mana-mana role dia cipta. Role ciptaan tak boleh lebih kuasa dari boundary, walau policy kata Admin. Keyword "delegate role/permission creation safely / cap max permission of created entities" → Permissions Boundary, BUKAN SCP (itu siling account), BUKAN audit manual.',
+              },
             ],
             detailsLabel: 'IAM — komponen utama',
             storageDetails: 'Principal → entiti yang hantar request (User, Role, atau AWS service). Hanya Principal boleh "buat" sesuatu\nUser → identiti KEKAL untuk 1 orang/app. Ada credentials sendiri (password + access keys long-term)\nGroup → bakul untuk kumpul Users. BUKAN identity — tak boleh login, tak boleh jadi Principal. Attach policy kat sini (best practice)\nRole → identiti SEMENTARA yang di-assume. Tiada long-term creds — dapat temp creds via STS yang auto-expire\nPolicy → JSON Allow/Deny. Identity-based (attach kat User/Group/Role) atau Resource-based (attach kat S3/SQS/KMS)\nPermission Boundary → siling MAKSIMUM permission untuk satu entity (had, bukan bagi)\nMFA → faktor kedua (app/hardware token) selain password',
@@ -281,6 +291,19 @@ export const domains: DomainData[] = [
                 ],
                 takeaway: 'Cross-account = sistem DOUBLE-CHECK: dua-dua pintu kena buka. Set satu belah je → BLOCKED. S3/SQS/KMS: IAM (source) + Resource-based policy (destination, ada Principal). Member account: IAM + SCP. Pangkah mana-mana jawapan exam yang kata "set IAM sahaja" atau "set resource policy sahaja". Resource-based policy = satu-satunya yang boleh bagi cross-account TANPA assume role.',
               },
+              {
+                label: 'ABAC vs RBAC — mana scale bila projek/team makin banyak',
+                headers: ['Aspect', 'RBAC (role/policy-based)', 'ABAC (tag-based)'],
+                rows: [
+                  ['Asas keputusan', 'Identiti/role ada policy spesifik', 'Padanan TAG (aws:PrincipalTag = aws:ResourceTag)'],
+                  ['Projek/team baru', 'Tulis policy / role BARU tiap kali', '🟢 Cuma tag — guna policy SEDIA ADA'],
+                  ['Bilangan policy', 'Membesar ikut bilangan team (ratusan)', '🟢 Sikit & tetap (satu policy guna conditions)'],
+                  ['Scale', 'Penat & meletup bila banyak projek', '🟢 Scale automatik'],
+                  ['Guna bila', 'Sikit role, struktur stabil', 'Banyak projek/team, fast-growing, multi-tenant'],
+                  ['Keyword exam', '"distinct roles, small set"', '"scale without new policy per project/team / tag-based"'],
+                ],
+                takeaway: 'RBAC = satu policy per peranan (membesar ikut bilangan team). ABAC = satu policy yang padan TAG principal dengan TAG resource — projek baru cuma perlu tag, tak perlu policy baru. Keyword "scale permissions across many projects/teams without writing a new policy each time" / "tag-based access" → ABAC. "few well-defined roles" → RBAC.',
+              },
             ],
             scenario: '"App dalam EC2 perlu akses S3" → IAM Role (BUKAN hardcode access keys). "Account A akses resource Account B" → assume Role cross-account ATAU resource-based policy. "Hadkan permission MAKSIMUM developer walau admin bagi lebih" → Permissions Boundary. "Sekat semua account dalam OU dari guna region tertentu" → SCP. "Explicit Deny + Allow pada action sama" → DENIED. "User luar login Google/Facebook nak akses" → Cognito/federation (BUKAN cipta IAM user). Keywords: least privilege, temporary credentials, cross-account, explicit deny, permission boundary.',
             tips: [
@@ -298,7 +321,7 @@ export const domains: DomainData[] = [
               { label: 'IAM policy evaluation logic', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html' },
               { label: 'Security best practices in IAM', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html' },
             ],
-            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation', 'IAM Role', 'IAM User', 'IAM Group', 'identity-based policy', 'resource-based policy', 'permission boundary', 'SCP', 'explicit deny', 'implicit deny', 'policy evaluation', 'service-linked role', 'role chaining', 'session policy', 'cross-account access', 'Principal', 'Principal *', 'anonymous access', 'public access', 'policy anatomy', 'Effect Action Resource', 'source account', 'destination account', 'two keys', 'double-check', 'bucket policy', 'queue policy', 'key policy'],
+            keywords: ['users', 'groups', 'roles', 'policies', 'least privilege', 'MFA', 'principals', 'identity federation', 'IAM Role', 'IAM User', 'IAM Group', 'identity-based policy', 'resource-based policy', 'permission boundary', 'SCP', 'explicit deny', 'implicit deny', 'policy evaluation', 'service-linked role', 'role chaining', 'session policy', 'cross-account access', 'Principal', 'Principal *', 'anonymous access', 'public access', 'policy anatomy', 'Effect Action Resource', 'source account', 'destination account', 'two keys', 'double-check', 'bucket policy', 'queue policy', 'key policy', 'ABAC', 'RBAC', 'attribute-based access control', 'tag-based access', 'aws:PrincipalTag', 'aws:ResourceTag', 'scale permissions', 'permissions boundary delegate', 'iam:PermissionsBoundary', 'privilege escalation', 'delegate role creation'],
           },
           {
             shortName: 'STS',
