@@ -6181,20 +6181,78 @@ export const domains: DomainData[] = [
           {
             shortName: 'Lake Formation',
             fullName: 'AWS Lake Formation',
-            ingat: '"Lapisan keselamatan atas S3/Glue — row, column, cell level access"',
-            gunaUntuk: 'Fine-grained access control on data lake: row-level, column-level, cell-level security',
-            fungsi: 'Lake Formation duduk atas S3 + Glue Data Catalog dan enforce fine-grained permissions. Glue Data Catalog je hanya ada table/column metadata — Lake Formation enforce ACTUAL access control hingga row, column, dan cell level.',
-            sebabApa: "Lake Formation wujud sebab Glue Data Catalog cuma simpan metadata (table/column wujud) — dia TAK boleh kawal siapa boleh baca baris/kolum mana. Dalam data lake dengan data sensitif, kau perlu fine-grained access (analyst region A nampak baris region A je, kolum gaji disembunyi). Lake Formation duduk atas S3+Glue dan enforce akses hingga row/column/cell level dari satu tempat.",
-            sifir: ["Glue Data Catalog = metadata (apa data wujud). Lake Formation = ACCESS CONTROL (siapa boleh akses).", "Lake Formation = row-level + column-level + cell-level security (Glue sahaja tak boleh).", "Keyword: 'fine-grained access' / 'row/column/cell-level security' untuk data lake → Lake Formation.", "One-stop data lake governance: permission, secure sharing, cleansing, catalog."],
-            perangkap: [{"soalan": "Data lake dalam S3 perlu analyst hanya boleh baca kolum tertentu & baris tertentu (sembunyi data sensitif). Penyelesaian?", "umpan": "Glue Data Catalog + IAM policy atas bucket S3 — nampak boleh kawal akses.", "betul": "Lake Formation — keyword 'row/column/cell-level fine-grained access untuk data lake' = Lake Formation. Glue Catalog metadata sahaja; IAM S3 cuma object-level, bukan row/column dalam table."}],
+            ingat: '"Pengawal keselamatan kolam (data lake) — row, column, cell level access + bina secure lake laju"',
+            gunaUntuk: 'Fine-grained access control on data lake (row/column/cell) + simplify & accelerate creation of a secure data lake',
+            fungsi: 'Senang cerita: Data Lake = KOLAM simpan data (S3). Lake Formation = PENGAWAL KESELAMATAN + KONTRAKTOR untuk kolam tu. Ia duduk atas S3 + Glue Data Catalog dan (1) enforce fine-grained permissions hingga row, column, cell level, dan (2) automate kerja susah bina data lake (IAM, encryption, cleansing, catalog) supaya secure lake siap dalam HARI, bukan minggu. Glue Data Catalog cuma simpan table/column metadata — Lake Formation yang enforce ACTUAL access control.',
+            sebabApa: "Lake Formation wujud sebab dua pain: (1) Glue Data Catalog cuma simpan metadata (table/column wujud) — dia TAK boleh kawal siapa boleh baca baris/kolum mana; dan (2) bina data lake selamat guna S3+IAM+Glue+KMS secara manual itu azab & ambil berminggu (setup IAM satu-satu, pening encryption, cuci data kotor). Lake Formation selesai dua-dua: fine-grained access (analyst Region A nampak baris Region A je, kolum gaji disorok) DARI SATU TEMPAT, plus blueprint/automation yang percepat bina secure lake.",
+            sifir: ["Data Lake = KOLAM (S3, simpan data). Lake Formation = PENGAWAL kolam (kawal akses + bina lake).", "Glue Data Catalog = metadata (apa data wujud). Lake Formation = ACCESS CONTROL (siapa boleh akses).", "Lake Formation = row-level + column-level + cell-level security (IAM/Glue sahaja tak boleh).", "Keyword 'fine-grained / row/column/cell-level access' untuk data lake → Lake Formation.", "Keyword 'simplify / accelerate creation of a SECURE data lake' → Lake Formation.", "Lake Formation sendiri PERCUMA — bayar service bawah (S3, Glue, Athena) je."],
+            perangkap: [
+              {"soalan": "Data lake dalam S3 perlu analyst hanya boleh baca kolum tertentu & baris tertentu (sembunyi data sensitif macam gaji/No IC). Penyelesaian?", "umpan": "Glue Data Catalog + IAM policy atas bucket S3 — nampak boleh kawal akses.", "betul": "Lake Formation — keyword 'row/column/cell-level fine-grained access untuk data lake' = Lake Formation. Glue Catalog metadata sahaja; IAM S3 cuma object-level (whole-file), bukan row/column dalam table."},
+              {"soalan": "Syarikat nak bina data lake SELAMAT dengan cepat — auto setup permission, encryption, data cleansing, catalog. Service mana?", "umpan": "Setup S3 + IAM + Glue + KMS manual satu-satu — 'memang boleh buat sendiri'. Nampak betul sebab 'semua komponen ada'. SALAH: manual = berminggu, banyak silap config, bukan 'simplify/accelerate'.", "betul": "AWS Lake Formation — keyword 'simplify / accelerate creation of a SECURE data lake' = Lake Formation (blueprint, permission, encryption, cleansing, semua sekali tempat)."},
+              {"soalan": "Analyst nak run complex SQL + BI dashboard BERULANG atas data jualan yang dah tersusun (structured). Simpan & analisis kat mana?", "umpan": "Data Lake (S3) + Athena — 'boleh query S3 guna SQL'. Separa betul, tapi untuk BI berulang + complex join atas structured data, Athena ad-hoc kurang sesuai & data lake bukan optimized untuk ni.", "betul": "Data Warehouse = Amazon Redshift — keyword 'complex SQL + BI on structured data, berulang' = Redshift (OLAP, columnar, MPP). Data Lake (S3) = simpan SEMUA data mentah; Warehouse = structured dah kemas untuk BI."},
+            ],
+            mermaid: [
+              {
+                label: 'Analogi Kolam + Pengawal Keselamatan — Data Lake vs Lake Formation',
+                source: `flowchart TD
+  SRC["🚚 Macam-macam lori air<br/>(data dari banyak app:<br/>log, gambar, JSON, SQL)"] --> POOL["🏊 KOLAM BESAR = Data Lake (S3)<br/>humban SEMUA jenis data, tak disusun"]
+  POOL --> GUARD["👮 PENGAWAL = Lake Formation<br/>duduk depan pintu kolam"]
+  GUARD -->|"sauk bahagian ni je"| A["👤 Analyst Region A<br/>nampak baris Region A sahaja<br/>(row-level)"]
+  GUARD -->|"kolum gaji disorok"| B["👤 Analyst HR<br/>tak nampak No IC / gaji<br/>(column / cell-level)"]
+  GUARD -.->|"auto cuci + catalog + encrypt"| CLEAN["🧹 Governance sekali tempat<br/>(bina secure lake dalam HARI)"]`,
+                caption: 'Data Lake = kolam takungan data (S3). Lake Formation = pengawal keselamatan pintar depan pintu kolam: tapis siapa boleh sauk air, bahagian mana boleh ambil (row/column/cell), + tolong cuci & catalog kolam automatik. INGAT exam: "fine-grained / row/column/cell-level access pada data lake" ATAU "simplify/accelerate secure data lake" → Lake Formation.',
+              },
+              {
+                label: 'Aliran sebenar — Data Lake → cuci → Data Warehouse → BI',
+                source: `flowchart LR
+  APP["📱 App / sumber<br/>data mentah"] --> LAKE["🏊 Data Lake — S3<br/>SEMUA jenis data, mentah<br/>(gudang lambakan 📦)"]
+  LAKE --> ETL["🧼 AWS Glue / Batch<br/>cuci · tapis · susun (ETL)<br/>→ Parquet"]
+  ETL --> WH["📚 Data Warehouse — Redshift<br/>structured, kemas, OLAP<br/>(perpustakaan tersusun 📚)"]
+  WH --> BI["📊 BI / laporan<br/>QuickSight, dashboard, SQL"]
+  LAKE -.->|"governance / akses halus"| LF["👮 Lake Formation<br/>row/column/cell access atas Lake"]`,
+                caption: 'Aliran lazim syarikat besar: data mentah → Data Lake (S3, simpan semua) → Glue/Batch cuci & susun → Data Warehouse (Redshift) untuk BI. INGAT exam: "store all/any data types raw, any scale" → Data Lake/S3; "complex SQL + BI on structured data" → Redshift; "process massive raw logs/big data" → EMR/Batch; "row/column/cell access on the lake" → Lake Formation.',
+              },
+            ],
+            compare: [
+              {
+                label: 'Data Lake vs Data Warehouse — exam paling suka kelirukan',
+                headers: ['Aspect', 'Data Lake (S3)', 'Data Warehouse (Redshift)'],
+                rows: [
+                  ['Jenis data', 'SEMUA: struct + unstruct + semi (mentah)', 'Structured sahaja (dah bersih & modeled)'],
+                  ['Analogi', 'Gudang lambakan 📦', 'Perpustakaan tersusun 📚'],
+                  ['Tujuan', 'Simpan semua / staging awal', 'OLAP analytics, BI, laporan berulang'],
+                  ['Schema', 'Schema-on-read (tafsir masa baca)', 'Schema-on-write (kena kemas dulu)'],
+                  ['Service', 'Amazon S3 (+ Athena / Spectrum query)', 'Amazon Redshift'],
+                  ['Keyword exam', '"store all/any data types, any scale, raw"', '"complex SQL + BI on structured data"'],
+                ],
+                takeaway: 'Lake = mentah, semua jenis, simpan dulu (S3). Warehouse = structured kemas untuk BI (Redshift). "any/all data raw" → Data Lake/S3; "complex SQL + BI on structured" → Redshift. Lake Formation BUKAN storage — ia pengawal akses ATAS data lake.',
+              },
+              {
+                label: 'Glue Data Catalog vs Lake Formation — metadata vs akses',
+                headers: ['Aspect', 'Glue Data Catalog', 'Lake Formation'],
+                rows: [
+                  ['Simpan apa', 'Metadata: apa data wujud (table/column/schema)', 'Access control: siapa boleh akses apa'],
+                  ['Kawal akses?', '❌ Tidak (metadata sahaja)', '✅ Row / column / cell-level'],
+                  ['Keyword', '"central metadata / schema catalog"', '"fine-grained / row/column/cell security"'],
+                ],
+                takeaway: 'Catalog = WHAT data exists. Lake Formation = WHO can access (sampai row/column/cell). "fine-grained access to data lake" → Lake Formation, bukan Glue Catalog, bukan IAM S3 (object-level je).',
+              },
+            ],
             tips: [
               'Glue Data Catalog = metadata store (what data exists). Lake Formation = access control (who can access what data)',
-              'Lake Formation supports row-level, column-level, dan cell-level security — Glue je tak boleh buat ni',
+              'Lake Formation supports row-level, column-level, dan cell-level security — Glue / IAM S3 je tak boleh buat ni (IAM S3 = object-level whole-file)',
               'Use case: data lake dengan sensitive data, analysts boleh access hanya specific columns/rows',
               'Exam: "fine-grained access control" atau "row/column/cell-level security" untuk data lake → Lake Formation',
+              'Exam: "simplify / accelerate the creation of a secure data lake" → Lake Formation (blueprint, automate IAM/encryption/cleansing)',
               'Lake Formation juga support data cleansing, data catalog, secure data sharing — one-stop data lake governance',
+              'Data Lake (S3) vs Data Warehouse (Redshift): Lake = raw, semua jenis; Warehouse = structured untuk BI. Lake Formation governs the Lake',
+              'PRICING: AWS Lake Formation sendiri PERCUMA (no additional charge) — kau bayar service bawah je: S3 storage ($0.023/GB-mo), Glue ETL/crawler ($0.44/DPU-hr), Athena query ($5/TB scanned). Jadi governance tak tambah kos extra',
             ],
-            keywords: ['Lake Formation', 'row-level security', 'column-level', 'cell-level', 'fine-grained access', 'data lake', 'Glue Data Catalog'],
+            docs: [
+              { label: 'What is AWS Lake Formation?', url: 'https://docs.aws.amazon.com/lake-formation/latest/dg/what-is-lake-formation.html' },
+              { label: 'Lake Formation fine-grained access control', url: 'https://docs.aws.amazon.com/lake-formation/latest/dg/data-filtering.html' },
+            ],
+            keywords: ['Lake Formation', 'row-level security', 'column-level', 'cell-level', 'fine-grained access', 'data lake', 'Glue Data Catalog', 'secure data lake', 'accelerate data lake', 'simplify data lake', 'data lake vs data warehouse', 'data warehouse', 'governance', 'centralized access control', 'blueprint', 'data cleansing', 'pricing'],
           },
           {
             shortName: 'EMR',

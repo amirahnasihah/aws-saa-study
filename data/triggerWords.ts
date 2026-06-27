@@ -115,6 +115,33 @@ export const triggerRows: TriggerRow[] = [
     domain: 'D2 · Resilient',
     slug: 'd3-messaging-sqs',
   },
+  {
+    id: 'data-lake-s3',
+    keywords: ['store all/any data types, any scale', 'structured + unstructured + raw', 'central repository semua data'],
+    service: 'S3 (Data Lake)',
+    why: 'Data Lake = humban SEMUA jenis data mentah (struct/unstruct/semi) di satu tempat murah & scale tanpa had → Amazon S3.',
+    accent: 'c2',
+    domain: 'D3 · High-Perf',
+    slug: 'd3-storage-s3',
+  },
+  {
+    id: 'lake-formation',
+    keywords: ['fine-grained access data lake', 'row/column/cell-level security', 'simplify/accelerate secure data lake'],
+    service: 'AWS Lake Formation',
+    why: 'Kawalan akses halus (row/column/cell) ATAS data lake + bina secure lake laju. Glue Catalog metadata je, IAM S3 object-level je.',
+    accent: 'c3',
+    domain: 'D3 · High-Perf',
+    slug: 'd3-analytics-lake-formation',
+  },
+  {
+    id: 'redshift-warehouse',
+    keywords: ['complex SQL + BI on structured data', 'data warehouse', 'analyze structured data, recurring reports'],
+    service: 'Amazon Redshift',
+    why: 'Data Warehouse OLAP — structured data dah kemas, complex SQL + BI berulang atas berbilion baris. BUKAN Data Lake (mentah) / Athena (ad-hoc jarang).',
+    accent: 'c5',
+    domain: 'D3 · High-Perf',
+    slug: 'd3-analytics-redshift',
+  },
 ]
 
 export const trapRows: TrapRow[] = [
