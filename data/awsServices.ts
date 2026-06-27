@@ -1984,6 +1984,82 @@ export const domains: DomainData[] = [
             keywords: ['SG', 'NACL', 'stateful', 'stateless', 'instance-level', 'subnet-level', 'deny', 'defense-in-depth'],
           },
           {
+            shortName: 'Laluan Packet VPC',
+            fullName: 'Perjalanan Satu Packet — VPC Traffic Flow (end-to-end)',
+            ingat: '"Jejak JALAN, bukan hafal komponen. Pergi: IGW → Route Table → NACL → SG → EC2. Balik: terbalik, tapi SG ingat (auto), NACL lupa (kena rule)."',
+            gunaUntuk: 'Faham urutan checkpoint satu packet lalui dari internet sampai EC2 dan balik — kunci untuk semua soalan troubleshoot VPC',
+            fungsi: 'Ini bukan satu "servis" — ia model mental untuk faham macam mana semua komponen VPC bekerja sebagai SATU laluan. Bila satu packet datang dari internet ke EC2 kau, dia lalu checkpoint ikut turutan tetap: IGW (pintu VPC) → Route Table (papan tanda arah) → NACL (pengawal sempadan subnet) → Security Group (pengawal pintu instance) → baru sampai EC2. Reply balik ikut jalan terbalik. Hafal LALUAN ni, semua soalan VPC jadi automatik.',
+            sebabApa: 'Wujud sebagai kad sebab punca #1 orang stuck dengan VPC ialah depa hafal komponen SECARA BERASINGAN ("NACL = subnet level", "SG = instance level") tanpa nampak susunan dia dalam satu laluan. Bila kau tahu urutan checkpoint, soalan macam "ada IGW tapi takde internet", "inbound allow tapi connection gagal", "dua EC2 subnet sama dikawal apa" — semua jadi automatik sebab kau cuma tanya: "packet ni sampai checkpoint mana, dan checkpoint tu buat apa?" Jejak laluan = ganti hafalan dengan logik.',
+            sifir: [
+              'Packet PERGI: IGW → Route Table → NACL → SG → EC2',
+              'Packet BALIK: EC2 → SG (stateful, AUTO lepas) → NACL (stateless, kena outbound ephemeral rule) → Route Table → IGW',
+              'NACL = pagar SUBNET (nampak bila lintas sempadan je). SG = pintu INSTANCE (nampak intra-subnet pun)',
+              'Public subnet = route 0.0.0.0/0 → IGW. Private subnet = route 0.0.0.0/0 → NAT GW',
+              'Bila stuck, tanya: "packet ni LINTAS sempadan subnet tak?" — itu tentukan NACL terlibat ke tidak',
+            ],
+            perangkap: [
+              {
+                soalan: 'Packet dari internet menuju EC2 kau. Checkpoint mana ia jumpa DULU — Security Group atau NACL?',
+                umpan: 'Security Group dulu, sebab SG paling rapat dengan EC2 jadi ia "pertahanan pertama". Nampak masuk akal.',
+                betul: 'NACL dulu, BARU Security Group. Packet kena lintas sempadan subnet (jumpa NACL = pagar) sebelum boleh sampai ke instance (jumpa SG = pintu rumah). Urutan masuk: IGW → Route Table → NACL → SG → EC2. Keyword "order of evaluation inbound" → NACL sebelum SG.',
+              },
+              {
+                soalan: 'EC2 dalam PRIVATE subnet perlu download patch dari internet. Route table dia patut tunjuk 0.0.0.0/0 ke mana?',
+                umpan: 'Terus ke IGW (Internet Gateway) — sebab nak akses internet kan? Nampak betul.',
+                betul: 'Ke NAT Gateway (yang duduk dalam PUBLIC subnet), bukan terus ke IGW. EC2 private takde public IP, jadi tak boleh guna IGW terus — NAT GW yang tukar private IP → public untuk outbound sahaja. Keyword "private subnet + outbound internet" → NAT GW.',
+              },
+            ],
+            mermaid: [
+              {
+                label: 'Perjalanan satu packet — pergi & balik (urutan checkpoint)',
+                source: `flowchart TD
+  U["🌍 Browser User<br/>tuju public IP EC2"] -->|"request masuk"| IGW["1️⃣ IGW 🚪<br/>pintu VPC + terjemah<br/>public IP → private IP"]
+  IGW --> RT["2️⃣ Route Table 🪧<br/>papan tanda: belok subnet mana"]
+  RT --> NACL["3️⃣ NACL inbound 🛂<br/>pagar SUBNET (stateless)<br/>kena ada allow rule"]
+  NACL --> SG["4️⃣ Security Group inbound 👮<br/>pintu INSTANCE (stateful)<br/>+ INGAT connection ni"]
+  SG --> EC2["🖥️ EC2 terima ✅"]
+  EC2 -.->|"reply balik"| SGo["4️⃣ SG outbound 👮<br/>'aku ingat kau' → auto-lepas ✅<br/>TAK perlu outbound rule"]
+  SGo -.-> NACLo["3️⃣ NACL outbound 🛂<br/>'sapa kau?' cek balik<br/>WAJIB allow ephemeral 1024-65535"]
+  NACLo -.-> RTo["2️⃣ Route Table 🪧<br/>0.0.0.0/0 → IGW"]
+  RTo -.-> IGWo["1️⃣ IGW 🚪<br/>terjemah private → public"]
+  IGWo -.-> Uo["🌍 Browser terima jawapan ✅"]`,
+                caption: 'Garisan tegas = packet pergi (request). Garisan putus = packet balik (reply). INGAT exam: masa BALIK, SG (stateful) auto-lepas reply tanpa outbound rule, tapi NACL (stateless) "kuat lupa" → kena ada outbound rule allow ephemeral port 1024-65535, kalau tak reply mati separuh jalan. Inilah punca trap "inbound allow tapi connection tetap gagal".',
+              },
+              {
+                label: 'Public vs Private subnet — laluan keluar internet',
+                source: `flowchart TD
+  Q{"EC2 nak keluar ke internet"} --> PUB{"Route table subnet<br/>0.0.0.0/0 tunjuk ke mana?"}
+  PUB -->|"→ IGW"| P1["📡 PUBLIC subnet<br/>EC2 (ada public IP) → IGW → 🌍<br/>boleh inbound &amp; outbound"]
+  PUB -->|"→ NAT GW"| P2["🔒 PRIVATE subnet<br/>EC2 → NAT GW (dlm public subnet) → IGW → 🌍<br/>outbound SAHAJA, no inbound dari luar"]`,
+                caption: 'Public/private subnet BUKAN setting pada subnet — ia sifat ROUTE TABLE. Route 0.0.0.0/0 → IGW = subnet jadi public. Route 0.0.0.0/0 → NAT GW = subnet jadi private. INGAT exam: tukar route je, subnet sama tu bertukar sifat.',
+              },
+            ],
+            compare: {
+              label: '4 Checkpoint sepanjang laluan packet',
+              headers: ['Checkpoint', 'Peranan', 'Stateful?', 'Simptom bila tersilap'],
+              rows: [
+                ['1️⃣ IGW', 'Pintu VPC ↔ internet + NAT public/private IP', '—', 'Takde IGW/route → langsung no internet'],
+                ['2️⃣ Route Table', 'Tentukan arah (IGW / NAT / local)', '—', '"Ada IGW tapi takde internet" → route 0.0.0.0/0 hilang'],
+                ['3️⃣ NACL', 'Pengawal sempadan subnet, allow + deny', '🔴 Stateless (2 hala)', '"Inbound allow tapi gagal" → outbound ephemeral tak allow'],
+                ['4️⃣ Security Group', 'Pengawal instance, allow-only', '🟢 Stateful (reply auto)', 'Lupa SG tak boleh block IP tertentu (guna NACL)'],
+              ],
+              takeaway: 'Setiap simptom troubleshoot VPC = satu checkpoint tertentu pada laluan. Kenal pasti checkpoint = terus dapat jawapan. Inbound order: Route Table → NACL → SG.',
+            },
+            scenario: '"Order of evaluation packet masuk" → IGW → Route Table → NACL → SG → EC2. "Private subnet outbound internet" → NAT GW (bukan IGW terus). "Dua EC2 subnet sama" → SG je (tak lintas NACL).',
+            tips: [
+              'Inbound: NACL (subnet) DULU, baru SG (instance). Outbound: SG dulu, baru NACL',
+              'SG stateful → reply auto-allow. NACL stateless → reply kena outbound rule (ephemeral 1024-65535)',
+              'Public/private subnet = sifat ROUTE TABLE (→ IGW vs → NAT GW), bukan setting subnet',
+              'PRICING: laluan packet itu sendiri tiada caj. Tapi NAT GW (laluan private→internet) = $0.045/jam + $0.045/GB diproses — cost-trap biasa untuk traffic private subnet keluar internet',
+            ],
+            docs: [
+              { label: 'How traffic flows (VPC)', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/how-it-works.html' },
+              { label: 'Route tables', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html' },
+              { label: 'Compare SG and NACL', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/infrastructure-security.html' },
+            ],
+            keywords: ['packet journey', 'traffic flow', 'laluan packet', 'order of evaluation', 'IGW route table NACL SG', 'inbound order', 'outbound order', 'public subnet', 'private subnet', 'NAT Gateway', 'ephemeral ports', 'stateful', 'stateless', 'troubleshoot VPC', 'pricing'],
+          },
+          {
             shortName: 'VPC Peering',
             fullName: 'VPC Peering Connection',
             ingat: '"Jambatan terus antara dua VPC — non-transitive"',
