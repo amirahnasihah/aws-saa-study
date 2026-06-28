@@ -203,7 +203,7 @@ export default function TriggerWordsPage() {
 
           <div className="grid gap-3 md:grid-cols-2">
             {petaModules.map((m) => (
-              <div key={m.num} className="rounded-lg border border-aws-border bg-aws-card/40 p-3.5">
+              <div key={m.num} className="min-w-0 rounded-lg border border-aws-border bg-aws-card/40 p-3.5">
                 <div className="flex items-baseline gap-2 mb-3">
                   <span className={`font-space-mono text-[0.7rem] font-bold ${accentText[m.accent]}`}>{m.num}</span>
                   <h3 className="font-space-mono text-[0.8rem] font-bold text-aws-text">{m.title}</h3>

@@ -33,6 +33,22 @@ function repairMermaidLabels(source: string): string {
     .replace(/\(([^()\n]+)\)/g, (_m, inner: string) => `(${quote(inner)})`)
 }
 
+// Mermaid renders the SVG with `width="100%"` + `style="max-width:<natural>px"`.
+// On a container narrower than the diagram (a phone), `width:100%` squishes the
+// whole thing down to fit — wide LR diagrams become unreadably tiny. Pin the SVG
+// to its intrinsic size (from the viewBox) and drop the max-width cap so the
+// `overflow-x-auto` wrapper scrolls it horizontally at a legible size instead.
+// Containers wider than the diagram still fit it (no scroll); only narrow ones scroll.
+function makeSvgScrollable(svg: string): string {
+  const vb = svg.match(/viewBox="0 0 ([\d.]+) ([\d.]+)"/)
+  if (!vb) return svg
+  const w = Math.ceil(parseFloat(vb[1]))
+  const h = Math.ceil(parseFloat(vb[2]))
+  return svg
+    .replace(/(<svg\b[^>]*?)\swidth="[^"]*"/, `$1 width="${w}" height="${h}"`)
+    .replace(/(<svg\b[^>]*?style="[^"]*?)max-width:\s*[^;"]*;?/, '$1')
+}
+
 function getMermaid() {
   if (!mermaidInitPromise) {
     mermaidInitPromise = import('mermaid').then(({ default: mermaid }) => {
@@ -94,7 +110,7 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
           if (repaired === source) throw firstError
           svg = await tryRender(repaired, `mermaid-${reactId}-r`)
         }
-        if (!cancelled) setRendered({ source, svg })
+        if (!cancelled) setRendered({ source, svg: makeSvgScrollable(svg) })
       } catch {
         if (!cancelled) setFailedSource(source)
       }
