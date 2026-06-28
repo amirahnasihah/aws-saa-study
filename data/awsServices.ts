@@ -3775,8 +3775,69 @@ export const domains: DomainData[] = [
             sebabApa: "EBS volume tied ke satu AZ — kalau AZ rosak, atau OS dalam volume corrupt/kena ransomware, kau hilang data. Snapshot wujud sebagai backup point-in-time yang disimpan dalam S3 (durable, 11 nines, merentas AZ), jadi kau boleh restore volume balik atau create volume baru di AZ/region lain. Pain yang ia buang: EBS sendiri tak survive AZ failure — snapshot bagi recovery + portability.",
             sifir: ["Snapshot = INCREMENTAL (cuma block yang berubah disimpan) tapi restore = full volume", "Snapshot disimpan dalam S3 (managed, kau tak nampak bucket) — durable merentas AZ", "Copy snapshot ke region lain = cara pindah EBS data cross-region (volume sendiri AZ-locked)", "DLM (Data Lifecycle Manager) = automate snapshot schedule + retention, PERCUMA", "PRICING: snapshot $0.05/GB-month (incremental). Fast Snapshot Restore (FSR) = extra cost, no first-access latency"],
             perangkap: [{"soalan": "Nak pindah EBS volume dari us-east-1 ke eu-west-1 untuk DR. Macam mana?", "umpan": "Detach volume, attach ke region lain — TAK BOLEH, EBS volume terkunci dalam satu AZ/region, tak boleh attach merentas region.", "betul": "Buat snapshot → COPY snapshot ke region lain → create volume baru dari snapshot. Keyword 'cross-region EBS' = copy snapshot."}, {"soalan": "Nak automate daily EBS backup + buang yang lebih 30 hari, tanpa script sendiri. Guna apa?", "umpan": "Tulis Lambda + EventBridge cron untuk create/delete snapshot — boleh tapi extra ops, ada service siap sedia.", "betul": "Data Lifecycle Manager (DLM) — keyword 'automated EBS snapshot schedule + retention' = DLM (free)."}],
-            scenario: 'EC2 kena ransomware, OS corrupted — restore EBS dari snapshot semalam. Atau copy snapshot ke region lain untuk DR, create new EC2 dari snapshot tu.',
-            keywords: ['incremental backup', 'point-in-time', 'cross-AZ', 'cross-region copy', 'EC2 recovery'],
+            scenario: 'EC2 kena ransomware, OS corrupted — restore EBS dari snapshot semalam. Atau copy snapshot ke region lain untuk DR, create new EC2 dari snapshot tu. "Rarely-accessed snapshot simpan 90+ hari, jimat kos" → Snapshot Archive tier. "Restore volume tanpa first-access latency" → Fast Snapshot Restore (FSR). "Automate schedule + retention" → Data Lifecycle Manager (DLM). "Tersilap delete snapshot, nak recover" → Recycle Bin.',
+            detailsLabel: 'EBS Snapshots — bahagian & feature (semua duduk atas S3 belakang tabir)',
+            storageDetails: 'Standard tier → snapshot biasa, INCREMENTAL (block berubah je disimpan), disimpan dalam S3 managed. $0.05/GB-mo\nArchive tier (Snapshot Archive) → untuk snapshot rarely-accessed simpan 90+ hari. Convert incremental → FULL snapshot, sampai 75% lebih murah. Restore ambil 24-72 jam\nFast Snapshot Restore (FSR) → volume yang dibuat dari snapshot terus fully-initialized, takde first-access latency. Enable per snapshot + per AZ, max 5/Region, snapshot ≤16 TiB. Mahal (DSU-hours)\nData Lifecycle Manager (DLM) → automate create + retention + copy snapshot ikut schedule (tag-based). PERCUMA\nCopy & Share → copy snapshot cross-region/cross-account (cara pindah EBS data merentas region); share private (modify permissions) atau public\nRecycle Bin → retention rule untuk recover snapshot/AMI yang ter-delete dalam tempoh tertentu',
+            mermaid: [
+              {
+                label: 'Mekanik incremental — kenapa snapshot ke-2 murah',
+                source: `flowchart LR
+  V["💽 Volume<br/>blocks A B C D"] --> S1["📸 Snapshot 1<br/>simpan A B C D<br/>(full set pertama)"]
+  V2["💽 Volume<br/>blocks A B C' D"] --> S2["📸 Snapshot 2<br/>simpan C' SAHAJA<br/>(block berubah je)"]
+  S1 -.->|"rujuk balik A B D"| S2
+  S2 --> R["♻️ Restore = full volume<br/>(gabung A B C' D)"]`,
+                caption: 'Snapshot INCREMENTAL: hanya block yang berubah disimpan, tapi restore tetap bagi full volume. Sebab tu snapshot ke-2 ke-3 murah. INGAT exam: "incremental storage tapi full restore" = EBS snapshot. Padam snapshot lama selamat — AWS pindah block yang masih diperlukan ke snapshot berikut.',
+              },
+              {
+                label: 'Pilih: snapshot lifecycle & feature mana',
+                source: `flowchart TD
+  Q["Apa masalah kau?"] --> A{"Nak apa?"}
+  A -->|"Pindah EBS ke region lain"| C["📋 Copy snapshot → region lain<br/>→ create volume baru"]
+  A -->|"Automate backup + retention"| D["🗓️ Data Lifecycle Manager<br/>(DLM, percuma)"]
+  A -->|"Simpan lama 90+ hari, jarang akses"| AR["🧊 Snapshot Archive tier<br/>(sampai 75% murah)"]
+  A -->|"Restore laju tanpa latency"| F["⚡ Fast Snapshot Restore<br/>(FSR, mahal, per AZ)"]
+  A -->|"Recover snapshot ter-delete"| RB["♻️ Recycle Bin<br/>(retention rule)"]`,
+                caption: 'Setiap pain ada feature sendiri. INGAT exam: cross-region → COPY snapshot · automate → DLM (free) · arkib jimat kos → Archive tier · hapus first-access latency → FSR · undo delete → Recycle Bin. Jangan keliru DLM (automate) dengan FSR (laju restore).',
+              },
+            ],
+            compare: [
+              {
+                label: 'Standard tier vs Archive tier (jangan keliru kos & kelajuan)',
+                headers: ['Aspect', 'Standard tier', 'Archive tier'],
+                rows: [
+                  ['Format simpan', 'Incremental (block berubah je)', 'Full snapshot (semua block)'],
+                  ['Kos', '$0.05/GB-mo', 'Sampai 75% lebih murah (~$0.0125/GB-mo)'],
+                  ['Kelajuan restore', 'Serta-merta (terus guna)', '24-72 jam (kena restore ke standard dulu)'],
+                  ['Min retention', 'Tiada', '90 hari'],
+                  ['Guna bila', 'Backup aktif, DR, restore kerap', 'Compliance / end-of-project, jarang akses'],
+                ],
+                takeaway: 'Keyword "rarely accessed / long-term / 90+ days / compliance archive" → Archive tier (jimat sampai 75% TAPI restore lambat 24-72 jam + min 90 hari). Backup yang mungkin kena restore cepat → kekal Standard tier.',
+              },
+              {
+                label: 'EBS Snapshot vs AMI vs Recycle Bin (sering tertukar)',
+                headers: ['Benda', 'Apa dia', 'Guna bila'],
+                rows: [
+                  ['EBS Snapshot', 'Backup point-in-time SATU volume → S3', 'Restore/clone volume, DR cross-region'],
+                  ['AMI', 'Template launch EC2 (root volume + metadata, boleh banyak snapshot)', 'Boot EC2 baru yang identical'],
+                  ['Recycle Bin', 'Retention rule untuk recover snapshot/AMI ter-delete', 'Undo accidental/malicious delete'],
+                ],
+                takeaway: 'Snapshot = backup 1 volume. AMI = blueprint untuk boot EC2 (mengandungi snapshot). Recycle Bin = jaring keselamatan bila tersilap padam. Keyword "accidentally deleted snapshot / protect against deletion" → Recycle Bin.',
+              },
+            ],
+            tips: [
+              'Incremental tapi self-contained: padam snapshot lama TAK rosakkan snapshot baru — AWS pindah block yang masih diperlukan. Restore sentiasa bagi full volume',
+              'Cross-region DR: COPY snapshot ke region lain (EBS volume AZ-locked, tak boleh attach cross-region). Cross-account: modify permissions / share. Snapshot encrypted dengan custom KMS key kena share key tu juga',
+              'Encryption: snapshot dari encrypted volume = encrypted. Copy snapshot boleh tukar/ tambah encryption (re-encrypt dengan KMS key lain). Unencrypted → encrypted: BOLEH masa copy/create volume',
+              'Fast Snapshot Restore (FSR): volume terus fully-initialized, takde first-access I/O latency. Enable per snapshot + per AZ, max 5/Region, snapshot ≤16 TiB, TAK support Outposts/Local Zones/Wavelength. Mahal — guna untuk RTO ketat je',
+              'Data Lifecycle Manager (DLM): automate create/retain/copy snapshot & AMI guna tag, PERCUMA — elak tulis Lambda+EventBridge sendiri. AWS Backup pula centralized merentas banyak service (EBS+RDS+EFS+DynamoDB...)',
+              'PRICING: Standard snapshot $0.05/GB-mo (incremental). Archive tier sampai 75% lebih murah (~$0.0125/GB-mo) min 90 hari + restore fee. FSR dicaj per DSU-hour setiap AZ yang di-enable (mahal). DLM percuma. Copy snapshot = caj data transfer + storage di destinasi',
+            ],
+            docs: [
+              { label: 'EBS snapshots', url: 'https://docs.aws.amazon.com/ebs/latest/userguide/ebs-snapshots.html' },
+              { label: 'Snapshot Archive', url: 'https://docs.aws.amazon.com/ebs/latest/userguide/snapshot-archive.html' },
+              { label: 'Fast Snapshot Restore', url: 'https://docs.aws.amazon.com/ebs/latest/userguide/ebs-fast-snapshot-restore.html' },
+            ],
+            keywords: ['incremental backup', 'point-in-time', 'cross-AZ', 'cross-region copy', 'EC2 recovery', 'Snapshot Archive', 'archive tier', 'Fast Snapshot Restore', 'FSR', 'Data Lifecycle Manager', 'DLM', 'Recycle Bin', 'AMI vs snapshot', 'snapshot encryption', 'KMS', 'cross-account share', 'rarely accessed', 'long-term backup', 'first-access latency', 'pricing'],
           },
           {
             shortName: 'FSx',
@@ -5788,6 +5849,7 @@ export const domains: DomainData[] = [
               'Firehose TIADA replay/storage (deliver lepas tu hilang). Streams retention 24j→365hari',
               'Streams: kau urus shards (1 shard = 1MB/s in, 2MB/s out). Firehose auto-scale',
               'Transform/analisa stream guna SQL/Flink → Managed Service for Apache Flink (dulu Kinesis Data Analytics)',
+              'Stream VIDEO (CCTV/webcam) untuk playback/ML → Kinesis Video Streams (KVS), bukan Data Streams',
               'Bukan streaming (task discrete, decouple) → SQS, bukan Kinesis',
             ],
             perangkap: [
@@ -5857,7 +5919,7 @@ export const domains: DomainData[] = [
             docs: [
               { label: 'Change data retention period', url: 'https://docs.aws.amazon.com/streams/latest/dev/kinesis-extended-retention.html' },
             ],
-            keywords: ['real-time', 'streaming', 'data pipeline', 'analytics', 'Data Streams', 'Firehose', 'shards', 'retention', 'clickstream', 'IoT', 'replay', 'serverless delivery'],
+            keywords: ['real-time', 'streaming', 'data pipeline', 'analytics', 'Data Streams', 'Firehose', 'shards', 'retention', 'clickstream', 'IoT', 'replay', 'serverless delivery', 'Kinesis Video Streams', 'KVS', 'video stream', 'CCTV', 'Managed Service for Apache Flink', 'Kinesis Data Analytics'],
           },
           {
             shortName: 'API Gateway',
