@@ -3792,14 +3792,45 @@ export const domains: DomainData[] = [
             sebabApa: "Dulu setiap service ada cara backup sendiri — RDS snapshot, EBS snapshot, EFS backup, DynamoDB PITR — semua manual, lain-lain tempat, susah nak prove ke auditor company comply. AWS Backup wujud sebagai satu 'control panel' tunggal: satu backup plan, satu retention policy, satu audit report untuk SEMUA service sekali gus. Pain yang ia buang: tak payah tulis script backup berasingan + senang nak buktikan compliance.",
             sifir: ["AWS Backup = CENTRALIZED backup across services (EFS, EBS, RDS, Aurora, DynamoDB, S3, FSx, EC2 AMI, Storage Gateway)", "Backup Plan = schedule + retention + cross-region copy, semua di satu tempat", "Backup Audit Manager = compliance report (prove backups ikut policy)", "EFS backup = AWS Backup (BUKAN File Gateway, BUKAN FSx Gateway)", "PERCUMA service; bayar storage backup (cth backup ke Backup Vault, Glacier-class untuk cold)"],
             perangkap: [{"soalan": "Company kena backup EFS file system ikut retention policy 90 hari + prove ke auditor. Service mana?", "umpan": "S3 File Gateway / FSx File Gateway — nampak macam 'gateway' boleh backup file, tapi Gateway = hybrid ACCESS storage, bukan backup tool.", "betul": "AWS Backup — keyword 'centralized backup + retention + compliance report' = AWS Backup (+ Backup Audit Manager untuk audit)."}, {"soalan": "Nak satu tempat manage + audit backup untuk RDS, DynamoDB, dan EBS sekali gus. Apa pilih?", "umpan": "Buat manual RDS automated backup + DynamoDB PITR + EBS snapshot lifecycle — boleh jadi tapi berselerak, susah audit, bukan 'centralized'.", "betul": "AWS Backup — keyword 'single place / centralized / cross-service' terus pointing ke AWS Backup."}],
-            scenario: 'Company kena comply dengan policy backup 90-hari untuk semua databases — AWS Backup create backup plan, auto backup RDS + DynamoDB + EFS setiap hari, retain 90 hari, auto copy ke DR region.',
+            scenario: 'Company kena comply dengan policy backup 90-hari untuk semua databases — AWS Backup create backup plan, auto backup RDS + DynamoDB + EFS setiap hari, retain 90 hari, auto copy ke DR region. "Backup tak boleh delete walaupun admin/ransomware" → Vault Lock (WORM, compliance mode).',
+            detailsLabel: 'AWS Backup — pecahan component (anatomy)',
+            storageDetails: 'Backup Plan → "resepi": schedule (frequency) + retention + lifecycle (transition ke cold storage) + cross-region / cross-account copy\nResource assignment → pilih resource ikut TAG atau resource ID (auto-cover resource baru yang match tag)\nBackup Vault → bekas tempat recovery point disimpan, encrypt dengan KMS\nVault Lock → WORM / immutable — Compliance mode TAK BOLEH undo (lindung dari delete admin/ransomware); Governance mode boleh dengan permission khas\nRecovery Point → satu backup pada satu masa (macam snapshot) untuk satu resource\nBackup Audit Manager → framework compliance + report (buktikan backup ikut policy ke auditor)',
+            compare: {
+              label: 'AWS Backup vs DLM vs native per-service backup',
+              headers: ['Aspect', 'AWS Backup', 'Data Lifecycle Manager (DLM)', 'Native per-service'],
+              rows: [
+                ['Skop', '🟢 Banyak service (EBS, RDS, EFS, DynamoDB, FSx, S3, EC2…)', 'EBS snapshot + AMI SAHAJA', 'Satu service je (RDS auto-backup, DynamoDB PITR)'],
+                ['Centralized + audit', '🟢 Ya — satu tempat + Backup Audit Manager', '🔴 Tak', '🔴 Tak (berselerak)'],
+                ['Immutable / WORM', '🟢 Vault Lock (anti-ransomware)', '🔴 Tak', 'Terhad'],
+                ['Kos service', 'Free (bayar storage backup)', 'Free', 'Selalunya included'],
+                ['Guna bila', 'Compliance / cross-service / audit / cross-region', 'Automate EBS snapshot je, ringkas', 'Cukup untuk satu service sahaja'],
+              ],
+              takeaway: '"Centralized / cross-service / compliance report / immutable backup" → AWS Backup. "Automate EBS snapshot je" → DLM (lagi ringkas + free). Satu service sahaja & dah cukup → native (RDS automated backup, DynamoDB PITR).',
+            },
+            mermaid: {
+              label: 'Pilih tool backup mana?',
+              source: `flowchart TD
+  Q{"Berapa banyak service<br/>nak di-backup?"} -->|"Banyak service +<br/>perlu audit/compliance"| AB["🛡️ AWS Backup<br/>(plan + vault + audit)"]
+  Q -->|"EBS snapshot / AMI sahaja"| DLM["🗓️ Data Lifecycle Manager<br/>(free, ringkas)"]
+  Q -->|"Satu service & dah cukup"| NAT["⚙️ Native backup<br/>(RDS auto-backup / DynamoDB PITR)"]
+  AB --> LOCK{"Perlu backup<br/>TAK BOLEH delete?"}
+  LOCK -->|"Ya — anti-ransomware /<br/>compliance"| VL["🔒 Vault Lock<br/>(WORM, Compliance mode)"]`,
+              caption: 'Banyak service + audit → AWS Backup; EBS sahaja → DLM; satu service cukup → native. Kalau backup mesti immutable (ransomware/compliance) → Vault Lock Compliance mode (tak boleh undo). INGAT exam: "centralized + compliance report" = AWS Backup; "immutable backup" = Vault Lock.',
+            },
             tips: [
-              'AWS Backup supports: EFS, EBS, RDS, Aurora, DynamoDB, S3, FSx, EC2 AMIs, Storage Gateway volumes',
+              'AWS Backup supports: EFS, EBS, RDS, Aurora, DynamoDB, S3, FSx, EC2 AMIs, Storage Gateway volumes, DocumentDB, Neptune, Redshift',
               '"centralized backup management + monitoring + auditing reporting" → AWS Backup (every time)',
               'Backup Audit Manager: compliance framework + reporting for audit — "prove backups meet policy" → Backup Audit Manager',
+              'Vault Lock (WORM): Compliance mode = TAK BOLEH undo/delete walaupun root (anti-ransomware/regulatory); Governance mode = boleh dengan permission khas. Keyword "immutable / cannot be deleted / ransomware protection" → Vault Lock',
               'S3 File Gateway ≠ EFS backup. FSx File Gateway ≠ EFS backup. For EFS backup → AWS Backup.',
+              'PRICING: service PERCUMA — bayar (1) storage backup (warm ~$0.05/GB-mo EBS-class; cold storage lagi murah untuk EFS/DynamoDB) + (2) restore + (3) cross-region/cross-account copy = data transfer. Cost note: lifecycle ke cold storage jimat untuk retention panjang.',
             ],
-            keywords: ['centralized backup', 'backup plans', 'retention', 'cross-region', 'compliance', 'automated', 'EFS backup', 'Backup Audit Manager', 'monitoring'],
+            docs: [
+              { label: 'What is AWS Backup?', url: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/whatisbackup.html' },
+              { label: 'AWS Backup Vault Lock', url: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/vault-lock.html' },
+              { label: 'Backup Audit Manager', url: 'https://docs.aws.amazon.com/aws-backup/latest/devguide/aws-backup-audit-manager.html' },
+            ],
+            keywords: ['centralized backup', 'backup plans', 'backup vault', 'vault lock', 'WORM', 'immutable backup', 'ransomware protection', 'retention', 'cross-region', 'cross-account', 'compliance', 'automated', 'EFS backup', 'Backup Audit Manager', 'monitoring', 'pricing'],
           },
           {
             shortName: 'S3 Versioning & CRR',
@@ -3810,8 +3841,43 @@ export const domains: DomainData[] = [
             sebabApa: "S3 by default OVERWRITE atau DELETE terus — sekali tersilap delete atau replace file, hilang selamanya. Versioning wujud supaya setiap perubahan jadi 'version' baru, version lama masih ada untuk restore (termasuk recover dari accidental delete sebab delete cuma letak delete marker). CRR pula wujud sebab data dalam satu region je = risiko bila region down atau untuk compliance 'data mesti ada di region lain' — ia auto-copy objects ke bucket region berbeza.",
             sifir: ["Versioning = simpan SEMUA versi; delete = letak delete marker je, boleh undo", "Versioning kena ENABLE dulu BEFORE replication — CRR wajib versioning ON kat source & destination", "CRR = Cross-Region (region lain) ; SRR = Same-Region Replication (region sama, beza account/bucket)", "Replication = ASYNC + objek BARU sahaja (existing object kena S3 Batch Replication)", "MFA Delete = extra protection, kena MFA untuk delete version (lawan accidental/malicious delete)"],
             perangkap: [{"soalan": "Developer accidentally overwrite file penting dalam S3. Macam mana recover ke versi sebelum?", "umpan": "Enable CRR — orang ingat 'replication = backup', tapi CRR cuma copy ke region lain, tak bagi balik versi LAMA dalam bucket asal.", "betul": "S3 Versioning — keyword 'restore previous version / undo overwrite' = Versioning (setiap overwrite jadi version baru)."}, {"soalan": "Compliance kata objects mesti disimpan di region kedua untuk DR. Pilih apa?", "umpan": "S3 Versioning sahaja — versioning lindung dari delete tapi semua versi DUDUK region sama; region down = tetap hilang.", "betul": "Cross-Region Replication (CRR) — keyword 'different region / DR / data residency' = CRR (ingat: versioning kena ON dulu)."}],
-            scenario: 'Developer accidentally delete important file dalam S3 — Versioning enable restore previous version. CRR auto-copy semua objects ke DR bucket kat region lain untuk disaster recovery.',
-            keywords: ['versioning', 'CRR', 'accidental deletion', 'cross-region replication', 'SRR', 'point-in-time recovery'],
+            scenario: 'Developer accidentally delete important file dalam S3 — Versioning enable restore previous version. CRR auto-copy semua objects ke DR bucket kat region lain untuk disaster recovery. "Replicate ke region lain, latency rendah untuk user" → CRR. "Compliance kena data 2 region" → CRR. "Aggregate log dari banyak bucket ke satu bucket region sama" → SRR.',
+            detailsLabel: 'Versioning + Replication — pecahan component',
+            storageDetails: 'Versioning → setiap PUT jadi version baru (version ID unik); delete = letak delete marker (object "hilang" tapi versi lama kekal, boleh undo). Kena enable per bucket; sekali ON cuma boleh suspend, tak boleh OFF\nDelete marker → penanda "latest = deleted"; buang delete marker = object muncul balik\nMFA Delete → wajib kod MFA untuk delete version / suspend versioning (lindung dari delete malicious)\nReplication (CRR/SRR) → auto-copy object ke bucket lain, ASYNC, objek BARU sahaja selepas enable\nS3 Batch Replication → replicate object SEDIA ADA (existing) yang wujud sebelum rule di-enable\nReplication rules → boleh tapis by prefix/tag, tukar storage class di destinasi, tukar owner (cross-account)',
+            compare: {
+              label: 'Versioning vs CRR vs SRR — recovery ke DR?',
+              headers: ['Feature', 'Buat apa', 'Guna bila (keyword)'],
+              rows: [
+                ['Versioning', 'Simpan semua versi dalam bucket SAMA; undo overwrite/delete', '"restore previous version / accidental delete / undo overwrite"'],
+                ['CRR (Cross-Region)', 'Auto-copy ke bucket region BERBEZA', '"DR / different region / data residency / latency dekat user region lain"'],
+                ['SRR (Same-Region)', 'Auto-copy ke bucket region SAMA (beza bucket/account)', '"aggregate logs / compliance / replicate to another account, same region"'],
+              ],
+              takeaway: 'Undo silap delete/overwrite → Versioning (bucket sama). Region lain untuk DR/residency → CRR. Region sama (log aggregation / cross-account) → SRR. PENTING: Versioning WAJIB ON di source & destination sebelum replication boleh jalan. CRR ≠ backup versi lama — ia copy ke region lain je.',
+            },
+            mermaid: {
+              label: 'Versioning / CRR / SRR — pilih yang mana',
+              source: `flowchart TD
+  Q{"Apa masalah kau?"} -->|"Tersilap overwrite/<br/>delete object"| V["🕑 Versioning<br/>(restore versi lama, bucket sama)"]
+  Q -->|"Perlu salinan di<br/>REGION LAIN"| CRR["🌍 CRR<br/>(DR / data residency /<br/>latency region lain)"]
+  Q -->|"Perlu salinan di<br/>REGION SAMA"| SRR["🗂️ SRR<br/>(log aggregation /<br/>cross-account)"]
+  CRR --> PRE["⚠️ Prasyarat:<br/>Versioning ON di source & destination"]
+  SRR --> PRE`,
+              caption: 'Undo delete → Versioning. Salinan region lain → CRR. Salinan region sama → SRR. Replication WAJIB versioning ON dua-dua hujung, async, objek baru je (existing → S3 Batch Replication). INGAT exam: "previous version" = Versioning; "different region" = CRR; "same region, another bucket/account" = SRR.',
+            },
+            tips: [
+              'Versioning sekali ENABLE tak boleh OFF — cuma boleh SUSPEND (versi sedia ada kekal). Delete object = delete marker; nak betul-betul buang kena delete version ID',
+              'Replication = ASYNC + objek BARU selepas rule enable. Object SEDIA ADA → guna S3 Batch Replication. Replication TAK retroaktif',
+              'CRR vs SRR: CRR = region BEZA (DR, data residency, latency dekat user region lain). SRR = region SAMA (log aggregation, cross-account, compliance same-region)',
+              'MFA Delete: extra layer — kena MFA untuk delete version atau suspend versioning. Lindung dari delete accidental/malicious',
+              'Versioning naikkan kos sebab simpan SEMUA versi — guna S3 Lifecycle untuk expire noncurrent versions / transition ke kelas murah',
+              'PRICING: Versioning sendiri free, TAPI kau bayar storage SETIAP versi (versi lama makan ruang). Replication = bayar storage di destinasi + request + cross-region data transfer (CRR). Jimat: lifecycle rule buang noncurrent versions.',
+            ],
+            docs: [
+              { label: 'Using versioning in S3 buckets', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/Versioning.html' },
+              { label: 'S3 Replication (CRR & SRR)', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html' },
+              { label: 'S3 Batch Replication (existing objects)', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/s3-batch-replication-batch.html' },
+            ],
+            keywords: ['versioning', 'CRR', 'SRR', 'delete marker', 'MFA Delete', 'accidental deletion', 'cross-region replication', 'same-region replication', 'S3 Batch Replication', 'noncurrent version', 'data residency', 'point-in-time recovery', 'pricing'],
           },
           {
             shortName: 'EBS Snapshots',
@@ -3894,17 +3960,48 @@ export const domains: DomainData[] = [
             fungsi: 'Empat pilihan: FSx for Windows (SMB/NTFS, AD integration), FSx for Lustre (high-throughput HPC, S3 integration), FSx for NetApp ONTAP (enterprise NAS migration), FSx for OpenZFS.',
             sebabApa: "EFS cuma support NFS (Linux/POSIX) — tapi ramai enterprise guna Windows apps yang perlu SMB + Active Directory, atau HPC yang perlu throughput gila-gila, atau dah ada NetApp on-prem nak migrate. FSx wujud bagi managed file system untuk kes-kes yang EFS tak boleh handle: Windows SMB, Lustre HPC, NetApp ONTAP, OpenZFS. Pain yang ia buang: tak payah build & patch Windows file server atau Lustre cluster sendiri atas EC2.",
             sifir: ["FSx for Windows = SMB/NTFS + Active Directory (Windows file share)", "FSx for Lustre = HPC high-throughput + native S3 integration (DRA)", "FSx for NetApp ONTAP = migrate enterprise NetApp/NAS ke AWS (multi-protocol)", "FSx for OpenZFS = migrate ZFS / Linux NFS workload", "EFS = general NFS (Linux je); Windows SMB → FSx Windows, BUKAN EFS"],
-            perangkap: [{"soalan": "Windows application perlu shared file storage guna SMB protocol + integrate Active Directory. Pilih apa?", "umpan": "Amazon EFS — orang ingat 'EFS = shared file storage' jadi pilih EFS, tapi EFS NFS-only, tak support SMB/Windows.", "betul": "FSx for Windows File Server — keyword 'SMB / NTFS / Active Directory / Windows file share' = FSx Windows."}, {"soalan": "HPC workload perlu POSIX file system, throughput sangat tinggi, dan baca/tulis data terus dari S3. Pilih apa?", "umpan": "EFS — POSIX betul, tapi EFS tak ada S3 native integration dan throughput tak setanding Lustre untuk HPC.", "betul": "FSx for Lustre — keyword 'HPC + high throughput + S3 integration (DRA)' = FSx for Lustre."}],
-            scenario: '"Windows apps perlu SMB file share" → FSx for Windows. "HPC workload perlu high-throughput scratch storage" → FSx for Lustre. "Migrate on-prem NetApp storage ke AWS" → FSx for NetApp ONTAP.',
+            perangkap: [{"soalan": "Windows application perlu shared file storage guna SMB protocol + integrate Active Directory. Pilih apa?", "umpan": "Amazon EFS — orang ingat 'EFS = shared file storage' jadi pilih EFS, tapi EFS NFS-only, tak support SMB/Windows.", "betul": "FSx for Windows File Server — keyword 'SMB / NTFS / Active Directory / Windows file share' = FSx Windows."}, {"soalan": "HPC workload perlu POSIX file system, throughput sangat tinggi, dan baca/tulis data terus dari S3. Pilih apa?", "umpan": "EFS — POSIX betul, tapi EFS tak ada S3 native integration dan throughput tak setanding Lustre untuk HPC.", "betul": "FSx for Lustre — keyword 'HPC + high throughput + S3 integration (DRA)' = FSx for Lustre."}, {"soalan": "Migrate enterprise NetApp NAS on-prem ke AWS tapi nak kekalkan feature ONTAP (snapshot, SnapMirror, dedup) + access guna NFS DAN SMB sekali. Pilih apa?", "umpan": "FSx for OpenZFS — nampak macam 'NAS migration', tapi OpenZFS untuk ZFS/Linux NFS workload, bukan NetApp.", "betul": "FSx for NetApp ONTAP — keyword 'NetApp / multi-protocol NFS+SMB+iSCSI / SnapMirror / enterprise NAS' = ONTAP."}],
+            scenario: '"Windows apps perlu SMB file share" → FSx for Windows. "HPC workload perlu high-throughput scratch storage" → FSx for Lustre. "Migrate on-prem NetApp storage ke AWS" → FSx for NetApp ONTAP. "Migrate ZFS / Linux NFS workload" → FSx for OpenZFS.',
+            detailsLabel: 'FSx — 4 jenis file system (pilih ikut workload)',
+            storageDetails: 'FSx for Windows File Server → SMB / NTFS + Active Directory, DFS namespaces, VSS shadow copies. Single-AZ atau Multi-AZ. Untuk Windows apps & file share\nFSx for Lustre → POSIX, throughput ratus GB/s + jutaan IOPS, sub-ms latency. Native S3 integration (DRA). Dua deployment: Scratch (sementara, no replication, murah) vs Persistent (durable, replicated dalam AZ). Untuk HPC / ML / media\nFSx for NetApp ONTAP → MULTI-PROTOCOL (NFS + SMB + iSCSI serentak), feature ONTAP penuh: snapshot, SnapMirror, dedup, compression, auto data tiering ke capacity pool murah. Untuk migrate NetApp enterprise\nFSx for OpenZFS → NFS (v3/v4.x), powered by OpenZFS, snapshot + low latency. Untuk migrate ZFS / Linux NFS workload\nSemua → fully managed (no patch/scale server), backup automatik, encrypt at rest (KMS) + in transit',
+            compare: {
+              label: '4 jenis FSx — protokol, kekuatan, keyword exam',
+              headers: ['FSx type', 'Protokol', 'Kekuatan utama', 'Keyword exam'],
+              rows: [
+                ['FSx for Windows', 'SMB (NTFS)', 'Active Directory, DFS, VSS — Windows-native', '"Windows / SMB / Active Directory / NTFS file share"'],
+                ['FSx for Lustre', 'POSIX (Linux)', 'Throughput gila + S3 integration (DRA)', '"HPC / ML / high throughput / POSIX + S3"'],
+                ['FSx for NetApp ONTAP', 'NFS + SMB + iSCSI', 'Multi-protocol + ONTAP features + tiering', '"NetApp / migrate NAS / multi-protocol / SnapMirror"'],
+                ['FSx for OpenZFS', 'NFS', 'ZFS snapshots, low-latency, migrate ZFS', '"ZFS / Linux NFS migration / OpenZFS"'],
+              ],
+              takeaway: 'Windows+SMB+AD → Windows. HPC POSIX + S3 → Lustre. Multi-protocol (NFS+SMB+iSCSI) atau NetApp → ONTAP. ZFS/Linux NFS → OpenZFS. Lawan EFS: EFS = general NFS Linux SAHAJA, no SMB, no S3-native. Bila soalan sebut "Windows" atau "SMB" → JANGAN pilih EFS.',
+            },
+            mermaid: {
+              label: 'Pilih FSx (atau EFS) mana?',
+              source: `flowchart TD
+  Start{"Shared file system —<br/>workload jenis apa?"} -->|"Windows app /<br/>SMB + Active Directory"| WIN["🪟 FSx for Windows"]
+  Start -->|"HPC / ML +<br/>throughput tinggi + S3"| LUS["⚡ FSx for Lustre"]
+  Start -->|"Migrate NetApp /<br/>perlu NFS+SMB+iSCSI"| ONTAP["🟦 FSx for NetApp ONTAP"]
+  Start -->|"Migrate ZFS /<br/>Linux NFS"| ZFS["🟩 FSx for OpenZFS"]
+  Start -->|"General Linux NFS,<br/>tak perlu feature khas"| EFS["📁 Amazon EFS<br/>(bukan FSx)"]`,
+              caption: 'Cabang ikut workload: Windows→Windows, HPC+S3→Lustre, NetApp/multi-protocol→ONTAP, ZFS→OpenZFS, general Linux NFS→EFS. INGAT exam: "Windows" atau "SMB" muncul → FSx Windows, BUKAN EFS. "high throughput + S3 integration" → Lustre. "multi-protocol / NetApp" → ONTAP.',
+            },
             tips: [
               'FSx for Lustre: natively integrates with S3 via Data Repository Associations (DRA) — objects lazily imported from S3, processed files can be exported back to S3',
+              'FSx for Lustre deployment: Scratch = temporary, NO replication, cheapest (HPC scratch, data boleh rebuild); Persistent = durable, replicated dalam satu AZ (long-lived). Keyword "temporary scratch / cheapest" → Scratch',
               'FSx for Lustre + DataSync: DataSync supports FSx for Lustre as a transfer location — use for scheduled bulk transfers to/from FSx Lustre',
               'Exam: "POSIX + S3 integration + high throughput" → FSx for Lustre (not EFS). EFS is general-purpose NFS, no S3 native integration',
-              'FSx for Windows: Single-AZ or Multi-AZ deployments; SSD or HDD storage; SMB/NTFS NOT POSIX',
+              'FSx for Windows: Single-AZ or Multi-AZ deployments; SSD or HDD storage; SMB/NTFS NOT POSIX. Multi-AZ = HA (standby di AZ lain)',
+              'FSx for NetApp ONTAP: SATU-SATUNYA FSx multi-protocol (NFS + SMB + iSCSI serentak). Ada auto-tiering ke "capacity pool" yang murah untuk data sejuk',
               'FSx for Windows access: supports cross-VPC/account/region via VPC Peering or Transit Gateway; on-premises via Direct Connect or VPN',
               'DRA = Data Repository Association: links FSx Lustre file system to an S3 bucket for automatic import/export',
+              'PRICING: (approximate, per GB-month) FSx Lustre Scratch SSD ~$0.140 (cheapest, no replication); Lustre Persistent lebih mahal ikut throughput tier; FSx Windows SSD ~$0.13 + throughput capacity, HDD ~$0.013 (murah); FSx ONTAP SSD primary ~$0.022/GB-mo + capacity-pool tiering lagi murah untuk data sejuk; FSx OpenZFS SSD ~$0.09. Cost discriminator: HPC temporary → Lustre Scratch; nak murah Windows → HDD; data sejuk besar → ONTAP tiering.',
             ],
-            keywords: ['Windows SMB', 'NTFS', 'Active Directory', 'Lustre HPC', 'NetApp ONTAP', 'OpenZFS', 'managed file system', 'S3 integration', 'DRA', 'DataSync', 'multi-AZ', 'single-AZ', 'POSIX'],
+            docs: [
+              { label: 'Choosing an Amazon FSx file system', url: 'https://docs.aws.amazon.com/fsx/latest/WindowsGuide/what-is.html' },
+              { label: 'FSx for Lustre — link to S3 (DRA)', url: 'https://docs.aws.amazon.com/fsx/latest/LustreGuide/create-dra-linked-data-repo.html' },
+              { label: 'FSx for NetApp ONTAP', url: 'https://docs.aws.amazon.com/fsx/latest/ONTAPGuide/what-is-fsx-ontap.html' },
+            ],
+            keywords: ['Windows SMB', 'NTFS', 'Active Directory', 'DFS', 'VSS', 'Lustre HPC', 'Scratch', 'Persistent', 'NetApp ONTAP', 'SnapMirror', 'multi-protocol', 'OpenZFS', 'ZFS', 'managed file system', 'S3 integration', 'DRA', 'DataSync', 'multi-AZ', 'single-AZ', 'POSIX', 'capacity pool tiering', 'pricing'],
           },
           {
             shortName: 'Storage Gateway',
@@ -5133,6 +5230,10 @@ export const domains: DomainData[] = [
               'PRICING (us-east-1): gp3 = $0.08/GB-mo (base, includes 3K IOPS + 125 MB/s). io2 = $0.125/GB-mo + $0.065/provisioned-IOPS-mo. st1 = $0.045/GB-mo. sc1 = $0.015/GB-mo. Snapshots = $0.05/GB-mo (incremental, stored in S3). Data transfer IN = free. Cross-region snapshot copy = standard data transfer rates.',
               'Exam: "cheapest EBS type" → sc1 ($0.015/GB). "default boot volume" → gp3. "mission-critical DB" → io2. "sequential log processing" → st1.',
             ],
+            docs: [
+              { label: 'Amazon EBS volumes', url: 'https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volumes.html' },
+              { label: 'Amazon EBS encryption', url: 'https://docs.aws.amazon.com/ebs/latest/userguide/ebs-encryption.html' },
+            ],
             keywords: ['block storage', 'single EC2', 'persistent disk', 'instance store', 'ephemeral', 'Elastic Volumes', 'resize', 'encryption', 'data in transit', 'pricing', 'gp3 cost', 'io2 cost', 'st1 cost', 'sc1 cost', 'snapshot cost'],
           },
           {
@@ -5193,6 +5294,10 @@ export const domains: DomainData[] = [
               'Database needing consistent IOPS under sustained load → gp3 (cheaper) atau io2 (mission-critical)',
               'Large sequential writes (log processing) → st1 (bukan gp3 atau io2 — they are random I/O optimized)',
               'Pattern: "database + log processing on same EC2" → io2 or gp3 for DB, st1 for logs',
+            ],
+            docs: [
+              { label: 'Amazon EBS volume types', url: 'https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html' },
+              { label: 'Attach a volume to multiple instances (Multi-Attach)', url: 'https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volumes-multi.html' },
             ],
             keywords: ['gp3', 'io2', 'st1', 'sc1', 'Multi-Attach', 'Provisioned IOPS', 'throughput HDD', 'EBS types'],
           },
