@@ -4992,6 +4992,32 @@ export const domains: DomainData[] = [
             sebabApa: "EBS wujud sebab EC2 perlukan disk yang PERSISTENT — data mesti kekal walaupun instance stop/start atau pindah host. Instance Store (disk fizikal host) ephemeral & hilang bila stop, jadi tak boleh untuk OS drive / database. EBS = network-attached block storage yang persistent, boleh snapshot ke S3, boleh resize tanpa downtime (Elastic Volumes), dan boleh encrypt — supaya data EC2 selamat & kekal.",
             sifir: ["EBS = persistent block storage, attach ke 1 EC2 (kecuali Multi-Attach io1/io2)", "Persistent: data KEKAL lepas stop/start (lawan Instance Store ephemeral)", "Elastic Volumes = resize/retype/adjust IOPS TANPA detach atau downtime", "Encryption = at rest + in transit (volume <-> instance), guna KMS", "Unencrypted snapshot -> encrypted volume = BOLEH (pilih encrypt masa create)", "PRICING: sc1 paling murah $0.015/GB-mo; gp3 $0.08; io2 $0.125 + $0.065/IOPS; snapshot $0.05/GB-mo"],
             perangkap: [{"soalan": "EBS volume hampir penuh, perlu tambah saiz dengan perubahan config paling minimum & tiada downtime. Cara terbaik?", "umpan": "Buat snapshot, create volume baru lebih besar dari snapshot, detach lama attach baru — nampak macam cara standard.", "betul": "Elastic Volumes — increase saiz EBS terus (online, no detach), lepas tu extend filesystem (growpart + resize2fs). Keyword 'minimal config change + no downtime'. Snapshot+new volume = extra steps & downtime."}, {"soalan": "Database storage perlu survive instance failure/stop. Instance Store atau EBS?", "umpan": "Instance Store — sebab IOPS tinggi nampak bagus untuk DB.", "betul": "EBS — keyword 'survive stop/failure (persistent)'. Instance Store ephemeral; EBS persistent + boleh snapshot."}],
+            detailsLabel: 'EBS — pecahan component (anatomy)',
+            storageDetails: 'Volume → "hard disk" maya, attach ke 1 EC2 (network-attached). Hidup dalam SATU AZ je\nSnapshot → backup volume ke S3 (incremental). Boleh copy cross-region/cross-account untuk DR\nDeleteOnTermination → flag: root volume default TRUE (hilang bila terminate), extra volume default FALSE (kekal)\nMulti-Attach → io1/io2 SAHAJA boleh attach ke banyak EC2 dalam AZ sama (cluster-aware FS je)\nEncryption (KMS) → at rest + in transit + snapshot + semua volume dari snapshot tu, auto\nEBS-Optimized → throughput EBS dedicated, tak rebut bandwidth dengan network instance',
+            compare: {
+              label: 'EBS vs Instance Store — persistent ke ephemeral?',
+              headers: ['Ciri', 'EBS', 'Instance Store'],
+              rows: [
+                ['Persistent?', '✅ Kekal lepas stop/start', '❌ HILANG bila stop/terminate (ephemeral)'],
+                ['Lokasi disk', 'Network-attached (luar host)', 'Fizikal pada host EC2'],
+                ['Bila boleh tambah', 'Bila-bila masa (attach/detach)', 'HANYA masa launch'],
+                ['Snapshot ke S3', '✅ Boleh', '❌ Tak boleh'],
+                ['Resize tanpa downtime', '✅ Elastic Volumes', '❌ Tak boleh'],
+                ['Guna untuk', 'OS drive, database, data penting', 'cache, buffer, scratch, temp data'],
+              ],
+              takeaway: 'Keyword "survive stop / persistent / boleh backup" → EBS. Keyword "temporary / cache / highest IOPS sebab local" → Instance Store. DB & data penting SELALU EBS.',
+            },
+            mermaid: {
+              label: 'EBS vs Instance Store — pilih yang mana',
+              source: `flowchart TD
+  A["Data ni kena KEKAL lepas stop/terminate?"] -->|"Ya, mesti persistent"| B["EBS 💾"]
+  A -->|"Tak, buang pun takpe (cache/temp)"| C["Instance Store ⚡"]
+  B --> D["Perlu attach ke banyak EC2 serentak?"]
+  D -->|"Ya (cluster FS)"| E["io1/io2 + Multi-Attach"]
+  D -->|"Tak, 1 EC2 je"| F["gp3 default; io2 untuk DB; st1/sc1 untuk HDD"]
+  C --> G["Highest IOPS sebab local disk,<br/>tapi data hilang bila stop ⚠️"]`,
+              caption: 'INGAT exam: soalan sebut "persistent / survive failure / boleh snapshot" = EBS. "temporary / scratch / fastest local" = Instance Store.',
+            },
             contohGuna: 'OS drive untuk EC2, database storage',
             tips: [
               'Instance store vs EBS: Instance store = ephemeral (data HILANG bila stop/terminate). EBS = persistent (data kekal)',
@@ -5076,6 +5102,8 @@ export const domains: DomainData[] = [
             sifir: ["EFS = managed NFS, shared, multi-AZ, ramai EC2 mount serentak", "Performance mode: General Purpose (latency rendah, default) vs Max I/O (latency LEBIH TINGGI, untuk parallel besar)", "Throughput mode: Bursting (scale ikut saiz) / Provisioned (set MiB/s tetap) / Elastic (auto, recommended)", "Encryption in transit BUKAN default — enable masa mount: mount -o tls (TLS 1.2)", "Mount target connection timeout = check SG inbound TCP 2049 + NACL", "PRICING: Standard $0.30/GB-mo; One Zone-IA $0.016/GB-mo (cheapest); EFS lebih mahal dari S3 tapi shared"],
             perangkap: [{"soalan": "20 EC2 across multiple AZ perlu baca/tulis fail web content yang SAMA serentak. Pilih storage?", "umpan": "EBS Multi-Attach (io2) — sebab 'attach ke banyak EC2' nampak padan.", "betul": "EFS — keyword 'shared FILE storage, multi-AZ, ramai EC2 serentak'. EBS Multi-Attach = block storage, max dalam satu AZ & io1/io2 sahaja; EFS = file system NFS multi-AZ sebenar."}, {"soalan": "EFS kecil (25 GB) tapi perlu throughput tinggi konsisten. Apa setting?", "umpan": "Bursting Throughput — sebab ia default, orang biar je.", "betul": "Provisioned (atau Elastic) Throughput — Bursting scale ikut saiz (25 GB = ~1.25 MiB/s baseline je, tak cukup). Keyword 'small file system + high throughput' = Provisioned/Elastic."}, {"soalan": "EC2 cuba mount EFS tapi connection TIMEOUT. Punca paling mungkin?", "umpan": "Salah DNS name file system — tapi DNS failure bagi error lain, bukan timeout.", "betul": "Security Group / NACL block TCP 2049 — keyword 'timeout'. Mount target SG mesti allow inbound TCP 2049 dari CIDR EC2; ini punca timeout, bukan DNS."}, {"soalan": "Syarikat berita perlu storan backup/redundant: low-cost, high-throughput, dikongsi banyak EC2, JARANG diakses kecuali masa recovery, dalam SATU AZ je, dan boleh dijana semula kalau hilang. Kelas EFS mana?", "umpan": "EFS Standard-IA — nampak 'infrequent access' terus pilih IA. SALAH separa: Standard-IA simpan merentas ≥3 AZ, jadi bayar lebih untuk redundansi yang soalan TAK perlu (data re-creatable + 1 AZ je dah cukup).", "betul": "EFS One Zone-IA — keyword 'rarely accessed' (→ IA) + 'single AZ + can be regenerated/re-creatable' (→ One Zone) + 'low-cost' = One Zone-IA, kombinasi PALING MURAH ($0.016/GB · 1 AZ)."}],
             contohGuna: 'Web content serving across 20 EC2 instances, shared config files, content management systems',
+            detailsLabel: 'EFS — pecahan component (anatomy)',
+            storageDetails: 'File System → "shared drive" NFS sebenar, auto-scale (bayar ikut guna). Span banyak AZ\nMount Target → 1 ENI per AZ (alamat EC2 mount). Setiap AZ kena ada satu; SG-nya MESTI allow inbound TCP 2049\nPerformance Mode (set masa create) → General Purpose (latency rendah, default) vs Max I/O (latency lebih tinggi, parallel besar)\nThroughput Mode (boleh tukar) → Bursting (scale ikut saiz) / Provisioned (set MiB/s tetap) / Elastic (auto, recommended)\nStorage Classes → Standard / Standard-IA (multi-AZ) + One Zone / One Zone-IA (1 AZ). Lifecycle auto-pindah ke IA\nEncryption → at rest (KMS, masa create je) + in transit (TLS, masa mount: mount -o tls)',
             scenario: 'Multi-EC2 shared storage → EFS. Single-instance persistent block storage → EBS. Object storage (images, backups) → S3. PILIH KELAS EFS: "rarely accessed + single AZ + can be regenerated/re-creatable + low-cost" → One Zone-IA (paling murah); "frequently accessed + highly available / multi-AZ" → Standard; "infrequent access TAPI masih perlu multi-AZ redundancy" → Standard-IA; "active data tapi re-creatable / dev-test, nak jimat" → One Zone.',
             compare: {
               label: 'Kelas storage EFS — 2 soalan je: kerap akses? + berapa AZ?',
@@ -8618,10 +8646,36 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Data dengan access pattern tak menentu',
             fungsi: 'Memindahkan objek secara automatik antara access tiers berdasarkan corak penggunaan',
             sebabApa: "Bila kau TAK BOLEH predict mana data akan dipanggil (cth video kadang viral, kadang mati), pilih tier manual jadi tekaan — silap pilih = bayar lebih atau kena retrieval fee. Intelligent-Tiering wujud supaya AWS auto-pindah objek antara access tier ikut pattern sebenar, tanpa retrieval fee. Bayar monitoring kecik ($0.0025/1K objek) tapi tak risau salah tier.",
-            sifir: ["Auto-move antara tier ikut access pattern — NO retrieval fee bila tier berubah", "Caj monitoring ~$0.0025 per 1,000 objek/bulan (selain storage)", "Frequent → Infrequent (selepas 30 hari tak akses) auto", "Optional Archive Instant / Deep Archive tiers untuk objek lama", "Best bila access pattern TAK MENENTU / tak dapat ramal"],
             perangkap: [{"soalan": "Access pattern objek tak boleh diramal langsung, nak optimize kos automatik tanpa risiko retrieval fee. Pilih?", "umpan": "Lifecycle Policy ke Standard-IA — sebab nampak 'optimize kos'. SALAH: lifecycle ikut UMUR objek (statik), bukan access sebenar; salah ramal = retrieval fee + kos lebih.", "betul": "S3 Intelligent-Tiering — auto-tier ikut access sebenar, no retrieval fee. Keyword: 'unpredictable / unknown access patterns'."}],
             scenario: 'Media company simpan assets — ada video yang viral tiba-tiba, ada yang tak pernah ditonton. Tak boleh predict mana yang akan kena access. Intelligent-Tiering auto-optimize kos tanpa perlu urus manually.',
-            keywords: ['auto-tiering', 'unpredictable access', 'no retrieval fees'],
+            detailsLabel: 'S3 Intelligent-Tiering — 5 access tier (objek auto-pindah)',
+            storageDetails: 'Frequent Access → tier default masuk. Sama harga macam S3 Standard ($0.023/GB)\nInfrequent Access → auto turun lepas 30 hari TAK akses. Sama harga Standard-IA ($0.0125/GB)\nArchive Instant Access → auto turun lepas 90 hari tak akses. Retrieval ms (instant). ~$0.004/GB\nArchive Access (optional) → kena ENABLE sendiri. Lepas 90-730 hari. Retrieval minit-jam (async)\nDeep Archive Access (optional) → kena ENABLE sendiri. Lepas 180-730 hari. Retrieval 12 jam (async)',
+            sifir: ["Auto-move antara tier ikut access pattern — NO retrieval fee bila tier berubah", "Caj monitoring ~$0.0025 per 1,000 objek/bulan (selain storage)", "Frequent → Infrequent auto lepas 30 hari tak akses", "Archive Instant auto lepas 90 hari; retrieval masih INSTANT (ms)", "2 tier dalam (Archive Access, Deep Archive Access) = OPTIONAL, kena enable + retrieval async", "Objek <128KB tak pernah turun tier (kekal Frequent), tak kena monitoring fee", "Best bila access pattern TAK MENENTU / tak dapat ramal"],
+            mermaid: {
+              label: 'S3 Intelligent-Tiering — aliran auto antara tier',
+              source: `flowchart TD
+  U["Upload objek"] --> F["Frequent Access<br/>(= S3 Standard price)"]
+  F -->|"30 hari tak akses"| I["Infrequent Access<br/>(= Standard-IA price)"]
+  I -->|"diakses balik"| F
+  I -->|"90 hari tak akses"| AI["Archive Instant Access<br/>retrieval INSTANT (ms)"]
+  AI -->|"diakses balik"| F
+  AI -.->|"opt-in: 90-730 hari"| AA["Archive Access<br/>retrieval minit-jam ⏳"]
+  AA -.->|"opt-in: 180-730 hari"| DA["Deep Archive Access<br/>retrieval ~12 jam ⏳"]`,
+              caption: 'INGAT exam: tier auto turun bila objek "sejuk", auto naik balik bila diakses — TANPA retrieval fee. 2 tier Archive paling bawah = optional + async retrieval. Trigger: "unpredictable / unknown access pattern".',
+            },
+            compare: {
+              label: 'Intelligent-Tiering vs pilih kelas manual — bila guna yang mana?',
+              headers: ['Situasi', 'Pilih', 'Sebab'],
+              rows: [
+                ['Access pattern TAK boleh ramal', 'Intelligent-Tiering', 'AWS auto-tier, no retrieval fee, tak risau salah pilih'],
+                ['Tahu data kerap diakses', 'S3 Standard', 'Tak payah bayar monitoring fee'],
+                ['Tahu data jarang, tapi kena instant bila perlu', 'Standard-IA', 'Lagi murah dari Intelligent kalau pattern stabil'],
+                ['Tahu data arkib, OK tunggu jam', 'Glacier Flexible/Deep Archive', 'Paling murah, tapi ada retrieval delay + fee'],
+                ['Objek kecik banyak (<128KB)', 'Standard (bukan Int-Tier)', 'Objek <128KB tak turun tier; monitoring fee jadi membazir'],
+              ],
+              takeaway: 'Discriminator: "unpredictable / changing / unknown access" → Intelligent-Tiering. Kalau pattern dah DIKETAHUI (kerap / jarang / arkib), pilih kelas manual lagi jimat sebab elak monitoring fee.',
+            },
+            keywords: ['auto-tiering', 'unpredictable access', 'no retrieval fees', 'access tiers', 'frequent access', 'infrequent access', 'archive instant access', 'archive access', 'deep archive access', 'monitoring fee', 'changing access pattern', '128KB minimum', 'S3 storage classes', 'pricing'],
           },
         ],
       },

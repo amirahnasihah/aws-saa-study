@@ -250,6 +250,33 @@ export const triggerRows: TriggerRow[] = [
     domain: 'D2 · Resilient',
     slug: 'd3-network-alb',
   },
+  {
+    id: 'efs-one-zone-ia',
+    keywords: ['rarely accessed shared files', 'low-cost EFS', 'single AZ + can be regenerated', 're-creatable / not critical data', 'cheapest EFS class', 'redundant backup file storage'],
+    service: 'EFS One Zone-IA',
+    why: '2 soalan je: (1) jarang akses → IA. (2) 1 AZ cukup sebab data boleh dijana semula → One Zone. Gabung "rarely accessed + single AZ + re-creatable + low-cost" = One Zone-IA (paling murah). "frequently accessed + multi-AZ HA" = Standard; "infrequent tapi masih multi-AZ" = Standard-IA.',
+    accent: 'c4',
+    domain: 'D4 · Cost-Opt',
+    slug: 'd3-storage-efs',
+  },
+  {
+    id: 'data-lake-zones-swamp',
+    keywords: ['raw / landing zone', 'cleanse / processed zone', 'curated / analytics zone', 'data lake unmanageable / unsearchable', 'data swamp', 'organize data lake by zone'],
+    service: 'Data Lake zones + Lake Formation governance',
+    why: 'Data lake matang = 3 zon: Raw/Landing (mentah as-is) → Cleanse/Processed (Glue ETL, Parquet) → Curated/Analytics (sedia BI/ML). Humban tanpa Glue Catalog + Lake Formation = DATA SWAMP (ada data tapi tak boleh cari/percaya). "lake jadi tak terurus" → fix dengan catalog + governance.',
+    accent: 'c3',
+    domain: 'D3 · High-Perf',
+    slug: 'd3-analytics-lake-formation',
+  },
+  {
+    id: 'not-rds-purpose-built',
+    keywords: ['shopping cart / session store', 'schemaless / key-value', 'graph / mutual friends / fraud ring', 'data warehouse / OLAP / BI', 'time-series / IoT metrics', 'cache in-memory', 'serverless DB scale-to-zero'],
+    service: 'Purpose-built DB (BUKAN RDS)',
+    why: 'RDS = 6 enjin RELATIONAL je (MySQL/PostgreSQL/MariaDB/Oracle/SQL Server/Aurora). Apa-apa NoSQL/cache/warehouse/graph/time-series = BUKAN RDS: cart/session/key-value → DynamoDB; graph/fraud → Neptune; OLAP/BI → Redshift; IoT/time-series → Timestream; cache → ElastiCache. "Aurora" ≠ serverless melainkan ada perkataan "Serverless".',
+    accent: 'c1',
+    domain: 'D3 · High-Perf',
+    slug: 'd3-db-pilih-database',
+  },
 ]
 
 // ── Pokok keputusan (decision tree) ─────────────────────────────────────────

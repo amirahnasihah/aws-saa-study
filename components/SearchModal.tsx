@@ -14,7 +14,12 @@ interface SearchResult {
   sectionTitle: string
   sectionIcon: string
   category: ColorCategory
-  searchText: string
+  // Lowercased fields kept SEPARATE (not one joined blob) so the scorer can rank
+  // a title hit above a body hit — a blob loses which field actually matched.
+  shortLower: string
+  fullLower: string
+  keywordsLower: string
+  descLower: string
 }
 
 const searchIndex: SearchResult[] = domains.flatMap((domain) =>
@@ -29,19 +34,31 @@ const searchIndex: SearchResult[] = domains.flatMap((domain) =>
       sectionTitle: section.title,
       sectionIcon: section.icon,
       category: section.category,
-      searchText: [
-        service.shortName,
-        service.fullName,
-        ...(service.keywords ?? []),
-        service.fungsi,
-        service.contohGuna ?? '',
-        service.scenario ?? '',
-      ]
+      shortLower: service.shortName.toLowerCase(),
+      fullLower: service.fullName.toLowerCase(),
+      keywordsLower: (service.keywords ?? []).join(' ').toLowerCase(),
+      descLower: [service.fungsi, service.contohGuna ?? '', service.scenario ?? '']
         .join(' ')
         .toLowerCase(),
     }))
   )
 )
+
+// Relevance score for a result vs a lowercased query. Title (shortName) hits
+// beat fullName hits beat keyword hits beat description hits — so an exact
+// service name like "efs" floats to the top even though many other cards
+// mention EFS in their body. Returns -1 for no match (filtered out).
+function scoreResult(r: SearchResult, q: string): number {
+  if (r.shortLower === q) return 1000
+  if (r.shortLower.startsWith(q)) return 900
+  if (r.shortLower.includes(q)) return 800
+  if (r.fullLower === q) return 700
+  if (r.fullLower.startsWith(q)) return 600
+  if (r.fullLower.includes(q)) return 500
+  if (r.keywordsLower.includes(q)) return 300
+  if (r.descLower.includes(q)) return 100
+  return -1
+}
 
 const domainColors: Record<string, string> = {
   d1: 'text-c3',
@@ -63,12 +80,17 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const router = useRouter()
   const pathname = usePathname()
 
-  const results = useMemo(() =>
-    query.trim().length > 0
-      ? searchIndex.filter((r) => r.searchText.includes(query.toLowerCase().trim())).slice(0, 8)
-      : [],
-    [query]
-  )
+  const results = useMemo(() => {
+    const q = query.toLowerCase().trim()
+    if (q.length === 0) return []
+    return searchIndex
+      .map((r) => ({ r, score: scoreResult(r, q) }))
+      .filter((x) => x.score >= 0)
+      // best score first; tie-break by shorter name (closer to an exact hit)
+      .sort((a, b) => b.score - a.score || a.r.shortName.length - b.r.shortName.length)
+      .slice(0, 8)
+      .map((x) => x.r)
+  }, [query])
 
   const navigate = useCallback((result: SearchResult) => {
     onClose()
