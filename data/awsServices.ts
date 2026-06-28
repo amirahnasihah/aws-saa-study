@@ -3536,6 +3536,67 @@ export const domains: DomainData[] = [
             ],
             keywords: ['RPO: near-zero', 'RTO: seconds', 'full capacity both', 'highest cost', 'mission-critical', 'zero downtime'],
           },
+          {
+            shortName: 'AWS Elastic Disaster Recovery',
+            fullName: 'AWS Elastic Disaster Recovery (AWS DRS)',
+            ingat: '"Replicate server berterusan ke AWS — failover bila bencana, failback bila pulih"',
+            gunaUntuk: 'DR-as-a-service: continuously replicate on-prem/cloud/EC2 servers to AWS',
+            fungsi: 'The AWS service that implements low-cost disaster recovery. It does continuous block-level replication of your servers (on-prem, other cloud, or EC2) into a low-cost staging area in AWS. When disaster strikes you fail over — DRS launches full EC2 instances from the latest replicated state in minutes; when the primary recovers you can fail back. Formerly CloudEndure Disaster Recovery.',
+            sebabApa: 'Wujud sebab nak bina DR sendiri (Pilot Light/Warm Standby) bermakna kau urus replikasi, AMI, scripting failover — leceh & senang silap. AWS DRS automate semua: ia replicate server kau berterusan (block-level) ke kawasan staging MURAH dalam AWS (cuma storage + compute kecil, BUKAN full instance), jadi kos rendah. Bila bencana, satu klik → ia spin up EC2 penuh dari state terkini (RPO saat, RTO minit). Lepas primary pulih, boleh failback. So you get near-Warm-Standby recovery at near-Pilot-Light cost, tanpa urus sendiri.',
+            sifir: [
+              'AWS DRS = DR-as-a-service: continuous block-level replication server → staging area MURAH dalam AWS',
+              'RPO: saat (sub-second to seconds). RTO: minit. Kos rendah (staging guna resource minimal, bukan full instance)',
+              'Source boleh: on-prem, cloud lain, ATAU EC2 (cross-region/cross-AZ DR)',
+              'Failover = launch EC2 penuh dari replika terkini. Failback = balik ke primary bila pulih',
+              'Formerly CloudEndure Disaster Recovery',
+              'JANGAN keliru: DRS = Disaster recovery (replikasi berterusan, failover/failback). MGN = Migration (one-time cutover, lepas pindah habis cerita)',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat ada server on-prem kritikal. Mahu DR ke AWS dengan RPO beberapa saat & RTO beberapa minit, tapi TAK nak bayar full duplicate infra berjalan macam Warm Standby. Cara terbaik?',
+                umpan: 'Warm Standby — full stack scaled-down berjalan di AWS, jadi failover laju. Nampak betul sebab "ada infra = laju". SALAH: Warm Standby tetap bayar infra berjalan berterusan + kau urus replikasi sendiri; lebih mahal & leceh dari yang diperlukan.',
+                betul: 'AWS Elastic Disaster Recovery (DRS) — continuous replication ke staging area MURAH (bukan full instance), failover spin up EC2 penuh dalam minit (RTO minit, RPO saat). Dapat kelajuan hampir Warm Standby pada kos hampir Pilot Light, automated. Keyword "DR for servers, seconds RPO + minutes RTO, low cost, no full standby" → AWS DRS.',
+              },
+              {
+                soalan: 'Pasukan nak PINDAH (migrate) server on-prem ke AWS sebagai EC2 secara kekal — lepas pindah, server lama dimatikan. Guna DRS?',
+                umpan: 'Guna AWS DRS sebab ia pun buat block-level replication server ke AWS. Nampak betul sebab "replicate server ke EC2". SALAH: DRS untuk DR (kekal sedia failover/failback), bukan untuk pindah-habis-cerita.',
+                betul: 'AWS MGN (Application Migration Service) — direka untuk lift-and-shift migration (one-time cutover, server lama dimatikan). DRS untuk DR berterusan. Keyword "migrate/lift-and-shift permanently" → MGN; "ongoing disaster recovery / failover-failback" → DRS.',
+              },
+            ],
+            compare: {
+              label: 'AWS DRS vs MGN vs strategi DR (jangan keliru DR vs Migration)',
+              headers: ['Aspect', 'AWS DRS', 'AWS MGN', 'Warm Standby (DIY)'],
+              rows: [
+                ['Tujuan', 'Disaster recovery (sedia failover)', 'Migration (pindah kekal)', 'Disaster recovery (urus sendiri)'],
+                ['Replikasi', 'Berterusan, block-level', 'Berterusan sampai cutover', 'Kau urus sendiri'],
+                ['Lepas selesai', 'Kekal standby, boleh failback', 'Cutover → habis, matikan source', 'Sentiasa berjalan (scaled-down)'],
+                ['Kos', 'Rendah (staging area minimal)', 'Bayar masa migrate je', 'Tinggi (full infra jalan)'],
+                ['RPO / RTO', 'Saat / minit', '—  (one-time)', 'Saat–minit / minit'],
+              ],
+              takeaway: 'DRS & MGN guna teknologi replikasi sama, beza NIAT: DRS = DR (kekal sedia, failover + failback), MGN = migrate (one-time cutover, lepas tu matikan source). DRS bagi recovery hampir Warm Standby pada kos rendah & automated. Keyword "disaster recovery / failover" → DRS; "lift-and-shift migrate" → MGN.',
+            },
+            mermaid: {
+              label: 'AWS DRS — replikasi murah → failover bila bencana',
+              source: `flowchart LR
+  SRC["🖥️ Source servers<br/>on-prem / cloud lain / EC2"] -->|"continuous block-level<br/>replication"| STAGE["💧 Staging area (MURAH)<br/>dalam AWS — storage +<br/>compute minimal je"]
+  STAGE -->|"💥 BENCANA → failover"| EC2["🚀 EC2 penuh dilancarkan<br/>dari state terkini<br/>RPO saat · RTO minit"]
+  EC2 -->|"✅ primary pulih → failback"| SRC`,
+              caption: 'Macam ada pelan insurans yang sentiasa simpan salinan terkini rumah kau di gudang murah — bila rumah terbakar, sehari boleh siap rumah penuh dari salinan tu, lepas tu boleh pindah balik. INGAT exam: "low-cost DR for servers, continuous replication, seconds RPO / minutes RTO, failover + failback" → AWS Elastic Disaster Recovery (DRS), BUKAN MGN (itu migration one-time).',
+            },
+            tips: [
+              'AWS DRS = formerly CloudEndure Disaster Recovery — DR-as-a-service yang automate replikasi + failover',
+              'Replikasi block-level berterusan ke staging area kos rendah (guna resource minimal, bukan full-size instance) → murah berbanding Warm Standby',
+              'Failover: launch EC2 penuh dari replika terkini (RTO minit, RPO saat). Failback: balik ke source bila primary pulih',
+              'Source: on-prem servers, server cloud lain, ATAU EC2 (untuk cross-region / cross-AZ DR antara region AWS)',
+              'Boleh buat drill (test recovery) tanpa ganggu production — pastikan DR betul-betul jalan',
+              'PRICING: ~$0.028/jam per source server direplikasi + kos staging (EBS snapshot/storage rendah) + EC2 penuh hanya semasa drill/failover. Jauh lebih murah dari full standby berjalan',
+              'Exam discriminator: "low-cost DR / continuously replicate servers to AWS / fast failover + failback" → AWS DRS. "migrate servers to AWS permanently (lift-and-shift)" → MGN. "DIY DR tiers" → Backup&Restore/Pilot Light/Warm Standby/Multi-Site',
+            ],
+            docs: [
+              { label: 'What is AWS Elastic Disaster Recovery', url: 'https://docs.aws.amazon.com/drs/latest/userguide/what-is-drs.html' },
+            ],
+            keywords: ['AWS DRS', 'Elastic Disaster Recovery', 'CloudEndure Disaster Recovery', 'continuous replication', 'block-level replication', 'failover', 'failback', 'staging area', 'low-cost DR', 'DR as a service', 'on-premises DR', 'cross-region DR', 'DRS vs MGN', 'RPO seconds', 'RTO minutes', 'pricing'],
+          },
         ],
       },
       {
