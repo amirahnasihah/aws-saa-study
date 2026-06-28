@@ -4839,14 +4839,45 @@ export const domains: DomainData[] = [
             sifir: ["Hibernation = simpan isi RAM ke EBS root volume, resume laju tanpa re-init", "EBS root volume MESTI encrypted untuk hibernation", "Bukan semua instance type support hibernation", "Stop/Start biasa = RAM HILANG; Reboot = OS restart; Hibernate = RAM KEKAL", "Keyword 'preserve in-memory state + fast recovery' = Hibernation, BUKAN AMI"],
             perangkap: [{"soalan": "App in-memory cache ambil 20 minit untuk warm-up. Nak stop instance waktu malam jimat kos, tapi pagi resume terus warm tanpa re-load. Pilih apa?", "umpan": "Buat AMI sebelum stop, restore dari AMI pagi esok — nampak macam 'simpan state'.", "betul": "EC2 Hibernation — AMI cuma snapshot DISK, ia TAK simpan RAM/in-memory state. Hanya Hibernation preserve RAM contents (saved to encrypted EBS root)."}, {"soalan": "Memory-intensive app, nak elak long initialization time & resume dengan application state SAMA atas backup instance, on-demand. Cara paling tepat?", "umpan": "Stop instance bila tak guna, Start balik bila perlu — nampak paling jimat kos & macam 'instance sama balik'.", "betul": "EC2 Hibernation atas backup instance, resume on-demand. Stop/Start biasa KOSONGKAN RAM → memory-intensive app kena re-initialize dari kosong = long init time. Hanya Hibernate simpan RAM state untuk resume pantas."}],
             scenario: 'Formula poket: "memory-intensive app" + "long initialization / warm-up time" + "preserve application state across restart" → EC2 Hibernation. BUKAN Stop/Start (RAM cleared, kena warm-up balik), BUKAN AMI/launch baru (disk snapshot je, cold boot, RAM kosong), BUKAN Reboot (tak simpan RAM state).',
+            compare: {
+              label: 'EC2 lifecycle — Hibernate vs Stop/Start vs Reboot vs Terminate',
+              headers: ['Aspect', 'Hibernate', 'Stop / Start', 'Reboot', 'Terminate'],
+              rows: [
+                ['RAM / in-memory state', 'KEKAL (ditulis ke EBS root)', 'HILANG (dikosongkan)', 'KEKAL (instance tak stop)', 'HILANG'],
+                ['Instance store (ephemeral) data', 'HILANG', 'HILANG', 'KEKAL', 'HILANG'],
+                ['Public IPv4 (no EIP)', 'Berubah', 'Berubah', 'Kekal', 'N/A'],
+                ['Compute billing', 'Tak bayar (state = stopped)', 'Tak bayar (stopped)', 'Bayar (masih running)', 'Tak bayar'],
+                ['EBS billing', 'Bayar — termasuk RAM dump di root', 'Bayar', 'Bayar', 'Hilang (jika DeleteOnTermination)'],
+                ['Resume', 'Laju, no re-init (state sama)', 'Cold boot, RAM re-warm', 'Cepat (OS restart je)', 'N/A — instance gone'],
+              ],
+              takeaway: 'Nak preserve RAM merentas stop → Hibernate. RAM tak penting / nak jimat → Stop/Start. Tukar nothing-persistent / clear glitch → Reboot. Buang terus → Terminate. INGAT exam: hanya Hibernate & Reboot kekalkan RAM; hanya Reboot kekalkan instance-store + public IP.',
+            },
+            mermaid: {
+              label: 'Nak "matikan" EC2 — pilih transition mana?',
+              source: `flowchart TD
+  A["Nak hentikan / kitar semula<br/>EC2 instance"] --> Q1{Perlu kekalkan<br/>RAM / in-memory state?}
+  Q1 -->|"Ya"| Q2{Nak jimat kos<br/>masa idle juga?}
+  Q1 -->|"Tak"| Q3{Nak buang<br/>instance terus?}
+  Q2 -->|"Ya — stop & resume nanti"| H["💤 Hibernate<br/>RAM → EBS root (encrypted)<br/>resume laju, no re-init"]
+  Q2 -->|"Tak — cuma clear glitch"| R["🔄 Reboot<br/>OS restart, RAM kekal,<br/>masih billed (running)"]
+  Q3 -->|"Ya"| T["🗑️ Terminate<br/>semua hilang"]
+  Q3 -->|"Tak — pakai balik nanti"| S["⏸️ Stop / Start<br/>RAM kosong, cold boot"]`,
+              caption: 'Hibernate = satu-satunya cara stop instance (tak bayar compute) TAPI kekalkan RAM. Reboot kekal RAM tapi masih bayar (running). INGAT exam: "memory-intensive + long warm-up + preserve state sambil jimat kos idle" → Hibernate.',
+            },
             tips: [
               'Hibernation saves RAM to EBS root volume (must be encrypted)',
               'Resume time = sangat cepat vs cold start (no app re-initialization)',
               'Use case: memory-intensive apps yang ambil masa lama nak load (e.g. in-memory cache warm-up)',
               'Not all instance types support hibernation. Root EBS volume MESTI encrypted',
               'Exam: "preserve in-memory state + fast recovery" → EC2 Hibernation. Bukan AMI (AMI = snapshot, no RAM state)',
+              'Prereq: enable hibernation MASA launch (tak boleh tambah lepas). RAM ≤ 150 GB, root volume cukup besar untuk muat RAM, instance tak boleh hibernate > 60 hari berturut',
+              'PRICING: Hibernation feature = FREE. Bila hibernated instance dalam "stopped" state → TAK bayar compute (per-second/jam), TAPI bayar EBS storage untuk root volume TERMASUK RAM dump (gp3 ~$0.08/GB-bulan). Contoh: instance 32 GB RAM perlu +32 GB EBS untuk simpan RAM = ~$2.56/bulan tambahan storan. Masih bayar EIP jika allocated tapi tak attached. Exam cost: Hibernate jimat compute tapi NAIK sikit kos EBS berbanding Stop biasa.',
             ],
-            keywords: ['hibernation', 'RAM save', 'EBS root', 'fast resume', 'in-memory state', 'encrypted root volume'],
+            docs: [
+              { label: 'Hibernate your Amazon EC2 instance', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Hibernate.html' },
+              { label: 'Hibernation prerequisites', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/hibernating-prerequisites.html' },
+            ],
+            keywords: ['hibernation', 'RAM save', 'EBS root', 'fast resume', 'in-memory state', 'encrypted root volume', 'stop start reboot terminate', 'instance lifecycle', 'warm-up time', 'pricing'],
           },
           {
             shortName: 'EC2 Metadata',
