@@ -366,6 +366,7 @@ export const petaModules: PetaModule[] = [
       { left: 'Secrets Manager', rel: 'vs', right: 'SSM Parameter Store', note: 'Secrets Manager = auto-rotate built-in (Lambda), bayar/secret — DB password/API key. Parameter Store = config biasa, Standard FREE, no native rotation.' },
       { left: 'AWS-managed key', rel: 'vs', right: 'Customer-managed key (CMK)', note: 'AWS-managed = AWS urus penuh, takde kawalan rotation/policy. CMK = kau cipta & kawal: "control over keys / rotate own key / audit who used key / custom key policy" → CMK.' },
       { left: 'KMS', rel: 'vs', right: 'CloudHSM', note: 'KMS = multi-tenant managed (FIPS 140-2 L2), AWS urus. CloudHSM = single-tenant dedicated HW (FIPS L3), AWS tak boleh access — bank/regulasi ketat.' },
+      { left: 'Encryption at rest', rel: 'vs', right: 'Encryption in transit', note: 'At rest = data DUDUK disimpan (S3/EBS/RDS/snapshot): "stored data / on disk / encrypt at rest" → KMS (SSE-KMS). In transit = data JALAN atas network: "in flight / over the network / man-in-the-middle / secure communication" → TLS/SSL (ACM cert) atau IPSec VPN.' },
     ],
   },
   {

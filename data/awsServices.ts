@@ -3009,19 +3009,33 @@ export const domains: DomainData[] = [
               },
             ],
             scenario: 'Production RDS kat AZ-1 fail — automatic failover ke standby kat AZ-2 dalam 1-2 minit. Same connection endpoint, app tak perlu tukar config. BUKAN untuk scale reads — guna Read Replicas untuk tu.',
-            compare: {
-              label: 'Multi-AZ vs Read Replicas — THE classic exam comparison',
-              headers: ['Aspect', 'Multi-AZ', 'Read Replicas'],
-              rows: [
-                ['Purpose', 'High availability (failover)', 'Scale read traffic'],
-                ['Replication', '🟢 Synchronous', '🟡 Asynchronous'],
-                ['Standby usable?', '❌ Standby idle — no reads', '✅ Serves read queries'],
-                ['Failover', 'Automatic (~1–2 min)', 'Manual — can promote to standalone'],
-                ['Region', 'Same region (across AZs)', 'Same OR cross-region'],
-                ['How many', '1 standby', 'Up to 15'],
-              ],
-              takeaway: 'Multi-AZ = HA / disaster survival (same region). Read Replicas = read scaling + cross-region reads. Soalan "reporting queries slow down prod" → Read Replica. "Survive an AZ outage" → Multi-AZ. Boleh guna dua-dua sekali.',
-            },
+            compare: [
+              {
+                label: 'Multi-AZ vs Read Replicas — THE classic exam comparison',
+                headers: ['Aspect', 'Multi-AZ', 'Read Replicas'],
+                rows: [
+                  ['Purpose', 'High availability (failover)', 'Scale read traffic'],
+                  ['Replication', '🟢 Synchronous', '🟡 Asynchronous'],
+                  ['Standby usable?', '❌ Standby idle — no reads', '✅ Serves read queries'],
+                  ['Failover', 'Automatic (~1–2 min)', 'Manual — can promote to standalone'],
+                  ['Region', 'Same region (across AZs)', 'Same OR cross-region'],
+                  ['How many', '1 standby', 'Up to 15'],
+                ],
+                takeaway: 'Multi-AZ = HA / disaster survival (same region). Read Replicas = read scaling + cross-region reads. Soalan "reporting queries slow down prod" → Read Replica. "Survive an AZ outage" → Multi-AZ. Boleh guna dua-dua sekali.',
+              },
+              {
+                label: 'Segitiga Emas RDS — Multi-AZ vs Read Replica vs Backup (3-hala)',
+                headers: ['Aspect', 'Multi-AZ', 'Read Replica', 'Backup / Snapshot'],
+                rows: [
+                  ['Masalah yang dia selesai', 'AZ outage / hardware fail / patching', 'read-heavy queries cekik prod', 'human error / data corrupt / tersalah delete'],
+                  ['Solusi', '🟢 standby sync, auto-failover ~1-2min', '🟡 async copy, offload read', '🔵 point-in-time recovery / restore'],
+                  ['Replication', 'Synchronous', 'Asynchronous', '— (snapshot, bukan live copy)'],
+                  ['Bila pulih?', 'Automatik (DNS flip)', 'Manual (promote to standalone)', 'Manual restore → instance BARU'],
+                  ['Kategori', 'High Availability', 'Performance Scaling', 'Data Recovery'],
+                ],
+                takeaway: 'Tiga penjuru beza tujuan: "survive AZ outage / auto-failover" → Multi-AZ (HA). "reporting slow down prod / global read" → Read Replica (scaling). "tersalah delete / corrupt / restore ke masa lalu" → Snapshot/PITR (recovery). Soalan exam tembak ikut PUNCA masalah, bukan nama service.',
+              },
+            ],
             diagram: {
               label: 'Anatomy failover — endpoint SAMA flip ke standby',
               steps: [
