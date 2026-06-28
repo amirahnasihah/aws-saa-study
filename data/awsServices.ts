@@ -1543,6 +1543,116 @@ export const domains: DomainData[] = [
             docs: [{ label: 'AWS Penetration Testing', url: 'https://aws.amazon.com/security/penetration-testing/' }],
             keywords: ['penetration testing', 'pentest', 'security assessment', 'AUP', 'Acceptable Use Policy', 'no prior approval', '8 services', 'prohibited activities', 'DoS DDoS prohibited', 'DNS zone walking', 'DDoS simulation testing', 'pre-authorized services'],
           },
+          {
+            shortName: 'Security Stack',
+            fullName: 'AWS Security Services — Custom Rules & Integration',
+            ingat: '"Lego keselamatan AWS — detection auto (ML), protection kau TULIS rules, Security Hub gam semua jadi satu"',
+            gunaUntuk: 'Faham service mana boleh custom rules vs auto, macam mana security services integrate, + keyword cost tolak jawapan ke versi jimat/premium',
+            fungsi: 'Ini BUKAN satu service — ini gambaran besar macam mana SEMUA security service AWS bekerja sebagai satu sistem berlapis (defense in depth). Dua soalan besar exam: (1) service mana boleh kau TULIS custom rules vs yang auto guna ML/DB AWS; (2) service mana feed/integrate dengan service lain (cth GuardDuty → Detective → Security Hub).',
+            sebabApa: 'Wujud sebab pelajar hafal service satu-satu tapi exam uji macam mana diorang BERGABUNG — "GuardDuty detect, Detective siasat, Security Hub kumpul" atau "WAF + Shield jaga web". Dan exam suka tukar jawapan ikut keyword arah: tambah "cost-effective" je → tukar dari Shield Advanced ke Standard. Faham peta besar ni = boleh pangkah jawapan reka + baca keyword arah betul-betul, bukan main tembak ikut topik.',
+            scenario: '"Write custom rules / block specific SQLi pattern / rate-limit IP" → WAF (atau Network Firewall untuk VPC traffic), BUKAN GuardDuty (ML auto). "Aggregate findings dari banyak security service + compliance score" → Security Hub. "Investigate root cause selepas finding" → Detective. "Cost-effective basic DDoS" → Shield Standard (free), BUKAN Advanced.',
+            sifir: [
+              'Detection (GuardDuty/Inspector/Macie/Detective) = AWS AUTO guna ML/DB — TAK tulis custom detection logic (tweak je: suppression, custom data identifier, IP list)',
+              'Protection/Access (WAF/Network Firewall/IAM/KMS/Config/Shield Adv) = kau TULIS custom rules sendiri',
+              'Security Hub = AGGREGATOR: kumpul finding GuardDuty+Inspector+Macie+Access Analyzer jadi 1 format (ASFF) + compliance — bukan detector',
+              'Aliran klasik: GuardDuty detect → Detective investigate → EventBridge → Lambda/SSM auto-remediate. CloudTrail = SOURCE GuardDuty',
+              'Combo web klasik: WAF + Shield Advanced pada CloudFront/ALB (Shield jaga DDoS, WAF jaga L7 + custom rules)',
+              'Keyword "cost-effective" tolak ke versi JIMAT (Shield Standard, Parameter Store, KMS); "maximum/FIPS/single-tenant" ke PREMIUM (Shield Advanced, CloudHSM)',
+            ],
+            perangkap: [
+              {
+                soalan: 'App perlu perlindungan DDoS asas yang COST-EFFECTIVE, tanpa kos tambahan. Pilih apa?',
+                umpan: 'Shield Advanced — sebab dia maximum DDoS protection, mesti paling selamat. SALAH: Advanced $3,000/bulan; soalan tekankan "cost-effective + no additional cost".',
+                betul: 'Shield Standard — FREE, auto, L3/4 DDoS. Keyword "cost-effective / basic / no additional cost" → Standard. (Kalau soalan sebut "maximum / DRT / cost protection" baru Advanced.)',
+              },
+              {
+                soalan: 'Security team nak TULIS peraturan tersuai untuk block corak SQL injection tertentu + rate-limit satu IP. Service mana?',
+                umpan: 'GuardDuty — sebab dia threat detection, mesti boleh set rule apa nak detect. SALAH: GuardDuty guna ML AWS, kau tak tulis custom detection rules (suppression rule je untuk tapis finding).',
+                betul: 'AWS WAF — custom rule statements (SQLi match + rate-based rule). Keyword "write custom rules / block specific pattern / rate limit" → WAF, bukan GuardDuty.',
+              },
+            ],
+            compare: [
+              {
+                label: 'Custom rules? + integrate dengan apa (semua security service)',
+                headers: ['Service', 'Custom rules?', 'Integrate / feed dengan'],
+                rows: [
+                  ['WAF', '🟢 Penuh — rule statement, regex, rate-based, IP/geo set, managed groups', 'CloudFront, ALB, API GW, AppSync, Cognito; Shield Adv; Firewall Manager'],
+                  ['Shield Standard', '🔴 Tiada (auto sepenuhnya)', 'Auto semua AWS edge'],
+                  ['Shield Advanced', '🟢 Custom mitigation (via SRT)', 'WAF (free), CloudFront/ALB/NLB/EIP/Route 53; Firewall Manager'],
+                  ['Network Firewall', '🟢 Custom Suricata stateful + stateless rules', 'VPC (firewall subnet), Transit Gateway; Firewall Manager'],
+                  ['GuardDuty', '🟡 Separa — suppression rule + threat/trusted IP list (BUKAN detection logic)', 'Source: CloudTrail/VPC Flow/DNS → Security Hub, Detective, EventBridge'],
+                  ['Inspector', '🔴 Tiada — AWS-managed CVE database', '→ Security Hub, EventBridge'],
+                  ['Macie', '🟡 Custom data identifier (regex) + allow list', 'S3 → Security Hub, EventBridge'],
+                  ['Detective', '🔴 Tiada — auto behavior graph', 'Source: GuardDuty findings + CloudTrail/VPC Flow'],
+                  ['Security Hub', '🟢 Custom insight + automation rule + custom action', 'Aggregate GuardDuty/Inspector/Macie/Access Analyzer → EventBridge'],
+                  ['Config', '🟢 Custom rule (Lambda / Guard DSL)', '→ Security Hub; prasyarat Firewall Manager'],
+                  ['IAM', '🟢 Custom policy', 'Hampir semua service'],
+                  ['KMS', '🟢 Custom key policy', 'S3/EBS/RDS/hampir semua'],
+                ],
+                takeaway: 'Protection/access (WAF, Network Firewall, IAM, KMS, Config, Shield Adv) = kau TULIS rules. Detection (GuardDuty, Inspector, Macie, Detective) = AWS auto ML/DB — paling banyak "tweak" je (suppression / custom data identifier / IP list), BUKAN detection logic. Semua detection → feed Security Hub. Keyword "write custom rules / block specific pattern" → WAF/Network Firewall; "aggregate findings" → Security Hub.',
+              },
+              {
+                label: 'Keyword "arah" — tolak jawapan ke versi JIMAT atau PREMIUM',
+                headers: ['Keyword dalam soalan', 'Tolak ke', 'Contoh pasangan'],
+                rows: [
+                  ['"cost-effective / minimize cost / free / no additional cost"', 'Versi JIMAT/asas', 'Shield Standard, Parameter Store, KMS'],
+                  ['"maximum / highest / advanced / custom mitigation"', 'Versi PREMIUM', 'Shield Advanced, CloudHSM'],
+                  ['"compliance / regulatory / FIPS 140-2 Level 3 / single-tenant"', 'Paling KETAT', 'CloudHSM'],
+                  ['"managed / minimize operational overhead / serverless"', 'AWS urus', 'KMS (bukan CloudHSM), Secrets Manager rotation'],
+                  ['"automatic / no configuration / ML-based detection"', 'Auto', 'GuardDuty'],
+                  ['"auto-rotation / rotate credentials"', 'Auto-rotate', 'Secrets Manager (bukan Parameter Store)'],
+                ],
+                takeaway: 'Topik sama, keyword arah tukar jawapan. "cost-effective" di hujung ayat selalu tolak ke versi PERCUMA/murah (Shield Standard, Parameter Store, KMS); "maximum/FIPS/single-tenant" tolak ke premium (Shield Advanced, CloudHSM). Baca habis soalan dulu — keyword arah selalu di hujung.',
+              },
+            ],
+            mermaid: [
+              {
+                label: 'Sistem keselamatan berlapis — macam mana semua bekerja bersama',
+                source: `flowchart TD
+  NET["🌐 Trafik internet (+ hackers)"] --> SH["🛡️ Shield<br/>(tahan DDoS L3/4)"]
+  SH --> WAFn["🧱 WAF<br/>(block SQLi/XSS L7 · custom rules)"]
+  WAFn --> APP["🖥️ App · CloudFront/ALB/EC2/VPC"]
+  NFW["🚧 Network Firewall<br/>(filter trafik VPC · domain/egress)"] --> APP
+  APP --> GD2["📹 GuardDuty<br/>(aktiviti jahat dari logs · ML)"]
+  APP --> INS2["🔍 Inspector<br/>(CVE/vuln scan)"]
+  APP --> MAC2["🐕 Macie<br/>(PII dalam S3)"]
+  GD2 --> HUB2["📊 Security Hub<br/>(bilik kawalan pusat · kumpul finding + compliance)"]
+  INS2 --> HUB2
+  MAC2 --> HUB2
+  HUB2 --> DET2["🕵️ Detective<br/>(siasat root cause)"]
+  HUB2 --> ACT2["⚡ EventBridge → Lambda/SSM<br/>(auto-remediate)"]
+  CT2["📒 CloudTrail<br/>(buku log · who did what)"] -. "source" .-> GD2
+  KMS2["🔐 KMS/CloudHSM<br/>(peti besi kunci)"] -. "encrypt" .-> APP`,
+                caption: 'Bayangkan sistem keselamatan bangunan berlapis: Shield+WAF = pengawal pintu luar (halang penceroboh), Network Firewall = pagar dalaman, GuardDuty/Inspector/Macie = CCTV & sensor (auto), Security Hub = bilik kawalan pusat (1 skrin semua CCTV), Detective = penyiasat, CloudTrail = buku log, KMS = peti besi kunci. INGAT exam: security services AWS direka BEKERJA BERSAMA — bukan berdiri sendiri.',
+              },
+              {
+                label: 'Boleh tulis custom rules ke tak?',
+                source: `flowchart TD
+  Q["Boleh tulis custom rules?"] --> P{"Jenis service?"}
+  P -->|"Protection / Access<br/>(kau yang kawal)"| YES["🟢 YA tulis rules sendiri:<br/>WAF · Network Firewall · IAM ·<br/>KMS · Config · Shield Advanced"]
+  P -->|"Detection<br/>(AWS auto · ML/DB)"| NO["🔴 TAK tulis detection logic:<br/>GuardDuty · Inspector ·<br/>Macie · Detective"]
+  NO --> TWEAK["🟡 Boleh TWEAK je:<br/>GuardDuty suppression + IP list ·<br/>Macie custom data identifier"]`,
+                caption: 'INGAT exam: "write custom rules / block specific pattern" → protection service (WAF/Network Firewall), BUKAN detection service. Detection (GuardDuty/Inspector/Macie) guna ML/DB AWS — kau cuma boleh tweak (suppress finding, tambah custom data identifier), tak tulis logic detection sendiri.',
+              },
+            ],
+            tips: [
+              'GuardDuty "customize" = suppression rule (tapis false-positive finding) + trusted IP / threat IP / entity list — BUKAN tulis detection logic sendiri (itu ML AWS)',
+              'Macie "customize" = custom data identifier (regex sendiri) + allow list — untuk format PII khusus (cth nombor IC Malaysia)',
+              'Config custom rule = tulis guna Lambda atau Guard DSL untuk compliance check sendiri (selain managed rules)',
+              'Semua detection finding boleh push ke EventBridge → Lambda / SSM Automation untuk auto-remediation — corak yang exam suka uji',
+              'Firewall Manager = lapisan ATAS yang sebar & enforce WAF/Shield Adv/SG/Network Firewall/DNS Firewall merentas seluruh Organization (perlu Organizations + Config dulu)',
+              'Combo klasik exam: WAF + Shield Advanced pada CloudFront/ALB · Secrets Manager auto-rotate RDS · KMS encrypt S3/EBS/RDS',
+              'PRICING (rujuk card masing-masing): Shield Advanced $3,000/bln + WAF free; WAF $5/web ACL + $1/rule + $0.60/1M req; GuardDuty/Macie/Inspector/Security Hub = pay-as-you-go (no free tier kekal); Shield Standard + Parameter Store Standard = FREE. Keyword "cost-effective" → pilih yang free/murah.',
+            ],
+            docs: [
+              { label: 'GuardDuty suppression rules', url: 'https://docs.aws.amazon.com/guardduty/latest/ug/findings_suppression-rule.html' },
+              { label: 'GuardDuty entity & IP lists (customize detection)', url: 'https://docs.aws.amazon.com/guardduty/latest/ug/guardduty_upload-lists.html' },
+              { label: 'Macie custom data identifiers', url: 'https://docs.aws.amazon.com/macie/latest/user/custom-data-identifiers.html' },
+              { label: 'What is AWS Security Hub', url: 'https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html' },
+              { label: 'AWS Config custom rules', url: 'https://docs.aws.amazon.com/config/latest/developerguide/evaluate-config_develop-rules.html' },
+            ],
+            keywords: ['security stack', 'defense in depth', 'layered security', 'custom rules', 'suppression rules', 'custom data identifier', 'threat IP list', 'integration', 'work together', 'aggregate findings', 'ASFF', 'EventBridge', 'auto-remediation', 'Security Hub', 'GuardDuty Detective', 'WAF Shield combo', 'cost-effective', 'Shield Standard vs Advanced', 'keyword direction', 'pricing'],
+          },
         ],
       },
       {
