@@ -6168,6 +6168,7 @@ export const domains: DomainData[] = [
             storageDetails: 'Listener → "telinga" ALB yang dengar request pada port + protocol tertentu (cth HTTP:80, HTTPS:443). Sini kau pasang ACM cert untuk SSL/TLS termination.\nRules → undang-undang saringan pada listener: "kalau path = /api/* → hantar ke Target Group Backend". Dinilai ikut priority; ada default rule sebagai fallback. Condition boleh path, host, header, query string, source IP.\nTarget Group → bakul server yang buat satu tugas. Health check jalan ke SETIAP target dalam bakul ni. Satu rule tunjuk ke satu target group.\nTargets → benda sebenar dalam target group. 3 jenis: instance (EC2 by ID), ip (IP — peered VPC / on-prem), lambda (function). ASG daftar/buang EC2 sini automatik.\nHealth Check → ALB ketuk pintu setiap target ikut tempoh (interval). Lulus healthy threshold → terima trafik; gagal unhealthy threshold → ALB berhenti hantar trafik ke target tu, alih ke yang sihat.',
             sebabApa: 'Wujud sebab kalau kau ada banyak server web/microservice, kau tak nak user kena tahu IP setiap server, dan kau nak elak satu server mati = website down. ALB jadi "satu pintu masuk" yang sebarkan request ke server yang sihat. Lebih dari NLB: ALB faham HTTP, jadi dia boleh baca path/host/header dan hantar /cart ke service A, /video ke service B — satu LB untuk banyak microservice. Tujuan: HA + scaling + routing pintar di Layer 7.',
             sifir: [
+              'ELB (Elastic Load Balancing) = NAMA KELUARGA, BUKAN 1 produk. 4 jenis: ALB (L7), NLB (L4), GWLB (L3), CLB (legacy). ALB = SATU jenis ELB. "behind ELB" = am; "behind ALB" = spesifik',
               'ALB = Layer 7 (HTTP/HTTPS), routing by path/host/header. NLB = Layer 4 (TCP/UDP)',
               'Anatomy: Listener (port) → Rules (saringan) → Target Group (bakul server) → Targets (EC2/IP/Lambda)',
               'ALB takde static IP (DNS name je). Perlu static IP → NLB',
@@ -6196,6 +6197,11 @@ export const domains: DomainData[] = [
                 umpan: 'Tukar semua Spot ke On-Demand (atau scale up) supaya tiada instance kena rampas. Nampak betul sebab "error sebab Spot mati, jadi buang Spot".',
                 betul: 'Aktif/naikkan Deregistration Delay (Connection Draining) pada target group + pastikan ASG guna ELB health check. Bila Spot dapat 2-min termination notice, ASG deregister instance → ALB tukar status ke draining, berhenti hantar trafik BARU, tapi biar request sedia ada habis dulu (default 300s) → no dropped connection. Buang Spot = bunuh penjimatan kos; betulkan draining je. Keyword "Spot interruption + 5xx error + keep cost low" → deregistration delay + ELB health check, BUKAN tukar ke On-Demand.',
               },
+              {
+                soalan: 'Apa beza "EC2 behind ELB" dengan "EC2 behind ALB"? ELB lawan ALB tu dua produk berbeza ke?',
+                umpan: 'Anggap ELB dan ALB dua produk berasingan yang kau kena banding (ELB vs ALB). Nampak betul sebab nama lain-lain. SALAH: ELB BUKAN produk berasingan — ia nama keluarga.',
+                betul: 'ALB ialah SATU JENIS ELB (bukan lawan ELB). ELB (Elastic Load Balancing) = nama payung untuk 4 jenis: ALB/NLB/GWLB/CLB. "EC2 behind ELB" = di belakang mana-mana jenis load balancer (am); "EC2 behind ALB" = spesifik Application Load Balancer (L7 routing). Yang patut dibanding ialah ALB vs NLB (dua jenis ELB), bukan ALB vs ELB. Analogi: ELB = "kenderaan", ALB = "sedan".',
+              },
             ],
             scenario: 'Cross-VPC load balancing: company ada 3 VPCs peered. Guna satu ALB dengan IP address targets untuk route ke instances dalam semua 3 VPCs. Classic Load Balancer (CLB) tak boleh buat ni — CLB hanya support instance ID targets dalam same VPC. "Web app cost-optimized + fault-tolerant walau Spot ditutup" → ALB + ASG Mixed Instances Policy (On-Demand baseline + Spot) + deregistration delay. "Cuma route ikut path/host" → ALB Listener Rules.',
             diagram: {
@@ -6215,6 +6221,16 @@ export const domains: DomainData[] = [
               caption: 'Trafik internet TAK terus serang EC2 — masuk Listener (TLS termination guna ACM cert), Rules saring ikut path/host, hantar ke Target Group betul. Health check buang target rosak; ASG daftar/drain target automatik (penting bila Spot kena rampas). INGAT exam: Listener → Rules → Target Group → Targets.',
             },
             mermaid: [
+              {
+                label: 'Keluarga ELB — ELB = payung, ALB/NLB/GWLB/CLB = anak-anaknya',
+                source: `flowchart TD
+  ELB["☂️ ELB = Elastic Load Balancing<br/>(NAMA KELUARGA, bukan 1 produk)"]
+  ELB --> ALB["🟢 ALB<br/>Application LB<br/>Layer 7 · HTTP/HTTPS<br/>route ikut path/host"]
+  ELB --> NLB["🔵 NLB<br/>Network LB<br/>Layer 4 · TCP/UDP<br/>static IP · ultra laju"]
+  ELB --> GWLB["🟤 GWLB<br/>Gateway LB<br/>Layer 3 · firewall/IDS<br/>GENEVE 6081"]
+  ELB --> CLB["🟡 CLB<br/>Classic LB (legacy)<br/>elak — design lama je"]`,
+                caption: 'ELB BUKAN produk berasingan — ia nama payung untuk 4 jenis load balancer. ALB cuma SATU jenis ELB. Jadi "ALB vs ELB" tak masuk akal (macam banding "sedan vs kenderaan"); yang betul nak banding ialah ALB vs NLB. INGAT exam: pilihan tulis "ELB" = konsep am; jawapan betul biasanya paksa pilih jenis spesifik — "route by path/host" → ALB, "static IP + TCP + extreme perf" → NLB.',
+              },
               {
                 label: 'Pilih load balancer (ALB vs NLB vs GWLB vs CLB)',
                 source: `flowchart TD
@@ -6273,7 +6289,7 @@ export const domains: DomainData[] = [
               { label: 'ALB IP Targets', url: 'https://aws.amazon.com/blogs/aws/new-application-load-balancing-via-ip-address-to-aws-on-premises-resources/' },
               { label: 'ALB User Guide', url: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html' },
             ],
-            keywords: ['path-based routing', 'host-based routing', 'HTTP', 'HTTPS', 'layer 7', 'IP targets', 'cross-VPC', 'microservices', 'Listener', 'Listener Rules', 'Target Group', 'target types', 'health check', 'SSL termination', 'TLS termination', 'ACM certificate', 'SNI', 'stickiness', 'session affinity', 'cross-zone load balancing', 'deregistration delay', 'connection draining', 'Spot interruption', 'Auto Scaling', 'ASG', 'Mixed Instances Policy', 'capacity rebalancing', '502 Bad Gateway', 'Lambda target', 'X-Forwarded-For', 'pricing'],
+            keywords: ['ELB', 'Elastic Load Balancing', 'ELB vs ALB', 'EC2 behind ELB', 'EC2 behind ALB', 'load balancer types', 'ALB vs NLB', 'path-based routing', 'host-based routing', 'HTTP', 'HTTPS', 'layer 7', 'IP targets', 'cross-VPC', 'microservices', 'Listener', 'Listener Rules', 'Target Group', 'target types', 'health check', 'SSL termination', 'TLS termination', 'ACM certificate', 'SNI', 'stickiness', 'session affinity', 'cross-zone load balancing', 'deregistration delay', 'connection draining', 'Spot interruption', 'Auto Scaling', 'ASG', 'Mixed Instances Policy', 'capacity rebalancing', '502 Bad Gateway', 'Lambda target', 'X-Forwarded-For', 'pricing'],
           },
           {
             shortName: 'NLB',
@@ -6888,9 +6904,9 @@ export const domains: DomainData[] = [
             mermaid: {
               label: 'Decision tree: REST vs HTTP vs WebSocket',
               source: `flowchart TD
-    Q["Pilih API Gateway type"] --> A{Server perlu PUSH ke client?<br/>(two-way real-time)}
+    Q["Pilih API Gateway type"] --> A{"Server perlu PUSH ke client?<br/>(two-way real-time)"}
     A -->|"Ya — chat / game / trading"| WS["WebSocket API"]
-    A -->|"Tak — request-response"| B{Perlu API keys / usage plans /<br/>WAF / request validation /<br/>private VPC endpoint?}
+    A -->|"Tak — request-response"| B{"Perlu API keys / usage plans /<br/>WAF / request validation /<br/>private VPC endpoint?"}
     B -->|"Ya"| REST["REST API<br/>(full features, mahal)"]
     B -->|"Tak — simple & murah"| HTTP["HTTP API<br/>(~70% murah, lower latency)"]`,
               caption: 'Mula dengan: server perlu push ke client tak? Ya → WebSocket. Tak → kalau perlu API keys/WAF/request validation/private endpoint → REST; kalau tak (cuma proxy ringkas ke Lambda) → HTTP API (lebih murah + laju). INGAT exam: HTTP = default murah; REST = bila perlu extras; WebSocket = real-time dua-arah.',
