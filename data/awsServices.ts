@@ -1724,7 +1724,7 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Audit who did what and when — compliance, forensics, account activity',
             fungsi: 'Merekod setiap API call dalam AWS account: siapa buat, bila, dari mana, apa hasilnya. Default simpan 90 hari. Boleh hantar ke S3 untuk long-term retention.',
             sebabApa: "Wujud sebab bila resource hilang atau ada perubahan mencurigakan, soalan pertama ialah 'SIAPA buat ni, bila, dari IP mana?' — tanpa log, mustahil nak siasat atau buktikan untuk audit/compliance. CloudTrail rakam SETIAP API call dalam account (user, masa, source IP, hasil) secara automatik, jadi kau ada jejak audit lengkap untuk forensics & compliance. Management event default ON dan free, jadi visibility asas dah ada tanpa setup.",
-            sifir: ["CloudTrail = WHO did WHAT (API audit). CloudWatch = WHAT happening NOW (metrics)", "Management events = default ON + FREE (CreateBucket, TerminateInstances...)", "Data events = OFF by default, ada kos (S3 object-level Get/Put, Lambda invoke)", "Standard retention 90 hari; CloudTrail Lake = sampai 7 tahun + query SQL terus", "Console trail = ALL regions by default (multi-region)", "'Compliance + config over time / drift' → AWS Config, BUKAN CloudTrail"],
+            sifir: ["CloudTrail = WHO did WHAT (API audit). CloudWatch = WHAT happening NOW (metrics)", "Management events = default ON + FREE (CreateBucket, TerminateInstances...)", "Data events = OFF by default, ada kos (S3 object-level Get/Put, Lambda invoke)", "Standard retention 90 hari; CloudTrail Lake = sampai 7 tahun + query SQL terus", "Console trail = ALL regions by default (multi-region)", "Log file validation = SHA-256 hash + digest file → buktikan log TAK diusik (tamper-proof)", "'Compliance + config over time / drift' → AWS Config, BUKAN CloudTrail"],
             perangkap: [{"soalan": "Pasukan security nak query 7 tahun aktiviti API secara SQL tanpa export ke S3/Athena. Guna apa?", "umpan": "Standard CloudTrail trail hantar ke S3 + Athena untuk query. Nampak betul sebab 'CloudTrail simpan log'. SALAH: standard trail simpan 90 hari je dan perlu setup S3 + Athena untuk query.", "betul": "CloudTrail Lake — managed data lake, simpan sampai 7 tahun, query SQL terus dalam console. Keyword 'long-term + queryable tanpa export' = CloudTrail Lake."}, {"soalan": "Audit mahu log setiap kali objek di-download (GetObject) dari bucket S3 sensitif. CloudTrail dah ON. Cukup ke?", "umpan": "Cukup — CloudTrail default dah log semua, termasuk akses S3. Nampak betul sebab 'CloudTrail dah enabled'. SALAH: default cuma management events; S3 object-level GetObject ialah DATA event yang OFF by default.", "betul": "Enable CloudTrail DATA events untuk bucket tu (ada kos $0.10/100K events). Keyword 'object-level / GetObject / data-plane' = data events, bukan management events."}],
             contohGuna: 'Security team nak tau siapa delete S3 bucket semalam — CloudTrail log ada: user, timestamp, source IP, action.',
             scenario: '"Who deleted this resource?", "compliance audit log of all API activity" → CloudTrail. Bukan CloudWatch (yang untuk metrics/logs dari apps). CloudTrail = WHO DID WHAT. CloudWatch = WHAT IS HAPPENING NOW.',
@@ -1738,6 +1738,7 @@ export const domains: DomainData[] = [
               'Console-created Trail applies to ALL REGIONS by default (multi-region trail). CloudTrail Events dari semua regions dihantar ke satu S3 bucket.',
               'Insight Events: detect unusual API activity patterns (e.g. sudden spike in EC2 TerminateInstances calls). Optional, additional cost.',
               'Exam: "S3 object download activity logging" → CloudTrail data events (not management events). "Who created this IAM role?" → CloudTrail management events (default logging).',
+              'Log file validation: CloudTrail kira SHA-256 hash setiap log file + hasilkan digest file (yang signed) setiap jam → kau boleh sahkan log TAK diubah/dipadam selepas delivery (tamper-proof audit). Ini CIRI CloudTrail, BUKAN S3. Keyword "ensure logs not tampered / integrity / prove log authenticity" → enable log file validation.',
               'PRICING: First copy of management events = FREE (all accounts). Data events (S3 object-level, Lambda invocations) = $0.10 per 100,000 events. CloudTrail Lake = $0.75/GB ingested + $0.005/GB scanned. Insight events = additional cost. Long-term: export ke S3 (bayar S3 storage sahaja, CloudTrail tak charge untuk export).',
               'Exam: "free audit trail of API calls" → CloudTrail management events (free). "log S3 object-level API calls" → data events ($0.10/100K events, not free).',
             ],
@@ -4478,7 +4479,38 @@ export const domains: DomainData[] = [
             perangkap: [{"soalan": "ASG launch instance EC2 baru perlu auto-install Apache + download app config setiap kali scale-out, tanpa admin SSH masuk. Guna apa?", "umpan": "EC2 Instance Metadata — sebab nama bunyi macam 'set up instance', orang campur aduk metadata dengan user data.", "betul": "EC2 User Data — keyword 'auto-install on launch / bootstrap'. Metadata cuma BACA info pasal instance (IP, instance ID, IAM role), ia tak RUN script."}],
             contohGuna: 'Launch EC2 → User Data install Apache + download web app secara automatik. Developer tak perlu SSH masuk untuk setup.',
             scenario: '"EC2 fleet baru launch perlu auto-install software tanpa manual SSH" → User Data. Keyword: during instance launch, bootstrap, initialization script.',
-            keywords: ['bootstrap', 'launch script', 'cloud-init', 'first boot', 'initialization', '16KB limit'],
+            compare: {
+              label: 'EC2 User Data vs Instance Metadata — JANGAN keliru (selalu kena exam)',
+              headers: ['Aspect', 'User Data', 'Instance Metadata (IMDS)'],
+              rows: [
+                ['Apa dia', '🟢 SCRIPT yang RUN', 'INFO yang kau BACA'],
+                ['Tujuan', 'Bootstrap: install, pull code, config', 'Tahu instance ID, IP, IAM role, hostname'],
+                ['Bila jalan', 'Sekali, masa FIRST BOOT', 'Bila-bila, query dari dalam instance'],
+                ['Endpoint', '169.254.169.254/latest/user-data/', '169.254.169.254/latest/meta-data/'],
+              ],
+              takeaway: 'User Data = RUN script (verb). Metadata = BACA info (noun). "bootstrap / auto-install on launch" → User Data; "retrieve instance ID / IAM role credentials from inside" → Metadata. Dua-dua guna 169.254.169.254 tapi path beza (user-data vs meta-data).',
+            },
+            mermaid: {
+              label: 'Analogi — User Data vs Metadata (check-in hotel)',
+              source: `flowchart LR
+  subgraph UD["📝 User Data = ARAHAN check-in"]
+    A["Tetamu masuk bilik kali PERTAMA<br/>(first boot)"] --> B["Buat ikut nota: pasang wifi,<br/>isi peti sejuk (install Apache, pull app)"]
+  end
+  subgraph MD["🪪 Metadata = KAD info bilik"]
+    C["Nak tahu no bilik / nama tetamu?<br/>(instance ID, IP, IAM role)"] --> D["Baca kad di meja<br/>169.254.169.254"]
+  end`,
+              caption: 'User Data = senarai ARAHAN dibuat SEKALI masa check-in (first boot). Metadata = KAD info bilik yang kau BACA bila-bila. INGAT exam: "auto-install / bootstrap on launch" → User Data (RUN); "retrieve instance ID / IAM role creds" → Metadata (BACA).',
+            },
+            tips: [
+              'User Data run SEKALI masa first boot, as root (cloud-init). Nak run setiap boot → cloud-init directive / mime multipart.',
+              'Limit 16 KB (sebelum base64). Script besar → letak User Data kecil yang pull script penuh dari S3.',
+              'User Data BOLEH dibaca balik via metadata (169.254.169.254/latest/user-data) → JANGAN letak password/secret plain. Guna Secrets Manager / SSM Parameter Store.',
+              'PRICING: User Data percuma — bayar EC2 je.',
+            ],
+            docs: [
+              { label: 'Run commands on your Linux instance at launch (User Data)', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/user-data.html' },
+            ],
+            keywords: ['bootstrap', 'launch script', 'cloud-init', 'first boot', 'initialization', '16KB limit', 'user data vs metadata', 'auto-configure', 'pull from S3'],
           },
           {
             shortName: 'EC2 Hibernation',
@@ -4510,7 +4542,41 @@ export const domains: DomainData[] = [
             perangkap: [{"soalan": "App dalam EC2 perlu retrieve temporary IAM role credentials & instance ID dari dalam instance itu sendiri. Guna apa?", "umpan": "EC2 User Data — sebab dua-dua duduk 'dalam EC2' & nama bunyi serupa, mudah tertukar.", "betul": "EC2 Instance Metadata (IMDS, 169.254.169.254) — ia BACA info & credentials pasal instance. User Data cuma RUN script masa boot, bukan untuk query info."}, {"soalan": "Security audit nak halang SSRF attack curi IAM credentials dari metadata endpoint. Tindakan?", "umpan": "Block port 169.254.169.254 dengan security group — SG tak boleh control link-local address, jadi tak jalan.", "betul": "Enforce IMDSv2 (token/session-based) — keyword 'SSRF / metadata credential theft'. IMDSv2 paksa PUT token dulu, halang attack yang exploit IMDSv1."}],
             contohGuna: 'App dalam EC2 nak tau public IP dia sendiri atau nama IAM role yang attached — query Metadata endpoint tanpa perlu AWS CLI.',
             scenario: '"Script dalam EC2 nak retrieve IAM role credentials atau instance ID" → Instance Metadata. Bukan untuk run scripts. Keyword: 169.254.169.254, info about instance.',
-            keywords: ['169.254.169.254', 'instance info', 'IMDSv2', 'hostname', 'IP address', 'IAM role name'],
+            detailsLabel: 'IMDS paths (169.254.169.254/latest/)',
+            storageDetails: 'meta-data/ → info instance: instance-id, local/public-ipv4, hostname, security-groups, placement/az\nmeta-data/iam/security-credentials/<role> → temporary IAM role credentials (auto-rotate) — ni yang SSRF nak curi\ndynamic/instance-identity/document → JSON identity (region, accountId, instanceType) untuk verify identity\nuser-data/ → baca balik User Data script (sebab tu JANGAN letak secret dalam User Data)',
+            compare: {
+              label: 'IMDSv1 vs IMDSv2 — security discriminator',
+              headers: ['Aspect', 'IMDSv1', 'IMDSv2'],
+              rows: [
+                ['Cara request', '🔴 Simple GET (no token)', '🟢 PUT token dulu, baru GET pakai token'],
+                ['Tahan SSRF?', '❌ Terdedah (attacker GET terus)', '🟢 Token + hop limit halang SSRF'],
+                ['Session', 'Stateless', 'Session-oriented (token ada TTL)'],
+                ['Recommend', 'Legacy je', '🟢 Default & enforce (HttpTokens=required)'],
+              ],
+              takeaway: '"SSRF / steal IAM credentials from metadata / harden instance" → enforce IMDSv2 (HttpTokens=required). IMDSv2 paksa PUT session token + default IP hop limit = 1. Security group / NACL TAK boleh block 169.254.169.254 (link-local) — IMDSv2 satu-satunya kawalan betul.',
+            },
+            mermaid: {
+              label: 'IMDSv2 token flow — kenapa SSRF gagal',
+              source: `flowchart TD
+  A["App / attacker minta credentials"] --> V{"IMDS version?"}
+  V -->|"IMDSv1 (GET terus)"| BAD["🔴 SSRF boleh curi creds<br/>tanpa token"]
+  V -->|"IMDSv2"| T["PUT /latest/api/token<br/>(dapat session token)"]
+  T --> G["GET meta-data/iam/...<br/>+ header token"]
+  G --> OK["🟢 creds keluar<br/>(hop limit halang proxy/SSRF)"]`,
+              caption: 'IMDSv2 tambah langkah PUT token sebelum GET — request SSRF naif (yang cuma boleh GET) gagal. INGAT exam: "prevent metadata credential theft / SSRF" → enforce IMDSv2 (HttpTokens=required), BUKAN security group (tak boleh control link-local 169.254.169.254).',
+            },
+            tips: [
+              'IMDSv2 enforce: set HttpTokens=required pada instance metadata options (boleh paksa via launch template / SCP / org policy).',
+              'IMDSv2 default hop limit = 1 → halang request transit melalui container network / reverse proxy (lapisan SSRF defense extra).',
+              'Security group / NACL TAK boleh block 169.254.169.254 (link-local) — satu-satunya kawalan = IMDSv2, atau matikan IMDS terus kalau tak perlu.',
+              'Metadata BACA info; nak IAM role temporary credentials → meta-data/iam/security-credentials/<role-name> (auto-rotate, no hardcode).',
+              'PRICING: IMDS percuma — sebahagian EC2.',
+            ],
+            docs: [
+              { label: 'Instance metadata and user data (IMDS)', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html' },
+              { label: 'Use IMDSv2', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html' },
+            ],
+            keywords: ['169.254.169.254', 'instance info', 'IMDSv2', 'IMDSv1', 'hostname', 'IP address', 'IAM role name', 'SSRF', 'HttpTokens', 'hop limit', 'link-local'],
           },
           {
             shortName: 'Recycle Bin',
