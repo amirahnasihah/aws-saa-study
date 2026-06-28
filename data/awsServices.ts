@@ -6597,8 +6597,8 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Automate infrastructure deployment, consistent environment',
             fungsi: 'Mengurus dan menyediakan infrastruktur AWS secara automatik menggunakan template (IaC)',
             sebabApa: "CloudFormation wujud sebab buat infra manual (klik console satu-satu) = lambat, tak konsisten antara env (dev/prod), dan susah nak replicate atau rollback. CloudFormation = Infrastructure as Code: tulis template (YAML/JSON) sekali, deploy infra yang sama berulang kali, dan kalau gagal auto-rollback. Buang human error + 'works on dev tapi tak sama kat prod'. Ia FREE — bayar resource je.",
-            sifir: ["CloudFormation FREE — bayar hanya resource yang dibuat (EC2/RDS/S3), stacks & StackSets percuma", "Change Set = PREVIEW perubahan sebelum apply; Drift Detection = detect perubahan manual luar CFN", "Mappings = static lookup (region→AMI); Outputs+Fn::ImportValue = cross-stack ref; Parameters = user input", "cfn-init = install packages dari metadata; cfn-signal = hantar SUCCESS/FAIL; cfn-hup = re-run bila metadata berubah", "DeletionPolicy: Retain = resource KEKAL walau stack dipadam (untuk RDS/S3)", "Nested Stacks = reusable component (VPC/security layer); StackSets = deploy multi-account/region", "Stack update gagal → auto-ROLLBACK ke state lama (default)"],
-            perangkap: [{"soalan": "Satu CloudFormation template untuk banyak region, auto-pilih AMI ID betul ikut region. Guna apa?", "umpan": "Parameters — sangka user kena input AMI ID setiap region.", "betul": "Mappings (static region→AMI lookup) atau Lambda-backed custom resource (dynamic lookup SSM). Bukan Parameters (manual). Keyword: 'region-specific AMI' → Mappings/custom resource."}, {"soalan": "Nak detect kalau ada orang ubah resource stack secara MANUAL via console. Feature?", "umpan": "Change Set — sangka ia tunjuk perubahan yang dah berlaku.", "betul": "Drift Detection. Change Set = preview perubahan SEBELUM apply; Drift = detect perubahan manual yang dah terjadi di luar CFN. Keyword: 'manual console changes' → Drift Detection."}, {"soalan": "Padam stack tapi nak data RDS/S3 KEKAL (jangan lenyap). Macam mana?", "umpan": "Backup manual dulu sebelum delete stack — leceh + boleh terlupa.", "betul": "Set DeletionPolicy: Retain pada resource tu. Stack dipadam, resource kekal. Keyword: 'retain data on stack deletion' → DeletionPolicy: Retain."}],
+            sifir: ["CloudFormation FREE — bayar hanya resource yang dibuat (EC2/RDS/S3), stacks & StackSets percuma", "INGAT 4 komponen: Output keLUAR (kongsi antara stack), Parameter masUK (input launch), Mapping ikut REGION (lookup static), Condition ikut SYARAT (if/else)", "Cross-stack: Stack A guna Outputs + Export → Stack B guna Fn::ImportValue untuk import. Exported value TAK boleh delete/ubah selagi stack lain masih import dia", "Change Set = PREVIEW perubahan sebelum apply; Drift Detection = detect perubahan manual luar CFN", "Mappings = static lookup (region→AMI); Outputs+Fn::ImportValue = cross-stack ref; Parameters = user input", "cfn-init = install packages dari metadata; cfn-signal = hantar SUCCESS/FAIL; cfn-hup = re-run bila metadata berubah", "DeletionPolicy: Retain = resource KEKAL walau stack dipadam (untuk RDS/S3)", "Nested Stacks = reusable component (VPC/security layer); StackSets = deploy multi-account/region", "Stack update gagal → auto-ROLLBACK ke state lama (default)"],
+            perangkap: [{"soalan": "Satu CloudFormation template untuk banyak region, auto-pilih AMI ID betul ikut region. Guna apa?", "umpan": "Parameters — sangka user kena input AMI ID setiap region.", "betul": "Mappings (static region→AMI lookup) atau Lambda-backed custom resource (dynamic lookup SSM). Bukan Parameters (manual). Keyword: 'region-specific AMI' → Mappings/custom resource."}, {"soalan": "Nak detect kalau ada orang ubah resource stack secara MANUAL via console. Feature?", "umpan": "Change Set — sangka ia tunjuk perubahan yang dah berlaku.", "betul": "Drift Detection. Change Set = preview perubahan SEBELUM apply; Drift = detect perubahan manual yang dah terjadi di luar CFN. Keyword: 'manual console changes' → Drift Detection."}, {"soalan": "Padam stack tapi nak data RDS/S3 KEKAL (jangan lenyap). Macam mana?", "umpan": "Backup manual dulu sebelum delete stack — leceh + boleh terlupa.", "betul": "Set DeletionPolicy: Retain pada resource tu. Stack dipadam, resource kekal. Keyword: 'retain data on stack deletion' → DeletionPolicy: Retain."}, {"soalan": "Stack urus RDS dengan data production kritikal. Kalau stack TER-delete, nak pastikan database TAK musnah & data kekal. Set apa?", "umpan": "Termination Protection — bunyi macam betul sebab ia 'protect dari delete'. Tapi ia halang STACK dari dipadam langsung; ia TAK kawal nasib resource kalau stack memang jadi dipadam.", "betul": "DeletionPolicy: Retain pada RDS resource — kalau stack dipadam, database tetap kekal. Keyword 'if stack deleted, preserve the resource/data' → DeletionPolicy: Retain. (Termination Protection = halang stack delete; DeletionPolicy = nasib resource bila stack memang delete.)"}, {"soalan": "Masa stack UPDATE, nak lindungi database production kritikal daripada terganti/terpadam oleh operasi update tu sendiri. Feature?", "umpan": "DeletionPolicy: Retain — nampak betul sebab 'protect resource'. Tapi DeletionPolicy cuma terpakai bila STACK dipadam, bukan masa update.", "betul": "Stack Policy — JSON policy yang lindungi resource tertentu daripada diubah/diganti masa stack UPDATE. Keyword 'protect resource during stack update' → Stack Policy. (Stack Policy = masa UPDATE; DeletionPolicy = masa DELETE.)"}],
             contohGuna: 'Deploy EC2 + S3 + RDS sekaligus dari satu template YAML/JSON, replicate environment dev/staging/prod',
             compare: [
               {
@@ -6614,18 +6614,36 @@ export const domains: DomainData[] = [
               takeaway: 'AWS-only IaC + percuma → CloudFormation. Multi-cloud satu tool → Terraform. Deploy app tanpa fikir infra → Elastic Beanstalk (dia sebenarnya guna CloudFormation di bawah hood).',
               },
               {
-                label: 'Anatomy template — 4 bahagian (Parameters vs Mappings vs Outputs vs Conditions)',
-                headers: ['Bahagian', 'Apa dia', 'Nilai datang dari mana', 'Exam keyword'],
+                label: 'Template SECTIONS — 7 bahagian (apa kau TULIS dalam fail YAML/JSON)',
+                headers: ['Section', 'Apa dia', 'Wajib?', 'Exam keyword'],
                 rows: [
-                  ['Parameters', 'Input DINAMIK masa launch stack (user pilih env/saiz)', 'User taip/pilih masa deploy', '"user chooses env / instance size"'],
-                  ['Mappings', 'Lookup table STATIC dalam template (region → AMI ID)', 'Hardcoded dalam template, no input', '"region-specific AMI / static lookup"'],
-                  ['Outputs', 'EXPORT value keluar stack untuk stack lain guna', 'Dari resource yang stack ni cipta', '"share value between stacks → Fn::ImportValue"'],
-                  ['Conditions', 'Cipta resource SECARA bersyarat (if prod → buat X)', 'Dinilai dari Parameters/Mappings', '"create resource only if / conditional"'],
+                  ['Resources', 'Define resource nak dicipta (EC2/S3/VPC/RDS...)', '🔴 WAJIB — satu-satunya', '"the only required section"'],
+                  ['Parameters', 'Input DINAMIK masa launch (user pilih env/saiz)', 'Optional', '"user chooses env / instance size"'],
+                  ['Mappings', 'Lookup table STATIC (region → AMI ID)', 'Optional', '"region-specific AMI / static lookup"'],
+                  ['Conditions', 'Cipta resource bersyarat (if prod → buat X)', 'Optional', '"create only if / conditional logic"'],
+                  ['Outputs', 'EXPORT value keluar untuk stack lain import', 'Optional', '"share between stacks → Fn::ImportValue"'],
+                  ['Metadata', 'Info tambahan + config untuk cfn-init', 'Optional', 'jarang keluar — kenal nama je'],
+                  ['Transform', 'Guna SAM (serverless) atau macros', 'Optional', '"serverless + CloudFormation → SAM/Transform"'],
                 ],
-                takeaway: 'Parameters = INPUT masa launch · Mappings = LOOKUP static (region→AMI) · Outputs = EXPORT keluar (Fn::ImportValue) · Conditions = IF/bersyarat. INGAT exam: "region-specific AMI" → Mappings; "share between stacks" → Outputs; "user picks env" → Parameters; "create only when prod" → Conditions.',
+                takeaway: 'Resources = SATU-SATUNYA section WAJIB; yang lain optional. Mnemonic 4 exam-favourite: Output keLUAR (kongsi), Parameter masUK (input), Mapping ikut REGION, Condition ikut SYARAT. Transform = SAM (serverless app). INGAT exam: "only required section" → Resources; "region-specific AMI" → Mappings; "share between stacks" → Outputs.',
+              },
+              {
+                label: 'Operasi STACK — konsep CARA CloudFormation urus (bukan section template)',
+                headers: ['Konsep', 'Apa dia', 'Exam keyword'],
+                rows: [
+                  ['Stack', 'Kumpulan resource dari 1 template, urus sekali. Delete stack = semua resource padam (kemas)', '"group of resources / manage together"'],
+                  ['StackSets', 'Deploy 1 template ke BANYAK account + region sekali gus (guna Organizations)', '"across multiple accounts/regions"'],
+                  ['Nested Stacks', 'Stack dalam stack — pecah jadi modul reusable (VPC/security layer)', '"reusable / modular templates"'],
+                  ['Change Set', 'PREVIEW perubahan SEBELUM apply pada stack', '"preview changes before applying"'],
+                  ['Drift Detection', 'Kesan resource diubah MANUAL di luar CFN (console)', '"detect manual / console changes, config drift"'],
+                  ['DeletionPolicy', 'Apa jadi pada resource bila stack delete. Retain = resource KEKAL', '"preserve data when stack deleted → Retain"'],
+                  ['Stack Policy', 'Lindungi resource penting dari terubah/terpadam masa UPDATE', '"protect resource during stack update"'],
+                ],
+                takeaway: 'Section = apa kau TULIS dalam template; Operasi = macam mana CFN URUS stack. INGAT exam: multi-account/region → StackSets; modular/reusable → Nested Stacks; preview → Change Set; manual change → Drift Detection; keep data on delete → DeletionPolicy: Retain; protect during update → Stack Policy.',
               },
             ],
-            mermaid: {
+            mermaid: [
+              {
               label: 'CloudFormation = manual IKEA untuk infra (analogi)',
               source: `flowchart TD
   A["📄 Template YAML/JSON<br/>(senarai perabot + cara pasang)"] --> B["CloudFormation Stack<br/>(tukang ikut manual)"]
@@ -6635,7 +6653,22 @@ export const domains: DomainData[] = [
   D -->|"Ada org ubah manual?"| F["Drift Detection<br/>kesan lari dari template"]
   C -->|"Gagal tengah jalan"| G["Auto-rollback ke state lama"]`,
               caption: 'Macam manual IKEA: template sama → perabot sama setiap kali, takda silap manusia. INGAT exam: preview = Change Set; kesan ubah manual = Drift Detection; deploy multi-account/region = StackSets; kekalkan data masa delete = DeletionPolicy: Retain.',
-            },
+              },
+              {
+              label: 'Pilih konsep operasi CFN — decision tree (yang mana aku guna?)',
+              source: `flowchart TD
+  A["Nak buat apa dengan stack/resource?"] --> B{Tujuan?}
+  B -->|"Deploy ke banyak<br/>account + region"| SS["📦 StackSets"]
+  B -->|"Template besar →<br/>modul reusable"| NS["🧩 Nested Stacks"]
+  B -->|"Tengok perubahan<br/>SEBELUM apply"| CS["👀 Change Set"]
+  B -->|"Kesan ubah MANUAL<br/>luar CFN"| DD["🔍 Drift Detection"]
+  B -->|"Lindung resource"| P{Bila?}
+  P -->|"Masa stack UPDATE"| SP["🛡️ Stack Policy"]
+  P -->|"Kalau stack DELETE,<br/>resource kekal"| DP["💾 DeletionPolicy: Retain"]
+  P -->|"Halang stack itu sendiri<br/>dari di-DELETE"| TP["🔒 Termination Protection"]`,
+              caption: 'Tiga "protect" yang selalu keliru: Stack Policy = lindung masa UPDATE · DeletionPolicy: Retain = kekalkan resource bila stack DELETE · Termination Protection = halang stack itu sendiri dari delete. INGAT exam: "multiple accounts/regions" → StackSets; "reusable/modular" → Nested Stacks; "preview" → Change Set; "manual change/drift" → Drift Detection.',
+              },
+            ],
             tips: [
               'Lambda-backed Custom Resources: guna Lambda untuk perform logic masa CloudFormation create/update/delete — contoh: lookup AMI ID dynamically',
               'AMI IDs berbeza tiap region + instance type → Lambda custom resource query SSM Parameter Store atau EC2 API untuk get correct AMI ID masa stack creation',
@@ -6663,8 +6696,13 @@ export const domains: DomainData[] = [
               'PRICING: CloudFormation is FREE — kau bayar hanya untuk AWS resources yang ia create (EC2, RDS, S3, dll). Tiada charge untuk stacks, templates, changes, drift detection, StackSets. Designer & change sets juga free.',
               'StackSets: deploy ke multiple accounts/regions sekali gus. Perlukan AWS Organizations atau self-managed permissions. Boleh auto-reconcile drift.',
               'Exam: "no additional charge for using CloudFormation" → hanya bayar resources yang dibuat. Nested stacks & StackSets percuma.',
+              'Resources = SATU-SATUNYA section yang WAJIB dalam template. Template tanpa Resources tak sah. Exam: "the only required section in a CloudFormation template" → Resources.',
+              'Transform: section untuk guna SAM (Serverless Application Model — AWS::Serverless-2016-10-31) atau CloudFormation macros. Exam: "simplify serverless (Lambda/API Gateway/DynamoDB) definitions in CloudFormation" → Transform / SAM.',
+              'Stack Policy: JSON policy yang lindungi resource kritikal (e.g. database) daripada terubah/terpadam masa stack UPDATE — beza dengan DeletionPolicy (yang protect masa stack DELETE). Exam: "prevent accidental updates to specific resources during a stack update" → Stack Policy.',
+              'Termination Protection: setting di STACK level yang halang stack itu sendiri daripada dipadam (mesti disable dulu sebelum boleh delete). BEZA: Termination Protection = halang stack DELETE; DeletionPolicy: Retain = kalau stack memang dipadam, kekalkan resource tertentu. Exam: "prevent the stack from being deleted" → Termination Protection; "keep the database if the stack is deleted" → DeletionPolicy: Retain.',
+              'INGAT 3-cara keliru: Termination Protection (halang stack delete) · DeletionPolicy (nasib resource bila stack DELETE) · Stack Policy (lindung resource masa stack UPDATE).',
             ],
-            keywords: ['IaC', 'Infrastructure as Code', 'template', 'stack', 'rollback', 'repeatable deployment', 'Lambda-backed custom resource', 'AMI lookup', 'dynamic parameters', 'multi-region template', 'Mappings', 'Outputs', 'cross-stack reference', 'Fn::ImportValue', 'cfn-init', 'cfn-signal', 'cfn-hup', 'cfn-get-metadata', 'change set', 'drift detection', 'stack rollback', 'DeletionPolicy', 'nested stacks', 'AWS::CloudFormation::Stack', 'modular templates', 'StackSets', 'free', 'pricing', 'no additional charge'],
+            keywords: ['IaC', 'Infrastructure as Code', 'template', 'stack', 'rollback', 'repeatable deployment', 'Lambda-backed custom resource', 'AMI lookup', 'dynamic parameters', 'multi-region template', 'Mappings', 'Outputs', 'cross-stack reference', 'Fn::ImportValue', 'cfn-init', 'cfn-signal', 'cfn-hup', 'cfn-get-metadata', 'change set', 'drift detection', 'stack rollback', 'DeletionPolicy', 'nested stacks', 'AWS::CloudFormation::Stack', 'modular templates', 'StackSets', 'free', 'pricing', 'no additional charge', 'Resources', 'Transform', 'SAM', 'Serverless Application Model', 'Stack Policy', 'Termination Protection', 'Metadata', 'template sections', 'Conditions', 'Parameters'],
           },
           {
             shortName: 'SSM',
