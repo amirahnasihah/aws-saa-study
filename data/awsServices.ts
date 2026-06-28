@@ -5074,9 +5074,32 @@ export const domains: DomainData[] = [
             fungsi: 'Managed NFS (Network File System) that scales automatically. Multiple EC2 instances across AZs can mount and read/write the same file system at the same time.',
             sebabApa: "EFS wujud sebab EBS hanya boleh attach ke satu EC2 (kecuali Multi-Attach io1/io2 dalam satu AZ), jadi bila banyak EC2 across AZ perlu baca/tulis FAIL yang SAMA serentak (web content, CMS, shared config), EBS tak cukup. EFS = managed NFS yang auto-scale, multi-AZ, boleh di-mount oleh ratusan EC2 sekali gus supaya semua kongsi satu file system tanpa duplicate data.",
             sifir: ["EFS = managed NFS, shared, multi-AZ, ramai EC2 mount serentak", "Performance mode: General Purpose (latency rendah, default) vs Max I/O (latency LEBIH TINGGI, untuk parallel besar)", "Throughput mode: Bursting (scale ikut saiz) / Provisioned (set MiB/s tetap) / Elastic (auto, recommended)", "Encryption in transit BUKAN default — enable masa mount: mount -o tls (TLS 1.2)", "Mount target connection timeout = check SG inbound TCP 2049 + NACL", "PRICING: Standard $0.30/GB-mo; One Zone-IA $0.016/GB-mo (cheapest); EFS lebih mahal dari S3 tapi shared"],
-            perangkap: [{"soalan": "20 EC2 across multiple AZ perlu baca/tulis fail web content yang SAMA serentak. Pilih storage?", "umpan": "EBS Multi-Attach (io2) — sebab 'attach ke banyak EC2' nampak padan.", "betul": "EFS — keyword 'shared FILE storage, multi-AZ, ramai EC2 serentak'. EBS Multi-Attach = block storage, max dalam satu AZ & io1/io2 sahaja; EFS = file system NFS multi-AZ sebenar."}, {"soalan": "EFS kecil (25 GB) tapi perlu throughput tinggi konsisten. Apa setting?", "umpan": "Bursting Throughput — sebab ia default, orang biar je.", "betul": "Provisioned (atau Elastic) Throughput — Bursting scale ikut saiz (25 GB = ~1.25 MiB/s baseline je, tak cukup). Keyword 'small file system + high throughput' = Provisioned/Elastic."}, {"soalan": "EC2 cuba mount EFS tapi connection TIMEOUT. Punca paling mungkin?", "umpan": "Salah DNS name file system — tapi DNS failure bagi error lain, bukan timeout.", "betul": "Security Group / NACL block TCP 2049 — keyword 'timeout'. Mount target SG mesti allow inbound TCP 2049 dari CIDR EC2; ini punca timeout, bukan DNS."}],
+            perangkap: [{"soalan": "20 EC2 across multiple AZ perlu baca/tulis fail web content yang SAMA serentak. Pilih storage?", "umpan": "EBS Multi-Attach (io2) — sebab 'attach ke banyak EC2' nampak padan.", "betul": "EFS — keyword 'shared FILE storage, multi-AZ, ramai EC2 serentak'. EBS Multi-Attach = block storage, max dalam satu AZ & io1/io2 sahaja; EFS = file system NFS multi-AZ sebenar."}, {"soalan": "EFS kecil (25 GB) tapi perlu throughput tinggi konsisten. Apa setting?", "umpan": "Bursting Throughput — sebab ia default, orang biar je.", "betul": "Provisioned (atau Elastic) Throughput — Bursting scale ikut saiz (25 GB = ~1.25 MiB/s baseline je, tak cukup). Keyword 'small file system + high throughput' = Provisioned/Elastic."}, {"soalan": "EC2 cuba mount EFS tapi connection TIMEOUT. Punca paling mungkin?", "umpan": "Salah DNS name file system — tapi DNS failure bagi error lain, bukan timeout.", "betul": "Security Group / NACL block TCP 2049 — keyword 'timeout'. Mount target SG mesti allow inbound TCP 2049 dari CIDR EC2; ini punca timeout, bukan DNS."}, {"soalan": "Syarikat berita perlu storan backup/redundant: low-cost, high-throughput, dikongsi banyak EC2, JARANG diakses kecuali masa recovery, dalam SATU AZ je, dan boleh dijana semula kalau hilang. Kelas EFS mana?", "umpan": "EFS Standard-IA — nampak 'infrequent access' terus pilih IA. SALAH separa: Standard-IA simpan merentas ≥3 AZ, jadi bayar lebih untuk redundansi yang soalan TAK perlu (data re-creatable + 1 AZ je dah cukup).", "betul": "EFS One Zone-IA — keyword 'rarely accessed' (→ IA) + 'single AZ + can be regenerated/re-creatable' (→ One Zone) + 'low-cost' = One Zone-IA, kombinasi PALING MURAH ($0.016/GB · 1 AZ)."}],
             contohGuna: 'Web content serving across 20 EC2 instances, shared config files, content management systems',
-            scenario: 'Multi-EC2 shared storage → EFS. Single-instance persistent block storage → EBS. Object storage (images, backups) → S3.',
+            scenario: 'Multi-EC2 shared storage → EFS. Single-instance persistent block storage → EBS. Object storage (images, backups) → S3. PILIH KELAS EFS: "rarely accessed + single AZ + can be regenerated/re-creatable + low-cost" → One Zone-IA (paling murah); "frequently accessed + highly available / multi-AZ" → Standard; "infrequent access TAPI masih perlu multi-AZ redundancy" → Standard-IA; "active data tapi re-creatable / dev-test, nak jimat" → One Zone.',
+            compare: {
+              label: 'Kelas storage EFS — 2 soalan je: kerap akses? + berapa AZ?',
+              headers: ['Kelas', 'Akses', 'AZ', 'Harga/GB-mo', 'Guna bila / keyword exam'],
+              rows: [
+                ['Standard', 'Kerap', 'Multi-AZ (≥3)', '$0.30', 'Default, data aktif, perlu tahan AZ outage (HA)'],
+                ['Standard-IA', 'Jarang', 'Multi-AZ (≥3)', '$0.016 (+retrieval)', '"infrequent access" TAPI masih perlu redundansi multi-AZ'],
+                ['One Zone', 'Kerap', '1 AZ je', '$0.16', 'Data aktif tapi re-creatable / dev-test — jimat'],
+                ['One Zone-IA', 'Jarang', '1 AZ je', '🟢 $0.016 (+retrieval)', '🟢 PALING MURAH — "rarely accessed + single AZ + re-creatable"'],
+              ],
+              takeaway: 'Cuma 2 soalan: (1) kerap ke jarang akses? jarang → IA. (2) perlu tahan AZ outage, atau 1 AZ cukup sebab data boleh dijana semula? 1 AZ cukup → One Zone. Gabung "jarang + 1 AZ + re-creatable + low-cost" = One Zone-IA (paling murah). "kerap + multi-AZ HA" = Standard. Durability semua kelas tinggi; beza = availability (multi-AZ vs 1 AZ) + retrieval fee (IA).',
+            },
+            mermaid: {
+              label: 'Pilih kelas EFS (decision tree) — 2 soalan',
+              source: `flowchart TD
+  Q["Nak simpan dalam EFS —<br/>kelas mana?"] --> A{Kerap diakses?}
+  A -->|"Ya — data aktif"| B{Perlu tahan<br/>AZ outage?}
+  A -->|"Jarang — rarely accessed"| C{Perlu tahan<br/>AZ outage?}
+  B -->|"Ya, multi-AZ HA"| S["EFS Standard<br/>$0.30/GB · ≥3 AZ"]
+  B -->|"Tak — 1 AZ cukup<br/>(re-creatable)"| OZ["EFS One Zone<br/>$0.16/GB · 1 AZ"]
+  C -->|"Ya, multi-AZ HA"| SIA["EFS Standard-IA<br/>$0.016/GB +retrieval · ≥3 AZ"]
+  C -->|"Tak — 1 AZ cukup<br/>(re-creatable)"| OZIA["🟢 EFS One Zone-IA<br/>$0.016/GB · 1 AZ · PALING MURAH"]`,
+              caption: 'Dua soalan je: (1) kerap atau jarang akses → jarang pilih IA. (2) perlu multi-AZ atau 1 AZ cukup → kalau data boleh dijana semula, One Zone. INGAT exam: "low-cost + rarely accessed + single AZ + can be regenerated/re-creatable" = EFS One Zone-IA (kombinasi paling murah). "frequently accessed + highly available / multi-AZ" = EFS Standard. "high-throughput + shared banyak EC2" = EFS sememangnya (file storage), throughput pakai Elastic/Provisioned.',
+            },
             tips: [
               'Performance modes (set at creation): General Purpose = lowest latency, recommended for MOST workloads including web serving. Max I/O = HIGHER latency (not lower!), for massive parallel HPC workloads with 100s of connections.',
               'Throughput modes (can change): Bursting = scales with storage size (50 KiB/s per GiB baseline — 25 GB file system gets only ~1.25 MiB/s). Provisioned = set specific MiB/s regardless of file system size. Elastic (recommended) = auto-scales, pay per use.',
@@ -5095,7 +5118,7 @@ export const domains: DomainData[] = [
               { label: 'EFS Encryption in Transit', url: 'https://docs.aws.amazon.com/efs/latest/ug/encryption-in-transit.html' },
               { label: 'EFS Cross-VPC Mounting', url: 'https://docs.aws.amazon.com/efs/latest/ug/mount-fs-different-vpc.html' },
             ],
-            keywords: ['shared storage', 'multiple EC2', 'NFS', 'General Purpose', 'Max I/O', 'Provisioned Throughput', 'Bursting Throughput', 'Elastic Throughput', 'TLS 1.2', 'mount helper', '-o tls', 'TCP 2049', 'cross-VPC EFS', 'EFS mount target', 'ReadWriteMany', 'RWX', 'ReadWriteOnce', 'RWO', 'EFS CSI Driver', 'EKS shared storage', 'pods different nodes', 'Kubernetes persistent volume'],
+            keywords: ['shared storage', 'multiple EC2', 'NFS', 'General Purpose', 'Max I/O', 'Provisioned Throughput', 'Bursting Throughput', 'Elastic Throughput', 'TLS 1.2', 'mount helper', '-o tls', 'TCP 2049', 'cross-VPC EFS', 'EFS mount target', 'ReadWriteMany', 'RWX', 'ReadWriteOnce', 'RWO', 'EFS CSI Driver', 'EKS shared storage', 'pods different nodes', 'Kubernetes persistent volume', 'EFS storage classes', 'One Zone-IA', 'Standard-IA', 'EFS One Zone', 'rarely accessed', 'single AZ', 're-creatable', 'regenerated if lost', 'low-cost', 'cheapest EFS', 'redundant storage', 'high-throughput'],
           },
           {
             shortName: 'S3',
@@ -7021,8 +7044,8 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Pilih database betul ikut shape data + access pattern (THE exam decision)',
             fungsi: 'AWS galak "purpose-built database" — pilih ikut bentuk data dan cara access, bukan satu DB untuk semua. Relational (SQL, transaksi) → RDS/Aurora. Key-value laju → DynamoDB. Cache → ElastiCache. Document/Mongo → DocumentDB. Graph → Neptune. Wide-column → Keyspaces. Analytics/warehouse → Redshift. In-memory durable → MemoryDB.',
             sebabApa: "Kad ni wujud sebab exam SAA-C03 suka uji 'pilih database betul ikut shape data + access pattern' — bukan satu DB untuk semua. AWS galak purpose-built: tiap engine optimize untuk satu corak data (relational, key-value, document, graph, wide-column, OLAP), jadi pilih salah = lambat/mahal. Kad ni map keyword soalan terus ke engine supaya kau tak teragak-agak.",
-            sifir: ["Relational + transaksi OLTP → RDS (standard) / Aurora (HA hebat, auto-scale).", "Key-value, ms latency, serverless, spiky → DynamoDB. Microsecond atas DynamoDB → +DAX.", "MongoDB → DocumentDB. Cassandra → Keyspaces. Graph/relationship/fraud → Neptune.", "Analytics/warehouse/aggregate berjuta baris (OLAP) → Redshift. Time-series/IoT → Timestream.", "Cache depan SEBARANG DB → ElastiCache (Redis/Memcached).", "Trap: OLTP (checkout/transaksi) = RDS/Aurora; OLAP (laporan/dashboard) = Redshift."],
-            perangkap: [{"soalan": "App perlu cari semua mutual friends & detect fraud ring dalam data berhubung-rapat (highly connected). Database?", "umpan": "DynamoDB — sebab dia laju & scalable, ramai default pilih untuk apa-apa NoSQL.", "betul": "Neptune — keyword 'relationship / mutual friends / fraud ring / connected data' = graph = Neptune. DynamoDB key-value, teruk untuk traverse relationship."}, {"soalan": "Aplikasi e-commerce transaksi (checkout, tolak stok, simpan order) perlukan consistency kuat & SQL. Database?", "umpan": "Redshift — sebab dia handle data besar & SQL, nampak macam boleh.", "betul": "RDS/Aurora — keyword 'transaksi / checkout / OLTP' = relational OLTP = RDS/Aurora. Redshift = OLAP/analytics (aggregate), teruk untuk single-row insert/update."}],
+            sifir: ["Relational + transaksi OLTP → RDS (standard) / Aurora (HA hebat, auto-scale).", "Key-value, ms latency, serverless, spiky → DynamoDB. Microsecond atas DynamoDB → +DAX.", "MongoDB → DocumentDB. Cassandra → Keyspaces. Graph/relationship/fraud → Neptune.", "Analytics/warehouse/aggregate berjuta baris (OLAP) → Redshift. Time-series/IoT → Timestream.", "Cache depan SEBARANG DB → ElastiCache (Redis/Memcached).", "Trap: OLTP (checkout/transaksi) = RDS/Aurora; OLAP (laporan/dashboard) = Redshift.", "RDS = 6 enjin RELATIONAL je (MySQL, PostgreSQL, MariaDB, Oracle, SQL Server, Aurora). NoSQL/cache/warehouse/graph/time-series = BUKAN RDS.", "Server-based = bayar instance 24/7 walau idle (RDS biasa, Aurora biasa). Serverless = bayar guna je / scale near-zero (DynamoDB, Keyspaces, Aurora Serverless v2).", "'Aurora' ≠ serverless melainkan ada perkataan 'Serverless' di belakang. Aurora biasa = server-based cluster."],
+            perangkap: [{"soalan": "App perlu cari semua mutual friends & detect fraud ring dalam data berhubung-rapat (highly connected). Database?", "umpan": "DynamoDB — sebab dia laju & scalable, ramai default pilih untuk apa-apa NoSQL.", "betul": "Neptune — keyword 'relationship / mutual friends / fraud ring / connected data' = graph = Neptune. DynamoDB key-value, teruk untuk traverse relationship."}, {"soalan": "Aplikasi e-commerce transaksi (checkout, tolak stok, simpan order) perlukan consistency kuat & SQL. Database?", "umpan": "Redshift — sebab dia handle data besar & SQL, nampak macam boleh.", "betul": "RDS/Aurora — keyword 'transaksi / checkout / OLTP' = relational OLTP = RDS/Aurora. Redshift = OLAP/analytics (aggregate), teruk untuk single-row insert/update."}, {"soalan": "App relational MySQL dengan traffic ON-OFF teruk (dev-test waktu office je, malam sunyi). Nak bayar ikut guna & scale near-zero bila idle. Pilih?", "umpan": "Amazon RDS MySQL (Multi-AZ) — sebab 'relational MySQL' terus pilih RDS biasa. SALAH: RDS biasa server-based, bayar instance 24/7 walau idle — bukan 'pay per use / scale to zero'.", "betul": "Aurora Serverless v2 — keyword 'unpredictable/intermittent/dev-test + scale near-zero + pay per use' = serverless. 'Aurora' je ≠ serverless; mesti ada 'Serverless' di belakang nama."}, {"soalan": "Nak simpan shopping cart / user session berskala besar, schemaless, latency millisecond. Database?", "umpan": "Amazon RDS — sebab 'database' biasa orang fikir SQL/RDS dulu. SALAH: cart/session = key-value schemaless, RDS (relational, fixed schema) leceh & susah scale.", "betul": "DynamoDB — keyword 'session / shopping cart / schemaless / any scale / single-digit ms' = key-value NoSQL = DynamoDB (BUKAN RDS — DynamoDB bukan bawah RDS langsung)."}],
             mermaid: [
               {
                 label: 'Pilih database (decision tree)',
@@ -7052,7 +7075,7 @@ export const domains: DomainData[] = [
                 caption: 'Analogi Shopee: setiap kali kau tekan Checkout = satu transaksi kecil pantas (tolak stok, simpan order dalam millisecond) = OLTP → RDS/Aurora/DynamoDB. Bila bos minta laporan "jumlah jualan semua kedai ikut negeri bulan ni" = baca & aggregate berjuta baris = OLAP → Redshift. Jangan keliru: checkout = OLTP, dashboard/laporan = OLAP.',
               },
             ],
-            compare: {
+            compare: [{
               label: 'Purpose-built database matrix',
               headers: ['Engine', 'Jenis', 'Guna bila / keyword exam'],
               rows: [
@@ -7069,6 +7092,26 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Exam fish for KEYWORD: "MongoDB"→DocumentDB, "Cassandra"→Keyspaces, "graph/relationship"→Neptune, "warehouse/analytics"→Redshift, "time-series/IoT metrics"→Timestream, "microsecond DynamoDB"→DAX, "transaksi + HA"→Aurora. Jangan jawab DynamoDB untuk soalan relational/transaksi.',
             },
+            {
+              label: 'Apa BAWAH RDS vs apa BUKAN RDS — + server-based vs serverless',
+              headers: ['Service', 'Bawah RDS?', 'Jenis', 'Server / Serverless'],
+              rows: [
+                ['MySQL', '✅ Ya (1 of 6 engine)', 'Relational SQL', 'Server-based (pilih instance)'],
+                ['PostgreSQL', '✅ Ya', 'Relational SQL', 'Server-based'],
+                ['MariaDB', '✅ Ya', 'Relational SQL', 'Server-based'],
+                ['Oracle', '✅ Ya', 'Relational SQL (komersial)', 'Server-based'],
+                ['SQL Server', '✅ Ya', 'Relational SQL (komersial)', 'Server-based'],
+                ['Aurora', '✅ Ya (cloud-native; MySQL/PG je)', 'Relational SQL', 'Server-based ATAU Serverless v2'],
+                ['DynamoDB', '❌ BUKAN', 'Key-value NoSQL', '🟢 Serverless'],
+                ['ElastiCache', '❌ BUKAN', 'In-memory cache (Redis/Memcached)', 'Server-based (node)'],
+                ['Redshift', '❌ BUKAN', 'Data warehouse OLAP', 'Server-based (+Serverless)'],
+                ['DocumentDB', '❌ BUKAN', 'Document (Mongo-compat)', 'Server-based'],
+                ['Neptune', '❌ BUKAN', 'Graph', 'Server-based (+Serverless)'],
+                ['Keyspaces', '❌ BUKAN', 'Wide-column (Cassandra)', '🟢 Serverless'],
+                ['Timestream', '❌ BUKAN', 'Time-series', '🟢 Serverless'],
+              ],
+              takeaway: 'RDS = PAYUNG untuk 6 enjin RELATIONAL/SQL je: MySQL, PostgreSQL, MariaDB, Oracle, SQL Server, Aurora. Apa-apa NoSQL / cache / warehouse / graph / time-series = BUKAN RDS walaupun ia "database". Server-based = pilih saiz instance, bayar 24/7 walau idle (RDS biasa, Aurora biasa). Serverless = auto-scale + bayar guna je / boleh scale near-zero (DynamoDB, Keyspaces, Aurora Serverless v2). PENTING: "Aurora" sendiri ≠ serverless — mesti ada perkataan "Serverless" di belakang nama.',
+            }],
             tips: [
               'OLTP (transaksi, banyak read/write baris tunggal) → RDS/Aurora. OLAP (analytics, aggregate besar) → Redshift. Ni beza paling kerap ditanya.',
               'SQL/relational + perlu HA terbaik + auto storage + global → Aurora. SQL standard / engine spesifik (Oracle, SQL Server) → RDS.',
@@ -7082,7 +7125,7 @@ export const domains: DomainData[] = [
               { label: 'Choosing an AWS database service', url: 'https://docs.aws.amazon.com/decision-guides/latest/databases-on-aws-how-to-choose/databases-on-aws-how-to-choose.html' },
               { label: 'AWS purpose-built databases', url: 'https://docs.aws.amazon.com/whitepapers/latest/aws-overview/database.html' },
             ],
-            keywords: ['purpose-built database', 'OLTP vs OLAP', 'relational', 'NoSQL', 'key-value', 'document', 'graph', 'wide-column', 'time-series', 'database selection', 'which database', 'serverless vs instance', 'pricing'],
+            keywords: ['purpose-built database', 'OLTP vs OLAP', 'relational', 'NoSQL', 'key-value', 'document', 'graph', 'wide-column', 'time-series', 'database selection', 'which database', 'serverless vs instance', 'pricing', 'what is RDS', 'not RDS', 'RDS engines', 'six RDS engines', 'MySQL PostgreSQL MariaDB Oracle SQL Server', 'server-based vs serverless', 'RDS vs Aurora Serverless', 'Aurora not serverless'],
           },
           {
             shortName: 'DocumentDB',
@@ -7668,7 +7711,7 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Fine-grained access control on data lake (row/column/cell) + simplify & accelerate creation of a secure data lake',
             fungsi: 'Senang cerita: Data Lake = KOLAM simpan data (S3). Lake Formation = PENGAWAL KESELAMATAN + KONTRAKTOR untuk kolam tu. Ia duduk atas S3 + Glue Data Catalog dan (1) enforce fine-grained permissions hingga row, column, cell level, dan (2) automate kerja susah bina data lake (IAM, encryption, cleansing, catalog) supaya secure lake siap dalam HARI, bukan minggu. Glue Data Catalog cuma simpan table/column metadata — Lake Formation yang enforce ACTUAL access control.',
             sebabApa: "Lake Formation wujud sebab dua pain: (1) Glue Data Catalog cuma simpan metadata (table/column wujud) — dia TAK boleh kawal siapa boleh baca baris/kolum mana; dan (2) bina data lake selamat guna S3+IAM+Glue+KMS secara manual itu azab & ambil berminggu (setup IAM satu-satu, pening encryption, cuci data kotor). Lake Formation selesai dua-dua: fine-grained access (analyst Region A nampak baris Region A je, kolum gaji disorok) DARI SATU TEMPAT, plus blueprint/automation yang percepat bina secure lake.",
-            sifir: ["Data Lake = KOLAM (S3, simpan data). Lake Formation = PENGAWAL kolam (kawal akses + bina lake).", "Glue Data Catalog = metadata (apa data wujud). Lake Formation = ACCESS CONTROL (siapa boleh akses).", "Lake Formation = row-level + column-level + cell-level security (IAM/Glue sahaja tak boleh).", "Keyword 'fine-grained / row/column/cell-level access' untuk data lake → Lake Formation.", "Keyword 'simplify / accelerate creation of a SECURE data lake' → Lake Formation.", "Lake Formation sendiri PERCUMA — bayar service bawah (S3, Glue, Athena) je."],
+            sifir: ["Data Lake = KOLAM (S3, simpan data). Lake Formation = PENGAWAL kolam (kawal akses + bina lake).", "Glue Data Catalog = metadata (apa data wujud). Lake Formation = ACCESS CONTROL (siapa boleh akses).", "Lake Formation = row-level + column-level + cell-level security (IAM/Glue sahaja tak boleh).", "Keyword 'fine-grained / row/column/cell-level access' untuk data lake → Lake Formation.", "Keyword 'simplify / accelerate creation of a SECURE data lake' → Lake Formation.", "Lake Formation sendiri PERCUMA — bayar service bawah (S3, Glue, Athena) je.", "3 zon data lake: Raw/Landing (mentah, as-is) → Cleanse/Processed (dah bersih, Parquet) → Curated/Analytics (sedia BI/ML).", "Humban data tanpa catalog + governance = DATA SWAMP (ada data tapi tak boleh cari/guna) — Glue Catalog + Lake Formation yang elak swamp."],
             perangkap: [
               {"soalan": "Data lake dalam S3 perlu analyst hanya boleh baca kolum tertentu & baris tertentu (sembunyi data sensitif macam gaji/No IC). Penyelesaian?", "umpan": "Glue Data Catalog + IAM policy atas bucket S3 — nampak boleh kawal akses.", "betul": "Lake Formation — keyword 'row/column/cell-level fine-grained access untuk data lake' = Lake Formation. Glue Catalog metadata sahaja; IAM S3 cuma object-level (whole-file), bukan row/column dalam table."},
               {"soalan": "Syarikat nak bina data lake SELAMAT dengan cepat — auto setup permission, encryption, data cleansing, catalog. Service mana?", "umpan": "Setup S3 + IAM + Glue + KMS manual satu-satu — 'memang boleh buat sendiri'. Nampak betul sebab 'semua komponen ada'. SALAH: manual = berminggu, banyak silap config, bukan 'simplify/accelerate'.", "betul": "AWS Lake Formation — keyword 'simplify / accelerate creation of a SECURE data lake' = Lake Formation (blueprint, permission, encryption, cleansing, semua sekali tempat)."},
@@ -7694,6 +7737,17 @@ export const domains: DomainData[] = [
   WH --> BI["📊 BI / laporan<br/>QuickSight, dashboard, SQL"]
   LAKE -.->|"governance / akses halus"| LF["👮 Lake Formation<br/>row/column/cell access atas Lake"]`,
                 caption: 'Aliran lazim syarikat besar: data mentah → Data Lake (S3, simpan semua) → Glue/Batch cuci & susun → Data Warehouse (Redshift) untuk BI. INGAT exam: "store all/any data types raw, any scale" → Data Lake/S3; "complex SQL + BI on structured data" → Redshift; "process massive raw logs/big data" → EMR/Batch; "row/column/cell access on the lake" → Lake Formation.',
+              },
+              {
+                label: '3 Zon dalam Data Lake — Raw → Cleanse → Curated (elak jadi Data Swamp)',
+                source: `flowchart TD
+  SRC["📥 Data mentah masuk<br/>(log, JSON, CSV, gambar)"] --> Z1["🟤 Zon 1: RAW / Landing<br/>simpan APA SAJA, as-is<br/>(belum cuci · immutable · original)"]
+  Z1 -->|"Glue ETL: buang duplicate,<br/>fix anomali → Parquet"| Z2["🧼 Zon 2: Cleanse / Processed<br/>data dah bersih & standard"]
+  Z2 -->|"model + aggregate ikut business"| Z3["✨ Zon 3: Curated / Analytics<br/>kemas, sedia diguna"]
+  Z3 --> USE["📊 BI / ML / query<br/>Athena · Redshift · QuickSight"]
+  Z1 -.->|"kalau humban je —<br/>tiada catalog, governance, cleansing"| SWAMP["🐊 DATA SWAMP<br/>ada data tapi tak bertanda<br/>= tak boleh cari / tak boleh percaya"]
+  GOV["👮 Glue Catalog + Lake Formation"] -.->|"tag · catalog · kawal akses<br/>setiap zon"| Z1`,
+                caption: 'Data lake matang biasa pecah 3 zon: Raw/Landing (mentah, simpan original tak diubah) → Cleanse/Processed (Glue ETL buang duplicate/anomali, tukar Parquet) → Curated/Analytics (kemas, sedia BI/ML). Kalau data dihumban masuk tanpa Glue Data Catalog + Lake Formation governance, lake reput jadi DATA SWAMP — ada data tapi tiada siapa boleh cari/percaya/guna. INGAT exam: "raw zone/landing zone" = data as-is; "curated/analytics zone" = data sedia guna; "data lake jadi tak terurus/tak boleh cari" = Data Swamp → fix dengan Catalog + Lake Formation governance.',
               },
             ],
             compare: [
@@ -7735,7 +7789,7 @@ export const domains: DomainData[] = [
               { label: 'What is AWS Lake Formation?', url: 'https://docs.aws.amazon.com/lake-formation/latest/dg/what-is-lake-formation.html' },
               { label: 'Lake Formation fine-grained access control', url: 'https://docs.aws.amazon.com/lake-formation/latest/dg/data-filtering.html' },
             ],
-            keywords: ['Lake Formation', 'row-level security', 'column-level', 'cell-level', 'fine-grained access', 'data lake', 'Glue Data Catalog', 'secure data lake', 'accelerate data lake', 'simplify data lake', 'data lake vs data warehouse', 'data warehouse', 'governance', 'centralized access control', 'blueprint', 'data cleansing', 'pricing'],
+            keywords: ['Lake Formation', 'row-level security', 'column-level', 'cell-level', 'fine-grained access', 'data lake', 'Glue Data Catalog', 'secure data lake', 'accelerate data lake', 'simplify data lake', 'data lake vs data warehouse', 'data warehouse', 'governance', 'centralized access control', 'blueprint', 'data cleansing', 'pricing', 'data swamp', 'raw zone', 'landing zone', 'cleanse zone', 'curated zone', 'analytics zone', 'three-zone data lake', 'data lake zones'],
           },
           {
             shortName: 'EMR',
