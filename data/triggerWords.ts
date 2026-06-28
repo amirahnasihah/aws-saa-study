@@ -300,7 +300,7 @@ export const storageDecisionTree: DecisionTree = {
       cat: 'Block — attach jadi disk (1 EC2)',
       accent: 'c4',
       leaves: [
-        { svc: 'EBS', cond: 'volume persistent satu EC2 · boot/DB disk · io2 Multi-Attach = shared BLOCK (max 16 EC2, same AZ)' },
+        { svc: 'EBS', cond: 'volume persistent satu EC2 (RWO) · boot/DB disk · Multi-Attach HANYA io1/io2 = shared BLOCK (max 16 EC2, same AZ); gp/st1/sc1 TAK boleh' },
         { svc: 'Instance Store', cond: 'disk fizikal ephemeral · hilang bila stop/terminate · paling laju · buffer/cache/scratch' },
       ],
     },
@@ -308,7 +308,7 @@ export const storageDecisionTree: DecisionTree = {
       cat: 'File — mount share (ramai serentak)',
       accent: 'c1',
       leaves: [
-        { svc: 'EFS', cond: 'NFS · Linux · ReadWriteMany · ribuan EC2/pod merentas AZ · auto-grow · "shared file"' },
+        { svc: 'EFS', cond: 'NFS · Linux · ReadWriteMany (RWX) · ribuan EC2/pod merentas AZ · auto-grow · "shared file" · "multiple pods different nodes" → EFS' },
         { svc: 'FSx for Windows', cond: 'SMB · Windows file share · Active Directory · NTFS' },
         { svc: 'FSx for Lustre', cond: 'HPC / ML / analytics · throughput gila · boleh link ke S3' },
       ],
@@ -355,6 +355,7 @@ export const petaModules: PetaModule[] = [
       { left: 'Resource policy', rel: 'vs', right: 'Role + AssumeRole', note: 'Org luar read S3/SQS → resource policy (kemas). Permission kompleks / temp creds / banyak service → Role + STS.' },
       { left: 'IAM Group', rel: 'vs', right: 'IAM Role', note: 'Group = bakul kumpul user (tak boleh login/assume). Role = identiti sementara di-assume (EC2/Lambda/cross-account).' },
       { left: 'Secrets Manager', rel: 'vs', right: 'SSM Parameter Store', note: 'Secrets Manager = auto-rotate built-in (Lambda), bayar/secret — DB password/API key. Parameter Store = config biasa, Standard FREE, no native rotation.' },
+      { left: 'AWS-managed key', rel: 'vs', right: 'Customer-managed key (CMK)', note: 'AWS-managed = AWS urus penuh, takde kawalan rotation/policy. CMK = kau cipta & kawal: "control over keys / rotate own key / audit who used key / custom key policy" → CMK.' },
       { left: 'KMS', rel: 'vs', right: 'CloudHSM', note: 'KMS = multi-tenant managed (FIPS 140-2 L2), AWS urus. CloudHSM = single-tenant dedicated HW (FIPS L3), AWS tak boleh access — bank/regulasi ketat.' },
     ],
   },
