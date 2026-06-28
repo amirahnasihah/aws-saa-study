@@ -1709,13 +1709,9 @@ export const domains: DomainData[] = [
               'Redshift DataShare: share live data cross-account TANPA export/ETL/duplication — QA account boleh query production data secara langsung',
               'DataShare vs S3 export: DataShare = live, no copy, secure. S3 export = snapshot, kena sync semula, extra cost',
               'Exam: "separate AWS account needs analytics access to Redshift, no ETL, no duplication" → Redshift DataShare',
-              'AQUA (Advanced Query Accelerator): distributed cache yang bawa computation dekat ke storage dalam Redshift',
-              'AQUA offload data-intensive query processing — reduce CPU dan network bottlenecks pada compute nodes',
-              'Available pada Redshift ra3 instances, no extra charge. Bukan Redshift Spectrum (yang query external S3 data)',
-              'Exam: "improve Redshift query performance, minimize cost and overhead" → AQUA (bukan ElastiCache atau Spectrum)',
             ],
             docs: [{ label: 'Redshift Encryption', url: 'https://docs.aws.amazon.com/redshift/latest/mgmt/working-with-db-encryption.html' }],
-            keywords: ['Redshift', 'KMS', 'encryption at rest', 'SSL TLS', 'in transit', 'AES-256', 'data warehouse', 'DataShare', 'cross-account analytics', 'no ETL', 'AQUA', 'query accelerator', 'ra3'],
+            keywords: ['Redshift', 'KMS', 'encryption at rest', 'SSL TLS', 'in transit', 'AES-256', 'data warehouse', 'DataShare', 'cross-account analytics', 'no ETL'],
           },
           {
             shortName: 'CloudTrail',
@@ -4002,14 +3998,31 @@ export const domains: DomainData[] = [
             sifir: ["DataSync = MIGRATION/transfer (one-time atau scheduled); Storage Gateway = ongoing hybrid access", "Source: NFS, SMB, HDFS, S3-compatible, object storage → Target: S3, EFS, FSx", "Auto checksum verification + encryption in-transit (TLS)", "Boleh EFS → EFS cross-region replication melalui AWS private network (no public internet)", "Online transfer (network ada); kalau internet terlalu lambat / petabyte → Snow Family instead"],
             perangkap: [{"soalan": "Migrate 50TB dari on-prem NAS ke S3, sekali sahaja, dengan auto-verify integrity. Pilih apa?", "umpan": "Storage Gateway File Gateway — boleh letak file ke S3, tapi ia untuk ONGOING access, bukan bulk one-time migration berjadual.", "betul": "AWS DataSync — keyword 'one-time bulk migration + verification + faster than rsync' = DataSync."}, {"soalan": "Replicate EFS data antara dua region secara selamat tanpa lalu public internet. Pilih apa?", "umpan": "Snowball — Snow = physical device untuk migration offline, bukan replication berterusan antara region.", "betul": "AWS DataSync — keyword 'EFS cross-region + secure + no public internet' = DataSync (lalu AWS private network)."}],
             scenario: '"Migrate 50TB dari on-premises NAS ke S3" → DataSync (lebih laju dan auto-verify vs manual). DataSync = MIGRATION task. Storage Gateway = ONGOING hybrid access. Ingat perbezaan ni — exam favourite!',
+            compare: {
+              label: 'DataSync vs Storage Gateway vs Snow — 3 cara data masuk AWS (selalu kena exam)',
+              headers: ['Aspect', 'DataSync', 'Storage Gateway', 'Snow Family'],
+              rows: [
+                ['Tujuan', '🟢 MIGRATION/transfer (one-time / scheduled)', 'ONGOING hybrid access on-prem↔AWS', 'OFFLINE bulk transfer (peti fizikal)'],
+                ['Network', 'Online (network ada), optimized 10x rsync', 'Online (cache panas on-prem)', '🔴 Offline — internet TAK praktikal'],
+                ['Bila pilih', 'Pindah 10s–100s TB cepat + verify', 'On-prem app perlu akses fail AWS berterusan', 'PB-scale / bandwidth lambat / lokasi terpencil'],
+                ['Verification', '🟢 Auto checksum + encryption in-transit', 'N/A (cache layer)', 'Encrypt KMS + tamper-resistant'],
+                ['Keyword', '"one-time/scheduled migration to S3/EFS/FSx"', '"hybrid / low-latency on-prem cache"', '"petabyte / weeks online / disconnected"'],
+              ],
+              takeaway: 'Migration berjadual + network ada → DataSync. Akses hybrid berterusan → Storage Gateway. Offline/PB/bandwidth lambat → Snow. Perangkap: ketiga-tiga "pindah data ke AWS" tapi DataSync=migration online, Storage Gateway=ongoing access, Snow=offline fizikal.',
+            },
             tips: [
               'DataSync juga handle EFS → EFS cross-region replication (bukan setakat on-prem ke AWS sahaja)',
               'EFS cross-region via DataSync: transfer melalui AWS private network (bukan public internet) — secure by default',
               'Bukan Snowball untuk cross-region EFS (Snowball = physical device, untuk migration, bukan replication)',
               'Bukan VPN/open-source tools (lebih complex, kena manage sendiri)',
               'Exam: "replicate EFS data between regions securely without public internet" → AWS DataSync',
+              'PRICING: $0.0125 per GB data dipindah (per-GB copied). Takda free tier. Bayar juga request/storage di target (S3/EFS/FSx) macam biasa. Lawan Snow: DataSync per-GB murah untuk TB-scale online; Snow per-job fee lagi worth bila PB-scale / bandwidth tak cukup.',
             ],
-            keywords: ['data migration', 'automated transfer', 'S3', 'EFS', 'FSx', 'NFS', 'SMB', 'HDFS', 'one-time migration', 'EFS cross-region', 'private network', 'no public internet'],
+            docs: [
+              { label: 'What is AWS DataSync?', url: 'https://docs.aws.amazon.com/datasync/latest/userguide/what-is-datasync.html' },
+              { label: 'DataSync transfer locations (NFS/SMB/S3/EFS/FSx)', url: 'https://docs.aws.amazon.com/datasync/latest/userguide/working-with-locations.html' },
+            ],
+            keywords: ['data migration', 'automated transfer', 'S3', 'EFS', 'FSx', 'NFS', 'SMB', 'HDFS', 'one-time migration', 'scheduled transfer', 'Storage Gateway', 'EFS cross-region', 'private network', 'no public internet', 'pricing'],
           },
           {
             shortName: 'DMS',
@@ -4021,6 +4034,16 @@ export const domains: DomainData[] = [
             sifir: ["DMS = database migration ONLY; source kekal running (minimal downtime)", "Homogeneous (engine sama, MySQL→RDS MySQL) = DMS sahaja", "Heterogeneous (engine beza, Oracle→Aurora PostgreSQL) = DMS + SCT (Schema Conversion Tool)", "CDC (Change Data Capture) = continuous sync source↔target sampai cutover", "DMS replication instance duduk dalam VPC; boleh on-prem→AWS, AWS→AWS, AWS→on-prem"],
             perangkap: [{"soalan": "Migrate Oracle on-prem ke Aurora PostgreSQL dengan minimal downtime. Pilih apa?", "umpan": "DMS sahaja — DMS pindah data, tapi engine beza (Oracle→PostgreSQL) jadi schema + stored procedure kena convert dulu, DMS sorang tak buat tu.", "betul": "DMS + SCT — keyword 'different engine / heterogeneous' wajib SCT untuk convert schema, baru DMS pindah data."}, {"soalan": "Nak migrate keseluruhan server (OS + apps + DB) ke EC2 dengan minimal downtime. Pilih apa?", "umpan": "DMS — ada perkataan 'minimal downtime' yang bait orang, tapi DMS cuma untuk DATABASE, bukan whole server.", "betul": "AWS MGN — keyword 'entire server / OS + apps / lift-and-shift ke EC2' = MGN, BUKAN DMS."}],
             scenario: '"Migrate Oracle on-prem ke Aurora PostgreSQL" → DMS + SCT (heterogeneous). "Migrate MySQL on-prem ke RDS MySQL" → DMS sahaja (homogeneous). Source kekal up masa migration — near-zero downtime.',
+            mermaid: {
+              label: 'DMS sahaja vs DMS + SCT — tengok engine',
+              source: `flowchart TD
+  Start{"Source & target<br/>SAMA engine?"} -->|"Ya (MySQL→MySQL,<br/>PostgreSQL→Aurora PG)"| Homo["🟢 DMS SAHAJA<br/>(homogeneous)"]
+  Start -->|"Beza (Oracle→Aurora PG,<br/>SQL Server→MySQL)"| Hetero["🟡 DMS + SCT<br/>(heterogeneous)"]
+  Hetero --> SCT["1️⃣ SCT convert schema<br/>+ stored procedures dulu"]
+  SCT --> DMS["2️⃣ DMS pindah data<br/>(CDC keep sync sampai cutover)"]
+  Homo --> DMS2["DMS pindah data terus<br/>(CDC keep sync)"]`,
+              caption: 'Engine SAMA → DMS sorang cukup. Engine BEZA → wajib SCT convert schema dulu, baru DMS pindah data. CDC (Change Data Capture) buat source kekal sync dengan target sampai cutover = minimal downtime. INGAT exam: "different/heterogeneous engine" = trigger SCT.',
+            },
             tips: [
               'Homogeneous migration (same engine): DMS sahaja cukup. E.g. MySQL → RDS MySQL, PostgreSQL → Aurora PostgreSQL',
               'Heterogeneous migration (different engine): DMS + SCT. SCT convert schema/stored procedures first, then DMS migrates data. E.g. Oracle → Aurora PostgreSQL',
@@ -4029,8 +4052,14 @@ export const domains: DomainData[] = [
               'Exam: "migrate database with minimal downtime" → DMS. "migrate entire server (OS + apps)" → MGN. "transfer files to S3" → DataSync',
               'Supports: on-prem → AWS, AWS → AWS (cross-region), AWS → on-prem. Not just one-way!',
               'Multi-AZ replication instance available for high availability during migration',
+              'PRICING: bayar replication instance ikut jam (macam EC2, cth dms.t3.medium ~$0.146/hr) + storage + data transfer. DMS Serverless = bayar per DCU-hour (auto-scale). FREE 6 bulan bila migrate KE Aurora / Redshift / DynamoDB / DocumentDB (DMS free tier untuk target ni). SCT = percuma.',
             ],
-            keywords: ['database migration', 'minimal downtime', 'homogeneous', 'heterogeneous', 'Schema Conversion Tool', 'CDC', 'replication', 'Multi-AZ'],
+            docs: [
+              { label: 'What is AWS DMS?', url: 'https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html' },
+              { label: 'AWS DMS Serverless', url: 'https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Serverless.html' },
+              { label: 'Schema Conversion Tool (SCT)', url: 'https://docs.aws.amazon.com/SchemaConversionTool/latest/userguide/CHAP_Welcome.html' },
+            ],
+            keywords: ['database migration', 'minimal downtime', 'homogeneous', 'heterogeneous', 'Schema Conversion Tool', 'SCT', 'CDC', 'change data capture', 'DMS Serverless', 'replication instance', 'Multi-AZ', 'pricing'],
           },
           {
             shortName: 'Snow Family',
@@ -4060,8 +4089,13 @@ export const domains: DomainData[] = [
               'Exam: "transfer petabytes offline" → Snowball Edge. "edge computing in disconnected location" → Snow Family. "online migration to S3/EFS" → DataSync (not Snow)',
               'Snowmobile: 100PB per truck. For exabyte-scale. Must be requested specially — rarely tested on SAA exam',
               'OpsHub: GUI application to manage Snow devices locally — configure, transfer data, launch EC2 instances',
+              'PRICING: per-JOB service fee + per-day usage selepas hari free + shipping. Snowball Edge ~ service fee per job (beberapa hari guna included), lebih hari = caj harian; Snowcone lebih murah per job. Takda kos per-GB macam DataSync. Cost discriminator: PB-scale / bandwidth lambat → Snow per-job lagi worth; TB-scale online → DataSync per-GB lagi murah.',
             ],
-            keywords: ['Snowcone', 'Snowball Edge', 'Snowmobile', 'physical transfer', 'petabyte', 'edge computing', 'offline migration', 'OpsHub', '210TB'],
+            docs: [
+              { label: 'AWS Snow Family', url: 'https://docs.aws.amazon.com/snowball/latest/developer-guide/whatissnowball.html' },
+              { label: 'Snowball Edge device options', url: 'https://docs.aws.amazon.com/snowball/latest/developer-guide/device-differences.html' },
+            ],
+            keywords: ['Snowcone', 'Snowball Edge', 'Snowmobile', 'physical transfer', 'petabyte', 'edge computing', 'offline migration', 'OpsHub', 'compute optimized', 'storage optimized', '210TB', 'pricing'],
           },
         ],
       },
@@ -4088,8 +4122,13 @@ export const domains: DomainData[] = [
               'Bukan DataSync (DataSync = automated scheduled migration. Transfer Family = ongoing SFTP endpoint for users/partners)',
               'Bukan Storage Gateway (Storage Gateway = hybrid storage access. Transfer Family = file transfer protocol endpoint)',
               'Identity providers: Service managed, Active Directory, custom Lambda-based',
+              'PRICING: ~$0.30 per jam per protokol yang di-enable pada endpoint (SFTP/FTPS/FTP/AS2 dikira berasingan) + ~$0.04 per GB upload/download. Takda free tier. Cost note: endpoint sentiasa "on" (bayar per jam walaupun takda transfer) — vs DataSync yang per-GB sahaja. Banyak protokol enable = berganda kos jam.',
             ],
-            keywords: ['SFTP', 'FTP', 'FTPS', 'AS2', 'S3 backend', 'EFS backend', 'managed FTP', 'legacy protocol', 'B2B file transfer', 'no code change'],
+            docs: [
+              { label: 'What is AWS Transfer Family?', url: 'https://docs.aws.amazon.com/transfer/latest/userguide/what-is-aws-transfer-family.html' },
+              { label: 'Transfer Family identity providers', url: 'https://docs.aws.amazon.com/transfer/latest/userguide/authenticating-users.html' },
+            ],
+            keywords: ['SFTP', 'FTP', 'FTPS', 'AS2', 'S3 backend', 'EFS backend', 'managed FTP', 'legacy protocol', 'B2B file transfer', 'Active Directory', 'no code change', 'pricing'],
           },
           {
             shortName: 'AWS MGN',
@@ -4112,13 +4151,34 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Server (OS+apps) → MGN. Database → DMS (+SCT kalau tukar engine). Files to S3/EFS/FSx → DataSync. Application Discovery Service = planning sahaja, bukan migrate.',
             },
+            mermaid: {
+              label: 'MASTER decision tree — pilih migration/transfer tool mana?',
+              source: `flowchart TD
+  Start{"Apa yang nak<br/>dipindah?"} -->|"Whole SERVER<br/>(OS + apps + data)"| MGN["🖥️ AWS MGN<br/>lift-and-shift → EC2"]
+  Start -->|"DATABASE"| DB{"Engine sama<br/>ke beza?"}
+  Start -->|"File / Object data"| FILE{"Online (network ada)<br/>atau offline?"}
+  Start -->|"Partner upload<br/>via SFTP/FTP"| TF["📨 Transfer Family<br/>managed SFTP → S3/EFS"]
+  DB -->|"Sama (MySQL→MySQL)"| DMS1["🗄️ DMS sahaja"]
+  DB -->|"Beza (Oracle→Aurora)"| DMS2["🗄️ DMS + SCT<br/>(convert schema dulu)"]
+  FILE -->|"Online + scheduled<br/>+ verify"| DS["🔄 DataSync"]
+  FILE -->|"Offline / petabyte /<br/>internet lambat"| SNOW["📦 Snow Family"]
+  FILE -->|"ONGOING hybrid<br/>access on-prem↔AWS"| SG["🌉 Storage Gateway"]
+  PLAN{"Fasa PLANNING<br/>dulu?"} -.->|"discover + dependency"| ADS["🔍 App Discovery Service"]
+  PLAN -.->|"track progress<br/>banyak tool"| HUB["📊 Migration Hub"]`,
+              caption: 'Cabang utama: SERVER → MGN, DATABASE → DMS (+SCT kalau engine beza), FILE → DataSync (online) / Snow (offline) / Storage Gateway (ongoing hybrid), SFTP partner → Transfer Family. Fasa plan: ADS = discover, Migration Hub = track. INGAT exam: baca KATA KUNCI objek yang dipindah dulu, baru pilih tool.',
+            },
             tips: [
               'MGN = server migration (OS + apps + data). DMS = database migration only. DataSync = file/object data transfer',
               'Application Discovery Service = discovery/planning phase bukan migration',
               'Exam: "migrate entire server/application to EC2 with minimal downtime" → AWS MGN',
               'Supports: physical servers, VMware, Hyper-V, cloud instances → EC2',
+              'PRICING: MGN PERCUMA untuk migrate — 90 hari free per source server (continuous replication). Kau bayar HANYA resource AWS yang MGN guna (staging EBS, replication EC2, dan EC2 sebenar selepas cutover). Lepas 90 hari/server ada caj kecil per-server kalau masih replicate. Lawan: rebuild manual = jauh lebih mahal masa + risiko.',
             ],
-            keywords: ['MGN', 'lift-and-shift', 'server migration', 'EC2 migration', 'block replication', 'minimal downtime'],
+            docs: [
+              { label: 'What is Application Migration Service (MGN)?', url: 'https://docs.aws.amazon.com/mgn/latest/ug/what-is-application-migration-service.html' },
+              { label: 'MGN vs other AWS migration tools', url: 'https://docs.aws.amazon.com/prescriptive-guidance/latest/migration-tools/welcome.html' },
+            ],
+            keywords: ['MGN', 'Application Migration Service', 'lift-and-shift', 'rehost', 'server migration', 'EC2 migration', 'block replication', 'CloudEndure', 'Application Discovery Service', 'minimal downtime', 'pricing'],
           },
           {
             shortName: 'Migration Hub',
@@ -4137,8 +4197,13 @@ export const domains: DomainData[] = [
               'Migration Hub Orchestrator: automate migration workflows with predefined templates',
               'Refactor Spaces: starting point for incremental refactoring to microservices',
               'Exam: "single dashboard to track migrations across tools" → Migration Hub. "actually migrate servers" → MGN. "migrate databases" → DMS',
+              'PRICING: Migration Hub sendiri PERCUMA (dashboard + tracking + Strategy Recommendations). Kau bayar hanya tool migrasi yang sebenar (MGN, DMS, DataSync) + resource AWS. Takda caj untuk track.',
             ],
-            keywords: ['migration tracking', 'dashboard', 'home region', 'strategy recommendations', 'orchestrator', 'refactor spaces'],
+            docs: [
+              { label: 'What is AWS Migration Hub?', url: 'https://docs.aws.amazon.com/migrationhub/latest/ug/whatishub.html' },
+              { label: 'Migration Hub Strategy Recommendations', url: 'https://docs.aws.amazon.com/migrationhub-strategy/latest/userguide/what-is-mhub-strategy.html' },
+            ],
+            keywords: ['migration tracking', 'single pane of glass', 'dashboard', 'home region', 'strategy recommendations', 'orchestrator', 'refactor spaces', 'pricing'],
           },
           {
             shortName: 'AWS Outposts',
@@ -4507,6 +4572,25 @@ export const domains: DomainData[] = [
             perangkap: [{"soalan": "Company nak run open-source Kubernetes on-premises tapi nak konsistensi & management dari AWS control plane. Pilih mana?", "umpan": "EKS Distro — sebab 'open-source Kubernetes on-prem' padan, orang terus pilih.", "betul": "EKS Anywhere — keyword pembeza ialah 'consistency with AWS control plane'. EKS Distro JUSTRU tiada AWS control plane dependency (untuk no lock-in)."}],
             storageDetails: 'EKS Anywhere → Deploy K8s clusters on-prem using open-source tools, connected to AWS control plane for management consistency\nEKS Distro → AWS K8s distribution used by EKS — run fully on-prem, NO AWS control plane dependency. Full open-source freedom\nECS Anywhere → Run ECS tasks on on-premises servers, managed by AWS ECS control plane',
             detailsLabel: 'Variants',
+            compare: {
+              label: '3 variant on-prem — orchestrator & AWS control plane',
+              headers: ['Variant', 'Orchestrator', 'AWS control plane?', 'Pilih bila'],
+              rows: [
+                ['EKS Anywhere', 'Kubernetes', '🟢 Ya — connect AWS untuk consistency', 'Nak run K8s on-prem TAPI nak management & consistency macam EKS cloud'],
+                ['EKS Distro', 'Kubernetes', '🔴 Tiada — 100% on-prem, no lock-in', 'Nak distribusi K8s SAMA macam EKS guna tapi fully self-managed on-prem'],
+                ['ECS Anywhere', 'ECS (AWS-native)', '🟢 Ya — ECS control plane urus task', 'Dah pakai ECS, nak bawak task ECS turun ke server on-prem sendiri'],
+              ],
+              takeaway: 'K8s + on-prem + "consistency with AWS control plane" → EKS Anywhere. K8s + on-prem + "no AWS dependency / no lock-in" → EKS Distro. ECS (bukan K8s) + on-prem → ECS Anywhere. Perangkap utama: "open-source K8s on-prem" SAHAJA tak cukup beza — kena tengok ada/tiada AWS control plane.',
+            },
+            mermaid: {
+              label: 'Pilih variant on-prem mana?',
+              source: `flowchart TD
+  Start{"Nak run container<br/>ON-PREMISES?"} -->|"Pakai ECS (AWS-native)"| ECSA["🟦 ECS Anywhere<br/>task ECS atas server on-prem"]
+  Start -->|"Pakai Kubernetes"| K8s{"Nak AWS control plane<br/>untuk consistency?"}
+  K8s -->|"Ya — nak management<br/>macam EKS cloud"| EKSA["🟩 EKS Anywhere<br/>K8s on-prem + connect AWS"]
+  K8s -->|"Tak — no lock-in,<br/>fully self-managed"| EKSD["🟨 EKS Distro<br/>distribusi K8s, 100% on-prem"]`,
+              caption: 'Cabang pertama: ECS ke Kubernetes? Kalau K8s, cabang kedua yang penting: ADA atau TIADA AWS control plane. INGAT exam: "open-source K8s on-prem + consistency with AWS" → EKS Anywhere; "no AWS dependency / avoid lock-in" → EKS Distro.',
+            },
             tips: [
               'EKS Anywhere: "open-source Kubernetes + on-prem + consistency with AWS control plane" → EKS Anywhere',
               'EKS Distro: "no AWS lock-in + no AWS control plane + on-prem Kubernetes" → EKS Distro',
@@ -4774,6 +4858,8 @@ export const domains: DomainData[] = [
             sebabApa: "ECR wujud sebab kalau kau simpan Docker image di Docker Hub (public) untuk production, ada risiko security, rate limit, dan tiada IAM control yang rapat. ECR jadi private registry dalam AWS: access ikut IAM (bukan login Docker Hub), auto-scan vulnerability, encrypt at rest dengan KMS, dan integrate native dengan ECS/EKS/Fargate supaya pull image masa launch jadi seamless & selamat.",
             sifir: ["ECR = PRIVATE container registry (lawan Docker Hub public)", "Access guna IAM, bukan login Docker Hub", "Image scanning: basic (on push) atau enhanced (Amazon Inspector) untuk CVE", "Encrypt at rest dengan KMS; ada cross-region & cross-account replication", "Lifecycle policy auto-buang image lama/untagged supaya jimat storage", "Keyword 'store container image privately untuk ECS/EKS' = ECR"],
             perangkap: [{"soalan": "Company nak simpan Docker image untuk deployment ECS/EKS secara private dengan access control IAM + auto-scan vulnerability. Pilih?", "umpan": "Docker Hub private repo — sebab 'tempat simpan Docker image' terus terlintas Docker Hub.", "betul": "Amazon ECR — keyword 'private + IAM-controlled + vulnerability scanning + ECS/EKS native'. Docker Hub bukan AWS-IAM integrated & scanning tak native."}],
+            detailsLabel: 'ECR — pecahan component (anatomy)',
+            storageDetails: 'Registry → satu registry private per akaun AWS per region (auto-wujud)\nRepository → "folder" untuk satu app/image (cth my-app), simpan banyak versi\nImage tag → versi image (cth :latest, :v1.2) — tag boleh mutable atau immutable (immutable = elak orang timpa :v1\nImage scanning → basic (scan masa push, guna CVE database) atau enhanced (Amazon Inspector, continuous)\nLifecycle policy → rule auto-buang image lama/untagged supaya storage tak membengkak\nReplication → cross-region + cross-account (image sampai dekat dengan cluster yang pull)\nEncryption → at rest dengan KMS; access via IAM + repository policy',
             diagram: {
               label: 'Anatomy push → store → pull',
               steps: [
@@ -4785,14 +4871,32 @@ export const domains: DomainData[] = [
               caption: 'Login dulu (ecr get-login-password), kemudian push image. ECS/EKS/Fargate akan pull dari ECR masa launch task. Lifecycle policy auto-buang image lama supaya jimat storage.',
             },
             scenario: '"Store container images untuk ECS/EKS deployment" → ECR. Bukan Docker Hub (public). ECR = private, IAM-controlled, vulnerability scanning built-in. Images auto-encrypt at rest dengan KMS.',
+            compare: {
+              label: 'ECR vs Docker Hub — kenapa exam selalu pilih ECR',
+              headers: ['Aspect', 'Amazon ECR', 'Docker Hub'],
+              rows: [
+                ['Access control', '🟢 IAM + repository policy (least privilege)', 'Login Docker Hub (bukan IAM)'],
+                ['Privacy', '🟢 Private by default', 'Public default; private repo terhad/berbayar'],
+                ['Vulnerability scan', '🟢 Native (basic on-push / enhanced via Inspector)', 'Terhad / pelan berbayar'],
+                ['Rate limit', '🟢 Tiada pull-rate cap macam Docker Hub', '🔴 Anonymous/free pull di-rate-limit'],
+                ['AWS integration', '🟢 Native ECS / EKS / Fargate, encrypt KMS', 'Bukan AWS-native'],
+              ],
+              takeaway: '"Private + IAM-controlled + vulnerability scan + native ECS/EKS" → ECR. Docker Hub kena exam sebagai umpan ("tempat simpan Docker image") tapi takda IAM, ada rate limit, scan tak native. Production AWS = ECR.',
+            },
             tips: [
               'ECR = PRIVATE registry (lawan Docker Hub yang public). Access guna IAM, bukan login Docker Hub',
               'Image scanning: basic (on push) atau enhanced (guna Amazon Inspector) untuk cari CVE/vulnerability',
               'Lifecycle policy: auto-expire image lama / untagged supaya storage tak membengkak',
               'Encrypt at rest dengan KMS; ada cross-region & cross-account replication',
               'Exam: "store container images privately untuk ECS/EKS" → ECR. "scan image untuk vulnerability" → ECR image scanning (+ Inspector)',
+              'PRICING: $0.10 per GB-month storage (private). Free tier: 500 MB-month private storage (12 bulan) + 50 GB-month public (forever). Pull dalam region sama = percuma; cross-region/internet = data transfer biasa. Diskaun storage guna lifecycle policy buang image lama.',
             ],
-            keywords: ['container registry', 'Docker images', 'private registry', 'IAM integration', 'image scanning', 'lifecycle policy', 'KMS', 'ECS', 'EKS'],
+            docs: [
+              { label: 'What is Amazon ECR?', url: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/what-is-ecr.html' },
+              { label: 'ECR image scanning', url: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/image-scanning.html' },
+              { label: 'ECR lifecycle policies', url: 'https://docs.aws.amazon.com/AmazonECR/latest/userguide/LifecyclePolicies.html' },
+            ],
+            keywords: ['container registry', 'Docker images', 'private registry', 'IAM integration', 'image scanning', 'lifecycle policy', 'immutable tags', 'replication', 'Amazon Inspector', 'rate limit', 'Docker Hub', 'KMS', 'pricing', 'ECS', 'EKS'],
           },
           {
             shortName: 'Instance Store',
