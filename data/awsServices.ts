@@ -2777,6 +2777,110 @@ export const domains: DomainData[] = [
         category: 'd2ha',
         services: [
           {
+            shortName: 'Region & AZ',
+            fullName: 'AWS Global Infrastructure — Region, Availability Zone, Edge',
+            ingat: '"Region = bandar · AZ = mall berasingan dalam bandar"',
+            gunaUntuk: 'Faham geografi AWS — asas semua keputusan HA, DR, latency & data residency',
+            fungsi: 'Ni peta dunia AWS. Region = satu kawasan geografi (cth ap-southeast-1 Singapore, us-east-1 N. Virginia) yang ada beberapa Availability Zone (AZ). AZ = satu atau lebih datacenter fizikal yang berasingan (kuasa, penyejuk, rangkaian sendiri) dalam Region tu, tapi disambung sesama sendiri dengan link laju (<2ms). Edge Location = ratusan PoP kecil global (CloudFront) untuk caching dekat user. Pilih Region = pilih di mana data & server kau "duduk".',
+            sebabApa: 'Wujud sebab kalau semua server kau dalam SATU bangunan dan bangunan tu terbakar/banjir/putus kuasa → semua mati. AWS pecahkan jadi banyak AZ yang berasingan secara fizikal (berkilometer jauh, grid kuasa lain) tapi cukup dekat untuk replicate SYNC tanpa lag. Jadi kau letak server merentas ≥2 AZ → satu AZ tumbang, yang lain terus jalan (itu maksud Multi-AZ). Region pula asingkan ikut geografi/undang-undang: kau pilih Region dekat user (latency rendah) atau Region yang patuhi data residency (cth data kena duduk dalam Malaysia/EU). Edge wujud sebab Region jauh dari user → cache kandungan di PoP berhampiran supaya laju.',
+            scenario: '"Survive satu datacenter / AZ outage" → sebar across Multi-AZ (dalam SATU Region). "Survive seluruh Region tumbang / bencana besar / data residency negara lain" → Multi-Region (DR). "Latency rendah untuk user global / cache static content" → Edge Location (CloudFront). "Compute ultra-dekat metro tertentu" → Local Zone. "5G mobile edge" → Wavelength.',
+            detailsLabel: 'Anatomi Global Infrastructure (besar → kecil)',
+            storageDetails: 'Region → kawasan geografi (cth ap-southeast-1). Servis & harga berbeza ikut Region. Pilih ikut latency, kos, compliance/data residency, ketersediaan servis\nAvailability Zone (AZ) → 1+ datacenter fizikal berasingan dalam Region (kuasa/penyejuk/rangkaian sendiri). Berkilometer jauh tapi link <2ms. Min 3 AZ per Region biasanya\nAZ ID (cth use1-az1) → ID fizikal tetap; nama AZ (us-east-1a) di-map rawak per account supaya beban seimbang. Guna AZ ID bila nak padan AZ across account (RAM/shared VPC)\nEdge Location → 600+ PoP CloudFront global untuk cache & terminate TLS dekat user. BUKAN tempat run server kau\nLocal Zone → extension Region letak compute/storage dekat bandar besar (latency single-digit ms untuk metro tu)\nWavelength Zone → infra AWS dalam rangkaian 5G telco untuk mobile edge ultra-low latency',
+            sifir: [
+              'Region = geografi (bandar) · AZ = datacenter berasingan dalam Region (mall) · Edge = PoP cache global',
+              'Multi-AZ = tahan AZ outage (1 Region). Multi-Region = tahan Region outage + data residency',
+              'Min 3 AZ per Region (biasanya). Sebar ≥2 AZ = HA paling asas',
+              'AZ name (us-east-1a) di-map RAWAK per account → guna AZ ID (use1-az1) untuk padan across account',
+              'Pilih Region ikut: latency, kos, compliance/data residency, servis tersedia',
+              'Data dalam Region tak keluar Region melainkan kau pindah sendiri (asas data residency)',
+              'Edge ≠ compute kau — ia cache/CDN je. Run server → AZ',
+            ],
+            perangkap: [
+              {
+                soalan: 'App mesti terus jalan walaupun satu Availability Zone tumbang sepenuhnya. Reka bentuk paling tepat & kos efektif?',
+                umpan: 'Deploy ke Multi-Region (replicate ke Region kedua) supaya sentiasa ada backup. Nampak betul sebab "sentiasa hidup".',
+                betul: 'Sebar resource across MULTIPLE AZ dalam SATU Region (Multi-AZ) — cth ASG + ELB merentas 2-3 AZ. AZ memang direka berasingan secara fizikal, jadi satu AZ jatuh, AZ lain terus serve. Multi-Region itu untuk tahan seluruh REGION tumbang (mahal & kompleks, over-engineered untuk satu AZ). Keyword "survive AZ failure / single datacenter outage" → Multi-AZ, BUKAN Multi-Region.',
+              },
+              {
+                soalan: 'Syarikat kerajaan wajib SEMUA data pelanggan kekal dalam sempadan negara untuk pematuhan undang-undang. Apa kawalan asas?',
+                umpan: 'Enable Multi-AZ dan encryption supaya data selamat. Nampak betul sebab "data selamat = compliance".',
+                betul: 'Pilih & hadkan kepada Region dalam negara tu (data residency) — data dalam satu Region tak keluar Region melainkan dipindah secara eksplisit. Multi-AZ/encryption bagus tapi tak jawab "data kena duduk negara mana". Boleh kuatkan lagi dengan SCP halang Region lain. Keyword "data must stay in country / data residency / sovereignty" → pilih Region yang betul (+ SCP region restriction).',
+              },
+              {
+                soalan: 'Dua AWS account kongsi subnet via shared VPC, tapi "us-east-1a" di account A nampak macam beza lokasi fizikal dari "us-east-1a" account B. Macam mana pastikan padan AZ fizikal yang sama?',
+                umpan: 'AZ name memang konsisten merentas account — us-east-1a sentiasa AZ fizikal sama. Nampak betul sebab nama sama.',
+                betul: 'Nama AZ (us-east-1a) di-map RAWAK per account — "1a" account A boleh ≠ "1a" account B secara fizikal. Guna AZ ID (use1-az1) yang TETAP merentas semua account untuk padan AZ fizikal sebenar. Keyword "match AZ across accounts / consistent physical AZ" → AZ ID, BUKAN AZ name.',
+              },
+            ],
+            mermaid: [
+              {
+                label: 'Geografi AWS — Region → AZ → datacenter (+ Edge global)',
+                source: `flowchart TD
+  GLOBE["🌍 AWS Global Infrastructure"]
+  GLOBE --> R1["🏙️ Region: ap-southeast-1<br/>(Singapore)"]
+  GLOBE --> R2["🏙️ Region: us-east-1<br/>(N. Virginia)"]
+  R1 --> AZ1["🏢 AZ-1a<br/>1+ datacenter"]
+  R1 --> AZ2["🏢 AZ-1b<br/>1+ datacenter"]
+  R1 --> AZ3["🏢 AZ-1c<br/>1+ datacenter"]
+  AZ1 -. "link laju &lt;2ms" .- AZ2
+  AZ2 -. "link laju &lt;2ms" .- AZ3
+  GLOBE --> EDGE["📍 600+ Edge Locations<br/>(CloudFront cache, dekat user)"]`,
+                caption: 'INGAT exam: Region = bandar (geografi), AZ = datacenter berasingan dalam bandar tu (link <2ms sesama sendiri). Sebar across ≥2 AZ = Multi-AZ (tahan satu AZ jatuh). Edge = PoP cache global, BUKAN tempat run server. "survive AZ outage" → Multi-AZ; "survive Region outage / data residency" → Multi-Region.',
+              },
+              {
+                label: 'Kaitkan dengan familiar — bandar & mall',
+                source: `flowchart LR
+  CITY["🏙️ Bandar = Region<br/>(cth Singapore)"]
+  CITY --> M1["🏬 Mall A = AZ-1a"]
+  CITY --> M2["🏬 Mall B = AZ-1b"]
+  CITY --> M3["🏬 Mall C = AZ-1c"]
+  M1 --> FIRE["🔥 Mall A kebakaran<br/>(AZ outage)"]
+  FIRE --> SAFE["✅ Mall B &amp; C terus buka<br/>(app kekal hidup = Multi-AZ)"]
+  CITY -.-> CITY2["🏙️ Bandar lain = Region lain<br/>(Multi-Region: tahan SELURUH bandar lumpuh)"]`,
+                caption: 'Bayangkan kedai kau ada cawangan dalam BEBERAPA mall (AZ) dalam satu bandar (Region) — satu mall kebakaran, cawangan mall lain terus jalan (Multi-AZ). Kalau seluruh bandar banjir besar, baru kau perlu cawangan di bandar lain (Multi-Region). INGAT: jangan buka Multi-Region (bandar lain) semata-mata untuk tahan satu mall terbakar — itu membazir.',
+              },
+            ],
+            compare: [
+              {
+                label: 'Region vs AZ vs Edge vs Local Zone — pilih ikut keperluan',
+                headers: ['Lapisan', 'Apa dia', 'Guna bila (keyword)'],
+                rows: [
+                  ['Region', 'Kawasan geografi, ada banyak AZ', 'Data residency · pilih latency/kos · DR Multi-Region'],
+                  ['Availability Zone', 'Datacenter berasingan fizikal dlm Region', 'HA — survive AZ outage (Multi-AZ)'],
+                  ['Edge Location', 'PoP cache CloudFront, global', 'Latency rendah static/dynamic content · cache dekat user'],
+                  ['Local Zone', 'Compute/storage dekat bandar besar', 'Single-digit ms untuk metro tertentu (gaming/media)'],
+                  ['Wavelength', 'Infra dalam rangkaian 5G telco', 'Mobile edge ultra-low latency (5G app)'],
+                ],
+                takeaway: 'Run server tahan kerosakan → AZ (Multi-AZ). Tahan bencana seluruh Region / data residency → Region (Multi-Region). Cache dekat user → Edge. Compute dekat metro → Local Zone. 5G mobile → Wavelength.',
+              },
+              {
+                label: 'Multi-AZ vs Multi-Region (jangan keliru)',
+                headers: ['Aspect', 'Multi-AZ', 'Multi-Region'],
+                rows: [
+                  ['Lindung dari', 'Satu AZ / datacenter tumbang', 'Seluruh Region tumbang / bencana besar'],
+                  ['Kos & kompleksiti', 'Rendah-sederhana', 'Tinggi (replicate data + DNS failover)'],
+                  ['Latency replikasi', 'Sangat rendah (<2ms) → boleh SYNC', 'Tinggi → biasanya ASYNC'],
+                  ['Data residency', '❌ Tak selesaikan', '🟢 Boleh pilih Region patuh undang-undang'],
+                  ['Keyword exam', '"survive AZ failure / HA"', '"survive Region outage / DR / data sovereignty"'],
+                ],
+                takeaway: 'Default HA = Multi-AZ (murah, cukup untuk 99% soalan "survive outage"). Naik ke Multi-Region HANYA bila exam sebut "entire Region down", "disaster recovery across regions", atau "data must stay in country". Jangan over-engineer Multi-Region untuk soalan AZ.',
+              },
+            ],
+            tips: [
+              'AZ direka berasingan secara fizikal (kuasa/penyejuk/rangkaian sendiri) tapi disambung dengan link redundan latency rendah (<2ms) — itu sebab boleh replicate SYNC across AZ',
+              'Setiap Region ada minimum 3 AZ (kebanyakannya); sebar ≥2 AZ untuk HA asas',
+              'AZ name (us-east-1a) di-map rawak per account untuk seimbangkan beban; AZ ID (use1-az1) tetap merentas account — guna AZ ID bila nak padan AZ fizikal across account (shared VPC / RAM)',
+              'Beberapa servis bersifat GLOBAL (IAM, Route 53, CloudFront, WAF for CloudFront), kebanyakan lain Regional (EC2, RDS, S3 bucket terikat Region walau nama global)',
+              'PRICING: data transfer SAME AZ (private IP) = FREE. Cross-AZ dalam Region = $0.01/GB SETIAP arah (in + out). Cross-Region = ~$0.02/GB (varies). Egress ke Internet = ~$0.09/GB (10TB pertama). Data IN dari Internet = FREE.',
+              'Exam cost trap: trafik antara AZ kena caj ($0.01/GB tiap arah) — sebab tu NLB cross-zone OFF by default (elak caj inter-AZ). "minimize data transfer cost" → kekalkan trafik dalam SATU AZ bila boleh, atau guna private IP.',
+            ],
+            docs: [
+              { label: 'AWS Global Infrastructure', url: 'https://aws.amazon.com/about-aws/global-infrastructure/' },
+              { label: 'Regions, AZ & Local Zones', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-regions-availability-zones.html' },
+            ],
+            keywords: ['region', 'availability zone', 'AZ', 'AZ ID', 'edge location', 'local zone', 'wavelength', 'global infrastructure', 'multi-AZ', 'multi-region', 'data residency', 'data sovereignty', 'cross-AZ data transfer', 'inter-AZ', 'latency', 'CloudFront PoP', 'physical isolation', 'datacenter', 'pricing', 'data transfer cost', 'survive AZ outage', 'survive region outage', 'global vs regional service'],
+          },
+          {
             shortName: 'Auto Scaling Groups',
             fullName: 'Amazon EC2 Auto Scaling',
             ingat: '"Auto tambah/kurang server ikut demand"',

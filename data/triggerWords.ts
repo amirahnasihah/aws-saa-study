@@ -180,22 +180,27 @@ export const triggerRows: TriggerRow[] = [
   },
 ]
 
-// ── Pilih Database — pokok keputusan ────────────────────────────────────────
-// One root question splits into three families; each leaf maps an exam keyword
-// cluster to the service that answers it. Mirrors the visual blueprint so the
-// /trigger-words page carries the same decision tree as the Deep Notes card.
-export interface DbLeaf {
+// ── Pokok keputusan (decision tree) ─────────────────────────────────────────
+// One root question splits into families; each leaf maps an exam keyword cluster
+// to the service that answers it. Shared shape so /trigger-words can carry more
+// than one tree (Database, Storage, ...) with the same renderer.
+export interface TreeLeaf {
   svc: string // the service to fire
   cond: string // the keyword cluster / discriminator that picks it
 }
 
-export interface DbBranch {
+export interface TreeBranch {
   cat: string // family label
   accent: Accent
-  leaves: DbLeaf[]
+  leaves: TreeLeaf[]
 }
 
-export const dbDecisionTree: { root: string; branches: DbBranch[] } = {
+export interface DecisionTree {
+  root: string
+  branches: TreeBranch[]
+}
+
+export const dbDecisionTree: DecisionTree = {
   root: 'Apa bentuk data + cara akses?',
   branches: [
     {
@@ -224,6 +229,43 @@ export const dbDecisionTree: { root: string; branches: DbBranch[] } = {
       leaves: [
         { svc: 'Redshift', cond: 'OLAP warehouse · BI · agregat berjuta baris · report berulang' },
         { svc: 'Timestream', cond: 'time-series · sensor IoT · metrik ikut masa' },
+      ],
+    },
+  ],
+}
+
+// ── Pilih Storage — pokok keputusan ─────────────────────────────────────────
+// Three families by access pattern: BLOCK (attach as disk), FILE (mount shared
+// filesystem), OBJECT (HTTP API, flat). The exam's favourite trap lives in the
+// takeaway: "shared across many" → EFS (file) BUKAN EBS, melainkan soalan tanya
+// shared BLOCK device → io1/io2 Multi-Attach.
+export const storageDecisionTree: DecisionTree = {
+  root: 'Macam mana nak akses? (disk · mount share · HTTP API)',
+  branches: [
+    {
+      cat: 'Block — attach jadi disk (1 EC2)',
+      accent: 'c4',
+      leaves: [
+        { svc: 'EBS', cond: 'volume persistent satu EC2 · boot/DB disk · io2 Multi-Attach = shared BLOCK (max 16 EC2, same AZ)' },
+        { svc: 'Instance Store', cond: 'disk fizikal ephemeral · hilang bila stop/terminate · paling laju · buffer/cache/scratch' },
+      ],
+    },
+    {
+      cat: 'File — mount share (ramai serentak)',
+      accent: 'c1',
+      leaves: [
+        { svc: 'EFS', cond: 'NFS · Linux · ReadWriteMany · ribuan EC2/pod merentas AZ · auto-grow · "shared file"' },
+        { svc: 'FSx for Windows', cond: 'SMB · Windows file share · Active Directory · NTFS' },
+        { svc: 'FSx for Lustre', cond: 'HPC / ML / analytics · throughput gila · boleh link ke S3' },
+      ],
+    },
+    {
+      cat: 'Object — HTTP API (flat, unlimited)',
+      accent: 'c6',
+      leaves: [
+        { svc: 'S3', cond: 'object · 11 nines · unlimited · web asset / data lake / backup · akses via API' },
+        { svc: 'S3 Glacier', cond: 'arkib murah · retrieval lambat (ms→jam ikut tier) · compliance/long-term' },
+        { svc: 'Storage Gateway', cond: 'hybrid · on-prem sentuh AWS storage (File/Volume/Tape Gateway)' },
       ],
     },
   ],

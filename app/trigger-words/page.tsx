@@ -2,7 +2,15 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
-import { triggerRows, trapRows, dbDecisionTree, petaModules, type Accent } from '@/data/triggerWords'
+import {
+  triggerRows,
+  trapRows,
+  dbDecisionTree,
+  storageDecisionTree,
+  petaModules,
+  type Accent,
+  type DecisionTree,
+} from '@/data/triggerWords'
 
 export const metadata: Metadata = {
   title: 'Trigger Words — AWS SAA-C03 Study',
@@ -34,6 +42,58 @@ const groups = domainMeta
   .map((d) => ({ ...d, rows: triggerRows.filter((r) => r.domain.startsWith(d.code)) }))
   .filter((g) => g.rows.length > 0)
 
+// One renderer for every decision tree (Database, Storage, ...) so the two
+// sections stay visually identical and only the data + framing copy differ.
+function DecisionTreeBlock({
+  title,
+  rootAccent,
+  tree,
+  intro,
+  footer,
+}: {
+  title: string
+  rootAccent: Accent
+  tree: DecisionTree
+  intro: string
+  footer: React.ReactNode
+}) {
+  return (
+    <section className="mb-9">
+      <div className="flex items-baseline gap-3 mb-1">
+        <h2 className="font-space-mono text-[0.95rem] font-bold text-aws-text">{title}</h2>
+        <span className="font-space-mono text-[0.55rem] text-aws-muted">pokok keputusan</span>
+        <span className="flex-1 h-px bg-aws-border/60" aria-hidden="true" />
+      </div>
+      <p className="text-[0.72rem] text-aws-muted mb-3 max-w-[60ch] leading-relaxed">{intro}</p>
+
+      {/* Root question */}
+      <div className={`font-space-mono text-[0.8rem] font-bold border rounded-md px-3 py-2 mb-3 inline-block ${accentText[rootAccent]} ${accentBorder[rootAccent]} ${accentBg[rootAccent]}`}>
+        {tree.root}
+      </div>
+
+      {/* Branches */}
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        {tree.branches.map((b) => (
+          <div key={b.cat} className={`rounded-lg border ${accentBorder[b.accent]} ${accentBg[b.accent]} p-3`}>
+            <h3 className={`font-space-mono text-[0.72rem] font-bold mb-2.5 pb-2 border-b border-aws-border/60 ${accentText[b.accent]}`}>
+              {b.cat}
+            </h3>
+            <div className="flex flex-col gap-2.5">
+              {b.leaves.map((leaf) => (
+                <div key={leaf.svc}>
+                  <span className={`font-space-mono text-[0.78rem] font-bold ${accentText[b.accent]}`}>{leaf.svc}</span>
+                  <p className="text-[0.69rem] text-aws-muted leading-relaxed mt-0.5">{leaf.cond}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="text-[0.7rem] text-aws-muted/90 mt-3 max-w-[68ch] leading-relaxed">{footer}</p>
+    </section>
+  )
+}
+
 export default function TriggerWordsPage() {
   return (
     <>
@@ -47,7 +107,7 @@ export default function TriggerWordsPage() {
             → tembak service → buang perangkap. Disusun ikut domain exam (D1–D4) — tap mana-mana row untuk Deep Notes.
           </p>
           <p className="font-space-mono text-[0.55rem] text-aws-muted mt-3">
-            {triggerRows.length} triggers · {groups.length} domain · 1 decision tree · {petaModules.length} corak · {trapRows.length} perangkap
+            {triggerRows.length} triggers · {groups.length} domain · 2 decision tree · {petaModules.length} corak · {trapRows.length} perangkap
           </p>
         </header>
 
@@ -99,45 +159,34 @@ export default function TriggerWordsPage() {
         ))}
 
         {/* Pilih Database — decision tree */}
-        <section className="mb-9">
-          <div className="flex items-baseline gap-3 mb-1">
-            <h2 className="font-space-mono text-[0.95rem] font-bold text-aws-text">★ Pilih Database</h2>
-            <span className="font-space-mono text-[0.55rem] text-aws-muted">pokok keputusan</span>
-            <span className="flex-1 h-px bg-aws-border/60" aria-hidden="true" />
-          </div>
-          <p className="text-[0.72rem] text-aws-muted mb-3 max-w-[60ch] leading-relaxed">
-            Nampak bentuk data → pilih keluarga → tembak service ikut keyword. Mula dari soalan ni:
-          </p>
+        <DecisionTreeBlock
+          title="★ Pilih Database"
+          rootAccent="c5"
+          tree={dbDecisionTree}
+          intro="Nampak bentuk data → pilih keluarga → tembak service ikut keyword. Mula dari soalan ni:"
+          footer={
+            <>
+              <span className="text-c5 font-semibold">Discriminator:</span> &ldquo;relational + transaksi&rdquo; → RDS/Aurora ·
+              &ldquo;key-value + serverless + ms&rdquo; → DynamoDB · &ldquo;graph / hubungan&rdquo; → Neptune ·
+              &ldquo;warehouse / BI&rdquo; → Redshift · &ldquo;cache&rdquo; → ElastiCache (BUKAN DAX melainkan sebut DynamoDB).
+            </>
+          }
+        />
 
-          {/* Root question */}
-          <div className="font-space-mono text-[0.8rem] font-bold text-c5 border border-c5/30 bg-c5/8 rounded-md px-3 py-2 mb-3 inline-block">
-            {dbDecisionTree.root}
-          </div>
-
-          {/* Branches */}
-          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {dbDecisionTree.branches.map((b) => (
-              <div key={b.cat} className={`rounded-lg border ${accentBorder[b.accent]} ${accentBg[b.accent]} p-3`}>
-                <h3 className={`font-space-mono text-[0.72rem] font-bold mb-2.5 pb-2 border-b border-aws-border/60 ${accentText[b.accent]}`}>
-                  {b.cat}
-                </h3>
-                <div className="flex flex-col gap-2.5">
-                  {b.leaves.map((leaf) => (
-                    <div key={leaf.svc}>
-                      <span className={`font-space-mono text-[0.78rem] font-bold ${accentText[b.accent]}`}>{leaf.svc}</span>
-                      <p className="text-[0.69rem] text-aws-muted leading-relaxed mt-0.5">{leaf.cond}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-          <p className="text-[0.7rem] text-aws-muted/90 mt-3 max-w-[68ch] leading-relaxed">
-            <span className="text-c5 font-semibold">Discriminator:</span> &ldquo;relational + transaksi&rdquo; → RDS/Aurora ·
-            &ldquo;key-value + serverless + ms&rdquo; → DynamoDB · &ldquo;graph / hubungan&rdquo; → Neptune ·
-            &ldquo;warehouse / BI&rdquo; → Redshift · &ldquo;cache&rdquo; → ElastiCache (BUKAN DAX melainkan sebut DynamoDB).
-          </p>
-        </section>
+        {/* Pilih Storage — decision tree */}
+        <DecisionTreeBlock
+          title="★ Pilih Storage"
+          rootAccent="c1"
+          tree={storageDecisionTree}
+          intro="Tanya cara akses dulu — attach jadi disk (block) · mount share ramai (file) · HTTP API (object). Lepas tu pilih service:"
+          footer={
+            <>
+              <span className="text-c1 font-semibold">Perangkap utama:</span> &ldquo;shared across many EC2/pod&rdquo; → <span className="text-c1">EFS</span> (file, RWX),
+              BUKAN EBS. Tapi kalau soalan tanya <span className="text-aws-text">shared BLOCK device</span> → <span className="text-c4">io1/io2 Multi-Attach</span> (max 16 EC2, same AZ).
+              &ldquo;ephemeral / paling laju / boleh hilang&rdquo; → Instance Store. &ldquo;Windows / SMB / AD&rdquo; → FSx for Windows · &ldquo;HPC / ML throughput&rdquo; → FSx for Lustre.
+            </>
+          }
+        />
 
         {/* Peta Besar — corak teras */}
         <section className="mb-9">
