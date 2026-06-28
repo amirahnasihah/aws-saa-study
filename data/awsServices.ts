@@ -602,6 +602,83 @@ export const domains: DomainData[] = [
             keywords: ['AWS RAM', 'Resource Access Manager', 'share resources', 'VPC sharing', 'shared subnets', 'Transit Gateway sharing', 'Route 53 Resolver rules', 'cross-account sharing', 'resource share', 'Organizations sharing', 'central VPC', 'owner consumer', 'pricing', 'free'],
           },
           {
+            shortName: 'IAM Roles Anywhere',
+            fullName: 'AWS IAM Roles Anywhere',
+            ingat: '"Server luar AWS (on-prem) dapat temp IAM creds guna sijil X.509 — bukan access key"',
+            gunaUntuk: 'Give on-prem / non-AWS servers temporary AWS credentials without access keys',
+            fungsi: 'Lets workloads that run OUTSIDE AWS (on-prem servers, other clouds, IoT) obtain temporary IAM credentials by authenticating with an X.509 certificate, instead of storing long-term IAM access keys. The certificate is issued by a Certificate Authority (CA) that you register as a trust anchor.',
+            sebabApa: 'Wujud sebab server on-prem yang nak akses S3/DynamoDB selalunya kena simpan IAM access key — long-term secret yang bocor = bahaya kekal. Untuk workload DALAM AWS, kita guna IAM Role (EC2/Lambda dapat temp creds auto). Tapi server LUAR AWS tak boleh assume role macam tu. IAM Roles Anywhere isi jurang ni: server tunjuk sijil X.509 (dari CA yang kau percaya) → dapat temp creds via STS yang auto-expire. So on-prem gets the same "no hardcoded keys" benefit as EC2.',
+            sifir: [
+              'IAM Roles Anywhere = temp IAM creds untuk workload LUAR AWS (on-prem/other cloud), guna sijil X.509',
+              'Trust anchor = CA (AWS Private CA atau CA sendiri) yang kau daftar supaya AWS percaya sijil tu',
+              'Profile = had role mana boleh di-assume + session policy',
+              'Ganti pattern lama: simpan IAM access key panjang dalam server on-prem (bahaya)',
+              'Bawah hood guna STS → temp creds auto-expire. Sama falsafah dengan EC2 instance role, tapi untuk luar AWS',
+            ],
+            perangkap: [
+              {
+                soalan: 'Server data center on-prem perlu muat naik fail ke S3 setiap malam. Sekarang ia simpan IAM access key dalam config. Security mahu buang long-term key tapi kekalkan akses. Cara terbaik?',
+                umpan: 'Rotate access key tu setiap 90 hari guna script. Nampak betul sebab "rotate = lebih selamat". SALAH: ia masih long-term secret yang tersimpan dalam server — kalau bocor antara rotation, tetap boleh disalahguna; rotation tak hapus risiko punca.',
+                betul: 'IAM Roles Anywhere — server authenticate guna sijil X.509 (dari CA yang didaftar sebagai trust anchor) → dapat temp creds auto-expire, tiada access key tersimpan langsung. Keyword "on-premises / non-AWS server needs AWS access without long-term keys" → IAM Roles Anywhere.',
+              },
+            ],
+            compare: {
+              label: 'Macam mana workload dapat AWS creds — ikut DI MANA ia berjalan',
+              headers: ['Workload jalan di mana', 'Cara dapat creds', 'Service'],
+              rows: [
+                ['EC2 / ECS / Lambda (dalam AWS)', 'Attach IAM Role (instance profile / task role)', 'IAM Role'],
+                ['On-prem / other cloud (luar AWS)', 'Sijil X.509 → temp creds', 'IAM Roles Anywhere'],
+                ['Mobile/web app (user login Google/FB)', 'Token OIDC → temp creds', 'Cognito / STS WebIdentity'],
+                ['Corporate AD users', 'SAML assertion → temp creds', 'IAM Identity Center / STS SAML'],
+              ],
+              takeaway: 'Semua jalan ke temp creds (STS), beza pada CARA authenticate. Dalam AWS → IAM Role. Luar AWS (server) → IAM Roles Anywhere (X.509). User app → Cognito/WebIdentity. Enterprise AD → SAML/Identity Center. Keyword "on-prem server, no long-term keys" → Roles Anywhere.',
+            },
+            tips: [
+              'Komponen: (1) Trust Anchor — daftar CA (AWS Private CA atau CA sendiri) yang sijilnya AWS akan percaya. (2) Profile — tetapkan role mana boleh di-assume + had permission',
+              'Server guna alat helper untuk tukar sijil X.509 → temp AWS credentials (akses S3/DynamoDB/dll seperti biasa)',
+              'Guna bila: hybrid — server on-prem atau cloud lain perlu akses AWS service TANPA simpan IAM access key panjang',
+              'PRICING: IAM Roles Anywhere sendiri PERCUMA. Bayar hanya AWS Private CA kalau guna ($400/bulan per CA) + resource yang diakses',
+              'Exam discriminator: "on-premises servers / workloads outside AWS need AWS credentials securely without long-term access keys" → IAM Roles Anywhere (X.509). Dalam AWS → IAM Role biasa',
+            ],
+            docs: [
+              { label: 'What is IAM Roles Anywhere', url: 'https://docs.aws.amazon.com/rolesanywhere/latest/userguide/introduction.html' },
+            ],
+            keywords: ['IAM Roles Anywhere', 'on-premises', 'X.509 certificate', 'trust anchor', 'hybrid', 'temporary credentials', 'no access keys', 'non-AWS workload', 'Private CA', 'profile', 'outside AWS', 'pricing'],
+          },
+          {
+            shortName: 'AWS Artifact',
+            fullName: 'AWS Artifact',
+            ingat: '"Self-service muat turun laporan pematuhan AWS (SOC, ISO, PCI)"',
+            gunaUntuk: 'Download AWS compliance reports & accept agreements',
+            fungsi: 'A self-service portal to download AWS compliance reports (SOC 1/2/3, ISO 27001, PCI DSS, FedRAMP, etc.) and to review/accept legal agreements like the BAA (for HIPAA) or GDPR DPA. The reports prove AWS\'s side of the shared responsibility model to your auditors.',
+            sebabApa: 'Wujud sebab bila syarikat kau kena audit (cth nak cert PCI/ISO/HIPAA), juruaudit akan minta bukti yang AWS (sebagai penyedia infra) pun patuh standard tu. Kau tak boleh audit data center AWS sendiri. AWS Artifact bagi kau muat turun laporan rasmi (SOC, ISO, PCI) terus — bukti untuk bahagian "OF the cloud" dalam shared responsibility. So you hand auditors AWS\'s certificates instead of trying to inspect AWS yourself.',
+            sifir: [
+              'AWS Artifact = portal muat turun laporan pematuhan AWS (SOC, ISO, PCI, FedRAMP) + terima agreement (BAA, GDPR DPA)',
+              'Laporan = bukti bahagian AWS dalam Shared Responsibility Model ("security OF the cloud")',
+              'Artifact Reports = dokumen audit AWS. Artifact Agreements = perjanjian undang-undang (cth BAA untuk HIPAA)',
+              'PERCUMA — kau bayar tiada apa untuk muat turun',
+              'Jangan keliru: Artifact = dokumen pematuhan AWS; Audit Manager = kumpul bukti untuk audit KAU; Config = semak compliance resource KAU',
+            ],
+            perangkap: [
+              {
+                soalan: 'Juruaudit syarikat minta bukti yang AWS (penyedia infrastruktur) mematuhi SOC 2 dan ISO 27001. Dari mana dapat laporan rasmi ni?',
+                umpan: 'Hubungi AWS Support buka kes, atau guna AWS Config untuk jana laporan compliance. Nampak betul sebab Config ada "compliance". SALAH: Config semak compliance RESOURCE kau, bukan keluarkan sijil audit AWS sendiri.',
+                betul: 'AWS Artifact — muat turun terus laporan SOC 2, ISO 27001, PCI DSS AWS (self-service, percuma). Keyword "download AWS compliance/audit reports (SOC/ISO/PCI) for auditors" → AWS Artifact, BUKAN Config/Audit Manager.',
+              },
+            ],
+            tips: [
+              'Dua bahagian: Artifact Reports (muat turun laporan audit AWS — SOC, ISO, PCI, FedRAMP) dan Artifact Agreements (semak & terima BAA, GDPR DPA)',
+              'BAA (Business Associate Addendum) untuk HIPAA workload diterima melalui AWS Artifact',
+              'Laporan ialah bukti untuk bahagian AWS ("OF the cloud") dalam Shared Responsibility Model — bukan compliance KAU',
+              'PRICING: PERCUMA',
+              'Exam discriminator: "obtain/download AWS\'s compliance or audit reports (SOC, ISO, PCI) for our own auditors" → AWS Artifact. "assess MY resources\' compliance" → Config/Audit Manager',
+            ],
+            docs: [
+              { label: 'What is AWS Artifact', url: 'https://docs.aws.amazon.com/artifact/latest/ug/what-is-aws-artifact.html' },
+            ],
+            keywords: ['AWS Artifact', 'compliance reports', 'SOC', 'ISO 27001', 'PCI DSS', 'FedRAMP', 'BAA', 'HIPAA', 'GDPR DPA', 'audit reports', 'shared responsibility', 'agreements', 'free'],
+          },
+          {
             shortName: 'Cognito',
             fullName: 'Amazon Cognito',
             ingat: '"Login untuk user apps — User Pool = siapa kau, Identity Pool = boleh buat apa"',
@@ -1221,6 +1298,117 @@ export const domains: DomainData[] = [
               'Analogi: Macie = anjing pengesan 🐕 di airport — hidu "beg" (S3 objects) cari barang sensitif (PII, passport, credit card). Tapi dia hanya kawal terminal S3 — bukan RDS/EBS.',
             ],
             keywords: ['PII detection', 'sensitive data', 'S3', 'ML-based', 'data privacy', 'GDPR', 'data discovery', 'policy findings'],
+          },
+          {
+            shortName: 'Security Hub',
+            fullName: 'AWS Security Hub',
+            ingat: '"Satu dashboard kumpul SEMUA finding security + compliance score"',
+            gunaUntuk: 'Central view of security findings across accounts + compliance checks',
+            fungsi: 'A single dashboard that AGGREGATES security findings from GuardDuty, Inspector, Macie, IAM Access Analyzer, Firewall Manager (and partner tools) into one normalized format (ASFF). It also runs automated compliance checks against standards (CIS, PCI DSS, AWS Foundational Best Practices) and gives you a security score.',
+            sebabApa: 'Wujud sebab bila kau dah hidupkan GuardDuty + Inspector + Macie + Access Analyzer, setiap satu ada console & format finding sendiri — security team kena buka 5 tempat, tiap account lain pulak. Penat & senang terlepas. Security Hub kumpul SEMUA jadi satu paparan ternormalisasi (satu format ASFF), satu skor, merentas semua account dalam Organization. So you triage from ONE place instead of five.',
+            sifir: [
+              'Security Hub = AGGREGATOR + compliance checker. It does NOT detect threats itself — it collects findings from other services',
+              'Sumber finding: GuardDuty, Inspector, Macie, IAM Access Analyzer, Firewall Manager, Systems Manager + partner products',
+              'Compliance standards built-in: CIS AWS Foundations, PCI DSS, AWS Foundational Security Best Practices (FSBP) → security score',
+              'Semua finding ditukar jadi satu format: ASFF (AWS Security Finding Format)',
+              'Cross-account: jadikan satu account sebagai delegated administrator dalam Organizations → kumpul finding semua account',
+              'Boleh auto-remediate: Security Hub finding → EventBridge → Lambda/SSM Automation',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat dah hidupkan GuardDuty, Inspector, dan Macie merentas 30 account. Security team penat sebab kena log masuk tiap service, tiap account untuk tengok finding. Mahu SATU paparan berpusat + skor pematuhan (CIS/PCI). Service mana?',
+                umpan: 'Hidupkan GuardDuty di management account, atau guna CloudWatch dashboard. Nampak betul sebab GuardDuty pun ada "findings". SALAH: GuardDuty satu sumber je (threat detection), ia tak kumpul finding Inspector/Macie atau bagi compliance score.',
+                betul: 'AWS Security Hub — aggregates findings dari GuardDuty + Inspector + Macie + lagi, normalize ke ASFF, jalankan compliance checks (CIS/PCI/FSBP) untuk security score, merentas semua account. Keyword "single pane of glass / aggregate security findings / compliance score across accounts" → Security Hub.',
+              },
+            ],
+            compare: {
+              label: 'Security Hub vs sumber findingnya (jangan keliru: aggregator vs detector)',
+              headers: ['Service', 'Peranan', 'Detect sendiri?'],
+              rows: [
+                ['Security Hub', 'Kumpul finding + compliance score (one dashboard)', '❌ Tak — aggregator'],
+                ['GuardDuty', 'Threat detection (logs: VPC Flow, DNS, CloudTrail)', '🟢 Ya'],
+                ['Inspector', 'Vulnerability scan (EC2, ECR images, Lambda)', '🟢 Ya'],
+                ['Macie', 'Sensitive data (PII) discovery dalam S3', '🟢 Ya'],
+                ['Detective', 'Investigate / root-cause sesuatu finding (graph)', '🟢 Ya (analisis)'],
+              ],
+              takeaway: 'Security Hub = "single pane of glass" yang KUMPUL finding + bagi compliance score; ia tak detect apa-apa sendiri. GuardDuty/Inspector/Macie = detector (sumber). Detective = siasat punca selepas finding. Keyword "aggregate/centralize findings + compliance" → Security Hub; "investigate the root cause" → Detective.',
+            },
+            mermaid: {
+              label: 'Security Hub = papan kawalan pusat',
+              source: `flowchart LR
+  GD["🛡️ GuardDuty<br/>threat"] --> HUB
+  INS["🔍 Inspector<br/>vuln scan"] --> HUB
+  MAC["🐕 Macie<br/>PII in S3"] --> HUB
+  AA["🔦 Access Analyzer<br/>exposure"] --> HUB
+  HUB["📊 AWS Security Hub<br/>normalize → ASFF<br/>+ compliance score (CIS/PCI/FSBP)"] --> ACT["⚡ EventBridge → Lambda/SSM<br/>auto-remediate"]
+  HUB --> VIEW["👀 Satu dashboard<br/>semua account"]`,
+              caption: 'Macam pusat kawalan keselamatan bangunan: tiap kamera/sensor (GuardDuty, Inspector, Macie, Access Analyzer) hantar amaran ke SATU bilik kawalan (Security Hub), yang susun semua dalam satu format + bagi skor. INGAT exam: nampak "aggregate findings from multiple security services + compliance score across accounts" → Security Hub, BUKAN GuardDuty (itu satu sumber je).',
+            },
+            tips: [
+              'Security Hub TAK detect threat sendiri — ia aggregate. Kalau soalan tanya "detect malicious activity / compromised instance" itu GuardDuty; "central dashboard + compliance" baru Security Hub',
+              'Compliance standards: CIS AWS Foundations Benchmark, PCI DSS, AWS Foundational Security Best Practices → automated checks + security score',
+              'Cross-account: set satu account sebagai delegated administrator via Organizations → satu Security Hub kumpul finding semua member account',
+              'Auto-remediation: Security Hub finding → Amazon EventBridge rule → Lambda function atau SSM Automation document untuk auto-fix',
+              'PRICING: ada per finding ingested + per compliance check (security check) sebulan. Free trial 30 hari. Bukan free tier kekal.',
+              'Exam discriminator: "single pane of glass for security across many AWS accounts" / "continuous compliance check against CIS/PCI" → Security Hub',
+            ],
+            docs: [
+              { label: 'What is AWS Security Hub', url: 'https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html' },
+            ],
+            keywords: ['Security Hub', 'aggregate findings', 'single pane of glass', 'compliance score', 'CIS', 'PCI DSS', 'FSBP', 'ASFF', 'security posture', 'centralized security', 'delegated administrator', 'compliance checks', 'pricing'],
+          },
+          {
+            shortName: 'Firewall Manager',
+            fullName: 'AWS Firewall Manager',
+            ingat: '"Satu tempat urus WAF/Shield/SG/Network Firewall untuk SEMUA account"',
+            gunaUntuk: 'Centrally manage firewall rules across all accounts in an Organization',
+            fungsi: 'A central management service that lets you set up firewall rules (WAF rules, Shield Advanced, Security Groups, Network Firewall, Route 53 Resolver DNS Firewall) ONCE and apply them automatically across all accounts and resources in your AWS Organization — including new accounts/resources created later.',
+            sebabApa: 'Wujud sebab dalam Organization dengan banyak account, kalau kau set WAF rule atau Security Group satu-satu per account, mustahil nak pastikan SEMUA account patuh — account baru lahir tanpa WAF, ada team terlupa. Firewall Manager apply policy SEKALI di peringkat Organization, dan ia auto-enforce + auto-cover resource baru. So compliance is automatic, not manual per account.',
+            sifir: [
+              'Firewall Manager = CENTRAL enforce firewall policy merentas seluruh Organization (auto-cover account/resource baru)',
+              'Urus: AWS WAF rules, Shield Advanced, Security Groups, AWS Network Firewall, Route 53 Resolver DNS Firewall',
+              'WAJIB: AWS Organizations + AWS Config enabled dulu',
+              'Set policy SEKALI → auto-apply ke semua account; account baru auto-patuh',
+              'Beza dengan WAF sorang: WAF = tulis rule untuk SATU resource; Firewall Manager = sebar rule ke SEMUA account/resource',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat ada 50 account dalam Organizations. Security mahu PASTIKAN setiap ALB di setiap account ada WAF rule yang sama, termasuk account baru yang akan dibuat nanti — tanpa set manual satu-satu. Service mana?',
+                umpan: 'Tulis WAF Web ACL dan attach ke tiap ALB di tiap account. Nampak betul sebab WAF memang buat rule. SALAH: itu manual per resource — account ke-51 lahir, kena buat lagi; senang terlepas, tak scale.',
+                betul: 'AWS Firewall Manager — set satu WAF policy di peringkat Organization, ia auto-apply ke semua ALB merentas semua account DAN auto-cover account/resource baru. Keyword "centrally enforce WAF/firewall rules across all accounts incl. new ones" → Firewall Manager, BUKAN WAF sorang-sorang.',
+              },
+            ],
+            compare: {
+              label: 'Firewall Manager vs WAF vs Shield (siapa buat apa)',
+              headers: ['Service', 'Skop', 'Peranan'],
+              rows: [
+                ['Firewall Manager', 'Seluruh Organization (banyak account)', 'CENTRAL apply/enforce rules + auto-cover baru'],
+                ['AWS WAF', 'Satu resource (ALB/CloudFront/API GW)', 'Tulis rule Layer 7 (SQLi/XSS/rate limit)'],
+                ['Shield Advanced', 'Resource tertentu', 'DDoS protection + 24/7 DRT + cost protection'],
+              ],
+              takeaway: 'Firewall Manager = lapisan PENGURUSAN di atas WAF/Shield/SG/Network Firewall — sebar & enforce merentas Organization. WAF/Shield = enjin sebenar pada satu resource. Keyword "central/across all accounts + auto new accounts" → Firewall Manager; "rule for this one ALB" → WAF.',
+            },
+            mermaid: {
+              label: 'Firewall Manager sebar policy ke semua account',
+              source: `flowchart TD
+  FM["🎛️ AWS Firewall Manager<br/>(set policy SEKALI)"] --> A1["Account 1<br/>ALB + WAF rule ✅"]
+  FM --> A2["Account 2<br/>ALB + WAF rule ✅"]
+  FM --> A3["Account 3<br/>ALB + WAF rule ✅"]
+  FM -.->|"auto-cover"| NEW["🆕 Account baru<br/>auto patuh ✅"]`,
+              caption: 'Macam pihak pengurusan pusat hantar SOP keselamatan yang sama ke semua cawangan — cawangan baru buka, terus dapat SOP. INGAT exam: "enforce consistent firewall/WAF rules across ALL accounts in the org, including future ones" → Firewall Manager (perlu Organizations + Config dulu).',
+            },
+            tips: [
+              'Prasyarat: AWS Organizations + AWS Config mesti enabled dulu sebelum guna Firewall Manager',
+              'Boleh urus: AWS WAF, Shield Advanced, VPC Security Groups (audit + baseline), AWS Network Firewall, Route 53 Resolver DNS Firewall',
+              'Auto-remediation: kalau ada resource tak patuh policy (cth ALB tanpa WAF), Firewall Manager boleh auto-apply rule yang betul',
+              'Set satu account sebagai Firewall Manager administrator account dalam Organization',
+              'PRICING: $100/bulan per policy (per region) + kos underlying (WAF Web ACL, Shield Advanced, dll)',
+              'Exam discriminator: "centrally configure & manage firewall rules across the entire Organization" / "ensure new accounts automatically comply" → Firewall Manager. Satu resource je → WAF/SG terus',
+            ],
+            docs: [
+              { label: 'AWS Firewall Manager', url: 'https://docs.aws.amazon.com/waf/latest/developerguide/fms-chapter.html' },
+            ],
+            keywords: ['Firewall Manager', 'central firewall', 'across accounts', 'Organization wide', 'WAF policy', 'Shield Advanced', 'security group policy', 'Network Firewall policy', 'DNS Firewall', 'auto enforce', 'compliance', 'new accounts', 'pricing'],
           },
           {
             shortName: 'Penetration Testing',
