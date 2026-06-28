@@ -6355,8 +6355,13 @@ export const domains: DomainData[] = [
               'Keyword migrasi: "migrate MongoDB"→DocumentDB, "migrate Cassandra"→Keyspaces, "migrate Kafka"→MSK (streaming, bukan DB).',
               'Cache: ElastiCache = cache depan SEBARANG DB (Redis/Memcached). DAX = cache KHUSUS DynamoDB sahaja.',
               'Graph (mutual friends, fraud rings, recommendation) → Neptune. Bukan DynamoDB, bukan RDS.',
+              'PRICING discriminator (model bil): DynamoDB & Keyspaces = serverless pay-per-request (boleh turun $0 bila idle). RDS/Aurora/DocumentDB/Neptune = instance-based (bayar/jam walau idle; Aurora & Neptune ada pilihan Serverless). "Spiky / idle selalu / tak nak urus kapasiti" condong serverless; "beban stabil 24/7" condong instance provisioned.',
             ],
-            keywords: ['purpose-built database', 'OLTP vs OLAP', 'relational', 'NoSQL', 'key-value', 'document', 'graph', 'wide-column', 'time-series', 'database selection', 'which database'],
+            docs: [
+              { label: 'Choosing an AWS database service', url: 'https://docs.aws.amazon.com/decision-guides/latest/databases-on-aws-how-to-choose/databases-on-aws-how-to-choose.html' },
+              { label: 'AWS purpose-built databases', url: 'https://docs.aws.amazon.com/whitepapers/latest/aws-overview/database.html' },
+            ],
+            keywords: ['purpose-built database', 'OLTP vs OLAP', 'relational', 'NoSQL', 'key-value', 'document', 'graph', 'wide-column', 'time-series', 'database selection', 'which database', 'serverless vs instance', 'pricing'],
           },
           {
             shortName: 'DocumentDB',
@@ -6368,7 +6373,41 @@ export const domains: DomainData[] = [
             sifir: ["DocumentDB = managed document DB, MongoDB-compatible (API/driver sama).", "Keyword exam: 'migrate MongoDB' / 'JSON documents' / 'collections' → DocumentDB.", "Storage auto-scale hingga 64TB; data simpan sebagai JSON documents.", "BUKAN DynamoDB (key-value), BUKAN Neptune (graph)."],
             perangkap: [{"soalan": "Syarikat nak migrate aplikasi MongoDB sedia ada ke AWS fully managed tanpa ubah code aplikasi. Service?", "umpan": "DynamoDB — sebab dia NoSQL managed AWS, nampak macam pengganti semula jadi.", "betul": "DocumentDB — keyword 'MongoDB-compatible / migrate MongoDB tanpa ubah code' = DocumentDB. DynamoDB key-value, API berbeza, app MongoDB kena tulis semula."}],
             scenario: '"Migrate MongoDB to AWS managed service" → DocumentDB. NOT Neptune (graph). NOT DynamoDB (key-value). DocumentDB = DOCUMENT/MONGODB. Keywords: JSON, semi-structured data, MongoDB compatible, collections.',
-            keywords: ['MongoDB compatible', 'document store', 'JSON', 'collections', 'NoSQL', 'MongoDB migration'],
+            detailsLabel: 'Anatomy DocumentDB',
+            storageDetails: 'Cluster → satu primary instance (read+write) + sampai 15 replica (read-only) merentas AZ untuk HA.\nCompute & storage BERPISAH → instance handle query, storage layer auto-grow 10GB → 64TB sendiri (kau tak provision disk).\nStorage replicate 6 salinan / 3 AZ (sama macam Aurora) → durable + failover auto.\nDocuments (BSON/JSON) simpan dalam collections; sambung guna MongoDB driver/API (v3.6 / 4.0 / 5.0 compatible).\nBackup continuous ke S3 + point-in-time recovery (PITR).',
+            compare: {
+              label: 'DocumentDB vs DynamoDB vs MongoDB-on-EC2',
+              headers: ['', 'DocumentDB', 'DynamoDB', 'MongoDB atas EC2'],
+              rows: [
+                ['Model data', 'Document (JSON/BSON)', 'Key-value / document', 'Document (JSON/BSON)'],
+                ['API', 'MongoDB-compatible', 'DynamoDB API (sendiri)', 'MongoDB tulen (native)'],
+                ['Urus server?', 'Managed (AWS jaga)', 'Serverless penuh', 'Kau urus semua (patch, scale, backup)'],
+                ['Scaling', 'Tambah replica + storage auto 64TB', 'Auto, tanpa had', 'Manual / sharding sendiri'],
+                ['Bila pilih', '"Migrate MongoDB", perlu MongoDB API', 'Key-value laju, serverless, spiky', 'Perlu versi/feature MongoDB terkini yg DocumentDB belum sokong'],
+              ],
+              takeaway: 'Keyword "MongoDB-compatible / migrate MongoDB tanpa ubah code" → DocumentDB. "Key-value serverless ms latency" → DynamoDB (API lain, app MongoDB kena tulis semula). "Perlu MongoDB versi terkini / feature DocumentDB tak ada" → MongoDB atas EC2 / Atlas. DocumentDB = managed MongoDB-compatible, BUKAN MongoDB tulen 100%.',
+            },
+            mermaid: {
+              label: 'Analogi — katering vs masak sendiri',
+              source: `flowchart TD
+  A["App MongoDB sedia ada<br/>(dah pandai cakap bahasa MongoDB)"] --> B{Nak urus server sendiri?}
+  B -->|"Tak nak pening patch/backup/scale"| C["🍱 DocumentDB<br/>(katering — AWS masak &amp; jaga,<br/>kau makan je guna driver sama)"]
+  B -->|"Nak kawalan penuh / versi terkini"| D["🍳 MongoDB atas EC2<br/>(masak sendiri — bebas tapi<br/>kau cuci pinggan: patch, scale, backup)"]
+  C --> E["App sambung guna MongoDB driver<br/>tanpa tulis semula code"]`,
+              caption: 'Analogi: app MongoDB kau dah pandai cakap "bahasa MongoDB". DocumentDB = katering — AWS yang masak & jaga dapur (patch, backup, scale, HA), kau makan guna pinggan sama (driver MongoDB). MongoDB atas EC2 = masak sendiri: bebas penuh tapi cuci pinggan sendiri. INGAT exam: "migrate MongoDB, jangan urus server" → DocumentDB.',
+            },
+            tips: [
+              'DocumentDB = MongoDB-COMPATIBLE, bukan MongoDB tulen. Sokong subset MongoDB API (v3.6/4.0/5.0). Kalau soalan tekankan "perlu feature MongoDB terkini yang DocumentDB tak sokong" → MongoDB atas EC2/Atlas.',
+              'Compute & storage berpisah: storage auto-scale 10GB→64TB, 6 copies/3 AZ (macam Aurora). Tambah read replica untuk offload read.',
+              'PRICING: instance-based (BUKAN serverless macam DynamoDB). Instance db.t3.medium ~$0.078/hr, db.r6g.large ~$0.226/hr (us-east-1). Storage $0.10/GB-bulan. I/O $0.20 per 1 juta request. Backup $0.021/GB-bulan. Ada pilihan I/O-Optimized (storage mahal sikit, I/O free) untuk workload baca/tulis tinggi.',
+              'PRICING trap: DocumentDB takde free tier kekal — ada 30-hari free trial (db.t3.medium, 750 jam). Sebab instance-based, idle pun masih bayar instance/jam — beza dengan DynamoDB on-demand (bayar bila guna je).',
+              'Jangan keliru: DocumentDB = document. Neptune = graph. Keyspaces = wide-column. DynamoDB = key-value. Semua NoSQL tapi shape data lain.',
+            ],
+            docs: [
+              { label: 'What is Amazon DocumentDB', url: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/what-is.html' },
+              { label: 'DocumentDB MongoDB compatibility', url: 'https://docs.aws.amazon.com/documentdb/latest/developerguide/compatibility.html' },
+            ],
+            keywords: ['MongoDB compatible', 'document store', 'JSON', 'BSON', 'collections', 'NoSQL', 'MongoDB migration', 'DocumentDB pricing', 'pricing', '64TB', 'I/O-Optimized'],
           },
           {
             shortName: 'Neptune',
@@ -6380,7 +6419,53 @@ export const domains: DomainData[] = [
             sifir: ["Neptune = managed graph DB — optimize traverse RELATIONSHIP.", "Keyword: social network / fraud detection / recommendation / knowledge graph / connected data.", "Support Gremlin (property graph) + SPARQL (RDF).", "BUKAN DynamoDB (key-value), BUKAN RDS (tabular JOIN lambat untuk deep relationship)."],
             perangkap: [{"soalan": "Platform perlu detect fraud ring dengan cari pattern dalam transaksi yang saling berhubung berlapis-lapis. Database?", "umpan": "RDS — sebab relational boleh JOIN table transaksi, nampak boleh trace hubungan.", "betul": "Neptune — keyword 'fraud ring / relationship pattern / connected transactions' = graph = Neptune. RDS JOIN berlapis-lapis jadi terlalu lambat untuk deep relationship traversal."}],
             scenario: '"Social network: cari semua mutual friends antara dua users" → Neptune (graph query efficient). "Fraud detection: cari pattern dalam linked transactions" → Neptune. Bukan DynamoDB (key-value) atau RDS (relational tabular). Keywords: graph, relationships, connected data.',
-            keywords: ['graph database', 'social network', 'fraud detection', 'Gremlin', 'SPARQL', 'relationships', 'knowledge graph'],
+            detailsLabel: 'Anatomy Neptune',
+            storageDetails: 'Data simpan sebagai nodes (benda) + edges (hubungan) + properties → bukan rows/columns. Query = "ikut benang hubungan", bukan JOIN table.\nCluster → 1 primary (write) + sampai 15 read replica merentas AZ; storage auto-grow ke 64TB, 6 copies / 3 AZ (macam Aurora).\nDua model query → Property Graph (guna Gremlin / openCypher) ATAU RDF (guna SPARQL). Pilih ikut data model app.\nNeptune Serverless → auto-scale kapasiti ikut NCU (Neptune Capacity Units) untuk beban naik-turun.',
+            compare: [
+              {
+                label: 'Gremlin vs SPARQL vs openCypher (dalam Neptune)',
+                headers: ['Bahasa query', 'Model data', 'Guna bila / keyword'],
+                rows: [
+                  ['Gremlin', 'Property Graph', 'Traversal "ikut benang" (TinkerPop). Default ramai social/fraud app.'],
+                  ['openCypher', 'Property Graph', 'Sintaks pattern-match (asal Neo4j). Senang baca, migrate dari Neo4j.'],
+                  ['SPARQL', 'RDF (triple subject-predicate-object)', 'Knowledge graph, linked open data, standard W3C.'],
+                ],
+                takeaway: 'Gremlin & openCypher = Property Graph (node+edge ada property). SPARQL = RDF (triples). Exam jarang paksa pilih bahasa — cukup tau Neptune sokong KEDUA model (property graph + RDF). Keyword "RDF / triple / SPARQL" pun masih → Neptune.',
+              },
+              {
+                label: 'Neptune vs RDS-JOIN vs DynamoDB untuk data berhubung',
+                headers: ['', 'Neptune', 'RDS (relational)', 'DynamoDB'],
+                rows: [
+                  ['Model', 'Graph (node + edge)', 'Table + foreign key', 'Key-value / document'],
+                  ['Deep relationship (5+ lapisan)', 'Laju — memang dibina untuk traverse', 'Lambat — JOIN bersarang makin dalam makin teruk', 'Teruk — kena banyak query / scan'],
+                  ['Soalan "mutual friends / fraud ring / recommendation"', '✅ jawapan', '❌ umpan', '❌ umpan'],
+                  ['Bila pilih', 'Hubungan ITU sendiri yang penting', 'Data tabular, JOIN cetek, transaksi', 'Lookup laju ikut key, tanpa traverse'],
+                ],
+                takeaway: 'Keyword "relationship / connected / mutual friends / fraud ring / recommendation / knowledge graph" → Neptune. RDS boleh JOIN tapi deep traversal jadi terlalu lambat (umpan paling biasa). DynamoDB hebat lookup-by-key, teruk untuk follow hubungan.',
+              },
+            ],
+            mermaid: {
+              label: 'Analogi — siasatan "siapa kenal siapa"',
+              source: `flowchart TD
+  Q["Soalan: cari SAMBUNGAN antara benda<br/>(kawan-kawan, transaksi, cadangan)?"] --> T{Hubungan itu sendiri penting?}
+  T -->|"Ya — ikut benang berlapis-lapis"| N["🕸️ Neptune (graph)<br/>papan siasatan benang merah:<br/>node = orang, edge = 'kenal'"]
+  T -->|"Tak — lookup ikut key je"| D["DynamoDB (key-value)"]
+  T -->|"Data tabular, JOIN cetek"| R["RDS (relational)"]
+  N --> E["'Cari mutual friends' / 'fraud ring'<br/>= ikut benang 3-5 lapisan, laju"]`,
+              caption: 'Analogi: papan siasatan detektif dengan benang merah sambung gambar suspek — "siapa kenal siapa, siapa transaksi dengan siapa". Itu Neptune: node = orang/benda, edge = hubungan, query = ikut benang berlapis-lapis. Kalau kau cuba buat papan ni dengan table RDS (JOIN berlapis) ia jadi sangat lambat. INGAT exam: "mutual friends / fraud ring / recommendation / connected data" → Neptune.',
+            },
+            tips: [
+              'Keyword graph yang exam pakai: mutual friends, social network, fraud ring / fraud detection, recommendation engine, knowledge graph, "highly connected data", relationship traversal → semua Neptune.',
+              'Neptune sokong DUA model: Property Graph (Gremlin / openCypher) + RDF (SPARQL). Nampak "RDF" atau "SPARQL" jangan terkejut — masih Neptune.',
+              'Umpan paling biasa: RDS (boleh JOIN) atau DynamoDB (NoSQL default). Discriminator = "hubungan dalam / berlapis". RDS JOIN bersarang = lambat; DynamoDB tak boleh traverse. Hubungan dalam → Neptune.',
+              'PRICING: instance-based. db.t3.medium ~$0.0832/hr (dev), db.r5.large ~$0.348/hr (prod) us-east-1. Storage $0.10/GB-bulan, I/O $0.20 per 1 juta request, backup $0.021/GB-bulan. Neptune Serverless ~$0.1608 per NCU-jam (auto-scale untuk beban naik-turun). Takde free tier.',
+              'PRICING discriminator: beban graph stabil → instance provisioned (murah/jam). Beban naik-turun / spiky / dev → Neptune Serverless (bayar ikut NCU, tak idle-charge sebanyak instance penuh).',
+            ],
+            docs: [
+              { label: 'What is Amazon Neptune', url: 'https://docs.aws.amazon.com/neptune/latest/userguide/intro.html' },
+              { label: 'Neptune graph query languages', url: 'https://docs.aws.amazon.com/neptune/latest/userguide/access-graph.html' },
+            ],
+            keywords: ['graph database', 'social network', 'fraud detection', 'fraud ring', 'recommendation engine', 'Gremlin', 'SPARQL', 'openCypher', 'property graph', 'RDF', 'relationships', 'knowledge graph', 'connected data', 'Neptune Serverless', 'NCU', 'pricing'],
           },
           {
             shortName: 'Keyspaces',
@@ -6392,7 +6477,42 @@ export const domains: DomainData[] = [
             sifir: ["Keyspaces = managed serverless Cassandra-compatible DB, guna CQL.", "Keyword: 'migrate Cassandra' / CQL / wide-column / high write throughput / IoT telemetry.", "Serverless — auto-scale, pay-per-request (atau provisioned).", "Wide-column model (bukan key-value DynamoDB, bukan document DocumentDB)."],
             perangkap: [{"soalan": "Pasukan nak migrate Apache Cassandra workload ke AWS fully managed tanpa urus node/cluster, kekal guna CQL. Service?", "umpan": "DynamoDB — sebab serverless NoSQL AWS, nampak macam pengganti Cassandra.", "betul": "Amazon Keyspaces — keyword 'Cassandra / CQL / wide-column' = Keyspaces. DynamoDB tak guna CQL & bukan wide-column, app Cassandra kena tulis semula."}],
             scenario: '"Migrate Apache Cassandra to fully managed AWS service" → Amazon Keyspaces. Same CQL queries, no server management. Atau IoT telemetry data yang perlu high write throughput. Keywords: Cassandra, CQL, wide column.',
-            keywords: ['Cassandra compatible', 'CQL', 'wide column', 'IoT telemetry', 'time-series', 'high write throughput'],
+            detailsLabel: 'Anatomy Keyspaces',
+            storageDetails: 'Keyspace → macam "database" dalam Cassandra; dalam dia ada tables (wide-column). Akses guna CQL (Cassandra Query Language) — sama macam Cassandra tulen.\nServerless penuh → takde node/cluster nak urus. AWS auto-scale throughput naik-turun ikut traffic.\nData replicate 3 salinan merentas AZ automatik → durable, HA.\nDua mode kapasiti → On-Demand (bayar per request, untuk traffic tak boleh agak) atau Provisioned (set RCU/WCU, untuk traffic stabil — lebih murah).',
+            compare: {
+              label: 'Keyspaces vs DynamoDB vs Cassandra-on-EC2',
+              headers: ['', 'Keyspaces', 'DynamoDB', 'Cassandra atas EC2'],
+              rows: [
+                ['Model data', 'Wide-column', 'Key-value / document', 'Wide-column'],
+                ['Query language', 'CQL (Cassandra)', 'DynamoDB API (sendiri)', 'CQL (Cassandra tulen)'],
+                ['Urus server?', 'Serverless (AWS jaga)', 'Serverless penuh', 'Kau urus node, replication, tuning'],
+                ['Migrate app Cassandra?', 'Terus — CQL sama', 'Kena tulis semula (API lain)', 'Lift-and-shift, tapi kau jaga'],
+                ['Bila pilih', '"Migrate Cassandra" tanpa urus cluster', 'NoSQL baru, tak terikat Cassandra', 'Perlu kawalan penuh / feature Cassandra spesifik'],
+              ],
+              takeaway: 'Keyword "Cassandra / CQL / wide-column" → Keyspaces (serverless, app Cassandra terus sambung). DynamoDB pun serverless NoSQL tapi API lain — app Cassandra kena tulis semula (umpan biasa). "Nak kawalan penuh cluster Cassandra" → Cassandra atas EC2. Keyspaces = managed serverless Cassandra-compatible.',
+            },
+            mermaid: {
+              label: 'Analogi — pindah kedai, kekal resipi',
+              source: `flowchart TD
+  A["App guna Apache Cassandra<br/>(tulis query dalam CQL)"] --> B{Nak masuk AWS, urus cluster sendiri?}
+  B -->|"Tak nak jaga node/replication/tuning"| K["⚡ Amazon Keyspaces<br/>(serverless — AWS jaga dapur,<br/>kau kekal guna CQL sama)"]
+  B -->|"Nak kawalan penuh cluster"| E["Cassandra atas EC2<br/>(kau jaga node, scaling, patch)"]
+  K --> R["App sambung tanpa tukar query<br/>(CQL tak berubah)"]
+  X["DynamoDB?"] -.->|"Umpan: serverless NoSQL juga<br/>TAPI guna API sendiri,<br/>CQL kena tulis semula"| K`,
+              caption: 'Analogi: kau pindah kedai (data center → AWS) tapi nak kekal resipi sama (CQL). Keyspaces = pindah ke dapur baru yang AWS uruskan sepenuhnya, resipi (CQL) tak berubah, app terus jalan. DynamoDB pun serverless NoSQL tapi "resipi" (API) lain — kena tulis semula. INGAT exam: "migrate Cassandra / CQL / wide-column tanpa urus cluster" → Keyspaces.',
+            },
+            tips: [
+              'Discriminator exam: nampak "Cassandra", "CQL", atau "wide-column" → Keyspaces. DynamoDB ialah umpan (serverless NoSQL juga) tapi guna API sendiri, jadi app Cassandra kena re-write — Keyspaces tak.',
+              'Serverless: takde node/cluster. On-Demand mode untuk traffic spiky / tak boleh agak; Provisioned mode (set RCU/WCU) untuk traffic stabil = lebih murah.',
+              'PRICING: serverless, pay-per-request. On-Demand (us-east-1) ~$1.45 per 1 juta WRU (write), ~$0.29 per 1 juta RRU (read). Storage $0.30/GB-bulan. Provisioned mode untuk beban stabil boleh jauh lebih murah dari On-Demand.',
+              'PRICING discriminator: storage Keyspaces $0.30/GB-bulan lebih mahal dari DynamoDB ($0.25/GB-bulan) — tapi exam pilih Keyspaces atas COMPATIBILITY (CQL), bukan kos. Kos jadi penentu hanya bila dua-dua sama-sama boleh.',
+              'Jangan keliru "IoT telemetry / time-series" semestinya Keyspaces — kalau soalan sebut "purpose-built time-series" tulen, jawapan Timestream. Keyspaces hanya bila ada keyword Cassandra/CQL/wide-column.',
+            ],
+            docs: [
+              { label: 'What is Amazon Keyspaces', url: 'https://docs.aws.amazon.com/keyspaces/latest/devguide/what-is-keyspaces.html' },
+              { label: 'Keyspaces read/write capacity modes', url: 'https://docs.aws.amazon.com/keyspaces/latest/devguide/ReadWriteCapacityMode.html' },
+            ],
+            keywords: ['Cassandra compatible', 'CQL', 'wide column', 'IoT telemetry', 'time-series', 'high write throughput', 'serverless', 'on-demand capacity', 'provisioned capacity', 'WRU', 'RRU', 'Keyspaces pricing', 'pricing'],
           },
         ],
       },
