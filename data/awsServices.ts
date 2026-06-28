@@ -3801,7 +3801,7 @@ export const domains: DomainData[] = [
           {
             shortName: 'Storage Gateway',
             fullName: 'AWS Storage Gateway',
-            ingat: '"Jambatan antara on-premises apps dan AWS storage"',
+            ingat: '"Jambatan on-prem ↔ AWS." Mnemonic 4 jenis = FBT: Fail (File GW → S3 atau FSx), Blok (Volume GW, iSCSI), Tape (Tape GW, VTL). Cached vs Stored → "Cached = Cloud dulu (primary S3); Stored = Simpan Sini (primary on-prem)".',
             gunaUntuk: 'Hybrid cloud storage — on-premises apps guna AWS storage secara seamless',
             fungsi: 'EMPAT jenis: S3 File Gateway (NFS/SMB → S3), FSx File Gateway (SMB → Amazon FSx for Windows, ada AD), Volume Gateway (iSCSI block → EBS snapshots, mode Cached vs Stored), Tape Gateway (virtual tape library/VTL → S3 + Glacier). On-premises apps tak perlu tahu depa sebenarnya guna cloud storage — ada local cache untuk akses laju.',
             sebabApa: "Banyak company ada apps lama on-premises yang expect local storage (NFS, SMB, iSCSI, atau tape) — tak boleh tukar code untuk cakap dengan S3 API. Storage Gateway wujud sebagai 'penterjemah' yang duduk on-prem: apps fikir depa guna disk/tape biasa, tapi belakang tabir data masuk S3/Glacier/EBS. Pain yang ia buang: extend storage ke cloud TANPA tukar aplikasi, dan ini ONGOING (bukan one-time macam DataSync).",
