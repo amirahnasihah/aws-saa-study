@@ -5766,32 +5766,51 @@ export const domains: DomainData[] = [
           },
           {
             shortName: 'S3 Storage Classes',
-            fullName: 'S3 Storage Classes — All 7 Tiers with Pricing',
-            ingat: '"7 tingkat storan — makin sejuk makin murah, makin lama nak cairkan"',
+            fullName: 'S3 Storage Classes — 7 Main Tiers + Express One Zone',
+            ingat: '"7 tingkat storan + Express One Zone — makin sejuk makin murah, makin lama nak cairkan"',
             gunaUntuk: 'Pilih S3 class ikut access pattern + retrieval speed + kos (the THE exam storage decision)',
-            fungsi: 'S3 ada 7 storage classes untuk optimize kos ikut access frequency. Semua class ada 11 nines durability (99.999999999%). Beza adalah pada availability, retrieval speed, minimum duration, dan kos.',
+            fungsi: 'S3 ada 7 storage classes utama (+ S3 Express One Zone yang baru) untuk optimize kos ikut access frequency. Semua class ada 11 nines durability (99.999999999%) — yang BEZA = availability, AZ resilience, retrieval speed, minimum duration, dan kos. Faham SATU benda dulu: cara retrieve ada DUA jenis — (1) direct GET (millisecond, ambik terus) untuk Standard, IA, One Zone-IA, Intelligent-Tiering, Express One Zone, dan Glacier INSTANT; (2) RESTORE job (kena "order" dulu, tunggu) untuk Glacier Flexible & Deep Archive. Garis pemisah ni paling kerap exam umpan.',
             sebabApa: "Storage classes wujud sebab bukan semua data sama 'panas' — ada yang access tiap saat, ada yang duduk diam bertahun. Bayar harga Standard untuk semua = membazir. Class bagi kau padankan kos dengan access pattern: panas bayar mahal+laju, sejuk bayar murah+lambat. Inilah jawapan no.1 untuk soalan 'cost optimization' dalam exam.",
-            sifir: ["Semua 7 class = 11 nines durability; beza availability + retrieval + min duration", "One Zone-IA = 20% lebih murah Standard-IA TAPI 1 AZ je (data hilang kalau AZ musnah)", "Standard-IA & One Zone-IA: min 30 hari + retrieval fee per GB", "Intelligent-Tiering: auto-move ikut access, monitoring fee $0.0025/GB (free objek <128KB)", "Glacier Instant = ms retrieval no restore; Flexible/Deep = kena restore job", "Cheapest = Deep Archive $0.00099/GB; default/hot = Standard $0.023/GB"],
-            perangkap: [{"soalan": "Access pattern data baru TAK DIKETAHUI, nak auto-optimize kos tanpa risiko salah pilih. Class?", "umpan": "Standard-IA — anggap 'jimat sikit' selamat, atau set Lifecycle manual.", "betul": "Intelligent-Tiering. Ia auto-pindah antara tiers ikut access sebenar, jadi tak perlu teka. Standard-IA salah kalau data sebenarnya kerap diakses (kena retrieval fee). Keyword: 'unknown/unpredictable access pattern'."}, {"soalan": "Log files re-creatable, infrequent access, nak paling murah untuk infrequent tier. Pilih mana?", "umpan": "Standard-IA — nampak 'infrequent' terus pilih IA standard.", "betul": "One Zone-IA — 20% lebih murah, dan sebab data re-creatable, risiko AZ musnah OK. Keyword: 're-creatable' + 'infrequent' → One Zone-IA."}],
-            detailsLabel: '7 Storage Classes — anatomy',
-            storageDetails: 'S3 Standard → Hot data, access frequent, default untuk most workloads\nS3 Standard-IA → Infrequent access TAPI masih perlu millisecond retrieval (contohnya: disaster recovery backup)\nS3 One Zone-IA → Infrequent access, data dalam 1 AZ sahaja (20% lebih murah dari Standard-IA, risiko AZ musnah)\nS3 Intelligent-Tiering → Auto-pindah object antara tiers ikut access pattern (monitoring fee)\nS3 Glacier Instant Retrieval → Arkib, jarang access, TAPI bila perlu kena millisecond (ms retrieval, tak perlu restore)\nS3 Glacier Flexible Retrieval → Arkib, boleh tunggu minit-jam untuk restore\nS3 Glacier Deep Archive → Paling murah, arkib jangka sangat panjang (compliance 7-10 tahun), retrieve 12-48 jam',
-            compare: {
-              label: 'All 7 S3 Storage Classes — pricing & key facts (us-east-1)',
-              headers: ['Class', 'Storage $/GB-mo', 'Retrieval', 'Min Duration', 'AZ', 'Best untuk'],
-              rows: [
-                ['Standard', '$0.023', 'ms (free)', 'None', 'Multi-AZ (≥3)', 'Hot data, frequent access — default'],
-                ['Standard-IA', '$0.0125', 'ms (retrieval fee)', '30 hari', 'Multi-AZ (≥3)', 'Infrequent access, long-lived data'],
-                ['One Zone-IA', '$0.01', 'ms (retrieval fee)', '30 hari', '1 AZ', 'Infrequent, re-creatable data — cheapest IA'],
-                ['Intelligent-Tiering', '$0.023 (hot tier)', 'ms (auto-tier)', 'None', 'Multi-AZ', 'Unknown/unpredictable access pattern'],
-                ['Glacier Instant', '$0.004', 'ms (no restore!)', '90 hari', 'Multi-AZ', 'Archive, rare access BUT ms needed'],
-                ['Glacier Flexible', '$0.0036', 'min–jam (restore)', '90 hari', 'Multi-AZ', 'Archive, boleh tunggu untuk restore'],
-                ['Deep Archive', '$0.00099', '12–48 jam (restore)', '180 hari', 'Multi-AZ', 'Compliance 7-10 thn, hampir tak pernah access'],
-              ],
-              takeaway: 'Hot data → Standard. Infrequent but ms retrieval → Standard-IA (multi-AZ) atau One Zone-IA (murah, 1 AZ). Unknown pattern → Intelligent-Tiering (auto-move). Archive + ms retrieval → Glacier Instant. Archive + boleh tunggu → Glacier Flexible. Cheapest long-term → Deep Archive.',
-            },
-            mermaid: {
-              label: 'Pilih S3 Storage Class (decision tree)',
-              source: `flowchart TD
+            sifir: ["Semua class = 11 nines durability; beza availability + AZ resilience + retrieval + min duration", "Direct GET (ms): Standard, IA, One Zone-IA, Intelligent-Tiering, Express One Zone, Glacier INSTANT", "RESTORE job (tunggu): Glacier Flexible (min-jam) + Deep Archive (12-48 jam) — BUKAN GET terus", "Glacier Instant vs Standard-IA: kedua ms; beza frekuensi (IA ~bulanan, Glacier IR ~suku tahun)", "One Zone-IA = 20% lebih murah Standard-IA TAPI 1 AZ je (data hilang kalau AZ musnah)", "Intelligent-Tiering: auto-move ikut access, NO retrieval fee, monitoring $0.0025/GB (free objek <128KB)", "Express One Zone = single-digit ms (10x laju Standard) tapi 1 AZ + MAHAL — latency-sensitive je", "Cheapest = Deep Archive $0.00099/GB; default/hot = Standard $0.023/GB"],
+            perangkap: [{"soalan": "Access pattern data baru TAK DIKETAHUI, nak auto-optimize kos tanpa risiko salah pilih. Class?", "umpan": "Standard-IA — anggap 'jimat sikit' selamat, atau set Lifecycle manual.", "betul": "Intelligent-Tiering. Ia auto-pindah antara tiers ikut access sebenar, jadi tak perlu teka. Standard-IA salah kalau data sebenarnya kerap diakses (kena retrieval fee). Keyword: 'unknown/unpredictable access pattern'."}, {"soalan": "Log files re-creatable, infrequent access, nak paling murah untuk infrequent tier. Pilih mana?", "umpan": "Standard-IA — nampak 'infrequent' terus pilih IA standard.", "betul": "One Zone-IA — 20% lebih murah, dan sebab data re-creatable, risiko AZ musnah OK. Keyword: 're-creatable' + 'infrequent' → One Zone-IA."}, {"soalan": "Medical images rarely accessed (sekali sesuku tahun) TAPI bila doktor minta kena dapat dalam millisecond. Standard-IA atau Glacier Instant Retrieval?", "umpan": "Standard-IA — sebab kedua-dua bagi retrieval millisecond, jadi nampak sama je, pilih yang familiar.", "betul": "Glacier Instant Retrieval — kedua-dua memang ms, tapi DISCRIMINATOR = berapa KERAP. Standard-IA = AWS design for ~sebulan sekali; Glacier Instant = ~sesuku tahun sekali (lagi sejuk, storan lagi murah $0.004 vs $0.0125). Keyword: 'rarely accessed' + 'millisecond' → Glacier INSTANT, bukan IA."}, {"soalan": "Data archive perlu diretrieve dalam millisecond bila perlu. Boss pilih Glacier Flexible sebab 'Glacier murah'. Betul ke?", "umpan": "Glacier Flexible — nampak 'archive + murah', dan ingat semua Glacier boleh ambik terus.", "betul": "SALAH — Glacier Flexible & Deep Archive WAJIB buat RESTORE job dulu (min–jam / 12–48 jam), bukan direct GET. Untuk archive + millisecond, satu-satunya pilihan = Glacier INSTANT Retrieval (direct GET ms, no restore). Keyword: 'archive' + 'millisecond' → Glacier Instant; 'restore job' / 'minutes to hours' → Flexible/Deep."}],
+            detailsLabel: 'Storage Classes — anatomy (7 utama + Express One Zone)',
+            storageDetails: 'S3 Standard → Hot data, access frequent, default untuk most workloads (99.99% avail, ≥3 AZ)\nS3 Standard-IA → Infrequent access (~sebulan sekali) TAPI masih perlu millisecond retrieval; multi-AZ (contoh: DR backup)\nS3 One Zone-IA → Infrequent access, data dalam 1 AZ sahaja (20% lebih murah dari Standard-IA, risiko AZ musnah)\nS3 Intelligent-Tiering → Auto-pindah object antara tiers ikut access pattern (no retrieval fee, monitoring fee)\nS3 Express One Zone → BARU: single-digit ms, 10x laju Standard, 1 AZ, untuk latency-sensitive hot data (mahal ~$0.16/GB)\nS3 Glacier Instant Retrieval → Arkib, jarang access (~suku tahun), TAPI bila perlu kena millisecond (direct GET, tak perlu restore)\nS3 Glacier Flexible Retrieval → Arkib (~setahun sekali), WAJIB restore job, tunggu minit-jam\nS3 Glacier Deep Archive → Paling murah, arkib jangka sangat panjang (compliance 7-10 tahun), WAJIB restore job, retrieve 12-48 jam',
+            compare: [
+              {
+                label: 'DISCRIMINATOR: retrieval MECHANISM + availability + AZ (D3 angle — kos all-in di card "S3 Storage Tiers")',
+                headers: ['Class', 'Cara retrieve', 'Availability (designed)', 'AZ', 'Akses (AWS design for)'],
+                rows: [
+                  ['Standard', 'direct GET (ms)', '99.99%', '≥3', '>1×/bulan (hot)'],
+                  ['Standard-IA', 'direct GET (ms)', '99.9%', '≥3', '~1×/bulan'],
+                  ['One Zone-IA', 'direct GET (ms)', '99.5%', '1 AZ', '~1×/bulan, re-creatable'],
+                  ['Intelligent-Tiering', 'direct GET (ms, auto-tier)', '99.9%', '≥3', 'unknown / berubah'],
+                  ['Express One Zone ⚡', 'direct GET (single-digit ms)', '99.95%', '1 AZ', 'hot + latency-sensitive'],
+                  ['Glacier Instant', 'direct GET (ms, NO restore)', '99.9%', '≥3', '~1×/suku tahun'],
+                  ['Glacier Flexible', 'RESTORE job dulu (min–jam)', '99.99% (lepas restore)', '≥3', '~1×/tahun'],
+                  ['Deep Archive', 'RESTORE job dulu (12–48 jam)', '99.99% (lepas restore)', '≥3', 'hampir tak pernah'],
+                ],
+                takeaway: 'Discriminator no.1 = direct GET (ms) vs RESTORE job. Standard / IA / One Zone-IA / Intelligent-Tiering / Express One Zone / Glacier INSTANT = direct GET (millisecond). Glacier FLEXIBLE & Deep Archive = WAJIB restore job dulu, bukan GET terus. Semua 11 nines durability — yang beza availability + AZ resilience (One Zone classes = 1 AZ, hilang kalau AZ musnah).',
+              },
+              {
+                label: 'All S3 Storage Classes — pricing & key facts (us-east-1)',
+                headers: ['Class', 'Storage $/GB-mo', 'Retrieval', 'Min Duration', 'AZ', 'Best untuk'],
+                rows: [
+                  ['Standard', '$0.023', 'ms (free)', 'None', 'Multi-AZ (≥3)', 'Hot data, frequent access — default'],
+                  ['Standard-IA', '$0.0125', 'ms (retrieval fee)', '30 hari', 'Multi-AZ (≥3)', 'Infrequent access, long-lived data'],
+                  ['One Zone-IA', '$0.01', 'ms (retrieval fee)', '30 hari', '1 AZ', 'Infrequent, re-creatable data — cheapest IA'],
+                  ['Intelligent-Tiering', '$0.023 (hot tier)', 'ms (auto-tier)', 'None', 'Multi-AZ', 'Unknown/unpredictable access pattern'],
+                  ['Express One Zone', '~$0.16 (mahal!)', 'single-digit ms', 'None', '1 AZ', 'Latency-sensitive hot data (10x laju Standard)'],
+                  ['Glacier Instant', '$0.004', 'ms (no restore!)', '90 hari', 'Multi-AZ', 'Archive, rare access BUT ms needed'],
+                  ['Glacier Flexible', '$0.0036', 'min–jam (restore)', '90 hari', 'Multi-AZ', 'Archive, boleh tunggu untuk restore'],
+                  ['Deep Archive', '$0.00099', '12–48 jam (restore)', '180 hari', 'Multi-AZ', 'Compliance 7-10 thn, hampir tak pernah access'],
+                ],
+                takeaway: 'Hot data → Standard. Latency-paling-kritikal (single-digit ms) → Express One Zone (mahal, 1 AZ). Infrequent but ms retrieval → Standard-IA (multi-AZ) atau One Zone-IA (murah, 1 AZ). Unknown pattern → Intelligent-Tiering (auto-move). Archive + ms retrieval → Glacier Instant. Archive + boleh tunggu → Glacier Flexible. Cheapest long-term → Deep Archive.',
+              },
+            ],
+            mermaid: [
+              {
+                label: 'Pilih S3 Storage Class (decision tree)',
+                source: `flowchart TD
   A[Data masuk S3] --> B{Access frequency?}
   B -->|Frequent / hot| C[S3 Standard<br/>$0.023/GB · ms retrieval]
   B -->|Infrequent| D{Re-creatable? <br/>Risk of AZ loss OK?}
@@ -5802,8 +5821,25 @@ export const domains: DomainData[] = [
   H -->|Milliseconds, no restore| I[Glacier Instant Retrieval<br/>$0.004/GB · min 90 hari]
   H -->|Minit–jam OK| J[Glacier Flexible Retrieval<br/>$0.0036/GB · min 90 hari]
   H -->|"12–48 jam, paling murah"| K[Deep Archive<br/>$0.00099/GB · min 180 hari]`,
-              caption: 'Cara ingat: makin sejuk makin murah, makin lama nak "cair". Standard = panas (mahal, laju). Deep Archive = beku (murah, retrieve 12-48 jam). IA = sejuk sikit (murah dari Standard, retrieval fee). Intelligent-Tiering = auto thermostat. INGAT exam: One Zone-IA 20% lebih murah dari Standard-IA tapi data hilang kalau AZ musnah — guna untuk re-creatable data sahaja.',
-            },
+                caption: 'Cara ingat: makin sejuk makin murah, makin lama nak "cair". Standard = panas (mahal, laju). Deep Archive = beku (murah, retrieve 12-48 jam). IA = sejuk sikit (murah dari Standard, retrieval fee). Intelligent-Tiering = auto thermostat. INGAT exam: One Zone-IA 20% lebih murah dari Standard-IA tapi data hilang kalau AZ musnah — guna untuk re-creatable data sahaja.',
+              },
+              {
+                label: 'Cara ingat — analogi dapur: peti ais → peti beku → stor sejukbeku',
+                source: `flowchart LR
+  subgraph DAPUR["🍳 Dapur (akses laju, ms)"]
+    S["🥛 Atas meja<br/>S3 Standard<br/>capai bila-bila, mahal"]
+    IA["🧊 Peti ais bawah<br/>Standard-IA / One Zone-IA<br/>jarang buka, bayar 'tol' bila ambik"]
+    GIR["❄️ Peti beku<br/>Glacier Instant<br/>beku tapi capai terus (ms)"]
+  end
+  subgraph GUDANG["🏭 Stor sejukbeku luar (kena 'order' dulu)"]
+    GF["📦 Stor biasa<br/>Glacier Flexible<br/>booking → tunggu min-jam"]
+    DA["🗄️ Stor jauh<br/>Deep Archive<br/>booking lori → tunggu 12-48 jam"]
+  end
+  S --> IA --> GIR
+  GIR -.->|"perlu RESTORE job"| GF -.-> DA`,
+                caption: 'Kaitkan dengan dapur: barang selalu guna letak atas meja (Standard, ambik free bila-bila). Barang jarang → peti ais bawah (IA, tiap kali ambik kena bayar "tol" = retrieval fee). Beku tapi nak segera → peti beku (Glacier Instant, capai terus ms tanpa restore). Barang simpan lama betul → stor sejukbeku luar (Glacier Flexible/Deep Archive) = kena "order/booking" dulu (RESTORE job), tunggu min-jam atau 12-48 jam. INGAT exam: garis pemisah BESAR = Glacier Flexible & Deep Archive WAJIB restore job; semua yang lain (termasuk Glacier Instant) = direct GET ms.',
+              },
+            ],
             scenario: '"Medical images rarely access but need ms retrieval when doctor requests" → Glacier Instant Retrieval (bukan Flexible). "Log files 90-day retention, infrequent access, re-creatable" → One Zone-IA. "Don\'t know access pattern yet" → Intelligent-Tiering. "Compliance records 7 years, petabytes, almost never access" → Deep Archive. "Active web content" → Standard.',
             tips: [
               'Intelligent-Tiering ada monitoring fee ($0.0025/GB/mo) tapi auto-pindah antara tiers → elak tebak access pattern salah. Free untuk objects <128KB (too small to monitor).',
@@ -5814,12 +5850,15 @@ export const domains: DomainData[] = [
               'Min storage duration: delete sebelum tempoh minimum tetap kena bayar baki. Standard = no min. IA = 30 hari. Glacier = 90/90/180 hari.',
               'Semua class ada 11 nines durability — beza adalah pada availability (Standard 99.99%, IA 99.9%, One Zone-IA 99.5%) dan retrieval speed.',
               'Lifecycle Policy: auto-transition ikut umur — Standard → IA (30d) → Glacier Flexible (90d) → Deep Archive (365d). Letak Intelligent-Tiering kalau tak yakin pattern.',
+              'RESTORE job: Glacier Flexible & Deep Archive BUKAN direct GET — kena initiate restore job dulu (Flexible: Expedited 1-5min / Standard 3-5hr / Bulk 5-12hr; Deep Archive: Standard ~12hr / Bulk ~48hr, NO Expedited). Glacier Instant tak perlu restore (GET terus ms).',
+              'S3 Express One Zone (BARU, makin masuk exam 2024+): single-digit ms, up to 10x laju Standard, request cost 50% lebih murah TAPI storan mahal (~$0.16/GB) + 1 AZ je. Trigger: "lowest latency / latency-sensitive / single-digit millisecond". Bukan untuk jimat storan — untuk laju.',
+              'PRICING: storan/GB-mo — Standard $0.023 · Standard-IA $0.0125 · One Zone-IA $0.01 · Express One Zone ~$0.16 · Glacier Instant $0.004 · Flexible $0.0036 · Deep Archive $0.00099 (cheapest). Untuk breakdown KOS penuh (retrieval fee + min-duration + min 128KB billing + break-even rule) tengok card "S3 Storage Tiers" (D4 cost angle).',
             ],
             docs: [
               { label: 'S3 storage classes overview', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-classes.html' },
               { label: 'S3 storage class comparison', url: 'https://aws.amazon.com/s3/storage-classes/' },
             ],
-            keywords: ['S3 Standard', 'Standard-IA', 'One Zone-IA', 'Intelligent-Tiering', 'Glacier Instant Retrieval', 'Glacier Flexible Retrieval', 'Deep Archive', 'pricing', 'storage class', 'retrieval fee', 'min storage duration', 'availability', '11 nines durability', 'lifecycle transition', 'auto-tiering'],
+            keywords: ['S3 Standard', 'Standard-IA', 'One Zone-IA', 'Intelligent-Tiering', 'S3 Express One Zone', 'Glacier Instant Retrieval', 'Glacier Flexible Retrieval', 'Deep Archive', 'pricing', 'storage class', 'retrieval fee', 'min storage duration', 'availability', '11 nines durability', 'lifecycle transition', 'auto-tiering', 'restore job', 'direct GET', 'millisecond retrieval', 'single-digit millisecond', 'latency-sensitive', 'AZ resilience', 'rarely accessed'],
           },
           {
             shortName: 'S3 Lifecycle',
