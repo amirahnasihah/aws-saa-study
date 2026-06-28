@@ -3803,12 +3803,82 @@ export const domains: DomainData[] = [
             fullName: 'AWS Storage Gateway',
             ingat: '"Jambatan antara on-premises apps dan AWS storage"',
             gunaUntuk: 'Hybrid cloud storage — on-premises apps guna AWS storage secara seamless',
-            fungsi: 'Tiga jenis: File Gateway (NFS/SMB → S3), Volume Gateway (iSCSI block storage → EBS snapshots), Tape Gateway (virtual tape library → S3 Glacier). On-premises apps tak perlu tahu depa sebenarnya guna cloud storage.',
+            fungsi: 'EMPAT jenis: S3 File Gateway (NFS/SMB → S3), FSx File Gateway (SMB → Amazon FSx for Windows, ada AD), Volume Gateway (iSCSI block → EBS snapshots, mode Cached vs Stored), Tape Gateway (virtual tape library/VTL → S3 + Glacier). On-premises apps tak perlu tahu depa sebenarnya guna cloud storage — ada local cache untuk akses laju.',
             sebabApa: "Banyak company ada apps lama on-premises yang expect local storage (NFS, SMB, iSCSI, atau tape) — tak boleh tukar code untuk cakap dengan S3 API. Storage Gateway wujud sebagai 'penterjemah' yang duduk on-prem: apps fikir depa guna disk/tape biasa, tapi belakang tabir data masuk S3/Glacier/EBS. Pain yang ia buang: extend storage ke cloud TANPA tukar aplikasi, dan ini ONGOING (bukan one-time macam DataSync).",
-            sifir: ["File Gateway = NFS/SMB → S3 (file access)", "Volume Gateway = iSCSI block → backup ke EBS snapshot (Cached vs Stored mode)", "Tape Gateway = virtual tape library (VTL) → S3 Glacier (ganti physical tape)", "Storage Gateway = ONGOING hybrid access; DataSync = ONE-TIME/scheduled migration", "Volume Cached = data utama di S3, hot data cache on-prem; Stored = data utama on-prem, backup ke S3"],
+            sifir: ["S3 File Gateway = NFS/SMB → S3 (file access). FSx File Gateway = SMB + Active Directory → Amazon FSx for Windows", "Volume Gateway = iSCSI block → backup ke EBS snapshot (Cached vs Stored mode)", "Tape Gateway = virtual tape library (VTL) → S3 Glacier (ganti physical tape)", "Storage Gateway = ONGOING hybrid access; DataSync = ONE-TIME/scheduled migration; Snow = offline bulk", "Volume Cached = data utama di S3, hot data cache on-prem (max 32TB/vol); Stored = data utama on-prem, snapshot ke S3 (max 16TB/vol)", "Keyword: 'low latency to ENTIRE dataset' → Stored; 'minimize on-prem storage / cache hot je' → Cached"],
             perangkap: [{"soalan": "Company nak ganti physical tape backup library dengan cloud tapi backup software lama mereka cuma tahu cakap dengan tape. Pilih apa?", "umpan": "S3 Glacier terus — Glacier murah untuk archive, tapi backup software lama tak tahu cakap S3 API, kena tape interface.", "betul": "Tape Gateway — keyword 'replace physical tape / VTL / legacy backup software' = Tape Gateway (belakang ia simpan ke Glacier)."}, {"soalan": "On-prem apps perlu access S3 secara ONGOING melalui NFS mount tanpa tukar code. Pilih apa?", "umpan": "AWS DataSync — DataSync pindah file ke S3, tapi ia untuk MIGRATION berjadual, bukan mount NFS ongoing untuk app.", "betul": "File Gateway (Storage Gateway) — keyword 'ongoing hybrid access / NFS-SMB mount ke S3' = File Gateway."}],
-            scenario: '"On-premises apps nak access S3 via NFS" → File Gateway. "Replace physical tape library dengan cloud backup" → Tape Gateway. "Ongoing hybrid access" → Storage Gateway. Bukan DataSync (yang untuk one-time migration).',
-            keywords: ['hybrid storage', 'File Gateway', 'Volume Gateway', 'Tape Gateway', 'on-premises', 'NFS', 'SMB', 'iSCSI'],
+            scenario: '"On-premises apps nak access S3 via NFS/SMB" → S3 File Gateway. "Windows file share + Active Directory, low latency" → FSx File Gateway. "Replace physical tape library / legacy backup software (VTL)" → Tape Gateway. "Block volume iSCSI on-prem + backup ke cloud" → Volume Gateway. "Low latency akses SELURUH dataset" → Stored volume; "jimat storage on-prem, cache hot je" → Cached volume. "Ongoing hybrid access" → Storage Gateway (BUKAN DataSync = one-time migration, BUKAN Snow = offline bulk).',
+            detailsLabel: 'Storage Gateway — 4 jenis (protokol on-prem → backend AWS)',
+            storageDetails: 'S3 File Gateway → mount NFS/SMB on-prem, file disimpan sebagai object dalam S3 (boleh lifecycle ke Glacier). Local cache untuk akses laju\nFSx File Gateway → mount SMB on-prem dengan Active Directory, backend Amazon FSx for Windows File Server. Untuk Windows file share low-latency\nVolume Gateway → expose iSCSI block volume ke server on-prem. Backup point-in-time = EBS snapshot dalam S3. Dua mode: Cached vs Stored\nTape Gateway → virtual tape library (VTL) — backup software lama tulis "tape", sebenarnya masuk S3 lepas tu arkib ke Glacier / Deep Archive\nLocal cache / upload buffer → semua gateway ada disk tempatan untuk cache hot data + buffer sebelum hantar ke AWS (akses latency rendah)',
+            mermaid: [
+              {
+                label: 'Anatomi — gateway jadi jambatan on-prem ↔ AWS storage',
+                source: `flowchart LR
+  subgraph ONPREM["🏢 On-premises"]
+    APP["💻 Apps lama<br/>(expect NFS/SMB/iSCSI/tape)"]
+    GW["🌉 Storage Gateway appliance<br/>(VM / hardware / EC2)<br/>+ local cache & upload buffer"]
+    APP --> GW
+  end
+  GW -->|"NFS/SMB"| S3["🪣 S3 (S3 File GW)<br/>→ lifecycle Glacier"]
+  GW -->|"SMB + AD"| FSX["🪟 Amazon FSx for Windows<br/>(FSx File GW)"]
+  GW -->|"iSCSI block"| EBS["💽 EBS snapshots<br/>(Volume GW)"]
+  GW -->|"VTL tape"| TAPE["📼 S3 + Glacier/Deep Archive<br/>(Tape GW)"]`,
+                caption: 'Gateway = penterjemah on-prem: apps fikir depa guna disk/tape biasa, belakang tabir data masuk AWS. Local cache bagi akses latency rendah. INGAT exam: NFS/SMB→S3 = S3 File GW · SMB+AD→FSx Windows = FSx File GW · iSCSI block = Volume GW · ganti tape/VTL = Tape GW. Storage Gateway = akses HYBRID berterusan, bukan migration one-time (itu DataSync) atau offline bulk (Snow).',
+              },
+              {
+                label: 'Pilih gateway type — decision tree',
+                source: `flowchart TD
+  Q["On-prem app perlu akses AWS storage berterusan?"] --> T{"Jenis akses?"}
+  T -->|"File (NFS/SMB)"| F{"Windows + Active Directory?"}
+  F -->|"Ya"| FSXG["🪟 FSx File Gateway"]
+  F -->|"Tidak / generik → S3"| S3G["🪣 S3 File Gateway"]
+  T -->|"Block (iSCSI)"| V{"Perlu low latency ke SELURUH dataset?"}
+  V -->|"Ya — semua data local"| STORED["💽 Volume GW — Stored<br/>(primary on-prem, snapshot ke S3)"]
+  V -->|"Tidak — jimat ruang, cache hot je"| CACHED["💽 Volume GW — Cached<br/>(primary di S3)"]
+  T -->|"Tape / VTL (backup software lama)"| TG["📼 Tape Gateway"]`,
+                caption: 'Tanya jenis akses dulu. File → FSx File GW (Windows/AD) atau S3 File GW (generik). Block iSCSI → Stored (low-latency seluruh dataset, primary local) atau Cached (jimat on-prem, primary di S3). Tape/VTL → Tape Gateway. INGAT exam: "Windows file share + AD" = FSx File GW; "low latency to entire dataset" = Stored volume.',
+              },
+            ],
+            compare: [
+              {
+                label: '4 jenis Storage Gateway — pilih ikut protokol & backend',
+                headers: ['Type', 'Protokol on-prem', 'Backend AWS', 'Guna bila (keyword)'],
+                rows: [
+                  ['S3 File Gateway', 'NFS / SMB', 'S3 (+ lifecycle Glacier)', 'File share on-prem → object S3, ongoing'],
+                  ['FSx File Gateway', 'SMB', 'Amazon FSx for Windows', 'Windows file share + Active Directory, low-latency'],
+                  ['Volume Gateway', 'iSCSI (block)', 'EBS snapshots dalam S3', 'Block volume on-prem + backup ke cloud'],
+                  ['Tape Gateway', 'iSCSI VTL (tape)', 'S3 + Glacier/Deep Archive', 'Ganti physical tape / legacy backup software'],
+                ],
+                takeaway: 'File NFS/SMB → S3 File GW. Windows+AD → FSx File GW. Block iSCSI → Volume GW. Tape/VTL → Tape GW. Semua ada local cache untuk latency rendah. Storage Gateway = hybrid ONGOING; DataSync = migration; Snow = offline bulk.',
+              },
+              {
+                label: 'Volume Gateway: Cached vs Stored (jangan keliru)',
+                headers: ['Aspect', 'Cached volume', 'Stored volume'],
+                rows: [
+                  ['Data utama (primary)', '🪣 S3 (cloud)', '💽 On-prem (local disk)'],
+                  ['Cache on-prem', 'Hot data je', 'Semua data dah local'],
+                  ['Backup ke S3', 'Primary memang di S3', 'Async EBS snapshot (point-in-time)'],
+                  ['Max saiz / volume', '32 TB (max 1 PB/gateway)', '16 TB (max 512 TB/gateway)'],
+                  ['Guna bila', 'Jimat storage on-prem, dataset besar', 'Low-latency akses SELURUH dataset + DR backup'],
+                ],
+                takeaway: 'Soalan kunci: "primary data DEKAT MANA?" Cached = primary di S3 (on-prem cache hot je → jimat ruang). Stored = primary on-prem (akses penuh latency rendah), snapshot ke S3 untuk DR. Keyword "low latency to ENTIRE dataset" → Stored; "minimize on-prem storage / cache only hot data" → Cached.',
+              },
+            ],
+            tips: [
+              'S3 File Gateway vs FSx File Gateway: dua-dua file, tapi S3 File GW = generik NFS/SMB → object S3 (boleh lifecycle ke Glacier); FSx File GW = khusus SMB + Active Directory → Amazon FSx for Windows (native Windows file share, low-latency). Keyword "Windows / SMB / Active Directory / NTFS" → FSx File Gateway',
+              'Volume Gateway Cached: primary data di S3, cache hot data on-prem — max 32TB/volume, sampai 1PB per gateway (32 volume). Guna bila nak jimat ruang on-prem',
+              'Volume Gateway Stored: primary data SEMUA on-prem (low-latency penuh), async snapshot ke S3 sebagai EBS snapshot untuk DR — max 16TB/volume, sampai 512TB per gateway',
+              'Tape Gateway = ganti physical tape library; backup software lama tulis ke "virtual tape", AWS simpan ke S3 lepas tu arkib ke Glacier / Deep Archive. Keyword "replace tape / VTL / legacy backup" → Tape Gateway',
+              'Storage Gateway (ongoing hybrid) vs DataSync (one-time/scheduled migration) vs Snow Family (offline bulk bila network tak praktikal) — exam favourite untuk keliru tiga ni',
+              'PRICING: bayar (1) underlying AWS storage yang diguna pada kadar standard (S3 $0.023/GB-mo, Glacier, EBS snapshot $0.05/GB-mo) + (2) ~$0.01/GB data ditulis ke AWS melalui gateway, capped ~$125/gateway/bulan + (3) request & data transfer-out ikut kadar biasa. Tiada caj untuk gateway VM itu sendiri.',
+              'Exam cost: "cheapest archive backend untuk Tape Gateway" → Glacier Deep Archive ($0.00099/GB-mo). "minimize on-prem storage cost" → Cached volume (primary di S3) atau S3 File Gateway + lifecycle ke Glacier',
+            ],
+            docs: [
+              { label: 'What is Storage Gateway (Volume)', url: 'https://docs.aws.amazon.com/storagegateway/latest/vgw/WhatIsStorageGateway.html' },
+              { label: 'Amazon FSx File Gateway', url: 'https://docs.aws.amazon.com/filegateway/latest/filefsxw/what-is-file-fsxw.html' },
+              { label: 'Storage Gateway pricing', url: 'https://aws.amazon.com/storagegateway/pricing/' },
+            ],
+            keywords: ['hybrid storage', 'S3 File Gateway', 'FSx File Gateway', 'Volume Gateway', 'Tape Gateway', 'cached volume', 'stored volume', 'VTL', 'virtual tape library', 'on-premises', 'NFS', 'SMB', 'iSCSI', 'Active Directory', 'EBS snapshot', 'local cache', 'ongoing hybrid access', 'legacy backup software', 'replace physical tape', 'low latency entire dataset', 'minimize on-prem storage', 'pricing'],
           },
           {
             shortName: 'DataSync',
