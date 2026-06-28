@@ -211,6 +211,20 @@ export default function TriggerWordsPage() {
                 <div className="overflow-x-auto">
                   <MermaidDiagram source={m.mermaid} />
                 </div>
+                {m.rows.length > 0 && (
+                  <table className="w-full mt-3 border-collapse">
+                    <tbody>
+                      {m.rows.map((row) => (
+                        <tr key={row.left + row.right} className="border-t border-aws-border/40 align-top">
+                          <td className="py-1.5 pr-3 font-space-mono text-[0.68rem] leading-snug text-aws-text whitespace-nowrap">
+                            {row.left} <span className={accentText[m.accent]}>{row.rel}</span> {row.right}
+                          </td>
+                          <td className="py-1.5 text-[0.68rem] leading-relaxed text-aws-muted">{row.note}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             ))}
           </div>

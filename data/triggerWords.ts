@@ -572,6 +572,14 @@ export const trapRows: TrapRow[] = [
     fix: 'Resource policy izin source masuk, tapi user/app di source masih perlu IAM policy bagi dia buat action keluar. Dua-dua pintu kena buka.',
   },
   {
+    bait: 'aws:SourceVpc untuk hadkan akses ke satu endpoint je (least privilege)',
+    fix: 'SourceVpc = SELURUH VPC (luas). Untuk least privilege "satu endpoint tertentu" → aws:SourceVpce (ada "e" hujung = VPC Endpoint ID, lebih spesifik).',
+  },
+  {
+    bait: 'cfn-signal / cfn-hup untuk install packages masa EC2 launch',
+    fix: 'Baca metadata + INSTALL masa launch → cfn-init (init = setup). cfn-signal = bagi tahu CFN dah siap; cfn-hup = pantau metadata berubah; cfn-get-metadata = ambil info je.',
+  },
+  {
     bait: 'Spot 100% untuk fault-tolerant + murah',
     fix: 'Kalau semua Spot, AWS boleh reclaim serentak → app down. Guna Mixed: On-Demand baseline + Spot.',
   },

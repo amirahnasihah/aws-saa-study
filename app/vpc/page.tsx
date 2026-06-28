@@ -1138,6 +1138,14 @@ export default function VpcPage() {
                   Boleh attach Security Group. Berbayar tapi support hampir semua services.
                 </p>
               </div>
+              <div className="mt-3 pt-3 border-t border-amber-500/15">
+                <p className="text-[0.78rem] text-aws-text">
+                  <span className="text-c4 font-bold">aws:SourceVpc vs aws:SourceVpce</span> (beza satu huruf, dalam bucket/key policy) —
+                  <span className="text-c4"> Vpc</span> = SELURUH VPC (luas); <span className="text-c4">Vpce</span> = satu VPC Endpoint TERTENTU je
+                  (ada &ldquo;e&rdquo; hujung = endpoint ID). Soalan sebut <strong className="text-aws-text">&ldquo;least privilege / restrict to specific endpoint&rdquo;</strong> → <span className="text-c4">aws:SourceVpce</span>.
+                  Detail ni jarang keluar SAA-C03 — yang wajib cuma &ldquo;private access tanpa internet → VPC Endpoint&rdquo;.
+                </p>
+              </div>
             </div>
             <div className="px-4 py-2 border-t border-aws-border/40">
               <p className="text-[0.68rem] text-aws-muted">
