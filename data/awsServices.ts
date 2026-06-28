@@ -441,6 +441,19 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Full AD dalam cloud / ada trust → Managed Microsoft AD. AD kekal on-prem, AWS cuma proxy auth → AD Connector. Kecil + murah + basic → Simple AD. (User external Google/Facebook → Cognito, bukan Directory Service.)',
             },
+            mermaid: {
+              label: 'Pilih Directory Service mana?',
+              source: `flowchart TD
+  A["Perlu Active Directory untuk workload AWS"] --> B{"User external<br/>(Google/Facebook/app users)?"}
+  B -->|Ya| COG["❌ Bukan Directory Service<br/>→ Cognito User Pools"]
+  B -->|"Tidak — workforce/domain"| C{"Dah ada AD on-prem?"}
+  C -->|"Ya, & data TAK boleh masuk cloud"| ADC["AD Connector<br/>proxy auth ke on-prem, zero data in cloud"]
+  C -->|"Ya, nak full AD dalam AWS + trust"| MAD1["Managed Microsoft AD<br/>+ trust ke on-prem"]
+  C -->|"Tiada on-prem AD"| D{"Perlu FULL AD features?<br/>(GPO, Kerberos penuh, trust, RDS/M365)"}
+  D -->|Ya| MAD2["AWS Managed Microsoft AD"]
+  D -->|"Tak — basic, murah"| SAD["Simple AD<br/>(Samba, no trust)"]`,
+              caption: 'INGAT exam: data AD TAK boleh masuk cloud → AD Connector. Full AD/trust/RDS-M365 → Managed Microsoft AD. Kecil & murah → Simple AD. User external → Cognito (bukan Directory Service).',
+            },
             tips: [
               'AWS Managed Microsoft AD: full Microsoft AD dalam AWS. Untuk apps yang perlukan actual AD features (Group Policy, Kerberos, LDAP). Boleh trust ke on-premises AD',
               'AD Connector: BUKAN AD dalam cloud — ia redirect authentication requests ke on-premises AD. Data tetap on-prem. Untuk existing on-prem AD yang tak nak migrate',
@@ -448,8 +461,13 @@ export const domains: DomainData[] = [
               'IAM Identity Center + AWS Managed Microsoft AD = SSO untuk AWS + SaaS apps dengan full AD features',
               'Exam: "join EC2 to existing on-premises domain, AD stays on-prem" → AD Connector. "Full AD in cloud, migrate off-prem" → AWS Managed Microsoft AD',
               'Exam: "users all WITHIN AWS, need FULL AD features" → AWS Managed Microsoft AD. "users all WITHIN AWS, need BASIC AD features" → Simple AD. "users on-premises, authenticate to Cloud Native apps using existing on-prem directory" → AD Connector. "users are external (Facebook/Google), no AD needed" → Cognito User Pools (bukan Directory Service)',
+              'PRICING: Managed Microsoft AD ~$0.40/jam (Standard) / ~$0.60/jam (Enterprise) — billing per jam, sentiasa ON. AD Connector ~$0.05/jam (Small) — paling murah sebab takde directory dalam cloud. Simple AD ~$0.05/jam (Small). Cost discriminator: dah ada on-prem AD → AD Connector jimat (tak duplicate directory).',
             ],
-            keywords: ['Active Directory', 'Managed Microsoft AD', 'AD Connector', 'Simple AD', 'LDAP', 'Kerberos', 'Group Policy', 'on-premises AD'],
+            docs: [
+              { label: 'AWS Directory Service options', url: 'https://docs.aws.amazon.com/directoryservice/latest/admin-guide/what_is.html' },
+              { label: 'AD Connector', url: 'https://docs.aws.amazon.com/directoryservice/latest/admin-guide/directory_ad_connector.html' },
+            ],
+            keywords: ['Active Directory', 'Managed Microsoft AD', 'AD Connector', 'Simple AD', 'LDAP', 'Kerberos', 'Group Policy', 'on-premises AD', 'pricing'],
           },
           {
             shortName: 'IAM Identity Center',
@@ -1031,14 +1049,42 @@ export const domains: DomainData[] = [
                 betul: 'URI-specific rate-based rule — scope rate limit pada /api/report je. Keyword "throttle specific expensive endpoint" = URI-specific rate-based rule.',
               },
             ],
+            compare: {
+              label: 'WAF — 4 jenis rule (apa block apa)',
+              headers: ['Jenis rule', 'Block apa', 'Keyword exam'],
+              rows: [
+                ['Managed rule groups', 'Known exploits — OWASP Top 10, CVE, bad inputs, Anonymous IP', '"AWS Managed Rules", "OWASP", "common vulnerabilities"'],
+                ['Rate-based rule', 'IP yang lebih threshold req/5min — anti bot/brute-force', '"rate limit", "too many requests from one IP", "brute force"'],
+                ['IP set / geo match', 'Allow/block ikut senarai IP atau negara', '"block country", "allowlist office IP", "geo restriction L7"'],
+                ['String/regex/SQLi/XSS match', 'Custom pattern dalam header/body/URI', '"block specific URI", "inspect request body", "custom rule"'],
+              ],
+              takeaway: 'Managed rule group = senjata default (auto-cover OWASP/CVE). Rate-based = anti-flood satu IP. SQLi/XSS = WAF (BUKAN Shield). Untuk WAF vs Shield vs Network Firewall, tengok card Shield / Network Firewall.',
+            },
+            mermaid: {
+              label: 'Serangan jenis apa? → lapisan perlindungan mana',
+              source: `flowchart TD
+  A["Ada ancaman ke web/network"] --> B{"Jenis serangan?"}
+  B -->|"SQLi / XSS / bad bot<br/>(isi HTTP request)"| WAF["🛡️ AWS WAF<br/>Layer 7, pasang kat CloudFront/ALB/API GW"]
+  B -->|"DDoS flood<br/>(banjir packet/request)"| S{"Skala + perlu DRT?"}
+  B -->|"Filter SEMUA traffic VPC<br/>ikut domain / IDS-IPS"| NF["🧱 Network Firewall<br/>Layer 3-7, Suricata, egress control"]
+  S -->|"Asas, auto, free"| SS["Shield Standard<br/>(auto, L3/4)"]
+  S -->|"Besar + cost protection + DRT"| SA["Shield Advanced<br/>$3k/bln + WAF free"]
+  WAF --> FM["Banyak account?<br/>→ Firewall Manager urus WAF/Shield central"]`,
+              caption: 'INGAT exam: isi HTTP request (SQLi/XSS/bot) → WAF. Banjir trafik (DDoS) → Shield. Traffic VPC-wide ikut domain/egress → Network Firewall. Banyak account nak satu policy → Firewall Manager.',
+            },
             tips: [
               'Rate-based rule: throttle requests dari satu IP yang melebihi threshold',
               'URI-specific rate-based rule → throttle ONLY heavy/expensive endpoints (e.g. /api/compute) sambil biarkan lightweight endpoints unrestricted',
               'Blanket rate-based rule = semua endpoint kena limit (too broad). URI-specific = targeted throttling',
               'IP reputation rule = block known bad IPs. Managed rule groups = block known exploits/CVEs',
               'Exam: "throttle specific API endpoint yang computationally expensive" → URI-specific rate-based rule',
+              'PRICING: WAF = $5/web ACL/bulan + $1/rule/bulan + $0.60/1M requests. Managed rule groups (AWS) free; Marketplace managed rules ada surcharge. Bot Control / Fraud Control = add-on berasingan.',
             ],
-            keywords: ['Layer 7', 'SQL injection', 'XSS', 'rate limiting', 'managed rules', 'ALB', 'CloudFront', 'URI-specific rate-based rule', 'targeted throttling'],
+            docs: [
+              { label: 'How AWS WAF works', url: 'https://docs.aws.amazon.com/waf/latest/developerguide/how-aws-waf-works.html' },
+              { label: 'Rate-based rule statement', url: 'https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based.html' },
+            ],
+            keywords: ['Layer 7', 'SQL injection', 'XSS', 'rate limiting', 'managed rules', 'ALB', 'CloudFront', 'URI-specific rate-based rule', 'targeted throttling', 'web ACL', 'rule groups', 'pricing'],
           },
           {
             shortName: 'AWS Shield',
@@ -1256,6 +1302,9 @@ export const domains: DomainData[] = [
               'Exam: "investigate GuardDuty findings, understand root cause, visualize attack" → Amazon Detective',
               'Bukan Inspector (vulnerability scan). Bukan GuardDuty (active detection). Detective = forensics',
             ],
+            docs: [
+              { label: 'What is Amazon Detective?', url: 'https://docs.aws.amazon.com/detective/latest/userguide/what-is-detective.html' },
+            ],
             keywords: ['security investigation', 'forensics', 'GuardDuty findings', 'root cause', 'behavior graph', 'post-incident'],
           },
           {
@@ -1323,8 +1372,12 @@ export const domains: DomainData[] = [
               'Integrate dengan EventBridge dan Security Hub untuk automated remediation workflow',
               'Exam: "detect PII or sensitive data accidentally uploaded to S3" → Amazon Macie. Bukan GuardDuty (threats), bukan Inspector (vulnerabilities)',
               'Analogi: Macie = anjing pengesan 🐕 di airport — hidu "beg" (S3 objects) cari barang sensitif (PII, passport, credit card). Tapi dia hanya kawal terminal S3 — bukan RDS/EBS.',
+              'PRICING: Macie = $0.10/GB untuk automated sensitive-data discovery (bucket inventory + evaluation murah) + per-GB untuk sensitive-data discovery jobs (scan kandungan). Free 30 hari trial. Cost discriminator: scan kandungan object MAHAL → guna automated sampling dulu, target job hanya bucket berisiko.',
             ],
-            keywords: ['PII detection', 'sensitive data', 'S3', 'ML-based', 'data privacy', 'GDPR', 'data discovery', 'policy findings'],
+            docs: [
+              { label: 'What is Amazon Macie?', url: 'https://docs.aws.amazon.com/macie/latest/user/what-is-macie.html' },
+            ],
+            keywords: ['PII detection', 'sensitive data', 'S3', 'ML-based', 'data privacy', 'GDPR', 'data discovery', 'policy findings', 'pricing'],
           },
           {
             shortName: 'Security Hub',
@@ -1567,6 +1620,10 @@ export const domains: DomainData[] = [
   F -->|Langsung tak nak urus| I[AWS Owned Key<br/>free, tak boleh audit]`,
               caption: 'Dedicated HW + FIPS Level 3 + kawalan eksklusif → CloudHSM. Sign/asymmetric → Asymmetric CMK. Nak custom policy + rotation + audit penuh → Customer Managed Key. Terhad satu service, tak nak customize → AWS Managed Key. Zero management → AWS Owned Key.',
             },
+            docs: [
+              { label: 'AWS KMS concepts', url: 'https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html' },
+              { label: 'Rotating AWS KMS keys', url: 'https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html' },
+            ],
             keywords: ['encryption at rest', 'CMK', 'key rotation', 'SSE-KMS', 'envelope encryption', 'CloudTrail audit', 'asymmetric keys', 'digital signing', 'multi-region keys', 'aws:SourceVpce', 'CloudHSM', 'FIPS 140-2', 'single-tenant', 'custom key store', 'key policy', 'cross-account KMS', 'root of trust', 'cross-account decrypt'],
           },
           {
@@ -1850,8 +1907,13 @@ export const domains: DomainData[] = [
               'Backup mechanism: EBK (Ephemeral Backup Key) encrypts the HSM data; PBK (Persistent Backup Key) encrypts the EBK — encrypted backup stored in S3 in the SAME region as the cluster',
               'Cross-region backup: must explicitly copy the S3 backup to another region — not automatic',
               'Analogi: CloudHSM = peti besi peribadi 🔐 — bank (AWS) bagi bilik khas dedicated, kau pegang kunci sendiri, bank pun tak boleh buka. Lawan KMS = locker awam yang bank uruskan (multi-tenant, AWS managed).',
+              'PRICING: CloudHSM = ~$1.45/jam per HSM instance (sentiasa ON, billing per jam) — JAUH lebih mahal dari KMS ($1/key/bulan + $0.03/10K requests). Untuk HA perlu ≥2 HSM = ~$2.90/jam. Cost discriminator: kalau soalan tak sebut FIPS Level 3 / dedicated / "AWS no access", pilih KMS sebab CloudHSM mahal.',
             ],
-            keywords: ['dedicated HSM', 'FIPS 140-2 Level 3', 'customer control', 'single-tenant', 'hardware security', 'TDE', 'Oracle RDS', 'Transparent Data Encryption', 'EBK', 'PBK', 'backup'],
+            docs: [
+              { label: 'What is AWS CloudHSM?', url: 'https://docs.aws.amazon.com/cloudhsm/latest/userguide/introduction.html' },
+              { label: 'KMS custom key store (backed by CloudHSM)', url: 'https://docs.aws.amazon.com/kms/latest/developerguide/custom-key-store-overview.html' },
+            ],
+            keywords: ['dedicated HSM', 'FIPS 140-2 Level 3', 'customer control', 'single-tenant', 'hardware security', 'TDE', 'Oracle RDS', 'Transparent Data Encryption', 'EBK', 'PBK', 'backup', 'pricing'],
           },
         ],
       },
@@ -6005,6 +6067,7 @@ export const domains: DomainData[] = [
               'NLB = static IP/Elastic IP support. ALB = tiada static IP (guna static IP alias CloudFront/Global Accelerator)',
               'NLB dan ALB BOLEH route cross-VPC via IP targets. CLB TIDAK boleh',
               'NLB preserve client IP address. ALB tidak (guna X-Forwarded-For header)',
+              'PRICING: NLB = $0.0225/jam + $0.006/NLCU-jam — per-unit LEBIH MURAH dari ALB ($0.008/LCU-jam). Cross-zone OFF by default; enable = caj data inter-AZ $0.01/GB. Cost discriminator: "cheapest LB per unit + TCP" → NLB. Untuk ALB vs NLB vs GWLB harga penuh, lihat card ALB.',
             ],
             docs: [
               { label: 'NLB User Guide', url: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html' },
@@ -6345,6 +6408,7 @@ export const domains: DomainData[] = [
               'SNS vs EventBridge: SNS = simple fan-out, high throughput. EventBridge = content-based routing with rules, schema registry, SaaS integration, archive & replay. EventBridge lebih flexible tapi SNS lebih simple untuk basic fan-out',
               'Cross-account SNS: guna SNS topic policy (resource-based) untuk allow other accounts subscribe atau publish. Same pattern as SQS cross-account',
               'Exam: "one event must trigger multiple independent processes" → SNS fan-out. "Route different events to different targets based on content" → EventBridge',
+              'PRICING: SNS = $0.50/1M publishes (Standard) + delivery cost ikut endpoint — SQS/Lambda delivery FREE, HTTP/S $0.60/1M, email $2/100K, SMS ikut negara (mahal). Free tier 1M publishes + 1M SQS/Lambda deliveries/bulan. Cost discriminator: fan-out ke SQS = murah; SMS = paling mahal. (Triad SQS vs SNS vs EventBridge: lihat card SQS.)',
             ],
             docs: [
               { label: 'SNS — fan-out to Amazon SQS queues', url: 'https://docs.aws.amazon.com/sns/latest/dg/sns-sqs-as-subscriber.html' },
@@ -6824,7 +6888,18 @@ export const domains: DomainData[] = [
             sifir: ["Firehose = DELIVERY/loading (no consumer code); Data Streams = real-time PROCESSING (tulis consumer)", "Destinasi: S3, Redshift, OpenSearch, Splunk (managed delivery)", "Buffer ikut size/time sebelum write (near real-time, ada sikit delay)", "Inline transform optional guna Lambda sebelum deliver", "Fully managed, auto-scale — tiada shard nak urus macam Data Streams"],
             perangkap: [{"soalan": "Ingest clickstream data terus ke S3 untuk analytics, tak nak tulis/maintain consumer code. Service?", "umpan": "Kinesis Data Streams — sangka semua streaming mesti Data Streams.", "betul": "Kinesis Data Firehose. Firehose auto-deliver ke S3 tanpa consumer code. Data Streams kena bina consumer sendiri. Keyword: 'load to S3' + 'no consumer code' → Firehose."}, {"soalan": "Real-time fraud detection proses event streaming dengan custom logic + low latency. Firehose?", "umpan": "Firehose dengan Lambda transform — sangka transform = processing.", "betul": "Kinesis Data Streams. Real-time processing + custom consumer logic + sub-second → Data Streams. Firehose ada buffer delay (near real-time). Keyword: 'real-time processing' → Data Streams."}],
             scenario: '"Ingest clickstream data to S3 for analysis" → Kinesis Firehose (automatic, no consumer code). "Real-time fraud detection processing streaming events" → Kinesis Data Streams (more control, write consumer). Ingat perbezaan Streams vs Firehose!',
-            keywords: ['delivery stream', 'S3 delivery', 'Redshift', 'OpenSearch', 'no consumer code', 'buffer', 'transform with Lambda'],
+            tips: [
+              'Buffer hints: size (1-128 MB) ATAU interval (60-900 saat) — mana cukup dulu. Buffer kecil = lebih real-time tapi lebih banyak PUT ke destinasi; buffer besar = lebih jimat tapi lebih lambat',
+              'Inline transform guna Lambda (cth tukar JSON→Parquet untuk Athena). Boleh convert format ke Parquet/ORC tanpa Lambda (built-in)',
+              'Firehose TIADA replay/storage — data deliver lepas tu hilang. Perlu replay / banyak consumer baca aliran sama → Kinesis Data Streams',
+              'PRICING: Firehose = $0.029/GB ingested (per-GB, no shard cost) — bayar ikut data masuk je, tiada caj jam idle. Format conversion + VPC delivery ada caj tambahan. Cost discriminator: tak nak urus shard / bayar bila guna je → Firehose lebih murah dari Data Streams untuk delivery pure.',
+              'Untuk compare penuh Data Streams vs Firehose vs Video Streams + decision tree, lihat card Kinesis (anchor).',
+            ],
+            docs: [
+              { label: 'What is Amazon Data Firehose?', url: 'https://docs.aws.amazon.com/firehose/latest/dev/what-is-this-service.html' },
+              { label: 'Firehose data transformation (Lambda)', url: 'https://docs.aws.amazon.com/firehose/latest/dev/data-transformation.html' },
+            ],
+            keywords: ['delivery stream', 'S3 delivery', 'Redshift', 'OpenSearch', 'no consumer code', 'buffer', 'transform with Lambda', 'Parquet conversion', 'pricing'],
           },
           {
             shortName: 'AppFlow',
@@ -7880,8 +7955,13 @@ export const domains: DomainData[] = [
               'Kurangkan kos Athena: data di-scan = duit. Guna columnar format (Parquet/ORC) + PARTITION data (by date/region) + compress → scan kurang, murah + laju',
               'Serverless analytics pipeline: S3 (store) → Glue (catalog/ETL) → Athena (query) → QuickSight (visualize). Hafal urutan ni',
               'Athena = ad-hoc/interactive SQL pada S3. Redshift = data warehouse dedicated untuk recurring/complex analytics. Redshift Spectrum = Redshift query terus S3',
+              'PRICING: Athena = $5.00 per TB data DI-SCAN (round up 10MB minimum per query). Convert ke Parquet + partition + compress boleh jimat 30-90% sebab byte di-scan turun. DDL (CREATE/ALTER) FREE. Athena Provisioned Capacity (per-DPU) ada untuk workload besar predictable. Cost discriminator: kos ikut byte scan, BUKAN bilangan query — jadi columnar+partition = lever utama.',
             ],
-            keywords: ['serverless SQL', 'S3 queries', 'pay per scan', 'Parquet', 'ORC', 'Glue Catalog', 'log analysis', 'ad-hoc', 'partition', 'columnar', 'QuickSight', 'serverless analytics pattern'],
+            docs: [
+              { label: 'What is Amazon Athena?', url: 'https://docs.aws.amazon.com/athena/latest/ug/what-is.html' },
+              { label: 'Top 10 performance tuning tips for Athena', url: 'https://docs.aws.amazon.com/athena/latest/ug/performance-tuning.html' },
+            ],
+            keywords: ['serverless SQL', 'S3 queries', 'pay per scan', 'Parquet', 'ORC', 'Glue Catalog', 'log analysis', 'ad-hoc', 'partition', 'columnar', 'QuickSight', 'serverless analytics pattern', 'pricing'],
           },
           {
             shortName: 'Glue',
@@ -8679,9 +8759,13 @@ export const domains: DomainData[] = [
               'Budget Actions: auto-respond when threshold exceeded — apply IAM policy, attach SCP, or stop EC2 instances',
               'Budgets alerts: actual OR forecast. Set multiple thresholds (e.g., alert at 80%, 100%, 120%)',
               'Exam: "alert BEFORE overspending" → Budgets. "analyze WHERE money went" → Cost Explorer. "detailed line-item billing data" → Cost and Usage Report (CUR)',
-              'Free tier: 2 budgets free. Additional budgets $0.02/day each',
+              'PRICING: AWS Budgets = 2 budgets PERCUMA per account; lebih = $0.02/hari setiap budget (~$0.60/bulan). Budget Actions free. Cost discriminator: Budgets murah sangat — guna untuk semua threshold alerting. (Compare penuh Cost Explorer vs Budgets vs CUR: lihat card Cost Explorer.)',
             ],
-            keywords: ['budget alerts', 'cost threshold', 'SNS notification', 'usage budget', 'forecast alert', 'before overspend', 'budget actions'],
+            docs: [
+              { label: 'Managing your costs with AWS Budgets', url: 'https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-managing-costs.html' },
+              { label: 'Configuring budget actions', url: 'https://docs.aws.amazon.com/cost-management/latest/userguide/budgets-controls.html' },
+            ],
+            keywords: ['budget alerts', 'cost threshold', 'SNS notification', 'usage budget', 'forecast alert', 'before overspend', 'budget actions', 'pricing'],
           },
           {
             shortName: 'Cost Explorer',
@@ -8915,6 +8999,10 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Discriminator: "unpredictable / changing / unknown access" → Intelligent-Tiering. Kalau pattern dah DIKETAHUI (kerap / jarang / arkib), pilih kelas manual lagi jimat sebab elak monitoring fee.',
             },
+            docs: [
+              { label: 'Amazon S3 Intelligent-Tiering storage class', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html#sc-dynamic-data-access' },
+              { label: 'Managing Intelligent-Tiering archive tiers', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/intelligent-tiering-managing.html' },
+            ],
             keywords: ['auto-tiering', 'unpredictable access', 'no retrieval fees', 'access tiers', 'frequent access', 'infrequent access', 'archive instant access', 'archive access', 'deep archive access', 'monitoring fee', 'changing access pattern', '128KB minimum', 'S3 storage classes', 'pricing'],
           },
         ],
