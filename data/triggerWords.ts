@@ -354,6 +354,8 @@ export const petaModules: PetaModule[] = [
       { left: 'IAM (source)', rel: '+', right: 'Resource policy (dest)', note: 'Cross-account = DUA kunci; set satu belah je → Access Denied.' },
       { left: 'Resource policy', rel: 'vs', right: 'Role + AssumeRole', note: 'Org luar read S3/SQS → resource policy (kemas). Permission kompleks / temp creds / banyak service → Role + STS.' },
       { left: 'IAM Group', rel: 'vs', right: 'IAM Role', note: 'Group = bakul kumpul user (tak boleh login/assume). Role = identiti sementara di-assume (EC2/Lambda/cross-account).' },
+      { left: 'Secrets Manager', rel: 'vs', right: 'SSM Parameter Store', note: 'Secrets Manager = auto-rotate built-in (Lambda), bayar/secret — DB password/API key. Parameter Store = config biasa, Standard FREE, no native rotation.' },
+      { left: 'KMS', rel: 'vs', right: 'CloudHSM', note: 'KMS = multi-tenant managed (FIPS 140-2 L2), AWS urus. CloudHSM = single-tenant dedicated HW (FIPS L3), AWS tak boleh access — bank/regulasi ketat.' },
     ],
   },
   {
@@ -372,6 +374,7 @@ export const petaModules: PetaModule[] = [
     rows: [
       { left: 'VPC', rel: '⊃', right: 'Subnet (public/private)', note: 'VPC = rangkaian sendiri; subnet pecah ikut AZ.' },
       { left: 'Security Group', rel: 'vs', right: 'NACL', note: 'SG = stateful, instance-level, allow je; NACL = stateless, subnet-level, allow + deny.' },
+      { left: 'CloudFront', rel: 'vs', right: 'Global Accelerator', note: 'CloudFront = CDN, cache content (statik/dynamic) di edge. GA = NO cache, 2 static anycast IP, route TCP/UDP via AWS backbone + failover cross-region <30s.' },
     ],
   },
   {
@@ -400,6 +403,7 @@ export const petaModules: PetaModule[] = [
       { left: 'Scale UP (vertical)', rel: 'vs', right: 'Scale OUT (horizontal)', note: 'UP = instance lagi besar (ada had); OUT = tambah instance (ASG) = elastik.' },
       { left: 'On-Demand / Reserved', rel: 'vs', right: 'Spot', note: 'Spot = sampai 90% murah, 2-min notice; Mixed = On-Demand baseline + Spot.' },
       { left: 'EBS (1 AZ)', rel: 'vs', right: 'EFS (multi-AZ)', note: 'EBS = block, 1 instance; EFS = file, share ramai; S3 = object; Instance Store = ephemeral.' },
+      { left: 'Beanstalk', rel: 'vs', right: 'CloudFormation', note: 'Beanstalk = PaaS, deploy APP cepat (opinionated: auto EC2+ALB+ASG). CloudFormation = IaC general untuk SEMUA jenis resource.' },
     ],
   },
   {
