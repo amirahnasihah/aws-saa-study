@@ -5477,7 +5477,7 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Shared file storage for multiple EC2 instances simultaneously',
             fungsi: 'Managed NFS (Network File System) that scales automatically. Multiple EC2 instances across AZs can mount and read/write the same file system at the same time.',
             sebabApa: "EFS wujud sebab EBS hanya boleh attach ke satu EC2 (kecuali Multi-Attach io1/io2 dalam satu AZ), jadi bila banyak EC2 across AZ perlu baca/tulis FAIL yang SAMA serentak (web content, CMS, shared config), EBS tak cukup. EFS = managed NFS yang auto-scale, multi-AZ, boleh di-mount oleh ratusan EC2 sekali gus supaya semua kongsi satu file system tanpa duplicate data.",
-            sifir: ["EFS = managed NFS, shared, multi-AZ, ramai EC2 mount serentak", "Performance mode: General Purpose (latency rendah, default) vs Max I/O (latency LEBIH TINGGI, untuk parallel besar)", "Throughput mode: Bursting (scale ikut saiz) / Provisioned (set MiB/s tetap) / Elastic (auto, recommended)", "Encryption in transit BUKAN default — enable masa mount: mount -o tls (TLS 1.2)", "Mount target connection timeout = check SG inbound TCP 2049 + NACL", "EFS = MOUNT macam folder (network drive pejabat, edit in-place/POSIX); S3 = UPLOAD/DOWNLOAD macam Google Drive — JANGAN keliru", "PRICING: Standard $0.30/GB-mo; One Zone-IA $0.016/GB-mo (cheapest); EFS lebih mahal dari S3 tapi shared"],
+            sifir: ["EFS = managed NFS, shared, multi-AZ, ramai EC2 mount serentak", "4 storage classes: Standard / Standard-IA (multi-AZ ≥3) + One Zone / One Zone-IA (1 AZ je)", "Performance mode: General Purpose (latency rendah, default) vs Max I/O (latency LEBIH TINGGI, untuk parallel besar)", "Throughput mode: Bursting (scale ikut saiz) / Provisioned (set MiB/s tetap) / Elastic (auto, recommended)", "Encryption in transit BUKAN default — enable masa mount: mount -o tls (TLS 1.2)", "Mount target connection timeout = check SG inbound TCP 2049 + NACL", "EFS = MOUNT macam folder (network drive pejabat, edit in-place/POSIX); S3 = UPLOAD/DOWNLOAD macam Google Drive — JANGAN keliru", "PRICING: Standard $0.30 · One Zone $0.16 · Standard-IA $0.016 · One Zone-IA $0.0133/GB-mo (cheapest); EFS lebih mahal dari S3 tapi shared"],
             perangkap: [{"soalan": "20 EC2 across multiple AZ perlu baca/tulis fail web content yang SAMA serentak. Pilih storage?", "umpan": "EBS Multi-Attach (io2) — sebab 'attach ke banyak EC2' nampak padan.", "betul": "EFS — keyword 'shared FILE storage, multi-AZ, ramai EC2 serentak'. EBS Multi-Attach = block storage, max dalam satu AZ & io1/io2 sahaja; EFS = file system NFS multi-AZ sebenar."}, {"soalan": "EFS kecil (25 GB) tapi perlu throughput tinggi konsisten. Apa setting?", "umpan": "Bursting Throughput — sebab ia default, orang biar je.", "betul": "Provisioned (atau Elastic) Throughput — Bursting scale ikut saiz (25 GB = ~1.25 MiB/s baseline je, tak cukup). Keyword 'small file system + high throughput' = Provisioned/Elastic."}, {"soalan": "EC2 cuba mount EFS tapi connection TIMEOUT. Punca paling mungkin?", "umpan": "Salah DNS name file system — tapi DNS failure bagi error lain, bukan timeout.", "betul": "Security Group / NACL block TCP 2049 — keyword 'timeout'. Mount target SG mesti allow inbound TCP 2049 dari CIDR EC2; ini punca timeout, bukan DNS."}, {"soalan": "Syarikat berita perlu storan backup/redundant: low-cost, high-throughput, dikongsi banyak EC2, JARANG diakses kecuali masa recovery, dalam SATU AZ je, dan boleh dijana semula kalau hilang. Kelas EFS mana?", "umpan": "EFS Standard-IA — nampak 'infrequent access' terus pilih IA. SALAH separa: Standard-IA simpan merentas ≥3 AZ, jadi bayar lebih untuk redundansi yang soalan TAK perlu (data re-creatable + 1 AZ je dah cukup).", "betul": "EFS One Zone-IA — keyword 'rarely accessed' (→ IA) + 'single AZ + can be regenerated/re-creatable' (→ One Zone) + 'low-cost' = One Zone-IA, kombinasi PALING MURAH ($0.016/GB · 1 AZ)."}, {"soalan": "App Linux perlu banyak EC2 baca/tulis fail yang SAMA, mount macam folder biasa & edit terus in-place (POSIX). EFS atau S3?", "umpan": "S3 — sebab 'boleh kongsi & ramai akses' nampak macam Google Drive. SALAH: S3 = object, kau UPLOAD/DOWNLOAD guna API, TAK boleh mount & edit in-place macam folder.", "betul": "EFS — keyword 'mount / POSIX / edit fail terus / shared file system'. EFS = folder kongsi yang kau MOUNT (macam network drive pejabat); S3 = Google Drive (upload/download je). Dua-dua boleh kongsi, tapi cara guna beza."}],
             contohGuna: 'Web content serving across 20 EC2 instances, shared config files, content management systems',
             detailsLabel: 'EFS — pecahan component (anatomy)',
@@ -5490,7 +5490,7 @@ export const domains: DomainData[] = [
                 ['Standard', 'Kerap', 'Multi-AZ (≥3)', '$0.30', 'Default, data aktif, perlu tahan AZ outage (HA)'],
                 ['Standard-IA', 'Jarang', 'Multi-AZ (≥3)', '$0.016 (+retrieval)', '"infrequent access" TAPI masih perlu redundansi multi-AZ'],
                 ['One Zone', 'Kerap', '1 AZ je', '$0.16', 'Data aktif tapi re-creatable / dev-test — jimat'],
-                ['One Zone-IA', 'Jarang', '1 AZ je', '🟢 $0.016 (+retrieval)', '🟢 PALING MURAH — "rarely accessed + single AZ + re-creatable"'],
+                ['One Zone-IA', 'Jarang', '1 AZ je', '🟢 $0.0133 (+retrieval)', '🟢 PALING MURAH — "rarely accessed + single AZ + re-creatable"'],
               ],
               takeaway: 'Cuma 2 soalan: (1) kerap ke jarang akses? jarang → IA. (2) perlu tahan AZ outage, atau 1 AZ cukup sebab data boleh dijana semula? 1 AZ cukup → One Zone. Gabung "jarang + 1 AZ + re-creatable + low-cost" = One Zone-IA (paling murah). "kerap + multi-AZ HA" = Standard. Durability semua kelas tinggi; beza = availability (multi-AZ vs 1 AZ) + retrieval fee (IA).',
             },
@@ -5503,7 +5503,7 @@ export const domains: DomainData[] = [
   B -->|"Ya, multi-AZ HA"| S["EFS Standard<br/>$0.30/GB · ≥3 AZ"]
   B -->|"Tak — 1 AZ cukup<br/>(re-creatable)"| OZ["EFS One Zone<br/>$0.16/GB · 1 AZ"]
   C -->|"Ya, multi-AZ HA"| SIA["EFS Standard-IA<br/>$0.016/GB +retrieval · ≥3 AZ"]
-  C -->|"Tak — 1 AZ cukup<br/>(re-creatable)"| OZIA["🟢 EFS One Zone-IA<br/>$0.016/GB · 1 AZ · PALING MURAH"]`,
+  C -->|"Tak — 1 AZ cukup<br/>(re-creatable)"| OZIA["🟢 EFS One Zone-IA<br/>$0.0133/GB · 1 AZ · PALING MURAH"]`,
               caption: 'Dua soalan je: (1) kerap atau jarang akses → jarang pilih IA. (2) perlu multi-AZ atau 1 AZ cukup → kalau data boleh dijana semula, One Zone. INGAT exam: "low-cost + rarely accessed + single AZ + can be regenerated/re-creatable" = EFS One Zone-IA (kombinasi paling murah). "frequently accessed + highly available / multi-AZ" = EFS Standard. "high-throughput + shared banyak EC2" = EFS sememangnya (file storage), throughput pakai Elastic/Provisioned.',
             },
             tips: [
@@ -5517,8 +5517,8 @@ export const domains: DomainData[] = [
               'Connection timeout to EFS mount target = check: (1) SG inbound TCP 2049 from EC2 CIDR, (2) NACL allows TCP 2049. DNS failure → different error (not timeout).',
               'EFS backup: use AWS Backup natively. S3 File Gateway ≠ EFS backup.',
               'Storage classes: Standard (multi-AZ), Standard-IA (infrequent access), One Zone, One Zone-IA (cheapest — data in single AZ).',
-              'PRICING (us-east-1): Standard = $0.30/GB-mo. Standard-IA = $0.016/GB-mo (retrieval fee $0.01/GB). One Zone = $0.16/GB-mo. One Zone-IA = $0.016/GB-mo. Provisioned Throughput = $6.00/provisioned-MB/s-mo. Elastic Throughput = pay per throughput used. Infrequent Access (IA) lifecycle = auto-move to IA for savings.',
-              'Exam: "cheapest EFS class" → One Zone-IA ($0.016/GB). "multi-AZ EFS" → Standard ($0.30/GB). "infrequently accessed EFS data" → Standard-IA or One Zone-IA. EFS is MORE expensive than S3 ($0.023/GB) but cheaper than EBS for shared multi-instance.',
+              'PRICING (us-east-1): Standard = $0.30/GB-mo. One Zone = $0.16/GB-mo. Standard-IA = $0.016/GB-mo (+ retrieval fee). One Zone-IA = $0.0133/GB-mo (+ retrieval fee — cheaper than Standard-IA sebab 1 AZ je). Provisioned Throughput = $6.00/provisioned-MB/s-mo. Elastic Throughput = pay per throughput used. IA lifecycle = auto-move to IA for savings.',
+              'Exam: "cheapest EFS class" → One Zone-IA ($0.0133/GB, cheaper than Standard-IA $0.016). "multi-AZ EFS" → Standard ($0.30/GB). "infrequently accessed EFS data" → Standard-IA (multi-AZ) atau One Zone-IA (1 AZ). EFS is MORE expensive than S3 ($0.023/GB) but cheaper than EBS for shared multi-instance.',
             ],
             docs: [
               { label: 'EFS Performance', url: 'https://docs.aws.amazon.com/efs/latest/ug/performance.html' },
@@ -8739,7 +8739,17 @@ export const domains: DomainData[] = [
               ],
               takeaway: '"Steady 24/7" → RI/Savings Plan. "Flexible across instance types" → Savings Plan. "Interruptible batch" → Spot. "Unpredictable / short-term" → On-Demand. NEVER Spot for critical stateful prod.',
             },
-            keywords: ['no commitment', 'flexible', 'short-term', 'highest cost'],
+            tips: [
+              'PRICING: On-Demand = baseline (paling mahal per jam, takde diskaun). Contoh t3.medium Linux ~$0.0416/jam. Billing per-SECOND untuk Linux (minimum 60 saat); per-HOUR untuk Windows & sesetengah Marketplace AMI. Untuk diskaun → RI / Savings Plans (steady) atau Spot (interruptible).',
+              'Per-second billing (Linux) bermakna kalau instance jalan 90 saat, kau bayar 90 saat je (lepas min 60s) — bagus untuk beban pendek/spiky. Windows dibulatkan ke jam penuh.',
+              'On-Demand = baseline harga yang semua diskaun (RI/SP/Spot) dikira relatif kepadanya. Untuk perbandingan 4 model penuh + decision tree, tengok card "Savings Plans" (anchor EC2 purchasing).',
+              'On-Demand Capacity Reservation (ODCR) = reserve kapasiti dalam satu AZ tanpa komitmen 1-3 tahun (bayar On-Demand rate walaupun tak guna). Beza dengan Zonal RI yang gabung capacity reservation + diskaun. Keyword "guaranteed capacity tanpa long-term commitment" → ODCR.',
+            ],
+            docs: [
+              { label: 'EC2 On-Demand pricing & billing', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-on-demand-instances.html' },
+              { label: 'On-Demand Capacity Reservations', url: 'https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-capacity-reservations.html' },
+            ],
+            keywords: ['no commitment', 'flexible', 'short-term', 'highest cost', 'per-second billing', 'per-hour billing', 'pricing', 'On-Demand Capacity Reservation', 'ODCR', 'guaranteed capacity'],
           },
           {
             shortName: 'Reserved Instances',
