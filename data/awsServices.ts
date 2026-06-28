@@ -259,6 +259,33 @@ export const domains: DomainData[] = [
   PB -.->|"siling, tak boleh lepas"| U`,
                 caption: 'User = staf tetap dengan kad akses sendiri (long-term creds). Group = jabatan — kumpul staf & bagi kebenaran pintu sekali gus (attach policy kat Group). Role = pas pelawat sementara — sesiapa boleh pinjam & auto-luput (temp creds, no hardcode). Policy = senarai pintu mana boleh buka. Permission Boundary = aras tertinggi lif dibenarkan, walau kad kata boleh ke penthouse. INGAT exam: app dalam EC2 = bagi ia "pas pelawat" (Role), JANGAN salin kad staf masuk kod (hardcode access key).',
               },
+              {
+                label: '4 lapisan permission — mana PAGAR (sekat), mana PEMBERI (bagi)',
+                source: `flowchart TD
+  REQ["📨 Request masuk"] --> L1
+  subgraph L1["🚧 PAGAR 1 · SCP (Organizations) — siling SELURUH account/OU"]
+    subgraph L2["🚧 PAGAR 2 · Permission Boundary — siling SATU entity"]
+      subgraph L3["🚧 PAGAR 3 · Session policy — siling sesi AssumeRole"]
+        GRANT["✅ PEMBERI (union — satu Allow cukup):<br/>Identity-based policy (User/Group/Role)<br/>ATAU Resource-based policy (S3/SQS/KMS)<br/>Resource-based = boleh cross-account TANPA assume"]
+      end
+    end
+  end
+  L1 --> RESULT{"Lepas SEMUA pagar<br/>DAN ada PEMBERI<br/>DAN takde explicit DENY?"}
+  RESULT -->|"Ya"| OK["✅ ALLOWED"]
+  RESULT -->|"Tidak"| NO["❌ DENIED"]
+  DENYX["⛔ Explicit DENY mana-mana lapisan<br/>= tembus semua, terus DENIED"] -.-> NO`,
+                caption: 'Dua keluarga: PEMBERI (Identity + Resource — union, satu Allow dah cukup, dan Resource-based boleh bagi cross-account TANPA assume role) duduk DI DALAM tiga PAGAR (SCP siling account → Permission Boundary siling entity → Session policy siling sesi — intersection, SEMUA mesti benarkan, tak pernah BAGI). INGAT exam: pagar (SCP/Boundary/Session) HANYA sekat, tak boleh grant; explicit DENY tembus semua lapisan. Susunan menang: explicit Deny > pagar > explicit Allow > implicit Deny.',
+              },
+              {
+                label: 'Cross-account: Resource-based policy ATAU Role + AssumeRole?',
+                source: `flowchart TD
+  Q["🌐 Account LUAR nak akses resource kau?"] --> Q2{"Akses langsung ke SATU service<br/>(S3 / SQS / SNS / KMS) je?"}
+  Q2 -->|"Ya — kemas &amp; scalable"| RB["📋 Resource-based policy<br/>(bucket / queue / topic / key policy)<br/>tampal Principal = account luar<br/>+ IAM policy di belah sumber = Dua Kunci"]
+  Q2 -->|"Tidak — perlu SET permission kompleks,<br/>temp creds, atau banyak service"| ROLE["🎫 IAM Role + STS AssumeRole<br/>trust policy benarkan account luar assume<br/>→ temp creds auto-expire"]
+  RB --> NOTE1["cth: 'org luar READ bucket S3 aku'"]
+  ROLE --> NOTE2["cth: 'partner urus banyak resource aku sementara'"]`,
+                caption: 'Dua-dua SAH untuk cross-account. Akses langsung & kemas ke satu service (S3/SQS/SNS/KMS) → Resource-based policy (ingat Dua Kunci: IAM source + resource policy destination). Perlu set permission kompleks / temp credentials / sentuh banyak service → IAM Role + AssumeRole. INGAT exam: "org luar nak read S3 / send to SQS" → resource-based policy; "assume identity & dapat temp creds merentas account" → Role + STS.',
+              },
             ],
             compare: [
               {

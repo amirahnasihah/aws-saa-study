@@ -298,6 +298,8 @@ export const petaModules: PetaModule[] = [
       { left: 'Management acct', rel: '⊃', right: 'OU → member accts', note: 'Organizations = satu payer · consolidated billing + volume discount.' },
       { left: 'SCP', rel: 'vs', right: 'IAM policy', note: 'SCP = siling maksimum (SEKAT, bukan BAGI) — even root member tak lepas.' },
       { left: 'IAM (source)', rel: '+', right: 'Resource policy (dest)', note: 'Cross-account = DUA kunci; set satu belah je → Access Denied.' },
+      { left: 'Resource policy', rel: 'vs', right: 'Role + AssumeRole', note: 'Org luar read S3/SQS → resource policy (kemas). Permission kompleks / temp creds / banyak service → Role + STS.' },
+      { left: 'IAM Group', rel: 'vs', right: 'IAM Role', note: 'Group = bakul kumpul user (tak boleh login/assume). Role = identiti sementara di-assume (EC2/Lambda/cross-account).' },
     ],
   },
   {
