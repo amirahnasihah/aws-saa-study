@@ -3628,6 +3628,33 @@ export const domains: DomainData[] = [
                 takeaway: 'Cost & recovery speed naik dari kiri → kanan. Cheapest+slowest = Backup & Restore. Fastest+priciest = Multi-Site Active/Active. Pilih ikut RPO/RTO requirement vs budget. Pilot Light = DB on, app off; Warm Standby = full stack scaled-down running.',
               },
             ],
+            mermaid: [
+              {
+                label: 'Pilih DR strategy mana — decision tree (RTO/RPO vs kos)',
+                source: `flowchart TD
+  Q["Apa requirement RTO/RPO?"] --> A{"Downtime berjam-jam OK?"}
+  A -->|"Ya — nak termurah"| BR["💾 Backup &amp; Restore<br/>RPO jam-hari · RTO jam<br/>takde infra DR · TERMURAH"]
+  A -->|"Tak boleh"| C{"Perlu RTO saat +<br/>RPO ~0 (zero downtime)?"}
+  C -->|"Ya — mission-critical"| MS["🟢 Multi-Site Active/Active<br/>2 region full LIVE · RPO~0 · RTO saat<br/>TERMAHAL (2× infra)"]
+  C -->|"Tak, RTO minit OK"| D{"Sanggup bayar app<br/>compute idle 24/7?"}
+  D -->|"Tak — DB je ON"| PL["🔥 Pilot Light<br/>DB ON, app OFF<br/>RPO minit · RTO minit-jam"]
+  D -->|"Boleh (full stack kecil)"| WS["🌤️ Warm Standby<br/>full stack scaled-DOWN, app ON<br/>RPO saat-minit · RTO minit"]`,
+                caption: 'Tanya RTO/RPO dulu, baru bajet. Downtime jam OK + termurah → Backup & Restore. Zero-downtime/RTO saat → Multi-Site (termahal). Antara dua: DB sedia tapi tak nak bayar app idle → Pilot Light; full stack kecil sentiasa jalan → Warm Standby. INGAT exam: keyword "lowest cost" → Backup&Restore · "core DB only / app off" → Pilot Light · "scaled-down running / scale up" → Warm Standby · "near-zero RPO + seconds RTO / mission-critical" → Multi-Site.',
+              },
+              {
+                label: 'Analogi — backup elektrik kedai bila bekalan putus',
+                source: `flowchart LR
+  BR["💾 Backup &amp; Restore<br/>genset dalam STOR<br/>kena keluar+sambung+start dulu"]
+  PL["🔥 Pilot Light<br/>genset dah SAMBUNG<br/>tinggal tekan start"]
+  WS["🌤️ Warm Standby<br/>genset dah HIDUP kecil (idle)<br/>tinggal naikkan kuasa"]
+  MS["🟢 Multi-Site<br/>DUA sumber penuh serentak<br/>(grid + solar) — satu putus tak terasa"]
+  BR -->|"murah → mahal · lambat → laju"| PL --> WS --> MS`,
+                caption: 'Spektrum kesediaan: makin sedia (genset dah hidup), makin laju pulih tapi makin mahal. Backup&Restore = genset dalam stor (kena pasang dulu = RTO jam). Pilot Light = genset dah sambung tinggal start (DB on, app off). Warm Standby = genset idle kecil (full stack scaled-down). Multi-Site = dua sumber penuh, takde "recover" langsung (zero downtime). INGAT exam: bajet ketat & downtime OK → kiri; mission-critical zero-downtime → kanan.',
+              },
+            ],
+            docs: [
+              { label: 'Disaster recovery options in the cloud (AWS whitepaper)', url: 'https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html' },
+            ],
             keywords: ['RPO: hours/days', 'RTO: hours', 'lowest cost', 'no standby infra', 'S3/Glacier backup', 'DR spectrum', 'Pilot Light', 'Warm Standby', 'Multi-Site'],
           },
           {
@@ -3644,6 +3671,9 @@ export const domains: DomainData[] = [
               'RPO minit, RTO minit-jam. Lebih laju dari Backup&Restore, lebih murah dari Warm Standby',
               'Beza utama vs Warm Standby: Pilot Light app OFF; Warm Standby app ON (scaled-down)',
               '"DB sentiasa sedia tapi tak nak bayar app compute idle" → Pilot Light',
+            ],
+            docs: [
+              { label: 'Pilot Light — Disaster recovery options in the cloud', url: 'https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html' },
             ],
             keywords: ['RPO: minutes', 'RTO: minutes-hours', 'core DB running', 'app servers off', 'medium cost'],
           },
@@ -3662,6 +3692,9 @@ export const domains: DomainData[] = [
               'Beza vs Pilot Light: Warm Standby app ON (kecil); Pilot Light app OFF',
               'Beza vs Multi-Site: Warm Standby kena scale up dulu (RTO minit); Multi-Site dah full (RTO saat)',
             ],
+            docs: [
+              { label: 'Warm Standby — Disaster recovery options in the cloud', url: 'https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html' },
+            ],
             keywords: ['RPO: seconds/minutes', 'RTO: minutes', 'scaled-down active', 'quick scale up', 'higher cost'],
           },
           {
@@ -3678,6 +3711,9 @@ export const domains: DomainData[] = [
               'RPO near-zero, RTO saat. Region fail = takde scale up, terus serap traffic',
               'PALING MAHAL (2× full infra) — guna HANYA untuk mission-critical/zero-downtime',
               'Bukan "near-zero/seconds"? Strategi lebih murah cukup (Warm Standby/Pilot Light)',
+            ],
+            docs: [
+              { label: 'Multi-Site Active/Active — Disaster recovery options in the cloud', url: 'https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html' },
             ],
             keywords: ['RPO: near-zero', 'RTO: seconds', 'full capacity both', 'highest cost', 'mission-critical', 'zero downtime'],
           },
