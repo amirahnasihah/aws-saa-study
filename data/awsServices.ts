@@ -5557,12 +5557,19 @@ export const domains: DomainData[] = [
             fullName: 'Application Load Balancer',
             ingat: '"Traffic director — by path/host, Layer 7"',
             gunaUntuk: 'HTTP/HTTPS path-based routing, microservices, containers',
-            fungsi: 'Mengagihkan traffic HTTP/HTTPS berdasarkan path atau host rules (Layer 7). Boleh route ke instances dalam peered VPCs menggunakan IP address sebagai target — bukan hanya dalam satu VPC.',
+            fungsi: 'Bayangkan ALB macam kaunter pertanyaan / resepsionis hospital untuk website kau: SATU pintu masuk yang baca setiap request HTTP/HTTPS (Layer 7) — tengok URL path, hostname, header, cookie — pastu hantar ke kumpulan server (target group) yang betul, dan server yang SIHAT je. Persis macam kau setup routing dengan React Router / Next.js (`/dashboard` → komponen dashboard), tapi ALB buat di peringkat infrastructure: `/api` → service A, `/images` → service B. Boleh route ke instances dalam peered VPCs guna IP target — bukan satu VPC je.',
             contohGuna: 'myshop.com/products → service A, myshop.com/cart → service B. Cross-VPC: route ke EC2 instances dalam peered VPCs guna IP targets.',
+            detailsLabel: 'Anatomy ALB — 3 komponen wajib ingat (+ targets & health check)',
+            storageDetails: 'Listener → "telinga" ALB yang dengar request pada port + protocol tertentu (cth HTTP:80, HTTPS:443). Sini kau pasang ACM cert untuk SSL/TLS termination.\nRules → undang-undang saringan pada listener: "kalau path = /api/* → hantar ke Target Group Backend". Dinilai ikut priority; ada default rule sebagai fallback. Condition boleh path, host, header, query string, source IP.\nTarget Group → bakul server yang buat satu tugas. Health check jalan ke SETIAP target dalam bakul ni. Satu rule tunjuk ke satu target group.\nTargets → benda sebenar dalam target group. 3 jenis: instance (EC2 by ID), ip (IP — peered VPC / on-prem), lambda (function). ASG daftar/buang EC2 sini automatik.\nHealth Check → ALB ketuk pintu setiap target ikut tempoh (interval). Lulus healthy threshold → terima trafik; gagal unhealthy threshold → ALB berhenti hantar trafik ke target tu, alih ke yang sihat.',
             sebabApa: 'Wujud sebab kalau kau ada banyak server web/microservice, kau tak nak user kena tahu IP setiap server, dan kau nak elak satu server mati = website down. ALB jadi "satu pintu masuk" yang sebarkan request ke server yang sihat. Lebih dari NLB: ALB faham HTTP, jadi dia boleh baca path/host/header dan hantar /cart ke service A, /video ke service B — satu LB untuk banyak microservice. Tujuan: HA + scaling + routing pintar di Layer 7.',
             sifir: [
               'ALB = Layer 7 (HTTP/HTTPS), routing by path/host/header. NLB = Layer 4 (TCP/UDP)',
+              'Anatomy: Listener (port) → Rules (saringan) → Target Group (bakul server) → Targets (EC2/IP/Lambda)',
               'ALB takde static IP (DNS name je). Perlu static IP → NLB',
+              'SSL/TLS termination kat ALB: pasang ACM cert kat listener; ALB→EC2 boleh HTTP biasa (jimat CPU server)',
+              'Health check = ALB auto-buang target rosak dari rotation. Ini asas HA, bukan Spot',
+              'Deregistration delay (Connection Draining) = DEFAULT 300s; range 0–3600s. Habiskan request lama sebelum target mati → elak error 500/502',
+              'Spot + ASG Mixed Instances + ALB = resipi cost-optimized + HA. Spot kena rampas → ASG deregister → ALB drain → no error',
               'Banyak domain satu ALB, cert berasingan → SNI (multi-cert pada satu listener)',
               'ALB cross-zone = SENTIASA ON & free. NLB cross-zone = OFF default (enable = caj inter-AZ)',
               'Stateful app perlu session sama → enable ALB stickiness (cookie AWSALB)',
@@ -5579,8 +5586,53 @@ export const domains: DomainData[] = [
                 umpan: 'ALB — sebab ia load balancer paling popular & feature-rich. Nampak betul sebab ALB selalu jadi default.',
                 betul: 'NLB. ALB tiada static IP (DNS name sahaja) dan ia Layer 7 HTTP, bukan untuk raw TCP gaming. NLB = Layer 4, ultra-low latency, dan bagi Elastic/static IP per AZ. Keyword "static IP + TCP/UDP + extreme low latency" → NLB.',
               },
+              {
+                soalan: 'Web app jalan atas ASG campuran On-Demand + Spot di belakang ALB untuk jimat kos. Bila Spot kena rampas, sesetengah user dapat error HTTP 500/502 masa tengah checkout. Macam mana hentikan error tu tanpa buang Spot?',
+                umpan: 'Tukar semua Spot ke On-Demand (atau scale up) supaya tiada instance kena rampas. Nampak betul sebab "error sebab Spot mati, jadi buang Spot".',
+                betul: 'Aktif/naikkan Deregistration Delay (Connection Draining) pada target group + pastikan ASG guna ELB health check. Bila Spot dapat 2-min termination notice, ASG deregister instance → ALB tukar status ke draining, berhenti hantar trafik BARU, tapi biar request sedia ada habis dulu (default 300s) → no dropped connection. Buang Spot = bunuh penjimatan kos; betulkan draining je. Keyword "Spot interruption + 5xx error + keep cost low" → deregistration delay + ELB health check, BUKAN tukar ke On-Demand.',
+              },
             ],
-            scenario: 'Cross-VPC load balancing: company ada 3 VPCs peered. Guna satu ALB dengan IP address targets untuk route ke instances dalam semua 3 VPCs. Classic Load Balancer (CLB) tak boleh buat ni — CLB hanya support instance ID targets dalam same VPC.',
+            scenario: 'Cross-VPC load balancing: company ada 3 VPCs peered. Guna satu ALB dengan IP address targets untuk route ke instances dalam semua 3 VPCs. Classic Load Balancer (CLB) tak boleh buat ni — CLB hanya support instance ID targets dalam same VPC. "Web app cost-optimized + fault-tolerant walau Spot ditutup" → ALB + ASG Mixed Instances Policy (On-Demand baseline + Spot) + deregistration delay. "Cuma route ikut path/host" → ALB Listener Rules.',
+            diagram: {
+              label: 'ALB request flow (Listener → Rules → Target Groups)',
+              steps: [
+                { nodes: [{ label: 'Client', sub: 'browser HTTPS', tone: 'c4' }] },
+                { nodes: [{ label: 'Listener :443', sub: 'ACM cert · TLS termination', tone: 'c3' }] },
+                { nodes: [
+                  { label: 'Rule /api/*', sub: '→ TG Backend', tone: 'c1' },
+                  { label: 'Rule /static/*', sub: '→ TG Frontend', tone: 'c5' },
+                ] },
+                { nodes: [
+                  { label: 'TG + health check', sub: 'EC2 / IP / Lambda', tone: 'c2' },
+                  { label: 'ASG (On-Demand + Spot)', sub: 'auto register/drain', tone: 'c6' },
+                ] },
+              ],
+              caption: 'Trafik internet TAK terus serang EC2 — masuk Listener (TLS termination guna ACM cert), Rules saring ikut path/host, hantar ke Target Group betul. Health check buang target rosak; ASG daftar/drain target automatik (penting bila Spot kena rampas). INGAT exam: Listener → Rules → Target Group → Targets.',
+            },
+            mermaid: [
+              {
+                label: 'Pilih load balancer (ALB vs NLB vs GWLB vs CLB)',
+                source: `flowchart TD
+  A["Nak load balance apa?"] --> B{"Trafik HTTP/HTTPS<br/>(web app)?"}
+  B -->|"Ya — route ikut path/host/header"| ALB["✅ ALB (Layer 7)<br/>path/host routing, SNI,<br/>stickiness, WAF"]
+  B -->|"Tidak — TCP/UDP raw"| C{"Perlu static IP atau<br/>extreme low latency?"}
+  C -->|"Ya — gaming, IoT, VoIP, jutaan req/s"| NLB["✅ NLB (Layer 4)<br/>Elastic IP per AZ,<br/>preserve client IP"]
+  C -->|"Salur trafik ke firewall/IDS/IPS"| GWLB["✅ GWLB (Layer 3)<br/>virtual appliance,<br/>GENEVE 6081"]
+  B -.->|"app sangat lama / EC2-Classic"| CLB["⚠️ CLB (legacy)<br/>elak untuk design baru"]`,
+                caption: 'HTTP + routing pintar (path/host) → ALB. TCP/UDP + static IP + latency rendah → NLB. Salur ke security appliance (firewall/IDS/IPS) → GWLB. CLB = legacy, elak. INGAT exam: "web application + route by path/URL/host" → ALB; "extreme performance + millions of requests + static IP + TCP" → NLB.',
+              },
+              {
+                label: 'Analogi: Kaunter Hospital + Food Court (Spot draining)',
+                source: `flowchart TD
+  U["🚶 Pesakit / user datang"] --> R["🏛️ Kaunter pertanyaan = ALB<br/>baca surat rujukan (URL path)"]
+  R -->|"/dental"| B2["🦷 Blok Gigi = Target Group A"]
+  R -->|"/maternity"| B5["🤰 Blok Bersalin = Target Group B"]
+  R -.->|"klinik runtuh / doktor pengsan<br/>(health check GAGAL)"| X["⛔ ALB stop hantar ke situ,<br/>pusing ke klinik sihat"]
+  B2 --> FC{"Gerai food court = Spot instance<br/>kena tutup mengejut (2-min notice)?"}
+  FC -->|"ya"| DR["🧹 ALB draining:<br/>tutup pintu masuk baru,<br/>biar pelanggan dalam habis makan<br/>(deregistration delay 300s)<br/>→ takde error 502"]`,
+                caption: 'ALB = kaunter pertanyaan hospital: baca surat rujukan (URL path) → hantar ke blok betul (target group). Klinik runtuh (health check gagal) → kaunter pusing pesakit ke klinik sihat. Gerai food court (Spot) tutup mengejut → ALB jadi pengawal yang tutup pintu masuk baru tapi biar pelanggan dalam habis dulu (deregistration delay) → no error 502. INGAT exam: health check = buang target rosak; deregistration delay = habiskan request lama masa Spot/scale-in.',
+              },
+            ],
             compare: {
               label: 'ELB types — pilih load balancer ikut layer & keperluan',
               headers: ['Aspect', 'ALB', 'NLB', 'GWLB'],
@@ -5595,6 +5647,13 @@ export const domains: DomainData[] = [
             },
             tips: [
               'ALB = Layer 7 (HTTP/HTTPS). NLB = Layer 4 (TCP/UDP). CLB = legacy, avoid',
+              'Anatomy: Listener (dengar port/protocol) → Rules (saring ikut path/host/header/query/source-IP, by priority + 1 default) → Target Group (health check di sini) → Targets. Hafal aliran ni — soalan suka tanya "letak rule kat mana".',
+              'Target types: instance (EC2 by ID), ip (peered VPC / on-prem via DX/VPN), lambda (ALB → Lambda terus, no API Gateway). Satu target group = satu jenis.',
+              'SSL/TLS Termination: pasang ACM cert kat ALB HTTPS listener. User→ALB encrypted (HTTPS); ALB→EC2 boleh HTTP biasa dalam private subnet → jimat CPU server, tak payah urus cert dalam app. Nak end-to-end encryption → guna HTTPS sampai target juga.',
+              'Health check: ALB ketuk path (cth /health) ikut interval; lulus HealthyThreshold kali → InService; gagal UnhealthyThreshold → buang dari rotation. Ini sumber HA asas — auto-elak server mati. ASG patut guna ELB health check (bukan EC2 je) supaya app-level failure pun dikira unhealthy.',
+              'Deregistration Delay (= "Connection Draining" pada CLB): DEFAULT 300 saat, set 0–3600. Bila target di-deregister (scale-in / Spot rampas / deploy), ALB stop trafik BARU tapi biar request sedia ada habis (state: draining → unused). Kalau target putus connection sebelum delay habis → client dapat error 500-level. Turunkan delay = scale-in laju; naikkan = lindung request panjang (upload/checkout).',
+              'ALB + Auto Scaling + Spot = combo cost-optimized klasik: ASG Mixed Instances Policy (On-Demand baseline + Spot untuk lebihan murah, jimat sampai 90%). ASG auto-register instance baru ke target group ALB & auto-drain bila Spot dapat 2-min termination notice. Capacity Rebalancing boleh launch ganti AWAL sebelum Spot betul-betul mati.',
+              'Exam combo: "web app, paling murah, kekal HA walau Spot ditutup tiba-tiba" → ALB + ASG Mixed Instances (On-Demand + Spot) + deregistration delay. Jangan pilih "tukar semua ke On-Demand" — itu bunuh penjimatan.',
               'IP targets membolehkan ALB/NLB route ke peered VPCs, on-premises (via Direct Connect/VPN)',
               'CLB limitation: instance ID only, same VPC only — exam trap!',
               'SNI (Server Name Indication): ALB HTTPS listener boleh hold MULTIPLE TLS certificates serentak. Client sends hostname in TLS ClientHello → ALB picks the right cert. No extra ALB needed per domain!',
@@ -5609,7 +5668,7 @@ export const domains: DomainData[] = [
               { label: 'ALB IP Targets', url: 'https://aws.amazon.com/blogs/aws/new-application-load-balancing-via-ip-address-to-aws-on-premises-resources/' },
               { label: 'ALB User Guide', url: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/application/introduction.html' },
             ],
-            keywords: ['path-based routing', 'HTTP', 'layer 7', 'IP targets', 'cross-VPC', 'microservices'],
+            keywords: ['path-based routing', 'host-based routing', 'HTTP', 'HTTPS', 'layer 7', 'IP targets', 'cross-VPC', 'microservices', 'Listener', 'Listener Rules', 'Target Group', 'target types', 'health check', 'SSL termination', 'TLS termination', 'ACM certificate', 'SNI', 'stickiness', 'session affinity', 'cross-zone load balancing', 'deregistration delay', 'connection draining', 'Spot interruption', 'Auto Scaling', 'ASG', 'Mixed Instances Policy', 'capacity rebalancing', '502 Bad Gateway', 'Lambda target', 'X-Forwarded-For', 'pricing'],
           },
           {
             shortName: 'NLB',
