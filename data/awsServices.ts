@@ -4145,18 +4145,65 @@ export const domains: DomainData[] = [
             fullName: 'AWS Outposts',
             ingat: '"AWS datang ke rumah kau — rack AWS dalam data center sendiri"',
             gunaUntuk: 'Run AWS services on-premises for compliance, low latency, or data residency requirements',
-            fungsi: 'AWS Outposts adalah physical rack AWS yang dihantar dan dipasang dalam data center kau. Kau boleh run EC2, RDS, ECS, EKS, S3 on Outposts — semua dengan AWS APIs yang sama. Data tak keluar dari premise kau.',
-            sebabApa: "Sesetengah workload TAK boleh pergi cloud — data mesti duduk on-prem atas sebab regulatory/data residency, atau perlu single-digit millisecond latency ke sistem factory/trading on-prem. Outposts wujud sebagai rack hardware AWS sebenar yang AWS hantar & pasang dalam data center kau, run EC2/RDS/EKS/S3 guna API AWS yang SAMA — data tak keluar premise. Pain yang ia buang: dapat pengalaman + API AWS sambil data & compute kekal fizikal on-prem.",
-            sifir: ["Outposts = rack hardware AWS DALAM data center kau (on-prem), API AWS sama", "Run EC2, EBS, RDS, ECS, EKS, S3 on Outposts — data kekal on-prem", "Use case: data residency/compliance, ultra-low latency ke sistem on-prem, local processing", "Outposts ≠ data transfer (itu DataSync/Snow) ; ≠ hybrid storage je (itu Storage Gateway)", "Sambung ke AWS region via Direct Connect/internet untuk management plane"],
-            perangkap: [{"soalan": "Regulasi kata database mesti kekal on-premises, tapi team nak guna AWS services + API yang sama. Pilih apa?", "umpan": "AWS Storage Gateway — ia hybrid, tapi cuma untuk STORAGE access ke cloud, tak boleh run compute/RDS penuh on-prem.", "betul": "AWS Outposts — keyword 'data must stay on-prem / data residency + run AWS services locally' = Outposts."}, {"soalan": "Factory perlu compute latency single-digit ms ke peralatan on-prem, tapi nak ekosistem AWS. Pilih apa?", "umpan": "Run kat AWS region terdekat — latency tetap ada hop ke cloud, tak cukup laju untuk control loop factory.", "betul": "AWS Outposts — keyword 'low latency to on-prem systems + local processing' = Outposts (compute duduk on-prem)."}],
+            fungsi: 'AWS Outposts adalah hardware AWS sebenar (rack 42U penuh, atau server 1U/2U) yang AWS hantar & pasang dalam data center kau. Kau boleh run EC2, EBS, RDS, ECS, EKS, S3 on Outposts — semua guna AWS API, console, dan tools yang SAMA macam cloud. Data & compute kekal fizikal dalam premise kau; cuma control plane (management) sambung balik ke parent AWS Region.',
+            sebabApa: "Sesetengah workload TAK boleh pergi cloud — data mesti duduk on-prem atas sebab regulatory/data residency, atau perlu single-digit millisecond latency ke sistem factory/trading/hospital on-prem. Outposts wujud sebagai rack/server hardware AWS sebenar yang AWS hantar & pasang dalam data center kau, run EC2/RDS/EKS/S3 guna API AWS yang SAMA — data tak keluar premise. Pain yang ia buang: kau dapat pengalaman + API AWS (consistent hybrid) sambil data & compute kekal fizikal on-prem, TANPA perlu migrate apa-apa ke cloud.",
+            sifir: ["Outposts = rack/server hardware AWS DALAM data center kau (on-prem), API AWS sama", "2 form factor: rack 42U (penuh) · server 1U/2U (kecik, single server)", "Run EC2, EBS, RDS, ECS, EKS, S3 on Outposts — data kekal on-prem", "Use case: data residency/compliance, ultra-low latency ke sistem on-prem, local processing, consistent hybrid", "Service Link = control plane balik ke parent Region; Local Gateway (LGW) = trafik on-prem (racks)", "Outposts ≠ data transfer (itu DataSync/Snow) ; ≠ hybrid storage je (itu Storage Gateway) ; ≠ AWS-owned metro infra (itu Local Zones)"],
+            perangkap: [{"soalan": "Regulasi kata database mesti kekal on-premises (tak boleh migrate), tapi team nak extend AWS services + API yang sama, low latency, consistent hybrid. Pilih apa?", "umpan": "AWS Storage Gateway — ia hybrid, tapi cuma untuk STORAGE bridge ke cloud, tak boleh run compute/RDS penuh on-prem.", "betul": "AWS Outposts — keyword 'database must stay on-prem / cannot migrate + run AWS services locally + hybrid' = Outposts."}, {"soalan": "Factory perlu compute latency single-digit ms ke peralatan on-prem, tapi nak ekosistem AWS. Pilih apa?", "umpan": "Run kat AWS region terdekat — latency tetap ada hop ke cloud, tak cukup laju untuk control loop factory.", "betul": "AWS Outposts — keyword 'low latency to on-prem systems + local processing' = Outposts (compute duduk on-prem)."}, {"soalan": "Game studio nak latency rendah ke pengguna bandar besar, TAPI tak nak beli/urus hardware sendiri. Pilih apa?", "umpan": "AWS Outposts — nampak 'low latency' terus pilih. SALAH: Outposts kau yang kena ada premise + hardware on-prem.", "betul": "AWS Local Zones — AWS yang punya infra, letak dekat metro besar untuk latency rendah, kau tak perlu hardware sendiri. (Wavelength = latency rendah dalam rangkaian 5G telco.) Keyword: 'low latency to end-users, no on-prem hardware' = Local Zones."}],
+            detailsLabel: 'Anatomy Outposts — komponen wajib ingat',
+            storageDetails: 'Outposts hardware → rack 42U atau server 1U/2U yang AWS hantar & pasang dalam data center kau (AWS yang maintain).\nSupported services on Outposts → EC2, EBS, S3 on Outposts, ECS, EKS, RDS, EMR, ElastiCache — run LOCAL, data kekal on-prem.\nService Link → sambungan (VPN over internet / Direct Connect) balik ke parent AWS Region untuk control plane (management, monitoring).\nLocal Gateway (LGW) → untuk racks: pintu trafik antara Outposts dan rangkaian on-prem kau (low-latency, CoIP).\nLocal Network Interface (LNI) → untuk servers: sambung terus ke LAN on-prem.\nParent Region → Region AWS yang Outposts "tergantung" — kalau Service Link putus, instance terus jalan tapi tak boleh urus dari console.',
+            diagram: {
+              label: 'Outposts — on-prem compute, control plane ke Region',
+              steps: [
+                { nodes: [{ label: 'App / sistem on-prem', sub: 'factory · hospital · DB compliance', tone: 'c2' }] },
+                { nodes: [{ label: 'AWS Outposts (on-prem)', sub: 'EC2 · RDS · EBS · S3 · EKS — API AWS sama', tone: 'c1' }] },
+                { nodes: [{ label: 'Local Gateway / LNI', sub: 'trafik low-latency ke LAN on-prem', tone: 'c4' }, { label: 'Service Link', sub: 'control plane → parent Region', tone: 'c5' }] },
+                { nodes: [{ label: 'Parent AWS Region', sub: 'management, monitoring, broad services', tone: 'c6' }] },
+              ],
+              caption: 'Data + compute kekal on-prem (Local Gateway/LNI). Cuma management plane lalu Service Link ke parent Region. Service Link putus → instance JALAN lagi, cuma tak boleh urus dari console. INGAT exam: "data cannot leave premises + need AWS API locally" = Outposts.',
+            },
+            compare: {
+              label: 'Outposts vs hybrid/edge confusables (jangan keliru!)',
+              headers: ['Service', 'Apa dia', 'Siapa punya hardware', 'Guna bila (keyword exam)'],
+              rows: [
+                ['AWS Outposts', 'Rack/server AWS DALAM data center kau, run AWS services local', 'Kau punya premise, AWS punya + maintain hardware', '"data must stay on-prem / cannot migrate + run AWS locally + low latency to on-prem systems"'],
+                ['AWS Local Zones', 'Infra AWS dalam metro besar, dekat end-user', 'AWS (kau tak perlu hardware)', '"low latency to end-users in a city, no on-prem hardware"'],
+                ['AWS Wavelength', 'Compute dalam rangkaian 5G telco (edge)', 'AWS + telco', '"ultra-low latency to mobile / 5G users"'],
+                ['Storage Gateway', 'Appliance on-prem = bridge STORAGE ke cloud (file/volume/tape)', 'Kau (VM/appliance)', '"hybrid storage / cache on-prem, backup ke S3" — bukan run compute'],
+                ['DataSync', 'Online transfer data on-prem ↔ AWS (NFS/SMB/S3)', '—', '"migrate / sync / move data online ke AWS"'],
+                ['Snow Family', 'Offline transfer (truk fizikal) + edge compute', 'AWS (pinjam device)', '"transfer petabytes, network slow / no bandwidth, one-time migration"'],
+              ],
+              takeaway: 'Soalan kata RUN AWS services / database / compute on-prem tanpa migrate → Outposts. Low latency ke END-USER tanpa hardware sendiri → Local Zones (5G → Wavelength). Cuma STORAGE bridge → Storage Gateway. PINDAH data → DataSync (online) / Snow (offline). Kalau soalan kata "without migrating" tapi pilihan ada Snowball/DataSync — itu umpan, sebab dua-dua tu MIGRATE.',
+            },
+            mermaid: {
+              label: 'Pilih hybrid/edge service (decision tree)',
+              source: `flowchart TD
+  A[Keperluan hybrid/edge?] --> B{Nak RUN AWS compute/DB di mana?}
+  B -->|"Dalam data center SENDIRI, data tak boleh keluar"| C[AWS Outposts<br/>rack/server AWS on-prem<br/>EC2 · RDS · S3 local]
+  B -->|"Dekat end-user di metro, tak nak hardware sendiri"| D[AWS Local Zones]
+  B -->|"Ultra-low latency ke pengguna 5G mobile"| E[AWS Wavelength]
+  A --> F{Atau cuma nak STORAGE / pindah data?}
+  F -->|"Bridge storage on-prem, backup ke S3"| G[Storage Gateway]
+  F -->|"Pindah data ONLINE ke AWS"| H[DataSync]
+  F -->|"Pindah PB offline / network slow"| I[Snow Family]`,
+              caption: 'Analogi: Outposts = pasang "cawangan AWS mini" dalam rumah kau sendiri (sebab barang tak boleh keluar rumah). Local Zones = AWS buka kedai dekat taman perumahan kau (dia punya kedai, kau singgah je). Wavelength = kiosk AWS dalam tower 5G. Storage Gateway = peti simpanan yang auto-sync ke gudang pusat. DataSync/Snow = lori pindah barang (online vs offline). INGAT exam: "cannot migrate + data residency + run AWS locally" = Outposts; "low latency to users + no hardware" = Local Zones.',
+            },
+            scenario: '"Database must stay on-premises (regulatory/compliance), cannot migrate, but extend AWS services + low latency + consistent hybrid" → AWS Outposts (BUKAN Storage Gateway/DataSync/Snowball). "Single-digit ms latency to on-prem factory/trading systems + AWS ecosystem" → Outposts. "Low latency to end-users in a metro, no on-prem hardware" → Local Zones. "Ultra-low latency to 5G mobile users" → Wavelength. "Hybrid storage / backup on-prem to S3" → Storage Gateway. "Move/sync data online to AWS" → DataSync. "Transfer petabytes offline, slow network" → Snow Family.',
             tips: [
-              'Outposts = AWS infrastructure ON-PREMISES — bukan data transfer service',
-              'Use case: regulatory compliance (data must stay on-prem), low-latency access to on-prem systems, local data processing',
-              'Bukan DataSync (data transfer), bukan Storage Gateway (hybrid storage only), bukan Snow Family (one-time migration)',
-              'Exam: "database must stay on-premises due to compliance, extend AWS services to on-prem" → AWS Outposts',
-              'Outposts connect ke AWS region melalui internet atau Direct Connect untuk management plane',
+              'Outposts = AWS infrastructure ON-PREMISES (hardware sebenar) — bukan data transfer service, bukan storage bridge.',
+              '2 form factor: Outposts rack (42U penuh, banyak capacity) dan Outposts server (1U/2U, single server untuk ruang kecik / cawangan).',
+              'Use case: regulatory compliance (data must stay on-prem), low-latency access to on-prem systems, local data processing, consistent hybrid (API sama).',
+              'Bukan DataSync (data transfer online), bukan Storage Gateway (hybrid STORAGE only), bukan Snow Family (one-time offline migration), bukan Local Zones (AWS-owned metro infra, tiada hardware kau).',
+              'Service Link = sambungan control plane balik ke parent Region (VPN over internet atau Direct Connect). Kalau putus, instance on-prem TERUS jalan, cuma tak boleh urus dari console/API.',
+              'Local Gateway (LGW) untuk racks = pintu trafik low-latency antara Outposts & rangkaian on-prem. Local Network Interface (LNI) untuk servers.',
+              'Exam keyword: "database/data must stay on-premises due to compliance + extend AWS services to on-prem + cannot migrate" → AWS Outposts.',
+              'PRICING: Outposts TIADA free tier. Capacity-based — kau order konfigurasi (compute + storage) dengan komitmen term (biasa 3 tahun), bayar All / Partial / No Upfront. Harga dah termasuk hardware, penghantaran, install & maintenance oleh AWS. Outposts server = entry cost jauh lebih murah dari rack. Compute/EBS atas Outposts tak dicaj per-jam berasingan (dah termasuk dalam langganan Outposts); S3 on Outposts dicaj per-GB capacity yang kau provision.',
             ],
-            keywords: ['Outposts', 'on-premises AWS', 'data residency', 'compliance', 'local processing', 'hybrid'],
+            docs: [
+              { label: 'What is AWS Outposts?', url: 'https://docs.aws.amazon.com/outposts/latest/userguide/what-is-outposts.html' },
+              { label: 'How AWS Outposts works (Service Link, Local Gateway, LNI)', url: 'https://docs.aws.amazon.com/outposts/latest/userguide/how-outposts-works.html' },
+              { label: 'AWS Outposts pricing', url: 'https://aws.amazon.com/outposts/rack/pricing/' },
+            ],
+            keywords: ['Outposts', 'Outposts rack', 'Outposts server', 'on-premises AWS', 'data residency', 'compliance', 'cannot migrate', 'local processing', 'low latency', 'consistent hybrid', 'Service Link', 'Local Gateway', 'LGW', 'Local Network Interface', 'LNI', 'parent Region', 'Local Zones', 'Wavelength', 'Storage Gateway', 'DataSync', 'Snow Family', 'hybrid', 'pricing'],
           },
         ],
       },
@@ -8449,25 +8496,66 @@ export const domains: DomainData[] = [
         services: [
           {
             shortName: 'S3 Storage Tiers',
-            fullName: 'Amazon S3 Storage Classes',
-            ingat: '"Pilih tier ikut seberapa selalu kau access"',
-            gunaUntuk: 'Kurangkan kos storage ikut frequency of access',
-            fungsi: 'Menyediakan pelbagai kelas storan dengan harga berbeza berdasarkan keperluan akses data',
-            sebabApa: "Kalau semua data duduk dalam S3 Standard, kau bayar harga penuh ($0.023/GB-mo) walaupun data dah lama tak disentuh. S3 Storage Tiers wujud sebab access pattern berubah ikut umur data — log baru kena laju, log lama jarang baca. Pilih tier murah untuk data sejuk = jimat besar (Deep Archive $0.00099/GB = ~23x lebih murah dari Standard).",
-            sifir: ["Standard $0.023/GB · Standard-IA $0.0125 (min 30d) · One Zone-IA $0.01 (1 AZ)", "Glacier Instant $0.004 = ms retrieval, min 90d", "Glacier Flexible $0.0036 = retrieve 1min–12hr, min 90d", "Glacier Deep Archive $0.00099 = CHEAPEST, retrieve 12–48hr, min 180d", "IA & Glacier ada retrieval fee + minimum storage duration charge", "Auto-move antara tier = S3 Lifecycle Policy"],
-            perangkap: [{"soalan": "Data jarang diakses TAPI bila perlu kena dapat dalam millisecond (medical imaging). Tier mana paling murah?", "umpan": "Glacier Deep Archive — sebab nampak 'jarang akses + paling murah'. SALAH: Deep Archive retrieve 12–48 jam, bukan ms.", "betul": "S3 Glacier Instant Retrieval — rarely accessed + millisecond retrieval, lebih murah dari Standard-IA. Keyword: 'millisecond' + 'rarely accessed'."}, {"soalan": "Compliance simpan 10 tahun, petabytes, hampir tak pernah baca, kos paling rendah. Pilih?", "umpan": "S3 Standard-IA — sebab 'infrequent access'. SALAH: IA masih $0.0125/GB, mahal untuk PB jangka panjang.", "betul": "S3 Glacier Deep Archive via Lifecycle Policy — $0.00099/GB, retrieve 12–48hr OK untuk archive. Keyword: '10-year retention, rarely accessed'."}],
-            storageDetails: 'S3 Standard → selalu access, harga tinggi\nS3 Standard-IA → jarang access tapi kena cepat bila diperlukan\nS3 One Zone-IA → same tapi 1 AZ je, lagi murah\nS3 Glacier Instant → archive, retrieve dalam miliseconds\nS3 Glacier Flexible → archive, retrieve dalam minit-jam\nS3 Glacier Deep Archive → paling murah, retrieve 12-48 jam',
-            scenario: 'Log files yang baru = S3 Standard. Log files 30 hari lepas = S3-IA. Log files setahun lepas untuk compliance = S3 Glacier. Guna S3 Lifecycle Policy untuk auto-move between tiers.',
+            fullName: 'Amazon S3 Storage Classes — Cost View (the TOTAL bill, bukan storage je)',
+            ingat: '"4 lapisan bil: storan + retrieval fee + min-duration + min 128KB/objek"',
+            gunaUntuk: 'Pilih tier yang paling MURAH all-in untuk access pattern data — cost-optimization (D4 angle, bukan retrieval-speed)',
+            fungsi: 'Sama set 7 storage classes macam card D3, TAPI lihat dari sudut KOS. Bil S3 bukan storage price je — ada 4 lapisan kos tersembunyi yang exam suka umpan: (1) storan $/GB-mo, (2) retrieval fee setiap GB kau tarik balik, (3) minimum storage duration (delete awal = still kena bayar baki), (4) minimum billable object size 128KB (objek kecik dalam IA/Glacier dibil macam saiz 128KB). Pilih tier salah = bil naik walaupun storage price nampak murah.',
+            sebabApa: "Kalau semua data duduk dalam S3 Standard, kau bayar harga penuh ($0.023/GB-mo) walaupun data dah lama tak disentuh. Storage classes wujud sebab access pattern berubah ikut umur data — log baru kena laju, log lama jarang baca. TAPI jebakan kos: pindah ke IA/Glacier nampak jimat (storage murah), padahal kalau kau access kerap kau kena retrieval fee + kalau delete awal kena early-delete charge. Jadi 'tier paling murah' = bergantung pada berapa KERAP access + berapa LAMA simpan, bukan storage price semata.",
+            sifir: ["4 lapisan kos: storan + retrieval fee + min-duration penalty + min 128KB/objek (IA & Glacier)", "Storan: Standard $0.023 · Standard-IA $0.0125 · One Zone-IA $0.01 · Glacier Instant $0.004 · Flexible $0.0036 · Deep Archive $0.00099 (CHEAPEST)", "Retrieval fee: Standard & Int-Tiering = $0 · IA ~$0.01/GB · Glacier Instant ~$0.03/GB · Deep Archive paling mahal tarik balik", "Min duration (early-delete): Standard none · IA 30d · Glacier 90d · Deep Archive 180d", "Access KERAP tapi guna IA = retrieval fee bunuh penjimatan → patut Standard atau Intelligent-Tiering", "Pattern TAK TENTU = Intelligent-Tiering (no retrieval fee, auto-move, monitoring $0.0025/GB)"],
+            perangkap: [{"soalan": "Data jarang diakses TAPI bila perlu kena dapat dalam millisecond (medical imaging). Tier mana paling murah?", "umpan": "Glacier Deep Archive — sebab nampak 'jarang akses + paling murah'. SALAH: Deep Archive retrieve 12–48 jam, bukan ms.", "betul": "S3 Glacier Instant Retrieval — rarely accessed + millisecond retrieval, storan lebih murah dari Standard-IA. Keyword: 'millisecond' + 'rarely accessed'."}, {"soalan": "Compliance simpan 10 tahun, petabytes, hampir tak pernah baca, kos paling rendah. Pilih?", "umpan": "S3 Standard-IA — sebab 'infrequent access'. SALAH: IA masih $0.0125/GB, mahal untuk PB jangka panjang.", "betul": "S3 Glacier Deep Archive via Lifecycle Policy — $0.00099/GB, retrieve 12–48hr OK untuk archive. Keyword: '10-year retention, rarely accessed'."}, {"soalan": "Team pindah data ke Standard-IA untuk jimat, tapi bil naik bukan turun. Kenapa?", "umpan": "Anggap IA mesti lebih murah dari Standard sebab storage price lebih rendah ($0.0125 < $0.023).", "betul": "Data tu di-access KERAP → retrieval fee + minimum 30-day + min 128KB/objek makan balik penjimatan. IA hanya jimat kalau betul-betul infrequent (access < ~sekali sebulan) + objek besar. Access tak tentu → Intelligent-Tiering (no retrieval fee). Keyword: 'frequently accessed' + 'small objects' = JANGAN IA."}, {"soalan": "Banyak objek KECIK (cth thumbnail 20KB) jarang access — nak letak One Zone-IA untuk jimat. OK?", "umpan": "One Zone-IA storage paling murah antara IA → nampak pilihan jimat.", "betul": "Objek <128KB dalam IA/Glacier dibil macam 128KB (minimum billable object size) → jutaan objek kecik = bayar lebih dari saiz sebenar. Untuk objek kecik banyak, Standard atau Intelligent-Tiering selalunya lebih murah. Keyword: 'many small objects'."}],
+            detailsLabel: 'Anatomy KOS — 4 lapisan bil tiap class (bukan storage price je)',
+            storageDetails: 'Lapisan 1 — Storage $/GB-mo → harga simpan tiap GB sebulan (Standard mahal → Deep Archive paling murah)\nLapisan 2 — Retrieval fee $/GB → bayar tiap kali tarik data balik (Standard & Intelligent-Tiering = $0; IA & Glacier kena caj, makin sejuk makin mahal tarik)\nLapisan 3 — Minimum storage duration → delete sebelum tempoh min still kena bayar baki (Standard none · IA 30d · Glacier 90d · Deep Archive 180d)\nLapisan 4 — Minimum billable object size 128KB → objek <128KB dalam IA/Glacier dibil macam 128KB (jutaan objek kecik = mahal)\n+ Lifecycle/transition request cost → setiap transition antara class ada caj per 1,000 request',
+            compare: {
+              label: 'Cost mechanics — yang exam guna untuk umpan (us-east-1, approx)',
+              headers: ['Class', 'Storan $/GB-mo', 'Retrieval fee', 'Min duration', 'Min objek', 'Cost trap'],
+              rows: [
+                ['Standard', '$0.023', '$0 (free)', 'None', 'None', 'Mahal untuk data sejuk — jangan biar data lama duduk sini'],
+                ['Intelligent-Tiering', '$0.023→ auto turun', '$0 (no retrieval!)', 'None', 'None*', 'Monitoring $0.0025/GB; *free untuk objek <128KB (tak monitor)'],
+                ['Standard-IA', '$0.0125', '~$0.01/GB', '30 hari', '128KB', 'Access kerap = retrieval fee bunuh penjimatan'],
+                ['One Zone-IA', '$0.01', '~$0.01/GB', '30 hari', '128KB', '1 AZ je — AZ musnah = data hilang. Re-creatable only'],
+                ['Glacier Instant', '$0.004', '~$0.03/GB', '90 hari', '128KB', 'Retrieval fee tinggi — jangan kalau access bulanan'],
+                ['Glacier Flexible', '$0.0036', 'per restore job', '90 hari', '40KB', 'Kena restore job (min–jam), bukan GET terus'],
+                ['Deep Archive', '$0.00099', 'paling mahal tarik', '180 hari', '40KB', 'Delete <180d = bayar baki; retrieve 12–48jam'],
+              ],
+              takeaway: 'Storage price murah ≠ bil murah. Tambah retrieval fee + early-delete penalty + min 128KB/objek dulu. Access KERAP → Standard. Access TAK TENTU → Intelligent-Tiering (satu-satunya no retrieval fee + auto-move). Access JARANG + objek besar + simpan lama → IA/Glacier ikut berapa laju nak retrieve. Banyak objek KECIK → elak IA (min 128KB billing).',
+            },
+            mermaid: {
+              label: 'Tier paling MURAH all-in (cost decision tree)',
+              source: `flowchart TD
+  A[Nak jimat kos S3] --> B{Access pattern tahu ke tak?}
+  B -->|"Tak tentu / berubah"| C[Intelligent-Tiering<br/>auto-move · NO retrieval fee<br/>monitoring $0.0025/GB]
+  B -->|Tahu| D{Berapa kerap access?}
+  D -->|"Kerap (hot)"| E[S3 Standard<br/>$0.023 · retrieval $0<br/>jangan IA: fee makan balik]
+  D -->|"Jarang, tapi simpan lama"| F{Banyak objek kecik <128KB?}
+  F -->|"Ya, banyak kecik"| E2[Standard / Intelligent-Tiering<br/>elak IA: min 128KB billing]
+  F -->|"Tak, objek besar"| G{Perlu retrieve laju mana?}
+  G -->|"ms, on-demand"| H{Multi-AZ perlu?}
+  H -->|"Ya"| I[Standard-IA<br/>$0.0125 · multi-AZ]
+  H -->|"Tak, re-creatable"| J[One Zone-IA<br/>$0.01 · 1 AZ · paling murah IA]
+  G -->|"Archive, ms bila perlu"| K[Glacier Instant<br/>$0.004 · retrieval fee tinggi]
+  G -->|"Boleh tunggu min–jam"| L[Glacier Flexible<br/>$0.0036 · restore job]
+  G -->|"12–48 jam OK, paling murah"| M[Deep Archive<br/>$0.00099 · min 180d]`,
+              caption: 'Cost analogy — macam sewa storan barang: barang selalu pakai letak rumah (Standard, ambik bila-bila free). Barang musim jarang pakai → sewa self-storage murah (IA), tapi tiap kali masuk ambik kena bayar tol (retrieval fee) + kontrak min sebulan. Barang pusaka simpan 10 tahun → gudang jauh paling murah (Deep Archive), tapi nak ambik kena booking lori tunggu 2 hari. INGAT exam: "frequently accessed" + "small objects" = JANGAN IA; "unknown/changing access pattern" = Intelligent-Tiering (satu-satunya tiada retrieval fee).',
+            },
+            scenario: '"Unknown / changing / unpredictable access pattern, nak auto-optimize kos" → Intelligent-Tiering (no retrieval fee). "Frequently accessed data tapi team letak IA, bil naik" → patut Standard (retrieval fee makan penjimatan). "10-year retention, rarely accessed, petabytes, lowest cost" → Glacier Deep Archive via Lifecycle. "Rarely accessed BUT millisecond retrieval" → Glacier Instant Retrieval. "Re-creatable + infrequent, cheapest" → One Zone-IA. "Many small objects, infrequent" → elak IA (min 128KB billing) → Standard/Intelligent-Tiering.',
             tips: [
-              'S3 Glacier Instant Retrieval: rarely accessed + millisecond retrieval. Medical/lab records yang perlu immediate access. Min 90-day storage',
-              'S3 Glacier Deep Archive: CHEAPEST ($0.00099/GB). 12-hour retrieval. For 10-year compliance retention (genomics, legal). Min 180-day',
-              'S3 One Zone-IA: SINGLE AZ only. For data yang boleh regenerated/reproduced. Cheaper than Standard-IA. Risk: AZ failure = data loss',
-              'S3 Standard-IA: multi-AZ, infrequent access, ms retrieval. Min 30-day storage charge',
-              'Pattern: "10-year retention, rarely accessed, petabytes" → S3 Glacier Deep Archive via lifecycle policy',
-              'Pattern: "millisecond retrieval but rarely accessed" → S3 Glacier Instant Retrieval (not Flexible/Deep Archive)',
-              'EFS One Zone-IA: cheapest EFS. Single AZ + infrequent access. Good when data can be regenerated',
+              'PRICING: 4 lapisan kos — storan $/GB-mo + retrieval fee/GB + min-duration penalty (delete awal bayar baki) + min billable object size 128KB (IA & Glacier). Storage price murah ≠ bil murah.',
+              'PRICING: Storan/GB-mo — Standard $0.023 · Standard-IA $0.0125 · One Zone-IA $0.01 · Glacier Instant $0.004 · Flexible $0.0036 · Deep Archive $0.00099 (cheapest, ~23x murah dari Standard).',
+              'PRICING: Retrieval fee — Standard & Intelligent-Tiering = $0. Standard-IA/One Zone-IA ~$0.01/GB. Glacier Instant ~$0.03/GB. Glacier Flexible/Deep Archive caj per restore job (Expedited mahal, Bulk murah).',
+              'PRICING: Minimum storage duration — Standard none · IA 30 hari · Glacier (Instant/Flexible) 90 hari · Deep Archive 180 hari. Delete sebelum tempoh = still bayar baki (early-delete fee).',
+              'PRICING: Minimum billable object size 128KB untuk IA & Glacier — objek <128KB dibil macam 128KB. Banyak objek kecik (thumbnail, log kecik) dalam IA = bayar lebih dari saiz sebenar. Guna Standard/Intelligent-Tiering.',
+              'Intelligent-Tiering = satu-satunya class TIADA retrieval fee + auto-move antara tiers ikut access. Monitoring fee $0.0025/GB/mo (free untuk objek <128KB). Default untuk "unknown/changing access pattern".',
+              'Break-even rule of thumb: IA jimat hanya kalau objek di-access < ~sekali sebulan DAN objek besar (>128KB) DAN simpan ≥ 30 hari. Kalau tak — Standard atau Intelligent-Tiering lebih murah.',
+              'S3 Storage Class Analysis (analytics) tengok access pattern sebenar untuk cadang bila pindah Standard → Standard-IA. Guna kalau tak pasti sebelum set Lifecycle.',
+              'Lifecycle transition ada caj per 1,000 transition requests — banyak objek kecik yang ditransition kerap boleh jadi mahal. Kira sebelum auto-transition jutaan objek.',
+              'S3 One Zone-IA: SINGLE AZ — AZ musnah = data hilang. Re-creatable/reproducible data only. EFS One Zone-IA = analog EFS yang paling murah (single AZ + infrequent).',
             ],
-            keywords: ['storage classes', 'lifecycle policy', 'infrequent access', 'glacier', 'Glacier Instant Retrieval', 'Glacier Deep Archive', 'One Zone-IA', 'min storage charge'],
+            docs: [
+              { label: 'S3 storage classes (intro)', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/storage-class-intro.html' },
+              { label: 'S3 storage classes comparison + pricing', url: 'https://aws.amazon.com/s3/storage-classes/' },
+              { label: 'S3 pricing (retrieval & request fees)', url: 'https://aws.amazon.com/s3/pricing/' },
+            ],
+            keywords: ['storage classes', 'cost optimization', 'lifecycle policy', 'infrequent access', 'glacier', 'Glacier Instant Retrieval', 'Glacier Deep Archive', 'One Zone-IA', 'Standard-IA', 'Intelligent-Tiering', 'retrieval fee', 'minimum storage duration', 'early delete fee', 'minimum billable object size', '128KB', 'break-even', 'small objects', 'Storage Class Analysis', 'transition request cost', 'pricing'],
           },
           {
             shortName: 'S3 Intelligent-Tiering',
