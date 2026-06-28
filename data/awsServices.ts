@@ -4853,6 +4853,33 @@ export const domains: DomainData[] = [
             perangkap: [{"soalan": "EKS perlu shared block storage di-attach serentak ke beberapa EC2 node. Pilih EBS type?", "umpan": "gp3 — sebab default & paling biasa, orang terus pilih gp3.", "betul": "Dua lapis: (1) keyword 'shared access by multiple PODS on different nodes' = ReadWriteMany (RWX) = Amazon EFS (EFS CSI Driver) — itu jawapan ideal. (2) TAPI kalau option semua EBS je (takde EFS), pilih io1/io2 sebab HANYA io1/io2 support Multi-Attach (gp3/st1/sc1 tak boleh). 'EKS + shared + different nodes' BUKAN soalan rosak bila option semua EBS — ia uji fakta Multi-Attach = io1/io2. Sifir: EFS ada → EFS; option EBS sahaja → io1/io2 (block RWO, wajib cluster-aware FS)."}, {"soalan": "Workload log processing — sequential write besar, kos rendah. Pilih EBS type?", "umpan": "gp3 atau io2 — sebab 'performance tinggi' nampak betul.", "betul": "st1 (Throughput-Optimized HDD) — keyword 'sequential / log / big data'. gp3 & io2 dioptimum untuk RANDOM I/O dan lebih mahal; st1 murah & laju untuk sequential throughput."}],
             storageDetails: 'gp3 → General Purpose SSD. Up to 16,000 IOPS, 1,000 MB/s throughput independently configurable. Default choice.\ngp2 → Older General Purpose. Burst IOPS (3 IOPS/GB). Less predictable under sustained load\nio2 → Provisioned IOPS SSD. Up to 64,000 IOPS. 99.999% durability. Supports Multi-Attach\nio1 → Older Provisioned IOPS. Up to 64,000 IOPS. Supports Multi-Attach\nst1 → Throughput-Optimized HDD. Sequential workloads: log processing, ETL, big data. NOT for random I/O\nsc1 → Cold HDD. Lowest cost. Infrequently accessed data',
             detailsLabel: 'EBS Types',
+            mermaid: [
+              {
+                label: 'Pilih EBS type — decision tree',
+                source: `flowchart TD
+  Q["Workload perlu apa?"] --> T{"Profil I/O?"}
+  T -->|"Random I/O / IOPS-bound<br/>(database, boot)"| S{"Berapa kritikal?"}
+  S -->|"Default / kos rendah"| GP["🚗 gp3<br/>General Purpose SSD"]
+  S -->|"Mission-critical / 64K+ IOPS<br/>/ perlu Multi-Attach"| IO["🏎️ io2<br/>Provisioned IOPS SSD"]
+  T -->|"Sequential / throughput besar"| H{"Kerap akses?"}
+  H -->|"Ya — log / ETL / big data"| ST["🚚 st1<br/>Throughput-Optimized HDD"]
+  H -->|"Tidak — cold / arkib"| SC["🧊 sc1<br/>Cold HDD (paling murah)"]`,
+                caption: 'Tanya profil I/O dulu. Random I/O → SSD (gp3 default, io2 kritikal + satu-satunya Multi-Attach). Sequential → HDD (st1 kerap-akses, sc1 cold). INGAT exam: "highest IOPS / Multi-Attach" → io2 · "cost-effective default / boot" → gp3 · "big data / log sequential" → st1 · "lowest cost / infrequent" → sc1.',
+              },
+              {
+                label: 'Cara ingat — analogi kenderaan',
+                source: `flowchart LR
+  subgraph SSD["⚡ SSD — laju respon (random I/O)"]
+    GP["🚗 gp3 = kereta sedan<br/>seimbang · default harian"]
+    IO["🏎️ io2 = kereta lumba<br/>power max · mahal · DB kritikal"]
+  end
+  subgraph HDD["🐢 HDD — angkut banyak (sequential)"]
+    ST["🚚 st1 = lori barang<br/>angkut banyak · log / big data"]
+    SC["🧊 sc1 = peti sejuk<br/>simpan murah · jarang buka"]
+  end`,
+                caption: 'SSD (gp/io) = perlu laju respon macam database; HDD (st/sc) = perlu simpan banyak/murah macam log & arkib. gp3 sedan (default), io2 kereta lumba (kritikal + Multi-Attach), st1 lori (throughput sequential), sc1 peti sejuk (cold, paling murah).',
+              },
+            ],
             compare: {
               label: 'EBS volume types — IOPS vs throughput vs cost',
               headers: ['Type', 'Kategori', 'Max prestasi', 'Best untuk', 'Multi-Attach'],
