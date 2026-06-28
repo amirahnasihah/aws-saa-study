@@ -232,6 +232,15 @@ export const triggerRows: TriggerRow[] = [
     domain: 'D2 · Resilient',
     slug: 'd2-ha-rds-multi-az',
   },
+  {
+    id: 'kinesis-video-streams',
+    keywords: ['live video', 'CCTV / camera feed', 'drone / dashcam / video doorbell', 'facial recognition on video', 'two-way / interactive video (WebRTC)', 'ingest & playback media'],
+    service: 'Kinesis Video Streams (KVS)',
+    why: 'Perkataan VIDEO / camera / CCTV / media → KVS (BUKAN Kinesis Data Streams, itu untuk text/log/telemetry). Real-time face/object detection atas video → KVS + Rekognition Video. Dua-hala / interactive / talk-back (video doorbell, baby monitor, telehealth) → KVS with WebRTC.',
+    accent: 'c4',
+    domain: 'D3 · High-Perf',
+    slug: 'd3-messaging-kinesis-video-streams',
+  },
 ]
 
 // ── Pokok keputusan (decision tree) ─────────────────────────────────────────
