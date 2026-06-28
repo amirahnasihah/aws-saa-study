@@ -520,6 +520,30 @@ export const petaModules: PetaModule[] = [
       { left: 'SQS', rel: 'vs', right: 'SNS', note: 'SQS = queue, pull, 1 consumer; SNS = pub/sub, push, fan-out ramai.' },
     ],
   },
+  {
+    num: '09',
+    title: 'Threat detection & protection',
+    accent: 'c6',
+    mermaid: `flowchart LR
+  g1["GuardDuty<br/>(threat dari LOGS · ML · no agent)"] -. "logs vs CVE" .-> g2["Inspector<br/>(scan CVE/vuln · EC2/ECR/Lambda)"]
+  g3["Inspector<br/>(CVE software)"] -. "software vs data" .-> g4["Macie<br/>(PII/sensitive data dalam S3)"]
+  g5["GuardDuty<br/>(DETECT real-time)"] -. "detect vs investigate" .-> g6["Detective<br/>(INVESTIGATE · behavior graph · root cause)"]
+  g7["GuardDuty/Inspector/Macie<br/>(detector)"] -->|"feed finding"| g8["Security Hub<br/>(AGGREGATOR + compliance CIS/PCI · 1 dashboard)"]
+  p1["WAF<br/>(L7 web exploit · SQLi/XSS/bot)"] -. "web exploit vs DDoS" .-> p2["Shield<br/>(DDoS L3/4 flood)"]
+  p3["Shield Standard<br/>(FREE · auto · L3/4)"] -. "free vs DRT+cost" .-> p4["Shield Advanced<br/>($3k/bln · DRT 24/7 · cost protection · WAF free)"]
+  p5["WAF<br/>(HTTP request je)"] -. "web vs VPC-wide" .-> p6["Network Firewall<br/>(semua traffic VPC · L3-7 · Suricata · domain/egress)"]
+  p7["WAF<br/>(rule 1 resource)"] -->|"sebar ke semua acct"| p8["Firewall Manager<br/>(enforce WAF/Shield/SG/NF · seluruh Org)"]`,
+    rows: [
+      { left: 'GuardDuty', rel: 'vs', right: 'Inspector', note: 'GuardDuty = threat dari LOGS (CloudTrail/VPC Flow/DNS, ML, no agent). Inspector = scan CVE/vulnerability (EC2/ECR/Lambda). "unusual activity / crypto-mining / compromised" → GuardDuty; "CVE / patch / vulnerability" → Inspector.' },
+      { left: 'Inspector', rel: 'vs', right: 'Macie', note: 'Inspector = CVE/vuln dalam SOFTWARE (EC2/ECR/Lambda). Macie = PII/sensitive data dalam S3. "vulnerability scan" → Inspector; "PII / credit card / sensitive data in S3" → Macie.' },
+      { left: 'GuardDuty', rel: 'vs', right: 'Detective', note: 'GuardDuty = DETECT (real-time, cari ancaman). Detective = INVESTIGATE (post-incident, behavior graph, root cause). "investigate finding / root cause / scope / visualize attack" → Detective.' },
+      { left: 'Security Hub', rel: 'vs', right: 'GuardDuty/Inspector/Macie', note: 'Security Hub = AGGREGATOR (kumpul semua finding + compliance score CIS/PCI, satu dashboard) — TAK detect sendiri. "single pane of glass / aggregate findings / compliance across accounts" → Security Hub.' },
+      { left: 'WAF', rel: 'vs', right: 'Shield', note: 'WAF = L7 web exploit (SQLi/XSS/bad bot/rate limit). Shield = DDoS (L3/4 volumetric flood). "SQL injection / XSS" → WAF; "DDoS flood" → Shield.' },
+      { left: 'Shield Standard', rel: 'vs', right: 'Shield Advanced', note: 'Standard = FREE, auto, L3/4 — takyah buat apa. Advanced = $3k/bln: DRT 24/7 + cost protection + WAF free + L7. "free DDoS" → Standard; "DRT / cost protection / maximum DDoS" → Advanced.' },
+      { left: 'WAF', rel: 'vs', right: 'Network Firewall', note: 'WAF = HTTP request je (L7, pasang CloudFront/ALB/API GW). Network Firewall = SEMUA traffic VPC (L3-7, Suricata, domain/egress filter). "domain filtering / egress / IDS-IPS VPC-wide" → Network Firewall.' },
+      { left: 'WAF', rel: 'vs', right: 'Firewall Manager', note: 'WAF = tulis rule untuk SATU resource. Firewall Manager = sebar policy (WAF/Shield/SG/Network Firewall) merentas SEMUA account Organization + auto-cover account baru. "centrally enforce across all accounts incl. new ones" → Firewall Manager.' },
+    ],
+  },
 ]
 
 export const trapRows: TrapRow[] = [
