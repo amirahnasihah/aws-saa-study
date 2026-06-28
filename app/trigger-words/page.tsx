@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
+import MermaidDiagram from '@/components/ai/MermaidDiagram'
 import {
   triggerRows,
   trapRows,
@@ -196,8 +197,8 @@ export default function TriggerWordsPage() {
             <span className="flex-1 h-px bg-aws-border/60" aria-hidden="true" />
           </div>
           <p className="text-[0.72rem] text-aws-muted mb-3 max-w-[60ch] leading-relaxed">
-            Pasangan keliru yang exam ulang — kotak <span className="text-aws-text">vs</span> kotak, dengan discriminator.
-            <span className="text-aws-muted/70"> (vs = pilih satu · → = aliran · ⊃ = mengandungi · + = dua-dua perlu)</span>
+            Pasangan keliru yang exam ulang — diagram dengan discriminator pada setiap edge.
+            <span className="text-aws-muted/70"> (garis putus-putus = vs, pilih satu · anak panah pejal = aliran / mengandungi · garis tebal = dua-dua perlu)</span>
           </p>
 
           <div className="grid gap-3 md:grid-cols-2">
@@ -207,21 +208,8 @@ export default function TriggerWordsPage() {
                   <span className={`font-space-mono text-[0.7rem] font-bold ${accentText[m.accent]}`}>{m.num}</span>
                   <h3 className="font-space-mono text-[0.8rem] font-bold text-aws-text">{m.title}</h3>
                 </div>
-                <div className="flex flex-col gap-2.5">
-                  {m.rows.map((row) => (
-                    <div key={row.left + row.right}>
-                      <div className="flex items-center gap-1.5 flex-wrap">
-                        <span className={`font-space-mono text-[0.72rem] font-semibold rounded border ${accentBorder[m.accent]} ${accentBg[m.accent]} px-1.5 py-0.5 ${accentText[m.accent]}`}>
-                          {row.left}
-                        </span>
-                        <span className="font-space-mono text-[0.66rem] text-aws-muted" aria-hidden="true">{row.rel}</span>
-                        <span className="font-space-mono text-[0.72rem] font-semibold rounded border border-aws-border bg-aws-bg px-1.5 py-0.5 text-aws-text/85">
-                          {row.right}
-                        </span>
-                      </div>
-                      <p className="text-[0.69rem] text-aws-muted leading-relaxed mt-1">{row.note}</p>
-                    </div>
-                  ))}
+                <div className="overflow-x-auto">
+                  <MermaidDiagram source={m.mermaid} />
                 </div>
               </div>
             ))}

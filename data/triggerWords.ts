@@ -359,6 +359,12 @@ export interface PetaModule {
   title: string
   accent: Accent
   rows: PetaRow[]
+  // Mermaid flowchart that renders the same confused-pairs visually. Edge style
+  // encodes the relation: solid `-->` = flow/contains (→/⊃), dashed `-.->` = vs
+  // (confused pair, pick one), thick `==>` = `+` (both needed). Discriminator
+  // rides on the edge/node label so no exam content is lost when the text cards
+  // are replaced by the diagram.
+  mermaid: string
 }
 
 export const petaModules: PetaModule[] = [
@@ -366,6 +372,16 @@ export const petaModules: PetaModule[] = [
     num: '01',
     title: 'Security & multi-account',
     accent: 'c3',
+    mermaid: `flowchart LR
+  a1["Management acct"] -->|"⊃ Organizations:<br/>1 payer + consolidated billing"| a2["OU → member accts"]
+  a3["SCP"] -. "siling MAX: SEKAT<br/>bukan BAGI, root pun kena" .-> a4["IAM policy"]
+  a5["IAM (source)"] == "DUA kunci · set 1 belah<br/>je = Access Denied" ==> a6["Resource policy (dest)"]
+  a7["Resource policy<br/>(org read S3/SQS)"] -. "kemas vs kompleks" .-> a8["Role + AssumeRole<br/>(temp creds)"]
+  a9["IAM Group<br/>(bakul user)"] -. "tak boleh assume vs<br/>identiti sementara" .-> a10["IAM Role"]
+  a11["Secrets Manager<br/>(auto-rotate)"] -. "rotate vs config" .-> a12["SSM Param Store<br/>(Standard FREE)"]
+  a13["AWS-managed key"] -. "kawal rotation/<br/>policy/audit → CMK" .-> a14["CMK"]
+  a15["KMS<br/>(multi-tenant, FIPS L2)"] -. "regulasi ketat<br/>→ HSM" .-> a16["CloudHSM<br/>(single-tenant L3)"]
+  a17["Encryption at rest<br/>(KMS/SSE)"] -. "disk vs network" .-> a18["In transit<br/>(TLS/ACM/VPN)"]`,
     rows: [
       { left: 'Management acct', rel: '⊃', right: 'OU → member accts', note: 'Organizations = satu payer · consolidated billing + volume discount.' },
       { left: 'SCP', rel: 'vs', right: 'IAM policy', note: 'SCP = siling maksimum (SEKAT, bukan BAGI) — even root member tak lepas.' },
@@ -382,6 +398,9 @@ export const petaModules: PetaModule[] = [
     num: '02',
     title: 'Monitoring & audit',
     accent: 'c1',
+    mermaid: `flowchart LR
+  b1["CloudWatch<br/>(metrics/logs/alarm · APA jadi)"] -. "apa vs siapa" .-> b2["CloudTrail<br/>(SIAPA call API · audit)"]
+  b3["CloudTrail<br/>(siapa buat action)"] -. "action vs state" .-> b4["AWS Config<br/>(STATE resource + comply)"]`,
     rows: [
       { left: 'CloudWatch', rel: 'vs', right: 'CloudTrail', note: 'CloudWatch = metrics/logs/alarms (APA jadi); CloudTrail = SIAPA call API (audit).' },
       { left: 'CloudTrail', rel: 'vs', right: 'AWS Config', note: 'CloudTrail = siapa buat action; Config = STATE resource + comply ke tak.' },
@@ -391,6 +410,10 @@ export const petaModules: PetaModule[] = [
     num: '03',
     title: 'Networking',
     accent: 'c4',
+    mermaid: `flowchart LR
+  c1["VPC<br/>(rangkaian sendiri)"] -->|"⊃ subnet pecah ikut AZ"| c2["Subnet (public/private)"]
+  c3["Security Group<br/>(stateful · instance · allow je)"] -. "vs" .-> c4["NACL<br/>(stateless · subnet · allow+deny)"]
+  c5["CloudFront<br/>(CDN · cache di edge)"] -. "cache vs no-cache" .-> c6["Global Accelerator<br/>(2 anycast IP · TCP/UDP · failover &lt;30s)"]`,
     rows: [
       { left: 'VPC', rel: '⊃', right: 'Subnet (public/private)', note: 'VPC = rangkaian sendiri; subnet pecah ikut AZ.' },
       { left: 'Security Group', rel: 'vs', right: 'NACL', note: 'SG = stateful, instance-level, allow je; NACL = stateless, subnet-level, allow + deny.' },
@@ -401,6 +424,9 @@ export const petaModules: PetaModule[] = [
     num: '04',
     title: 'Load Balancer',
     accent: 'c2',
+    mermaid: `flowchart LR
+  d1["ALB (L7)<br/>(HTTP path/host routing)"] -. "L7 vs L4" .-> d2["NLB (L4)<br/>(TCP/UDP · juta conn · static IP)"]
+  d3["NLB"] -. "depan appliance<br/>pihak ketiga" .-> d4["GWLB<br/>(firewall / IDS / IPS)"]`,
     rows: [
       { left: 'ALB (L7)', rel: 'vs', right: 'NLB (L4)', note: 'ALB = HTTP path/host routing; NLB = TCP/UDP, juta conn, static IP, latency rendah.' },
       { left: 'NLB', rel: 'vs', right: 'GWLB', note: 'GWLB = depan appliance pihak ketiga (firewall / IDS / IPS).' },
@@ -410,6 +436,9 @@ export const petaModules: PetaModule[] = [
     num: '05',
     title: 'Database',
     accent: 'c5',
+    mermaid: `flowchart LR
+  e1["Multi-AZ<br/>(survive AZ outage · HA)"] -. "HA vs scaling" .-> e2["Read Replica<br/>(offload READ)"]
+  e3["10,000 Lambda"] -->|"pool conn · elak<br/>too many connections"| e4["RDS Proxy"] --> e5["RDS"]`,
     rows: [
       { left: 'Multi-AZ', rel: 'vs', right: 'Read Replica', note: 'Multi-AZ = survive AZ outage (HA); Read Replica = offload READ (scaling).' },
       { left: '10,000 Lambda', rel: '→', right: 'RDS Proxy → RDS', note: 'Proxy pool connection; elak "too many connections". Pilih DB? Tengok pokok keputusan atas ↑' },
@@ -419,6 +448,11 @@ export const petaModules: PetaModule[] = [
     num: '06',
     title: 'Compute & scaling',
     accent: 'c6',
+    mermaid: `flowchart LR
+  f1["Scale UP (vertical)<br/>(instance besar · ada had)"] -. "vs" .-> f2["Scale OUT (horizontal)<br/>(tambah instance · ASG · elastik)"]
+  f3["On-Demand / Reserved"] -. "harga vs interruptible" .-> f4["Spot<br/>(90% murah · 2-min notice)"]
+  f5["EBS<br/>(block · 1 instance · 1 AZ)"] -. "1 vs ramai" .-> f6["EFS<br/>(file · share ramai · multi-AZ)"]
+  f7["Beanstalk<br/>(PaaS · deploy APP · auto EC2+ALB+ASG)"] -. "app vs semua resource" .-> f8["CloudFormation<br/>(IaC general)"]`,
     rows: [
       { left: 'Scale UP (vertical)', rel: 'vs', right: 'Scale OUT (horizontal)', note: 'UP = instance lagi besar (ada had); OUT = tambah instance (ASG) = elastik.' },
       { left: 'On-Demand / Reserved', rel: 'vs', right: 'Spot', note: 'Spot = sampai 90% murah, 2-min notice; Mixed = On-Demand baseline + Spot.' },
@@ -430,6 +464,9 @@ export const petaModules: PetaModule[] = [
     num: '07',
     title: 'Geografi — Region / AZ',
     accent: 'c1',
+    mermaid: `flowchart LR
+  g1["Region<br/>(geografi)"] -->|"⊃ ≥3 AZ"| g2["AZ<br/>(data center berasingan)"]
+  g2 -->|"⊃ 1 subnet = 1 AZ"| g3["Subnet<br/>(Multi-AZ = tahan 1 AZ tumbang)"]`,
     rows: [
       { left: 'Region', rel: '⊃', right: 'AZ (≥3)', note: 'Region = geografi; AZ = data center berasingan dalam region.' },
       { left: 'AZ', rel: '⊃', right: 'Subnet', note: '1 subnet = 1 AZ; deploy Multi-AZ = tahan 1 AZ tumbang.' },
@@ -439,6 +476,9 @@ export const petaModules: PetaModule[] = [
     num: '08',
     title: 'Aliran data',
     accent: 'c3',
+    mermaid: `flowchart LR
+  h1["Kinesis Streams<br/>(real-time custom · shard)"] -. "custom vs auto-deliver" .-> h2["Firehose<br/>(auto → S3/Redshift · serverless)"]
+  h3["SQS<br/>(queue · pull · 1 consumer)"] -. "queue vs pub/sub" .-> h4["SNS<br/>(push · fan-out ramai)"]`,
     rows: [
       { left: 'Kinesis Streams', rel: 'vs', right: 'Firehose', note: 'Streams = real-time custom (shard); Firehose = auto-deliver ke S3/Redshift (serverless).' },
       { left: 'SQS', rel: 'vs', right: 'SNS', note: 'SQS = queue, pull, 1 consumer; SNS = pub/sub, push, fan-out ramai.' },
