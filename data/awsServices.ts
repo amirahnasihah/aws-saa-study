@@ -3352,8 +3352,9 @@ export const domains: DomainData[] = [
               'Failover Aurora <30s; RDS Multi-AZ 1-2 min',
               'Semua instance SHARE satu cluster volume (bukan copy sendiri) → tambah replica laju',
               'Up to 15 Aurora Replicas (read), lag <10ms',
-              'MySQL & PostgreSQL compatible; storage auto-grow → 128 TiB',
+              'MySQL & PostgreSQL compatible; storage auto-grow → 256 TiB (128 TiB engine lama)',
               'Global Database = 1 primary + up to 5 region; RTO <1min, RPO ~1s',
+              'Aurora cluster ≠ RDS Multi-AZ DB Cluster: Aurora = shared storage 6-copy/3-AZ + ≤15 reader; Multi-AZ DB Cluster = standard RDS engine, 2 reader je, local storage per node',
             ],
             perangkap: [
               {
@@ -3365,6 +3366,11 @@ export const domains: DomainData[] = [
                 soalan: 'Nak HA relational DB dengan failover lebih laju & lebih banyak salinan dari RDS Multi-AZ.',
                 umpan: 'RDS Multi-AZ — nampak cukup. Tapi soalan tekan "lebih laju + lebih banyak copy".',
                 betul: 'Aurora (6 copies/3 AZ, failover <30s vs RDS Multi-AZ 1 standby/1-2 min).',
+              },
+              {
+                soalan: 'Nak MySQL HA dengan 2 readable standby + failover laju TAPI kekal guna standard RDS engine (bukan tukar ke Aurora). Pilih.',
+                umpan: 'Aurora — "readable replica + fast failover" bunyi sangat macam Aurora, ramai terjebak.',
+                betul: 'RDS Multi-AZ DB Cluster — kekal standard RDS MySQL/PostgreSQL engine, 2 readable standby, 3 AZ. Aurora = engine berasingan + shared storage (6-copy) + ≤15 reader. Keyword "shared storage / 6 copies / up to 15 readers" → Aurora; "standard RDS engine + 2 readable standby" → Multi-AZ DB Cluster.',
               },
             ],
             contohGuna: 'Replace RDS MySQL production — Aurora bagi HA automatik, 6 copies, failover <30s, storage auto-scale, tanpa manage sendiri.',
@@ -3382,7 +3388,7 @@ export const domains: DomainData[] = [
                     { label: 'Primary (Writer)', sub: 'read + write · 1 je', tone: 'c2' },
                     { label: 'Aurora Replicas', sub: 'up to 15 · read-only · failover target', tone: 'c4' },
                   ] },
-                  { nodes: [{ label: 'Shared Cluster Volume', sub: '6 copies · 3 AZs (2/AZ) · auto-grow → 128 TiB', tone: 'c3' }] },
+                  { nodes: [{ label: 'Shared Cluster Volume', sub: '6 copies · 3 AZs (2/AZ) · auto-grow → 256 TiB', tone: 'c3' }] },
                 ],
                 caption: 'SEMUA instance (writer + readers) share SATU cluster volume — bukan tiap instance ada copy sendiri (beza dengan RDS Multi-AZ). Tambah replica = laju sebab tak perlu copy data. Writer endpoint sentiasa tunjuk primary; reader endpoint auto load-balance across replicas. Primary fail → replica dipromote <30s.',
               },
@@ -3446,11 +3452,12 @@ export const domains: DomainData[] = [
               'Aurora Global Database failover: secondary region promote jadi primary automatically bila primary region down — minimal manual effort',
               'Exam: "cross-region DR, downtime < 1 minit, minimal manual ops" → Aurora Global Database. Bukan Multi-AZ (same region). Bukan manual snapshot restore (kena buat sendiri)',
               'Multi-AZ Aurora Replicas = same region HA (failover dalam AZ, bukan region)',
+              'JANGAN keliru Aurora cluster dengan RDS Multi-AZ DB Cluster: Aurora = engine berasingan, shared cluster volume (6 copies/3 AZ, storage terpisah dari compute), ≤15 reader, ~5x throughput. Multi-AZ DB Cluster = standard RDS engine (MySQL/PostgreSQL je), setiap node ada LOCAL storage sendiri, tepat 2 readable standby, semisynchronous, failover <35s. Lihat kad "RDS Multi-AZ" untuk DB Instance vs DB Cluster.',
             ],
             docs: [
               { label: 'What is Amazon Aurora?', url: 'https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html' },
             ],
-            keywords: ['MySQL compatible', 'PostgreSQL compatible', '6 copies', '3 AZs', 'auto storage 256 TiB', 'fast failover', '15 read replicas', 'Global Database', 'cross-region DR', 'RTO 1 min', 'RPO 1s'],
+            keywords: ['MySQL compatible', 'PostgreSQL compatible', '6 copies', '3 AZs', 'auto storage 256 TiB', 'fast failover', '15 read replicas', 'Global Database', 'cross-region DR', 'RTO 1 min', 'RPO 1s', 'shared cluster volume', 'Multi-AZ DB Cluster', 'Aurora vs Multi-AZ DB Cluster', 'shared storage'],
           },
           {
             shortName: 'Aurora Serverless',
