@@ -3075,7 +3075,8 @@ export const domains: DomainData[] = [
               'Replication SYNC; standby IDLE (tak serve read langsung)',
               'Failover auto ~60-120s, endpoint SAMA (DNS flip) — app tak tukar config',
               'Same region je (across AZ). Cross-region → Read Replica / Aurora Global DB',
-              '1 standby sahaja',
+              '1 standby sahaja (ni DB Instance — default exam)',
+              'Multi-AZ DB CLUSTER = 1 writer + 2 readable standby, 3 AZ, failover <35s (MySQL/PostgreSQL je)',
             ],
             perangkap: [
               {
@@ -3087,6 +3088,11 @@ export const domains: DomainData[] = [
                 soalan: 'Database kena survive AZ outage dengan downtime minimum & auto recovery. Pilih satu.',
                 umpan: 'Read Replica + promote — boleh, tapi "promote" tu MANUAL = bukan auto, RTO lama.',
                 betul: 'Multi-AZ (synchronous standby, auto-failover ~1-2 min). Keyword "survive AZ outage / automatic failover" → Multi-AZ.',
+              },
+              {
+                soalan: 'Perlu HA + standby yang BOLEH serve read + failover lebih laju, guna MySQL/PostgreSQL. Pilih satu.',
+                umpan: 'Multi-AZ DB Instance — nampak betul sebab "Multi-AZ". SALAH: DB Instance standby IDLE (no reads), failover ~60-120s je.',
+                betul: 'Multi-AZ DB CLUSTER (1 writer + 2 readable standby, 3 AZ, failover <35s). Keyword "readable standby + faster failover + MySQL/PostgreSQL" → DB Cluster, BUKAN DB Instance.',
               },
             ],
             scenario: 'Production RDS kat AZ-1 fail — automatic failover ke standby kat AZ-2 dalam 1-2 minit. Same connection endpoint, app tak perlu tukar config. BUKAN untuk scale reads — guna Read Replicas untuk tu.',
@@ -3115,6 +3121,20 @@ export const domains: DomainData[] = [
                   ['Kategori', 'High Availability', 'Performance Scaling', 'Data Recovery'],
                 ],
                 takeaway: 'Tiga penjuru beza tujuan: "survive AZ outage / auto-failover" → Multi-AZ (HA). "reporting slow down prod / global read" → Read Replica (scaling). "tersalah delete / corrupt / restore ke masa lalu" → Snapshot/PITR (recovery). Soalan exam tembak ikut PUNCA masalah, bukan nama service.',
+              },
+              {
+                label: 'DUA jenis "Multi-AZ" — DB Instance vs DB Cluster (jangan keliru)',
+                headers: ['Aspect', 'Multi-AZ DB Instance', 'Multi-AZ DB Cluster'],
+                rows: [
+                  ['Bentuk', '1 primary + 1 standby', '1 writer + 2 readable standbys'],
+                  ['AZ', '2 AZ', '🟢 3 AZ'],
+                  ['Standby boleh dibaca?', '❌ Standby IDLE — no reads', '✅ 2 reader BOLEH serve reads'],
+                  ['Replication', 'Synchronous', 'Semisynchronous (tunggu 1 reader je)'],
+                  ['Failover', '~60–120s', '🟢 Biasanya < 35s'],
+                  ['Write latency', 'Baseline', '🟢 Lower (semisync, tak tunggu semua)'],
+                  ['Engine', 'MySQL, PostgreSQL, MariaDB, Oracle, SQL Server', 'MySQL & PostgreSQL SAHAJA'],
+                ],
+                takeaway: 'Default "Multi-AZ" exam maksudkan DB INSTANCE (1 standby idle, no reads — ni yang semua perangkap lain rujuk). Multi-AZ DB CLUSTER (2022) = 1 writer + 2 readable standby, 3 AZ, failover laju (<35s), reader BOLEH baca = HA + sikit read capacity sekali. Keyword "readable standby / faster failover / lower write latency + MySQL/PostgreSQL" → DB Cluster. AWASS: Multi-AZ DB Cluster ≠ Aurora cluster (Aurora = storan kongsi 6-copy/3-AZ, sampai 15 reader).',
               },
             ],
             diagram: {
@@ -3157,8 +3177,9 @@ export const domains: DomainData[] = [
             ],
             docs: [
               { label: 'Multi-AZ deployments for high availability', url: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html' },
+              { label: 'Multi-AZ DB cluster deployments', url: 'https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/multi-az-db-clusters-concepts.html' },
             ],
-            keywords: ['automatic failover', 'standby', 'different AZ', 'sync replication', 'same endpoint', 'HA only', 'automated backups', 'manual snapshot', 'point-in-time restore', 'retention period'],
+            keywords: ['automatic failover', 'standby', 'different AZ', 'sync replication', 'same endpoint', 'HA only', 'automated backups', 'manual snapshot', 'point-in-time restore', 'retention period', 'Multi-AZ DB cluster', 'Multi-AZ DB instance', 'readable standby', 'semisynchronous', 'two readable standbys', 'three AZ', 'faster failover'],
           },
           {
             shortName: 'RDS Read Replicas',
