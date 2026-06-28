@@ -5377,11 +5377,11 @@ export const domains: DomainData[] = [
             fullName: 'Amazon EBS — Volume Types & Multi-Attach',
             ingat: '"gp3 = general best. io2 = mission-critical + Multi-Attach. st1 = sequential log. sc1 = cold"',
             gunaUntuk: 'Choose right EBS type for workload: random I/O vs sequential, IOPS vs throughput, cost vs performance',
-            fungsi: 'EBS ada 4 jenis: SSD-backed (gp2, gp3, io1, io2) untuk IOPS-intensive, HDD-backed (st1, sc1) untuk throughput-intensive sequential.',
-            sebabApa: "Banyak jenis EBS wujud sebab workload ada profil I/O berbeza & tak masuk akal guna satu jenis untuk semua (mahal/tak optimum). SSD (gp/io) untuk random I/O & IOPS-bound (database, boot). HDD (st1/sc1) jauh lebih murah untuk sequential throughput besar (log, big data) & cold data — kau jimat banyak bila pilih ikut corak akses sebenar.",
-            sifir: ["gp3 = default SSD, 16K IOPS, 1000 MB/s, IOPS & throughput configure berasingan", "io2 = mission-critical SSD, 64K+ IOPS, 99.999% durable, support Multi-Attach", "st1 = HDD sequential (log/ETL/big data), BUKAN random I/O", "sc1 = HDD cold, kos paling rendah, infrequent access", "Multi-Attach HANYA io1/io2; gp2/gp3/st1/sc1 TAK boleh", "Tak pasti = gp3; SSD = random I/O; HDD = sequential/cold"],
-            perangkap: [{"soalan": "EKS perlu shared block storage di-attach serentak ke beberapa EC2 node. Pilih EBS type?", "umpan": "gp3 — sebab default & paling biasa, orang terus pilih gp3.", "betul": "Dua lapis: (1) keyword 'shared access by multiple PODS on different nodes' = ReadWriteMany (RWX) = Amazon EFS (EFS CSI Driver) — itu jawapan ideal. (2) TAPI kalau option semua EBS je (takde EFS), pilih io1/io2 sebab HANYA io1/io2 support Multi-Attach (gp3/st1/sc1 tak boleh). 'EKS + shared + different nodes' BUKAN soalan rosak bila option semua EBS — ia uji fakta Multi-Attach = io1/io2. Sifir: EFS ada → EFS; option EBS sahaja → io1/io2 (block RWO, wajib cluster-aware FS)."}, {"soalan": "Workload log processing — sequential write besar, kos rendah. Pilih EBS type?", "umpan": "gp3 atau io2 — sebab 'performance tinggi' nampak betul.", "betul": "st1 (Throughput-Optimized HDD) — keyword 'sequential / log / big data'. gp3 & io2 dioptimum untuk RANDOM I/O dan lebih mahal; st1 murah & laju untuk sequential throughput."}],
-            storageDetails: 'gp3 → General Purpose SSD. Up to 16,000 IOPS, 1,000 MB/s throughput independently configurable. Default choice.\ngp2 → Older General Purpose. Burst IOPS (3 IOPS/GB). Less predictable under sustained load\nio2 → Provisioned IOPS SSD. Up to 64,000 IOPS. 99.999% durability. Supports Multi-Attach\nio1 → Older Provisioned IOPS. Up to 64,000 IOPS. Supports Multi-Attach\nst1 → Throughput-Optimized HDD. Sequential workloads: log processing, ETL, big data. NOT for random I/O\nsc1 → Cold HDD. Lowest cost. Infrequently accessed data',
+            fungsi: 'Pilih "jenis hard disk" EBS ikut corak kerja. Faham SATU benda dulu, lepas tu semua jatuh tempat — IOPS vs throughput: IOPS = berapa BANYAK operasi baca/tulis kecil sesaat (untuk data berselerak / RANDOM, macam database baca rekod sana-sini). Throughput = berapa BANYAK DATA (MB/s) mengalir sesaat (untuk data besar berturutan / SEQUENTIAL, macam log/video/backup). Ada 6 jenis aktif: 4 SSD (gp3, gp2, io2, io1) untuk IOPS/random, 2 HDD (st1, sc1) untuk throughput/sequential — plus 1 legacy Magnetic (standard) yang dah usang.',
+            sebabApa: "Banyak jenis EBS wujud sebab workload ada profil I/O berbeza & tak masuk akal guna satu jenis untuk semua (mahal/tak optimum). Cara fikir = 2 soalan je: (1) RANDOM atau SEQUENTIAL access? Random (database, boot, rekod kecil berselerak) → SSD (gp/io) sebab IOPS tinggi. Sequential (log, big data, throughput besar berturutan) → HDD (st1/sc1) sebab jauh lebih murah per GB. (2) Berapa kritikal / berapa murah nak? SSD: biasa → gp3, kritikal/IOPS gila → io2. HDD: kerap → st1, jarang/paling murah → sc1. Empat pilihan utama tu cuma kombinasi 2 soalan ni.",
+            sifir: ["KONSEP: IOPS = banyak operasi kecil (RANDOM, database) → SSD; Throughput = data besar berturutan (SEQUENTIAL, log) → HDD", "gp3 = default SSD; baseline 3,000 IOPS + 125 MB/s FREE; IOPS & throughput configure berasingan (gp2 IOPS terikat saiz)", "io2 = mission-critical SSD, 99.999% durable; io2 Block Express sampai 256,000 IOPS / 4,000 MB/s; support Multi-Attach", "io1 = 64,000 IOPS, support Multi-Attach (sama macam io2)", "st1 = HDD sequential (log/ETL/big data), 500 MB/s, BUKAN random I/O; sc1 = HDD cold, 250 MB/s, paling murah", "Multi-Attach HANYA io1/io2 (max 16 EC2, SAMA AZ); gp2/gp3/st1/sc1 TAK boleh", "HDD (st1/sc1) TAK boleh jadi boot volume; SSD + Magnetic legacy boleh", "Tak pasti = gp3; SSD = random I/O; HDD = sequential/cold"],
+            perangkap: [{"soalan": "EKS perlu shared block storage di-attach serentak ke beberapa EC2 node. Pilih EBS type?", "umpan": "gp3 — sebab default & paling biasa, orang terus pilih gp3.", "betul": "Dua lapis: (1) keyword 'shared access by multiple PODS on different nodes' = ReadWriteMany (RWX) = Amazon EFS (EFS CSI Driver) — itu jawapan ideal. (2) TAPI kalau option semua EBS je (takde EFS), pilih io1/io2 sebab HANYA io1/io2 support Multi-Attach (gp3/st1/sc1 tak boleh). 'EKS + shared + different nodes' BUKAN soalan rosak bila option semua EBS — ia uji fakta Multi-Attach = io1/io2. Sifir: EFS ada → EFS; option EBS sahaja → io1/io2 (block RWO, wajib cluster-aware FS)."}, {"soalan": "Workload log processing — sequential write besar, kos rendah. Pilih EBS type?", "umpan": "gp3 atau io2 — sebab 'performance tinggi' nampak betul.", "betul": "st1 (Throughput-Optimized HDD) — keyword 'sequential / log / big data'. gp3 & io2 dioptimum untuk RANDOM I/O dan lebih mahal; st1 murah & laju untuk sequential throughput."}, {"soalan": "Database mission-critical (SAP HANA) perlukan 100,000+ IOPS, latency sub-millisecond konsisten. Pilih EBS type?", "umpan": "gp3 — sebab 'default & boleh provision IOPS sendiri', orang sangka gp3 boleh push setinggi mana pun.", "betul": "io2 Block Express — keyword '100,000+ IOPS / sub-ms latency / mission-critical'. gp3 ceiling rendah (classic 16,000 IOPS); io1/io2 standard ~64,000; HANYA io2 Block Express cecah 256,000 IOPS / 4,000 MB/s. Lebih 64,000 IOPS → io2 Block Express."}, {"soalan": "Nak EBS volume PALING MURAH untuk simpan data jarang akses. Magnetic (standard) atau sc1?", "umpan": "Magnetic (standard) — sebab nama bunyi 'old & basic', orang sangka mesti paling murah.", "betul": "sc1 (Cold HDD, $0.015/GB) — keyword 'cheapest current-gen + infrequent'. Magnetic (standard) = LEGACY/previous-gen, ~100 IOPS, AWS tak galak guna; untuk current-gen cold storage jawapan = sc1. Magnetic cuma umpan."}],
+            storageDetails: 'gp3 → General Purpose SSD (default). Baseline 3,000 IOPS + 125 MB/s INCLUDED free; boleh provision IOPS & throughput BERASINGAN dari saiz (up to 16,000 IOPS / 1,000 MB/s — exam classic; docs terkini list ceiling lebih tinggi pada Nitro). Boot volume ✓\ngp2 → Older General Purpose SSD. IOPS terikat saiz (3 IOPS/GB, burst 3,000). Less predictable; migrate ke gp3 (gp3 ~20% murah)\nio2 / io2 Block Express → Provisioned IOPS SSD, paling power. 99.999% durability. io2 standard ~64,000 IOPS; io2 Block Express sampai 256,000 IOPS / 4,000 MB/s, sub-ms latency. Supports Multi-Attach\nio1 → Older Provisioned IOPS SSD. Up to 64,000 IOPS / 1,000 MB/s. Supports Multi-Attach (sama macam io2)\nst1 → Throughput-Optimized HDD. Max 500 MB/s · 500 IOPS. Sequential: log, ETL, big data. BUKAN random I/O. TAK boleh boot volume\nsc1 → Cold HDD. Max 250 MB/s · 250 IOPS. Kos PALING rendah ($0.015/GB). Infrequent/cold. TAK boleh boot volume\nMagnetic (standard) → LEGACY (previous-gen). ~100 IOPS, magnetic platter. Jangan pilih untuk sistem moden — kadang jadi umpan exam',
             detailsLabel: 'EBS Types',
             mermaid: [
               {
@@ -5409,33 +5409,66 @@ export const domains: DomainData[] = [
   end`,
                 caption: 'SSD (gp/io) = perlu laju respon macam database; HDD (st/sc) = perlu simpan banyak/murah macam log & arkib. gp3 sedan (default), io2 kereta lumba (kritikal + Multi-Attach), st1 lori (throughput sequential), sc1 peti sejuk (cold, paling murah).',
               },
+              {
+                label: 'Konsep IOPS vs Throughput — analogi tol & lori',
+                source: `flowchart LR
+  subgraph IOPS["🚗 IOPS = berapa BANYAK operasi"]
+    A["Tol plaza banyak lorong<br/>berapa kereta lalu sesaat"] --> A2["RANDOM access<br/>rekod kecil berselerak"]
+    A2 --> A3["💾 Database, boot<br/>→ SSD (gp3 / io2)"]
+  end
+  subgraph TP["🚚 Throughput = berapa BANYAK data"]
+    B["Lori barang besar<br/>berapa tan diangkut sesaat"] --> B2["SEQUENTIAL access<br/>data besar berturutan"]
+    B2 --> B3["📜 Log, big data, video<br/>→ HDD (st1 / sc1)"]
+  end`,
+                caption: 'INGAT exam: IOPS = kira BILANGAN operasi kecil (tol: berapa kereta lalu) → random → SSD. Throughput = kira ISIPADU data (lori: berapa tan barang) → sequential → HDD. Soalan sebut "high IOPS / random / database" → SSD; "high throughput / sequential / log / big data" → HDD.',
+              },
             ],
-            compare: {
-              label: 'EBS volume types — IOPS vs throughput vs cost',
-              headers: ['Type', 'Kategori', 'Max prestasi', 'Best untuk', 'Multi-Attach'],
-              rows: [
-                ['gp3', 'SSD', '16,000 IOPS · 1,000 MB/s', '🟢 Default — boot, most workloads', '❌'],
-                ['gp2', 'SSD', '16,000 IOPS (burst 3/GB)', 'Older general purpose', '❌'],
-                ['io2', 'SSD', '64,000+ IOPS · 99.999% durable', 'Mission-critical DB, latency rendah', '🟢 Ya'],
-                ['io1', 'SSD', '64,000 IOPS', 'Older provisioned IOPS', '🟢 Ya'],
-                ['st1', 'HDD', '500 MB/s throughput', 'Big data, log, ETL (sequential)', '❌'],
-                ['sc1', 'HDD', '250 MB/s · kos terendah', 'Cold / infrequent access', '❌'],
-              ],
-              takeaway: 'SSD (gp/io) = random I/O & IOPS-bound (database, boot volume). HDD (st1/sc1) = sequential throughput / cold storage — BUKAN untuk random I/O. Multi-Attach HANYA io1/io2. Tak pasti? → gp3.',
-            },
+            compare: [
+              {
+                label: 'KONSEP TERAS: IOPS vs Throughput (faham ni dulu)',
+                headers: ['Aspek', 'IOPS', 'Throughput'],
+                rows: [
+                  ['Ukur apa', 'Bilangan operasi baca/tulis sesaat', 'Jumlah DATA (MB/s) mengalir sesaat'],
+                  ['Analogi', 'Berapa kereta lalu tol sesaat', 'Berapa tan barang lori angkut'],
+                  ['Corak akses', 'RANDOM (rekod kecil berselerak)', 'SEQUENTIAL (data besar berturutan)'],
+                  ['Workload tipikal', 'Database, boot volume, transaksi', 'Log processing, big data, video, backup'],
+                  ['EBS keluarga', 'SSD → gp3 / io2', 'HDD → st1 / sc1'],
+                ],
+                takeaway: 'Dua soalan je masa exam: (1) RANDOM atau SEQUENTIAL? Random → SSD (gp/io), Sequential → HDD (st1/sc1). (2) Kritikal/IOPS gila → io2; biasa → gp3; throughput murah → st1; cold paling murah → sc1. Keyword "IOPS / random / database / low latency" → SSD; "throughput / sequential / log / big data / cheap" → HDD.',
+              },
+              {
+                label: 'EBS volume types — IOPS vs throughput vs cost',
+                headers: ['Type', 'Kategori', 'Max prestasi', 'Best untuk', 'Multi-Attach'],
+                rows: [
+                  ['gp3', 'SSD', 'baseline 3K IOPS+125MB/s free · up to 16K IOPS/1,000MB/s', '🟢 Default — boot, most workloads', '❌'],
+                  ['gp2', 'SSD', '16,000 IOPS (3 IOPS/GB, burst 3K)', 'Older general purpose', '❌'],
+                  ['io2 Block Express', 'SSD', '256,000 IOPS · 4,000 MB/s · 99.999% durable', 'Mission-critical DB (SAP HANA/Oracle), latency sub-ms', '🟢 Ya'],
+                  ['io1', 'SSD', '64,000 IOPS · 1,000 MB/s', 'Older provisioned IOPS', '🟢 Ya'],
+                  ['st1', 'HDD', '500 IOPS · 500 MB/s throughput', 'Big data, log, ETL (sequential)', '❌'],
+                  ['sc1', 'HDD', '250 IOPS · 250 MB/s · kos terendah', 'Cold / infrequent access', '❌'],
+                  ['Magnetic (standard)', 'Legacy', '~100 IOPS', 'Previous-gen, jangan guna (umpan exam)', '❌'],
+                ],
+                takeaway: 'SSD (gp/io) = random I/O & IOPS-bound (database, boot volume). HDD (st1/sc1) = sequential throughput / cold storage — BUKAN untuk random I/O. Multi-Attach HANYA io1/io2 (max 16 EC2, sama AZ). HDD TAK boleh boot. Tak pasti? → gp3.',
+              },
+            ],
             tips: [
-              'Multi-Attach: HANYA io1 dan io2 — attach satu EBS ke multiple EC2 instances simultaneously',
-              'gp2, gp3, st1, sc1 TIDAK support Multi-Attach',
-              'Exam: "shared block storage across multiple EC2 nodes (EKS)" → io2 with Multi-Attach. "Truly shared file storage" → EFS',
-              'Database needing consistent IOPS under sustained load → gp3 (cheaper) atau io2 (mission-critical)',
-              'Large sequential writes (log processing) → st1 (bukan gp3 atau io2 — they are random I/O optimized)',
-              'Pattern: "database + log processing on same EC2" → io2 or gp3 for DB, st1 for logs',
+              'KONSEP teras: IOPS = bilangan operasi kecil sesaat (random, database) → SSD. Throughput = isipadu data MB/s (sequential, log) → HDD. Faham ni dulu, semua jenis EBS jatuh tempat.',
+              'gp3 INCLUDE baseline 3,000 IOPS + 125 MB/s FREE — naik IOPS & throughput BERASINGAN dari saiz. gp2 sebaliknya: IOPS terikat saiz (3 IOPS/GB). Sebab tu migrate gp2→gp3 (gp3 ~20% murah, lagi predictable).',
+              'gp3 ceiling: exam classic = 16,000 IOPS / 1,000 MB/s. (AWS docs terkini list ceiling lebih tinggi pada Nitro, tapi yang diuji selalu baseline 3,000 + cap 16,000.) Perlu LEBIH dari tu → io2.',
+              'io2 Block Express = tier paling power: 256,000 IOPS, 4,000 MB/s, 99.999% durability, latency sub-ms. Soalan sebut ">64,000 IOPS / SAP HANA / mission-critical sub-ms" → io2 Block Express, BUKAN gp3.',
+              'Multi-Attach: HANYA io1 dan io2 — attach satu EBS ke multiple EC2 (max 16) dalam SAMA AZ, perlu cluster-aware filesystem. gp2, gp3, st1, sc1 TIDAK support.',
+              'Exam: "shared block storage across multiple EC2 nodes (EKS)" → io1/io2 Multi-Attach. "Truly shared FILE storage / multi-AZ / POSIX" → EFS (bukan EBS).',
+              'st1 vs sc1: dua-dua HDD sequential. st1 (500 MB/s) untuk kerap akses (log/ETL/big data); sc1 (250 MB/s, paling murah $0.015/GB) untuk jarang/cold. HDD TAK boleh jadi boot volume.',
+              'Magnetic (standard) = LEGACY/previous-gen (~100 IOPS). Jangan pilih untuk sistem moden; AWS sendiri tak galak. Kadang jadi umpan "cheapest" — current-gen cheapest sebenarnya sc1.',
+              'PRICING (us-east-1): gp3 $0.08/GB-mo (base, includes 3K IOPS + 125 MB/s) · io2 $0.125/GB-mo + $0.065/provisioned-IOPS-mo (paling mahal) · io1 sama family · st1 $0.045/GB-mo · sc1 $0.015/GB-mo (cheapest current-gen). Exam: "cheapest EBS" → sc1; "mission-critical DB" → io2.',
+              'Pattern: "database + log processing on same EC2" → io2/gp3 for DB (random IOPS), st1 for logs (sequential throughput).',
             ],
             docs: [
               { label: 'Amazon EBS volume types', url: 'https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volume-types.html' },
+              { label: 'Provisioned IOPS SSD (io1/io2) & Block Express', url: 'https://docs.aws.amazon.com/ebs/latest/userguide/provisioned-iops.html' },
               { label: 'Attach a volume to multiple instances (Multi-Attach)', url: 'https://docs.aws.amazon.com/ebs/latest/userguide/ebs-volumes-multi.html' },
             ],
-            keywords: ['gp3', 'io2', 'st1', 'sc1', 'Multi-Attach', 'Provisioned IOPS', 'throughput HDD', 'EBS types'],
+            keywords: ['gp3', 'gp2', 'io2', 'io1', 'io2 Block Express', 'st1', 'sc1', 'Magnetic', 'standard volume', 'Multi-Attach', 'Provisioned IOPS', 'throughput HDD', 'IOPS', 'throughput', 'random I/O', 'sequential', 'boot volume', 'EBS types', 'pricing', 'baseline IOPS'],
           },
           {
             shortName: 'EFS',
