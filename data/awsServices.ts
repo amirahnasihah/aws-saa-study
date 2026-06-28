@@ -6911,12 +6911,27 @@ export const domains: DomainData[] = [
             sifir: ["AppFlow = SaaS API integration (Salesforce, ServiceNow, Slack, Zendesk)", "DataSync = file/storage protocol (NFS, SMB, HDFS, S3) — BUKAN SaaS", "Glue = code-based ETL (PySpark/Python) untuk data lake — AppFlow no-code", "Bidirectional transfer + scheduling + field mapping + filter", "Destinasi AWS: S3, Redshift, EventBridge"],
             perangkap: [{"soalan": "Sync data Salesforce + ServiceNow ke S3 untuk analytics, tanpa custom development. Service?", "umpan": "AWS Glue — sangka 'data ke S3 = ETL = Glue'.", "betul": "AppFlow. Glue = code-based ETL (tulis PySpark). AppFlow = no-code SaaS connector. Keyword: 'SaaS app' (Salesforce/ServiceNow) + 'no code' → AppFlow."}, {"soalan": "Migrate fail dari on-prem NFS share ke S3. AppFlow?", "umpan": "AppFlow — sangka semua 'transfer ke AWS' guna AppFlow.", "betul": "DataSync. AppFlow untuk SaaS API; file protocol (NFS/SMB) → DataSync. Keyword: 'NFS/SMB file migration' → DataSync, BUKAN AppFlow."}],
             scenario: '"Company guna Salesforce dan ServiceNow, nak sync data ke S3 untuk analytics tanpa custom code" → AppFlow. DataSync = file/storage migration (NFS, SMB, S3). Glue = ETL untuk structured data. AppFlow = SaaS API connectors.',
+            compare: {
+              label: 'AppFlow vs DataSync vs Glue — "pindah data" tiga jenis, jangan keliru',
+              headers: ['Aspect', 'AppFlow', 'DataSync', 'Glue'],
+              rows: [
+                ['Sumber data', 'SaaS API (Salesforce, ServiceNow, Slack, Zendesk)', 'File/storage protocol (NFS, SMB, HDFS, object)', 'Data store (S3, RDS, Redshift, JDBC)'],
+                ['Cara kerja', 'No-code connector + field mapping', 'No-code agent, sync fail pukal', 'Code ETL (PySpark/Python) + crawler/catalog'],
+                ['Guna untuk', 'Tarik data SaaS → AWS (bidirectional)', 'Migrate/replicate fail on-prem ↔ AWS', 'Transform data untuk data lake/warehouse'],
+                ['Keyword exam', '"SaaS app", "Salesforce", "no custom code"', '"NFS/SMB", "file migration", "on-prem share"', '"ETL", "transform", "data catalog", "PySpark"'],
+              ],
+              takeaway: 'Sumber = SaaS app (Salesforce/ServiceNow) → AppFlow. Sumber = fail on-prem (NFS/SMB) → DataSync. Perlu TRANSFORM/ETL untuk data lake → Glue. INGAT exam: padankan ikut JENIS SUMBER, bukan destinasi (semua boleh tuju S3).',
+            },
             tips: [
               'AppFlow vs DataSync: AppFlow = SaaS API integration (Salesforce, ServiceNow, Zendesk). DataSync = file protocol migration (NFS, SMB, HDFS, S3)',
               'AppFlow vs Glue: AppFlow = no-code, event-triggered SaaS sync. Glue = code-based ETL (PySpark/Python), for data lakes',
               '"automate transfer between SaaS app and S3 with no custom development" → AppFlow (every time)',
+              'PRICING: (approx, no free tier)$0.001 per flow run + $0.02 per GB data diproses. Murah untuk sync berjadual; kos naik ikut volume data. Exam: AppFlow bil per-flow-run + per-GB, bukan per jam.',
             ],
-            keywords: ['AppFlow', 'SaaS integration', 'Salesforce', 'ServiceNow', 'no-code connector', 'data transfer', 'bidirectional', 'S3', 'Redshift'],
+            docs: [
+              { label: 'What is Amazon AppFlow', url: 'https://docs.aws.amazon.com/appflow/latest/userguide/what-is-appflow.html' },
+            ],
+            keywords: ['AppFlow', 'SaaS integration', 'Salesforce', 'ServiceNow', 'no-code connector', 'data transfer', 'bidirectional', 'S3', 'Redshift', 'DataSync', 'Glue', 'pricing'],
           },
           {
             shortName: 'AppSync',
@@ -6929,6 +6944,18 @@ export const domains: DomainData[] = [
             perangkap: [{"soalan": "Mobile app perlu real-time update + offline data sync dengan automatic conflict resolution. Service?", "umpan": "API Gateway WebSocket — sangka WebSocket = real-time = jawapan.", "betul": "AppSync. Ia ada offline sync + conflict resolution built-in (via Amplify DataStore); API Gateway tiada. Keyword: 'GraphQL' / 'offline sync' / 'conflict resolution' → AppSync."}, {"soalan": "Satu query frontend perlu aggregate data dari DynamoDB + Aurora + Lambda sekaligus. Pilih?", "umpan": "API Gateway + banyak REST endpoint — sangka kena panggil banyak endpoint.", "betul": "AppSync GraphQL — satu query resolve dari multiple data source. REST kena banyak round-trip. Keyword: 'single query, multiple sources' → AppSync."}],
             contohGuna: 'Mobile app perlukan real-time chat + offline support → AppSync GraphQL API. Frontend query satu endpoint, AppSync resolve dari DynamoDB + Lambda + Aurora sekaligus.',
             scenario: '"Mobile app needs real-time updates and offline data sync with automatic conflict resolution" → AppSync. "REST API for microservices" → API Gateway. AppSync = GraphQL + real-time + offline. API Gateway = REST/WebSocket + throttling + API keys.',
+            compare: {
+              label: 'AppSync vs API Gateway — dua-dua "managed API front door", beza paradigm',
+              headers: ['Aspect', 'AWS AppSync', 'API Gateway'],
+              rows: [
+                ['Paradigm', 'GraphQL (satu query, tarik apa perlu je)', 'REST / HTTP / WebSocket'],
+                ['Multi-source query', 'Ya — satu query resolve dari DynamoDB+Lambda+Aurora sekaligus', 'Tak — satu endpoint = satu integration (banyak round-trip)'],
+                ['Real-time', 'Built-in subscriptions (push via WebSocket)', 'Perlu WebSocket API + manual wiring'],
+                ['Offline sync', 'Ya (Amplify DataStore + conflict resolution)', 'Tiada'],
+                ['Guna bila', 'Mobile/web app, GraphQL, real-time, offline', 'REST microservices, throttling, API keys, usage plans'],
+              ],
+              takeaway: 'Keyword "GraphQL / offline sync / conflict resolution / satu query banyak source" → AppSync. Keyword "REST API / HTTP / throttling / API key / usage plan" → API Gateway. Jangan pilih API Gateway WebSocket bila soalan sebut offline sync — itu AppSync je yang ada built-in.',
+            },
             tips: [
               'AppSync vs API Gateway: AppSync = GraphQL, real-time subscriptions, offline sync, multiple data sources in one query. API Gateway = REST/HTTP/WebSocket APIs, throttling, usage plans, API keys',
               'Data sources: DynamoDB, Aurora, OpenSearch, Lambda, HTTP endpoints, other AWS services. Satu query boleh resolve dari MULTIPLE data sources sekaligus — powerful for aggregation',
@@ -6936,8 +6963,12 @@ export const domains: DomainData[] = [
               'Offline + conflict resolution: AppSync + Amplify DataStore = offline-first mobile/web apps. Data sync automatically bila device reconnects. Conflict resolution strategies: Optimistic Concurrency, Auto Merge, Custom Lambda',
               'Caching: AppSync has server-side caching (optional). Reduces resolver execution and improves latency',
               'Exam: "GraphQL" or "real-time data sync" or "offline mobile app" → AppSync. Bukan API Gateway (yang untuk REST/HTTP)',
+              'PRICING: (approx)$4.00 per juta query & data-modification operation + $2.00 per juta real-time update + $0.08 per juta connection-minute (subscription). Caching optional (per node-hour). Free tier 12 bulan: 250K query ops + 250K real-time updates/bulan. Exam: bil ikut jumlah operation + connection-time, bukan per jam endpoint.',
             ],
-            keywords: ['GraphQL', 'real-time', 'subscriptions', 'WebSocket', 'offline sync', 'conflict resolution', 'resolvers', 'DynamoDB', 'multiple data sources', 'mobile', 'Amplify'],
+            docs: [
+              { label: 'What is AWS AppSync (GraphQL)', url: 'https://docs.aws.amazon.com/appsync/latest/devguide/what-is-appsync.html' },
+            ],
+            keywords: ['GraphQL', 'real-time', 'subscriptions', 'WebSocket', 'offline sync', 'conflict resolution', 'resolvers', 'DynamoDB', 'multiple data sources', 'mobile', 'Amplify', 'API Gateway', 'pricing'],
           },
           {
             shortName: 'Amplify',
@@ -7200,7 +7231,15 @@ export const domains: DomainData[] = [
             perangkap: [{"soalan": "Team nak private Git source control dalam AWS dengan access control yang integrate terus dengan IAM users/roles. Service?", "umpan": "Host GitHub Enterprise atas EC2 — boleh, tapi kau urus server sendiri (patch/scale).", "betul": "CodeCommit — keyword 'private Git + IAM access control + fully managed' = CodeCommit, no server to manage."}],
             contohGuna: 'Dev team simpan code dalam CodeCommit → setiap push trigger CodePipeline automatically.',
             scenario: '"Source control dalam AWS", "private Git repository", "version control integrated dengan IAM" → CodeCommit.',
-            keywords: ['Git', 'source control', 'version control', 'private repo', 'IAM integration'],
+            tips: [
+              'CodeCommit vs S3: CodeCommit = Git version control untuk SOURCE CODE (branch, commit, merge). S3 = object store untuk artifact/binary besar — bukan source control.',
+              'Access control = IAM policies + IAM users/roles (no separate accounts). Encryption: at-rest auto via KMS, in-transit HTTPS/SSH.',
+              'PRICING: free tier 5 active users/account (50GB storage + 10K Git requests/user/mo), lepas tu $1.00 per active user/bulan. NOTA: AWS dah tutup CodeCommit untuk pelanggan BARU (sejak 2024) — repo sedia ada masih jalan; konsep masih boleh keluar exam.',
+            ],
+            docs: [
+              { label: 'What is AWS CodeCommit', url: 'https://docs.aws.amazon.com/codecommit/latest/userguide/welcome.html' },
+            ],
+            keywords: ['Git', 'source control', 'version control', 'private repo', 'IAM integration', 'pricing'],
           },
           {
             shortName: 'CI/CD Pipeline',
@@ -7215,7 +7254,26 @@ export const domains: DomainData[] = [
             storageDetails: 'CodeCommit → Store & version control source code (Git)\nCodeBuild → Compile, test, produce build artifacts\nCodeDeploy → Deploy ke EC2, Lambda, ECS, on-premises\nCodePipeline → Orchestrate & automate the full pipeline',
             detailsLabel: 'CI/CD Suite',
             scenario: 'Soalan sebut "automate deployment", "CI/CD pipeline in AWS", "deploy code automatically on push" → CodePipeline sebagai orchestrator utama.',
-            keywords: ['CI/CD', 'CodePipeline', 'CodeBuild', 'CodeDeploy', 'DevOps', 'automation', 'pipeline'],
+            mermaid: {
+              label: 'Aliran 4 Code services — siapa buat apa (CodePipeline = otak)',
+              source: `flowchart LR
+  DEV["👩‍💻 Developer<br/>git push"] --> CC["📦 CodeCommit<br/>(store + version code)"]
+  CC -->|"push trigger"| CP{"⚙️ CodePipeline<br/>ORCHESTRATOR"}
+  CP --> CB["🔨 CodeBuild<br/>compile + run test<br/>(serverless, per-minute)"]
+  CB --> CD["🚀 CodeDeploy<br/>deploy → EC2 / Lambda / ECS<br/>(blue-green / canary)"]
+  CD --> PROD["✅ Production"]`,
+              caption: 'CodePipeline = orchestrator (otak) yang detect push & sambung setiap stage ikut urutan. INGAT exam: "automate end-to-end on push / orchestrate" → CodePipeline; CodeBuild = build+test je (satu stage); CodeDeploy = deploy + blue-green/canary.',
+            },
+            tips: [
+              'CodePipeline = ORCHESTRATOR (otak). CodeBuild = build+test (satu stage). CodeDeploy = deploy (blue-green/canary). Jangan pilih CodeBuild bila soalan tanya "yang orchestrate end-to-end".',
+              'CodeDeploy deployment strategy: in-place, blue/green (EC2/ECS/Lambda), canary & linear (Lambda/ECS) — kurangkan risiko release. Keyword "gradual / shift traffic / rollback automatic" → CodeDeploy.',
+              'PRICING: (approx)CodePipeline V1 = $1.00/active pipeline/bulan (1 free first 30 days/pipeline). CodeBuild = per build-minute ikut compute (general1.small ~$0.005/min, 100 min/mo free tier). CodeDeploy = FREE deploy ke EC2/Lambda/ECS; on-prem $0.02/instance update. Exam: CodeDeploy ke EC2/Lambda/ECS percuma — bayar resource je.',
+            ],
+            docs: [
+              { label: 'AWS CodePipeline — what is', url: 'https://docs.aws.amazon.com/codepipeline/latest/userguide/welcome.html' },
+              { label: 'CodeDeploy deployment types (blue/green, canary)', url: 'https://docs.aws.amazon.com/codedeploy/latest/userguide/welcome.html' },
+            ],
+            keywords: ['CI/CD', 'CodePipeline', 'CodeBuild', 'CodeDeploy', 'DevOps', 'automation', 'pipeline', 'blue-green', 'canary', 'orchestrator', 'pricing'],
           },
           {
             shortName: 'CloudWatch',
@@ -8313,14 +8371,32 @@ export const domains: DomainData[] = [
             sifir: ["MSK = managed Apache Kafka; Kinesis = AWS-native proprietary (no Kafka API)", "Pilih MSK bila ada Kafka expertise / nak migrate existing Kafka; pilih Kinesis kalau nak simpler", "TIADA SSH / direct access ke broker — AWS manage infra", "Lambda + MSK perlu Event Source Mapping (ESM), tak auto-trigger", "MSK Serverless = auto-scale compute + storage, no broker capacity management", "MSK = AWS-only, BUKAN multi-cloud"],
             perangkap: [{"soalan": "Syarikat nak migrate on-prem Apache Kafka cluster ke AWS dengan minimum code change. Servis mana?", "umpan": "Amazon Kinesis Data Streams — nampak macam 'streaming jadi pilih', tapi Kinesis bukan Kafka-compatible, jadi kena rewrite producer/consumer code = bukan minimum change.", "betul": "Amazon MSK — Kafka API compatible, code Kafka sedia ada jalan terus. Keyword: 'migrate Kafka', 'Kafka API', 'minimum code change'."}, {"soalan": "Lambda function tak trigger walaupun ada message masuk topic MSK. Kenapa?", "umpan": "Ingat Lambda auto-poll MSK macam SNS/SQS — sebab tu orang tak setup apa-apa, sangka ia automatik.", "betul": "Kena configure Event Source Mapping (ESM) — Lambda TAK auto pick up MSK events. Keyword: 'event source mapping', 'Lambda MSK trigger'."}],
             scenario: '"Migrate on-premises Apache Kafka cluster ke AWS" → Amazon MSK. Atau streaming pipeline yang perlu Kafka API compatibility. Kinesis = AWS-native proprietary. MSK = Kafka-compatible (for migration or Kafka expertise teams).',
+            compare: {
+              label: 'MSK vs Kinesis Data Streams — streaming kembar (pilih yang mana?)',
+              headers: ['Aspect', 'Amazon MSK', 'Kinesis Data Streams'],
+              rows: [
+                ['API', 'Apache Kafka API (open-source)', 'AWS proprietary (Kinesis API/KCL)'],
+                ['Bila pilih', 'Dah ada Kafka / nak migrate / ada Kafka expertise', 'Mula baru, nak simpler, AWS-native'],
+                ['Ops beban', 'Pilih broker size & count (atau Serverless)', 'Pilih shard count (atau On-Demand)'],
+                ['Unit skala', 'Partition (per topic)', 'Shard (1MB/s in, 2MB/s out setiap satu)'],
+                ['Retention', 'Boleh unlimited (tiered storage)', 'Default 24h, max 365 hari'],
+                ['Trigger Lambda', 'Perlu Event Source Mapping (ESM)', 'Perlu Event Source Mapping (ESM)'],
+              ],
+              takeaway: 'Keyword "Apache Kafka / migrate Kafka / Kafka API / minimum code change" → MSK. Keyword "AWS-native streaming, simpler, tak nak urus Kafka" → Kinesis Data Streams. Dua-dua AWS-only (BUKAN multi-cloud). Lihat card Kinesis untuk Data Streams vs Firehose vs Video.',
+            },
             tips: [
               'MSK is managed BUT does NOT provide SSH/direct access to Kafka brokers — AWS manages the underlying infrastructure.',
               'Lambda + MSK integration REQUIRES configuring an Event Source Mapping (ESM) — Lambda does not automatically pick up MSK events.',
               'MSK Auto Scaling: automatically expands broker storage based on utilization threshold. MSK Serverless: auto-scales compute AND storage, no broker capacity management.',
               'MSK is NOT multi-cloud — AWS-only service. Does NOT span other cloud providers.',
               'Kinesis vs MSK: Kinesis = AWS-native, simpler, no Kafka expertise needed. MSK = Kafka API compatible, for teams with Kafka expertise or migrating existing Kafka workloads.',
+              'PRICING: (approx, us-east-1, no free tier)MSK Provisioned = bayar per broker-hour ikut instance type (kafka.m5.large ~$0.21/broker-hr) + storage $0.10/GB-mo + data transfer. Broker jalan 24/7 = bayar walau idle. MSK Serverless = $0.75/cluster-hr + ~$0.0015/partition-hr + throughput ($0.10/GB in). Exam: workload spiky/tak tentu → MSK Serverless (no broker capacity planning); steady high-throughput → Provisioned lagi murah.',
             ],
-            keywords: ['Kafka', 'managed', 'streaming', 'event streaming', 'migration', 'Kafka API', 'real-time pipeline', 'brokers', 'no SSH', 'event source mapping', 'MSK Serverless', 'auto scaling storage'],
+            docs: [
+              { label: 'What is Amazon MSK', url: 'https://docs.aws.amazon.com/msk/latest/developerguide/what-is-msk.html' },
+              { label: 'MSK Serverless', url: 'https://docs.aws.amazon.com/msk/latest/developerguide/serverless.html' },
+            ],
+            keywords: ['Kafka', 'managed', 'streaming', 'event streaming', 'migration', 'Kafka API', 'real-time pipeline', 'brokers', 'no SSH', 'event source mapping', 'MSK Serverless', 'auto scaling storage', 'partition', 'pricing', 'broker-hour'],
           },
           {
             shortName: 'Kendra',
@@ -8332,12 +8408,28 @@ export const domains: DomainData[] = [
             sifir: ["Kendra = ML semantic 'find the answer' search; OpenSearch = scalable keyword/full-text", "Faham natural-language query + intent, bukan sekadar match keyword", "Index unstructured: PDF, Word, PowerPoint, HTML, email, wiki", "Native handle FAQ → boleh bagi jawapan terus question-answer", "Connector ke S3, SharePoint, Confluence, database", "'enterprise document search + natural language' = Kendra"],
             perangkap: [{"soalan": "E-commerce nak product search berskala besar dengan spell-check, synonym, dan ranking untuk jutaan query/hari. Pilih apa?", "umpan": "Kendra — nampak macam 'intelligent search jadi mesti Kendra', tapi Kendra mahal + dioptimumkan untuk 'find the answer' enterprise docs, bukan high-volume keyword product search.", "betul": "OpenSearch — scalable keyword/full-text search dengan fuzzy + relevance ranking untuk volume tinggi. Keyword: 'product search', 'high-volume', 'spell-check/synonym'."}],
             scenario: '"Enterprise wants to search across internal docs, FAQs, emails, PDFs with natural language queries" → Kendra. "E-commerce product search with spell-check/synonyms" → OpenSearch (keyword search engine). Kendra = understanding context + intent. OpenSearch = scalable keyword/full-text search.',
+            compare: {
+              label: 'Kendra vs OpenSearch vs Comprehend — jangan keliru tiga "text" service ni',
+              headers: ['Aspect', 'Kendra', 'OpenSearch', 'Comprehend'],
+              rows: [
+                ['Buat apa', 'ML "find the answer" search', 'Keyword/full-text search engine', 'NLP — analisa kandungan text'],
+                ['Input → Output', 'Soalan natural → jawapan tepat', 'Query → senarai dokumen match', 'Text → sentiment/entiti/topik'],
+                ['Guna bila', 'Cari jawapan dlm dokumen syarikat', 'Product/log search, high-volume', 'Sentiment review, extract entiti'],
+                ['Kos', 'MAHAL (per-hour edition, ~$810+/mo)', 'Sederhana (per node-hour)', 'Murah (per unit text dianalisa)'],
+                ['Keyword exam', '"natural language", "ask a question", "FAQ"', '"spell-check", "synonym", "high-volume"', '"sentiment", "entities", "key phrases"'],
+              ],
+              takeaway: 'Kendra = FAHAM soalan & bagi JAWAPAN (mahal); OpenSearch = MATCH keyword & senarai dokumen (volume tinggi); Comprehend = ANALISA text (sentiment/entiti), bukan search. INGAT exam: "natural language enterprise search" → Kendra; tapi kalau soalan tekan "high-volume / cost-sensitive product search" → OpenSearch sebab Kendra mahal.',
+            },
             tips: [
               'Kendra vs OpenSearch: Kendra = ML semantic search for enterprise "find the answer" use cases. OpenSearch = scalable keyword full-text search for high-volume queries (e-commerce, log analytics).',
               'Kendra natively handles FAQs — can provide direct question-answer responses from FAQ documents.',
               'Kendra indexes unstructured content: PDFs, Word, PowerPoint, HTML, emails, wikis.',
+              'PRICING: (approx, us-east-1)Developer Edition ~$1.125/hr (~$810/mo, max 10K docs / 4K queries/day) ; Enterprise Edition ~$1.40/hr (~$1,008/mo, production HA) + connector sync hours. NO real free tier (Developer Edition free 750 hrs first 30 days je). Exam discriminator: Kendra MAHAL & bil per-jam walau idle — kalau soalan tekan kos atau high-volume keyword search, jawapan selalunya OpenSearch, BUKAN Kendra.',
             ],
-            keywords: ['Kendra', 'enterprise search', 'ML search', 'semantic search', 'natural language query', 'FAQs', 'unstructured documents', 'intelligent search'],
+            docs: [
+              { label: 'What is Amazon Kendra', url: 'https://docs.aws.amazon.com/kendra/latest/dg/what-is-kendra.html' },
+            ],
+            keywords: ['Kendra', 'enterprise search', 'ML search', 'semantic search', 'natural language query', 'FAQs', 'unstructured documents', 'intelligent search', 'pricing', 'expensive'],
           },
           {
             shortName: 'Data Exchange',
@@ -8349,7 +8441,15 @@ export const domains: DomainData[] = [
             sifir: ["Data Exchange = marketplace beli/subscribe data PIHAK KETIGA (external)", "Data dihantar terus ke S3 bucket kau", "AWS handle licensing + subscription management automatik", "Kinesis = data REAL-TIME kau sendiri; Data Exchange = data luar orang lain jual", "Contoh data: market/financial data, regulatory filing, cuaca, ekonomi"],
             perangkap: [{"soalan": "Firma analitik nak subscribe market data + economic indicator dari penyedia luar dan masukkan ke AWS untuk analisis. Servis mana?", "umpan": "Amazon Kinesis / S3 + custom ingest — orang ingat kena bina pipeline ingest sendiri, tapi itu untuk data KAU sendiri, bukan beli data pihak ketiga berlesen.", "betul": "AWS Data Exchange — marketplace third-party data, delivery terus ke S3, licensing diuruskan. Keyword: 'third-party data', 'subscribe dataset', 'data products'."}],
             scenario: '"Company wants to subscribe to market data, economic indicators, and regulatory filings from third-party providers and deliver them to their AWS accounts for analytics" → AWS Data Exchange. Kinesis = your own real-time data. Data Exchange = external third-party data products.',
-            keywords: ['Data Exchange', 'third-party data', 'data marketplace', 'data subscription', 'market data', 'financial data', 'data products', 'S3 delivery', 'licensing'],
+            tips: [
+              'Data Exchange vs Kinesis/Glue/DataSync: itu semua untuk gerak/proses data KAU SENDIRI. Data Exchange = beli data PIHAK KETIGA (provider luar jual). Keyword "third-party / subscribe to a dataset / data product" → Data Exchange.',
+              'Delivery: subscriber dapat data terus ke S3 (file-based), atau akses via API / Redshift datashare. AWS uruskan entitlement + licensing automatik.',
+              'PRICING: subscriber bayar harga langganan yang DITETAPKAN OLEH PROVIDER (ada produk percuma, ada bayar bulanan/tahunan) — tiada markup AWS tetap. Kau juga bayar storan S3 biasa untuk data yang dihantar. Provider bayar kos publish/deliver. Exam: kos Data Exchange = ikut harga provider, bukan tarif AWS tetap.',
+            ],
+            docs: [
+              { label: 'What is AWS Data Exchange', url: 'https://docs.aws.amazon.com/data-exchange/latest/userguide/what-is.html' },
+            ],
+            keywords: ['Data Exchange', 'third-party data', 'data marketplace', 'data subscription', 'market data', 'financial data', 'data products', 'S3 delivery', 'licensing', 'entitlement', 'pricing'],
           },
           {
             shortName: 'AWS AI/ML Services',
@@ -8432,12 +8532,28 @@ export const domains: DomainData[] = [
             sifir: ["SageMaker = latih/deploy MODEL CUSTOM sendiri (data kau, algorithm kau)", "Pre-built AI (Rekognition/Polly/Lex/Comprehend) = no training, call API je", "Autopilot = AutoML: auto cuba algorithm + hyperparameter, pilih terbaik", "Deploy options: real-time, serverless, batch, async endpoint", "'train custom model on company data' → SageMaker; 'detect faces' → Rekognition", "Pipelines = CI/CD untuk ML (MLOps)"],
             perangkap: [{"soalan": "Pasukan nak bina model ramalan churn guna kod Python custom, tune hyperparameter, dan deploy ke real-time endpoint. Servis mana?", "umpan": "Amazon Comprehend / servis AI pre-built — nampak 'AI/ML jadi pilih AI service', tapi pre-built tak boleh latih model custom atas data kau atau tune hyperparameter.", "betul": "Amazon SageMaker — platform ML end-to-end untuk train custom + tune + deploy. Keyword: 'custom model', 'train your own', 'hyperparameter tuning'."}],
             scenario: '"Build a churn prediction model from historical data using custom Python code, tune hyperparameters, and deploy to a real-time endpoint" → SageMaker. Pre-built AI services (Polly, Lex, Rekognition, Comprehend) = no training needed, call the API. SageMaker = you control the model.',
+            compare: {
+              label: 'SageMaker — 4 cara deploy model (pilih ikut traffic pattern)',
+              headers: ['Endpoint type', 'Bila guna', 'Bil (cost)', 'Keyword exam'],
+              rows: [
+                ['Real-time', 'Inference segera, traffic steady 24/7', 'Per instance-hour, jalan & bil non-stop walau idle', '"low-latency", "always-on API"'],
+                ['Serverless Inference', 'Traffic intermittent/spiky, ada idle period', 'Per inference (auto scale → 0 bila tiada traffic)', '"intermittent", "unpredictable", "scale to zero"'],
+                ['Batch Transform', 'Score dataset besar sekali-sekala (no live endpoint)', 'Per job (instance jalan masa job je)', '"batch", "offline scoring", "whole dataset"'],
+                ['Async Inference', 'Payload besar / inference lama (sampai 1GB, beratur)', 'Auto scale, queue request, scale→0 bila kosong', '"large payload", "long processing", "queue"'],
+              ],
+              takeaway: 'Steady traffic → Real-time. Spiky/idle → Serverless Inference (scale to zero, jimat). Score banyak data sekali → Batch Transform. Payload besar/lama → Async. INGAT exam: real-time endpoint bil 24/7 walau tiada request — kalau soalan tekan "intermittent traffic + cost", jawapan Serverless Inference.',
+            },
             tips: [
-              'SageMaker vs pre-built AI services: SageMaker = custom model training (your data, your algorithm). Rekognition/Polly/Lex/Comprehend = pre-trained, call API directly',
+              'SageMaker vs pre-built AI services: SageMaker = custom model training (your data, your algorithm). Rekognition/Polly/Lex/Comprehend = pre-trained, call API directly. Lihat card "AWS AI/ML Services" untuk decision tree pre-built vs custom.',
               'SageMaker Autopilot = AutoML: automatically tries different algorithms and hyperparameters, picks the best model',
               '"Train a custom model on company data" → SageMaker. "Detect faces in images" → Rekognition (no training needed)',
+              'PRICING: (approx, us-east-1)tiada flat fee — bayar per ML instance-hour untuk setiap fasa (Notebook/Studio, Training job, Endpoint) + storage + data processing. ml.m5.xlarge ~$0.23/hr. Free tier 2 bulan pertama (jam terhad). Exam discriminator: real-time endpoint bil SELAGI ia "InService" (walau 0 request) — workload intermittent → guna Serverless Inference / matikan endpoint untuk jimat.',
             ],
-            keywords: ['SageMaker', 'custom ML', 'training', 'AutoML', 'Autopilot', 'hyperparameter tuning', 'model deployment', 'MLOps', 'Feature Store', 'Pipelines'],
+            docs: [
+              { label: 'What is Amazon SageMaker AI', url: 'https://docs.aws.amazon.com/sagemaker/latest/dg/whatis.html' },
+              { label: 'Deploy models for inference', url: 'https://docs.aws.amazon.com/sagemaker/latest/dg/deploy-model.html' },
+            ],
+            keywords: ['SageMaker', 'custom ML', 'training', 'AutoML', 'Autopilot', 'hyperparameter tuning', 'model deployment', 'MLOps', 'Feature Store', 'Pipelines', 'real-time endpoint', 'serverless inference', 'batch transform', 'async inference', 'pricing'],
           },
         ],
       },
