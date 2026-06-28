@@ -4267,7 +4267,7 @@ export const domains: DomainData[] = [
             sifir: ["EKS = managed Kubernetes; ECS = AWS-proprietary orchestrator", "EKS control plane ~$0.10/jam/cluster; ECS control plane FREE", "Pilih EKS bila: dah ada K8s skill/YAML/Helm atau nak portable multi-cloud", "Pod access AWS tanpa simpan credentials = IRSA (IAM Roles for Service Accounts)", "ConfigMap = non-sensitive config je, BUKAN tempat secret", "Least ops + tak reti K8s = ECS Fargate, BUKAN EKS"],
             perangkap: [{"soalan": "Company nak run containers di AWS, team baru, tak ada pengalaman Kubernetes, nak least operational overhead. Pilih mana?", "umpan": "EKS — sebab 'Kubernetes' bunyi macam standard industri & power, ramai ingat container = K8s.", "betul": "ECS Fargate — keyword 'no K8s knowledge + least ops'. EKS ada learning curve tinggi + bayar control plane. ECS Fargate = AWS-native, serverless, paling senang."}, {"soalan": "EKS pods perlu baca secret dari Secrets Manager tanpa hardcode credentials dalam container image. Cara terbaik?", "umpan": "Simpan access key dalam Kubernetes ConfigMap atau dalam image — nampak macam senang, terus boleh pakai.", "betul": "IRSA (IAM Roles for Service Accounts) — pod assume IAM role via service account annotation, zero credentials tersimpan. ConfigMap BUKAN untuk secret."}],
             contohGuna: 'Large-scale containerized apps yang guna K8s',
-            compare: {
+            compare: [{
               label: 'ECS vs EKS — bila pilih yang mana',
               headers: ['Aspect', 'ECS', 'EKS'],
               rows: [
@@ -4279,19 +4279,46 @@ export const domains: DomainData[] = [
                 ['Guna bila', 'Nak cepat, AWS sahaja, simple', 'Dah ada K8s skill/tooling, multi-cloud, ekosistem K8s'],
               ],
               takeaway: 'Default + ringkas + AWS sahaja → ECS. Dah pakai Kubernetes / nak portable / ada team K8s → EKS. Dua-dua boleh guna Fargate untuk buang urusan server. "Least ops + no K8s knowledge" → ECS Fargate.',
+            }, {
+              label: 'EKS persistent storage — EBS vs EFS vs FSx (access mode)',
+              headers: ['Storage (CSI driver)', 'Access mode', 'Scope', 'Best untuk'],
+              rows: [
+                ['EBS (EBS CSI)', 'ReadWriteOnce (RWO)', 'Satu node · satu AZ', 'StatefulSet 1-pod-1-volume (DB pod)'],
+                ['EFS (EFS CSI)', '🟢 ReadWriteMany (RWX)', 'Multi-AZ · ramai node', 'Shared access pods across nodes (default jawapan)'],
+                ['FSx for Lustre', 'ReadWriteMany (RWX)', 'Multi-node high-perf', 'HPC / ML training throughput tinggi'],
+                ['FSx for NetApp ONTAP', 'RWX (NFS/SMB)', 'Multi-protocol', 'Enterprise shared, multi-protocol'],
+              ],
+              takeaway: 'Pods kongsi fail across different nodes → EFS (RWX). Satu pod satu volume (DB) → EBS (RWO). HPC/ML throughput → FSx Lustre. EBS Multi-Attach (io1/io2) = block RWO, satu AZ je, wajib cluster-aware FS — BUKAN shared file system untuk pods. Exam: "shared access by multiple pods on different EC2 nodes" → EFS.',
+            }],
+            detailsLabel: 'EKS persistent storage (CSI drivers)',
+            storageDetails: 'EBS CSI Driver → mount EBS sebagai ReadWriteOnce (RWO): satu volume terikat ke satu pod, satu AZ je. Sesuai StatefulSet macam database pod (satu pod = satu disk).\nEFS CSI Driver → mount EFS sebagai ReadWriteMany (RWX): banyak pod across nodes & AZ kongsi SATU file system serentak. Ini jawapan untuk "shared storage across pods".\nFSx for Lustre CSI → shared storage (RWX) throughput tinggi untuk HPC / ML training.\nFSx for NetApp ONTAP CSI → shared storage multi-protocol (NFS/SMB) untuk enterprise workload.\nEBS Multi-Attach (io1/io2 only) → kongsi satu BLOCK volume ke ≤16 EC2 dalam SATU AZ, wajib cluster-aware filesystem (GFS2/etc). Ini block-level RWO, BUKAN shared file system biasa untuk pods.',
+            mermaid: {
+              label: 'Pilih storage untuk EKS pods',
+              source: `flowchart TD
+  Q["📦 Pod perlu storage jenis apa?"] --> SH{"Banyak pod / node<br/>kongsi fail sama?"}
+  SH -->|"Ya — shared (RWX)"| PERF{"Perlu throughput<br/>gila (HPC / ML)?"}
+  SH -->|"Tak — 1 pod 1 volume (RWO)"| EBS["💾 EBS (EBS CSI)<br/>ReadWriteOnce<br/>StatefulSet / DB pod"]
+  PERF -->|"Ya"| FSX["⚡ FSx for Lustre<br/>RWX high-perf<br/>HPC / ML training"]
+  PERF -->|"Tak — file biasa"| EFS["📁 EFS (EFS CSI)<br/>ReadWriteMany<br/>shared across AZ"]`,
+              caption: 'Kongsi across nodes = RWX = EFS (default jawapan). Satu pod satu volume = RWO = EBS. Throughput gila = FSx Lustre. INGAT exam: "shared access by multiple pods on different EC2 nodes" → EFS, BUKAN EBS Multi-Attach (block RWO, satu AZ je).',
             },
             tips: [
               'IRSA (IAM Roles for Service Accounts): pods assume IAM roles via service account annotation — no credentials stored anywhere',
               'Best practice for EKS pods to access AWS services (Secrets Manager, S3, DynamoDB) without embedding credentials',
               'ConfigMaps = non-sensitive config data. NOT for secrets. Kubernetes Secrets + IRSA = proper pattern',
               'Exam: "EKS pods need access to Secrets Manager without credentials in container image" → IRSA + Kubernetes Secrets',
+              'STORAGE — EBS CSI Driver = ReadWriteOnce (RWO): satu pod, satu AZ. EFS CSI Driver = ReadWriteMany (RWX): banyak pod across nodes/AZ kongsi satu file system.',
+              'STORAGE exam: "EKS pods perlu shared access ke storage across different EC2 nodes" → Amazon EFS (RWX), BUKAN EBS Multi-Attach (RWO, satu AZ je).',
+              'STORAGE trap: EBS Multi-Attach hanya io1/io2, kongsi BLOCK volume ke ≤16 EC2 dalam SATU AZ + wajib cluster-aware filesystem — ia bukan shared file system biasa untuk pods.',
+              'STORAGE: FSx for Lustre (RWX) = high-performance shared storage untuk HPC / ML training atas EKS.',
             ],
-            scenario: '"Dah ada Kubernetes skill/YAML/Helm, nak portable across cloud" → EKS (bukan ECS). "Just run containers, AWS-only, least learning" → ECS. "EKS pods access AWS tanpa simpan credentials" → IRSA. "K8s control plane managed tapi nak run on-prem consistent" → EKS Anywhere. NOTA: control plane EKS ada kos (~$0.10/jam/cluster); ECS control plane percuma.',
+            scenario: '"Dah ada Kubernetes skill/YAML/Helm, nak portable across cloud" → EKS (bukan ECS). "Just run containers, AWS-only, least learning" → ECS. "EKS pods access AWS tanpa simpan credentials" → IRSA. "K8s control plane managed tapi nak run on-prem consistent" → EKS Anywhere. STORAGE: "shared access by multiple pods on different EC2 nodes" → EFS (RWX, EFS CSI Driver), BUKAN EBS Multi-Attach. "Satu pod satu volume / database StatefulSet" → EBS (RWO, EBS CSI Driver). "HPC / ML training throughput tinggi" → FSx for Lustre. NOTA: control plane EKS ada kos (~$0.10/jam/cluster); ECS control plane percuma.',
             docs: [
               { label: 'Amazon EKS — what is it', url: 'https://docs.aws.amazon.com/eks/latest/userguide/what-is-eks.html' },
               { label: 'IAM Roles for Service Accounts (IRSA)', url: 'https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html' },
+              { label: 'Storage for Amazon EKS (EBS/EFS/FSx CSI)', url: 'https://docs.aws.amazon.com/eks/latest/userguide/storage.html' },
             ],
-            keywords: ['Kubernetes', 'K8s', 'container orchestration', 'IRSA', 'IAM Roles for Service Accounts', 'pod identity', 'ECS vs EKS', 'control plane cost'],
+            keywords: ['Kubernetes', 'K8s', 'container orchestration', 'IRSA', 'IAM Roles for Service Accounts', 'pod identity', 'ECS vs EKS', 'control plane cost', 'EKS storage', 'persistent volume', 'EBS CSI Driver', 'EFS CSI Driver', 'ReadWriteMany', 'RWX', 'ReadWriteOnce', 'RWO', 'shared storage pods', 'pods different nodes', 'FSx for Lustre EKS', 'EBS Multi-Attach'],
           },
           {
             shortName: 'EKS Variants',
