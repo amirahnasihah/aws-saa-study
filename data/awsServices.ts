@@ -1563,7 +1563,8 @@ export const domains: DomainData[] = [
               'Envelope encryption = data key encrypt data, KMS master key encrypt data key (master tak pernah keluar KMS)',
               'CMK (Customer Managed) = full control: custom policy + rotation + audit. Exam keyword "lifecycle/rotation/access control"',
               'AWS Managed key = auto, terhad 1 service, TAK boleh customize. AWS Owned = free, tak boleh audit',
-              'Symmetric = encrypt+decrypt (default, AWS services). Asymmetric = digital signing / public-private',
+              'Symmetric = encrypt+decrypt (default, AWS service SSE guna ni SAHAJA). Asymmetric = public+private pair (sign/verify atau encrypt oleh pihak luar)',
+              'Asymmetric ada 2 KEY USAGE (pilih masa create, immutable): "Sign & Verify" (digital signature) ATAU "Encrypt & Decrypt". Digital signing → Sign & Verify. Private TAK keluar KMS; public boleh download',
               'Multi-Region key = same key material across regions, elak cross-region API call',
               'FIPS 140-2 Level 3 + dedicated hardware + AWS tak boleh access = CloudHSM, BUKAN KMS',
               'Key Policy = ROOT of trust KMS. By default WAJIB key policy bagi akses (atau delegate ke IAM lewat Principal=account-root). IAM Allow SAHAJA tak cukup kalau key policy tak izin — even admin kena blok',
@@ -1590,6 +1591,16 @@ export const domains: DomainData[] = [
                 umpan: 'IAM dah bagi kms:Decrypt, jadi patut boleh. Anggap key boleh diguna selagi IAM Allow — sama macam akses S3/SQS dalam account sendiri.',
                 betul: 'KMS Key Policy (di Account B) belum sebut Principal Account A. Key policy = ROOT of trust — IAM Allow sahaja tak cukup merentas account; key policy WAJIB delegate/izin Principal source acct. Keyword "cross-account KMS decrypt" → IAM policy (source) + Key Policy (destination) serentak.',
               },
+              {
+                soalan: 'Files mesti digitally signed; receiver kena verify authenticity + sahkan tak diubah; HANYA sending app boleh sign, orang lain verify je. KMS key jenis apa?',
+                umpan: 'Symmetric KMS key — sebab default & senang. SALAH: symmetric guna kunci SAMA untuk semua operasi, jadi sesiapa yang boleh verify pun boleh sign — tak boleh asingkan "hanya penghantar sign".',
+                betul: 'Asymmetric KMS key, key usage "Sign and Verify". Private key (sending app sahaja) sign; public key (boleh kongsi) verify. Pengasingan sign-vs-verify HANYA boleh dengan asymmetric. Keyword "digital signing / verify authenticity / only sender signs, others verify" → Asymmetric Sign and Verify.',
+              },
+              {
+                soalan: 'Pilih asymmetric KMS key untuk digital signing — key usage mana yang betul?',
+                umpan: 'Asymmetric "Encrypt and Decrypt" — sebab asymmetric, jadi nampak betul. SALAH: itu untuk encryption guna public/private, BUKAN signing. Satu asymmetric key buat SATU benda je.',
+                betul: 'Asymmetric "Sign and Verify". Asymmetric key pilih key usage masa create & TAK boleh tukar: "Sign and Verify" (digital signature) ATAU "Encrypt and Decrypt" (encrypt by external party). Digital signing → Sign and Verify.',
+              },
             ],
             tips: [
               'Symmetric KMS keys: satu 256-bit key untuk encrypt + decrypt; never leaves KMS unencrypted; AWS services pakai symmetric',
@@ -1600,22 +1611,38 @@ export const domains: DomainData[] = [
               '3 jenis KMS key: (1) AWS Owned keys — fully managed by AWS, free, tak boleh view/manage/audit langsung. (2) AWS Managed keys (aws/service-name) — dalam account anda tapi RESTRICTED kepada satu service, rotation automatic (anual), TAK boleh customize policy/rotation. (3) Customer Managed Keys (CMK) — FULL control: custom key policy, manual/auto rotation, enable/disable, audit penuh dalam CloudTrail',
               'Exam trick: "comprehensive lifecycle management, key rotation, auditing & access control" = ciri CUSTOMER Managed Key (CMK), BUKAN AWS Managed Key — AWS Managed Key tak boleh di-customize oleh user',
             ],
-            compare: {
-              label: 'KMS vs CloudHSM',
-              headers: ['Aspect', 'AWS KMS', 'AWS CloudHSM'],
-              rows: [
-                ['Tenancy', 'Multi-tenant, shared (AWS managed)', '🟢 Single-tenant, dedicated hardware'],
-                ['Who controls keys', 'AWS manages HSM; you manage key policy', '🟢 You fully control — AWS cannot access'],
-                ['FIPS 140-2', 'Level 2 (overall)', '🟢 Level 3'],
-                ['Key types', 'Symmetric + asymmetric, AWS service integration', 'Symmetric + asymmetric, your own crypto (PKCS#11, JCE)'],
-                ['Effort', '🟢 Low — fully managed', 'High — you manage cluster, users, backups'],
-                ['Use when', 'Default encryption for S3/RDS/EBS, easy & cheap', 'Regulatory need for dedicated HW + exclusive control'],
-              ],
-              takeaway: '"Customer-exclusive control / dedicated hardware / FIPS 140-2 Level 3" → CloudHSM. Anything else (normal encrypt-at-rest for AWS services) → KMS. KMS boleh guna CloudHSM sebagai custom key store kalau perlu both.',
-            },
-            mermaid: {
-              label: 'Pilih KMS key type yang betul',
-              source: `flowchart TD
+            compare: [
+              {
+                label: 'KMS vs CloudHSM',
+                headers: ['Aspect', 'AWS KMS', 'AWS CloudHSM'],
+                rows: [
+                  ['Tenancy', 'Multi-tenant, shared (AWS managed)', '🟢 Single-tenant, dedicated hardware'],
+                  ['Who controls keys', 'AWS manages HSM; you manage key policy', '🟢 You fully control — AWS cannot access'],
+                  ['FIPS 140-2', 'Level 2 (overall)', '🟢 Level 3'],
+                  ['Key types', 'Symmetric + asymmetric, AWS service integration', 'Symmetric + asymmetric, your own crypto (PKCS#11, JCE)'],
+                  ['Effort', '🟢 Low — fully managed', 'High — you manage cluster, users, backups'],
+                  ['Use when', 'Default encryption for S3/RDS/EBS, easy & cheap', 'Regulatory need for dedicated HW + exclusive control'],
+                ],
+                takeaway: '"Customer-exclusive control / dedicated hardware / FIPS 140-2 Level 3" → CloudHSM. Anything else (normal encrypt-at-rest for AWS services) → KMS. KMS boleh guna CloudHSM sebagai custom key store kalau perlu both.',
+              },
+              {
+                label: 'Symmetric vs Asymmetric KMS key — bila pilih yang mana',
+                headers: ['Aspect', 'Symmetric key', 'Asymmetric key'],
+                rows: [
+                  ['Kunci', '1 kunci sama (encrypt = decrypt)', '🟢 Pasangan public + private'],
+                  ['Digital signing?', '❌ Tak boleh (kunci sama untuk semua op)', '🟢 Boleh — private SIGN, public VERIFY'],
+                  ['Key usage', 'Encrypt & Decrypt (HMAC = Generate/Verify MAC)', 'Pilih SATU masa create (immutable): "Sign & Verify" ATAU "Encrypt & Decrypt"'],
+                  ['Keluar KMS?', 'Tak pernah keluar', 'Public key boleh download/share; private TAK keluar'],
+                  ['AWS service integration (SSE-KMS S3/RDS/EBS)', '🟢 Ya — AWS service guna symmetric SAHAJA', '❌ Tak boleh untuk SSE'],
+                  ['Guna bila', 'Encryption biasa AWS (default, senang)', 'Sign/verify dokumen, atau encrypt oleh pihak LUAR yang tak boleh call KMS'],
+                ],
+                takeaway: 'Keyword "digital signing / sign and verify / verify authenticity + not tampered / ONLY sender signs, others verify" → Asymmetric key (key usage "Sign and Verify"). Encryption biasa untuk AWS service → Symmetric (default). Symmetric TAK boleh digital signing sebab kunci sama = sesiapa yang verify pun boleh sign (tak boleh asingkan). Cop mohor diraja: private = cop raja (sign), public = sesiapa sahkan cop tu tulen (verify).',
+              },
+            ],
+            mermaid: [
+              {
+                label: 'Pilih KMS key type yang betul',
+                source: `flowchart TD
   A[Nak encrypt / manage key] --> B{Perlu dedicated hardware<br/>FIPS 140-2 Level 3<br/>exclusive control?}
   B -->|Ya| C[CloudHSM<br/>single-tenant HSM]
   B -->|Tidak| D{Digital signing /<br/>asymmetric encryption?}
@@ -1624,13 +1651,28 @@ export const domains: DomainData[] = [
   F -->|Ya| G[Customer Managed Key CMK]
   F -->|Tak, terhad satu service| H[AWS Managed Key<br/>aws/service-name]
   F -->|Langsung tak nak urus| I[AWS Owned Key<br/>free, tak boleh audit]`,
-              caption: 'Dedicated HW + FIPS Level 3 + kawalan eksklusif → CloudHSM. Sign/asymmetric → Asymmetric CMK. Nak custom policy + rotation + audit penuh → Customer Managed Key. Terhad satu service, tak nak customize → AWS Managed Key. Zero management → AWS Owned Key.',
-            },
+                caption: 'Dedicated HW + FIPS Level 3 + kawalan eksklusif → CloudHSM. Sign/asymmetric → Asymmetric CMK. Nak custom policy + rotation + audit penuh → Customer Managed Key. Terhad satu service, tak nak customize → AWS Managed Key. Zero management → AWS Owned Key.',
+              },
+              {
+                label: 'Cara ingat — cop mohor diraja (symmetric vs asymmetric)',
+                source: `flowchart LR
+  subgraph ASYM["👑 Asymmetric = COP MOHOR DIRAJA"]
+    K["Raja (sending app)"] -->|"pegang COP (private key)"| SIGN["Sign dokumen ✍️<br/>(hanya raja boleh)"]
+    SIGN --> DOC["Dokumen + tandatangan"]
+    DOC -->|"public key (dikongsi)"| V["Rakyat VERIFY cop tulen ✅<br/>(tak boleh tiru / sign)"]
+  end
+  subgraph SYM["🔑 Symmetric = SATU kunci pintu"]
+    ONE["Kunci SAMA buka & kunci pintu"] -->|"sesiapa pegang = boleh buat SEMUA"| BAD["Tak boleh asingkan<br/>'sign' dari 'verify' ❌"]
+  end`,
+                caption: 'Asymmetric = cop mohor diraja: hanya raja ada cop (private key) untuk SIGN; sesiapa pun boleh tengok & sahkan cop tu tulen (public key VERIFY) tapi tak boleh tiru. Itu pengasingan "only sender signs, others verify". Symmetric = satu kunci pintu: sesiapa pegang boleh buat semua op — tak boleh asingkan sign dari verify. INGAT exam: "digital signing / sign and verify / only sender signs" → Asymmetric (Sign and Verify); encryption biasa AWS service → Symmetric.',
+              },
+            ],
             docs: [
               { label: 'AWS KMS concepts', url: 'https://docs.aws.amazon.com/kms/latest/developerguide/concepts.html' },
               { label: 'Rotating AWS KMS keys', url: 'https://docs.aws.amazon.com/kms/latest/developerguide/rotate-keys.html' },
+              { label: 'Asymmetric keys in AWS KMS', url: 'https://docs.aws.amazon.com/kms/latest/developerguide/symmetric-asymmetric.html' },
             ],
-            keywords: ['encryption at rest', 'CMK', 'key rotation', 'SSE-KMS', 'envelope encryption', 'CloudTrail audit', 'asymmetric keys', 'digital signing', 'multi-region keys', 'aws:SourceVpce', 'CloudHSM', 'FIPS 140-2', 'single-tenant', 'custom key store', 'key policy', 'cross-account KMS', 'root of trust', 'cross-account decrypt'],
+            keywords: ['encryption at rest', 'CMK', 'key rotation', 'SSE-KMS', 'envelope encryption', 'CloudTrail audit', 'asymmetric keys', 'symmetric keys', 'digital signing', 'sign and verify', 'key usage', 'verify authenticity', 'tamper', 'public key', 'private key', 'only sender signs', 'multi-region keys', 'aws:SourceVpce', 'CloudHSM', 'FIPS 140-2', 'single-tenant', 'custom key store', 'key policy', 'cross-account KMS', 'root of trust', 'cross-account decrypt'],
           },
           {
             shortName: 'Secrets Manager',
