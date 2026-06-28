@@ -180,6 +180,150 @@ export const triggerRows: TriggerRow[] = [
   },
 ]
 
+// ── Pilih Database — pokok keputusan ────────────────────────────────────────
+// One root question splits into three families; each leaf maps an exam keyword
+// cluster to the service that answers it. Mirrors the visual blueprint so the
+// /trigger-words page carries the same decision tree as the Deep Notes card.
+export interface DbLeaf {
+  svc: string // the service to fire
+  cond: string // the keyword cluster / discriminator that picks it
+}
+
+export interface DbBranch {
+  cat: string // family label
+  accent: Accent
+  leaves: DbLeaf[]
+}
+
+export const dbDecisionTree: { root: string; branches: DbBranch[] } = {
+  root: 'Apa bentuk data + cara akses?',
+  branches: [
+    {
+      cat: 'Relational / SQL (transaksi OLTP)',
+      accent: 'c4',
+      leaves: [
+        { svc: 'Aurora', cond: 'perlu HA hebat · auto-scale storage · Global DB · MySQL/PostgreSQL je' },
+        { svc: 'RDS', cond: 'standard, atau perlu Oracle / SQL Server / MariaDB' },
+      ],
+    },
+    {
+      cat: 'NoSQL — ikut shape data',
+      accent: 'c5',
+      leaves: [
+        { svc: 'DynamoDB', cond: 'key-value · serverless · single-digit ms · spiky traffic' },
+        { svc: 'DocumentDB', cond: 'document · "MongoDB-compatible"' },
+        { svc: 'Neptune', cond: 'graph · hubungan · fraud ring · recommendation' },
+        { svc: 'Keyspaces', cond: 'wide-column · "Cassandra / CQL"' },
+        { svc: 'ElastiCache / DAX', cond: 'cache laju · DAX khusus depan DynamoDB' },
+        { svc: 'MemoryDB', cond: 'in-memory tapi DURABLE (boleh jadi primary DB)' },
+      ],
+    },
+    {
+      cat: 'Analytics / time-series',
+      accent: 'c3',
+      leaves: [
+        { svc: 'Redshift', cond: 'OLAP warehouse · BI · agregat berjuta baris · report berulang' },
+        { svc: 'Timestream', cond: 'time-series · sensor IoT · metrik ikut masa' },
+      ],
+    },
+  ],
+}
+
+// ── Peta Besar — corak teras (ringkasan) ────────────────────────────────────
+// Condensed version of the visual blueprint: each module = a few "X vs/→/⊃ Y"
+// rows, each with the exam discriminator. Uniform shape so it renders as a grid
+// of mini-diagram cards without per-module bespoke layout.
+export interface PetaRow {
+  left: string // box A
+  rel: string // relation: 'vs' (confused-pair) · '→' (flow) · '⊃' (contains) · '+' (both needed)
+  right: string // box B
+  note: string // the discriminator / exam takeaway
+}
+
+export interface PetaModule {
+  num: string
+  title: string
+  accent: Accent
+  rows: PetaRow[]
+}
+
+export const petaModules: PetaModule[] = [
+  {
+    num: '01',
+    title: 'Security & multi-account',
+    accent: 'c3',
+    rows: [
+      { left: 'Management acct', rel: '⊃', right: 'OU → member accts', note: 'Organizations = satu payer · consolidated billing + volume discount.' },
+      { left: 'SCP', rel: 'vs', right: 'IAM policy', note: 'SCP = siling maksimum (SEKAT, bukan BAGI) — even root member tak lepas.' },
+      { left: 'IAM (source)', rel: '+', right: 'Resource policy (dest)', note: 'Cross-account = DUA kunci; set satu belah je → Access Denied.' },
+    ],
+  },
+  {
+    num: '02',
+    title: 'Monitoring & audit',
+    accent: 'c1',
+    rows: [
+      { left: 'CloudWatch', rel: 'vs', right: 'CloudTrail', note: 'CloudWatch = metrics/logs/alarms (APA jadi); CloudTrail = SIAPA call API (audit).' },
+      { left: 'CloudTrail', rel: 'vs', right: 'AWS Config', note: 'CloudTrail = siapa buat action; Config = STATE resource + comply ke tak.' },
+    ],
+  },
+  {
+    num: '03',
+    title: 'Networking',
+    accent: 'c4',
+    rows: [
+      { left: 'VPC', rel: '⊃', right: 'Subnet (public/private)', note: 'VPC = rangkaian sendiri; subnet pecah ikut AZ.' },
+      { left: 'Security Group', rel: 'vs', right: 'NACL', note: 'SG = stateful, instance-level, allow je; NACL = stateless, subnet-level, allow + deny.' },
+    ],
+  },
+  {
+    num: '04',
+    title: 'Load Balancer',
+    accent: 'c2',
+    rows: [
+      { left: 'ALB (L7)', rel: 'vs', right: 'NLB (L4)', note: 'ALB = HTTP path/host routing; NLB = TCP/UDP, juta conn, static IP, latency rendah.' },
+      { left: 'NLB', rel: 'vs', right: 'GWLB', note: 'GWLB = depan appliance pihak ketiga (firewall / IDS / IPS).' },
+    ],
+  },
+  {
+    num: '05',
+    title: 'Database',
+    accent: 'c5',
+    rows: [
+      { left: 'Multi-AZ', rel: 'vs', right: 'Read Replica', note: 'Multi-AZ = survive AZ outage (HA); Read Replica = offload READ (scaling).' },
+      { left: '10,000 Lambda', rel: '→', right: 'RDS Proxy → RDS', note: 'Proxy pool connection; elak "too many connections". Pilih DB? Tengok pokok keputusan atas ↑' },
+    ],
+  },
+  {
+    num: '06',
+    title: 'Compute & scaling',
+    accent: 'c6',
+    rows: [
+      { left: 'Scale UP (vertical)', rel: 'vs', right: 'Scale OUT (horizontal)', note: 'UP = instance lagi besar (ada had); OUT = tambah instance (ASG) = elastik.' },
+      { left: 'On-Demand / Reserved', rel: 'vs', right: 'Spot', note: 'Spot = sampai 90% murah, 2-min notice; Mixed = On-Demand baseline + Spot.' },
+      { left: 'EBS (1 AZ)', rel: 'vs', right: 'EFS (multi-AZ)', note: 'EBS = block, 1 instance; EFS = file, share ramai; S3 = object; Instance Store = ephemeral.' },
+    ],
+  },
+  {
+    num: '07',
+    title: 'Geografi — Region / AZ',
+    accent: 'c1',
+    rows: [
+      { left: 'Region', rel: '⊃', right: 'AZ (≥3)', note: 'Region = geografi; AZ = data center berasingan dalam region.' },
+      { left: 'AZ', rel: '⊃', right: 'Subnet', note: '1 subnet = 1 AZ; deploy Multi-AZ = tahan 1 AZ tumbang.' },
+    ],
+  },
+  {
+    num: '08',
+    title: 'Aliran data',
+    accent: 'c3',
+    rows: [
+      { left: 'Kinesis Streams', rel: 'vs', right: 'Firehose', note: 'Streams = real-time custom (shard); Firehose = auto-deliver ke S3/Redshift (serverless).' },
+      { left: 'SQS', rel: 'vs', right: 'SNS', note: 'SQS = queue, pull, 1 consumer; SNS = pub/sub, push, fan-out ramai.' },
+    ],
+  },
+]
+
 export const trapRows: TrapRow[] = [
   {
     bait: 'DynamoDB simpan file',
