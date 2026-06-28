@@ -4219,6 +4219,18 @@ export const domains: DomainData[] = [
                 ],
                 takeaway: '"Container/app perlu akses S3/DynamoDB" → Task Role. "Task gagal pull image dari ECR / tak boleh tulis log" → fix Task Execution Role. Fargate = TIADA instance role (no host). NOTA: EC2 launch type tiada task isolation — container boleh capai credentials task lain di host sama; nak isolation ketat → Fargate.',
               },
+              {
+                label: 'ECS task storage — pilih volume jenis mana',
+                headers: ['Volume', 'Persistence', 'Launch type', 'Guna bila'],
+                rows: [
+                  ['Bind mount', '🔴 Ephemeral (hilang bila task stop)', 'Fargate + EC2', 'Scratch space / kongsi data antara container dalam SATU task'],
+                  ['Amazon EFS', '🟢 Persistent + shared (multi-AZ, concurrent)', 'Fargate + EC2', 'Shared file storage across tasks/AZ — analytics, CMS, web serving'],
+                  ['Amazon EBS', '🟡 Persistent (standalone task); EPHEMERAL kalau task diurus Service', 'Fargate + EC2', 'Block storage 1-task: database, throughput-intensive'],
+                  ['FSx Windows / NetApp ONTAP', '🟢 Persistent shared', 'EC2 only', 'Windows SMB (.NET) / enterprise NFS-SMB high-perf'],
+                  ['Docker volumes', '🟢 Persistent (host-tied)', 'EC2 only', 'Pakai third-party / local volume driver atas host'],
+                ],
+                takeaway: 'Shared persistent across tasks/AZ → EFS (jawapan default stateful ECS). Block 1-task → EBS (TAPI jadi ephemeral bila task diurus Service!). Scratch dalam task → bind mount (ephemeral). FSx & Docker volumes = EC2 launch type SAHAJA. Sama prinsip macam EKS: shared = EFS (RWX), block 1:1 = EBS (RWO).',
+              },
             ],
             mermaid: [
               {
@@ -4240,7 +4252,7 @@ export const domains: DomainData[] = [
                 caption: 'Kaitkan dengan familiar: menu = Task Definition (cuma kertas resepi), pinggan terhidang = Task, ketua dapur jaga stok = Service (desired count), dapur = Cluster. Sewa dapur sendiri = EC2 launch type; guna dapur kongsi tanpa urus = Fargate. INGAT exam: "least operational overhead / no servers" → Fargate; "kawal host (GPU/fleet murah)" → EC2.',
               },
             ],
-            scenario: '"Best describes a task definition" → JSON blueprint/template yang describe containers (image, CPU, memory, ports). "Container app perlu akses S3 dengan least privilege" → Task Role (per-task IAM). "Task tak boleh pull image dari ECR" → Task Execution Role rosak. "Maintain N running copies + auto-restart" → Service. "Run container least ops, no servers" → Fargate. "Pack tasks jimat kos" → binpack; "sebar AZ untuk HA" → spread.',
+            scenario: '"Best describes a task definition" → JSON blueprint/template yang describe containers (image, CPU, memory, ports). "Container app perlu akses S3 dengan least privilege" → Task Role (per-task IAM). "Task tak boleh pull image dari ECR" → Task Execution Role rosak. "Maintain N running copies + auto-restart" → Service. "Run container least ops, no servers" → Fargate. "Pack tasks jimat kos" → binpack; "sebar AZ untuk HA" → spread. STORAGE: "ECS tasks perlu shared persistent file storage across AZ" → Amazon EFS (RWX-style). "Block storage untuk satu task (DB)" → EBS (RWO-style). "Scratch space dalam task" → bind mount (ephemeral).',
             tips: [
               'Task Role vs Task Execution Role (SELALU kena exam): Task Role = IAM untuk APP DALAM container panggil AWS (S3, DynamoDB) — per-task least privilege. Task Execution Role = IAM untuk ECS/Fargate AGENT pull image dari ECR + tulis CloudWatch logs + amik Secrets Manager. Keliru dua ni = silap jawab.',
               'Task placement: binpack = jimat kos (padat), spread = HA (sebar AZ), random = rawak. Constraint: distinctInstance, memberOf',
@@ -4249,13 +4261,17 @@ export const domains: DomainData[] = [
               'ECS Launch Types: Fargate (serverless, AWS manage infrastructure) vs EC2 (kau manage EC2 cluster)',
               'Task = running instance of a Task Definition. Service = maintain desired number of running tasks',
               'Exam: "best describes a task definition" → JSON template that describes containers that form your application',
+              'STORAGE — ECS stateful: Amazon EFS = persistent + shared across tasks & AZ (RWX-style), pilihan default container yang scale horizontal & kongsi fail. EBS = block storage 1-task (RWO-style). Sama prinsip macam EKS.',
+              'STORAGE trap: EBS attached ke task yang diurus oleh Service = EPHEMERAL (hilang bila task diganti). Nak EBS persistent → standalone task. Nak persistent + shared yang selamat → EFS.',
+              'STORAGE: bind mount = ephemeral scratch (hilang bila task stop). FSx for Windows / NetApp ONTAP & Docker volumes = EC2 launch type SAHAJA, BUKAN Fargate.',
             ],
             docs: [
               { label: 'ECS task IAM role (Task Role)', url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-iam-roles.html' },
               { label: 'ECS task execution IAM role', url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task_execution_IAM_role.html' },
               { label: 'ECS task placement strategies', url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/task-placement-strategies.html' },
+              { label: 'Storage options for Amazon ECS tasks', url: 'https://docs.aws.amazon.com/AmazonECS/latest/bestpracticesguide/storage.html' },
             ],
-            keywords: ['Docker', 'containers', 'microservices', 'task definition', 'JSON template', 'Fargate', 'EC2 launch type', 'service', 'task', 'cluster', 'Task Role', 'Task Execution Role', 'per-task IAM', 'binpack', 'spread', 'random', 'task placement', 'desired count'],
+            keywords: ['Docker', 'containers', 'microservices', 'task definition', 'JSON template', 'Fargate', 'EC2 launch type', 'service', 'task', 'cluster', 'Task Role', 'Task Execution Role', 'per-task IAM', 'binpack', 'spread', 'random', 'task placement', 'desired count', 'ECS storage', 'EFS volumes', 'EBS volumes', 'bind mounts', 'ephemeral storage', 'persistent storage', 'stateful containers', 'shared storage'],
           },
           {
             shortName: 'EKS',
@@ -4506,15 +4522,22 @@ export const domains: DomainData[] = [
                 takeaway: '"Run container, least operational overhead, no servers" → Fargate. "Need host-level control / cheapest at steady scale" → EC2 launch type. "Short event-driven function" → Lambda (bukan container).',
               },
             ],
-            scenario: '"Migrate Docker app ke AWS, run berterusan, TAK nak urus EC2 langsung" → ECS/EKS on Fargate. "Job ambil masa >15 minit" → Fargate (bukan Lambda). "Resize image bila upload S3" → Lambda (event pendek). "Perlu GPU / fleet besar 24/7 paling murah" → ECS on EC2.',
+            scenario: '"Migrate Docker app ke AWS, run berterusan, TAK nak urus EC2 langsung" → ECS/EKS on Fargate. "Job ambil masa >15 minit" → Fargate (bukan Lambda). "Resize image bila upload S3" → Lambda (event pendek). "Perlu GPU / fleet besar 24/7 paling murah" → ECS on EC2. STORAGE: "Fargate task perlu persistent shared storage" → Amazon EFS. "Perlu lebih 20 GiB scratch" → naikkan ephemeral storage (max 200 GiB).',
             tips: [
               'Fargate = serverless CONTAINER engine untuk ECS & EKS. Kau bawak image, AWS bawak compute',
               'Fargate Spot: diskaun besar untuk task yang tahan interrupt (amaran 2 minit) — macam Spot untuk container',
               'Tiap Fargate task terpencil (own kernel/CPU/memory/ENI) — tak kongsi dengan task lain',
               'Beza dengan Lambda: Fargate = "Full container, no time limit." Lambda = "Function, ≤15 min, event-driven, scale to zero."',
               'Fargate lagi mahal per unit dari EC2 reserved, tapi zero infra management — kau bayar untuk kesenangan',
+              'STORAGE — Fargate ephemeral storage: 20 GiB default, boleh configure 20–200 GiB (ephemeralStorage), AES-256 encrypted. Ini EPHEMERAL — hilang bila task stop.',
+              'STORAGE — Fargate persistent/shared: mount Amazon EFS (platform 1.4.0+) untuk data yang kekal & dikongsi across tasks/AZ (RWX-style). EBS volume pun boleh attach ke Fargate task untuk block storage 1-task.',
+              'STORAGE trap: FSx for Windows / NetApp ONTAP & Docker volumes = EC2 launch type SAHAJA, tak boleh dengan Fargate. Fargate persistent shared = EFS.',
             ],
-            keywords: ['serverless containers', 'ECS', 'EKS', 'no EC2 management', 'pay per vCPU/memory', 'Fargate Spot', 'vs Lambda', 'no time limit'],
+            keywords: ['serverless containers', 'ECS', 'EKS', 'no EC2 management', 'pay per vCPU/memory', 'Fargate Spot', 'vs Lambda', 'no time limit', 'Fargate storage', 'ephemeral storage', '20 GiB', '200 GiB', 'ephemeralStorage', 'EFS volumes', 'persistent storage'],
+            docs: [
+              { label: 'AWS Fargate for Amazon ECS', url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/AWS_Fargate.html' },
+              { label: 'Fargate task ephemeral storage', url: 'https://docs.aws.amazon.com/AmazonECS/latest/developerguide/fargate-task-storage.html' },
+            ],
           },
           {
             shortName: 'ECR',
