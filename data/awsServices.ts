@@ -6514,6 +6514,99 @@ export const domains: DomainData[] = [
             ],
             keywords: ['Cassandra compatible', 'CQL', 'wide column', 'IoT telemetry', 'time-series', 'high write throughput', 'serverless', 'on-demand capacity', 'provisioned capacity', 'WRU', 'RRU', 'Keyspaces pricing', 'pricing'],
           },
+          {
+            shortName: 'Timestream',
+            fullName: 'Amazon Timestream (for LiveAnalytics)',
+            ingat: '"Database khusus data ikut MASA — IoT sensor, metrics"',
+            gunaUntuk: 'IoT sensor readings, app/DevOps metrics, apa-apa data yang ada timestamp & masuk berterusan',
+            fungsi: 'Serverless time-series database — khusus simpan data yang setiap titik ada cap masa (timestamp) dan masuk laju & berterusan (suhu sensor tiap saat, CPU metric tiap minit). Auto-tier: data baru duduk dalam memory store (laju), data lama turun ke magnetic store (murah). Query guna SQL dengan fungsi masa terbina (interpolate, smoothing).',
+            sebabApa: 'Timestream wujud sebab data time-series ada corak pelik: masuk BANYAK & laju (jutaan titik/saat), hampir tak pernah update (append je), dan data baru lagi penting dari data lama. Kalau simpan dalam RDS/DynamoDB, table membengkak, kos naik, query "purata 5 minit lepas merentas 10,000 sensor" jadi lambat. Timestream auto-pindah data lama ke storan murah + ada fungsi masa siap-siap, jadi kau tak reka sendiri lifecycle + rollup.',
+            sifir: ['Timestream = serverless time-series DB — data ber-timestamp, append-heavy, IoT/metrics.', 'Auto-tier: memory store (baru, laju, mahal) → magnetic store (lama, murah). Kau set tempoh.', 'Keyword: time-series, IoT sensor, telemetry, metrics over time, "millions of events per second".', 'BUKAN DynamoDB (key-value generik), BUKAN Redshift (OLAP warehouse), BUKAN Keyspaces (wide-column — kecuali ada keyword Cassandra).'],
+            perangkap: [{"soalan": "Platform IoT terima jutaan bacaan sensor sesaat (setiap satu ada timestamp) & perlu query trend ikut masa secara cekap. Database?", "umpan": "DynamoDB — sebab dia handle write throughput tinggi & serverless, nampak muat.", "betul": "Amazon Timestream — keyword 'time-series / sensor readings dengan timestamp / query trend ikut masa' = purpose-built time-series = Timestream. DynamoDB boleh tampung write tapi takde auto-tiering + fungsi masa; kos & query trend jadi teruk."}, {"soalan": "Pasukan nak analisa metrics aplikasi (CPU, latency) ikut masa, data lama jarang dibaca tapi nak kekal murah. Database?", "umpan": "Redshift — sebab dia untuk analytics & SQL, nampak boleh handle metrics.", "betul": "Amazon Timestream — keyword 'metrics ikut masa + auto-tier data lama murah' = time-series = Timestream. Redshift = OLAP warehouse untuk aggregate berstruktur berjuta baris, bukan ingest time-series laju + lifecycle auto."}],
+            scenario: '"Store & analyze IoT sensor / time-series data dengan timestamp, high ingest rate" → Amazon Timestream. NOT DynamoDB (key-value, takde time functions/tiering). NOT Redshift (OLAP warehouse). NOT Keyspaces (kecuali keyword Cassandra). Keywords: time-series, IoT telemetry, sensor, metrics over time.',
+            detailsLabel: 'Anatomy Timestream',
+            storageDetails: 'Ingestion → terima writes laju (jutaan/saat), serverless, auto-scale. Setiap rekod = timestamp + dimensions + measures.\nMemory store → data BARU duduk sini: laju untuk query terkini + write. Mahal/GB. Kau set tempoh simpan (cth 12 jam).\nMagnetic store → data LAMA auto-turun sini: murah, untuk query sejarah. Kau set retention (cth 1 tahun).\nQuery engine → SQL dengan fungsi masa terbina (interpolation, smoothing, time-bucketing) merentas kedua-dua tier secara telus.',
+            compare: {
+              label: 'Timestream vs DynamoDB vs Redshift untuk data masa',
+              headers: ['', 'Timestream', 'DynamoDB', 'Redshift'],
+              rows: [
+                ['Khusus untuk', 'Time-series (data ber-timestamp)', 'Key-value lookup generik', 'OLAP warehouse (aggregate berstruktur)'],
+                ['Lifecycle data', 'Auto-tier memory→magnetic', 'Manual (TTL delete je)', 'Manual'],
+                ['Fungsi masa', 'Terbina (interpolate, smoothing)', 'Tiada', 'SQL biasa (tak khusus masa)'],
+                ['Corak guna', 'Ingest laju + query trend ikut masa', 'Lookup laju ikut key', 'Report berulang, BI'],
+                ['Keyword exam', 'IoT sensor, metrics over time, telemetry', 'session, cart, key-value', 'data warehouse, complex SQL BI'],
+              ],
+              takeaway: 'Keyword "time-series / IoT sensor readings / metrics over time + timestamp + high ingest" → Timestream. DynamoDB = lookup-by-key (umpan sebab high write juga). Redshift = OLAP aggregate berstruktur (umpan sebab "analytics"). Timestream menang bila MASA itu paksi utama data.',
+            },
+            mermaid: {
+              label: 'Analogi — buku log suhu peti sejuk',
+              source: `flowchart TD
+  A["Sensor hantar bacaan tiap saat<br/>(suhu, masa) — jutaan titik"] --> M["📒 Memory store<br/>(muka surat terkini buku log,<br/>laju dibaca, mahal)"]
+  M -->|"Lepas tempoh kau set<br/>(cth 12 jam)"| G["🗄️ Magnetic store<br/>(buku log lama dalam stor,<br/>murah, untuk semak sejarah)"]
+  M --> Q["Query SQL + fungsi masa<br/>'purata suhu tiap 5 minit'"]
+  G --> Q`,
+              caption: 'Analogi: buku log suhu peti sejuk kedai. Bacaan terbaru kau letak atas meja (memory store — capai laju, tapi meja mahal/terhad). Buku log lama kau simpan dalam stor belakang (magnetic store — murah, jarang semak). Timestream auto-pindah dari meja ke stor ikut tempoh kau set, dan boleh baca dua-dua bila kau tanya "purata suhu tiap 5 minit bulan lepas". INGAT exam: data ber-timestamp + ingest laju + tiering = Timestream.',
+            },
+            tips: [
+              'Discriminator: paksi data ialah MASA (timestamp setiap rekod) + ingest laju berterusan + query trend ikut masa → Timestream. Kalau cuma "high write throughput" tanpa unsur masa, fikir DynamoDB.',
+              'Auto-tiering = pembeza besar: memory store (data baru, laju) → magnetic store (data lama, murah). Kau set retention tiap tier; Timestream pindah sendiri (tak payah lifecycle manual macam DynamoDB TTL/S3).',
+              'PRICING: serverless, bayar ikut guna. Writes ~$0.50 per 1 juta writes (1KB). Memory store ~$0.036/GB-jam (mahal — sebab itu tempoh memory pendek). Magnetic store ~$0.03/GB-bulan (murah). Query ~$0.01 per GB diimbas (us-east-1).',
+              'PRICING discriminator: kos memory store TINGGI/GB-jam → set tempoh memory pendek (jam, bukan bulan), biar data turun ke magnetic yang murah. Inilah sebab time-series guna tiering, bukan satu storan rata.',
+              'Jangan keliru: ada 2 jenis — Timestream for LiveAnalytics (serverless, AWS-native, default exam) vs Timestream for InfluxDB (managed InfluxDB, instance-based, untuk yang dah guna InfluxDB).',
+            ],
+            docs: [
+              { label: 'What is Amazon Timestream for LiveAnalytics', url: 'https://docs.aws.amazon.com/timestream/latest/developerguide/what-is-timestream.html' },
+              { label: 'Timestream storage architecture (tiering)', url: 'https://docs.aws.amazon.com/timestream/latest/developerguide/architecture.html' },
+            ],
+            keywords: ['time-series', 'Timestream', 'IoT telemetry', 'sensor data', 'metrics over time', 'memory store', 'magnetic store', 'tiered storage', 'serverless', 'high ingest', 'timestamp', 'Timestream pricing', 'pricing'],
+          },
+          {
+            shortName: 'MemoryDB',
+            fullName: 'Amazon MemoryDB (Valkey / Redis OSS compatible)',
+            ingat: '"Redis yang TAK hilang data — in-memory tapi durable, jadi DB utama"',
+            gunaUntuk: 'Primary database in-memory: microsecond reads + durability, untuk microservices yang perlu laju TAPI tak boleh hilang data',
+            fungsi: 'In-memory database yang DURABLE — laju macam Redis (microsecond reads, single-digit ms writes) tapi data TAK hilang bila node mati, sebab setiap write disimpan ke Multi-AZ transactional log dulu. Compatible dengan Valkey & Redis OSS (guna command/client sama). Boleh jadi DATABASE UTAMA (primary), bukan sekadar cache.',
+            sebabApa: 'MemoryDB wujud sebab orang nak kelajuan Redis TAPI tanpa risiko hilang data. ElastiCache (Redis) itu cache — kalau node mati, data boleh hilang, sebab kau anggap ada DB sebenar (RDS/DynamoDB) di belakang sebagai sumber kebenaran. MemoryDB tulis setiap perubahan ke log merentas Multi-AZ dulu sebelum acknowledge, jadi durable cukup untuk jadi DB utama — kau buang seni bina "cache + DB berasingan" jadi satu lapisan laju + durable.',
+            sifir: ['MemoryDB = in-memory + DURABLE (Multi-AZ transactional log) = boleh jadi primary DB.', 'ElastiCache = cache je (data boleh hilang; kena ada backing DB). MemoryDB = sumber kebenaran sendiri.', 'Microsecond reads, single-digit ms writes; Valkey/Redis OSS compatible.', 'Keyword: "durable in-memory", "Redis as primary database", "microsecond + tak boleh hilang data".'],
+            perangkap: [{"soalan": "Microservice perlu microsecond reads & in-memory speed TAPI data tak boleh hilang — nak satu database laju + durable tanpa DB berasingan di belakang. Service?", "umpan": "ElastiCache for Redis — sebab dia in-memory Redis laju, ramai terus pilih bila nampak 'Redis / in-memory'.", "betul": "Amazon MemoryDB — keyword 'durable + in-memory + primary database (tanpa backing DB)' = MemoryDB. ElastiCache = cache; data boleh hilang bila node gagal, jadi BUKAN sumber kebenaran. MemoryDB ada Multi-AZ transactional log = durable."}, {"soalan": "App nak microsecond READ caching di DEPAN DynamoDB sedia ada untuk kurangkan latency. Service?", "umpan": "MemoryDB — sebab dia in-memory microsecond, nampak macam cache laju.", "betul": "DAX — keyword 'cache DI DEPAN DynamoDB, microsecond read' = DAX (khusus DynamoDB). MemoryDB ialah DB utama berasingan, bukan cache write-through depan DynamoDB. (Cache depan DB lain → ElastiCache.)"}],
+            scenario: '"Durable in-memory database as a primary store, microsecond reads, no separate backing DB" → Amazon MemoryDB. "In-memory CACHE in front of an existing DB (data boleh hilang)" → ElastiCache (atau DAX khusus DynamoDB). Keywords: durable in-memory, Redis/Valkey primary database, Multi-AZ transactional log.',
+            detailsLabel: 'Anatomy MemoryDB',
+            storageDetails: 'In-memory data store → semua data dalam RAM → microsecond reads, single-digit ms writes. Valkey/Redis OSS commands.\nMulti-AZ transactional log → INI yang bagi durability: setiap write ditulis ke log merentas berbilang AZ SEBELUM di-ack. Node mati → data tak hilang, failover pulih dari log.\nCluster + shards → data dipecah ikut shard (horizontal scale); tiap shard ada primary + replica untuk HA.\nSnapshots → backup ke S3 untuk restore / point-in-time.',
+            compare: {
+              label: 'MemoryDB vs ElastiCache vs DynamoDB+DAX',
+              headers: ['', 'MemoryDB', 'ElastiCache (Redis)', 'DynamoDB + DAX'],
+              rows: [
+                ['Peranan', 'Primary DB (durable)', 'Cache (boleh hilang)', 'DB + cache khusus DynamoDB'],
+                ['Durability', '✅ Multi-AZ transactional log', '❌ data boleh hilang bila node gagal', '✅ DynamoDB durable; DAX cache je'],
+                ['Kelajuan baca', 'Microsecond', 'Microsecond', 'Microsecond (via DAX)'],
+                ['Perlu backing DB?', 'Tidak — dia sumber kebenaran', 'Ya — ada DB di belakang', 'DynamoDB itu sendiri backing'],
+                ['Keyword', 'durable in-memory, Redis as primary', 'cache, session store, offload DB', 'cache di depan DynamoDB'],
+              ],
+              takeaway: '"Durable in-memory + primary database (tanpa DB lain di belakang)" → MemoryDB. "Cache di depan DB sedia ada, data boleh hilang" → ElastiCache. "Microsecond cache KHUSUS DynamoDB" → DAX. Pembeza utama MemoryDB = DURABILITY (Multi-AZ log) yang jadikan dia DB, bukan sekadar cache.',
+            },
+            mermaid: {
+              label: 'Analogi — papan tulis vs buku nota tahan air',
+              source: `flowchart TD
+  Q["Nak in-memory laju (microsecond)?"] --> D{Data boleh hilang ke?}
+  D -->|"Boleh — ada DB sebenar di belakang"| C["🧽 ElastiCache (Redis)<br/>papan tulis: laju, tapi kalau<br/>terpadam ada salinan kat DB lain"]
+  D -->|"TAK boleh hilang — ini DB utama"| M["📓 MemoryDB<br/>buku nota tahan air: laju + setiap<br/>tulisan disalin ke log Multi-AZ dulu"]
+  C --> CB["Mesti ada backing DB<br/>(RDS / DynamoDB) sebagai kebenaran"]
+  M --> MB["Tak perlu DB lain —<br/>MemoryDB itu sendiri sumber kebenaran"]`,
+              caption: 'Analogi: ElastiCache = papan tulis — laju conteng & padam, tapi kalau tertumpah air semua hilang, jadi kau simpan salinan sebenar dalam buku (DB di belakang). MemoryDB = buku nota tahan air dengan karbon kopi — setiap tulisan terus disalin ke log merentas Multi-AZ, jadi walau satu naskhah rosak, data kekal. Sebab itu MemoryDB boleh jadi DB UTAMA, ElastiCache tak. INGAT exam: "durable in-memory / Redis as primary" → MemoryDB.',
+            },
+            tips: [
+              'Pembeza #1 vs ElastiCache: DURABILITY. MemoryDB tulis ke Multi-AZ transactional log sebelum ack → boleh jadi primary DB. ElastiCache = cache; anggap data boleh hilang, perlu backing DB.',
+              'Pembeza vs DAX: DAX = cache write-through KHUSUS DynamoDB (microsecond reads atas DynamoDB). MemoryDB = DB utama berasingan, bukan cache depan DynamoDB. Jangan tukar ganti.',
+              'Valkey/Redis OSS compatible: client & command sama, jadi app Redis sedia ada boleh guna MemoryDB sebagai primary tanpa tulis semula.',
+              'PRICING: node-based on-demand, cth db.r7g.large ~$0.227/jam (us-east-1) + data written ~$0.20/GB (ke transactional log) + snapshot storage ~$0.021/GB-bulan. Ada juga MemoryDB Serverless (bayar ikut data stored + ECPU). Reserved nodes untuk diskaun.',
+              'PRICING discriminator: MemoryDB lebih mahal dari ElastiCache sebab durability (transactional log) + simpan semua data dalam RAM. Pilih MemoryDB hanya bila kau betul-betul perlukan durable primary; kalau cache je, ElastiCache lebih murah.',
+            ],
+            docs: [
+              { label: 'What is Amazon MemoryDB', url: 'https://docs.aws.amazon.com/memorydb/latest/devguide/what-is-memorydb.html' },
+              { label: 'MemoryDB durability (transactional log)', url: 'https://docs.aws.amazon.com/memorydb/latest/devguide/durability.html' },
+            ],
+            keywords: ['MemoryDB', 'durable in-memory', 'Redis', 'Valkey', 'primary database', 'microsecond reads', 'Multi-AZ transactional log', 'in-memory database', 'durability', 'ElastiCache alternative', 'MemoryDB pricing', 'pricing'],
+          },
         ],
       },
       {
