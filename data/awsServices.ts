@@ -3302,7 +3302,7 @@ export const domains: DomainData[] = [
               rows: [
                 ['Salinan data', '1 standby (sync)', '🟢 6 copies / 3 AZ auto (2/AZ)'],
                 ['Failover', '1-2 minit', '🟢 <30 saat'],
-                ['Read replicas', 'Up to 5 (async)', '🟢 Up to 15, lag <10ms'],
+                ['Read replicas', 'Up to 15 (MySQL/PG/Maria) / 5 (Oracle/SQL Svr), async', '🟢 Up to 15, lag <10ms'],
                 ['Storage', 'Provision saiz, per-instance', '🟢 Shared volume auto-grow 128 TiB'],
                 ['Engine', 'MySQL/Postgres/MariaDB/Oracle/SQL Server', 'MySQL & PostgreSQL compatible SAHAJA'],
                 ['Cross-region DR', 'Cross-region replica (manual promote)', '🟢 Global Database (RTO<1min, RPO~1s)'],
@@ -5875,6 +5875,11 @@ export const domains: DomainData[] = [
                 soalan: 'Satu mesej dalam queue ada data corrupt — consumer cuba proses, crash, mesej balik queue, cuba lagi, crash lagi… berulang sampai blok mesej lain & bil naik. Kau nak isolate mesej bermasalah tu untuk debug tanpa ganggu trafik live. Apa setup terbaik?',
                 umpan: 'Naikkan Visibility Timeout supaya mesej tu "rehat" lama-lama, atau tambah logik retry + try/catch dalam kod consumer. Nampak betul sebab "uruskan mesej gagal". SALAH: naikkan visibility timeout cuma LAMBATKAN mesej muncul balik — ia tetap balik & crash lagi (loop tak putus). Retry dalam kod pun masih pusing benda corrupt yang sama (poison pill) selamanya.',
                 betul: 'Setup Dead-Letter Queue (DLQ) + set maxReceiveCount (cth 3) pada source queue. Lepas mesej gagal diproses 3 kali (ReceiveCount > maxReceiveCount), SQS AUTO pindahkan ia keluar dari queue utama masuk DLQ → trafik live jalan semula, developer bedah mesej dalam DLQ asingan. Keyword "corrupt/poison message blok queue + isolate untuk debug" → DLQ + maxReceiveCount, BUKAN visibility timeout, BUKAN retry dalam kod.',
+              },
+              {
+                soalan: 'E-commerce (EC2 + ALB + RDS) jangka lonjakan WRITE besar masa product launch. RDS hampir cecah IOPS limit; vertical scaling tak nak sebab bajet. Cara cost-effective handle write-heavy? (A) Tambah RDS Read Replica, (B) Letak SQS queue depan — app tulis ke queue, consumer proses ke RDS ikut kadar mampu, (C) Upgrade instance class RDS, (D) Migrate ke DynamoDB.',
+                umpan: 'A (Read Replica) paling menipu — nampak "scaling RDS" terus pilih. TAPI Read Replica scale READ je (offload SELECT); ia LANGSUNG tak bantu WRITE — malah write kena replicate ke replica juga. C (upgrade instance) = vertical scaling, dah dikecualikan (bajet). D (DynamoDB) = re-architecture besar, mahal & berisiko untuk relational e-commerce, bukan "cost-effective minimal change".',
+                betul: 'B — SQS di depan RDS (queue-based load leveling): app campak write request masuk queue, consumer proses ke RDS ikut kadar yang RDS MAMPU. Lonjakan write diserap dalam queue (buffer) → RDS tak kena hentam lebih IOPS limit. Murah (SQS sen je) + tak perlu vertical scaling. Keyword "write-heavy spike / nearing IOPS limit / cost-effective / no vertical scaling" → SQS buffer writes (queue-based load leveling). INGAT: Read Replica = READ scaling, BUKAN write.',
               },
             ],
             storageDetails: 'Visibility Timeout → Message invisible semasa diproses (max 12 jam). Jika consumer mati sebelum siap → message visible semula selepas timeout\nDelay Seconds → Delay sebelum message pertama kali visible dalam queue (max 15 minit)\nDead Letter Queue (DLQ) → Message yang gagal diproses N kali dihantar ke DLQ untuk debug\nMessage Retention → Default 4 hari, max 14 hari',
