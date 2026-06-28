@@ -1037,6 +1037,7 @@ export const domains: DomainData[] = [
             contohGuna: 'API kena SQL injection attack — deploy WAF dengan AWS Managed Rules kat ALB atau CloudFront. Boleh rate limit 1000 req/IP per minit',
             sifir: [
               'WAF = Layer 7 (HTTP/S) — block SQLi, XSS, bad bots, rate limit',
+              'Anatomy: Web ACL (tampal kat ALB/CloudFront/API GW) → dalam dia ada Rules + Rule Groups → Rule rujuk IP Set (himpunan IP) & Regex Pattern Set (corak)',
               'Pasang kat: CloudFront, ALB, API Gateway, AppSync, Cognito',
               'Rate-based rule = throttle IP lebih threshold. URI-specific = throttle endpoint mahal je',
               'WAF = web exploit (L7). Shield = DDoS (L3/4). Network Firewall = traffic VPC (L3-7)',
@@ -1084,7 +1085,7 @@ export const domains: DomainData[] = [
               { label: 'How AWS WAF works', url: 'https://docs.aws.amazon.com/waf/latest/developerguide/how-aws-waf-works.html' },
               { label: 'Rate-based rule statement', url: 'https://docs.aws.amazon.com/waf/latest/developerguide/waf-rule-statement-type-rate-based.html' },
             ],
-            keywords: ['Layer 7', 'SQL injection', 'XSS', 'rate limiting', 'managed rules', 'ALB', 'CloudFront', 'URI-specific rate-based rule', 'targeted throttling', 'web ACL', 'rule groups', 'pricing'],
+            keywords: ['Layer 7', 'SQL injection', 'XSS', 'rate limiting', 'managed rules', 'ALB', 'CloudFront', 'URI-specific rate-based rule', 'targeted throttling', 'web ACL', 'rule groups', 'IP set', 'regex pattern set', 'pricing'],
           },
           {
             shortName: 'AWS Shield',
@@ -1323,6 +1324,7 @@ export const domains: DomainData[] = [
             scenario: '"Audit EC2 instances untuk known CVEs dan security misconfigurations" → Amazon Inspector. "Scan container image dalam ECR sebelum deploy untuk vulnerability" → Inspector ECR scanning. Bukan GuardDuty (yang untuk active threats dari logs).',
             sifir: [
               'Inspector = CVE/vulnerability scan, target EC2 + ECR images + Lambda',
+              '2 jenis scan: (1) Network Reachability = port/route mana terdedah ke internet · (2) Host/Package Vulnerability = CVE dalam OS + library (guna SSM Agent atau EBS snapshot agentless)',
               'CONTINUOUS — auto re-scan bila CVE baru atau resource berubah',
               'Inspector cari LUBANG (vuln/CVE). GuardDuty cari PENCEROBOH (aktiviti jahat)',
               'Scan ECR image SEBELUM deploy = Inspector. Keyword "CVE/patch/vulnerability" = Inspector',
@@ -4532,7 +4534,8 @@ export const domains: DomainData[] = [
             sebabApa: "Nak 'lift-and-shift' keseluruhan server (OS + apps + data) ke AWS tapi kalau snapshot manual + rebuild = downtime panjang dan senang tertinggal config. MGN wujud buat continuous block-level replication dari source server ke AWS di latar belakang — bila ready, satu klik cutover launch EC2 dari replika terkini = minimal downtime. Pain yang ia buang: migrate whole server ke EC2 tanpa rebuild manual & tanpa downtime panjang (gantikan CloudEndure).",
             sifir: ["MGN = whole SERVER (OS + apps + data) → EC2; lift-and-shift / rehost", "Continuous block-level replication + one-click cutover = minimal downtime", "Source: physical, VMware, Hyper-V, cloud instance → target EC2", "MGN = server; DMS = database; DataSync = file/object", "Application Discovery Service = PLANNING/discovery je, BUKAN migrate"],
             perangkap: [{"soalan": "Migrate 100 on-prem servers (OS + applications) ke EC2 dengan minimal downtime, lift-and-shift. Pilih apa?", "umpan": "AWS DMS — 'minimal downtime' ada, tapi DMS cuma DATABASE; server penuh OS+apps bukan kerja DMS.", "betul": "AWS MGN — keyword 'entire server / rehost / lift-and-shift ke EC2' = MGN (continuous block replication)."}, {"soalan": "Sebelum migrate, team nak discover & map dependency aplikasi on-prem dulu. Guna apa?", "umpan": "AWS MGN — MGN handle migration, tapi tak buat discovery/dependency mapping fasa perancangan.", "betul": "Application Discovery Service — keyword 'discover / inventory / dependency / planning' = ADS, bukan MGN."}],
-            compare: {
+            compare: [
+              {
               label: 'MGN vs DMS vs DataSync — what are you moving?',
               headers: ['Aspect', 'MGN', 'DMS', 'DataSync'],
               rows: [
@@ -4543,7 +4546,19 @@ export const domains: DomainData[] = [
                 ['Keyword', '"lift-and-shift server to EC2"', '"migrate database, minimal downtime"', '"transfer NAS/NFS files to S3"'],
               ],
               takeaway: 'Server (OS+apps) → MGN. Database → DMS (+SCT kalau tukar engine). Files to S3/EFS/FSx → DataSync. Application Discovery Service = planning sahaja, bukan migrate.',
-            },
+              },
+              {
+                label: 'Application Discovery Service — Agentless vs Agent-based (fasa PLANNING, sebelum migrate)',
+                headers: ['Aspect', 'Agentless', 'Agent-based'],
+                rows: [
+                  ['Cara pasang', 'OVA appliance kat VMware vCenter (satu je, tak per-server)', 'Install AWS Discovery Agent dalam setiap OS (Windows/Linux)'],
+                  ['Nampak apa', 'Config asas: server, CPU, RAM, disk, OS', '🟢 + network connections (inbound/outbound) → dependency mapping'],
+                  ['Bila guna', 'Environment VMware je, nak ringan & cepat', 'Perlu map dependency antara server (proses ↔ port)'],
+                  ['Keyword', '"VMware vCenter, no agent install"', '"map network dependencies between servers/processes"'],
+                ],
+                takeaway: 'ADS = DISCOVER + inventory on-prem sebelum migrate (BUKAN migrate sendiri). Agentless = VMware vCenter, config asas. Agent-based = install agent, nampak network dependency. Hasil → AWS Migration Hub (dependency map + application groups). INGAT exam: "map dependencies between servers" → Agent-based; "what does ADS do" → discover + inventory + dependencies + resource utilization (BUKAN deploy/monitor/security-scan).',
+              },
+            ],
             mermaid: {
               label: 'MASTER decision tree — pilih migration/transfer tool mana?',
               source: `flowchart TD

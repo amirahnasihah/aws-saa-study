@@ -544,6 +544,29 @@ export const petaModules: PetaModule[] = [
       { left: 'WAF', rel: 'vs', right: 'Firewall Manager', note: 'WAF = tulis rule untuk SATU resource. Firewall Manager = sebar policy (WAF/Shield/SG/Network Firewall) merentas SEMUA account Organization + auto-cover account baru. "centrally enforce across all accounts incl. new ones" → Firewall Manager.' },
     ],
   },
+  {
+    num: '10',
+    title: 'Migration & Transfer',
+    accent: 'c2',
+    mermaid: `flowchart LR
+  m1["MGN<br/>(whole SERVER → EC2 · lift-and-shift)"] -. "server vs DB vs file" .-> m2["DMS<br/>(DATABASE · minimal downtime)"]
+  m2 -. "DB vs file" .-> m3["DataSync<br/>(FILE/object → S3/EFS/FSx)"]
+  d1["DMS sahaja<br/>(engine SAMA · homogeneous)"] -. "sama vs beza engine" .-> d2["DMS + SCT<br/>(engine BEZA · heterogeneous)"]
+  f1["DataSync<br/>(ONLINE · scheduled · verify)"] -. "online vs hybrid vs offline" .-> f2["Storage Gateway<br/>(ONGOING hybrid access)"]
+  f2 -. "hybrid vs offline" .-> f3["Snow Family<br/>(OFFLINE peti fizikal · PB-scale)"]
+  s1["Snowcone<br/>(8TB HDD / 14TB SSD · kecik)"] -. "ikut saiz" .-> s2["Snowball Edge Storage<br/>(210TB · bulk migration)"]
+  s2 -. "storage vs compute" .-> s3["Snowball Edge Compute<br/>(28TB · 104 vCPU · edge ML)"]
+  t1["Transfer Family<br/>(partner upload SFTP/FTPS/FTP/AS2 → S3/EFS)"]
+  p1["App Discovery Service<br/>(DISCOVER + dependency · planning)"] -->|"feed inventory"| p2["Migration Hub<br/>(TRACK je · home region · TAK migrate)"]`,
+    rows: [
+      { left: 'MGN', rel: 'vs', right: 'DMS vs DataSync', note: 'Apa yang dipindah? MGN = whole SERVER (OS+apps+data) → EC2, lift-and-shift. DMS = DATABASE je (minimal downtime). DataSync = FILE/object → S3/EFS/FSx. "entire server to EC2" → MGN; "migrate database" → DMS; "transfer NAS/NFS files" → DataSync.' },
+      { left: 'DMS sahaja', rel: 'vs', right: 'DMS + SCT', note: 'Engine SAMA (MySQL→RDS MySQL) = homogeneous = DMS sorang cukup. Engine BEZA (Oracle→Aurora PostgreSQL) = heterogeneous = wajib SCT convert schema dulu, baru DMS. CDC = keep source↔target sync sampai cutover. Multi-AZ replication instance = HA masa migrate.' },
+      { left: 'DataSync', rel: 'vs', right: 'Storage Gateway vs Snow', note: 'DataSync = migration ONLINE (one-time/scheduled, NFS/SMB/HDFS → S3/EFS/FSx, +EFS cross-region private network). Storage Gateway = akses hybrid BERTERUSAN. Snow = OFFLINE peti fizikal bila PB-scale / bandwidth lambat. "no public internet EFS cross-region" → DataSync.' },
+      { left: 'Snowcone', rel: 'vs', right: 'Snowball Edge', note: 'Ikut saiz: Snowcone = 8TB HDD / 14TB SSD (paling kecik, edge). Snowball Edge Storage Optimized = 210TB (bulk migration). Snowball Edge Compute Optimized = 28TB · 104 vCPU · 416GB RAM (edge ML/video). "smallest/portable" → Snowcone; "petabyte bulk" → Snowball Edge Storage.' },
+      { left: 'Transfer Family', rel: '=', right: 'SFTP / FTPS / FTP / AS2', note: 'Managed SFTP/FTPS/FTP/AS2 endpoint, backend S3/EFS — untuk partner/customer hantar fail guna protokol lama tanpa tukar code mereka. "partner uploads via SFTP into S3" → Transfer Family (BUKAN DataSync, BUKAN Storage Gateway).' },
+      { left: 'App Discovery Service', rel: 'vs', right: 'Migration Hub', note: 'ADS = DISCOVER + inventory + dependency on-prem (fasa planning; agentless via VMware vCenter, agent-based untuk network dependency). Migration Hub = TRACK progress merentas MGN/DMS/DataSync (home region, Strategy Recommendations, Orchestrator) — TAK migrate apa-apa. "track migrations one dashboard" → Migration Hub.' },
+    ],
+  },
 ]
 
 export const trapRows: TrapRow[] = [
@@ -594,5 +617,17 @@ export const trapRows: TrapRow[] = [
   {
     bait: 'Email validation untuk ACM auto-renew',
     fix: 'Email validation = manual & senang tersangkut. Untuk auto-renew selamanya → DNS validation (CNAME).',
+  },
+  {
+    bait: 'DMS untuk migrate whole server (OS + apps) ke EC2',
+    fix: 'DMS = DATABASE je. "minimal downtime" mengumpan, tapi whole server (OS+apps) → AWS MGN (lift-and-shift). Files → DataSync.',
+  },
+  {
+    bait: 'Migration Hub untuk migrate server/DB',
+    fix: 'Nama "Migration Hub" mengumpan — ia TRACK je, tak migrate. Server → MGN, DB → DMS, file → DataSync. Hub cuma dashboard progress.',
+  },
+  {
+    bait: 'DMS sahaja untuk Oracle → Aurora PostgreSQL',
+    fix: 'Engine BEZA (heterogeneous) → wajib SCT convert schema/stored procedure dulu, baru DMS pindah data. DMS sorang cukup hanya kalau engine SAMA.',
   },
 ]
