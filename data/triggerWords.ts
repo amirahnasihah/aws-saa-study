@@ -241,6 +241,15 @@ export const triggerRows: TriggerRow[] = [
     domain: 'D3 · High-Perf',
     slug: 'd3-messaging-kinesis-video-streams',
   },
+  {
+    id: 'deregistration-delay',
+    keywords: ['5xx / 502 error masa scale-in', 'dropped connection bila Spot ditutup', 'graceful shutdown behind ALB', 'finish in-flight requests before terminate', 'connection draining'],
+    service: 'ALB Deregistration Delay (Connection Draining)',
+    why: 'Bila target di-deregister (scale-in / Spot rampas / deploy), ALB stop trafik BARU tapi biar request sedia ada habis dulu (default 300s) → elak error 5xx. "Connection Draining" = nama lama pada CLB. Combo: ALB + ASG Mixed Instances (On-Demand + Spot) + deregistration delay. BUKAN tukar semua ke On-Demand.',
+    accent: 'c1',
+    domain: 'D2 · Resilient',
+    slug: 'd3-network-alb',
+  },
 ]
 
 // ── Pokok keputusan (decision tree) ─────────────────────────────────────────
