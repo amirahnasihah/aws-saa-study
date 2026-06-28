@@ -7416,11 +7416,11 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Data warehouse: complex/recurring analytics atas structured data berskala besar',
             fungsi: 'Petabyte-scale data warehouse untuk OLAP (analytics), BUKAN OLTP (transaksi → guna RDS). Simpan data secara COLUMNAR + compress → query aggregate (SUM, GROUP BY) atas berbilion baris jadi laju. Massively Parallel Processing (MPP): leader node agih query ke banyak compute node. Spectrum boleh query S3 terus tanpa load.',
             sebabApa: "Redshift wujud sebab database transaksi (RDS) lemah bila kau nak aggregate berbilion baris untuk laporan/BI — query SUM/GROUP BY atas data besar jadi sangat lambat sebab data simpan ikut row. Redshift simpan data COLUMNAR + compress + agih kerja ke banyak node (MPP), jadi analytics atas data warehouse berskala petabyte jadi laju — tanpa membebankan database OLTP production.",
-            sifir: ["Redshift = data warehouse OLAP (columnar + compress + MPP). RDS/Aurora = OLTP.", "Cluster = 1 Leader Node (plan/agih) + banyak Compute Node (proses) → pecah jadi Slices (unit MPP).", "RA3 + Managed Storage = compute & storage berasingan, scale independent.", "Spectrum = query S3 TERUS tanpa load. Athena = serverless ad-hoc (no cluster).", "Concurrency Scaling = auto-tambah cluster bila ramai user serentak.", "Zero-ETL (Aurora→Redshift) = analytics near-real-time tanpa bina pipeline ETL."],
-            perangkap: [{"soalan": "App transaksi e-commerce (banyak insert/update order satu-satu, low latency). Database paling sesuai?", "umpan": "Redshift — sebab dia handle data besar & SQL kompleks, nampak powerful.", "betul": "RDS/Aurora — keyword 'transaksi / single-row insert/update / OLTP' = RDS/Aurora. Redshift columnar, teruk untuk write satu-satu baris (itu OLAP, bukan OLTP)."}, {"soalan": "Analyst jarang-jarang nak run SQL ad-hoc atas log dalam S3, tak nak urus apa-apa cluster. Service?", "umpan": "Redshift — sebab dia 'analytics + SQL', nampak macam jawapan analytics default.", "betul": "Athena — keyword 'ad-hoc / jarang / no setup / no cluster / data dalam S3' = Athena (serverless). Redshift perlu provision cluster, overkill untuk query jarang-jarang."}],
+            sifir: ["Redshift = data warehouse OLAP (columnar + compress + MPP). RDS/Aurora = OLTP.", "Cluster = 1 Leader Node (plan/agih) + banyak Compute Node (proses) → pecah jadi Slices (unit MPP).", "RA3 + Managed Storage = compute & storage berasingan, scale independent.", "Spectrum = query S3 TERUS tanpa load. Athena = serverless ad-hoc (no cluster).", "Concurrency Scaling = auto-tambah cluster bila ramai user serentak.", "Zero-ETL (Aurora→Redshift) = analytics near-real-time tanpa bina pipeline ETL.", "AQUA = push compute dekat storage → kurang NETWORK + CPU bottleneck. Auto-managed, RA3, no extra charge. BUKAN Spectrum (Spectrum = query S3 external)."],
+            perangkap: [{"soalan": "App transaksi e-commerce (banyak insert/update order satu-satu, low latency). Database paling sesuai?", "umpan": "Redshift — sebab dia handle data besar & SQL kompleks, nampak powerful.", "betul": "RDS/Aurora — keyword 'transaksi / single-row insert/update / OLTP' = RDS/Aurora. Redshift columnar, teruk untuk write satu-satu baris (itu OLAP, bukan OLTP)."}, {"soalan": "Analyst jarang-jarang nak run SQL ad-hoc atas log dalam S3, tak nak urus apa-apa cluster. Service?", "umpan": "Redshift — sebab dia 'analytics + SQL', nampak macam jawapan analytics default.", "betul": "Athena — keyword 'ad-hoc / jarang / no setup / no cluster / data dalam S3' = Athena (serverless). Redshift perlu provision cluster, overkill untuk query jarang-jarang."}, {"soalan": "Redshift cluster makin slow bila data membesar — punca disebut 'network bandwidth and CPU processing limits'. Nak improve query performance, minimize operational overhead & cost. Pilih?", "umpan": "Redshift Spectrum — sebab data ada dalam warehouse + S3, Spectrum nampak macam jawapan 'Redshift + performance' default. SALAH: Spectrum cuma extend query ke S3 external; ia TAK selesai bottleneck CPU/network DALAM cluster, malah boleh TAMBAH trafik network dari S3.", "betul": "AQUA (Advanced Query Accelerator) — push compute dekat storage → kurang data lalu network + kurang beban CPU compute node. Tepat dua-dua keyword 'network bandwidth + CPU'. Auto-managed (Redshift decide sendiri) = zero operational overhead, no extra charge pada RA3."}, {"soalan": "Nak laju query analytics Redshift, ada yang cadang ElastiCache Memcached untuk cache. Betul tak?", "umpan": "ElastiCache Memcached — sebab 'caching = laju' nampak masuk akal.", "betul": "BUKAN — ElastiCache untuk cache OLTP/key-value (depan RDS/DynamoDB), bukan beban analytics columnar Redshift. Untuk percepat Redshift + kurang CPU/network = AQUA. Keyword 'Redshift query performance' ≠ ElastiCache."}],
             contohGuna: 'BI/reporting atas data berkumpul (sales, finance), join besar merentas berjuta baris, dashboard berulang yang sama tiap hari',
             detailsLabel: 'Redshift Anatomy (MPP)',
-            storageDetails: 'Leader Node → terima query, buat plan, agih ke compute node, kumpul hasil\nCompute Nodes → simpan data + jalankan query selari (MPP)\nRA3 + Managed Storage → compute & storage berasingan, bayar ikut guna; scale tanpa pindah data\nRedshift Spectrum → query data dalam S3 TERUS tanpa load ke cluster\nConcurrency Scaling → auto-tambah cluster sementara bila ramai user query serentak',
+            storageDetails: 'Leader Node → terima query, buat plan, agih ke compute node, kumpul hasil\nCompute Nodes → simpan data + jalankan query selari (MPP)\nRA3 + Managed Storage → compute & storage berasingan, bayar ikut guna; scale tanpa pindah data\nRedshift Spectrum → query data dalam S3 TERUS tanpa load ke cluster\nConcurrency Scaling → auto-tambah cluster sementara bila ramai user query serentak\nAQUA (Advanced Query Accelerator) → lapisan cache + compute DEKAT storage; tolak (push-down) filter/aggregate dekat data → kurang data lalu network + kurang beban CPU compute node. Auto-managed (RA3, no extra charge)',
             diagram: {
               label: 'Redshift MPP + Spectrum flow',
               steps: [
@@ -7463,6 +7463,17 @@ export const domains: DomainData[] = [
   B -->|Custom Spark/Hadoop, kawalan penuh cluster| G[EMR<br/>big data framework]`,
                 caption: 'OLTP (transaksi) → RDS/Aurora. Analytics berulang/kompleks → Redshift. Ad-hoc SQL atas S3 tanpa setup → Athena. Custom Spark/Hadoop → EMR. Ni trap paling kerap di exam: jangan pilih Redshift untuk "ad-hoc, jarang query" (itu Athena) atau untuk OLTP (itu RDS).',
               },
+              {
+                label: 'Redshift dah ada, tapi LAMBAT — pilih feature mana? (decision tree)',
+                source: `flowchart TD
+  A["Redshift lambat — apa puncanya?"] --> B{Punca disebut?}
+  B -->|"NETWORK bandwidth + CPU<br/>processing limits dalam cluster"| C["AQUA ⚡<br/>push compute dekat storage<br/>auto-managed · no extra charge"]
+  B -->|"Ramai user query SERENTAK,<br/>query beratur"| D["Concurrency Scaling<br/>auto-tambah cluster sementara"]
+  B -->|"Nak query data dalam S3<br/>(data lake) sekali dengan warehouse"| E["Redshift Spectrum<br/>query S3 external, tak load"]
+  B -->|"Tak nak urus cluster langsung,<br/>beban tak tetap"| F["Redshift Serverless"]
+  B -->|"Nak analytics atas data Aurora<br/>tanpa bina ETL"| G["Zero-ETL integration"]`,
+                caption: 'INGAT exam: baca PUNCA yang soalan sebut. "network bandwidth + CPU limits" → AQUA (BUKAN Spectrum — Spectrum extend ke S3, tak selesai bottleneck dalam cluster, malah boleh tambah trafik). "ramai user serentak" → Concurrency Scaling. "query data lake S3" → Spectrum. AQUA kini auto-managed = pilihan minimum operational overhead.',
+              },
             ],
             compare: [
               {
@@ -7504,11 +7515,24 @@ export const domains: DomainData[] = [
                   ['Redshift Serverless', 'Auto-scale RPU, no cluster management', '"Analytics tapi tak nak urus cluster / beban tak tetap"'],
                   ['Concurrency Scaling', 'Auto-tambah cluster bila ramai query serentak', '"Banyak user query serentak, jangan slow / queue"'],
                   ['Zero-ETL (Aurora→Redshift)', 'Data Aurora auto-flow ke Redshift, tak payah pipeline ETL', '"Analytics near-real-time tanpa bina ETL"'],
+                  ['AQUA (Advanced Query Accelerator)', 'Cache+compute dekat storage; push-down filter/aggregate → kurang data lalu network + beban CPU. Auto-managed, RA3, no extra charge', '🟢 "performance issues due to NETWORK BANDWIDTH + CPU limits" → AQUA'],
                 ],
-                takeaway: 'Spectrum = warehouse + S3 dalam satu query. Serverless = tak nak urus cluster. Concurrency Scaling = ramai user serentak. Zero-ETL = buang kerja bina pipeline Aurora→Redshift.',
+                takeaway: 'Spectrum = warehouse + S3 dalam satu query. Serverless = tak nak urus cluster. Concurrency Scaling = ramai user serentak. Zero-ETL = buang kerja bina pipeline Aurora→Redshift. AQUA = kurangkan network movement + CPU load (auto, no overhead).',
+              },
+              {
+                label: 'AQUA vs Redshift Spectrum — DUA-DUA "Redshift feature", JANGAN keliru',
+                headers: ['Aspect', 'AQUA', 'Redshift Spectrum'],
+                rows: [
+                  ['Masalah yang diselesai', 'Cluster slow sebab NETWORK + CPU bottleneck', 'Nak query data S3 external tanpa load ke cluster'],
+                  ['Cara kerja', 'Push compute (filter/aggregate) DEKAT storage → kurang data bergerak', 'Compute layer asing query data dalam S3 (external table)'],
+                  ['Kesan pada network', 'KURANGKAN data lalu network (dalam cluster)', 'Boleh TAMBAH trafik (tarik data dari S3)'],
+                  ['Setup / overhead', '🟢 Auto-managed — Redshift decide sendiri, no toggle', 'Kena define external schema + external table'],
+                  ['Kos', 'No extra charge (RA3)', 'Bayar per data DI-SCAN dalam S3'],
+                ],
+                takeaway: 'Keyword pembeza: "network bandwidth + CPU processing limits" → AQUA. "query data dalam S3 / data lake / external table tanpa load" → Spectrum. Dua-dua bunyi "Redshift + performance", tapi AQUA selesai bottleneck DALAM cluster; Spectrum extend query KELUAR ke S3. AQUA config status kini RETIRED — Redshift auto-tentukan (zero ops overhead).',
               },
             ],
-            scenario: '"Dashboard BI berulang atas berbilion baris sales, perlu join kompleks laju & konsisten" → Redshift. "Banyak analyst query serentak waktu puncak, jangan beratur" → Concurrency Scaling. "Nak query data dalam Redshift DAN data lake S3 dalam satu SQL" → Redshift Spectrum. "Beban analytics tak menentu, tak nak urus cluster" → Redshift Serverless. Bukan Athena (ad-hoc/jarang), bukan RDS (OLTP).',
+            scenario: '"Dashboard BI berulang atas berbilion baris sales, perlu join kompleks laju & konsisten" → Redshift. "Banyak analyst query serentak waktu puncak, jangan beratur" → Concurrency Scaling. "Nak query data dalam Redshift DAN data lake S3 dalam satu SQL" → Redshift Spectrum. "Beban analytics tak menentu, tak nak urus cluster" → Redshift Serverless. "Redshift slow sebab NETWORK BANDWIDTH + CPU processing limits, minimize overhead/cost" → AQUA (BUKAN Spectrum, BUKAN ElastiCache). Bukan Athena (ad-hoc/jarang), bukan RDS (OLTP).',
             tips: [
               'Redshift = OLAP/analytics (columnar, aggregate berjuta baris). RDS/Aurora = OLTP (transaksi, single-row read/write). Jangan keliru — soalan "transactional app" JANGAN jawab Redshift.',
               'Columnar storage + compression = sebab Redshift laju untuk SUM/AVG/GROUP BY atas data besar, tapi teruk untuk insert/update satu-satu baris.',
@@ -7517,12 +7541,17 @@ export const domains: DomainData[] = [
               'Concurrency Scaling: auto add transient cluster untuk handle spike concurrent queries — per-second billing, ada free credits harian.',
               'Multi-AZ: Redshift RA3 boleh Multi-AZ untuk HA. Cross-region snapshot untuk DR.',
               'Zero-ETL integration: Aurora/RDS → Redshift tanpa bina ETL pipeline sendiri (near-real-time analytics atas data transaksi).',
+              'AQUA (Advanced Query Accelerator): lapisan cache + hardware-accelerated compute antara compute node RA3 dengan Managed Storage. Push-down filter/aggregate dekat data → kurangkan data yang lalu network + kurangkan beban CPU compute node. Tepat untuk soalan "performance issues due to network bandwidth and CPU processing limits".',
+              'AQUA vs Spectrum (trap!): AQUA selesaikan bottleneck CPU/network DALAM cluster; Spectrum extend query KELUAR ke S3 (boleh tambah trafik network). Soalan sebut "network bandwidth + CPU limits" → AQUA, bukan Spectrum.',
+              'AQUA kini AUTO-MANAGED: parameter aqua-configuration-status sudah RETIRED — Redshift sendiri tentukan bila guna AQUA. Available pada RA3, no extra charge. Sebab itu AQUA = pilihan "minimize operational overhead".',
+              'AQUA ≠ ElastiCache: ElastiCache cache OLTP/key-value (depan RDS/DynamoDB), bukan untuk beban analytics columnar Redshift.',
             ],
             docs: [
               { label: 'Redshift Spectrum', url: 'https://docs.aws.amazon.com/redshift/latest/dg/c-using-spectrum.html' },
               { label: 'Concurrency Scaling', url: 'https://docs.aws.amazon.com/redshift/latest/dg/concurrency-scaling.html' },
+              { label: 'Query performance tuning', url: 'https://docs.aws.amazon.com/redshift/latest/dg/c-optimizing-query-performance.html' },
             ],
-            keywords: ['data warehouse', 'OLAP', 'columnar', 'MPP', 'RA3', 'managed storage', 'RMS', 'Redshift Spectrum', 'Redshift Serverless', 'concurrency scaling', 'zero-ETL', 'cluster', 'leader node', 'compute node', 'node slices', 'distribution key', 'DISTKEY', 'sort key', 'SORTKEY', 'zone maps', 'petabyte', 'BI analytics'],
+            keywords: ['data warehouse', 'OLAP', 'columnar', 'MPP', 'RA3', 'managed storage', 'RMS', 'Redshift Spectrum', 'Redshift Serverless', 'concurrency scaling', 'zero-ETL', 'cluster', 'leader node', 'compute node', 'node slices', 'distribution key', 'DISTKEY', 'sort key', 'SORTKEY', 'zone maps', 'petabyte', 'BI analytics', 'AQUA', 'Advanced Query Accelerator', 'network bandwidth', 'CPU processing limits', 'push down compute', 'query accelerator', 'AQUA vs Spectrum'],
           },
           {
             shortName: 'QuickSight',

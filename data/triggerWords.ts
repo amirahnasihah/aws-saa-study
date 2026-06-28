@@ -277,6 +277,15 @@ export const triggerRows: TriggerRow[] = [
     domain: 'D3 · High-Perf',
     slug: 'd3-db-pilih-database',
   },
+  {
+    id: 'aqua-redshift',
+    keywords: ['Redshift performance issues', 'network bandwidth + CPU processing limits', 'accelerate Redshift query, minimize overhead/cost', 'reduce data movement in cluster'],
+    service: 'AQUA (Advanced Query Accelerator)',
+    why: 'Push compute dekat storage → kurang data lalu NETWORK + kurang beban CPU compute node. Auto-managed (RA3, no extra charge) = minimum operational overhead. BUKAN Spectrum (Spectrum extend ke S3, boleh TAMBAH trafik), BUKAN ElastiCache (itu cache OLTP, bukan analytics columnar).',
+    accent: 'c3',
+    domain: 'D3 · High-Perf',
+    slug: 'd3-analytics-redshift',
+  },
 ]
 
 // ── Pokok keputusan (decision tree) ─────────────────────────────────────────
