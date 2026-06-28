@@ -571,6 +571,13 @@ export const bookmarkIndex: BookmarkIndexDoc[] = [
     "sectionId": "d3-compute"
   },
   {
+    "shortName": "AWS LB Controller",
+    "fullName": "AWS Load Balancer Controller",
+    "gunaUntuk": "Auto-provision AWS load balancers (ALB/NLB) dari Kubernetes Ingress/Service resources",
+    "category": "compute",
+    "sectionId": "d3-compute"
+  },
+  {
     "shortName": "EC2 User Data",
     "fullName": "EC2 User Data Scripts",
     "gunaUntuk": "Auto-configure EC2 instance on first boot",

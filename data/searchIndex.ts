@@ -1104,7 +1104,7 @@ export const searchIndex: SearchIndexDoc[] = [
     "category": "compute",
     "shortLower": "ecs",
     "fullLower": "elastic container service",
-    "keywordsLower": "docker containers microservices task definition json template fargate ec2 launch type service task cluster task role task execution role per-task iam binpack spread random task placement desired count ecs storage efs volumes ebs volumes bind mounts ephemeral storage persistent storage stateful containers shared storage",
+    "keywordsLower": "docker containers microservices task definition json template fargate ec2 launch type service task cluster task role task execution role per-task iam binpack spread random task placement desired count ecs storage efs volumes ebs volumes bind mounts ephemeral storage persistent storage stateful containers shared storage container instance ecs agent capacity provider",
     "descLower": "mengurus dan menjalankan docker containers pada cluster. hierarki: cluster (pool capacity) → service (jaga desired count) → task (satu running unit) yang dicetak dari task definition (blueprint json). dua launch type: ec2 (kau urus instances) atau fargate (serverless). run microservices dalam docker, e-commerce modules \"best describes a task definition\" → json blueprint/template yang describe containers (image, cpu, memory, ports). \"container app perlu akses s3 dengan least privilege\" → task role (per-task iam). \"task tak boleh pull image dari ecr\" → task execution role rosak. \"maintain n running copies + auto-restart\" → service. \"run container least ops, no servers\" → fargate. \"pack tasks jimat kos\" → binpack; \"sebar az untuk ha\" → spread. storage: \"ecs tasks perlu shared persistent file storage across az\" → amazon efs (rwx-style). \"block storage untuk satu task (db)\" → ebs (rwo-style). \"scratch space dalam task\" → bind mount (ephemeral)."
   },
   {
@@ -1118,7 +1118,7 @@ export const searchIndex: SearchIndexDoc[] = [
     "category": "compute",
     "shortLower": "eks",
     "fullLower": "elastic kubernetes service",
-    "keywordsLower": "kubernetes k8s container orchestration irsa iam roles for service accounts pod identity ecs vs eks control plane cost eks storage persistent volume ebs csi driver efs csi driver readwritemany rwx readwriteonce rwo shared storage pods pods different nodes fsx for lustre eks ebs multi-attach aws load balancer controller alb ingress kubernetes ingress path-based routing eks nlb eks nginx ingress route by url path",
+    "keywordsLower": "kubernetes k8s container orchestration irsa iam roles for service accounts pod identity ecs vs eks control plane cost eks storage persistent volume ebs csi driver efs csi driver readwritemany rwx readwriteonce rwo shared storage pods pods different nodes fsx for lustre eks ebs multi-attach aws load balancer controller alb ingress kubernetes ingress path-based routing eks nlb eks nginx ingress route by url path control plane worker nodes vpc cni namespace karpenter",
     "descLower": "mengurus kubernetes cluster untuk container orchestration large-scale containerized apps yang guna k8s \"route ke eks services ikut url path / host dengan least setup\" → alb via aws load balancer controller (ingress l7); nlb = l4 (port je, no path); nginx ingress = boleh path tapi self-managed = lebih ops. \"dah ada kubernetes skill/yaml/helm, nak portable across cloud\" → eks (bukan ecs). \"just run containers, aws-only, least learning\" → ecs. \"eks pods access aws tanpa simpan credentials\" → irsa. \"k8s control plane managed tapi nak run on-prem consistent\" → eks anywhere. storage: \"shared access by multiple pods on different ec2 nodes\" → efs (rwx, efs csi driver), bukan ebs multi-attach. \"satu pod satu volume / database statefulset\" → ebs (rwo, ebs csi driver). \"hpc / ml training throughput tinggi\" → fsx for lustre. nota: control plane eks ada kos (~$0.10/jam/cluster); ecs control plane percuma."
   },
   {
@@ -1134,6 +1134,20 @@ export const searchIndex: SearchIndexDoc[] = [
     "fullLower": "eks anywhere vs eks distro vs ecs anywhere",
     "keywordsLower": "eks anywhere eks distro ecs anywhere on-premises kubernetes hybrid containers",
     "descLower": "aws menyediakan pelbagai pilihan untuk run containers on-premises dengan degrees berbeza dari aws control plane dependency.  "
+  },
+  {
+    "shortName": "AWS LB Controller",
+    "fullName": "AWS Load Balancer Controller",
+    "domainBadge": "DOMAIN 3",
+    "domainVariant": "d3",
+    "slug": "d3-compute-aws-lb-controller",
+    "sectionTitle": "Compute",
+    "sectionIcon": "🖥️",
+    "category": "compute",
+    "shortLower": "aws lb controller",
+    "fullLower": "aws load balancer controller",
+    "keywordsLower": "aws load balancer controller alb nlb ingress path-based routing eks kubernetes layer 7 auto-provision",
+    "descLower": "kubernetes controller add-on yang watch for ingress resources dan auto-create alb, atau watch for service type loadbalancer dan auto-create nlb. install dalam eks cluster, integrate terus dengan aws apis. kau define routing rules dalam kubernetes yaml → controller buat semua aws infra automatically. define kubernetes ingress dengan path rules (/api → service-a, /web → service-b) → controller auto-provision alb dengan matching target groups dan listener rules \"eks cluster perlu route requests by url path with least setup\" → aws load balancer controller + alb. sebab: (1) alb natively support path-based routing (layer 7), (2) controller auto-provision — tak perlu manual create lb. lambda proxy = overkill + kena tulis routing logic. nlb = layer 4, tak faham url paths. nginx ingress = more setup (install + manage nginx pods sendiri)."
   },
   {
     "shortName": "EC2 User Data",
