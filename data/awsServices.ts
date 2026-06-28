@@ -5922,6 +5922,120 @@ export const domains: DomainData[] = [
             keywords: ['real-time', 'streaming', 'data pipeline', 'analytics', 'Data Streams', 'Firehose', 'shards', 'retention', 'clickstream', 'IoT', 'replay', 'serverless delivery', 'Kinesis Video Streams', 'KVS', 'video stream', 'CCTV', 'Managed Service for Apache Flink', 'Kinesis Data Analytics'],
           },
           {
+            shortName: 'Kinesis Video Streams',
+            fullName: 'Amazon Kinesis Video Streams (KVS)',
+            ingat: '"Paip VIDEO — bukan paip data. CCTV/drone/doorbell masuk cloud. Dua mod: simpan+playback ATAU WebRTC dua-hala"',
+            gunaUntuk: 'Ingest, simpan, playback & proses VIDEO/audio live dari beribu kamera/IoT device (CCTV, drone, dashcam, video doorbell) untuk ML/playback',
+            fungsi: 'Bayangkan macam YouTube Live / TikTok Live tapi untuk APP kau sendiri: KVS adalah paip yang sambut feed video live dari banyak sumber (CCTV, webcam, drone, dashcam, video doorbell), simpan elok-elok dalam cloud (encrypted at rest), index ikut masa (timestamp), pastu app kau boleh tonton live ATAU main semula rakaman lama. Dua mod: (1) **KVS classic** = ingest → durable storage → playback (HLS/DASH) + feed ke ML (Rekognition Video / SageMaker); (2) **KVS with WebRTC** = live dua-hala ultra-low-latency peer-to-peer (macam video call) — contoh video doorbell yang kau boleh cakap balik.',
+            sebabApa: 'Wujud sebab video itu BEZA dengan data text. Kalau kau cuba paksa feed CCTV masuk Kinesis Data Streams (yang direka untuk JSON/log/telemetry kecil), kau kena handle sendiri fragmentation, buffering, timestamp sync, encoding, playback protocol (HLS), TURN/STUN untuk NAT traversal — pening + mahal. KVS buang semua sakit kepala tu: device cuma kena push frame (guna Producer SDK / GStreamer kvssink / RTSP), AWS urus storage tahan lama, time-indexing, encryption, dan playback. Untuk interaktif dua-hala (baby monitor, doorbell sembang balik), WebRTC mode bagi peer-to-peer real-time tanpa kau bina sendiri media-relay server.',
+            sifir: [
+              'KVS = VIDEO/audio stream (CCTV, drone, dashcam, doorbell). BUKAN Kinesis Data Streams (itu text/JSON/log)',
+              'Soalan sebut "video", "camera", "CCTV", "live media", "playback rakaman" → Kinesis Video Streams',
+              'Real-time face/object detection atas video live → KVS + Rekognition Video (BUKAN Data Streams)',
+              'Dua-hala / two-way / interactive (video call, doorbell sembang balik, baby monitor) → KVS with WebRTC',
+              'WebRTC = peer-to-peer ultra-low latency + pakai signaling channel + STUN/TURN (NAT traversal)',
+              'Device hantar video guna Producer SDK / GStreamer kvssink / RTSP. Playback guna HLS / DASH / GetMedia',
+              'Durable storage retention boleh set (encrypted at rest, time-indexed by producer + ingest timestamp)',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat nak ingest live video dari beribu CCTV kedai untuk buat real-time facial recognition (kesan suspek). Servis apa untuk ingest video tu?',
+                umpan: 'Kinesis Data Streams — sangka semua "Kinesis = streaming jadi guna Data Streams", pastu pipe ke Rekognition.',
+                betul: 'Kinesis Video Streams (KVS) + Rekognition Video. Kinesis Data Streams cuma sambut rekod data text/JSON kecil (clickstream, log, telemetry) — ia TAK direka untuk frame video. Keyword "live video / camera / CCTV / facial recognition on video" → KVS, bukan Data Streams.',
+              },
+              {
+                soalan: 'Video doorbell perlu biar tuan rumah tengok LIVE siapa di pintu dan BERCAKAP balik (two-way audio/video) dengan latency paling rendah. Pilih?',
+                umpan: 'Kinesis Video Streams classic (ingest + playback HLS) — nampak betul sebab "video doorbell = video stream".',
+                betul: 'Kinesis Video Streams with WebRTC. Classic ingest→storage→playback ada latency (HLS buffer beberapa saat) dan satu-hala. Two-way + ultra-low-latency + peer-to-peer = WebRTC mode (signaling channel + STUN/TURN). Keyword "two-way / interactive / talk back / lowest latency live" → WebRTC.',
+              },
+              {
+                soalan: 'IoT sensor hantar data suhu & getaran (telemetry kecil) setiap saat untuk analisa real-time. Kinesis yang mana?',
+                umpan: 'Kinesis Video Streams — nampak "device streaming" jadi sangka KVS handle semua IoT.',
+                betul: 'Kinesis Data Streams (atau Firehose kalau cuma nak deliver ke S3). KVS HANYA untuk time-encoded MEDIA (video, audio, thermal, RADAR/LIDAR depth). Telemetry text/numerik biasa → Data Streams. Keyword "video/audio/media" = KVS; "telemetry/log/JSON" = Data Streams.',
+              },
+            ],
+            diagram: {
+              label: 'KVS pipeline anatomy',
+              steps: [
+                { nodes: [
+                  { label: 'Devices', sub: 'CCTV · drone · doorbell', tone: 'c1' },
+                ] },
+                { nodes: [
+                  { label: 'Producer SDK', sub: 'kvssink / RTSP', tone: 'c3' },
+                ] },
+                { nodes: [
+                  { label: 'KVS', sub: 'ingest · store · time-index', tone: 'c4' },
+                ] },
+                { nodes: [
+                  { label: 'Playback', sub: 'HLS / DASH', tone: 'c2' },
+                  { label: 'ML', sub: 'Rekognition / SageMaker', tone: 'c5' },
+                ] },
+              ],
+              caption: 'Device push frame (Producer SDK / GStreamer kvssink / RTSP) → KVS ingest, store (encrypted, time-indexed), serah ke consumer: playback live/lama (HLS/DASH/GetMedia) ATAU ML real-time (Rekognition Video). WebRTC mode = laluan peer-to-peer terus, langkau storage, untuk interaktif dua-hala.',
+            },
+            mermaid: [
+              {
+                label: 'KVS classic vs WebRTC vs Data Streams (decision tree)',
+                source: `flowchart TD
+  A["Apa jenis data nak stream?"] --> B{"Media (video/audio)<br/>atau data biasa?"}
+  B -->|"text · JSON · log · telemetry"| DS["Kinesis Data Streams<br/>(BUKAN video)"]
+  B -->|"video / audio / thermal / RADAR"| C{"Perlu dua-hala<br/>& ultra-low latency?"}
+  C -->|"Tidak — ingest, simpan,<br/>tonton live/lama, ML"| CLASSIC["KVS classic<br/>ingest → storage → HLS/DASH<br/>+ Rekognition Video"]
+  C -->|"Ya — two-way, interactive,<br/>video call / doorbell sembang balik"| WEBRTC["KVS with WebRTC<br/>peer-to-peer + signaling<br/>+ STUN/TURN"]`,
+                caption: 'Pertama tapis MEDIA vs data biasa: video/audio/thermal → KVS; text/log/telemetry → Data Streams. Dalam KVS, tanya perlu dua-hala ke tak: satu-hala (rakam/tonton/ML) → classic; dua-hala interaktif latency rendah → WebRTC. INGAT exam: "video + camera" = KVS; "two-way live" = WebRTC.',
+              },
+              {
+                label: 'Analogi: CCTV Rumah vs Video Call',
+                source: `flowchart TD
+  Q{"Video masuk cloud —<br/>nak buat apa?"} -->|"rakam & tengok balik,<br/>satu hala"| CCTV["📹 CCTV / Ring doorbell rakam<br/>= KVS classic<br/>simpan dalam cloud,<br/>tonton live atau ulang tayang"]
+  CCTV --> ML["🤖 boleh suruh AI tengokkan<br/>(Rekognition Video kesan muka/objek)"]
+  Q -->|"sembang muka-muka,<br/>dua hala, real-time"| CALL["📞 Video call WhatsApp/Meet<br/>= KVS with WebRTC<br/>peer-to-peer, latency rendah,<br/>boleh cakap & dengar serentak"]`,
+                caption: 'KVS classic = macam CCTV / Ring doorbell yang rakam masuk cloud: satu-hala, simpan, tonton live atau main semula, boleh suruh AI (Rekognition) tengokkan untuk kau. KVS WebRTC = macam video call WhatsApp/Google Meet: dua-hala, peer-to-peer, latency rendah, kedua-dua pihak cakap & dengar serentak. INGAT exam: "rakam/playback/analisa video" → classic; "two-way interactive call" → WebRTC.',
+              },
+            ],
+            scenario: '"Ingest live video dari ribuan kamera/CCTV/drone untuk simpan & analisa" → Kinesis Video Streams. "Real-time facial / object recognition atas video stream" → KVS + Rekognition Video. "Two-way / interactive live video atau audio (video doorbell, baby monitor, telehealth, video chat)" → KVS with WebRTC. "Telemetry/log/JSON streaming" → Kinesis Data Streams (BUKAN KVS).',
+            compare: [
+              {
+                label: 'KVS classic vs KVS with WebRTC',
+                headers: ['Aspect', 'KVS classic', 'KVS with WebRTC'],
+                rows: [
+                  ['Arah', 'One-way (device → cloud → viewer)', '🟢 Two-way / peer-to-peer interactive'],
+                  ['Latency', 'Detik (HLS/DASH buffer)', '🟢 Ultra-low (real-time human interaction)'],
+                  ['Storage', '🟢 Durable, time-indexed, retention boleh set', 'Tiada — laluan media live je'],
+                  ['Playback rakaman lama', '🟢 Ya (GetMedia / HLS / DASH)', '❌ Live sahaja'],
+                  ['ML integration', '🟢 Rekognition Video / SageMaker', 'Atas peer (tak melalui storage)'],
+                  ['Guna untuk', 'CCTV rakam, dashcam, video analytics', 'Video doorbell sembang balik, baby monitor, telehealth'],
+                ],
+                takeaway: 'Nak SIMPAN + playback + ML atas video → classic. Nak DUA-HALA real-time latency rendah (video call style) → WebRTC. INGAT: "two-way / interactive / talk back" = WebRTC.',
+              },
+              {
+                label: 'Kinesis Video Streams vs Kinesis Data Streams',
+                headers: ['Aspect', 'Kinesis Video Streams (KVS)', 'Kinesis Data Streams (KDS)'],
+                rows: [
+                  ['Data type', '🎥 Time-encoded MEDIA: video, audio, thermal, RADAR/LIDAR', '📊 Rekod data: JSON, log, clickstream, telemetry'],
+                  ['Sumber tipikal', 'CCTV, drone, dashcam, video doorbell, webcam', 'App, IoT sensor, log agent'],
+                  ['Cara hantar', 'Producer SDK / GStreamer kvssink / RTSP', 'PutRecord / KPL / agent'],
+                  ['Consumer', 'HLS/DASH playback, GetMedia, Rekognition Video', 'Lambda / KCL custom code'],
+                  ['Salah guna', '❌ Jangan paksa telemetry text masuk sini', '❌ Jangan paksa frame video masuk sini'],
+                ],
+                takeaway: 'Discriminator paling penting di exam: perkataan "VIDEO / camera / CCTV / media" → KVS. "log / clickstream / telemetry / JSON record" → Data Streams. Dua-dua nama ada "Kinesis" + "Streams" — itu umpan.',
+              },
+            ],
+            tips: [
+              'Producer (hantar masuk): Producer SDK (C/C++/Java/Android), GStreamer kvssink plugin, atau RTSP dari kamera rangkaian. Source-agnostic.',
+              'Consumer (ambil keluar): HLS / MPEG-DASH untuk playback dalam browser/player, atau GetMedia / GetMediaForFragmentList untuk frame-by-frame.',
+              'Fragment = unit asas KVS: satu jujukan frame media yang lengkap, ada fragment number + producer/server timestamp. Time-indexing guna timestamp ni.',
+              'WebRTC mode pakai signaling channel (bukan video stream) untuk peer jumpa satu sama lain, pastu STUN/TURN tembusi NAT/firewall untuk sambungan peer-to-peer.',
+              'Integrasi ML: KVS + Rekognition Video = real-time face/object detection (CCTV pengesanan). Untuk model sendiri → consume ke SageMaker.',
+              'PRICING (us-east-1, approx): classic — Data Ingested ~$0.0085/GB, Data Consumed ~$0.0085/GB, Data Stored ~$0.023/GB-month (durable, encrypted). Tiada free tier. WebRTC dicaj ikut bilangan signaling message + minit streaming TURN (relay bila peer-to-peer langsung gagal). pricing',
+            ],
+            docs: [
+              { label: 'What is Amazon Kinesis Video Streams?', url: 'https://docs.aws.amazon.com/kinesisvideostreams/latest/dg/what-is-kinesis-video.html' },
+              { label: 'What is KVS with WebRTC?', url: 'https://docs.aws.amazon.com/kinesisvideostreams-webrtc-dg/latest/devguide/what-is-kvswebrtc.html' },
+            ],
+            keywords: ['Kinesis Video Streams', 'KVS', 'video stream', 'CCTV', 'camera', 'drone', 'dashcam', 'video doorbell', 'baby monitor', 'WebRTC', 'two-way', 'peer-to-peer', 'signaling channel', 'STUN', 'TURN', 'HLS', 'DASH', 'RTSP', 'GStreamer', 'kvssink', 'fragment', 'Rekognition Video', 'time-encoded data', 'media stream', 'live video', 'playback', 'telehealth', 'pricing'],
+          },
+          {
             shortName: 'API Gateway',
             fullName: 'Amazon API Gateway',
             ingat: '"Pintu masuk untuk API — REST / HTTP / WebSocket"',
