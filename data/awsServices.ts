@@ -351,6 +351,7 @@ export const domains: DomainData[] = [
               'Confused Deputy: bila kau bagi satu AWS service (deputy) kuasa akses resource kau, pihak ketiga boleh perdaya service tu guna kuasa kau. Lindung dengan condition aws:SourceArn (resource spesifik) + aws:SourceAccount (account ID) dalam ROLE TRUST POLICY → service cuma assume role bila request betul-betul dari ARN/account kau. Keyword "cross-service confused deputy" → aws:SourceArn/aws:SourceAccount',
               'Least-privilege tooling — Credential Report: CSV semua IAM users + status credential (password age, access key age/last-used, MFA on/tak) → audit & buang creds lapuk, satu account satu report. Access Advisor (Last Accessed): tab pada user/role/group/policy yang tunjuk service mana TERAKHIR diakses & bila → buang permission yang tak pernah dipakai. Keyword "identify unused permissions / which services has this role actually used / audit stale credentials" → Access Advisor (last accessed) + Credential Report',
               'PRICING: IAM sendiri PERCUMA (users, groups, roles, policies, Credential Report, Access Advisor, MFA semua tiada caj). Bayar hanya resource AWS yang diakses. (IAM Access Analyzer External = free; Unused Access = bayar per resource.)',
+              'Least-privilege pattern (critical vs non-critical): critical resources → assign permission ke IAM Role, user ASSUME role on-demand bila perlu (selepas siap switch balik → kecilkan attack surface); non-critical → guna regular credentials harian. Bukan cipta user ID berasingan (kena urus banyak credential), bukan full access, bukan resource-based policy je (BUKAN semua resource support). Exam: "least privilege + critical on required basis + non-critical daily" → Role untuk critical, assume on-demand.',
             ],
             docs: [
               { label: 'IAM policy evaluation logic', url: 'https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_evaluation-logic.html' },
@@ -3196,6 +3197,7 @@ export const domains: DomainData[] = [
               'Phase out AMI lama masa scale-in → OldestLaunchTemplate termination policy',
               'ASG sendiri FREE — bayar EC2 yang dilancarkan je',
               'Scale on SQS queue backlog → custom metric (ApproximateNumberOfMessagesVisible / backlog per task), BUKAN CPU/Memory (CPU buta terhadap queue depth — container proses satu-satu)',
+              'Lifecycle hooks: PAUSE instance sebelum terminate (wait state, default 1 jam) → sempat copy data/log keluar sebelum mati. Bukan cooldown (itu delay antara scaling action)',
             ],
             perangkap: [
               {
@@ -3254,8 +3256,9 @@ export const domains: DomainData[] = [
               'Default policy: OldestLaunchConfiguration → OldestInstance → ClosestToNextInstanceHour',
               'Exam: "phase out old AMI, replace with new" → OldestLaunchTemplate termination policy',
               'Queue-based scaling: bila consumer tarik kerja dari SQS, scale ikut queue backlog (custom metric ApproximateNumberOfMessagesVisible atau backlog per task = queue depth ÷ target capacity) guna Target Tracking, BUKAN CPU/Memory. CPU/Memory maintain rendah sebab container proses satu-satu → tak scale walau queue meletup. Keyword "scale ECS/EC2 based on SQS queue" → custom metric backlog.',
+              'Lifecycle Hooks: bila ASG terminate instance (scale-in / Spot rampas), hook PAUSE instance ke wait state (default 1 JAM) → sempat invoke Lambda / connect ke instance untuk copy critical data atau drain sebelum mati. Notifikasi via EventBridge. BUKAN cooldown (cooldown = delay antara scaling action, bukan selamatkan data). BUKAN termination policy (itu pilih instance MANA nak terminate). Exam: "copy data before instance termination / data loss on scale-in" → Lifecycle Hooks.',
             ],
-            keywords: ['horizontal scaling', 'scale out/in', 'launch template', 'scaling policies', 'desired capacity', 'min/max', 'OldestLaunchTemplate', 'termination policy', 'AMI rollout', 'Mixed Instances Policy', 'On-Demand baseline', 'Spot', 'fault-tolerant', 'cost optimization spike', 'high availability', 'fault tolerance', 'scalability', 'elasticity', 'throughput', 'vertical scaling', 'scale up', 'zero downtime', 'eliminate single point of failure', 'custom metric', 'SQS backlog', 'ApproximateNumberOfMessagesVisible', 'backlog per task', 'queue-based scaling'],
+            keywords: ['horizontal scaling', 'scale out/in', 'launch template', 'scaling policies', 'desired capacity', 'min/max', 'OldestLaunchTemplate', 'termination policy', 'AMI rollout', 'Mixed Instances Policy', 'On-Demand baseline', 'Spot', 'fault-tolerant', 'cost optimization spike', 'high availability', 'fault tolerance', 'scalability', 'elasticity', 'throughput', 'vertical scaling', 'scale up', 'zero downtime', 'eliminate single point of failure', 'custom metric', 'SQS backlog', 'ApproximateNumberOfMessagesVisible', 'backlog per task', 'queue-based scaling', 'lifecycle hooks'],
           },
           {
             shortName: 'RDS Multi-AZ',
@@ -3372,7 +3375,7 @@ export const domains: DomainData[] = [
               },
             ],
             tips: [
-              'Automated backups: AWS backup daily (during backup window) + transaction logs — boleh restore ke ANY point-in-time dalam retention period (1-35 hari). Auto-deleted bila instance dipadam.',
+              'Automated backups: AWS backup daily (snapshot volume during backup window) + transaction logs di-upload ke S3 setiap 5 MINIT → RPO ~5 minit, boleh restore ke ANY point-in-time dalam retention period (1-35 hari). Auto-deleted bila instance dipadam.',
               'Manual snapshots: kau trigger sendiri, bila-bila masa — KEKAL walaupun RDS instance dipadam. Guna untuk "before major upgrade" atau long-term retention.',
               'Restore dari snapshot/PITR = create instance BARU dengan endpoint BARU — bukan restore in-place',
               'Exam: "retain backup walaupun delete DB instance" → manual snapshot (automated backups deleted together with instance)',
@@ -7368,12 +7371,13 @@ export const domains: DomainData[] = [
               '"Two product categories, same API, cache must not share entries" → include query param in cache key',
               'Integration types: HTTP (public internet), Lambda (same or cross-account), VPC Link (private VPC resources via NLB/ALB)',
               'CORS: enable on API Gateway untuk allow browser cross-origin requests. REST APIs: OPTIONS preflight handler auto-created.',
+              'Logging 2 jenis: EXECUTION logging (CloudWatch) = tangkap request & response PAYLOADS + error traces untuk debug "apa jadi". ACCESS logging = rekod SIAPA akses API + method (ke Kinesis Data Firehose/S3/CloudWatch) macam ALB access log. CloudTrail = audit API call AWS, BUKAN payload request app. Exam: "log request & response payloads + error traces" → CloudWatch EXECUTION logging (bukan CloudTrail, bukan access logging).',
             ],
             docs: [
               { label: 'Choose between REST APIs and HTTP APIs', url: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-vs-rest.html' },
               { label: 'WebSocket APIs', url: 'https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api.html' },
             ],
-            keywords: ['REST API', 'HTTP API', 'WebSocket', 'real-time', 'bidirectional', 'API management', 'throttling', 'usage plans', 'API keys', 'request validation', 'AWS WAF', 'JWT authorizer', 'Cognito', 'Lambda authorizer', 'IAM authorizer', 'edge-optimized', 'regional endpoint', 'private endpoint', 'mapping templates', 'backward compatibility', 'VTL', 'response transformation', 'cache key', 'CORS', 'VPC Link', 'cross-account Lambda'],
+            keywords: ['REST API', 'HTTP API', 'WebSocket', 'real-time', 'bidirectional', 'API management', 'throttling', 'usage plans', 'API keys', 'request validation', 'AWS WAF', 'JWT authorizer', 'Cognito', 'Lambda authorizer', 'IAM authorizer', 'edge-optimized', 'regional endpoint', 'private endpoint', 'mapping templates', 'backward compatibility', 'VTL', 'response transformation', 'cache key', 'CORS', 'execution logging', 'access logging', 'request response payloads', 'VPC Link', 'cross-account Lambda'],
           },
           {
             shortName: 'EventBridge',
@@ -8588,13 +8592,14 @@ export const domains: DomainData[] = [
               'AQUA vs Spectrum (trap!): AQUA selesaikan bottleneck CPU/network DALAM cluster; Spectrum extend query KELUAR ke S3 (boleh tambah trafik network). Soalan sebut "network bandwidth + CPU limits" → AQUA, bukan Spectrum.',
               'AQUA kini AUTO-MANAGED: parameter aqua-configuration-status sudah RETIRED — Redshift sendiri tentukan bila guna AQUA. Available pada RA3, no extra charge. Sebab itu AQUA = pilihan "minimize operational overhead".',
               'AQUA ≠ ElastiCache: ElastiCache cache OLTP/key-value (depan RDS/DynamoDB), bukan untuk beban analytics columnar Redshift.',
+              'PRICING/COST: Manual snapshots TAK auto-delete (kekal selamanya sampai kau padam sendiri) → caj storage berterusan, jadi cluster jangka panjang kos naik kalau tak padam yang lama. Automated snapshots auto-delete lepas retention (default 1, max 35 hari). Jimat kos cluster lama: padam manual snapshots tak perlu + set automated retention rendah. BUKAN Spot (Redshift cluster guna Reserved Instance), BUKAN instance store (data cluster = managed storage, instance store ephemeral = data hilang).',
             ],
             docs: [
               { label: 'Redshift Spectrum', url: 'https://docs.aws.amazon.com/redshift/latest/dg/c-using-spectrum.html' },
               { label: 'Concurrency Scaling', url: 'https://docs.aws.amazon.com/redshift/latest/dg/concurrency-scaling.html' },
               { label: 'Query performance tuning', url: 'https://docs.aws.amazon.com/redshift/latest/dg/c-optimizing-query-performance.html' },
             ],
-            keywords: ['data warehouse', 'OLAP', 'columnar', 'MPP', 'RA3', 'managed storage', 'RMS', 'Redshift Spectrum', 'Redshift Serverless', 'concurrency scaling', 'zero-ETL', 'cluster', 'leader node', 'compute node', 'node slices', 'distribution key', 'DISTKEY', 'sort key', 'SORTKEY', 'zone maps', 'petabyte', 'BI analytics', 'AQUA', 'Advanced Query Accelerator', 'network bandwidth', 'CPU processing limits', 'push down compute', 'query accelerator', 'AQUA vs Spectrum'],
+            keywords: ['data warehouse', 'OLAP', 'columnar', 'MPP', 'RA3', 'managed storage', 'RMS', 'Redshift Spectrum', 'Redshift Serverless', 'concurrency scaling', 'zero-ETL', 'cluster', 'leader node', 'compute node', 'node slices', 'distribution key', 'DISTKEY', 'sort key', 'SORTKEY', 'zone maps', 'petabyte', 'BI analytics', 'AQUA', 'Advanced Query Accelerator', 'network bandwidth', 'CPU processing limits', 'push down compute', 'query accelerator', 'AQUA vs Spectrum', 'manual snapshots cost', 'pricing'],
           },
           {
             shortName: 'QuickSight',
