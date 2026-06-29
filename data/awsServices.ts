@@ -6839,8 +6839,9 @@ export const domains: DomainData[] = [
               'CNAME record: standard DNS. TIDAK BOLEH guna untuk apex/root domain (DNS spec prohibition)',
               'Pattern: apex domain (example.com) → ALWAYS use Alias. Subdomain (www.example.com) → CNAME or Alias both work',
               'Exam: "root domain + www subdomain pointing to ALB" → Alias for root + CNAME (or Alias) for www',
+              'Hosted Zones: PUBLIC hosted zone = DNS record untuk domain internet awam (orang luar resolve). PRIVATE hosted zone = record HANYA dalam VPC kau (internal apps/database, split-horizon, orang luar tak nampak). Associate private hosted zone ke VPC → EC2 dalam VPC resolve nama dalaman. Satu domain = satu hosted zone. Exam: "internal DNS name dalam VPC / private domain untuk app dalaman" → private hosted zone.',
             ],
-            keywords: ['DNS', 'domain', 'routing policy', 'failover', 'Alias record', 'CNAME', 'apex domain', 'root domain', 'cannot CNAME apex'],
+            keywords: ['DNS', 'domain', 'routing policy', 'failover', 'Alias record', 'CNAME', 'apex domain', 'root domain', 'cannot CNAME apex', 'hosted zone', 'public hosted zone', 'private hosted zone'],
           },
           {
             shortName: 'Route 53 Routing Policies',
