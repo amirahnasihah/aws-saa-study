@@ -675,6 +675,22 @@ export const petaModules: PetaModule[] = [
       { left: 'App Discovery Service', rel: 'vs', right: 'Migration Hub', note: 'ADS = DISCOVER + inventory + dependency on-prem (fasa planning; agentless via VMware vCenter, agent-based untuk network dependency). Migration Hub = TRACK progress merentas MGN/DMS/DataSync (home region, Strategy Recommendations, Orchestrator) — TAK migrate apa-apa. "track migrations one dashboard" → Migration Hub.' },
     ],
   },
+  {
+    num: '11',
+    title: 'Terma: Ingress = Inbound · Egress = Outbound',
+    accent: 'c4',
+    mermaid: `flowchart LR
+  i1["Inbound<br/>(SG/NACL · nama UI Console)"] -. "SAMA · trafik MASUK ⬇" .-> i2["Ingress<br/>(code: Terraform/CFN/K8s)"]
+  o1["Outbound<br/>(SG/NACL · nama UI Console)"] -. "SAMA · trafik KELUAR ⬆" .-> o2["Egress<br/>(code: Terraform/CFN/K8s)"]
+  l1["SG/NACL Inbound (L4)<br/>(perimeter infra · port/IP je)"] -. "L4 infra vs L7 app" .-> l2["K8s Ingress (L7)<br/>(baca URL path → Pod betul)"]
+  k1["Kubernetes Ingress<br/>(EKS · rule pintu masuk)"] -->|"auto-create di belakang tabir<br/>(Load Balancer Controller)"| k2["AWS ALB (L7)<br/>(agih trafik ikut path/host)"]`,
+    rows: [
+      { left: 'Inbound', rel: '=', right: 'Ingress', note: 'Maksud SAMA: trafik MASUK dari luar → dalam sistem. "Inbound" = nama mesra UI (AWS Console Security Group/NACL). "Ingress" = nama saintifik bila tulis code (Terraform/CloudFormation/Kubernetes). Nampak `ingress {}` dalam Terraform → otak tukar: "ooo ini Inbound rules".' },
+      { left: 'Outbound', rel: '=', right: 'Egress', note: 'Maksud SAMA: trafik KELUAR dari sistem → internet luar. "Outbound" = UI Console; "Egress" = code. Terraform: blok `ingress{}` = inbound rules, blok `egress{}` = outbound rules.' },
+      { left: 'SG/NACL Inbound (L4)', rel: 'vs', right: 'Kubernetes Ingress (L7)', note: 'Konsep sama (jaga pintu masuk) tapi beza LAPISAN. SG/NACL Inbound = L4 perimeter infra — tengok port/IP je ("Port 443 bukak? Lepas masuk"), tak kisah app apa. K8s Ingress = L7 aplikasi — boleh baca URL path ("request ke /api/v1/users → hantar ke Pod backend-user").' },
+      { left: 'Kubernetes Ingress', rel: '→', right: 'AWS ALB', note: 'Pasang K8s Ingress dalam EKS → AWS Load Balancer Controller AUTO-create sebiji ALB di belakang tabir untuk agih trafik HTTP ikut path/host. Ingress Controller = "polis trafik / pengagih URL" = kerja sama macam ALB. Mereka berkawan baik.' },
+    ],
+  },
 ]
 
 export const trapRows: TrapRow[] = [
