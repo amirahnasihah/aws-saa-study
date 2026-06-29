@@ -430,6 +430,15 @@ export const triggerRows: TriggerRow[] = [
     domain: 'D1 · Secure',
     slug: 'd2-ha-rds-multi-az',
   },
+  {
+    id: 'sqs-backlog-scaling',
+    keywords: ['scale ECS/EC2 based on SQS queue', 'scale consumer on queue backlog', 'ApproximateNumberOfMessagesVisible', 'backlog per task custom metric', 'auto-scale on message count not CPU', 'queue-based scaling', 'which metric to scale SQS consumer'],
+    service: 'Custom metric SQS backlog (BUKAN CPU/Memory)',
+    why: 'Consumer yang sedut kerja dari SQS mesti scale ikut QUEUE BACKLOG, bukan CPU/Memory. CPU/Memory BUTA pada queue depth — container proses mesej satu-satu jadi CPU kekal rendah walau 10,000 mesej sangkut → auto-scaling ingat server rilek, tak scale. Guna custom metric ApproximateNumberOfMessagesVisible (queue depth) atau backlog per task (queue depth ÷ target capacity) → Target Tracking scale out. Keyword "scale based on SQS queue / number of messages" → custom metric backlog, BUKAN CPU/Memory/S3 objects/container count.',
+    accent: 'c5',
+    domain: 'D3 · High-Perf',
+    slug: 'd3-messaging-sqs',
+  },
 ]
 
 // ── Pokok keputusan (decision tree) ─────────────────────────────────────────
@@ -841,5 +850,9 @@ export const trapRows: TrapRow[] = [
   {
     bait: 'Encrypt the existing unencrypted Read Replica directly (sebab replica pun kena encrypt)',
     fix: 'Read Replica WARISI encryption source. RR dari primary unencrypted (same-region) WAJIB unencrypted — tak boleh encrypt terus. Buang RR lama, create RR BARU dari encrypted primary → auto encrypted. primary encrypted → replica encrypted (KMS key sama).',
+  },
+  {
+    bait: 'Scale ECS/EC2 SQS consumer based on CPU Utilization atau Memory Reservation (metrik default ASG)',
+    fix: 'CPU/Memory BUTA terhadap queue depth. Container yang proses SQS satu-satu maintain CPU rendah walau 10,000 mesej beratur → auto-scaling ingat server rilek, tak scale. Consumer tarik kerja dari queue → scale ikut custom metric: ApproximateNumberOfMessagesVisible atau backlog per task (queue depth ÷ target capacity). Salah juga: scale ikut "number of objects in S3" (bucket makin penuh hari hari → scale selamanya) atau "number of containers" (itu RESULT scaling, bukan METRIK).',
   },
 ]

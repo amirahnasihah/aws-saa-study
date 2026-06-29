@@ -3195,6 +3195,7 @@ export const domains: DomainData[] = [
               'min = HA floor (set ≥2 across AZ), desired = sekarang, max = siling',
               'Phase out AMI lama masa scale-in → OldestLaunchTemplate termination policy',
               'ASG sendiri FREE — bayar EC2 yang dilancarkan je',
+              'Scale on SQS queue backlog → custom metric (ApproximateNumberOfMessagesVisible / backlog per task), BUKAN CPU/Memory (CPU buta terhadap queue depth — container proses satu-satu)',
             ],
             perangkap: [
               {
@@ -3252,8 +3253,9 @@ export const domains: DomainData[] = [
               'AllocationStrategy → untuk Spot instances, terminate berdasarkan allocation strategy',
               'Default policy: OldestLaunchConfiguration → OldestInstance → ClosestToNextInstanceHour',
               'Exam: "phase out old AMI, replace with new" → OldestLaunchTemplate termination policy',
+              'Queue-based scaling: bila consumer tarik kerja dari SQS, scale ikut queue backlog (custom metric ApproximateNumberOfMessagesVisible atau backlog per task = queue depth ÷ target capacity) guna Target Tracking, BUKAN CPU/Memory. CPU/Memory maintain rendah sebab container proses satu-satu → tak scale walau queue meletup. Keyword "scale ECS/EC2 based on SQS queue" → custom metric backlog.',
             ],
-            keywords: ['horizontal scaling', 'scale out/in', 'launch template', 'scaling policies', 'desired capacity', 'min/max', 'OldestLaunchTemplate', 'termination policy', 'AMI rollout', 'Mixed Instances Policy', 'On-Demand baseline', 'Spot', 'fault-tolerant', 'cost optimization spike', 'high availability', 'fault tolerance', 'scalability', 'elasticity', 'throughput', 'vertical scaling', 'scale up', 'zero downtime', 'eliminate single point of failure'],
+            keywords: ['horizontal scaling', 'scale out/in', 'launch template', 'scaling policies', 'desired capacity', 'min/max', 'OldestLaunchTemplate', 'termination policy', 'AMI rollout', 'Mixed Instances Policy', 'On-Demand baseline', 'Spot', 'fault-tolerant', 'cost optimization spike', 'high availability', 'fault tolerance', 'scalability', 'elasticity', 'throughput', 'vertical scaling', 'scale up', 'zero downtime', 'eliminate single point of failure', 'custom metric', 'SQS backlog', 'ApproximateNumberOfMessagesVisible', 'backlog per task', 'queue-based scaling'],
           },
           {
             shortName: 'RDS Multi-AZ',
@@ -6903,6 +6905,7 @@ export const domains: DomainData[] = [
               'Poison pill (data corrupt) → DLQ, kalau tak server pusing proses sampai bil melambung',
               'DLQ source FIFO → DLQ kena FIFO juga; source Standard → DLQ kena Standard',
               'Lepas fix bug → DLQ Redrive tolak balik mesej ke queue utama, tak payah tulis kod',
+              'Scale consumer (ECS/EC2) ikut queue backlog BUKAN CPU/Memory — CPU rendah walau queue penuh sebab container proses satu-satu. Guna custom metric ApproximateNumberOfMessagesVisible atau backlog per task (queue depth ÷ target capacity)',
             ],
             perangkap: [
               {
@@ -7035,13 +7038,14 @@ export const domains: DomainData[] = [
               'DLQ Redrive: lepas developer fix bug, guna Redrive (console / StartMessageMoveTask API) tolak balik mesej dari DLQ ke queue utama untuk reproses — tak perlu tulis kod pindah manual.',
               'DLQ retention: kira dari masa mesej MASUK queue ASAL (bukan masa masuk DLQ). Set retention DLQ lebih panjang (cth 14 hari) supaya ada masa debug sebelum mesej luput.',
               'Exam trigger: "messages failing repeatedly block the queue" / "isolate & analyze corrupted messages separately" → Dead-Letter Queue + tune maxReceiveCount (BUKAN naikkan visibility timeout, BUKAN retry dalam kod).',
+              'Queue-based scaling (SQS + ASG/ECS): scale consumer ikut queue backlog, BUKAN CPU/Memory. CPU/Memory BUTA terhadap barisan queue (container proses satu-satu → CPU kekal rendah walau 10,000 mesej sangkut). Guna custom metric ApproximateNumberOfMessagesVisible (CloudWatch) atau backlog per task (queue depth ÷ ECS target capacity) → Target Tracking scale out bila backlog tinggi. Keyword "scale based on SQS queue" → custom metric backlog, BUKAN CPU/Memory.',
             ],
             docs: [
               { label: 'SQS — visibility timeout', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html' },
               { label: 'SQS — short vs long polling', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html' },
               { label: 'SQS — dead-letter queues', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html' },
             ],
-            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push', 'S3 SQS decouple', 'async file upload', 'burst traffic buffer', 'store file S3 not DynamoDB', 'temporary file storage', 'maxReceiveCount', 'RedrivePolicy', 'DLQ redrive', 'poison pill', 'failed messages', 'isolate corrupted messages', 'dead-letter queue', 'Principal', 'source account', 'destination account', 'two keys', 'dua kunci', 'SendMessage cross-account', 'aws:PrincipalOrgID', 'queue policy JSON'],
+            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push', 'S3 SQS decouple', 'async file upload', 'burst traffic buffer', 'store file S3 not DynamoDB', 'temporary file storage', 'maxReceiveCount', 'RedrivePolicy', 'DLQ redrive', 'poison pill', 'failed messages', 'isolate corrupted messages', 'dead-letter queue', 'Principal', 'source account', 'destination account', 'two keys', 'dua kunci', 'SendMessage cross-account', 'aws:PrincipalOrgID', 'queue policy JSON', 'queue-based scaling', 'ApproximateNumberOfMessagesVisible', 'backlog per task', 'custom metric scaling', 'scale on queue depth'],
           },
           {
             shortName: 'SNS',
