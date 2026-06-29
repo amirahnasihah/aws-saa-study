@@ -4464,13 +4464,14 @@ export const domains: DomainData[] = [
               'Supports: on-prem → AWS, AWS → AWS (cross-region), AWS → on-prem. Not just one-way!',
               'Multi-AZ replication instance available for high availability during migration',
               'PRICING: bayar replication instance ikut jam (macam EC2, cth dms.t3.medium ~$0.146/hr) + storage + data transfer. DMS Serverless = bayar per DCU-hour (auto-scale). FREE 6 bulan bila migrate KE Aurora / Redshift / DynamoDB / DocumentDB (DMS free tier untuk target ni). SCT = percuma.',
+              'Migrate ke NoSQL/DynamoDB (heterogeneous): DMS + SCT convert schema, guna S3 sebagai STAGING area sebelum load ke DynamoDB — S3 murah & serverless (BUKAN EC2 untuk staging = mahal + overkill). Istilah betul = Schema Conversion Tool (SCT), BUKAN "engine conversion tool". Exam: "legacy DB → DynamoDB, cost-effective" → DMS + SCT + S3 staging (BUKAN simpan staging kat EC2).',
             ],
             docs: [
               { label: 'What is AWS DMS?', url: 'https://docs.aws.amazon.com/dms/latest/userguide/Welcome.html' },
               { label: 'AWS DMS Serverless', url: 'https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Serverless.html' },
               { label: 'Schema Conversion Tool (SCT)', url: 'https://docs.aws.amazon.com/SchemaConversionTool/latest/userguide/CHAP_Welcome.html' },
             ],
-            keywords: ['database migration', 'minimal downtime', 'homogeneous', 'heterogeneous', 'Schema Conversion Tool', 'SCT', 'CDC', 'change data capture', 'DMS Serverless', 'replication instance', 'Multi-AZ', 'pricing'],
+            keywords: ['database migration', 'minimal downtime', 'homogeneous', 'heterogeneous', 'Schema Conversion Tool', 'SCT', 'CDC', 'change data capture', 'DMS Serverless', 'replication instance', 'Multi-AZ', 'pricing', 'S3 staging', 'DynamoDB target', 'NoSQL migration'],
           },
           {
             shortName: 'Snow Family',
@@ -4834,6 +4835,7 @@ export const domains: DomainData[] = [
               'Invocation model: SYNCHRONOUS (API Gateway/ALB/Function URL — caller tunggu, retry caller punya hal) · ASYNCHRONOUS (S3/SNS/EventBridge — Lambda queue event, retry 2× auto, gagal → DLQ / Lambda Destinations) · POLL-based / Event Source Mapping (SQS/Kinesis/DynamoDB Streams — Lambda POLL & batch). Response streaming = hantar output berperingkat (Function URL) untuk TTFB cepat / payload besar; ini BUKAN cold-start fix.',
               'PRICING: Free tier — 1M requests/mo + 400,000 GB-seconds/mo (forever). Selepas free tier: $0.20 per 1M requests + $0.0000166667 per GB-second. GB-second = memory allocated × duration. Provisioned Concurrency = $0.0000041667 per vCPU-hour + $0.000000111 per GB-hour (config + execution).',
               'Exam: "1 million free requests per month forever" → Lambda free tier. "pay per request + duration" → Lambda pricing model. "Provisioned Concurrency has hourly cost" → yes, separate from execution.',
+              'Environment variables: tukar CONFIGURATION (endpoint URL, flag toggle, feature switch) INSTANT tanpa ubah code Lambda — set di console, Lambda pakai nilai baru invocation seterusnya. Secure env var sensitif (API key/password) guna ENCRYPTION HELPERS (KMS) — Lambda auto-decrypt masa runtime. JANGAN pass config via request header (user boleh manipulate). Lambda Layers = shared library/dependency BUKAN config; Aliases = label version BUKAN config. Exam: "modify config instantly without code change + securely" → env vars + encryption helpers (KMS).',
             ],
             scenario: 'Sebut "predictable spike, mesti respond cepat TANPA cold start" → Provisioned Concurrency. Sebut "Java/Python/.NET cold start + paling jimat kos (most cost-effective)" → SnapStart (BUKAN Provisioned Concurrency yang bayar per jam). Sebut "Node.js/Ruby/container nak zero cold start" → Provisioned Concurrency (SnapStart tak support runtime tu). Sebut "Lambda throttling masa burst / decouple / buffer / smooth load" → letak SQS depan Lambda (SQS buffer; SNS tidak). Sebut "satu function jangan habiskan semua kuota / jamin kuota function kritikal" → Reserved Concurrency. Sebut "job ambil masa lebih 15 minit" → Lambda TAK sesuai (guna Fargate/Batch/Step Functions). STORAGE: "persistent / shared storage across invocations" atau "data > 10 GB / ML model besar" → mount Amazon EFS (function dalam VPC). "scratch sementara dalam satu run" → /tmp (512 MB–10 GB).',
             docs: [
@@ -4842,7 +4844,7 @@ export const domains: DomainData[] = [
               { label: 'Invocation & Event Source Mapping', url: 'https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html' },
               { label: 'Lambda Layers', url: 'https://docs.aws.amazon.com/lambda/latest/dg/chapter-layers.html' },
             ],
-            keywords: ['serverless', 'event-driven', '15-min max', 'reserved concurrency', 'provisioned concurrency', 'cold start', 'snapstart', 'Lambda SnapStart', 'Firecracker snapshot', 'Java cold start', 'event source mapping', 'invocation model', 'asynchronous invocation', 'synchronous invocation', 'poll-based', 'Lambda destinations', 'DLQ', 'dead letter queue', 'Lambda layers', 'response streaming', 'SQS decouple', 'throttling', '429', 'execution environment', 'execution role', '/tmp ephemeral storage', 'EFS mount', 'Lambda EFS', 'persistent storage', 'shared storage', 'function URL'],
+            keywords: ['serverless', 'event-driven', '15-min max', 'reserved concurrency', 'provisioned concurrency', 'cold start', 'snapstart', 'Lambda SnapStart', 'Firecracker snapshot', 'Java cold start', 'event source mapping', 'invocation model', 'asynchronous invocation', 'synchronous invocation', 'poll-based', 'Lambda destinations', 'DLQ', 'dead letter queue', 'Lambda layers', 'response streaming', 'SQS decouple', 'throttling', '429', 'execution environment', 'execution role', '/tmp ephemeral storage', 'EFS mount', 'Lambda EFS', 'persistent storage', 'shared storage', 'function URL', 'environment variables', 'encryption helpers', 'KMS env var'],
           },
           {
             shortName: 'Elastic Beanstalk',
@@ -7039,13 +7041,14 @@ export const domains: DomainData[] = [
               'DLQ retention: kira dari masa mesej MASUK queue ASAL (bukan masa masuk DLQ). Set retention DLQ lebih panjang (cth 14 hari) supaya ada masa debug sebelum mesej luput.',
               'Exam trigger: "messages failing repeatedly block the queue" / "isolate & analyze corrupted messages separately" → Dead-Letter Queue + tune maxReceiveCount (BUKAN naikkan visibility timeout, BUKAN retry dalam kod).',
               'Queue-based scaling (SQS + ASG/ECS): scale consumer ikut queue backlog, BUKAN CPU/Memory. CPU/Memory BUTA terhadap barisan queue (container proses satu-satu → CPU kekal rendah walau 10,000 mesej sangkut). Guna custom metric ApproximateNumberOfMessagesVisible (CloudWatch) atau backlog per task (queue depth ÷ ECS target capacity) → Target Tracking scale out bila backlog tinggi. Keyword "scale based on SQS queue" → custom metric backlog, BUKAN CPU/Memory.',
+              'PRICING (us-east-1): SQS Standard ~$0.40 per 1M requests; FIFO ~$0.50/1M (more expensive). Free tier 1M requests/mo (Standard). 1 request = any API call (SendMessage, ReceiveMessage, DeleteMessage) — BUKAN ikut tempoh queue hidup. Jimat kos: (1) BATCHING — up to 10 messages per request → 10x kurang request bill; (2) LONG POLLING (WaitTimeSeconds>0) → kurang empty-poll request. Payload >256KB → simpan kat S3 + SQS message rujuk je (Extended Client Library).',
             ],
             docs: [
               { label: 'SQS — visibility timeout', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-visibility-timeout.html' },
               { label: 'SQS — short vs long polling', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html' },
               { label: 'SQS — dead-letter queues', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html' },
             ],
-            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push', 'S3 SQS decouple', 'async file upload', 'burst traffic buffer', 'store file S3 not DynamoDB', 'temporary file storage', 'maxReceiveCount', 'RedrivePolicy', 'DLQ redrive', 'poison pill', 'failed messages', 'isolate corrupted messages', 'dead-letter queue', 'Principal', 'source account', 'destination account', 'two keys', 'dua kunci', 'SendMessage cross-account', 'aws:PrincipalOrgID', 'queue policy JSON', 'queue-based scaling', 'ApproximateNumberOfMessagesVisible', 'backlog per task', 'custom metric scaling', 'scale on queue depth'],
+            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push', 'S3 SQS decouple', 'async file upload', 'burst traffic buffer', 'store file S3 not DynamoDB', 'temporary file storage', 'maxReceiveCount', 'RedrivePolicy', 'DLQ redrive', 'poison pill', 'failed messages', 'isolate corrupted messages', 'dead-letter queue', 'Principal', 'source account', 'destination account', 'two keys', 'dua kunci', 'SendMessage cross-account', 'aws:PrincipalOrgID', 'queue policy JSON', 'queue-based scaling', 'ApproximateNumberOfMessagesVisible', 'backlog per task', 'custom metric scaling', 'scale on queue depth', 'pricing'],
           },
           {
             shortName: 'SNS',
@@ -7501,12 +7504,13 @@ export const domains: DomainData[] = [
               'Distributed Map state: parallelizes processing over large datasets (e.g. chunk a text file and process each chunk concurrently) — key for PT5 text-to-speech pipeline question. Standard sahaja.',
               '"Graphical/visual console to see each step\'s state" → Step Functions (not SQS, not SWF)',
               'SWF vs Step Functions: Step Functions is the modern replacement; SWF is legacy and lacks the visual console',
+              'PRICING (us-east-1): Standard = $0.025 per 1,000 state transitions (free tier 4,000 transitions/mo). Express = bayar per execution + duration × memory (model macam Lambda) — murah untuk high-volume short workflows. Standard caj ikut STATE TRANSITION (berapa kali lompat status), BUKAN tempoh menunggu — boleh pause tunggu human approval sampai 1 tahun tanpa caj masa. Exam: "Step Functions Standard bill melonjak sebab jutaan high-volume request" → tukar ke Express Workflow.',
             ],
             docs: [
               { label: 'Choosing workflow type (Standard vs Express)', url: 'https://docs.aws.amazon.com/step-functions/latest/dg/choosing-workflow-type.html' },
               { label: 'Service integration patterns (.sync, .waitForTaskToken)', url: 'https://docs.aws.amazon.com/step-functions/latest/dg/connect-to-resource.html' },
             ],
-            keywords: ['workflow', 'state machine', 'orchestration', 'retry logic', 'error handling', 'Lambda orchestration', 'visual workflow', 'Distributed Map', 'parallel processing', 'Standard workflow', 'Express workflow', 'exactly-once', 'at-least-once', 'idempotent', 'callback pattern', 'waitForTaskToken', 'sync integration', 'ASL', 'Amazon States Language', 'Choice state', 'Map state', 'Activities', 'SWF'],
+            keywords: ['workflow', 'state machine', 'orchestration', 'retry logic', 'error handling', 'Lambda orchestration', 'visual workflow', 'Distributed Map', 'parallel processing', 'Standard workflow', 'Express workflow', 'exactly-once', 'at-least-once', 'idempotent', 'callback pattern', 'waitForTaskToken', 'sync integration', 'ASL', 'Amazon States Language', 'Choice state', 'Map state', 'Activities', 'SWF', 'pricing', 'state transition pricing'],
           },
           {
             shortName: 'Amazon MQ',
