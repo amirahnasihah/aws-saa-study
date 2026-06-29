@@ -26,6 +26,15 @@ export interface TrapRow {
 
 export const triggerRows: TriggerRow[] = [
   {
+    id: 'dr-pilot-light-budget',
+    keywords: ['RTO RPO 20 minutes', 'backup infrastructure cost not high', 'budget concerns DR', 'tens of minutes recovery', 'financial institute disaster', 'resilient low budget DR'],
+    service: 'Pilot Light (DR)',
+    why: 'RTO/RPO "10s of minutes" cukup untuk ~20 min, data replicate aktif, app OFF → $$ (lebih murah dari Warm Standby $$$ yang bayar full stack idle). Backup&Restore = jam. Multi-Site = $$$$.',
+    accent: 'c5',
+    domain: 'D4 · Cost-Opt',
+    slug: 'd4-dr-dr-cost-spectrum',
+  },
+  {
     id: 'instance-scheduler',
     keywords: ['office hours only', 'stop EC2 nights & weekends', 'start stop schedule', 'dev/test idle after hours', 'cut cost non-prod'],
     service: 'Instance Scheduler on AWS',

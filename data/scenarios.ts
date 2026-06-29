@@ -790,6 +790,10 @@ export const scenarios: Scenario[] = [
         correct: 'RPO (data loss tolerance) drives replication strategy; RTO (downtime) drives compute readiness. A scenario can constrain both — match both.',
       },
       {
+        trap: 'Choosing Warm Standby when the stem says budget is tight but RTO is ~20 minutes',
+        correct: 'Pilot Light also meets "tens of minutes" RTO/RPO at lower cost ($$ vs $$$). Warm Standby is faster (minutes) but costs more because the full stack runs idle. Match the cheapest pattern that still meets the objective.',
+      },
+      {
         trap: 'Assuming Multi-AZ counts as disaster recovery',
         correct: 'Multi-AZ protects against AZ failure within one region. DR strategies here are about REGION failure — they replicate cross-region.',
       },

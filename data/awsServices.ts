@@ -8,6 +8,7 @@ export type ColorCategory =
   | 'd4store'
   | 'd4net'
   | 'd4db'
+  | 'd4dr'
   | 'd1iam'
   | 'd1net'
   | 'd1data'
@@ -132,6 +133,7 @@ export const categoryStyles: Record<
   d4store:   { title: 'text-c2', accent: 'bg-c2',  keyword: 'text-c2 border-c2/20 bg-c2/5',   nav: 'text-c2 border-c2/20',   scenario: 'bg-c6/5 border-c6/15' },
   d4net:     { title: 'text-c4', accent: 'bg-c4',  keyword: 'text-c4 border-c4/20 bg-c4/5',   nav: 'text-c4 border-c4/20',   scenario: 'bg-c6/5 border-c6/15' },
   d4db:      { title: 'text-c1', accent: 'bg-c1',  keyword: 'text-c1 border-c1/20 bg-c1/5',   nav: 'text-c1 border-c1/20',   scenario: 'bg-c6/5 border-c6/15' },
+  d4dr:      { title: 'text-c5', accent: 'bg-c5',  keyword: 'text-c5 border-c5/20 bg-c5/5',   nav: 'text-c5 border-c5/20',   scenario: 'bg-c6/5 border-c6/15' },
   d1iam:     { title: 'text-c3', accent: 'bg-c3',  keyword: 'text-c3 border-c3/20 bg-c3/5',   nav: 'text-c3 border-c3/20',   scenario: 'bg-c6/5 border-c6/15' },
   d1net:     { title: 'text-c4', accent: 'bg-c4',  keyword: 'text-c4 border-c4/20 bg-c4/5',   nav: 'text-c4 border-c4/20',   scenario: 'bg-c6/5 border-c6/15' },
   d1data:    { title: 'text-c6', accent: 'bg-c6',  keyword: 'text-c6 border-c6/20 bg-c6/5',   nav: 'text-c6 border-c6/20',   scenario: 'bg-c6/5 border-c6/15' },
@@ -3918,6 +3920,11 @@ export const domains: DomainData[] = [
                 umpan: 'Pilot Light — DB sentiasa replicate, jadi recovery cepat dan masih agak murah. Nampak betul sebab Pilot Light dikenali sebagai murah.',
                 betul: 'Backup & Restore. Pilot Light masih jalankan core DB (kos berterusan). Untuk kos PALING RENDAH bila downtime jam OK, cukup simpan backup di S3/Glacier tanpa infra berjalan langsung. Keyword "lowest cost / downtime hours acceptable / non-critical" → Backup & Restore.',
               },
+              {
+                soalan: 'Financial institute — critical web app, RTO/RPO ~20 minit bila bencana, tapi backup infra cost tak boleh tinggi. Strategi DR mana?',
+                umpan: 'Warm Standby — RTO dalam minit memang cukup untuk ~20 minit, full stack scaled-down dah berjalan. Nampak betul sebab "RTO minit = meet requirement". SALAH: Warm Standby bayar app compute idle 24/7 → lebih mahal dari yang diperlukan bila soalan tekan budget.',
+                betul: 'Pilot Light — RTO/RPO dalam "10s of minutes" (puluhan minit) memenuhi ~20 minit, tapi data replication aktif & app server OFF sampai bencana → kos backup infra lebih rendah dari Warm Standby. Keyword "RTO/RPO tens of minutes + budget concerns / backup cost not very high" → Pilot Light, BUKAN Warm Standby (lebih mahal) atau Multi-Site ($$$$).',
+              },
             ],
             compare: [
               {
@@ -3933,16 +3940,29 @@ export const domains: DomainData[] = [
                 label: 'The 4 DR strategies — cost ↔ speed spectrum',
                 headers: ['Aspect', 'Backup & Restore', 'Pilot Light', 'Warm Standby', 'Multi-Site Active/Active'],
                 rows: [
-                  ['RPO', 'Hours–days', 'Minutes', 'Seconds–minutes', '🟢 Near-zero'],
-                  ['RTO', 'Hours', 'Minutes–hours', 'Minutes', '🟢 Seconds'],
+                  ['RPO', 'Hours–days', 'Minutes (10s of min)', 'Seconds–minutes', '🟢 Near-zero'],
+                  ['RTO', 'Hours', '10s of minutes', 'Minutes', '🟢 Seconds (real-time)'],
                   ['What runs in DR', 'Nothing — just backups', 'Core DB only (app off)', 'Scaled-down full stack', '🟢 Full capacity, live'],
-                  ['Cost', '🟢 Lowest', 'Low–medium', 'Higher', 'Highest'],
+                  ['Cost', '🟢 $', '$$', '$$$', '$$$$'],
                   ['Use when', 'Non-critical, downtime OK', 'Can tolerate some recovery time', 'Need fast recovery, low traffic loss', 'Mission-critical, zero downtime'],
                 ],
-                takeaway: 'Cost & recovery speed naik dari kiri → kanan. Cheapest+slowest = Backup & Restore. Fastest+priciest = Multi-Site Active/Active. Pilih ikut RPO/RTO requirement vs budget. Pilot Light = DB on, app off; Warm Standby = full stack scaled-down running.',
+                takeaway: 'Cost & recovery speed naik dari kiri → kanan ($ → $$$$). Cheapest+slowest = Backup & Restore (hours). Sweet spot bajet + RTO puluhan minit = Pilot Light ($$). Warm Standby = minit tapi $$$. Multi-Site = real-time tapi $$$$. INGAT exam: "RTO/RPO ~20 min + budget tight" → Pilot Light, BUKAN Warm Standby (lebih mahal walaupun RTO minit).',
               },
             ],
             mermaid: [
+              {
+                label: 'AWS DR spectrum — active/passive → active/active (RTO/RPO vs cost)',
+                source: `flowchart LR
+  subgraph AP["active / passive"]
+    direction LR
+    BR["💾 Backup &amp; Restore<br/>RPO/RTO: Hours<br/>Cost: $<br/>Lower priority · provision ALL after event<br/>Restore backups after event"]
+    PL["🔥 Pilot Light<br/>RPO/RTO: 10s of minutes<br/>Cost: $$<br/>Data live · services IDLE<br/>Provision some + scale after event"]
+    WS["🌤️ Warm Standby<br/>RPO/RTO: Minutes<br/>Cost: $$$<br/>Always running, smaller<br/>Scale up after event"]
+  end
+  MS["🟢 Multi-Site active/active<br/>RPO/RTO: Real-time<br/>Cost: $$$$<br/>Zero downtime · near-zero data loss<br/>Mission critical"]
+  BR --> PL --> WS --> MS`,
+                caption: 'Diagram rasmi AWS whitepaper — kiri→kanan = laju & mahal naik. Tiga kiri = active/passive (infra DR tak melayan traffic penuh). Multi-Site = active/active (dua region LIVE). INGAT exam: financial institute RTO/RPO ~20 min + budget ketat → Pilot Light ($$, puluhan minit), BUKAN Warm Standby ($$$ walaupun RTO minit) atau Backup&Restore (jam).',
+              },
               {
                 label: 'Pilih DR strategy mana — decision tree (RTO/RPO vs kos)',
                 source: `flowchart TD
@@ -3969,7 +3989,7 @@ export const domains: DomainData[] = [
             docs: [
               { label: 'Disaster recovery options in the cloud (AWS whitepaper)', url: 'https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html' },
             ],
-            keywords: ['RPO: hours/days', 'RTO: hours', 'lowest cost', 'no standby infra', 'S3/Glacier backup', 'DR spectrum', 'Pilot Light', 'Warm Standby', 'Multi-Site'],
+            keywords: ['RPO: hours/days', 'RTO: hours', 'lowest cost', 'no standby infra', 'S3/Glacier backup', 'DR spectrum', 'Pilot Light', 'Warm Standby', 'Multi-Site', 'active/passive', 'active/active', 'financial institute', 'budget concerns', '20 minutes RTO'],
           },
           {
             shortName: 'Pilot Light',
@@ -3977,7 +3997,7 @@ export const domains: DomainData[] = [
             ingat: '"Api kecil sedia — boleh bakar besar bila perlu"',
             gunaUntuk: 'Core DB running in DR region, app servers off until needed',
             fungsi: 'Hanya core components (database) yang running kat DR region scaled down. App servers dilancarkan hanya bila disaster berlaku',
-            perangkap: [{"soalan": "DR strategy: kos sederhana, RTO minit-jam OK, tapi tak nak bayar app compute idle 24/7. Core DB mesti sentiasa sedia. Pola mana?", "umpan": "Warm Standby — sebab dia pun cepat recover & ada DB sedia. Nampak betul sebab 'DB sedia + cepat'. SALAH: Warm Standby app server SENTIASA ON (kecil) → bayar compute idle, lebih mahal.", "betul": "Pilot Light — DB ON (replicate), app server OFF sampai bencana. Keyword 'tak nak bayar app compute idle / DB sedia / kos sederhana' = Pilot Light."}, {"soalan": "Pilot Light setup: bila bencana berlaku, apa yang kena buat sebelum traffic boleh dilayan?", "umpan": "Terus failover DNS sahaja sebab semua dah berjalan. Nampak betul sebab 'DB dah replicate'. SALAH: dalam Pilot Light app server MATI — kena hidupkan & scale up dulu, baru DNS.", "betul": "Hidupkan + scale up app server, kemudian point DNS ke DR. Keyword 'app OFF sampai disaster' = perlu launch app dulu (RTO minit-jam)."}],
+            perangkap: [{"soalan": "DR strategy: kos sederhana, RTO minit-jam OK, tapi tak nak bayar app compute idle 24/7. Core DB mesti sentiasa sedia. Pola mana?", "umpan": "Warm Standby — sebab dia pun cepat recover & ada DB sedia. Nampak betul sebab 'DB sedia + cepat'. SALAH: Warm Standby app server SENTIASA ON (kecil) → bayar compute idle, lebih mahal.", "betul": "Pilot Light — DB ON (replicate), app server OFF sampai bencana. Keyword 'tak nak bayar app compute idle / DB sedia / kos sederhana' = Pilot Light."}, {"soalan": "Pilot Light setup: bila bencana berlaku, apa yang kena buat sebelum traffic boleh dilayan?", "umpan": "Terus failover DNS sahaja sebab semua dah berjalan. Nampak betul sebab 'DB dah replicate'. SALAH: dalam Pilot Light app server MATI — kena hidupkan & scale up dulu, baru DNS.", "betul": "Hidupkan + scale up app server, kemudian point DNS ke DR. Keyword 'app OFF sampai disaster' = perlu launch app dulu (RTO minit-jam)."}, {"soalan": "Financial institute — RTO/RPO ~20 minit, backup infra cost tak boleh tinggi. Mana strategi paling sesuai?", "umpan": "Warm Standby — RTO minit memenuhi 20 minit. Nampak betul sebab 'cepat recover'. SALAH: soalan tekan BUDGET — Warm Standby bayar full stack idle (lebih mahal).", "betul": "Pilot Light — RTO/RPO '10s of minutes' cukup untuk ~20 min, data replicate aktif, app OFF → kos lebih rendah. Keyword 'tens of minutes + budget / backup cost not high' → Pilot Light."}],
             scenario: 'Core DB replicated ke DR region (running minimal). App servers OFF. Disaster berlaku — turn on app servers, scale up, point DNS ke DR. RPO: minutes, RTO: minutes to hours. Lebih murah dari Warm Standby.',
             sebabApa: 'Wujud sebab Backup & Restore terlalu lambat (kena bina DB dari kosong + restore = jam), tapi kau tak nak bayar full standby. Pilot Light = nyalakan "api kecil": core DB sentiasa replicate & berjalan minimal di DR, tapi app server MATI (tak bayar compute). Bila bencana, kau cuma "bakar" — hidupkan & scale app server, point DNS. Tujuan: recovery lebih laju dari backup (DB dah sedia) pada kos sederhana.',
             sifir: [
@@ -3989,7 +4009,7 @@ export const domains: DomainData[] = [
             docs: [
               { label: 'Pilot Light — Disaster recovery options in the cloud', url: 'https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html' },
             ],
-            keywords: ['RPO: minutes', 'RTO: minutes-hours', 'core DB running', 'app servers off', 'medium cost'],
+            keywords: ['RPO: minutes', 'RTO: minutes-hours', 'core DB running', 'app servers off', 'medium cost', 'financial institute', 'budget concerns', '20 minutes RTO', 'tens of minutes'],
           },
           {
             shortName: 'Warm Standby',
@@ -10007,6 +10027,77 @@ export const domains: DomainData[] = [
           },
         ],
       },
+      {
+        id: 'd4-dr',
+        icon: '🔄',
+        title: 'DR Strategies (Cost vs RTO/RPO)',
+        category: 'd4dr',
+        services: [
+          {
+            shortName: 'DR Cost Spectrum',
+            fullName: 'Disaster Recovery — Cost vs RTO/RPO Spectrum',
+            ingat: '"Kiri murah+lambat → kanan mahal+laju. Bajet ketat + RTO puluhan minit = Pilot Light"',
+            gunaUntuk: 'Pick the cheapest DR pattern that still meets stated RTO/RPO — exam loves budget + recovery-time trade-offs',
+            fungsi: 'Empat strategi DR AWS diukur pada spektrum kos vs kelajuan pulih. RPO = berapa banyak data boleh hilang (titik backup terakhir). RTO = berapa lama downtime sebelum app online balik. Makin kecil RPO/RTO → makin mahal infra backup yang kena jalan.',
+            sebabApa: 'Wujud sebab tak semua org mampu bayar Multi-Site ($$$$) — exam D4 nak kau match requirement RTO/RPO dengan strategi PALING MURAH yang masih cukup. Financial institute dengan RTO ~20 minit + budget ketat = sweet spot Pilot Light: data sentiasa replicate (RPO minit), app OFF (jimat compute), RTO puluhan minit cukup — Warm Standby lebih laju (minit) tapi bayar full stack idle.',
+            sifir: [
+              'RPO = data loss tolerance (⏪ ke belakang). RTO = downtime tolerance (⏩ ke hadapan)',
+              'Backup & Restore: RTO/RPO jam · $ — tiada infra DR berjalan',
+              'Pilot Light: RTO/RPO 10s of min · $$ — data live, app OFF',
+              'Warm Standby: RTO/RPO minit · $$$ — full stack ON kecil',
+              'Multi-Site active/active: real-time · $$$$ — zero downtime',
+              '"RTO ~20 min + budget tight" → Pilot Light, BUKAN Warm Standby',
+            ],
+            perangkap: [
+              {
+                soalan: 'Financial institute — critical web app, RTO/RPO dalam 20 minit, backup infra cost tak boleh tinggi. Strategi mana?',
+                umpan: 'Warm Standby — RTO minit memenuhi 20 minit, stack scaled-down dah berjalan. Nampak betul sebab "cepat recover".',
+                betul: 'Pilot Light — "10s of minutes" RTO/RPO cukup untuk ~20 min, data replicate aktif, app server OFF → kos lebih rendah. Warm Standby = app ON idle = $$$ extra. Multi-Site = $$$$. Backup & Restore = jam. Keyword "tens of minutes + budget / backup cost not very high" → Pilot Light.',
+              },
+              {
+                soalan: 'Soalan sebut "RTO dalam minit" — auto pilih Warm Standby?',
+                umpan: 'Ya — "minit" = Warm Standby. Nampak betul sebab whitepaper kata Warm Standby RTO minit.',
+                betul: 'Baca BUDGET dulu. Pilot Light juga "10s of minutes" (puluhan minit) — kalau soalan tekan kos backup rendah, Pilot Light cukup walaupun RTO ~20 min. Warm Standby hanya bila perlu app ON idle untuk RTO lebih ketat ATAU soalan tak sebut budget.',
+              },
+            ],
+            compare: [
+              {
+                label: 'The 4 DR strategies — AWS whitepaper spectrum',
+                headers: ['Strategy', 'RTO / RPO', 'Cost', 'Active/passive?', 'What runs in DR'],
+                rows: [
+                  ['Backup & Restore', 'Hours', '$', 'Passive', 'Backups only — provision ALL after disaster'],
+                  ['Pilot Light', '10s of minutes', '$$', 'Passive', 'Data replicated LIVE; app servers OFF'],
+                  ['Warm Standby', 'Minutes', '$$$', 'Passive', 'Full stack scaled-DOWN, always ON'],
+                  ['Multi-Site Active/Active', 'Real-time', '$$$$', 'Active/active', 'Full production both regions LIVE'],
+                ],
+                takeaway: 'Tiga kiri = active/passive (DR region tak melayan traffic penuh). Multi-Site = active/active. Pilih PALING MURAH yang masih meet RTO/RPO. ~20 min + budget → Pilot Light ($$).',
+              },
+            ],
+            mermaid: [
+              {
+                label: 'AWS DR spectrum — active/passive → active/active (diagram rasmi whitepaper)',
+                source: `flowchart LR
+  subgraph AP["active / passive"]
+    direction LR
+    BR["💾 Backup &amp; Restore<br/>RPO/RTO: Hours<br/>Cost: $<br/>Lower priority · provision ALL after event<br/>Restore backups after event"]
+    PL["🔥 Pilot Light<br/>RPO/RTO: 10s of minutes<br/>Cost: $$<br/>Data live · services IDLE<br/>Provision some + scale after event"]
+    WS["🌤️ Warm Standby<br/>RPO/RTO: Minutes<br/>Cost: $$$<br/>Always running, smaller<br/>Scale up after event"]
+  end
+  MS["🟢 Multi-Site active/active<br/>RPO/RTO: Real-time<br/>Cost: $$$$<br/>Zero downtime · near-zero data loss<br/>Mission critical"]
+  BR --> PL --> WS --> MS`,
+                caption: 'Sama macam AWS Disaster Recovery whitepaper — kiri→kanan = laju & mahal naik. INGAT exam D4: financial institute RTO/RPO ~20 min + "backup cost not very high" → Pilot Light (bukan Warm Standby walaupun RTO minit juga OK).',
+              },
+            ],
+            detailsLabel: 'Empat strategi — apa yang berjalan bila bencana',
+            storageDetails: 'Backup & Restore — tiada infra DR. Bencana → provision semua + restore backup. RTO/RPO jam. Kos $.\nPilot Light — data replicate & LIVE (DB on). App server OFF. Bencana → hidupkan app + scale. RTO/RPO puluhan minit. Kos $$.\nWarm Standby — full stack scaled-down SENTIASA ON. Bencana → scale up + failover DNS. RTO/RPO minit. Kos $$$.\nMulti-Site Active/Active — dua region full LIVE serentak. Bencana = tiada "recovery step". RTO/RPO real-time. Kos $$$$.',
+            scenario: 'Financial institute — critical web app, RTO/RPO ~20 minit, backup infra cost tak boleh tinggi → Pilot Light. Data sync aktif (RPO minit), app OFF (jimat), provision app selepas bencana (RTO puluhan minit). Warm Standby overkill kos; Backup & Restore terlalu lambat (jam); Multi-Site terlalu mahal.',
+            docs: [
+              { label: 'Disaster recovery options in the cloud (AWS whitepaper)', url: 'https://docs.aws.amazon.com/whitepapers/latest/disaster-recovery-workloads-on-aws/disaster-recovery-options-in-the-cloud.html' },
+            ],
+            keywords: ['DR spectrum', 'RTO', 'RPO', 'Pilot Light', 'Warm Standby', 'Backup and Restore', 'Multi-Site', 'active/passive', 'active/active', 'budget concerns', 'financial institute', '20 minutes', 'cost-optimized DR', 'pricing'],
+          },
+        ],
+      },
     ],
   },
   {
@@ -10203,6 +10294,7 @@ export const navDomains: NavDomain[] = [
       { href: '#d4-storage',   label: '💾 Storage',   className: 'text-c2 border-c2/20' },
       { href: '#d4-network',   label: '🌐 Network',   className: 'text-c4 border-c4/20' },
       { href: '#d4-database',  label: '🗄️ Database', className: 'text-c1 border-c1/20' },
+      { href: '#d4-dr',        label: '🔄 DR Cost',   className: 'text-c5 border-c5/20' },
     ],
   },
 ]
