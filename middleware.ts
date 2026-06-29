@@ -19,6 +19,14 @@ function hasSupabaseSessionCookie(request: NextRequest): boolean {
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
+  const bookmarkDetailMatch = pathname.match(/^\/bookmarks\/([^/]+)$/)
+  if (bookmarkDetailMatch?.[1]) {
+    const redirectUrl = request.nextUrl.clone()
+    redirectUrl.pathname = '/bookmarks'
+    redirectUrl.searchParams.set('id', bookmarkDetailMatch[1])
+    return NextResponse.redirect(redirectUrl)
+  }
+
   if (pathname.startsWith('/auth/')) {
     return NextResponse.next()
   }

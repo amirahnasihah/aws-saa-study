@@ -866,6 +866,16 @@ export const domains: DomainData[] = [
                 umpan: 'CloudFormation StackSets + drift detection — perkataan "drift detection" bunyi tepat, tapi StackSets drift check resource DALAM stack (template vs sebenar), BUKAN perubahan struktur OU/account, dan kena trigger manual pula.',
                 betul: 'AWS Control Tower + enable account drift notifications — Control Tower auto-detect drift (termasuk OU & account changes dari landing zone baseline) dan publish ke SNS topic yang stakeholder boleh subscribe. Built-in, least overhead. Keyword "monitor OU hierarchy changes + subscribe alerts + least overhead" = Control Tower drift notifications.',
               },
+              {
+                soalan: 'Same OU monitoring stem — engineer cadang Control Tower + AWS Config aggregated rules. Betul?',
+                umpan: 'Config aggregated rules — nampak betul sebab "span multiple accounts" & compliance, tapi Config evaluate RESOURCE configuration, bukan perubahan hierarki OU/account.',
+                betul: 'Tak sesuai untuk OU hierarchy — guna Control Tower account drift notifications (built-in, SNS subscribe). Config aggregated rules untuk resource compliance across accounts, bukan OU structure changes.',
+              },
+              {
+                soalan: 'Same stem — Service Catalog create accounts + CloudTrail organization trail untuk OU changes?',
+                umpan: 'CloudTrail org trail log semua events — technically ada data OU changes, tapi kena parse log sendiri + tooling tambahan = overhead tinggi.',
+                betul: 'Control Tower drift notifications — built-in, least overhead. Org trail = raw logs, bukan purpose-built OU hierarchy alerting.',
+              },
             ],
             scenario: '"Restrict apa member accounts boleh buat org-wide, exempt management account" → SCP (member accounts only). "Enforce guardrails + auto setup landing zone / multi-account baseline" → Control Tower. "Monitor perubahan OU hierarchy + subscribe alert, least overhead" → Control Tower account drift notifications (SNS), BUKAN CloudFormation StackSets drift (check resource dalam stack, manual). "Satu bil + kongsi diskaun" → Consolidated Billing (bukan SCP). Ingat: SCP RESTRICT sahaja, tak GRANT.',
             mermaid: [
@@ -893,6 +903,30 @@ export const domains: DomainData[] = [
   E -- Tidak --> F[DENIED<br/>SCP tak GRANT, IAM kena Allow]
   E -- Ya --> G[ALLOWED]`,
                 caption: 'Effective permission = intersection SCP ∩ IAM policy. SCP tak grant apa-apa — kena ADA Allow dalam IAM policy juga. Management account tak terkena SCP langsung.',
+              },
+              {
+                label: 'AWS Control Tower — landing zone workflow (orchestration diagram)',
+                source: `flowchart TB
+  subgraph EXT["Services yang Control Tower orchestrate"]
+    IDC["🔐 IAM Identity Center<br/>+ AWS Organizations"]
+    SC["📦 AWS Service Catalog"]
+  end
+  subgraph CT["AWS Control Tower"]
+    ADM["👤 Administrators"]
+    ADM --> LZ["⚙️ Set up landing zone"]
+    ADM --> ACC["🔑 Manage access &amp; distribution"]
+    LZ --> BP["Automate based on<br/>best practices"]
+    LZ --> CTRL["🛡️ Enable controls at scale<br/>(guardrails)"]
+    CTRL --> SEC["Meet security &amp;<br/>compliance requirements"]
+    CTRL --> AF["🏭 Account Factory<br/>create · enroll · update accounts"]
+    ACC --> MEM["👥 Account members"]
+    MEM --> AF
+    AF --> MON["📊 Monitor landing zone<br/>OUs · accounts · controls"]
+  end
+  IDC --> ADM
+  SC -->|"Automate account<br/>provisioning workflow"| AF
+  DRIFT["🔔 Account drift notifications<br/>OU/account changes → SNS<br/>stakeholder subscribe"] -.-> MON`,
+                caption: 'Control Tower = automation DI ATAS Organizations (bukan ganti Organizations). Orchestrate IAM Identity Center + Service Catalog + guardrails untuk landing zone <1 jam. Account Factory provision account konsisten. INGAT exam: "monitor OU hierarchy + subscribe alerts + least overhead" → enable account drift notifications (SNS), BUKAN Config aggregated rules (resource compliance) atau StackSets drift (template infra).',
               },
             ],
             compare: [
@@ -7935,6 +7969,7 @@ export const domains: DomainData[] = [
               'PRICING: CloudFormation is FREE — kau bayar hanya untuk AWS resources yang ia create (EC2, RDS, S3, dll). Tiada charge untuk stacks, templates, changes, drift detection, StackSets. Designer & change sets juga free.',
               'StackSets: deploy ke multiple accounts/regions sekali gus. Perlukan AWS Organizations atau self-managed permissions. Boleh auto-reconcile drift.',
               'Exam: "no additional charge for using CloudFormation" → hanya bayar resources yang dibuat. Nested stacks & StackSets percuma.',
+              'AWS Solutions (e.g. Instance Scheduler on AWS) = pre-built CloudFormation templates — deploy stack, bukan native service. Instance Scheduler auto start/stop EC2+RDS on schedule.',
               'Resources = SATU-SATUNYA section yang WAJIB dalam template. Template tanpa Resources tak sah. Exam: "the only required section in a CloudFormation template" → Resources.',
               'Transform: section untuk guna SAM (Serverless Application Model — AWS::Serverless-2016-10-31) atau CloudFormation macros. Exam: "simplify serverless (Lambda/API Gateway/DynamoDB) definitions in CloudFormation" → Transform / SAM.',
               'Stack Policy: JSON policy yang lindungi resource kritikal (e.g. database) daripada terubah/terpadam masa stack UPDATE — beza dengan DeletionPolicy (yang protect masa stack DELETE). Exam: "prevent accidental updates to specific resources during a stack update" → Stack Policy.',
@@ -9762,9 +9797,10 @@ export const domains: DomainData[] = [
                 takeaway: 'Soalan sebut "unusual/anomalous spending + ML + alert" → Cost Anomaly Detection. "alert at fixed threshold" → Budgets. "visualize trends" → Cost Explorer. CloudWatch EstimateCharges tak boleh beza anomali vs growth normal — itu umpan.',
               },
             ],
-            mermaid: {
-              label: 'Cost monitoring — tool mana?',
-              source: `flowchart TD
+            mermaid: [
+              {
+                label: 'Cost monitoring — tool mana?',
+                source: `flowchart TD
   Q["Nak buat apa dengan kos?"] --> UNUSUAL{"Detect spike PELIK?<br/>(unusual / anomalous)"}
   UNUSUAL -->|"Ya — ML auto-detect + alert"| CAD["🤖 Cost Anomaly Detection<br/>ML, SNS/email, root-cause<br/>(account/service/region)"]
   UNUSUAL -->|"Tidak"| THR{"Alert bila cecah<br/>THRESHOLD tetap?"}
@@ -9772,9 +9808,146 @@ export const domains: DomainData[] = [
   THR -->|"Tidak"| VIZ{"Visualize / analyse<br/>trend lepas?"}
   VIZ -->|"Ya"| CE["📈 Cost Explorer<br/>chart + forecast + RI rec"]
   VIZ -->|"Nak data mentah SQL"| CUR["📄 CUR → S3 + Athena"]`,
-              caption: 'INGAT exam: "unusual/anomalous spending + ML" → Cost Anomaly Detection (BUKAN Budgets threshold, BUKAN CloudWatch yang tak beza anomali vs growth). "alert before overspend" → Budgets. "visualize trends" → Cost Explorer.',
-            },
+                caption: 'INGAT exam: "unusual/anomalous spending + ML" → Cost Anomaly Detection (BUKAN Budgets threshold, BUKAN CloudWatch yang tak beza anomali vs growth). "alert before overspend" → Budgets. "visualize trends" → Cost Explorer.',
+              },
+            ],
             keywords: ['cost analysis', 'spending visualization', 'RI recommendations', 'usage patterns', 'rightsizing', 'forecast', 'hourly granularity', 'anomaly detection', 'Cost Anomaly Detection', 'unusual spending', 'anomalous spend', 'vs Budgets', 'CUR'],
+          },
+          {
+            shortName: 'Cost Anomaly Detection',
+            fullName: 'AWS Cost Anomaly Detection',
+            ingat: '"ML detect spike pelik → alert + root cause — bukan threshold tetap"',
+            gunaUntuk: 'Detect unusual/anomalous AWS spend patterns and alert departments automatically',
+            fungsi: 'Feature dalam AWS Billing & Cost Management yang guna machine learning untuk detect corak belanja yang TIDAK BIASA (anomalous) pada EC2, RDS, S3, dll — kemudian hantar alert (email atau SNS) dengan root-cause analysis (account, service, Region, usage type). Boleh configure cost monitor ikut granularity (semua services, member account, cost allocation tag, cost category).',
+            sebabApa: 'Wujud sebab Budgets cuma alert bila cecah threshold TETAP — kalau kos naik perlahan-lahan (growth normal) atau spike kecil, kau tak sedar sampai terlambat. CloudWatch EstimateCharges pun tak boleh bezakan "unusual" vs "expected growth". Cost Anomaly Detection guna ML (account for seasonality, weekly/monthly patterns) untuk detect spike PELIK & bagitau department yang betul sebelum jadi surprise besar.',
+            sifir: [
+              'Cost Anomaly Detection = ML detect UNUSUAL spend + alert + root-cause',
+              'Workflow: create cost monitor → get alerted (email/SNS) → analyze root cause',
+              'ML minimize false positives (seasonality, natural growth)',
+              'BUKAN Budgets (threshold tetap / zero-spend template = Free Tier alert je)',
+              'BUKAN Cost Explorer (visualize trend, tak actively alert anomaly)',
+              'BUKAN CloudWatch EstimateCharges (tak bezakan unusual vs normal growth)',
+              'Keyword: "unusual spending patterns / anomalous spend / ML detect" → Cost Anomaly Detection',
+            ],
+            perangkap: [
+              {
+                soalan: 'EC2 + RDS + S3 — company nampak unusual spending patterns, nak monitor kos & alert department bila ada spend pelik. Pilih?',
+                umpan: 'AWS Budgets zero spend template — nampak "budget = alert kos", tapi zero-spend template cuma alert bila exceed Free Tier, bukan anomaly detection.',
+                betul: 'AWS Cost Anomaly Detection — create cost monitor dalam Billing console; ML detect anomalous patterns + alert email/SNS + root-cause. Keyword "unusual/anomalous spending + alert departments".',
+              },
+              {
+                soalan: 'Nak alert bila total bill cecah $5000/bulan (threshold tetap). Guna Cost Anomaly Detection?',
+                umpan: 'Cost Anomaly Detection — ada "detection" dalam nama, nampak sesuai untuk semua alert kos.',
+                betul: 'AWS Budgets — threshold tetap (actual/forecast). Cost Anomaly Detection untuk spike PELIK (ML), bukan fixed dollar limit.',
+              },
+              {
+                soalan: 'Enable CloudWatch EstimateCharges metric untuk detect unusual spending?',
+                umpan: 'CloudWatch boleh alarm pada billing metric — nampak betul sebab EstimateCharges = kos.',
+                betul: 'Tak cukup — CloudWatch EstimateCharges tak boleh bezakan unusual spike vs normal/expected growth. Keyword "anomalous/unusual" → Cost Anomaly Detection (ML).',
+              },
+              {
+                soalan: 'Cost Explorer multi-year monthly granularity untuk detect unusual spending?',
+                umpan: 'Cost Explorer = analisa trend — nampak betul untuk "review spending", tapi ia REACTIVE visualization, tak actively alert pada anomaly.',
+                betul: 'Cost Anomaly Detection untuk alert anomaly. Cost Explorer untuk visualize/analyse trend lepas (bukan proactive anomaly alert).',
+              },
+            ],
+            scenario: 'Finance review infra — nampak corak belanja pelik pada EC2/RDS/S3. Nak ML auto-detect + alert department + root-cause (service/region/account) → Billing console → create cost monitor (Cost Anomaly Detection). BUKAN Budgets (threshold), BUKAN CloudWatch EstimateCharges.',
+            mermaid: [
+              {
+                label: 'Cost Anomaly Detection — 4 langkah (AWS whitepaper flow)',
+                source: `flowchart LR
+  M1["1️⃣ Create cost monitor<br/>pilih granularity<br/>(all services / account / tag)"]
+  M2["2️⃣ Get alerted<br/>email atau SNS<br/>bila unusual spend detected"]
+  M3["3️⃣ Analyze root cause<br/>account · service · Region<br/>· usage type · impact"]
+  M1 --> M2 --> M3
+  ML["🤖 ML models<br/>minimize false positives<br/>(seasonality · growth)"] -.-> M1`,
+                caption: 'INGAT exam: "monitor unusual spending + alert departments" → create cost monitor (Cost Anomaly Detection) dalam Billing & Cost Management console. ML handle seasonality supaya tak alert setiap kali growth normal. Lepas alert, investigate root cause — bukan sekadar threshold Budgets.',
+              },
+            ],
+            docs: [
+              { label: 'Managing cost anomalies', url: 'https://docs.aws.amazon.com/cost-management/latest/userguide/manage-ad.html' },
+            ],
+            keywords: ['Cost Anomaly Detection', 'unusual spending', 'anomalous spend', 'ML', 'cost monitor', 'root cause', 'SNS alert', 'seasonality', 'vs Budgets', 'vs CloudWatch EstimateCharges', 'vs Cost Explorer', 'zero spend budget', 'pricing'],
+          },
+          {
+            shortName: 'Instance Scheduler',
+            fullName: 'Instance Scheduler on AWS',
+            ingat: '"Office hours je — auto stop EC2 + RDS malam & weekend (CFN template)"',
+            gunaUntuk: 'Auto start/stop EC2 + RDS on a fixed weekday schedule with minimal ops overhead',
+            fungsi: 'BUKAN AWS service native — ia **AWS Solution** (ready-made CloudFormation template) yang deploy stack: EventBridge timer → Lambda baca jadual dari DynamoDB → start/stop EC2 & RDS yang ditag. Kau set schedule (cth office-hours weekday), tag instances, solution handle rest. Boleh jimat ~70% bila guna ~50 jam/minggu vs 168 jam (24/7).',
+            sebabApa: 'App internal jalan weekday office hours je — bayar EC2+RDS 24/7 = membazir 118 jam/minggu idle. RI/Savings Plans commit hourly 24/7 (masih bayar waktu stopped untuk SP discount layer, RI commit tetap). Custom CloudWatch+Lambda boleh stop ikut CPU tapi overhead tinggi + RDS stop ikut CPU = risiko downtime waktu kerja. Instance Scheduler = deploy CFN template sekali, set jadual, least operational overhead.',
+            sifir: [
+              'Instance Scheduler = AWS Solution (CloudFormation template), BUKAN native service',
+              'Auto start/stop EC2 + RDS ikut tag-based schedule (office hours / weekday)',
+              'Stack: EventBridge → Lambda → DynamoDB (schedules) + IAM + KMS + SNS',
+              'RI / Savings Plan = commit 24/7 hourly — BUKAN untuk part-time/stopped workloads',
+              'Compute Savings Plan = EC2/Lambda/Fargate je — TAK cover RDS instance types',
+              'CloudWatch CPU alarm + Lambda = dynamic idle stop, lebih ops + RDS CPU trap',
+              'Keyword: "weekday office hours / minimal operational overhead" → Instance Scheduler CFN',
+            ],
+            perangkap: [
+              {
+                soalan: 'EC2 + RDS PostgreSQL jalan weekday office hours SAHAJA. Optimize cost, minimal operational overhead. Pilih?',
+                umpan: 'Compute Savings Plan / Reserved Instance — nampak jimat, tapi commit 24/7 selama 1-3 tahun = bayar masa malam & weekend yang tak guna.',
+                betul: 'Deploy Instance Scheduler on AWS (CloudFormation template) — set start/stop schedule EC2 + RDS ikut office hours. Ready-made, least overhead. Keyword "office hours / weekday only / minimal ops".',
+              },
+              {
+                soalan: 'Same stem — engineer cadang CloudWatch alarm + Lambda bila CPU rendah untuk stop EC2 & RDS.',
+                umpan: 'Dynamic idle detection — nampak pintar sebab "stop bila tak guna".',
+                betul: 'Tak ideal — lebih ops (build & maintain), dan stop RDS ikut CPU boleh trigger downtime waktu kerja bila utilization drop sementara. Fixed schedule = Instance Scheduler.',
+              },
+              {
+                soalan: 'Purchase compute Savings Plan for EC2 and RDS for this part-time app?',
+                umpan: 'Savings Plan cover both — nampak betul sebab "compute savings".',
+                betul: 'Salah dua-dua: (1) Savings Plan assume consistent hourly use — stopped hours still committed; (2) Compute SP = EC2/Lambda/Fargate, BUKAN RDS DB instance types. Part-time → start/stop schedule.',
+              },
+            ],
+            scenario: 'Internal app — EC2 + RDS PostgreSQL, run weekday working hours only. Deploy AWS Instance Scheduler CloudFormation template, configure office-hour start/stop for both. Up to ~70% savings vs 24/7 On-Demand. BUKAN RI/SP (24/7 commit). BUKAN hand-built CloudWatch+Lambda (more ops).',
+            compare: {
+              label: 'Part-time workload — Instance Scheduler vs RI/SP vs custom Lambda',
+              headers: ['Approach', 'Fits office-hours?', 'Ops overhead', 'Exam trap'],
+              rows: [
+                ['Instance Scheduler (CFN)', '🟢 Start/stop on schedule', '🟢 Low — deploy template', 'Correct for fixed weekday hours'],
+                ['Reserved Instances', '🔴 24/7 commit assumed', 'Low', 'Umpan: "save money" — wrong for part-time'],
+                ['Compute Savings Plan', '🔴 Hourly commit even if stopped', 'Low', 'Umpan: "Savings Plan" — no RDS, not stop'],
+                ['CloudWatch + Lambda (CPU)', 'Dynamic, not fixed schedule', '🔴 High — custom code', 'Umpan: "automate stop" — RDS CPU risk'],
+              ],
+              takeaway: 'Fixed weekday/office-hours pattern + minimal ops → Instance Scheduler CFN template. Continuous 24/7 → RI/SP. "Unusual" dynamic idle → maybe custom Lambda (but exam prefers scheduler for fixed hours).',
+            },
+            mermaid: {
+              label: 'Instance Scheduler on AWS — architecture (CloudFormation solution)',
+              source: `flowchart TB
+  subgraph SCHED["⏰ Schedule trigger"]
+    EB["Amazon EventBridge<br/>(timer — cth setiap 5 min)"]
+  end
+  subgraph CORE["Orchestrator"]
+    L["⚡ AWS Lambda<br/>baca jadual · start/stop resources"]
+    DDB["📋 DynamoDB<br/>schedule config &amp; state"]
+  end
+  subgraph SUPPORT["Supporting services"]
+    IAM["🔐 IAM role"]
+    KMS["🔑 KMS encrypt"]
+    SNS["📢 SNS alerts"]
+    CW["📊 CloudWatch Logs"]
+  end
+  subgraph TARGET["Tagged resources"]
+    EC2["🖥️ Amazon EC2"]
+    RDS["🗄️ Amazon RDS"]
+  end
+  EB --> L
+  DDB <--> L
+  IAM -.-> L
+  KMS -.-> L
+  SNS -.-> L
+  CW <--> L
+  L --> EC2
+  L --> RDS`,
+              caption: 'Bukan native AWS service — deploy CloudFormation template dari AWS Solutions. EventBridge cetus Lambda → baca schedule dari DynamoDB → start/stop EC2 & RDS yang ditag. INGAT exam: "office hours weekday + EC2 + RDS + least overhead" → Instance Scheduler template, BUKAN RI/SP (24/7 commit) atau CloudWatch CPU+Lambda (more ops + RDS trap).',
+            },
+            docs: [
+              { label: 'Instance Scheduler on AWS — solution overview', url: 'https://docs.aws.amazon.com/solutions/latest/instance-scheduler-on-aws/solution-overview.html' },
+            ],
+            keywords: ['Instance Scheduler on AWS', 'start stop schedule', 'office hours', 'weekday only', 'part-time workload', 'CloudFormation solution', 'EC2 RDS schedule', 'minimal operational overhead', 'AWS Solutions', 'tag-based schedule', '70% savings', 'vs Reserved Instances', 'vs Savings Plans', 'pricing'],
           },
           {
             shortName: 'Cost & Usage Report',

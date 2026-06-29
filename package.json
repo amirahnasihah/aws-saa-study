@@ -4,7 +4,7 @@
   "private": true,
   "packageManager": "bun@1.3.11",
   "scripts": {
-    "dev": "next dev --turbopack",
+    "dev": "bun run scripts/generate-ai-link-indexes.ts && next dev --turbopack",
     "dev:webpack": "next dev",
     "dev:clean": "rm -rf .next && next dev --turbopack",
     "build": "next build",

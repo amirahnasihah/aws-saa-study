@@ -1,8 +1,11 @@
 'use client'
 
+import { Suspense } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import SiteFooter from '@/components/SiteFooter'
 import BookmarkIcon from '@/components/bookmarks/BookmarkIcon'
+import BookmarkDetailClient from '@/components/bookmarks/BookmarkDetailClient'
 import { useBookmarksCtx } from '@/components/BookmarksContext'
 import { useAnswerBookmarksCtx } from '@/components/AnswerBookmarksContext'
 import { domains, categoryStyles } from '@/data/awsServices'
@@ -16,7 +19,14 @@ const allServices = domains.flatMap((d) =>
 
 const savedDate = (ts: number) => new Date(ts).toISOString().slice(0, 10)
 
-export default function BookmarksPageClient() {
+function BookmarksPageContent() {
+  const searchParams = useSearchParams()
+  const detailId = searchParams.get('id')
+
+  if (detailId) {
+    return <BookmarkDetailClient id={detailId} />
+  }
+
   const { bookmarks, toggle } = useBookmarksCtx()
   const { answers, remove: removeAnswer, clear: clearAnswers } = useAnswerBookmarksCtx()
 
@@ -143,7 +153,7 @@ export default function BookmarksPageClient() {
               {answers.map((a) => (
                 <Link
                   key={a.id}
-                  href={`/bookmarks/${a.id}`}
+                  href={`/bookmarks?id=${encodeURIComponent(a.id)}`}
                   className="flex items-start gap-3 px-4 py-3 border-b border-aws-border/50 hover:bg-white/3 transition-colors group"
                 >
                   <div className="flex-1 min-w-0">
@@ -195,5 +205,19 @@ export default function BookmarksPageClient() {
 
       <SiteFooter tagline="AWS SAA-C03 · Your saved study notes · Bookmark what matters" />
     </main>
+  )
+}
+
+export default function BookmarksPageClient() {
+  return (
+    <Suspense
+      fallback={
+        <main className="max-w-[720px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-28">
+          <p className="font-space-mono text-[0.72rem] text-aws-muted">Loading bookmarks…</p>
+        </main>
+      }
+    >
+      <BookmarksPageContent />
+    </Suspense>
   )
 }

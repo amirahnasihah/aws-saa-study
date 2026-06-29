@@ -108,7 +108,7 @@ If deploy fails with `Worker exceeded the size limit of 3 MiB`:
    ```bash
    find .vercel/output/static/_worker.js -name "*.func.js" -exec sh -c 'echo "$(gzip -c "$1" | wc -c) $1"' _ {} \; | sort -rn
    ```
-2. This repo keeps AI link indexes compact (`data/labsLinkIndex.ts`, `data/deepNotesLinkIndex.ts`) via `scripts/generate-ai-link-indexes.ts` — **do not** import full `labsCatalog` / `awsServices` from edge API routes.
+2. This repo keeps AI link indexes compact (`data/labsLinkIndex.ts`, `data/deepNotesLinkIndex.ts`, `data/searchIndex.ts`) and serves full lab catalog from `public/data/labs-fallback.json` via `scripts/generate-ai-link-indexes.ts` — **do not** import full `labsCatalog` / `awsServices` from edge API routes.
 3. Mermaid loads client-only (`next/dynamic` with `ssr: false`) so it is not in the Worker bundle.
 4. If still over limit: upgrade to Workers Paid ($5/mo) for **10 MiB**, or split heavy API routes to a separate Worker.
 

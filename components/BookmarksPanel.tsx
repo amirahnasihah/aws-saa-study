@@ -168,7 +168,7 @@ export default function BookmarksPanel({ isOpen, onClose }: BookmarksPanelProps)
                   {answers.map((a, i) => (
                     <Link
                       key={a.id}
-                      href={`/bookmarks/${a.id}`}
+                      href={`/bookmarks?id=${encodeURIComponent(a.id)}`}
                       onClick={onClose}
                       className="flex items-start gap-3 px-4 py-3 border-b border-aws-border/50 hover:bg-white/3 transition-colors animate-result-in group"
                       style={{ animationDelay: `${i * 0.03}s`, animationFillMode: 'both' }}

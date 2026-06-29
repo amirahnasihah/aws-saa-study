@@ -26,6 +26,15 @@ export interface TrapRow {
 
 export const triggerRows: TriggerRow[] = [
   {
+    id: 'cost-anomaly-detection',
+    keywords: ['unusual spending patterns', 'anomalous spend', 'detect unusual AWS costs', 'alert departments cost spike', 'ML cost anomaly', 'cost monitor Billing console'],
+    service: 'AWS Cost Anomaly Detection',
+    why: 'ML auto-detect spike pelik + alert email/SNS + root-cause. BUKAN Budgets (threshold tetap), BUKAN CloudWatch EstimateCharges (tak bezakan unusual vs growth), BUKAN Cost Explorer (visualize je).',
+    accent: 'c6',
+    domain: 'D4 · Cost-Opt',
+    slug: 'd4-pricing-cost-anomaly-detection',
+  },
+  {
     id: 'dr-pilot-light-budget',
     keywords: ['RTO RPO 20 minutes', 'backup infrastructure cost not high', 'budget concerns DR', 'tens of minutes recovery', 'financial institute disaster', 'resilient low budget DR'],
     service: 'Pilot Light (DR)',
@@ -36,12 +45,12 @@ export const triggerRows: TriggerRow[] = [
   },
   {
     id: 'instance-scheduler',
-    keywords: ['office hours only', 'stop EC2 nights & weekends', 'start stop schedule', 'dev/test idle after hours', 'cut cost non-prod'],
+    keywords: ['office hours only', 'stop EC2 nights & weekends', 'start stop schedule', 'dev/test idle after hours', 'cut cost non-prod', 'weekday working hours', 'EC2 RDS office hours', 'minimal operational overhead', 'Instance Scheduler CloudFormation'],
     service: 'Instance Scheduler on AWS',
-    why: 'CloudFormation solution yang auto start/stop EC2 + RDS ikut tag schedule. Savings Plan/RI TAK boleh stop instance — itu komitmen harga je.',
+    why: 'AWS Solution (CFN template): EventBridge → Lambda → start/stop EC2 + RDS ikut jadual tag. Least ops. BUKAN RI/SP (commit 24/7) atau CloudWatch CPU+Lambda (more ops, RDS trap).',
     accent: 'c6',
     domain: 'D4 · Cost-Opt',
-    slug: 'd3-compute-ec2',
+    slug: 'd4-pricing-instance-scheduler',
   },
   {
     id: 'lambda-snapstart',
