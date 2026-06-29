@@ -6594,6 +6594,121 @@ export const domains: DomainData[] = [
             keywords: ['TCP', 'UDP', 'TCP_UDP', 'TLS', 'QUIC', 'layer 4', 'static IP', 'Elastic IP', 'IP targets', 'cross-VPC', 'low latency', 'millions of requests', 'preserve source IP', 'preserve client IP', 'PrivateLink', 'VPC Endpoint Service', 'endpoint service', 'NLB front', 'TLS termination', 'TLS passthrough', 'idle timeout', 'tcp.idle_timeout.seconds', 'long-lived connection', 'cross-zone load balancing', 'ALB as target', 'health check', 'gaming', 'IoT', 'VoIP', 'pricing'],
           },
           {
+            shortName: 'GWLB',
+            fullName: 'Gateway Load Balancer',
+            ingat: '"Pos pemeriksaan keselamatan — semua paket lalu firewall/IDS, Layer 3, GENEVE 6081"',
+            gunaUntuk: 'Salur SEMUA trafik melalui fleet virtual appliance (firewall / IDS / IPS / DPI) secara terpusat & transparent',
+            fungsi: 'Bayangkan GWLB macam pos pemeriksaan keselamatan / imigresen lapangan terbang yang SEMUA penumpang (setiap IP packet) WAJIB lalu sebelum masuk atau keluar — tapi penumpang tak perlu tukar tiket atau tahu pos tu wujud (transparent, "bump-in-the-wire"). Kerja dia DUA-DALAM-SATU: (1) gateway telus — satu pintu masuk/keluar untuk semua trafik, dan (2) load balancer — sebar trafik ke sekumpulan mesin pemeriksa (virtual appliance macam Palo Alto / Fortinet / Cisco firewall, IDS/IPS, deep packet inspection), buang yang rosak (health check), tambah mesin bila ramai (auto-scale). Dia beroperasi di Layer 3 (network) — dengar SEMUA IP packet pada SEMUA port, bukan HTTP (ALB) atau TCP/UDP connection (NLB). Trafik dibungkus guna protokol GENEVE port 6081 supaya paket ASAL sampai ke appliance tanpa diubah untuk diperiksa.',
+            contohGuna: 'Centralized inspection: satu "security VPC" pegang fleet firewall, semua spoke VPC salur trafik egress/east-west melalui GWLB untuk diperiksa sebelum keluar internet. 3rd-party virtual firewall (Palo Alto VM-Series, Fortinet, Check Point) yang nak inspect setiap packet secara transparent.',
+            detailsLabel: 'Anatomy GWLB — Listener (semua IP packet) → Target Group (appliance) → GWLBe + GENEVE 6081 + flow stickiness',
+            storageDetails: 'Listener → dengar SEMUA IP packet merentas SEMUA port (Layer 3). Tiada port/protocol spesifik macam ALB (HTTP:443) atau NLB (TCP:80) — GWLB telan semua. Satu listener, hantar ke satu target group.\nTarget Group → bakul virtual appliance (firewall / IDS / IPS / DPI). Target jenis instance (EC2 by ID) atau ip. Health check pastikan appliance hidup; appliance rosak dibuang dari rotation.\nTargets → mesin pemeriksa sebenar (3rd-party security appliance). GWLB + appliance bertukar trafik guna GENEVE encapsulation port 6081 — paket asal dibalut, dihantar ke appliance untuk inspect, pastu dipulangkan.\nFlow stickiness → GWLB hantar SEMUA paket satu "flow" (aliran) ke appliance SAMA supaya stateful firewall nampak kedua-dua arah. Default 5-tuple (src IP, dst IP, src port, dst port, protocol); boleh tukar 3-tuple atau 2-tuple.\nGWLBe (Gateway Load Balancer Endpoint) → VPC endpoint khas (kuasa PrivateLink) yang sambung consumer VPC ↔ provider/security VPC secara private. Diletak sebagai NEXT HOP dalam route table subnet aplikasi. GWLBe & app server WAJIB dalam subnet berbeza.',
+            sebabApa: 'Wujud sebab syarikat besar nak SEMUA trafik (egress ke internet, east-west antara VPC) diperiksa oleh firewall/IDS pihak ketiga SEBELUM sampai destinasi — tapi tak nak pasang appliance dalam SETIAP VPC satu-satu (mahal, susah urus, tak scale). Tanpa GWLB, kau kena hand-craft routing + bina HA appliance sendiri dalam tiap VPC. GWLB selesaikan dengan: letak fleet appliance SEKALI dalam satu security VPC, pastu semua VPC lain salur trafik melaluinya guna GWLBe. Dia transparent (bump-in-the-wire) — app tak perlu diubah, IP tak berubah. Dia load-balance + auto-scale + health-check fleet appliance tu automatik. Flow stickiness pastikan stateful firewall (yang kena nampak request DAN response) dapat kedua-dua arah pada appliance sama. Tujuan: inspection keselamatan terpusat, transparent, scalable untuk virtual appliance.',
+            sifir: [
+              'GWLB = Layer 3 (IP packets), dengar SEMUA port. ALB = L7 HTTP, NLB = L4 TCP/UDP',
+              'GENEVE encapsulation port 6081 — nombor wajib hafal untuk GWLB',
+              'Target = virtual appliance (firewall / IDS / IPS / DPI), BUKAN web server biasa',
+              'Transparent "bump-in-the-wire" — app tak perasan, IP tak berubah',
+              'Flow stickiness: 5-tuple (default) / 3-tuple / 2-tuple → paket sama-flow pergi appliance sama (stateful firewall)',
+              'GWLBe (Gateway LB Endpoint) = pasangan wajib, kuasa PrivateLink, jadi NEXT HOP dalam route table',
+              'GWLBe & app server MESTI subnet berbeza (supaya GWLBe boleh jadi next hop subnet app)',
+              'GWLB & NLB = boleh jadi front VPC Endpoint Service / appliance via PrivateLink; ALB TAK boleh',
+              'Centralized inspection (1 security VPC, banyak spoke) → GWLB, bukan appliance per-VPC',
+            ],
+            perangkap: [
+              {
+                soalan: 'Syarikat nak SEMUA trafik egress dari banyak VPC diperiksa oleh fleet 3rd-party firewall (Palo Alto) secara TRANSPARENT, terpusat, dan auto-scale — tanpa ubah aplikasi atau pasang firewall dalam tiap VPC. Service mana?',
+                umpan: 'NLB depan fleet firewall — sebab NLB pun boleh front appliance via PrivateLink dan handle TCP. Atau letak firewall EC2 inline dalam tiap VPC. Nampak betul sebab NLB selalu jadi front untuk appliance.',
+                betul: 'Gateway Load Balancer (GWLB) + GWLB endpoint. GWLB direka KHAS untuk salur trafik ke virtual security appliance secara transparent di Layer 3 (semua IP packet, semua port) guna GENEVE 6081, dengan flow stickiness untuk stateful firewall. NLB cuma L4 connection + tak transparent untuk inspection inline penuh. Keyword "transparent inspection + 3rd-party firewall/IDS + centralized + all traffic" → GWLB.',
+              },
+              {
+                soalan: 'Stateful firewall di belakang GWLB nampak request masuk tapi MISS response balik (atau sebaliknya), jadi connection tracking pecah. Apa puncanya & betulkan macam mana?',
+                umpan: 'Tambah lebih banyak appliance dalam target group supaya ada kapasiti. Nampak betul sebab "firewall miss trafik = tak cukup kapasiti".',
+                betul: 'Isu flow stickiness — paket arah berbeza pergi appliance BERBEZA, jadi stateful firewall tak nampak kedua-dua hala satu flow. Betulkan dengan pastikan flow stickiness sesuai (5-tuple default hantar semua paket flow sama ke appliance sama; guna 3-tuple/2-tuple kalau perlu kumpul lebih luas). Tambah appliance TAK selesai — malah boleh pecahkan lagi tanpa stickiness betul. Keyword "stateful appliance miss return traffic behind GWLB" → flow stickiness (tuple), bukan tambah kapasiti.',
+              },
+              {
+                soalan: 'Trafik dari subnet aplikasi nak dipaksa lalu GWLB dalam security VPC sebelum keluar internet. Macam mana arahkan trafik ke sana?',
+                umpan: 'Daftar appliance terus sebagai target dan biar GWLB tarik trafik automatik. Atau letak GWLBe dalam subnet SAMA dengan app server. Nampak betul sebab "target group automatik handle trafik".',
+                betul: 'Letak GWLB Endpoint (GWLBe) sebagai NEXT HOP dalam route table subnet aplikasi — trafik 0.0.0.0/0 → GWLBe → (PrivateLink) → GWLB → appliance → balik. GWLBe & app server WAJIB dalam subnet BERBEZA supaya GWLBe boleh jadi next hop. Routing GWLB berasaskan route table, bukan auto-magnet. Keyword "route traffic through inspection appliances" → GWLBe sebagai next hop dalam route table.',
+              },
+            ],
+            scenario: '"Transparent inspection + 3rd-party firewall/IDS/IPS + semua trafik + centralized" → GWLB. "GENEVE 6081" → GWLB (nombor pengenalan). "Stateful appliance miss return traffic" → flow stickiness (tuple), bukan tambah kapasiti. "Route trafik subnet app lalu appliance" → GWLBe sebagai next hop route table. "Expose service private ke VPC lain (bukan appliance)" → NLB/GWLB front PrivateLink. Untuk ALB vs NLB vs GWLB family compare + harga penuh, lihat card ALB (anchor).',
+            diagram: {
+              label: 'GWLB inspection flow (consumer VPC → GWLBe → GWLB → appliance → balik)',
+              steps: [
+                { nodes: [{ label: 'App subnet', sub: 'route 0.0.0.0/0 → GWLBe', tone: 'c4' }] },
+                { nodes: [{ label: 'GWLBe (next hop)', sub: 'VPC endpoint · PrivateLink', tone: 'c3' }] },
+                { nodes: [{ label: 'GWLB (security VPC)', sub: 'GENEVE 6081 · flow stickiness', tone: 'c1' }] },
+                { nodes: [
+                  { label: 'Firewall appliance', sub: 'inspect packet', tone: 'c2' },
+                  { label: 'IDS/IPS fleet', sub: 'health-checked · auto-scale', tone: 'c6' },
+                ] },
+                { nodes: [{ label: 'Balik ke GWLBe → internet/dst', sub: 'paket lulus inspection', tone: 'c5' }] },
+              ],
+              caption: 'Trafik subnet app dipaksa (route table next hop = GWLBe) lalu GWLBe → PrivateLink → GWLB dalam security VPC → fleet appliance periksa (GENEVE 6081, flow stickiness pastikan satu flow = satu appliance) → pulang ke GWLBe → teruskan ke destinasi. Transparent: app tak berubah. INGAT exam: GWLBe = next hop; GENEVE = 6081; appliance = target.',
+            },
+            mermaid: [
+              {
+                label: 'Centralized inspection — security VPC + spoke VPC via GWLBe',
+                source: `flowchart LR
+  subgraph SPOKE["🏢 Spoke VPC (app)"]
+    APP["App subnet<br/>route 0.0.0.0/0 → GWLBe"]
+    GWE["🔌 GWLBe<br/>(next hop)"]
+  end
+  subgraph SEC["🛡️ Security VPC"]
+    GWLB["🟤 GWLB<br/>Layer 3 · GENEVE 6081"]
+    FW["🔥 Firewall / IDS / IPS<br/>(virtual appliance fleet)"]
+  end
+  APP --> GWE
+  GWE -. "AWS PrivateLink" .-> GWLB
+  GWLB --> FW
+  FW --> GWLB
+  GWLB -. balik .-> GWE
+  GWE --> NET["🌐 Internet / destinasi"]`,
+                caption: 'Satu security VPC pegang fleet appliance; setiap spoke VPC salur trafik melaluinya guna GWLBe (next hop dalam route table). Tak perlu pasang firewall dalam tiap VPC. GWLB load-balance + auto-scale + health-check fleet tu. INGAT exam: "centralized 3rd-party firewall inspection untuk banyak VPC" → GWLB + GWLBe dalam security VPC.',
+              },
+              {
+                label: 'Analogi: Pos imigresen lapangan terbang (transparent inspection)',
+                source: `flowchart TD
+  P["🧳 Penumpang = IP packet"] --> G["🛂 Pos imigresen = GWLB<br/>SEMUA orang WAJIB lalu"]
+  G -->|"agih ke kaunter"| K1["👮 Kaunter 1 = appliance (firewall)"]
+  G -->|"flow stickiness:<br/>orang sama → kaunter sama"| K2["👮 Kaunter 2 = appliance (IDS)"]
+  G -.->|"kaunter tutup (health check gagal)"| X["⛔ GWLB henti hantar,<br/>agih ke kaunter lain"]
+  K1 --> OUT["✅ Lulus → teruskan perjalanan<br/>(penumpang tak perasan diperiksa)"]`,
+                caption: 'GWLB = pos imigresen yang SEMUA penumpang (packet) wajib lalu sebelum masuk/keluar — tapi transparent, penumpang tak perlu tukar tiket (bump-in-the-wire). Flow stickiness = penumpang sama balik ke kaunter sama (stateful firewall nampak dua hala). Kaunter tutup (health check gagal) → GWLB agih ke kaunter lain + tambah kaunter bila ramai (auto-scale). INGAT exam: transparent + semua trafik + 3rd-party appliance → GWLB.',
+              },
+            ],
+            compare: {
+              label: 'Centralized inspection: GWLB vs appliance per-VPC vs NLB-fronted',
+              headers: ['Aspect', 'GWLB + GWLBe', 'Appliance inline per-VPC', 'NLB depan appliance'],
+              rows: [
+                ['Layer / skop', 'L3 — SEMUA IP packet, semua port', 'Ikut appliance', 'L4 — TCP/UDP connection'],
+                ['Transparent (bump-in-wire)', '🟢 Ya — app tak berubah', '⚠️ Kena hand-craft routing', '❌ Bukan inspection telus penuh'],
+                ['Centralized (banyak VPC)', '🟢 1 security VPC, spoke via GWLBe', '❌ Pasang dalam tiap VPC', '⚠️ Per-service, bukan all-traffic'],
+                ['Encapsulation', 'GENEVE 6081 (paket asal utuh)', 'Tiada', 'Tiada'],
+                ['Stateful flow', '🟢 Flow stickiness (5/3/2-tuple)', 'Bergantung setup', 'Per-connection'],
+                ['Auto-scale fleet appliance', '🟢 GWLB urus', '❌ DIY', '⚠️ NLB sebar je'],
+              ],
+              takeaway: 'Nak inspect SEMUA trafik (semua port, transparent) melalui 3rd-party firewall/IDS secara terpusat untuk banyak VPC → GWLB + GWLBe. Pasang appliance dalam tiap VPC = mahal + tak scale. NLB depan appliance = untuk expose service spesifik, bukan transparent all-traffic inspection. INGAT exam: GENEVE 6081 + transparent + virtual appliance = GWLB. Untuk ALB vs NLB vs GWLB family table, lihat card ALB.',
+            },
+            tips: [
+              'Anatomy: Listener (dengar SEMUA IP packet, semua port — L3) → Target Group (virtual appliance) → Targets (instance/ip). Tiada Rules path/host (ALB) atau port spesifik (NLB).',
+              'GENEVE encapsulation port 6081 — hafal nombor ni. GWLB balut paket asal dalam GENEVE, hantar ke appliance untuk inspect tanpa ubah paket asal, pastu pulangkan.',
+              'Flow stickiness: 5-tuple (default: src/dst IP + src/dst port + protocol), 3-tuple (src/dst IP + protocol), 2-tuple (src/dst IP). Pastikan semua paket satu flow → appliance SAMA (kritikal untuk stateful firewall yang kena nampak dua hala). "stateful appliance miss return traffic" → setel flow stickiness, bukan tambah node.',
+              'GWLBe (Gateway Load Balancer Endpoint): VPC endpoint dikuasai PrivateLink. Diletak sebagai NEXT HOP dalam route table subnet app. GWLBe & app server WAJIB subnet berbeza. Trafik: app subnet → GWLBe → PrivateLink → GWLB (security VPC) → appliance → balik.',
+              'Transparent "bump-in-the-wire": IP & app tak berubah; appliance nampak paket asal. Lawan proxy yang ubah paket. Inilah jualan utama GWLB.',
+              'Target = 3rd-party VIRTUAL APPLIANCE (firewall, IDS/IPS, DPI — Palo Alto VM-Series, Fortinet, Check Point, dll), BUKAN web/app server biasa. Kalau soalan cakap "load balance web servers" → itu ALB/NLB, bukan GWLB.',
+              'Centralized inspection architecture: satu security/inspection VPC pegang GWLB + fleet appliance; spoke VPC (atau egress via Transit Gateway) salur trafik melaluinya guna GWLBe. Elak pasang appliance dalam setiap VPC.',
+              'GWLB & NLB sahaja boleh berperanan dengan PrivateLink untuk expose appliance/service; ALB TAK boleh. (Lihat card NLB untuk PrivateLink endpoint service.)',
+              'PRICING (us-east-1): GWLB = $0.0135/jam (~$9.72/bulan) + $0.0035/GWLCU-jam — paling MURAH per jam antara ALB/NLB/GWLB. GWLCU diukur ikut new connections, active connections, & bytes processed. "cheapest LB per hour" → GWLB. Harga penuh ALB/NLB/GWLB ada di card ALB.',
+            ],
+            docs: [
+              { label: 'What is a Gateway Load Balancer?', url: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/introduction.html' },
+              { label: 'Access virtual appliances through AWS PrivateLink (GWLBe)', url: 'https://docs.aws.amazon.com/vpc/latest/privatelink/vpce-gateway-load-balancer.html' },
+              { label: 'GWLB flow stickiness (target group attributes)', url: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/gateway/edit-target-group-attributes.html' },
+            ],
+            keywords: ['GWLB', 'Gateway Load Balancer', 'layer 3', 'IP packets', 'GENEVE', 'GENEVE 6081', 'port 6081', 'virtual appliance', 'firewall', 'IDS', 'IPS', 'deep packet inspection', 'DPI', 'transparent', 'bump-in-the-wire', 'flow stickiness', '5-tuple', '3-tuple', '2-tuple', 'GWLBe', 'Gateway Load Balancer Endpoint', 'PrivateLink', 'centralized inspection', 'security VPC', 'inspection VPC', 'next hop', 'route table', 'Palo Alto', 'Fortinet', '3rd-party appliance', 'egress inspection', 'east-west traffic', 'pricing'],
+          },
+          {
             shortName: 'Route 53',
             fullName: 'Amazon Route 53',
             ingat: '"GPS untuk domain"',

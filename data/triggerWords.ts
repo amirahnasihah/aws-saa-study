@@ -305,6 +305,15 @@ export const triggerRows: TriggerRow[] = [
     slug: 'd3-network-alb',
   },
   {
+    id: 'gwlb-inspection',
+    keywords: ['transparent inspection semua trafik', '3rd-party firewall / IDS / IPS inline', 'centralized inspection untuk banyak VPC', 'GENEVE port 6081', 'salur trafik ke virtual appliance', 'bump-in-the-wire'],
+    service: 'Gateway Load Balancer (GWLB) + GWLBe',
+    why: 'GWLB = Layer 3, dengar SEMUA IP packet, salur ke fleet virtual appliance (firewall/IDS/IPS) secara transparent guna GENEVE port 6081. Pasangan GWLBe (next hop dalam route table) sambung spoke VPC ↔ security VPC via PrivateLink. Flow stickiness (5/3/2-tuple) pastikan stateful firewall nampak dua hala. BUKAN NLB (L4 connection je) atau appliance per-VPC (tak scale). Keyword "transparent + 3rd-party firewall + GENEVE 6081 + centralized" → GWLB.',
+    accent: 'c1',
+    domain: 'D1 · Secure',
+    slug: 'd3-network-gwlb',
+  },
+  {
     id: 'efs-one-zone-ia',
     keywords: ['rarely accessed shared files', 'low-cost EFS', 'single AZ + can be regenerated', 're-creatable / not critical data', 'cheapest EFS class', 'redundant backup file storage'],
     service: 'EFS One Zone-IA',
