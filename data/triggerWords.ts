@@ -421,6 +421,15 @@ export const triggerRows: TriggerRow[] = [
     domain: 'D2 · Resilient',
     slug: 'd2-ha-aurora',
   },
+  {
+    id: 'rds-encrypt-existing',
+    keywords: ['RDS instance not encrypted', 'encrypt existing unencrypted RDS', 'add encryption to running DB', 'security audit RDS unencrypted', 'encrypt Read Replica', 'KMS key for RDS'],
+    service: 'RDS encryption: snapshot → copy-with-encryption → restore (BUKAN modify in-place)',
+    why: 'RDS encryption-at-rest cuma boleh set masa CREATE instance — butang "turn on encryption" pada existing RDS TAK WUJUD. Encrypt existing unencrypted: (1) snapshot, (2) COPY snapshot + tick Enable Encryption (pilih KMS key: aws/rds managed atau CMK), (3) restore NEW encrypted instance, (4) update app endpoint, (5) buang lama. Read Replica WARISI source — primary unencrypted → replica unencrypted (same-region), jadi buang RR lama, create RR baru dari encrypted primary (auto encrypted). Konsep sama macam encrypt EBS volume.',
+    accent: 'c4',
+    domain: 'D1 · Secure',
+    slug: 'd2-ha-rds-multi-az',
+  },
 ]
 
 // ── Pokok keputusan (decision tree) ─────────────────────────────────────────
@@ -824,5 +833,13 @@ export const trapRows: TrapRow[] = [
   {
     bait: 'Set Inbound rule kat SG Aurora + Outbound rule kat SG Lambda (sebab "Aurora akses Lambda")',
     fix: 'TERBALIK arah SG. Security Group jaga dari mana request BERMULA. Aurora MULAKAN outbound → SG Aurora perlu OUTBOUND allow ke Lambda; SG Lambda perlu INBOUND allow dari SG Aurora (port 443). Kalau Lambda dalam VPC sahaja (VPC-enabled). Lambda non-VPC (default) takde SG inbound — invoke guna AWS API endpoint, cukup IAM Role pada Aurora je.',
+  },
+  {
+    bait: 'Modify running RDS instance → enable encryption in-place',
+    fix: 'Butang "turn on encryption" pada existing unencrypted RDS TAK WUJUD — encryption cuma set masa CREATE. Cara betul: snapshot → COPY snapshot (enable encryption + KMS key) → restore NEW encrypted instance → update app endpoint → buang lama. Konsep sama macam encrypt EBS volume.',
+  },
+  {
+    bait: 'Encrypt the existing unencrypted Read Replica directly (sebab replica pun kena encrypt)',
+    fix: 'Read Replica WARISI encryption source. RR dari primary unencrypted (same-region) WAJIB unencrypted — tak boleh encrypt terus. Buang RR lama, create RR BARU dari encrypted primary → auto encrypted. primary encrypted → replica encrypted (KMS key sama).',
   },
 ]

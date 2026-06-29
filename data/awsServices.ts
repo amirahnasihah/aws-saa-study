@@ -3269,6 +3269,9 @@ export const domains: DomainData[] = [
               'Same region je (across AZ). Cross-region → Read Replica / Aurora Global DB',
               '1 standby sahaja (ni DB Instance — default exam)',
               'Multi-AZ DB CLUSTER = 1 writer + 2 readable standby, 3 AZ, failover <35s (MySQL/PostgreSQL je)',
+              'RDS encryption-at-rest: set masa CREATE instance je — TAK boleh modify existing unencrypted in-place',
+              'Encrypt existing unencrypted RDS: snapshot → COPY snapshot (enable encryption + KMS key) → restore NEW encrypted instance → update app endpoint → buang lama',
+              'Read Replica WARISI encryption source: primary unencrypted → replica unencrypted (same-region, tak boleh encrypted). Buang RR lama, create RR baru dari encrypted primary → auto encrypted',
             ],
             perangkap: [
               {
@@ -3285,6 +3288,11 @@ export const domains: DomainData[] = [
                 soalan: 'Perlu HA + standby yang BOLEH serve read + failover lebih laju, guna MySQL/PostgreSQL. Pilih satu.',
                 umpan: 'Multi-AZ DB Instance — nampak betul sebab "Multi-AZ". SALAH: DB Instance standby IDLE (no reads), failover ~60-120s je.',
                 betul: 'Multi-AZ DB CLUSTER (1 writer + 2 readable standby, 3 AZ, failover <35s). Keyword "readable standby + faster failover + MySQL/PostgreSQL" → DB Cluster, BUKAN DB Instance.',
+              },
+              {
+                soalan: 'Security audit jumpa RDS MySQL instance unencrypted + Read Replica (same region) pun unencrypted. Fix secepat mungkin. Cara betul?',
+                umpan: 'Modify running instance → enable encryption in-place, lepas tu encrypt Read Replica terus. SALAH: butang "turn on encryption" pada existing RDS TAK WUJUD — encryption cuma set masa CREATE. Dan Read Replica tak boleh encrypt terus dari source unencrypted.',
+                betul: 'Snapshot primary → COPY snapshot (tick Enable Encryption + pilih KMS key) → restore NEW encrypted instance → update app endpoint → buang lama. Lepas tu buang RR unencrypted, create Read Replica BARU dari encrypted primary (auto encrypted, warisi source). Keyword: "encrypt existing unencrypted RDS" = snapshot→copy→restore, BUKAN modify in-place.',
               },
             ],
             scenario: 'Production RDS kat AZ-1 fail — automatic failover ke standby kat AZ-2 dalam 1-2 minit. Same connection endpoint, app tak perlu tukar config. BUKAN untuk scale reads — guna Read Replicas untuk tu.',
