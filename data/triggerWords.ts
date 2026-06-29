@@ -296,6 +296,15 @@ export const triggerRows: TriggerRow[] = [
     slug: 'd3-network-alb',
   },
   {
+    id: 'elb-health-check',
+    keywords: ['jangan hantar trafik ke EC2 crash', 'auto-detect unhealthy instance', 'stop routing to failed server', 'how does ELB avoid dead backend', 'remove unhealthy target from rotation'],
+    service: 'ELB Health Check (dalam Target Group)',
+    why: 'ELB ketuk setiap target ikut interval; pulang 200 OK = Healthy (hantar trafik), gagal threshold (cth 500/timeout) = Unhealthy → ELB STOP hantar trafik ke situ sampai sihat balik. Ini asas HA — auto-buang server rosak dari rotation. ASG patut guna ELB health check (bukan EC2 je) supaya app-level hang pun dikira unhealthy.',
+    accent: 'c2',
+    domain: 'D2 · Resilient',
+    slug: 'd3-network-alb',
+  },
+  {
     id: 'efs-one-zone-ia',
     keywords: ['rarely accessed shared files', 'low-cost EFS', 'single AZ + can be regenerated', 're-creatable / not critical data', 'cheapest EFS class', 'redundant backup file storage'],
     service: 'EFS One Zone-IA',
