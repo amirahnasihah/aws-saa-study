@@ -9737,19 +9737,44 @@ export const domains: DomainData[] = [
               'Cost anomaly detection: ML-powered, auto-detects unusual spending spikes and alerts you',
               'Exam: "visualize spending trends" → Cost Explorer. "alert when budget exceeded" → Budgets. "detailed CSV billing report" → Cost and Usage Report (CUR)',
             ],
-            compare: {
-              label: 'Cost Explorer vs Budgets vs CUR',
-              headers: ['Aspect', 'Cost Explorer', 'AWS Budgets', 'Cost & Usage Report'],
-              rows: [
-                ['Job', 'Visualize & analyze past spend', 'Alert before/over a threshold', 'Most granular billing line items'],
-                ['Direction', 'Reactive — "where did money go?"', '🟢 Proactive — "warn me at 80%"', 'Raw data for deep/custom analysis'],
-                ['Output', 'Charts, trends, forecast, RI/SP recs', 'Email/SNS alerts + Budget Actions', 'CSV/Parquet to S3 (query w/ Athena)'],
-                ['Granularity', 'Monthly / daily / hourly', 'Per budget threshold', 'Hourly, per-resource, per-tag'],
-                ['Keyword', '"visualize / analyze trends"', '"alert before overspending"', '"detailed line-item billing data"'],
-              ],
-              takeaway: 'Analyze trends → Cost Explorer. Alert before overspend → Budgets (proactive). Deepest raw billing data for custom queries → Cost & Usage Report (CUR) → S3 + Athena.',
+            compare: [
+              {
+                label: 'Cost Explorer vs Budgets vs CUR',
+                headers: ['Aspect', 'Cost Explorer', 'AWS Budgets', 'Cost & Usage Report'],
+                rows: [
+                  ['Job', 'Visualize & analyze past spend', 'Alert before/over a threshold', 'Most granular billing line items'],
+                  ['Direction', 'Reactive — "where did money go?"', '🟢 Proactive — "warn me at 80%"', 'Raw data for deep/custom analysis'],
+                  ['Output', 'Charts, trends, forecast, RI/SP recs', 'Email/SNS alerts + Budget Actions', 'CSV/Parquet to S3 (query w/ Athena)'],
+                  ['Granularity', 'Monthly / daily / hourly', 'Per budget threshold', 'Hourly, per-resource, per-tag'],
+                  ['Keyword', '"visualize / analyze trends"', '"alert before overspending"', '"detailed line-item billing data"'],
+                ],
+                takeaway: 'Analyze trends → Cost Explorer. Alert before overspend → Budgets (proactive). Deepest raw billing data for custom queries → Cost & Usage Report (CUR) → S3 + Athena.',
+              },
+              {
+                label: 'Unusual / anomalous spending — tool mana? (4-way exam trap)',
+                headers: ['Tool', 'Tugas', 'Keyword exam', 'Bukan untuk'],
+                rows: [
+                  ['Cost Anomaly Detection', '🟢 ML auto-detect spike pelik + alert (SNS/email) + root-cause', '"unusual / anomalous spending", "ML detect"', 'BUKAN threshold tetap, BUKAN auto-stop instance'],
+                  ['AWS Budgets', 'Alert bila cecah threshold (actual/forecast) + Budget Actions', '"alert before overspend", "notify at threshold"', 'BUKAN ML anomaly, BUKAN visualize'],
+                  ['Cost Explorer', 'Visualize & analyse past spend + forecast 12 bln', '"visualize trends", "analyze spend"', 'BUKAN alert proaktif'],
+                  ['CloudWatch (EstimateCharges)', 'Metric kasar bil anggaran + alarm', '"billing metric alarm"', 'BUKAN boleh bezakan unusual vs normal growth'],
+                ],
+                takeaway: 'Soalan sebut "unusual/anomalous spending + ML + alert" → Cost Anomaly Detection. "alert at fixed threshold" → Budgets. "visualize trends" → Cost Explorer. CloudWatch EstimateCharges tak boleh beza anomali vs growth normal — itu umpan.',
+              },
+            ],
+            mermaid: {
+              label: 'Cost monitoring — tool mana?',
+              source: `flowchart TD
+  Q["Nak buat apa dengan kos?"] --> UNUSUAL{"Detect spike PELIK?<br/>(unusual / anomalous)"}
+  UNUSUAL -->|"Ya — ML auto-detect + alert"| CAD["🤖 Cost Anomaly Detection<br/>ML, SNS/email, root-cause<br/>(account/service/region)"]
+  UNUSUAL -->|"Tidak"| THR{"Alert bila cecah<br/>THRESHOLD tetap?"}
+  THR -->|"Ya — proactive warn"| BUD["📊 AWS Budgets<br/>+ Budget Actions (auto-stop)"]
+  THR -->|"Tidak"| VIZ{"Visualize / analyse<br/>trend lepas?"}
+  VIZ -->|"Ya"| CE["📈 Cost Explorer<br/>chart + forecast + RI rec"]
+  VIZ -->|"Nak data mentah SQL"| CUR["📄 CUR → S3 + Athena"]`,
+              caption: 'INGAT exam: "unusual/anomalous spending + ML" → Cost Anomaly Detection (BUKAN Budgets threshold, BUKAN CloudWatch yang tak beza anomali vs growth). "alert before overspend" → Budgets. "visualize trends" → Cost Explorer.',
             },
-            keywords: ['cost analysis', 'spending visualization', 'RI recommendations', 'usage patterns', 'rightsizing', 'forecast', 'hourly granularity', 'anomaly detection', 'vs Budgets', 'CUR'],
+            keywords: ['cost analysis', 'spending visualization', 'RI recommendations', 'usage patterns', 'rightsizing', 'forecast', 'hourly granularity', 'anomaly detection', 'Cost Anomaly Detection', 'unusual spending', 'anomalous spend', 'vs Budgets', 'CUR'],
           },
           {
             shortName: 'Cost & Usage Report',

@@ -11,7 +11,10 @@ export const metadata: Metadata = {
 }
 
 export default function TopikPage() {
-  let totalServices = 0
+  const totalServices = domains.reduce(
+    (total, domain) => total + domain.sections.reduce((sum, section) => sum + section.services.length, 0),
+    0,
+  )
 
   return (
     <>
@@ -58,7 +61,6 @@ export default function TopikPage() {
                 {domain.sections.map((section) => {
                   const groupId = `${domain.id}-${section.id}`
                   const groupCount = section.services.length
-                  totalServices += groupCount
                   return (
                     <div key={section.id} data-topik-group data-group={groupId}>
                       <h3 data-topik-group data-group={groupId} className="text-[0.7rem] font-space-mono uppercase tracking-widest text-aws-muted mb-2">

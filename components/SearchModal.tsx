@@ -43,23 +43,28 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   // and aborts in-flight requests when the query changes (AbortController).
   useEffect(() => {
     const q = query.toLowerCase().trim()
-    if (q.length === 0) {
-      setResults([])
-      setActive(0)
-      return
-    }
     const controller = new AbortController()
-    const t = setTimeout(() => {
-      fetch(`/api/search?q=${encodeURIComponent(query)}`, { signal: controller.signal })
-        .then((r) => (r.ok ? r.json() : []))
-        .then((data: unknown) => {
-          setResults(Array.isArray(data) ? (data as SearchResult[]) : [])
+    // All setState lives inside the timeout callback so nothing is called
+    // synchronously in the effect body (avoids cascading renders / lint error).
+    const t = setTimeout(
+      () => {
+        if (q.length === 0) {
+          setResults([])
           setActive(0)
-        })
-        .catch(() => {
-          // aborted or network error — leave current results untouched
-        })
-    }, 120)
+          return
+        }
+        fetch(`/api/search?q=${encodeURIComponent(query)}`, { signal: controller.signal })
+          .then((r) => (r.ok ? r.json() : []))
+          .then((data: unknown) => {
+            setResults(Array.isArray(data) ? (data as SearchResult[]) : [])
+            setActive(0)
+          })
+          .catch(() => {
+            // aborted or network error — leave current results untouched
+          })
+      },
+      q.length === 0 ? 0 : 120,
+    )
     return () => {
       clearTimeout(t)
       controller.abort()
