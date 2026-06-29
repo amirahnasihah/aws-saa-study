@@ -12,7 +12,7 @@ import SignInButton from './nav/SignInButton'
 import { LogOutIcon } from './nav/icons'
 
 interface NavProps {
-  activePage?: 'cheatsheet' | 'triggers' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc' | 'labs' | 'ai' | 'bookmarks'
+  activePage?: 'cheatsheet' | 'triggers' | 'learn' | 'practice' | 'scenarios' | 'visual' | 'vpc' | 'labs' | 'ai' | 'bookmarks' | 'topik'
 }
 
 const siteHeaderTransition: CSSProperties = { viewTransitionName: 'site-header' }
@@ -61,6 +61,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
           <PageLink pathname={pathname} href="/vpc" label="VPC Guide" active={activePage === 'vpc'} />
           {userEmail && <PageLink pathname={pathname} href="/labs" label="Labs" active={activePage === 'labs'} />}
           <PageLink pathname={pathname} href="/trigger-words" label="Triggers" active={activePage === 'triggers'} />
+          <PageLink pathname={pathname} href="/topik" label="Topik" active={activePage === 'topik'} />
         </div>
 
         {/* Zone 3 — account */}
@@ -162,6 +163,7 @@ export default function Nav({ activePage = 'cheatsheet' }: NavProps) {
                   : []),
                 { href: '/bookmarks', label: 'Bookmarks', icon: '📌', active: activePage === 'bookmarks' },
                 { href: '/trigger-words', label: 'Triggers', icon: '🎯', active: activePage === 'triggers' },
+                { href: '/topik', label: 'Topik Index', icon: '🔍', active: activePage === 'topik' },
               ].map((p) => (
                 <Link
                   key={p.href}
