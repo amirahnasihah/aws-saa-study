@@ -822,6 +822,9 @@ export const domains: DomainData[] = [
               'Exam: "centralized shared resources across multiple accounts, reduce operational overhead" → AWS RAM (bukan resource-based policies yang perlu configure per-account)',
               'Resource-based policies = share satu resource ke specific account. RAM = share ke semua accounts dalam Org systematically',
             ],
+            docs: [
+              { label: 'What is AWS RAM', url: 'https://docs.aws.amazon.com/ram/latest/userguide/what-is.html' },
+            ],
             keywords: ['cross-account sharing', 'shared subnets', 'Transit Gateway sharing', 'no resource duplication', 'AWS Organizations', 'centralized resources'],
           },
           {
@@ -1298,6 +1301,9 @@ export const domains: DomainData[] = [
               'Foundational threat detection (CloudTrail MANAGEMENT events) ON by default bila GuardDuty enabled — TAK boleh disable. ListBuckets/DeleteBucket = management events, bukan data events',
               'S3 Protection (optional, enable berasingan): monitor CloudTrail DATA events untuk S3 — object-level ops (GetObject, PutObject, DeleteObject, ListObjects) untuk detect data exfiltration/destruction. Tak perlu manually configure S3 data event logging dalam CloudTrail',
               'Security Hub = aggregator/CSPM (kumpul finding GuardDuty + Inspector + Macie + run compliance standards). Bukan dia yang detect — dia central dashboard. Cross-Region aggregation pun ada',
+            ],
+            docs: [
+              { label: 'What is Amazon GuardDuty', url: 'https://docs.aws.amazon.com/guardduty/latest/ug/what-is-guardduty.html' },
             ],
             keywords: ['threat detection', 'ML', 'CloudTrail logs', 'VPC Flow Logs', 'no agents', 'findings', 'S3 Protection', 'management events', 'data events', 'object-level API', 'Security Hub', 'Detective', 'CSPM'],
           },
@@ -5152,6 +5158,10 @@ export const domains: DomainData[] = [
               'ECS Anywhere: "run ECS tasks on-premises" → ECS Anywhere',
               'Exam trick: kalau soalan sebut "open-source" + "on-prem" + "AWS control plane consistency" → EKS Anywhere (bukan EKS Distro)',
             ],
+            docs: [
+              { label: 'Amazon EKS Anywhere', url: 'https://docs.aws.amazon.com/eks/latest/userguide/eks-anywhere.html' },
+              { label: 'Amazon EKS Distro', url: 'https://docs.aws.amazon.com/eks/latest/userguide/eks-distro.html' },
+            ],
             keywords: ['EKS Anywhere', 'EKS Distro', 'ECS Anywhere', 'on-premises Kubernetes', 'hybrid containers'],
           },
           {
@@ -6840,8 +6850,12 @@ export const domains: DomainData[] = [
               'Pattern: apex domain (example.com) → ALWAYS use Alias. Subdomain (www.example.com) → CNAME or Alias both work',
               'Exam: "root domain + www subdomain pointing to ALB" → Alias for root + CNAME (or Alias) for www',
               'Hosted Zones: PUBLIC hosted zone = DNS record untuk domain internet awam (orang luar resolve). PRIVATE hosted zone = record HANYA dalam VPC kau (internal apps/database, split-horizon, orang luar tak nampak). Associate private hosted zone ke VPC → EC2 dalam VPC resolve nama dalaman. Satu domain = satu hosted zone. Exam: "internal DNS name dalam VPC / private domain untuk app dalaman" → private hosted zone.',
+              'PRICING (us-east-1): Hosted zone ~$0.50/month per zone (first 25 zones). Standard queries ~$0.40 per million (first 1 billion). Health checks ~$0.50/health-check/month (first 50 free) + optional endpoint monitoring extra. Alias query ke AWS resource = FREE. Exam cost: "cheapest DNS query to ALB/CloudFront/S3" → Alias (free) bukan CNAME. Health check berlebihan = kos tersembunyi.',
             ],
-            keywords: ['DNS', 'domain', 'routing policy', 'failover', 'Alias record', 'CNAME', 'apex domain', 'root domain', 'cannot CNAME apex', 'hosted zone', 'public hosted zone', 'private hosted zone'],
+            docs: [
+              { label: 'What is Amazon Route 53', url: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/Welcome.html' },
+            ],
+            keywords: ['DNS', 'domain', 'routing policy', 'failover', 'Alias record', 'CNAME', 'apex domain', 'root domain', 'cannot CNAME apex', 'hosted zone', 'public hosted zone', 'private hosted zone', 'pricing'],
           },
           {
             shortName: 'Route 53 Routing Policies',
@@ -6902,6 +6916,9 @@ export const domains: DomainData[] = [
               'Evaluate Target Health (ETH): untuk AWS resources yang support alias (ALB, ELB, CloudFront) — Route 53 check health target automatically TANPA perlu attach health check',
               'On-premises / non-alias resources: MESTI attach health check explicitly — ETH tak apply',
               'Exam: "AWS primary + on-premises secondary failover" → 2 failover alias records, AWS dengan ETH=Yes, on-premises dengan explicit health check',
+            ],
+            docs: [
+              { label: 'Choosing a routing policy', url: 'https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-policy.html' },
             ],
             keywords: ['failover', 'active-passive', 'health check', 'weighted', 'latency-based', 'geolocation', 'simple', 'Evaluate Target Health', 'hybrid failover', 'two alias records', 'on-premises secondary'],
           },
@@ -7715,6 +7732,9 @@ export const domains: DomainData[] = [
               'Backend: Amplify uses Cognito (auth), AppSync/API Gateway (API), DynamoDB (data), S3 (file storage), Lambda (functions) under the hood. Abstracts away the complexity',
               'Exam: "quickly build and deploy fullstack web application" or "frontend hosting with CI/CD" → Amplify. "Host static website cheaply" → S3 + CloudFront',
             ],
+            docs: [
+              { label: 'What is AWS Amplify', url: 'https://docs.aws.amazon.com/amplify/latest/userguide/welcome.html' },
+            ],
             keywords: ['fullstack', 'CI/CD', 'frontend hosting', 'mobile', 'React', 'Next.js', 'Cognito', 'AppSync', 'backend-as-a-service', 'BaaS', 'Firebase', 'Firebase alternative', 'Amplify Auth', 'Amplify Storage', 'Git deploy', 'CDN'],
           },
         ],
@@ -8082,8 +8102,12 @@ export const domains: DomainData[] = [
               'Exam: "debug message not reaching destination through SQS distributed system" → X-Ray (not CloudWatch, not CloudTrail)',
               'X-Ray Insights: automatically detects anomalies (error/latency spikes) in your X-Ray data and sends notifications via SNS/EventBridge — answers "automatic anomaly detection with notifications" requirement',
               '"graphical end-to-end visibility" + "anomaly notifications" → X-Ray + X-Ray Insights',
+              'PRICING: Free tier 100,000 traces/mo. Selepas itu ~$5.00 per 100,000 traces recorded. Tak caj untuk traces yang tak di-sampled. Exam: "distributed tracing cost / free tier 100K traces" → X-Ray.',
             ],
-            keywords: ['distributed tracing', 'service map', 'latency analysis', 'microservices', 'Lambda tracing', 'bottleneck', 'debugging', 'SQS tracing', 'end-to-end trace', 'bottleneck detection', 'X-Ray Insights', 'anomaly detection'],
+            docs: [
+              { label: 'AWS X-Ray concepts', url: 'https://docs.aws.amazon.com/xray/latest/devguide/xray-concepts.html' },
+            ],
+            keywords: ['distributed tracing', 'service map', 'latency analysis', 'microservices', 'Lambda tracing', 'bottleneck', 'debugging', 'SQS tracing', 'end-to-end trace', 'bottleneck detection', 'X-Ray Insights', 'anomaly detection', 'pricing'],
           },
           {
             shortName: 'AWS Health Dashboard',
