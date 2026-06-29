@@ -5990,13 +5990,14 @@ export const domains: DomainData[] = [
               'Storage classes: Standard (multi-AZ), Standard-IA (infrequent access), One Zone, One Zone-IA (cheapest — data in single AZ).',
               'PRICING (us-east-1): Standard = $0.30/GB-mo. One Zone = $0.16/GB-mo. Standard-IA = $0.016/GB-mo (+ retrieval fee). One Zone-IA = $0.0133/GB-mo (+ retrieval fee — cheaper than Standard-IA sebab 1 AZ je). Provisioned Throughput = $6.00/provisioned-MB/s-mo. Elastic Throughput = pay per throughput used. IA lifecycle = auto-move to IA for savings.',
               'Exam: "cheapest EFS class" → One Zone-IA ($0.0133/GB, cheaper than Standard-IA $0.016). "multi-AZ EFS" → Standard ($0.30/GB). "infrequently accessed EFS data" → Standard-IA (multi-AZ) atau One Zone-IA (1 AZ). EFS is MORE expensive than S3 ($0.023/GB) but cheaper than EBS for shared multi-instance.',
+              'EFS Lifecycle Management: auto-pindah ke IA (min 1 hari, max 365 hari selepas last access). TRAP: tak boleh set 730 hari (2 tahun) — kalau soalan "older than 2 years" → S3 Lifecycle, BUKAN EFS.',
             ],
             docs: [
               { label: 'EFS Performance', url: 'https://docs.aws.amazon.com/efs/latest/ug/performance.html' },
               { label: 'EFS Encryption in Transit', url: 'https://docs.aws.amazon.com/efs/latest/ug/encryption-in-transit.html' },
               { label: 'EFS Cross-VPC Mounting', url: 'https://docs.aws.amazon.com/efs/latest/ug/mount-fs-different-vpc.html' },
             ],
-            keywords: ['shared storage', 'multiple EC2', 'NFS', 'General Purpose', 'Max I/O', 'Provisioned Throughput', 'Bursting Throughput', 'Elastic Throughput', 'TLS 1.2', 'mount helper', '-o tls', 'TCP 2049', 'cross-VPC EFS', 'EFS mount target', 'ReadWriteMany', 'RWX', 'ReadWriteOnce', 'RWO', 'EFS CSI Driver', 'EKS shared storage', 'pods different nodes', 'Kubernetes persistent volume', 'EFS storage classes', 'One Zone-IA', 'Standard-IA', 'EFS One Zone', 'rarely accessed', 'single AZ', 're-creatable', 'regenerated if lost', 'low-cost', 'cheapest EFS', 'redundant storage', 'high-throughput'],
+            keywords: ['shared storage', 'multiple EC2', 'NFS', 'General Purpose', 'Max I/O', 'Provisioned Throughput', 'Bursting Throughput', 'Elastic Throughput', 'TLS 1.2', 'mount helper', '-o tls', 'TCP 2049', 'cross-VPC EFS', 'EFS mount target', 'ReadWriteMany', 'RWX', 'ReadWriteOnce', 'RWO', 'EFS CSI Driver', 'EKS shared storage', 'pods different nodes', 'Kubernetes persistent volume', 'EFS storage classes', 'One Zone-IA', 'Standard-IA', 'EFS One Zone', 'rarely accessed', 'single AZ', 're-creatable', 'regenerated if lost', 'low-cost', 'cheapest EFS', 'redundant storage', 'high-throughput', 'EFS lifecycle', '365 days max', 'vs S3 lifecycle 730 days'],
           },
           {
             shortName: 'S3',
@@ -6006,7 +6007,7 @@ export const domains: DomainData[] = [
             fungsi: 'Object storage tanpa had — simpan apa-apa jenis fail sebagai OBJECT dalam BUCKET. Bukan block (EBS) bukan file system (EFS). Tiap object ada key (nama penuh), value (data), metadata, version ID. Bucket nama global unik. Max 1 object = 5TB. 11 nines durability (99.999999999%) sebab tiap object auto-replicate across ≥3 AZ.',
             sebabApa: "S3 wujud sebab simpan fail kat disk EBS/server sendiri ada had saiz, kena urus capacity, kena backup manual, dan susah nak share antara banyak server. S3 buang semua sakit kepala tu — object storage tanpa had, auto-replicate across ≥3 AZ (11 nines durability) jadi kau tak payah risau data hilang, bayar ikut guna je. Inilah sebab S3 jadi 'tulang belakang' hampir semua AWS workload: data lake, backup, static site, log.",
             sifir: ["Durability 11 nines (99.999999999%) SEMUA class — beza availability je", "Max 1 object = 5TB; single PUT max 5GB; >5GB WAJIB Multipart", "Strong read-after-write consistency (sejak Dec 2020) — soalan 'eventual' = usang", "3,500 PUT + 5,500 GET per PREFIX per saat; prefix tak terhad → parallelize", "503 Slow Down = S3 tengah auto-scale, retry with exponential backoff", "Block Public Access (default ON) menang atas bucket policy/ACL"],
-            perangkap: [{"soalan": "App upload laju dapat banyak HTTP 503 'Slow Down'. Apa fix paling betul?", "umpan": "Tukar storage class atau request limit increase via support — nampak macam kena 'naikkan quota'.", "betul": "Agih object across MULTIPLE PREFIX + retry with exponential backoff. S3 auto-scale per prefix (3,500 PUT/5,500 GET tiap prefix), tiada hard limit nak naik. Keyword: 'prefix' + '503 slow down'."}, {"soalan": "Nak host static website + custom domain + HTTPS guna S3. Cukup ke S3 sahaja?", "umpan": "Enable S3 Static Website Hosting je — nampak macam dah lengkap.", "betul": "Letak CloudFront DEPAN S3. S3 static hosting HTTP sahaja; HTTPS + custom domain (ACM cert) kena CloudFront. Keyword: 'HTTPS' + 'custom domain'."}],
+            perangkap: [{"soalan": "App upload laju dapat banyak HTTP 503 'Slow Down'. Apa fix paling betul?", "umpan": "Tukar storage class atau request limit increase via support — nampak macam kena 'naikkan quota'.", "betul": "Agih object across MULTIPLE PREFIX + retry with exponential backoff. S3 auto-scale per prefix (3,500 PUT/5,500 GET tiap prefix), tiada hard limit nak naik. Keyword: 'prefix' + '503 slow down'."}, {"soalan": "Nak host static website + custom domain + HTTPS guna S3. Cukup ke S3 sahaja?", "umpan": "Enable S3 Static Website Hosting je — nampak macam dah lengkap.", "betul": "Letak CloudFront DEPAN S3. S3 static hosting HTTP sahaja; HTTPS + custom domain (ACM cert) kena CloudFront. Keyword: 'HTTPS' + 'custom domain'."}, {"soalan": "Global users upload files ke EC2 ASG; files >2 years old kena storage class lebih murah, durable & HA. Pilih DUA.", "umpan": "EFS lifecycle ke EFS-IA selepas 2 tahun — nampak 'lifecycle + infrequent' = EFS. SALAH: EFS lifecycle max 365 hari je, tak boleh 730 hari (2 tahun).", "betul": "DUA jawapan S3 Lifecycle: (1) transition ke Standard-IA selepas 2 tahun, (2) transition ke Glacier (Flexible) selepas 2 tahun. Object storage scalable untuk upload global; lifecycle age-based. BUKAN EBS/DLM/RAID — block storage, tak scalable multi-instance upload."}],
             contohGuna: 'Store images/video, backup & restore, data lake untuk Athena/Redshift, static website hosting, log storage, distribute software',
             detailsLabel: 'S3 Anatomy — Bucket → Object',
             storageDetails: 'Bucket → bekas top-level, nama GLOBAL unik (semua AWS), terikat pada 1 Region\nObject → fail sebenar; identified by Key (full path nama, cth photos/2026/cat.jpg)\nKey → "nama penuh" object dalam bucket (prefix + nama). Tiada folder sebenar — prefix je\nValue → kandungan data object (max 5TB)\nMetadata → key-value tags pasal object (content-type, dll)\nVersion ID → bila versioning ON, tiap update dapat ID baru',
@@ -6091,7 +6092,7 @@ export const domains: DomainData[] = [
               { label: 'S3 encryption options', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/UsingEncryption.html' },
               { label: 'S3 Replication', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/replication.html' },
             ],
-            keywords: ['object storage', '11 nines durability', 'strong consistency', 'bucket policy', 'block public access', 'versioning', 'CRR', 'SRR', 'SSE-S3', 'SSE-KMS', 'SSE-C', 'multipart upload', '5TB', 'transfer acceleration', '503 slow down', 'prefix', 'static website', 'event notification'],
+            keywords: ['object storage', '11 nines durability', 'strong consistency', 'bucket policy', 'block public access', 'versioning', 'CRR', 'SRR', 'SSE-S3', 'SSE-KMS', 'SSE-C', 'multipart upload', '5TB', 'transfer acceleration', '503 slow down', 'prefix', 'static website', 'event notification', 'lifecycle policy', '2 years', '730 days', 'Standard-IA', 'Glacier', 'global upload'],
           },
           {
             shortName: 'S3 Access Control',
@@ -6310,6 +6311,24 @@ export const domains: DomainData[] = [
   GIR -.->|"perlu RESTORE job"| GF -.-> DA`,
                 caption: 'Kaitkan dengan dapur: barang selalu guna letak atas meja (Standard, ambik free bila-bila). Barang jarang → peti ais bawah (IA, tiap kali ambik kena bayar "tol" = retrieval fee). Beku tapi nak segera → peti beku (Glacier Instant, capai terus ms tanpa restore). Barang simpan lama betul → stor sejukbeku luar (Glacier Flexible/Deep Archive) = kena "order/booking" dulu (RESTORE job), tunggu min-jam atau 12-48 jam. INGAT exam: garis pemisah BESAR = Glacier Flexible & Deep Archive WAJIB restore job; semua yang lain (termasuk Glacier Instant) = direct GET ms.',
               },
+              {
+                label: 'S3 Storage Class Transition Waterfall (lifecycle)',
+                source: `flowchart TB
+  STD["🟣 S3 Standard"]
+  SIA["🔵 S3 Standard-IA"]
+  IT["🟢 S3 Intelligent-Tiering"]
+  OZ["🔴 S3 One Zone-IA"]
+  GIR["🩵 Glacier Instant Retrieval"]
+  GFR["🟠 Glacier Flexible Retrieval"]
+  GDA["⬛ Glacier Deep Archive"]
+  STD --> SIA & IT & OZ & GIR & GFR & GDA
+  SIA --> IT & OZ & GIR & GFR & GDA
+  IT --> OZ & GIR & GFR & GDA
+  OZ --> GIR & GFR & GDA
+  GIR --> GFR & GDA
+  GFR --> GDA`,
+                caption: 'Lifecycle transition = waterfall MENURUN je (hot → cold). Standard boleh pindah ke mana-mana class bawah; setiap tier boleh skip ke bawah tapi tak boleh "naik" balik via lifecycle. INGAT exam: "files older than 2 years → cheaper class" + global upload → S3 Lifecycle (Standard-IA DAN/ATAU Glacier), BUKAN EFS (max 365 hari lifecycle), BUKAN EBS/DLM snapshots.',
+              },
             ],
             scenario: '"Medical images rarely access but need ms retrieval when doctor requests" → Glacier Instant Retrieval (bukan Flexible). "Log files 90-day retention, infrequent access, re-creatable" → One Zone-IA. "Don\'t know access pattern yet" → Intelligent-Tiering. "Compliance records 7 years, petabytes, almost never access" → Deep Archive. "Active web content" → Standard.',
             tips: [
@@ -6339,7 +6358,7 @@ export const domains: DomainData[] = [
             fungsi: 'Lifecycle rules automatik pindah object ke storage class yang lebih murah berdasarkan umur (days sejak creation), dan boleh auto-expire (delete) object lama. Dua jenis rule: Transition (pindah ke class lain) dan Expiration (padam object). Rules boleh untuk whole bucket atau specific prefix/tags.',
             sebabApa: "Lifecycle wujud sebab kalau kena tukar storage class atau padam object lama secara manual untuk berjuta object = mustahil + mudah terlupa → bil membengkak. Lifecycle automate: kau set jadual sekali ('30 hari → IA, 90 hari → Glacier, 7 tahun → delete'), AWS pindah & padam sendiri ikut umur object. Buang kerja manual + elak bayar storan panas untuk data lama.",
             sifir: ["Lifecycle = AGE-based (umur object); Intelligent-Tiering = ACCESS-based (auto-detect)", "2 jenis rule: Transition (pindah class) + Expiration (auto-delete)", "Lifecycle BOLEH auto-delete; Intelligent-Tiering TAK boleh delete (pindah je)", "Standard → Standard-IA minimum 30 hari sebelum boleh transition", "Noncurrent version rules = clean up versi LAMA bila versioning ON", "Boleh scope rule ikut prefix / tag / object size", "Lifecycle cover SEMUA storage class (Standard → IA → Glacier Instant → Flexible → Deep Archive), BUKAN Glacier je — ia 'jalan raya' auto-tolak object menuruni kasta murah", "Transition action = pindah class; Expiration action = auto-DELETE (compliance/retain-then-delete)"],
-            perangkap: [{"soalan": "Nak auto-pindah log ke IA selepas 30 hari, Glacier selepas 90, dan PADAM selepas 1 tahun. Guna apa?", "umpan": "Intelligent-Tiering — anggap ia uruskan semua auto-tiering.", "betul": "S3 Lifecycle Policy (Transition + Expiration). Intelligent-Tiering tak boleh auto-DELETE, dan ia access-based bukan age-based. Keyword: 'after X days' + 'delete' → Lifecycle."}, {"soalan": "Versioning ON, nak buang versi lama object selepas 30 hari untuk jimat kos. Rule apa?", "umpan": "Expiration rule biasa — sangka ia padam current version sahaja.", "betul": "Noncurrent version expiration rule. Expiration biasa kena current version; untuk versi lama kena rule 'noncurrent'. Keyword: 'old/previous versions cleanup'."}],
+            perangkap: [{"soalan": "Nak auto-pindah log ke IA selepas 30 hari, Glacier selepas 90, dan PADAM selepas 1 tahun. Guna apa?", "umpan": "Intelligent-Tiering — anggap ia uruskan semua auto-tiering.", "betul": "S3 Lifecycle Policy (Transition + Expiration). Intelligent-Tiering tak boleh auto-DELETE, dan ia access-based bukan age-based. Keyword: 'after X days' + 'delete' → Lifecycle."}, {"soalan": "Versioning ON, nak buang versi lama object selepas 30 hari untuk jimat kos. Rule apa?", "umpan": "Expiration rule biasa — sangka ia padam current version sahaja.", "betul": "Noncurrent version expiration rule. Expiration biasa kena current version; untuk versi lama kena rule 'noncurrent'. Keyword: 'old/previous versions cleanup'."}, {"soalan": "Files >2 years old kena cheaper storage; global upload via EC2 ASG. Pilih DUA lifecycle approach.", "umpan": "EFS lifecycle ke EFS-IA — nampak lifecycle = EFS. SALAH: EFS lifecycle max 365 hari, tak capai 730 hari (2 tahun).", "betul": "DUA S3 Lifecycle transitions: Standard-IA selepas 2 tahun DAN Glacier (Flexible) selepas 2 tahun. S3 scalable object store + lifecycle boleh 730+ hari. BUKAN EBS/DLM/RAID."}],
             contohGuna: 'Log file masuk Standard → 30 hari pindah ke Standard-IA → 90 hari pindah ke Glacier Flexible → 365 hari pindah Deep Archive → 2555 hari (7 tahun) auto-delete.',
             detailsLabel: 'Lifecycle rule anatomy',
             storageDetails: 'Transition rule → "bila object umur X hari, pindah ke class Y" (cth: 30 hari → Standard-IA)\nExpiration rule → "bila object umur Z hari, delete permanently" (cth: 2555 hari → delete)\nFilter → boleh scope rule ikut prefix (folder), tags, atau object size\nCurrent versions vs Previous versions → boleh set rules berbeza untuk version aktif vs lama\nNoncurrent version expiration → auto-padam versi lama selepas X hari (clean up versioning clutter)\nNoncurrent version transition → pindah versi lama ke class murah',
@@ -6355,15 +6374,35 @@ export const domains: DomainData[] = [
               ],
               takeaway: 'Tahu bila data jadi sejuk (log, backup, compliance) → Lifecycle (age-based, boleh auto-delete). Tak tahu corak access → Intelligent-Tiering (auto-detect, tapi tak auto-delete). Selalu guna dua-dua: Intelligent-Tiering untuk unknown + Lifecycle expiration untuk auto-cleanup.',
             },
-            mermaid: {
-              label: 'Analogi roti & beku — Lifecycle aging',
-              source: `flowchart LR
+            mermaid: [
+              {
+                label: 'Analogi roti & beku — Lifecycle aging',
+                source: `flowchart LR
   A["🍞 Fresh roti<br/>S3 Standard<br/>$0.023/GB<br/>(0–30 hari)"] -->|"30 hari"| B["🥖 Semalam<br/>Standard-IA<br/>$0.0125/GB<br/>(30–90 hari)"]
   B -->|"90 hari"| C["❄️ Sejuk beku<br/>Glacier Flexible<br/>$0.0036/GB<br/>(90–365 hari)"]
   C -->|"365 hari"| D["🧊 Deep freeze<br/>Deep Archive<br/>$0.00099/GB<br/>(365–2555 hari)"]
   D -->|"7 tahun"| E["🗑️ Tong sampah<br/>Auto-delete<br/>(expiration)"]`,
-              caption: 'Analogi kilang roti: roti fresh (Standard) → selepas 30 hari jadi roti semalam (IA) → sejuk beku (Glacier) → deep freeze (Deep Archive) → tong sampah (auto-delete). Lifecycle automation = kau tetapkan jadual, AWS pindah sendiri. INGAT exam: "automatically transition S3 objects to cheaper tiers by age" → Lifecycle Rules. "auto-detect access pattern" → Intelligent-Tiering.',
-            },
+                caption: 'Analogi kilang roti: roti fresh (Standard) → selepas 30 hari jadi roti semalam (IA) → sejuk beku (Glacier) → deep freeze (Deep Archive) → tong sampah (auto-delete). Lifecycle automation = kau tetapkan jadual, AWS pindah sendiri. INGAT exam: "automatically transition S3 objects to cheaper tiers by age" → Lifecycle Rules. "auto-detect access pattern" → Intelligent-Tiering.',
+              },
+              {
+                label: 'S3 Storage Class Transition Waterfall',
+                source: `flowchart TB
+  STD["🟣 S3 Standard"]
+  SIA["🔵 S3 Standard-IA"]
+  IT["🟢 S3 Intelligent-Tiering"]
+  OZ["🔴 S3 One Zone-IA"]
+  GIR["🩵 Glacier Instant Retrieval"]
+  GFR["🟠 Glacier Flexible Retrieval"]
+  GDA["⬛ Glacier Deep Archive"]
+  STD --> SIA & IT & OZ & GIR & GFR & GDA
+  SIA --> IT & OZ & GIR & GFR & GDA
+  IT --> OZ & GIR & GFR & GDA
+  OZ --> GIR & GFR & GDA
+  GIR --> GFR & GDA
+  GFR --> GDA`,
+                caption: 'Waterfall menurun: setiap class boleh transition ke mana-mana tier di BAWAH (tak naik balik). Standard = puncak; Deep Archive = hujung. S3 & EFS ada lifecycle, tapi EFS max 365 hari transition — tak boleh 2 tahun (730 hari). Exam SELECT TWO: S3 Lifecycle → Standard-IA + Glacier selepas 2 tahun.',
+              },
+            ],
             scenario: '"Automatically move log files from Standard to IA after 30 days, to Glacier after 90 days, delete after 1 year" → S3 Lifecycle Policy. "Don\'t know access pattern, want S3 to auto-choose tier" → Intelligent-Tiering (bukan Lifecycle). "Clean up old versions of objects after 30 days" → Noncurrent version expiration rule.',
             tips: [
               'Lifecycle = age-based (umur object), Intelligent-Tiering = access-based (auto-detect). Pilih Lifecycle bila tahu corak access.',
@@ -6376,7 +6415,7 @@ export const domains: DomainData[] = [
             docs: [
               { label: 'S3 Lifecycle configuration', url: 'https://docs.aws.amazon.com/AmazonS3/latest/userguide/object-lifecycle-mgmt.html' },
             ],
-            keywords: ['lifecycle', 'transition rule', 'expiration rule', 'auto-move', 'auto-delete', 'age-based', 'storage class transition', 'noncurrent version', 'versioning cleanup', 'S3 lifecycle policy', 'cost optimization', 'prefix filter', 'tag filter'],
+            keywords: ['lifecycle', 'transition rule', 'expiration rule', 'auto-move', 'auto-delete', 'age-based', 'storage class transition', 'transition waterfall', 'noncurrent version', 'versioning cleanup', 'S3 lifecycle policy', 'cost optimization', 'prefix filter', 'tag filter', '2 years', '730 days', 'EFS lifecycle 365 max'],
           },
           {
             shortName: 'S3 CORS',

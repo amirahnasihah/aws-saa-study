@@ -22,13 +22,12 @@ const savedDate = (ts: number) => new Date(ts).toISOString().slice(0, 10)
 function BookmarksPageContent() {
   const searchParams = useSearchParams()
   const detailId = searchParams.get('id')
+  const { bookmarks, toggle } = useBookmarksCtx()
+  const { answers, remove: removeAnswer, clear: clearAnswers } = useAnswerBookmarksCtx()
 
   if (detailId) {
     return <BookmarkDetailClient id={detailId} />
   }
-
-  const { bookmarks, toggle } = useBookmarksCtx()
-  const { answers, remove: removeAnswer, clear: clearAnswers } = useAnswerBookmarksCtx()
 
   const saved = allServices.filter((s) => bookmarks.has(s.shortName))
   const total = saved.length + answers.length
