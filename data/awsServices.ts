@@ -3681,10 +3681,11 @@ export const domains: DomainData[] = [
             sebabApa: 'Workload on-off / tak menentu (dev-test office hours, app baru, traffic spiky) — kau tak nak bayar instance penuh 24/7 sedangkan DB selalu idle. Aurora Serverless wujud supaya capacity auto naik-turun ikut demand & boleh pause ke near-zero bila tiada traffic. Bayar per second, bukan per instance 24/7.',
             sifir: [
               'Aurora Serverless = auto-scale COMPUTE (ACU), bayar per second',
-              'v2 = default sekarang: fine-grained 0.5 ACU, NO connection drop, boleh MIX dgn provisioned',
+              '1 ACU ≈ 2 GiB memory + matching CPU/network — min 1 max 8 ACU = ~2–16 GiB range',
+              'v2 = default: fine-grained 0.5 ACU, NO connection drop, boleh MIX provisioned + serverless dalam satu cluster',
               'v1 = legacy: scale step-step, connection boleh DROP',
-              'Min 0 ACU → auto-pause/resume (scale to ~zero bila idle)',
-              'Keyword: intermittent / variable / dev-test / unpredictable',
+              'MySQL/PostgreSQL compatible — DynamoDB BUKAN MySQL (NoSQL re-architecture)',
+              'Keyword: intermittent / unpredictable / memory range known / on-prem MySQL replace → Aurora Serverless v2',
             ],
             perangkap: [
               {
@@ -3692,31 +3693,79 @@ export const domains: DomainData[] = [
                 umpan: 'Aurora Serverless v1 — orang main pilih "Serverless". SALAH: v1 boleh drop connection masa scale & tak boleh mix dgn provisioned.',
                 betul: 'Aurora Serverless v2 (no connection drop, boleh campur dgn provisioned instances).',
               },
+              {
+                soalan: 'Three-tier app — on-prem MySQL-compatible DB (2–16 GiB memory) via Site-to-Site VPN, traffic unpredictable (spike + zero activity). Nak managed service auto-scale capacity. Pilih?',
+                umpan: 'Aurora memory-optimized provisioned instance — nampak "memory-optimized = betul untuk memory range". SALAH: provisioned = FIXED capacity, tak auto-scale ikut spike/zero activity.',
+                betul: 'Aurora Serverless v2 — set min 1 ACU max 8 ACU (1 ACU ≈ 2 GiB → cover 2–16 GiB). Auto-scale compute ikut demand, MySQL-compatible. Keyword "unpredictable traffic + memory range + MySQL-compatible + managed auto-scale" → Aurora Serverless v2.',
+              },
+              {
+                soalan: 'Same stem — engineer cadang DynamoDB + auto-scaling 2–16 capacity units sebab "serverless". Betul?',
+                umpan: 'DynamoDB serverless + auto-scale — nampak betul sebab "scale dengan app". SALAH: DynamoDB = NoSQL, BUKAN MySQL-compatible; app three-tier relational kena rewrite besar.',
+                betul: 'Tak sesuai — keyword "MySQL-compatible" = Aurora/RDS, BUKAN DynamoDB. DAX pula untuk cache DynamoDB read, bukan solve relational migration.',
+              },
+              {
+                soalan: 'Same stem — RDS MySQL 4 GiB fixed memory. Cukup?',
+                umpan: 'RDS managed MySQL — nampak betul sebab MySQL-compatible. SALAH: fixed 4 GiB tak cover range 2–16 GiB & tak auto-scale bila spike/zero.',
+                betul: 'Tak cukup — provisioned RDS = saiz tetap. Nak auto-scale ikut unpredictable load → Aurora Serverless v2 dengan ACU range.',
+              },
             ],
-            scenario: '"Dev/test database hanya pakai waktu office hours", "app traffic sangat unpredictable, nak zero DB cost masa idle" → Aurora Serverless. Keywords: intermittent, variable traffic, dev/test, scale to zero.',
-            compare: {
-              label: 'Aurora Serverless v1 vs v2',
-              headers: ['Aspect', 'Serverless v1', 'Serverless v2'],
-              rows: [
-                ['Scaling', 'Steps (whole capacity-unit jumps)', '🟢 Fine-grained 0.5 ACU, fractions of a second'],
-                ['Connection drop masa scale', '🔴 Boleh drop', '🟢 Tak drop'],
-                ['Auto-pause idle', '🟢 Ya (full pause → zero)', 'Set min 0 ACU → auto-pause (newer versions)'],
-                ['Mix dgn provisioned instances', '❌ Tidak', '🟢 Ya — dalam cluster yang sama'],
-                ['Global DB / Multi-AZ / Read Replica', 'Limited', '🟢 Penuh'],
-                ['Guna bila', 'Legacy / simple intermittent', 'Current default — variable traffic, no connection drops'],
-              ],
-              takeaway: 'v2 = current default (fine-grained, no connection drops, boleh mix dgn provisioned, full features). v1 = legacy. Exam: "instant scaling tanpa drop connection" atau "mix serverless + provisioned dalam satu cluster" → Aurora Serverless v2.',
-            },
-            mermaid: {
-              label: 'Analogi aircond inverter — auto naik-turun, padam bila takde orang',
-              source: `flowchart TD
+            scenario: 'On-prem MySQL (2–16 GiB memory) via VPN, traffic unpredictable spike + zero activity → Aurora Serverless v2 min 1 max 8 ACU. Dev/test office hours only → Aurora Serverless. Keywords: intermittent, variable traffic, MySQL-compatible, memory range, auto-scale capacity.',
+            compare: [
+              {
+                label: 'Aurora Serverless v1 vs v2',
+                headers: ['Aspect', 'Serverless v1', 'Serverless v2'],
+                rows: [
+                  ['Scaling', 'Steps (whole capacity-unit jumps)', '🟢 Fine-grained 0.5 ACU, fractions of a second'],
+                  ['Connection drop masa scale', '🔴 Boleh drop', '🟢 Tak drop'],
+                  ['Auto-pause idle', '🟢 Ya (full pause → zero)', 'Set min 0 ACU → auto-pause (newer versions)'],
+                  ['Mix dgn provisioned instances', '❌ Tidak', '🟢 Ya — dalam cluster yang sama'],
+                  ['Global DB / Multi-AZ / Read Replica', 'Limited', '🟢 Penuh'],
+                  ['Guna bila', 'Legacy / simple intermittent', 'Current default — variable traffic, no connection drops'],
+                ],
+                takeaway: 'v2 = current default (fine-grained, no connection drops, boleh mix dgn provisioned, full features). v1 = legacy. Exam: "instant scaling tanpa drop connection" atau "mix serverless + provisioned dalam satu cluster" → Aurora Serverless v2.',
+              },
+              {
+                label: 'Aurora Serverless v2 vs provisioned vs DynamoDB (exam trap)',
+                headers: ['Aspect', 'Aurora Serverless v2', 'Aurora/RDS provisioned', 'DynamoDB'],
+                rows: [
+                  ['MySQL-compatible', '🟢 Ya', '🟢 Ya', '❌ NoSQL — re-architecture'],
+                  ['Compute scaling', '🟢 Auto ACU (0.5 steps)', '🔴 Fixed instance size', 'Auto RCU/WCU or On-Demand'],
+                  ['Pay model', 'Per second (ACU used)', 'Per hour (instance 24/7)', 'Per request / capacity unit'],
+                  ['Best when', 'Unpredictable / intermittent relational', 'Steady predictable OLTP', 'Key-value / ms latency NoSQL'],
+                ],
+                takeaway: '"MySQL-compatible + unpredictable traffic + auto-scale capacity" → Aurora Serverless v2. "Fixed memory OK" → provisioned. "NoSQL / key-value" → DynamoDB (BUKAN untuk ganti MySQL app).',
+              },
+            ],
+            mermaid: [
+              {
+                label: 'Aurora anatomy — compute pisah dari storage (boleh mix provisioned + serverless)',
+                source: `flowchart TB
+  subgraph COMPUTE["Compute layer — boleh campur dalam satu cluster"]
+    subgraph AZ1["Availability Zone 1"]
+      W["🔵 Provisioned Writer<br/>fixed capacity · handle writes"]
+    end
+    subgraph AZ2["Availability Zone 2"]
+      R["🟣 Serverless v2 Reader<br/>auto-scale ACU · read traffic"]
+    end
+  end
+  subgraph STORAGE["Shared storage volume — 6 copies across 3 AZs"]
+    S["🟠 Aurora distributed storage<br/>auto-grow · compute &amp; storage DECOUPLED"]
+  end
+  W <-->|"read + write"| S
+  R -->|"read"| S`,
+                caption: 'Aurora = compute & storage DECOUPLED (beza RDS biasa). Serverless v2 boleh MIX dengan provisioned writer/reader dalam cluster sama — contoh: provisioned writer (writes konsisten) + serverless reader (read spike). Storage shared & replicate 6 salinan / 3 AZ. INGAT exam: "mix provisioned + serverless" = Aurora Serverless v2 sahaja (v1 tak boleh).',
+              },
+              {
+                label: 'Analogi aircond inverter — auto naik-turun, padam bila takde orang',
+                source: `flowchart TD
   T["Traffic DB naik-turun<br/>tak menentu 📈📉"] --> SRV["Aurora Serverless v2<br/>= aircond inverter ❄️"]
   SRV -->|"ramai orang masuk"| UP["Auto scale UP<br/>0.5 ACU steps · NO connection drop"]
   SRV -->|"bilik kosong (idle)"| DOWN["Scale near-ZERO<br/>(auto-pause)"]
   UP --> PAY["💰 Bayar per SECOND<br/>ikut guna sebenar"]
   DOWN --> PAY`,
-              caption: 'Aurora Serverless = aircond inverter: auto naik bila ramai (scale fine-grained 0.5 ACU, tanpa putus connection di v2), turun near-zero bila bilik kosong (auto-pause). Bayar per second ikut guna sebenar — bukan bayar instance penuh 24/7. INGAT exam: "intermittent / unpredictable / dev-test / scale to zero / variable traffic" → Aurora Serverless (v2 = default sekarang).',
-            },
+                caption: 'Aurora Serverless = aircond inverter: auto naik bila ramai (scale fine-grained 0.5 ACU, tanpa putus connection di v2), turun near-zero bila bilik kosong (auto-pause). Bayar per second ikut guna sebenar — bukan bayar instance penuh 24/7. INGAT exam: "intermittent / unpredictable / dev-test / scale to zero / variable traffic" → Aurora Serverless (v2 = default sekarang).',
+              },
+            ],
             tips: [
               'v1 (legacy): scale dalam STEPS (whole capacity unit jumps), connections boleh DROP semasa scaling, limited engine versions',
               'v2 (current): fine-grained scaling 0.5 ACU increments dalam fractions of seconds, NO connection drops, boleh dicampur dengan provisioned Aurora instances dalam cluster yang sama',
@@ -3728,7 +3777,7 @@ export const domains: DomainData[] = [
             docs: [
               { label: 'Using Aurora serverless (v2)', url: 'https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.html' },
             ],
-            keywords: ['scale to zero', 'ACU', 'pay per second', 'intermittent', 'dev/test', 'auto-pause', 'variable traffic', 'v1 vs v2', '0.5 ACU increments', 'no connection drops'],
+            keywords: ['scale to zero', 'ACU', 'pay per second', 'intermittent', 'dev/test', 'auto-pause', 'variable traffic', 'v1 vs v2', '0.5 ACU increments', 'no connection drops', 'MySQL-compatible', '2 GiB per ACU', 'memory 2-16 GiB', 'on-premises replacement', 'unpredictable spikes', 'mix provisioned serverless'],
           },
           {
             shortName: 'DynamoDB',
@@ -4827,6 +4876,15 @@ export const domains: DomainData[] = [
               },
             ],
             mermaid: [
+              {
+                label: 'Lambda producer → SQS → Lambda consumer (throttling fix)',
+                source: `flowchart LR
+  API["🌐 API Gateway"] --> P["⚡ Lambda Producer<br/>terima JSON 5KB<br/>acknowledge cepat → return"]
+  P -->|"send messages"| Q["📮 Amazon SQS<br/>buffer burst · hold work"]
+  Q -->|"trigger (Event Source Mapping<br/>Lambda POLL & batch)"| C["⚡ Lambda Consumer(s)<br/>persist ke Aurora<br/>scale concurrent ikut queue"]
+  C --> DB["🗄️ Amazon Aurora"]`,
+                caption: 'Pattern exam klasik: app cuma perlu ACK bila request diterima, BUKAN bila siap proses. Producer campak ke SQS & return laju; consumer proses ikut kadar mampu → burst diratakan, kurang throttle (429). SNS SALAH di sini — push real-time, tak buffer, consumer masih kena hentam. INGAT: "throttling / decouple / acknowledge fast" → 2 Lambda + SQS.',
+              },
               {
                 label: 'Cara ingat — Lambda = Food Truck 🚚, EC2 = kedai 24 jam 🏪',
                 source: `flowchart TD
@@ -6981,11 +7039,25 @@ export const domains: DomainData[] = [
                 umpan: 'A (Read Replica) paling menipu — nampak "scaling RDS" terus pilih. TAPI Read Replica scale READ je (offload SELECT); ia LANGSUNG tak bantu WRITE — malah write kena replicate ke replica juga. C (upgrade instance) = vertical scaling, dah dikecualikan (bajet). D (DynamoDB) = re-architecture besar, mahal & berisiko untuk relational e-commerce, bukan "cost-effective minimal change".',
                 betul: 'B — SQS di depan RDS (queue-based load leveling): app campak write request masuk queue, consumer proses ke RDS ikut kadar yang RDS MAMPU. Lonjakan write diserap dalam queue (buffer) → RDS tak kena hentam lebih IOPS limit. Murah (SQS sen je) + tak perlu vertical scaling. Keyword "write-heavy spike / nearing IOPS limit / cost-effective / no vertical scaling" → SQS buffer writes (queue-based load leveling). INGAT: Read Replica = READ scaling, BUKAN write.',
               },
+              {
+                soalan: 'API Gateway → Lambda terima 5KB JSON, simpan ke Aurora. App cuma perlu ACK bila request diterima (bukan bila siap proses). Banyak Lambda throttle (429), terpaksa naikkan concurrent execution berkali-kali. Fix?',
+                umpan: 'Pecah 2 Lambda + SNS antara keduanya — SNS nampak "signal work" macam queue. SALAH: SNS PUSH real-time ke subscriber; bila burst, consumer Lambda masih kena hentam serentak = masih throttle.',
+                betul: 'Pecah 2 Lambda + SQS di tengah — producer enqueue & return cepat; SQS BUFFER burst; consumer poll ikut kadar (Event Source Mapping + backoff bila throttle). Keyword "acknowledge when accepted / throttling / decouple" → SQS, BUKAN SNS. DAX/DynamoDB tak selesai root cause (Lambda concurrency, bukan DB read).',
+              },
             ],
             storageDetails: 'Visibility Timeout → Message invisible semasa diproses (max 12 jam). Jika consumer mati sebelum siap → message visible semula selepas timeout\nDelay Seconds → Delay sebelum message pertama kali visible dalam queue (max 15 minit)\nDead Letter Queue (DLQ) → Message yang gagal diproses N kali dihantar ke DLQ untuk debug\nMessage Retention → Default 4 hari, max 14 hari',
             detailsLabel: 'SQS Key Concepts',
             scenario: 'Spot instance terminated masa process SQS message → message TIDAK hilang. Ia akan visible semula selepas Visibility Timeout expired. Message hanya deleted bila consumer call DeleteMessage API selepas berjaya process.',
             mermaid: [
+              {
+                label: 'Lambda producer → SQS → Lambda consumer (throttling fix)',
+                source: `flowchart LR
+  API["🌐 API Gateway"] --> P["⚡ Lambda Producer<br/>terima request · ACK cepat"]
+  P -->|"send messages"| Q["📮 Amazon SQS<br/>buffer · hold work"]
+  Q -->|"trigger (poll)"| C["⚡ Lambda Consumer(s)<br/>persist ke DB<br/>proses ikut kadar sendiri"]
+  C --> DB["🗄️ Aurora / RDS"]`,
+                caption: 'Exam pattern: pecah 1 Lambda jadi 2 — producer ACK cepat (return selepas enqueue), SQS buffer burst, consumer poll & proses ikut kadar sendiri → kurang 429 throttle. SNS SALAH: push real-time, tak buffer. DAX/DynamoDB SALAH: root cause = Lambda concurrency, bukan DB read cache. INGAT: "throttling / acknowledge when accepted / decouple" → SQS antara 2 Lambda.',
+              },
               {
                 label: 'Pilih messaging service — SQS vs SNS vs EventBridge vs Amazon MQ (decision tree)',
                 source: `flowchart TD
@@ -7089,7 +7161,7 @@ export const domains: DomainData[] = [
               { label: 'SQS — short vs long polling', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-short-and-long-polling.html' },
               { label: 'SQS — dead-letter queues', url: 'https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/sqs-dead-letter-queues.html' },
             ],
-            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push', 'S3 SQS decouple', 'async file upload', 'burst traffic buffer', 'store file S3 not DynamoDB', 'temporary file storage', 'maxReceiveCount', 'RedrivePolicy', 'DLQ redrive', 'poison pill', 'failed messages', 'isolate corrupted messages', 'dead-letter queue', 'Principal', 'source account', 'destination account', 'two keys', 'dua kunci', 'SendMessage cross-account', 'aws:PrincipalOrgID', 'queue policy JSON', 'queue-based scaling', 'ApproximateNumberOfMessagesVisible', 'backlog per task', 'custom metric scaling', 'scale on queue depth', 'pricing'],
+            keywords: ['queue', 'decouple', 'async', 'pull-based', 'visibility timeout', 'FIFO', 'DLQ', 'at-least-once', 'exactly-once', 'long polling', 'short polling', 'batch operations', 'duplicate messages', 'queue policy', 'cross-account SQS', 'resource-based policy', 'SNS SQS Lambda fan-out', 'SQS vs SNS vs EventBridge', 'pilih messaging service', 'pull vs push', 'S3 SQS decouple', 'async file upload', 'burst traffic buffer', 'store file S3 not DynamoDB', 'temporary file storage', 'maxReceiveCount', 'RedrivePolicy', 'DLQ redrive', 'poison pill', 'failed messages', 'isolate corrupted messages', 'dead-letter queue', 'Principal', 'source account', 'destination account', 'two keys', 'dua kunci', 'SendMessage cross-account', 'aws:PrincipalOrgID', 'queue policy JSON', 'queue-based scaling', 'ApproximateNumberOfMessagesVisible', 'backlog per task', 'custom metric scaling', 'scale on queue depth', 'Lambda producer consumer', 'Lambda throttling buffer', 'acknowledge when accepted', 'pricing'],
           },
           {
             shortName: 'SNS',

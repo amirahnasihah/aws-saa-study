@@ -54,7 +54,7 @@ export const triggerRows: TriggerRow[] = [
   },
   {
     id: 'lambda-throttle-sqs',
-    keywords: ['Lambda throttling 429', 'downstream overwhelmed', 'spiky traffic decouple', 'smooth out burst to Lambda'],
+    keywords: ['Lambda throttling 429', 'downstream overwhelmed', 'spiky traffic decouple', 'smooth out burst to Lambda', 'acknowledge when accepted', 'API Gateway Aurora persist', 'split Lambda SQS'],
     service: 'SQS + Lambda (decouple)',
     why: 'SQS depan Lambda serap burst + retry; Lambda poll ikut kadar sendiri. SNS push terus → tak buffer, masih throttle.',
     accent: 'c2',
@@ -261,7 +261,7 @@ export const triggerRows: TriggerRow[] = [
   },
   {
     id: 'aurora-serverless',
-    keywords: ['intermittent / spiky workload', 'unpredictable traffic', 'dev / test database', 'don\'t pay when idle', 'auto-scale capacity', 'new app unknown load'],
+    keywords: ['intermittent / spiky workload', 'unpredictable traffic', 'dev / test database', 'don\'t pay when idle', 'auto-scale capacity', 'new app unknown load', 'MySQL-compatible on-prem replace', 'memory 2-16 GiB', 'ACU min max', 'Site-to-Site VPN database migrate'],
     service: 'Aurora Serverless v2',
     why: 'Beban naik-turun / tak boleh teka / dev-test / nak jimat masa idle → Aurora Serverless auto-scale capacity (ACU) ikut load, bayar ikut guna. BUKAN Aurora provisioned (kena set instance size tetap = bazir bila idle).',
     accent: 'c2',
