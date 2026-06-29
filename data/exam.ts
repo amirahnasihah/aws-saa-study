@@ -132,6 +132,9 @@ export const studyChecklist: ChecklistSection[] = [
       'ELB stickiness (session affinity); health checks; SSL termination',
       'ASG: launch template, scaling policies (target tracking / step / scheduled), cooldown, termination policy, health-check replace',
       'Lambda (event-driven, 15-min max, cold start, concurrency) · Lambda@Edge (run at CloudFront edge) · Beanstalk (PaaS, AWS manages infra) · Outposts (AWS HW on-prem)',
+      'Lambda concurrency: reserved (cap a function) vs provisioned (pre-warm, kill cold starts) vs SnapStart (Java cold-start cut); throttle → 429, overflow to SQS/DLQ',
+      'AWS Batch (managed batch/HPC job queues, runs on Fargate or EC2/Spot) — when over plain EC2 or Lambda (long-running, many parallel jobs)',
+      'EC2 Hibernation (RAM dumped to encrypted EBS, resume app state) vs Stop/Start (cold boot); ASG predictive scaling + Capacity Rebalancing for Spot',
     ],
   },
   {
@@ -149,6 +152,8 @@ export const studyChecklist: ChecklistSection[] = [
       'EFS (managed NFS, multi-AZ, Linux, auto-scale, IA tier) vs EBS (single-AZ block, 1 instance) vs S3 (object) — when each',
       'Storage Gateway: File (NFS/SMB→S3) vs Volume (iSCSI cached/stored) vs Tape (VTL backup) — hybrid on-prem bridge',
       'AWS Backup: centralized cross-service backup plans, scheduling, retention, cross-region/cross-account copy',
+      'FSx flavors: Windows File Server (SMB + AD) vs Lustre (HPC/ML, S3-linked, high throughput) vs NetApp ONTAP vs OpenZFS — match by protocol/workload',
+      'S3 Transfer Acceleration (edge upload via CloudFront) vs Multipart Upload (large objects, parallel parts) — when each speeds uploads',
     ],
   },
   {
@@ -166,6 +171,9 @@ export const studyChecklist: ChecklistSection[] = [
       'GuardDuty (threat detection from logs) vs Inspector (EC2/ECR/Lambda vuln scan) vs Macie (S3 PII)',
       'ACM: free public certs, auto-renew; must be in us-east-1 for CloudFront',
       'RAM — what can be shared cross-account (VPC subnets, Transit Gateway, etc.)?',
+      'IAM Access Analyzer — flags resources shared outside your account/Org; validates & generates least-privilege policies',
+      'Firewall Manager — centrally apply WAF rules, Shield Advanced, Security Groups & Network Firewall across an Organization',
+      'STS — temporary credentials (AssumeRole, federation); the engine behind cross-account roles & IAM Identity Center',
     ],
   },
   {
@@ -180,6 +188,8 @@ export const studyChecklist: ChecklistSection[] = [
       'Aurora: 6 copies / 3 AZs, up to 15 replicas; Serverless v1 vs v2; Aurora Global (cross-region <1s, DR)',
       'ElastiCache Redis (persistence, replication, Multi-AZ) vs Memcached (multi-threaded, no persistence)',
       'Caching strategies: lazy loading vs write-through; session-store pattern',
+      'Purpose-built DBs: Neptune (graph), DocumentDB (MongoDB-compatible), Keyspaces (Cassandra), Timestream (time-series/IoT), QLDB (immutable ledger), MemoryDB (durable Redis) — match data model to engine',
+      'RDS Multi-AZ vs Multi-AZ DB cluster (2 readable standbys) vs Aurora (6 copies/3 AZs) — levels of HA + read scaling',
     ],
   },
   {
@@ -190,6 +200,7 @@ export const studyChecklist: ChecklistSection[] = [
       'Rekognition = image/video analysis, face detection, moderation',
       'Lex = chatbots (ASR + NLU), powers Alexa',
       'Transcribe = speech→text · Textract = doc text extraction · SageMaker = build/train/deploy',
+      'Bedrock = managed foundation models / GenAI (serverless) · Kendra = intelligent enterprise search · Personalize = recommendations · Forecast = time-series prediction · Fraud Detector = fraud scoring',
     ],
   },
   {
@@ -202,6 +213,8 @@ export const studyChecklist: ChecklistSection[] = [
       'CloudFormation: change sets, drift detection, nested stacks, StackSets (multi-account/region)',
       'Trusted Advisor 5 categories (cost, security, fault tolerance, performance, service limits)',
       'Systems Manager: Session Manager (no SSH/bastion), Parameter Store, Patch Manager, Run Command',
+      'Control Tower (landing zone, Account Factory, guardrails + account drift detection) — multi-account governance layered on Organizations',
+      'Service Catalog (curated/approved product portfolios for self-service) · License Manager (track BYOL) · Health Dashboard (service vs account events)',
     ],
   },
   {
@@ -218,6 +231,8 @@ export const studyChecklist: ChecklistSection[] = [
       'CloudFront signed URL vs S3 presigned URL — when each',
       'Global Accelerator (anycast IPs, TCP/UDP, network layer) vs CloudFront (HTTP caching)',
       'API Gateway: REST vs HTTP vs WebSocket; throttling, caching, authorizers',
+      'AWS Network Firewall — managed stateful firewall for VPC traffic (Suricata-compatible); centralized inspection VPC via GWLB for 3rd-party appliances',
+      'PrivateLink / VPC Endpoint Service — expose your service privately to other VPCs/accounts behind an NLB or GWLB (not ALB)',
     ],
   },
   {
@@ -229,6 +244,8 @@ export const studyChecklist: ChecklistSection[] = [
       'Athena — serverless SQL on S3; cost = data scanned (partition + columnar to cut it)',
       'The serverless analytics pattern: S3 + Glue + Athena + QuickSight',
       'EMR (managed Hadoop/Spark) and OpenSearch (search/log analytics) — what each is for',
+      'QuickSight (serverless BI dashboards, SPICE in-memory engine) — the visualization layer of the analytics stack',
+      'Lake Formation (data-lake setup + fine-grained S3/Glue governance) · MSK (managed Apache Kafka) · Kinesis Data Analytics / Managed Flink (SQL/Flink on streams)',
     ],
   },
   {
@@ -241,6 +258,8 @@ export const studyChecklist: ChecklistSection[] = [
       'EventBridge: event bus, rules, cron schedules, SaaS/schema integration',
       'Step Functions: orchestration; Standard vs Express',
       'Amazon MQ — when (lift-and-shift apps using MQTT/AMQP) over SQS/SNS',
+      'AppFlow — no-code data flows between SaaS (Salesforce, Slack, Zendesk) and AWS (S3/Redshift)',
+      'SQS FIFO throughput (300 msg/s, 3000 batched) + message group ID for ordering; SNS FIFO → SQS FIFO fan-out',
     ],
   },
   {
@@ -252,6 +271,9 @@ export const studyChecklist: ChecklistSection[] = [
       'ECS task role (per-task IAM)',
       'EKS (managed Kubernetes) — when over ECS',
       'ECR — container registry; Fargate as the serverless-container answer',
+      'App Runner — fully-managed: deploy a container/web app from image or repo, AWS handles scaling + load balancer + TLS',
+      'EKS networking: AWS Load Balancer Controller maps K8s Ingress → ALB (L7 path/host) and Service type LoadBalancer → NLB (L4)',
+      'ECS Anywhere / EKS Anywhere — run the AWS container control-plane experience on-prem',
     ],
   },
   {
@@ -275,6 +297,8 @@ export const studyChecklist: ChecklistSection[] = [
       'Storage cost levers: S3 lifecycle, Intelligent-Tiering (cross-ref Storage)',
       'Cost and Usage Report (CUR): most detailed line-item billing data → S3 → Athena/QuickSight for deep analysis',
       'Compute Optimizer (ML-based rightsizing) vs Trusted Advisor (broad checks: cost, security, perf, limits)',
+      'Savings Plans: Compute SP (any family/region/OS + Fargate & Lambda, up to 66%, most flexible) vs EC2 Instance SP (specific family in a region, up to 72%) vs SageMaker SP',
+      'Reserved Instances: Standard (≤72%, modify only) vs Convertible (≤54%, swap family/OS); Regional (AZ-flexible) vs Zonal (reserves capacity in an AZ)',
     ],
   },
 ]

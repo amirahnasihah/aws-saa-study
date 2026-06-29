@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import { registerSteps, delivery, deliveryAccent, duringTesting, studyChecklist, checklistStatus } from '@/data/exam'
+import { domains as deepNoteDomains, serviceSlug } from '@/data/awsServices'
 
 export const metadata: Metadata = {
   title: 'Exam Guide — AWS SAA-C03 Study',
@@ -77,6 +78,10 @@ const quickFacts = [
   { label: 'Delivery', value: 'Pearson VUE center or OnVUE online' },
   { label: 'Languages', value: 'EN, JA, KO, ZH-CN, ES, PT-BR, FR, IT' },
 ] as const
+
+// Deep-note domain `variant` (d1–d4) → the same accent token the exam card uses,
+// so the service index colours line up with the domain-weighting bars above.
+const variantAccent: Record<'d1' | 'd2' | 'd3' | 'd4', Domain['accent']> = { d1: 'c3', d2: 'c4', d3: 'c2', d4: 'c5' }
 
 const accentText: Record<Domain['accent'], string> = { c3: 'text-c3', c4: 'text-c4', c2: 'text-c2', c5: 'text-c5' }
 const accentBar: Record<Domain['accent'], string> = { c3: 'bg-c3', c4: 'bg-c4', c2: 'bg-c2', c5: 'bg-c5' }
@@ -358,6 +363,80 @@ export default function ExamGuidePage() {
             Don&apos;t move on from a §5–§14 section until its quiz is ≥80%. Sources:{' '}
             <Link href="/glossary" className="text-c1 hover:underline">glossary</Link> ·{' '}
             <Link href="/practice" className="text-c1 hover:underline">practice</Link>.
+          </p>
+        </section>
+
+        {/* Service index — every service by domain → section (table of contents) */}
+        <section className="mt-12">
+          <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-c1 mb-2">
+            Service index
+          </p>
+          <h2 className="text-xl font-bold text-aws-text mb-1">Every service, by domain</h2>
+          <p className="text-sm text-aws-muted leading-relaxed max-w-[520px] mb-5">
+            The full map: the four exam domains → their sections → every AWS service in
+            Deep Notes. Tap any service to jump straight to its card.
+          </p>
+
+          <div className="space-y-4">
+            {deepNoteDomains
+              .filter((d) => d.badge.includes('OF EXAM'))
+              .map((d) => {
+                const accent = variantAccent[d.variant]
+                const weight = d.badge.match(/(\d+)%/)?.[1]
+                const total = d.sections.reduce((n, s) => n + s.services.length, 0)
+                return (
+                  <div key={d.id} className="rounded-xl border border-aws-border bg-aws-card/60 p-5">
+                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-aws-border">
+                      <span className={`font-space-mono text-[0.7rem] font-bold ${accentText[accent]}`}>
+                        {d.variant.toUpperCase()}
+                      </span>
+                      {weight && (
+                        <span className={`font-space-mono text-[0.58rem] ${accentText[accent]}`}>{weight}%</span>
+                      )}
+                      <span className="w-px h-3 bg-aws-border shrink-0" />
+                      <h3 className="text-sm font-bold text-aws-text leading-tight min-w-0">{d.title}</h3>
+                      <span className="ml-auto font-space-mono text-[0.5rem] text-aws-muted shrink-0">
+                        {total} services
+                      </span>
+                    </div>
+                    <div className="space-y-3">
+                      {d.sections.map((s) => (
+                        <div key={s.id}>
+                          <p className="font-space-mono text-[0.58rem] text-aws-muted mb-1.5 flex items-center gap-1.5">
+                            <span aria-hidden>{s.icon}</span>
+                            <span className="uppercase tracking-wide">{s.title}</span>
+                            <span className="text-aws-muted/50">· {s.services.length}</span>
+                          </p>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-1.5">
+                            {s.services.map((svc) => (
+                              <Link
+                                key={svc.shortName}
+                                href={`/learn#${serviceSlug(s.id, svc.shortName)}`}
+                                className="group block rounded-lg -mx-2 px-2 py-1 hover:bg-white/5 transition-colors"
+                              >
+                                <span className="flex items-baseline gap-1.5">
+                                  <span className={`font-space-mono text-[0.6rem] font-bold shrink-0 ${accentText[accent]} group-hover:underline`}>
+                                    {svc.shortName}
+                                  </span>
+                                  <span className="text-[0.58rem] text-aws-muted/60 truncate">{svc.fullName}</span>
+                                </span>
+                                <span className="block text-[0.65rem] text-aws-muted leading-snug mt-0.5">
+                                  {svc.gunaUntuk}
+                                </span>
+                              </Link>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+          </div>
+
+          <p className="font-space-mono text-[0.53rem] text-aws-muted mt-3">
+            Generated from the Deep Notes catalog — every card is linked. Browse the full set at{' '}
+            <Link href="/learn" className="text-c1 hover:underline">Deep Notes</Link>.
           </p>
         </section>
 
