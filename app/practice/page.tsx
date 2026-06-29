@@ -5,7 +5,7 @@ import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import KeywordHighlightedText from '@/components/practice/KeywordHighlightedText'
 import PracticeQuestionHint from '@/components/practice/PracticeQuestionHint'
-import { practiceQuestions, PracticeQuestion } from '@/data/practiceQuestions'
+import type { PracticeQuestion } from '@/data/practiceQuestions'
 import { PRACTICE_SESSION_KEY, readSessionJson, writeSessionJson } from '@/lib/ai/session-persist'
 import { setPracticeQuestionPickerOpen } from '@/lib/practice-picker'
 
@@ -83,7 +83,7 @@ export default function PracticePage() {
   // True while the questions fetch should restore position/answer state instead of resetting it.
   const skipNextResetRef = useRef(false)
 
-  const [questions, setQuestions] = useState<PracticeQuestion[]>(practiceQuestions)
+  const [questions, setQuestions] = useState<PracticeQuestion[]>([])
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [mode, setMode] = useState<PageMode>('quiz')
   const [currentIndex, setCurrentIndex] = useState(0)
@@ -158,22 +158,17 @@ export default function PracticePage() {
         return null
       })
       .catch(() => {
-        let qs = [...practiceQuestions]
-        if (filters.source !== 'all') qs = qs.filter((q) => q.source === filters.source)
-        if (filters.domain !== 'all') qs = qs.filter((q) => q.domain === filters.domain)
-        if (filters.difficulty !== 'all') qs = qs.filter((q) => q.difficulty === filters.difficulty)
-        if (filters.set === 'pt')      qs = qs.filter((q) => /^wz\d/.test(q.id))
-        if (filters.set === 'section') qs = qs.filter((q) => q.id.startsWith('wzs'))
-        if (filters.set === 'final')   qs = qs.filter((q) => q.id.startsWith('wzf'))
-        const finalQs = qs.length ? qs : practiceQuestions
-        setQuestions(filters.shuffle ? shuffleArray(finalQs) : finalQs)
-        return finalQs
+        // /api/questions (Cloudflare D1) is the source of truth on the edge.
+        // No client-side static fallback is shipped; on failure just clear so the
+        // loading guard shows rather than rendering stale/undefined state.
+        setQuestions([])
+        return null
       })
       .then((qs) => {
         if (skipNextResetRef.current) {
           // Restoring a session: keep the persisted position/answer state, just clamp it to bounds.
           skipNextResetRef.current = false
-          const total = qs?.length ?? practiceQuestions.length
+          const total = qs?.length ?? 0
           setCurrentIndex((i) => Math.min(Math.max(i, 0), Math.max(total - 1, 0)))
         } else {
           setCurrentIndex(0)
@@ -185,8 +180,8 @@ export default function PracticePage() {
       })
   }, [filters])
 
-  const q = questions[Math.min(currentIndex, questions.length - 1)]
-  const isCorrect = selected === q.correctId
+  const q = questions.length ? questions[Math.min(currentIndex, questions.length - 1)] : null
+  const isCorrect = q ? selected === q.correctId : false
 
   const handleSelect = useCallback((id: string) => {
     if (quizState === 'revealed') return
@@ -225,6 +220,21 @@ export default function PracticePage() {
   }, [handleRestart])
 
   const inSession = (mode === 'quiz' && !finished) || mode === 'review'
+
+  if (!q) {
+    return (
+      <>
+        <Nav activePage="practice" />
+        <main className="mx-auto max-w-[1280px] px-4 pt-[calc(3.5rem+1.5rem)] pb-28">
+          <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3 text-aws-muted">
+            <div className="w-8 h-8 border-2 border-aws-border border-t-aws-orange rounded-full animate-spin" />
+            <p className="font-space-mono text-xs">Loading questions…</p>
+          </div>
+        </main>
+        <SiteFooter tagline="AWS SAA-C03 · Practice Questions · Good luck! 💪" />
+      </>
+    )
+  }
 
   return (
     <>

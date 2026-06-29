@@ -1,63 +1,21 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { domains, categoryStyles, ColorCategory, serviceSlug } from '@/data/awsServices'
+import { categoryStyles, type ColorCategory } from '@/data/awsServices'
 
+// Search now runs server-side via /api/search so the full awsServices `domains`
+// dataset (1.2 MB) is NOT shipped to the client bundle. The modal only renders the
+// small JSON results the edge route returns.
 interface SearchResult {
   shortName: string
   fullName: string
-  ingat: string
   domainBadge: string
-  domainVariant: string
+  domainVariant: 'd1' | 'd2' | 'd3' | 'd4'
   slug: string
   sectionTitle: string
   sectionIcon: string
   category: ColorCategory
-  // Lowercased fields kept SEPARATE (not one joined blob) so the scorer can rank
-  // a title hit above a body hit — a blob loses which field actually matched.
-  shortLower: string
-  fullLower: string
-  keywordsLower: string
-  descLower: string
-}
-
-const searchIndex: SearchResult[] = domains.flatMap((domain) =>
-  domain.sections.flatMap((section) =>
-    section.services.map((service) => ({
-      shortName: service.shortName,
-      fullName: service.fullName,
-      ingat: service.ingat,
-      domainBadge: domain.badge.split('·')[0].trim(),
-      domainVariant: domain.variant,
-      slug: serviceSlug(section.id, service.shortName),
-      sectionTitle: section.title,
-      sectionIcon: section.icon,
-      category: section.category,
-      shortLower: service.shortName.toLowerCase(),
-      fullLower: service.fullName.toLowerCase(),
-      keywordsLower: (service.keywords ?? []).join(' ').toLowerCase(),
-      descLower: [service.fungsi, service.contohGuna ?? '', service.scenario ?? '']
-        .join(' ')
-        .toLowerCase(),
-    }))
-  )
-)
-
-// Relevance score for a result vs a lowercased query. Title (shortName) hits
-// beat fullName hits beat keyword hits beat description hits — so an exact
-// service name like "efs" floats to the top even though many other cards
-// mention EFS in their body. Returns -1 for no match (filtered out).
-function scoreResult(r: SearchResult, q: string): number {
-  if (r.shortLower === q) return 1000
-  if (r.shortLower.startsWith(q)) return 900
-  if (r.shortLower.includes(q)) return 800
-  if (r.fullLower === q) return 700
-  if (r.fullLower.startsWith(q)) return 600
-  if (r.fullLower.includes(q)) return 500
-  if (r.keywordsLower.includes(q)) return 300
-  if (r.descLower.includes(q)) return 100
-  return -1
 }
 
 const domainColors: Record<string, string> = {
@@ -74,22 +32,38 @@ interface SearchModalProps {
 
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('')
+  const [results, setResults] = useState<SearchResult[]>([])
   const [active, setActive] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const pathname = usePathname()
 
-  const results = useMemo(() => {
+  // Debounced server search — only fires after the user stops typing for ~120ms,
+  // and aborts in-flight requests when the query changes (AbortController).
+  useEffect(() => {
     const q = query.toLowerCase().trim()
-    if (q.length === 0) return []
-    return searchIndex
-      .map((r) => ({ r, score: scoreResult(r, q) }))
-      .filter((x) => x.score >= 0)
-      // best score first; tie-break by shorter name (closer to an exact hit)
-      .sort((a, b) => b.score - a.score || a.r.shortName.length - b.r.shortName.length)
-      .slice(0, 8)
-      .map((x) => x.r)
+    if (q.length === 0) {
+      setResults([])
+      setActive(0)
+      return
+    }
+    const controller = new AbortController()
+    const t = setTimeout(() => {
+      fetch(`/api/search?q=${encodeURIComponent(query)}`, { signal: controller.signal })
+        .then((r) => (r.ok ? r.json() : []))
+        .then((data: unknown) => {
+          setResults(Array.isArray(data) ? (data as SearchResult[]) : [])
+          setActive(0)
+        })
+        .catch(() => {
+          // aborted or network error — leave current results untouched
+        })
+    }, 120)
+    return () => {
+      clearTimeout(t)
+      controller.abort()
+    }
   }, [query])
 
   const navigate = useCallback((result: SearchResult) => {
