@@ -412,6 +412,15 @@ export const triggerRows: TriggerRow[] = [
     domain: 'D3 · High-Perf',
     slug: 'd3-analytics-aws-ai-ml-services',
   },
+  {
+    id: 'aurora-invoke-lambda',
+    keywords: ['Aurora DB invoke Lambda synchronously/asynchronously', 'trigger Lambda from Aurora DB cluster', 'mysql.lambda_async / lambda_sync', 'Aurora call Lambda function from stored procedure', 'database event-driven to Lambda'],
+    service: 'IAM Role on AURORA (lambda:InvokeFunction) + SG direction',
+    why: 'SIAPA mulakan aksi (actor) = dia yang pakai kuasa. Aurora DB yang nak panggil Lambda → IAM Role dengan lambda:InvokeFunction ATTACH dekat AURORA cluster (BUKAN dekat Lambda). Network: Security Group menjaga dari mana arah request BERMULA. Bila Lambda dalam VPC: SG Aurora OUTBOUND allow ke Lambda, SG Lambda INBOUND allow dari SG Aurora (port 443, AWS API endpoint). Jangan terbalik arah SG, dan jangan attach IAM ke Lambda (Lambda penerima, bukan pemanggil).',
+    accent: 'c1',
+    domain: 'D2 · Resilient',
+    slug: 'd2-ha-aurora',
+  },
 ]
 
 // ── Pokok keputusan (decision tree) ─────────────────────────────────────────
@@ -807,5 +816,13 @@ export const trapRows: TrapRow[] = [
   {
     bait: 'Rekognition Facial Analysis untuk detect animals via facial features',
     fix: 'Facial Analysis direka untuk MUKA MANUSIA (emosi, umur, jantina, landmark). Bukan untuk haiwan langsung. Kenal objek/haiwan → Object/Scene Detection (generik) atau Custom Labels (spesifik).',
+  },
+  {
+    bait: 'Attach IAM Role ke Lambda dengan lambda:InvokeFunction (sebab Lambda yang dipanggil)',
+    fix: 'TERBALIK. Aurora DB yang MEMULAKAN panggilan = actor, jadi IAM Role (lambda:InvokeFunction) attach dekat AURORA cluster, BUKAN Lambda. Lambda cuma penerima. Prinsip: siapa mula aksi, dia pakai pasport kuasa.',
+  },
+  {
+    bait: 'Set Inbound rule kat SG Aurora + Outbound rule kat SG Lambda (sebab "Aurora akses Lambda")',
+    fix: 'TERBALIK arah SG. Security Group jaga dari mana request BERMULA. Aurora MULAKAN outbound → SG Aurora perlu OUTBOUND allow ke Lambda; SG Lambda perlu INBOUND allow dari SG Aurora (port 443). Kalau Lambda dalam VPC sahaja (VPC-enabled). Lambda non-VPC (default) takde SG inbound — invoke guna AWS API endpoint, cukup IAM Role pada Aurora je.',
   },
 ]
