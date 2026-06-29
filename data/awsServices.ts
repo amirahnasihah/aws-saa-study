@@ -6501,16 +6501,22 @@ export const domains: DomainData[] = [
             shortName: 'NLB',
             fullName: 'Network Load Balancer',
             ingat: '"Traffic director — ultra laju, Layer 4, static IP"',
-            gunaUntuk: 'TCP/UDP, low latency, static IP, cross-VPC with IP targets',
-            fungsi: 'Mengagihkan traffic TCP/UDP pada Layer 4 dengan latency sangat rendah. Seperti ALB, NLB juga boleh route ke instances dalam peered VPCs menggunakan IP address targets.',
-            contohGuna: 'Gaming servers, IoT, VoIP. Cross-VPC: NLB dengan IP targets route ke instances dalam peered VPCs.',
-            sebabApa: 'Wujud sebab ada workload yang BUKAN HTTP (game server, VoIP, IoT, database protocol) dan perlukan kelajuan ekstrem + satu static IP yang firewall pelanggan boleh whitelist. ALB tak boleh — dia HTTP-only dan takde static IP. NLB beroperasi di Layer 4 (TCP/UDP), boleh handle berjuta connection per saat dengan latency super rendah, dan bagi Elastic IP tetap. Tujuan: load balancing untuk protocol bukan-HTTP, performance ekstrem, dan static IP.',
+            gunaUntuk: 'TCP/UDP, low latency, static IP, PrivateLink endpoint service, cross-VPC with IP targets',
+            fungsi: 'Bayangkan NLB macam tukang pos kilat yang TAK buka surat: dia agih connection TCP/UDP pada Layer 4 (tak baca isi HTTP/URL langsung) dengan latency super rendah dan boleh telan jutaan connection sesaat. Lawan ALB yang "baca surat rujukan" (URL path/host), NLB cuma tengok IP + port lalu hantar paket mentah ke target group secepat kilat. Bonus: dia bagi static / Elastic IP tetap per AZ (ALB takde — DNS name je), jadi firewall pelanggan boleh whitelist IP tu. Dia juga satu-satunya LB (selain GWLB) yang boleh jadi "muka depan" untuk VPC Endpoint Service (PrivateLink).',
+            contohGuna: 'Game server, VoIP, IoT/MQTT, database, high-frequency trading, WebSocket. Front untuk VPC Endpoint Service (PrivateLink) supaya service kau boleh dishare private ke VPC/account lain. Cross-VPC via IP targets.',
+            detailsLabel: 'Anatomy NLB — Listener (L4) → Target Group → Targets (+ static IP & idle timeout)',
+            storageDetails: 'Listener → dengar pada protokol Layer 4: TCP, UDP, TCP_UDP, atau TLS (+ QUIC). TIADA "Rules path/host" macam ALB — NLB tak baca HTTP. TLS listener boleh terminate SSL guna ACM cert (offload decrypt dari target).\nTarget Group → bakul target; protokol TCP/UDP/TCP_UDP/TLS/QUIC. Health check PER target group, boleh guna TCP, HTTP, atau HTTPS (boleh ketuk path /health walaupun NLB sendiri L4).\nTargets → 3 jenis: instance (EC2 by ID), ip (peered VPC / on-prem via DX/VPN), atau ALB (NLB boleh daftar ALB sebagai target → dapat static IP + L7 path routing serentak). ASG daftar/drain automatik.\nStatic IP → satu IP per AZ; boleh assign Elastic IP tetap. Ini yang ALB TAKDE.\nIdle timeout → TCP flow default 350s, BOLEH ubah 60–6000s (listener attribute). TLS listener = 350s, TAK boleh ubah.',
+            sebabApa: 'Wujud sebab ada workload yang BUKAN HTTP (game server, VoIP, IoT, database protocol) dan perlukan kelajuan ekstrem + satu static IP yang firewall pelanggan boleh whitelist. ALB tak boleh — dia HTTP-only dan takde static IP. NLB beroperasi di Layer 4 (TCP/UDP), boleh handle berjuta connection per saat dengan latency super rendah, bagi Elastic IP tetap, dan preserve source IP client. Lagi satu sebab penting: kalau kau nak EXPOSE service kau secara private ke VPC/account orang lain guna AWS PrivateLink (VPC Endpoint Service), kau WAJIB letak NLB (atau GWLB) sebagai muka depan — ALB tak layak. Tujuan: load balancing untuk protocol bukan-HTTP, performance ekstrem, static IP, dan jadi pintu PrivateLink.',
             sifir: [
-              'NLB = Layer 4 (TCP/UDP/TLS), ultra-low latency, jutaan req/s',
-              'NLB = ada static / Elastic IP per AZ. ALB = takde (DNS name je)',
-              'NLB preserve client IP terus. ALB guna X-Forwarded-For header',
+              'NLB = Layer 4 (TCP/UDP/TLS/QUIC), ultra-low latency, jutaan conn/saat',
+              'NLB = static / Elastic IP per AZ. ALB = takde (DNS name je)',
+              'NLB preserve client/source IP terus (no header). ALB guna X-Forwarded-For',
               'NLB cross-zone OFF by default (enable = caj data inter-AZ). ALB sentiasa ON & free',
-              'Bukan HTTP / perlu static IP / extreme perf → NLB. HTTP routing pintar → ALB',
+              'VPC Endpoint Service (PrivateLink) WAJIB depan NLB atau GWLB — BUKAN ALB',
+              'NLB idle timeout TCP = 350s default, boleh ubah 60–6000s. TLS listener = 350s fixed',
+              'NLB TLS listener boleh terminate SSL (ACM cert) — offload decrypt dari target',
+              'NLB boleh daftar ALB sebagai target → static IP + L7 path routing serentak',
+              'Bukan HTTP / static IP / extreme perf / PrivateLink → NLB. HTTP routing pintar → ALB',
             ],
             perangkap: [
               {
@@ -6518,17 +6524,74 @@ export const domains: DomainData[] = [
                 umpan: 'ALB dan baca header X-Forwarded-For untuk dapat client IP. Nampak betul sebab XFF memang cara biasa dapat client IP belakang LB.',
                 betul: 'NLB — ia preserve source/client IP secara native (target nampak IP client sebenar terus), tanpa perlu parse header. Plus client guna TCP, jadi NLB (L4) lebih sesuai dari ALB (L7 HTTP). Keyword "preserve client IP + TCP" → NLB.',
               },
+              {
+                soalan: 'Syarikat SaaS nak EXPOSE service mereka secara PRIVATE kepada VPC pelanggan lain (merentas account) guna AWS PrivateLink — pelanggan akses via interface endpoint tanpa lalu internet. Load balancer mana letak depan service tu?',
+                umpan: 'ALB — sebab service tu HTTP-based dan ALB paling biasa untuk web. Nampak betul sebab "service web → ALB".',
+                betul: 'NLB. VPC Endpoint Service (PrivateLink) WAJIB guna NLB atau GWLB sebagai front — ALB TAK boleh jadi muka depan endpoint service. Kalau betul-betul perlu L7 routing, daftar ALB sebagai TARGET di belakang NLB. Keyword "PrivateLink / endpoint service / expose service privately to other VPCs" → NLB (bukan ALB).',
+              },
+              {
+                soalan: 'Aplikasi long-lived TCP (database / streaming) di belakang NLB putus connection lepas ~6 minit idle, padahal protokol ni patut kekal terbuka lama. Cara paling mudah betulkan tanpa tukar load balancer?',
+                umpan: 'Tukar ke ALB sebab "NLB idle timeout 350s fixed, tak boleh ubah". Nampak betul sebab dulu memang NLB TCP idle timeout terkunci.',
+                betul: 'Naikkan TCP idle timeout pada NLB listener — sekarang BOLEH ubah 60–6000 saat (attribute tcp.idle_timeout.seconds), default 350s. Tak payah tukar LB. Nota: idle timeout untuk TLS listener pula KEKAL 350s (tak boleh ubah). Keyword "long-lived TCP connection dropped on NLB" → naikkan TCP idle timeout (TCP listener je).',
+              },
             ],
+            scenario: '"Preserve client source IP + TCP/UDP" → NLB (native, no XFF). "Static IP / Elastic IP untuk firewall whitelist" → NLB (ALB takde). "Expose service private ke VPC/account lain via PrivateLink / VPC Endpoint Service" → NLB (atau GWLB) sebagai front, BUKAN ALB. "Extreme performance / millions of req/s / lowest latency / gaming / IoT" → NLB. "Long-lived TCP connection putus masa idle" → naikkan NLB TCP idle timeout (60–6000s). Untuk ALB vs NLB vs GWLB family compare, lihat card ALB (anchor).',
+            mermaid: [
+              {
+                label: 'NLB sebagai front PrivateLink (VPC Endpoint Service)',
+                source: `flowchart LR
+  subgraph CON["🛒 Consumer VPC (account lain)"]
+    EP["Interface VPC Endpoint<br/>(ENI + private IP)"]
+  end
+  subgraph PROV["🏪 Provider VPC (service kau)"]
+    NLB["🔵 NLB<br/>(WAJIB — ALB tak boleh)"]
+    TG["Target Group"]
+    APP["EC2 / ECS / IP targets<br/>(service sebenar)"]
+  end
+  USER["Consumer app"] --> EP
+  EP -. "AWS PrivateLink<br/>(private, tak lalu internet)" .-> NLB
+  NLB --> TG --> APP`,
+                caption: 'PrivateLink = cara expose service private ke VPC/account lain tanpa lalu internet. Provider WAJIB letak NLB (atau GWLB) sebagai muka depan endpoint service — ALB TAK layak jadi front. Consumer akses via interface endpoint (ENI dengan private IP). INGAT exam: "expose service privately / PrivateLink / endpoint service" → NLB front, BUKAN ALB.',
+              },
+              {
+                label: 'NLB TLS listener — terminate vs passthrough',
+                source: `flowchart TD
+  C["Client (HTTPS/TLS)"] --> L{"NLB listener protokol?"}
+  L -->|"TLS (terminate)"| T["NLB decrypt guna ACM cert<br/>→ hantar plaintext ke target<br/>(offload CPU dari server)"]
+  L -->|"TCP (passthrough)"| P["NLB hantar TLS mentah<br/>→ target sendiri decrypt<br/>(end-to-end encryption)"]`,
+                caption: 'NLB TLS listener = terminate SSL kat NLB (pasang ACM cert, offload decrypt dari target) — jimat CPU server. NLB TCP listener = passthrough, hantar TLS mentah sampai target untuk end-to-end encryption (target yang decrypt). INGAT exam: "offload SSL at LB for TCP app" → NLB TLS listener; "end-to-end encryption, target must decrypt" → NLB TCP passthrough.',
+              },
+            ],
+            compare: {
+              label: 'NLB TLS listener — terminate vs TCP passthrough',
+              headers: ['Aspect', 'TLS listener (terminate)', 'TCP listener (passthrough)'],
+              rows: [
+                ['SSL decrypt di mana', 'Kat NLB (ACM cert)', 'Kat target (server)'],
+                ['Cert duduk mana', 'NLB (ACM)', 'Target sendiri urus'],
+                ['Beban CPU decrypt', 'NLB tanggung (offload server)', 'Server tanggung'],
+                ['Encryption', 'Client→NLB encrypted; NLB→target plaintext', 'End-to-end (client→target)'],
+                ['Bila guna', 'Offload SSL, urus cert terpusat', 'Compliance / mesti end-to-end encrypted'],
+              ],
+              takeaway: 'TLS listener = NLB terminate SSL (offload CPU server, cert kat ACM). TCP passthrough = target decrypt sendiri (end-to-end encryption). INGAT exam: "offload SSL at LB + TCP" → NLB TLS listener; "end-to-end / target must see encrypted" → TCP passthrough. Untuk ALB vs NLB vs GWLB, lihat card ALB.',
+            },
             tips: [
-              'NLB = static IP/Elastic IP support. ALB = tiada static IP (guna static IP alias CloudFront/Global Accelerator)',
-              'NLB dan ALB BOLEH route cross-VPC via IP targets. CLB TIDAK boleh',
-              'NLB preserve client IP address. ALB tidak (guna X-Forwarded-For header)',
-              'PRICING: NLB = $0.0225/jam + $0.006/NLCU-jam — per-unit LEBIH MURAH dari ALB ($0.008/LCU-jam). Cross-zone OFF by default; enable = caj data inter-AZ $0.01/GB. Cost discriminator: "cheapest LB per unit + TCP" → NLB. Untuk ALB vs NLB vs GWLB harga penuh, lihat card ALB.',
+              'Anatomy: Listener (TCP/UDP/TCP_UDP/TLS/QUIC) → Target Group (health check di sini) → Targets. TIADA Rules path/host macam ALB — NLB L4 tak baca HTTP.',
+              'Target types: instance (EC2 by ID), ip (peered VPC / on-prem via DX/VPN), atau ALB-as-target (NLB depan ALB = static IP + L7 routing serentak). Health check boleh TCP/HTTP/HTTPS walaupun NLB L4.',
+              'NLB = static IP/Elastic IP per AZ. ALB = tiada static IP (kalau nak static IP untuk ALB, letak ALB belakang NLB, atau guna Global Accelerator).',
+              'NLB dan ALB BOLEH route cross-VPC via IP targets. CLB TIDAK boleh.',
+              'NLB preserve client/source IP secara native — target nampak IP client sebenar. ALB tidak (guna X-Forwarded-For header).',
+              'PrivateLink: VPC Endpoint Service WAJIB depan NLB atau GWLB. ALB TAK boleh jadi front endpoint service — kalau perlu L7, daftar ALB sebagai target belakang NLB. "expose service private ke VPC/account lain" → NLB + endpoint service.',
+              'Idle timeout: NLB TCP flow default 350s, BOLEH ubah 60–6000s (attribute tcp.idle_timeout.seconds pada listener). TLS listener = 350s, TAK boleh ubah. "long-lived TCP connection dropped" → naikkan TCP idle timeout. (ALB idle timeout default 60s, configurable 1–4000s.)',
+              'TLS termination: NLB TLS listener boleh decrypt SSL guna ACM cert (offload dari target). TCP listener = passthrough (end-to-end, target decrypt sendiri).',
+              'Cross-zone: NLB OFF by default — setiap node hantar ke target dalam AZ sendiri je; enable cross-zone = caj data inter-AZ ($0.01/GB). ALB cross-zone SENTIASA ON & free. "NLB cross-zone" → disabled default + ada caj inter-AZ.',
+              'PRICING: NLB = $0.0225/jam + $0.006/NLCU-jam — per-unit LEBIH MURAH dari ALB ($0.008/LCU-jam). Cost discriminator: "cheapest LB per unit + TCP" → NLB. Untuk ALB vs NLB vs GWLB harga penuh, lihat card ALB.',
             ],
             docs: [
-              { label: 'NLB User Guide', url: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html' },
+              { label: 'What is a Network Load Balancer?', url: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/network/introduction.html' },
+              { label: 'NLB TCP idle timeout', url: 'https://docs.aws.amazon.com/elasticloadbalancing/latest/network/update-idle-timeout.html' },
+              { label: 'Create a PrivateLink endpoint service', url: 'https://docs.aws.amazon.com/vpc/latest/privatelink/create-endpoint-service.html' },
             ],
-            keywords: ['TCP', 'UDP', 'layer 4', 'static IP', 'IP targets', 'cross-VPC', 'low latency'],
+            keywords: ['TCP', 'UDP', 'TCP_UDP', 'TLS', 'QUIC', 'layer 4', 'static IP', 'Elastic IP', 'IP targets', 'cross-VPC', 'low latency', 'millions of requests', 'preserve source IP', 'preserve client IP', 'PrivateLink', 'VPC Endpoint Service', 'endpoint service', 'NLB front', 'TLS termination', 'TLS passthrough', 'idle timeout', 'tcp.idle_timeout.seconds', 'long-lived connection', 'cross-zone load balancing', 'ALB as target', 'health check', 'gaming', 'IoT', 'VoIP', 'pricing'],
           },
           {
             shortName: 'Route 53',
