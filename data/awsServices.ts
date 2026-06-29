@@ -4738,32 +4738,70 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Serverless, event-driven',
             fungsi: 'Melaksanakan kod tanpa perlu mengurus server',
             sebabApa: "Untuk kerja kecil & event-driven (resize image bila upload, handle webhook), sewa EC2 24/7 = bayar walau idle + kena patch/scale server sendiri. Lambda wujud supaya kau hantar code je, AWS run bila ada event, scale auto, dan kau bayar HANYA bila code jalan (scale to zero bila takda trafik). Pain yang ia buang: tak payah provision/patch/scale server untuk kerja pendek bersifat event-driven.",
-            sifir: ["Lambda = serverless event-driven; bayar bila run je (scale to zero)", "Maks 15 minit (900s) per invocation; lebih lama → Fargate / AWS Batch / Step Functions", "Memory 128MB–10,240MB; CPU naik IKUT memory (1,769MB = 1 vCPU penuh)", "Reserved Concurrency = cap/jamin kuota (PERCUMA, masih cold start); Provisioned Concurrency = buang cold start (BAYAR)", "Default 1,000 concurrent execution/region (soft); /tmp 512MB default sampai 10GB"],
-            perangkap: [{"soalan": "API latency-sensitive ada spike trafik boleh dijangka pagi setiap hari, mesti respond tanpa cold start. Pilih apa?", "umpan": "Reserved Concurrency — bunyi macam 'reserve capacity siap sedia', tapi Reserved cuma HADKAN/jamin kuota, MASIH ada cold start.", "betul": "Provisioned Concurrency — keyword 'no cold start / pre-warmed / predictable spike' = Provisioned Concurrency."}, {"soalan": "Job pemprosesan ambil masa 30 minit setiap run. Lambda sesuai ke?", "umpan": "Ya, tambah memory & Provisioned Concurrency — orang ingat naik resource boleh extend masa, tapi hard limit 15 min tetap kekal.", "betul": "TIDAK — Lambda hard cap 15 minit. Keyword '>15 min / long-running' → Fargate, AWS Batch, atau Step Functions."}],
+            sifir: ["Lambda = serverless event-driven; bayar bila run je (scale to zero)", "Maks 15 minit (900s) per invocation; lebih lama → Fargate / AWS Batch / Step Functions", "Memory 128MB–10,240MB; CPU naik IKUT memory (1,769MB = 1 vCPU penuh)", "Reserved Concurrency = cap/jamin kuota (PERCUMA, masih cold start); Provisioned Concurrency = buang cold start (BAYAR per jam)", "SnapStart = snapshot env yang dah init → resume sub-second; Java 11+/Python 3.12+/.NET 8+ SAHAJA (no Node/Ruby/container), murah", "Default 1,000 concurrent execution/region (soft); /tmp 512MB default sampai 10GB", "Throttle (429) masa burst? Letak SQS depan Lambda → buffer burst, smooth → no throttle (SNS tak buffer)"],
+            perangkap: [{"soalan": "App Java event-driven kerap kena cold start & outlier latency. Nak kurangkan dengan kos PALING rendah (most cost-effective). Pilih apa?", "umpan": "Provisioned Concurrency — ia memang hapus cold start, TAPI bayar per jam walau idle = mahal, jadi bukan 'most cost-effective'.", "betul": "Lambda SnapStart — Java/Python/.NET + cold start + cost-effective = SnapStart (snapshot env yang dah init, murah). Provisioned Concurrency baru relevan kalau runtime Node/Ruby/container ATAU perlu strict zero cold start."}, {"soalan": "API Gateway → Lambda terima JSON, simpan ke Aurora. Banyak throttling error masa burst, terpaksa naikkan concurrent execution berkali-kali. Macam mana scale elok?", "umpan": "Pecah jadi 2 function + SNS antara keduanya — SNS push TERUS, tak buffer, jadi burst masih banjir function kedua = masih throttle.", "betul": "Pecah jadi 2 function + SQS di tengah — SQS BUFFER burst, Lambda poll ikut kadar yang dia mampu → smooth, no throttle. Keyword 'throttling / decouple / buffer burst' = SQS, BUKAN SNS."}, {"soalan": "API latency-sensitive ada spike trafik boleh dijangka pagi setiap hari, mesti respond tanpa cold start (runtime Node.js). Pilih apa?", "umpan": "Reserved Concurrency — bunyi macam 'reserve capacity siap sedia', tapi Reserved cuma HADKAN/jamin kuota, MASIH ada cold start. (SnapStart pula tak support Node.js.)", "betul": "Provisioned Concurrency — keyword 'no cold start / pre-warmed / predictable spike' + runtime bukan Java/Python/.NET = Provisioned Concurrency."}, {"soalan": "Job pemprosesan ambil masa 30 minit setiap run. Lambda sesuai ke?", "umpan": "Ya, tambah memory & Provisioned Concurrency — orang ingat naik resource boleh extend masa, tapi hard limit 15 min tetap kekal.", "betul": "TIDAK — Lambda hard cap 15 minit. Keyword '>15 min / long-running' → Fargate, AWS Batch, atau Step Functions."}],
             contohGuna: 'Resize image bila upload ke S3, webhook handler, scheduled tasks',
-            compare: {
-              label: 'Reserved vs Provisioned Concurrency — selalu tertukar',
-              headers: ['Aspect', 'Reserved Concurrency', 'Provisioned Concurrency'],
-              rows: [
-                ['Buat apa', 'Reserve & HADKAN bilangan concurrent execution untuk satu function', 'Pre-init (warm) sejumlah execution environment supaya siap sedia'],
-                ['Tujuan utama', 'Jamin kuota function kritikal + halang ia makan semua kuota account', 'Hapuskan COLD START — environment dah init, respond serta-merta'],
-                ['Cold start?', '🔴 Masih ada cold start', '🟢 Tiada cold start (dah pre-initialized)'],
-                ['Kos', '🟢 Percuma — cuma agih semula kuota sedia ada', '💰 Bayar untuk environment yang di-warm (caj per jam)'],
-                ['Guna bila', 'Elak runaway function / jamin kuota function penting', 'Latency-sensitive + trafik boleh dijangka (cth waktu puncak)'],
-              ],
-              takeaway: 'Reserved = "RESERVE seat + cap" (jamin & hadkan kuota, masih cold start, percuma). Provisioned = "PRE-warm" (bayar untuk buang cold start). Default account = 1,000 concurrent execution per region (soft limit — boleh mohon naik ke puluhan ribu).',
-            },
-            mermaid: {
-              label: 'Cara ingat — Lambda = Food Truck 🚚, EC2 = kedai 24 jam 🏪',
-              source: `flowchart TD
+            detailsLabel: 'Lambda — komponen & anatomy',
+            storageDetails: 'Function → unit code + config (memory, timeout, runtime, env vars, role). Ini benda yang kau deploy\nHandler → entry point: method yang Lambda panggil tiap kali invoke (cth handler(event, context))\nExecution Environment → micro-VM (Firecracker) yang isolate + run code. Init sekali (= COLD START), lepas tu di-reuse (WARM)\nTrigger / Event Source → benda yang cetus Lambda: S3 upload, API Gateway, EventBridge, SQS, DynamoDB Streams, dll\nEvent Source Mapping → untuk POLL-based source (SQS · Kinesis · DynamoDB Streams) — Lambda yang POLL & batch source, bukan source push. Resource ini kawal batch size + concurrency\nExecution Role (IAM) → role Lambda assume masa run untuk akses AWS lain (S3, DynamoDB). Sama konsep macam EC2 instance role — JANGAN hardcode key\nLayers → pakej .zip shared (library/dependency/custom runtime) yang dikongsi antara function. Max 5/function. NOTA: BUKAN cold-start fix\nDestinations → hala hasil ASYNC invoke (onSuccess / onFailure) ke SQS · SNS · Lambda · EventBridge. Lebih kaya context dari DLQ lama\nConcurrency → berapa invocation serentak. Reserved = cap kuota (percuma); Provisioned = pre-warm (bayar)\nFunction URL → HTTPS endpoint terus ke function (tanpa API Gateway) untuk kes simple / response streaming',
+            compare: [
+              {
+                label: 'Reserved vs Provisioned Concurrency — selalu tertukar',
+                headers: ['Aspect', 'Reserved Concurrency', 'Provisioned Concurrency'],
+                rows: [
+                  ['Buat apa', 'Reserve & HADKAN bilangan concurrent execution untuk satu function', 'Pre-init (warm) sejumlah execution environment supaya siap sedia'],
+                  ['Tujuan utama', 'Jamin kuota function kritikal + halang ia makan semua kuota account', 'Hapuskan COLD START — environment dah init, respond serta-merta'],
+                  ['Cold start?', '🔴 Masih ada cold start', '🟢 Tiada cold start (dah pre-initialized)'],
+                  ['Kos', '🟢 Percuma — cuma agih semula kuota sedia ada', '💰 Bayar untuk environment yang di-warm (caj per jam)'],
+                  ['Guna bila', 'Elak runaway function / jamin kuota function penting', 'Latency-sensitive + trafik boleh dijangka (cth waktu puncak)'],
+                ],
+                takeaway: 'Reserved = "RESERVE seat + cap" (jamin & hadkan kuota, masih cold start, percuma). Provisioned = "PRE-warm" (bayar untuk buang cold start). Default account = 1,000 concurrent execution per region (soft limit — boleh mohon naik ke puluhan ribu).',
+              },
+              {
+                label: 'Cold-start fix: Provisioned Concurrency vs SnapStart (exam trap baru)',
+                headers: ['Aspect', 'Provisioned Concurrency', 'SnapStart'],
+                rows: [
+                  ['Cara kerja', 'Pre-warm N environment, sentiasa standby', 'Snapshot (Firecracker) env yang DAH init masa publish version → resume dari snapshot'],
+                  ['Runtime', '🟢 Semua runtime', '🔴 Java 11+ · Python 3.12+ · .NET 8+ SAHAJA (no Node.js/Ruby/OS-only/container image)'],
+                  ['Kos', '💰 Bayar per jam (config + execution) walau idle', '🟢 Jauh lebih murah — caching snapshot + per-restore charge je, takde kos idle 24/7'],
+                  ['Cold start', '🟢 Tiada (double-digit ms)', '🟢 Sub-second (kurangkan drastik, bukan 100% hapus)'],
+                  ['Limitation', 'Boleh combine versions/alias', '🔴 Tak boleh combine Provisioned Concurrency, EFS, /tmp >512MB; published version je (bukan $LATEST); hati-hati state unik'],
+                ],
+                takeaway: 'Java/Python/.NET + cold start + "MOST cost-effective" → SnapStart (murah). "strict / mesti zero cold start, ANY runtime, predictable spike" → Provisioned Concurrency (bayar per jam). Node.js/Ruby/container → SnapStart TAK boleh, terpaksa Provisioned Concurrency. Reserved Concurrency BUKAN cold-start fix.',
+              },
+              {
+                label: 'Invocation models — sync vs async vs poll-based',
+                headers: ['Model', 'Contoh source', 'Retry / error handling'],
+                rows: [
+                  ['Synchronous (push)', 'API Gateway · ALB · Function URL · invoke terus', 'Caller TUNGGU jawapan; retry = tanggungjawab caller'],
+                  ['Asynchronous (push)', 'S3 · SNS · EventBridge', 'Lambda queue event, retry 2× auto, gagal → DLQ / Destinations'],
+                  ['Poll-based (Event Source Mapping)', 'SQS · Kinesis · DynamoDB Streams', 'Lambda POLL & batch; SQS buffer burst → kawal concurrency, elak throttle'],
+                ],
+                takeaway: 'Sebut "S3/SNS/EventBridge cetus Lambda" = ASYNC (ada retry + DLQ/Destinations). Sebut "SQS/Kinesis/DynamoDB Streams" = POLL-based via Event Source Mapping (Lambda TARIK, bukan ditolak). Throttling masa burst → masukkan SQS depan Lambda untuk buffer.',
+              },
+            ],
+            mermaid: [
+              {
+                label: 'Cara ingat — Lambda = Food Truck 🚚, EC2 = kedai 24 jam 🏪',
+                source: `flowchart TD
   REQ["Ada permintaan masuk"] --> TYPE{"Server kena sentiasa hidup?"}
   TYPE -->|"Tak — datang bila<br/>ada order je"| L["🚚 Lambda (Food Truck)<br/>hidup bila dipanggil,<br/>tutup bila siap → bayar bila guna je"]
   TYPE -->|"Ya — kena standby 24/7"| E["🏪 EC2 (Kedai 24 jam)<br/>buka walau takda pelanggan<br/>→ bayar walau idle"]
   L --> CHK{"Kerja lebih 15 minit?"}
   CHK -->|"Ya"| LONG["❌ Lambda tak boleh<br/>→ Fargate / AWS Batch"]
   CHK -->|"Tak, pendek + event-driven"| OK["✅ Lambda sesuai<br/>(scale to zero, cold start risk)"]`,
-              caption: 'Analogi: Lambda = Food Truck (hidup bila ada order, tutup bila habis — kalau takda orang, kos = RM0). EC2 = kedai makan 24 jam (kena bayar sewa + gaji walaupun pukul 3 pagi takda pelanggan). INGAT exam: "pay only when running / scale to zero / event-driven" → Lambda. "lebih 15 minit" → Lambda GAGAL, guna Fargate atau AWS Batch.',
-            },
+                caption: 'Analogi: Lambda = Food Truck (hidup bila ada order, tutup bila habis — kalau takda orang, kos = RM0). EC2 = kedai makan 24 jam (kena bayar sewa + gaji walaupun pukul 3 pagi takda pelanggan). INGAT exam: "pay only when running / scale to zero / event-driven" → Lambda. "lebih 15 minit" → Lambda GAGAL, guna Fargate atau AWS Batch.',
+              },
+              {
+                label: 'Pilih cold-start fix — SnapStart vs Provisioned Concurrency',
+                source: `flowchart TD
+  CS["🥶 Nak kurangkan cold start"] --> RT{"Runtime apa?"}
+  RT -->|"Java / Python / .NET<br/>+ nak jimat kos"| SS["🟢 SnapStart<br/>(snapshot env, murah)"]
+  RT -->|"Node.js / Ruby / container<br/>ATAU strict zero cold start"| PC["💰 Provisioned Concurrency<br/>(pre-warm, bayar per jam)"]
+  SS --> NOTE["⚠️ SnapStart: published version je;<br/>tak boleh combine Provisioned<br/>Concurrency / EFS / tmp>512MB"]
+  RT -->|"Cuma nak cap / jamin kuota<br/>(bukan fix cold start)"| RC["Reserved Concurrency<br/>(percuma, MASIH cold start)"]`,
+                caption: 'INGAT exam: "Java + cold start + cost-effective" → SnapStart. "predictable spike + mesti zero cold start (any runtime)" → Provisioned Concurrency. Reserved Concurrency BUKAN cold-start fix — ia cuma cap/jamin kuota.',
+              },
+            ],
             tips: [
               'Had penting: maks 15 minit (900s) per invocation. Job lebih lama → guna ECS/Fargate, AWS Batch, atau Step Functions',
               'Memory 128 MB–10,240 MB (step 1 MB). CPU naik IKUT memory — 1,769 MB = 1 vCPU penuh. Nak laju? naik memory, CPU auto naik',
@@ -4771,12 +4809,23 @@ export const domains: DomainData[] = [
               '/tmp ephemeral storage: 512 MB default, boleh naik sampai 10,240 MB (10 GB). Ini EPHEMERAL — tak dikongsi antara invocation, hilang bila environment recycle.',
               'STORAGE persistent/shared: mount Amazon EFS untuk data yang KEKAL & dikongsi across invocations/functions (cth ML model besar, shared state, data > 10 GB). SYARAT: function mesti dalam VPC (sama VPC dengan EFS mount target) + EFS access point + elasticfilesystem permission pada execution role. /tmp = scratch sementara; EFS = persistent shared.',
               'Deployment package: 50 MB (zip, direct upload) / 250 MB (unzipped + layers), atau container image sampai 10 GB',
-              'Cold start = masa init environment + load code; teruk untuk VPC/package besar. Kurangkan dengan Provisioned Concurrency',
+              'Cold start = masa init environment + load code; teruk untuk runtime berat (Java) / package besar. Fix: SnapStart (Java/Python/.NET, murah) atau Provisioned Concurrency (any runtime, bayar). Layers TAK fix cold start.',
+              'SnapStart: Lambda ambil Firecracker SNAPSHOT environment yang DAH init (masa publish version), encrypt & cache. Invoke → resume dari snapshot (bukan init dari kosong) → cold start sub-second. Support Java 11+, Python 3.12+, .NET 8+ SAHAJA. TAK support: Node.js, Ruby, OS-only runtime, container image. TAK boleh combine: Provisioned Concurrency, EFS, S3 files, /tmp >512MB. Mesti published version/alias (bukan $LATEST). Hati-hati state unik (cth random seed) sebab snapshot dikongsi.',
+              'PRICING SnapStart: jauh lebih murah dari Provisioned Concurrency — caj = caching snapshot (per GB sambil cache) + restoration charge tiap kali resume (ikut memory). Takde kos "warm 24/7" macam Provisioned Concurrency. Exam "Java cold start + most cost-effective" → SnapStart.',
+              'Throttling fix (decouple): kalau Lambda kena throttle masa burst (429 TooManyRequests), letak SQS antara source dan Lambda. SQS BUFFER mesej, Lambda poll & proses ikut kadar — burst diratakan. SNS TAK buffer (push terus) jadi tak selesaikan throttle. Exam: "reduce throttling / smooth burst / decouple" → SQS.',
+              'Lambda Layers = pakej .zip berasingan untuk shared library/dependency/custom runtime — kongsi antara banyak function & kecikkan deployment package. Max 5 layer/function. NOTA: Layers BUKAN penyelesaian cold start (jangan tertipu soalan yang offer "Lambda layers" untuk minimize cold start).',
+              'Invocation model: SYNCHRONOUS (API Gateway/ALB/Function URL — caller tunggu, retry caller punya hal) · ASYNCHRONOUS (S3/SNS/EventBridge — Lambda queue event, retry 2× auto, gagal → DLQ / Lambda Destinations) · POLL-based / Event Source Mapping (SQS/Kinesis/DynamoDB Streams — Lambda POLL & batch). Response streaming = hantar output berperingkat (Function URL) untuk TTFB cepat / payload besar; ini BUKAN cold-start fix.',
               'PRICING: Free tier — 1M requests/mo + 400,000 GB-seconds/mo (forever). Selepas free tier: $0.20 per 1M requests + $0.0000166667 per GB-second. GB-second = memory allocated × duration. Provisioned Concurrency = $0.0000041667 per vCPU-hour + $0.000000111 per GB-hour (config + execution).',
               'Exam: "1 million free requests per month forever" → Lambda free tier. "pay per request + duration" → Lambda pricing model. "Provisioned Concurrency has hourly cost" → yes, separate from execution.',
             ],
-            scenario: 'Sebut "predictable spike, mesti respond cepat TANPA cold start" → Provisioned Concurrency. Sebut "satu function jangan habiskan semua kuota / jamin kuota function kritikal" → Reserved Concurrency. Sebut "job ambil masa lebih 15 minit" → Lambda TAK sesuai (guna Fargate/Batch/Step Functions). STORAGE: "Lambda perlu persistent / shared storage across invocations" atau "akses data > 10 GB / ML model besar" → mount Amazon EFS (function dalam VPC). "scratch sementara dalam satu run" → /tmp (512 MB–10 GB).',
-            keywords: ['serverless', 'event-driven', '15-min max', 'reserved concurrency', 'provisioned concurrency', 'cold start', '/tmp ephemeral storage', 'EFS mount', 'Lambda EFS', 'persistent storage', 'shared storage'],
+            scenario: 'Sebut "predictable spike, mesti respond cepat TANPA cold start" → Provisioned Concurrency. Sebut "Java/Python/.NET cold start + paling jimat kos (most cost-effective)" → SnapStart (BUKAN Provisioned Concurrency yang bayar per jam). Sebut "Node.js/Ruby/container nak zero cold start" → Provisioned Concurrency (SnapStart tak support runtime tu). Sebut "Lambda throttling masa burst / decouple / buffer / smooth load" → letak SQS depan Lambda (SQS buffer; SNS tidak). Sebut "satu function jangan habiskan semua kuota / jamin kuota function kritikal" → Reserved Concurrency. Sebut "job ambil masa lebih 15 minit" → Lambda TAK sesuai (guna Fargate/Batch/Step Functions). STORAGE: "persistent / shared storage across invocations" atau "data > 10 GB / ML model besar" → mount Amazon EFS (function dalam VPC). "scratch sementara dalam satu run" → /tmp (512 MB–10 GB).',
+            docs: [
+              { label: 'Lambda SnapStart', url: 'https://docs.aws.amazon.com/lambda/latest/dg/snapstart.html' },
+              { label: 'Provisioned & Reserved Concurrency', url: 'https://docs.aws.amazon.com/lambda/latest/dg/lambda-concurrency.html' },
+              { label: 'Invocation & Event Source Mapping', url: 'https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html' },
+              { label: 'Lambda Layers', url: 'https://docs.aws.amazon.com/lambda/latest/dg/chapter-layers.html' },
+            ],
+            keywords: ['serverless', 'event-driven', '15-min max', 'reserved concurrency', 'provisioned concurrency', 'cold start', 'snapstart', 'Lambda SnapStart', 'Firecracker snapshot', 'Java cold start', 'event source mapping', 'invocation model', 'asynchronous invocation', 'synchronous invocation', 'poll-based', 'Lambda destinations', 'DLQ', 'dead letter queue', 'Lambda layers', 'response streaming', 'SQS decouple', 'throttling', '429', 'execution environment', 'execution role', '/tmp ephemeral storage', 'EFS mount', 'Lambda EFS', 'persistent storage', 'shared storage', 'function URL'],
           },
           {
             shortName: 'Elastic Beanstalk',

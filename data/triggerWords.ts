@@ -286,6 +286,69 @@ export const triggerRows: TriggerRow[] = [
     domain: 'D3 · High-Perf',
     slug: 'd3-analytics-redshift',
   },
+  {
+    id: 'route53-failover-eth',
+    keywords: ['AWS primary + on-prem secondary failover', 'DR active-passive via Route 53', 'failover alias record', 'Evaluate Target Health for ALB', 'health check for on-prem endpoint'],
+    service: 'Route 53 — DUA failover records (ETH + custom health check)',
+    why: 'Active-passive failover perlu DUA record berasingan. AWS resource (ALB) → Evaluate Target Health = Yes (auto-check). On-prem BUKAN AWS resource → kena custom Route 53 health check. Tak boleh combine dua endpoint dalam satu record.',
+    accent: 'c1',
+    domain: 'D2 · Resilient',
+    slug: 'd3-network-route-53',
+  },
+  {
+    id: 'inter-region-vpc-peering',
+    keywords: ['VPC in different regions, private', 'access EFS across regions without internet', 'eu-west-2 to us-east-1 private link', 'minimize latency cross-region', 'Direct Connect + cross-region access'],
+    service: 'Inter-Region VPC Peering (+ Direct Connect)',
+    why: 'VPC beza REGION → inter-region VPC peering (private, elak internet, low-latency). PrivateLink TAK support EFS (ia untuk service-based, bukan file system). On-prem via Direct Connect ke satu VPC → route through peering ke VPS lain. BUKAN Managed VPN (mahal+latency), BUKAN same-region peering.',
+    accent: 'c2',
+    domain: 'D3 · High-Perf',
+    slug: 'd1-vpc-vpc-peering',
+  },
+  {
+    id: 'glacier-legal-hold',
+    keywords: ['retain indefinitely, no expiration', 'no user can delete forever', 'immutable compliance policy Glacier', 'block delete without time limit', 'compliance hold on archive'],
+    service: 'S3 Glacier — Legal Hold + Vault Lock policy',
+    why: '"indefinitely" (tiada tempoh tamat) → Legal Hold (apply serta-merta, halang delete selamanya). "fixed duration" → retention period (BUKAN indefinite). Compliance ketat → Vault LOCK policy (immutable lepas lock), BUKAN Vault ACCESS policy (mutable, boleh ubah).',
+    accent: 'c4',
+    domain: 'D1 · Secure',
+    slug: 'd1-data-s3-glacier-vault',
+  },
+  {
+    id: 'ec2-hibernation',
+    keywords: ['same application state on recovery', 'avoid long initialization', 'memory-intensive app fast recovery', 'preserve RAM across stop', 'in-memory state persistence', 'resume exactly where it stopped'],
+    service: 'EC2 Hibernation',
+    why: 'Hibernation simpan RAM (in-memory state: OS, processes, cache) ke EBS root volume. Resume sambung tepat di mana berhenti — cepat, tak reinitialize. Stop/Start = RAM HILANG (macam reboot). AMI = disk je, bukan RAM.',
+    accent: 'c3',
+    domain: 'D2 · Resilient',
+    slug: 'd3-compute-ec2-hibernation',
+  },
+  {
+    id: 'cloudwatch-alb-metrics',
+    keywords: ['track ALB request count / latency / HTTP codes', 'alarm when threshold crossed on load balancer', 'monitor ALB without installing agent', 'ALB metrics to CloudWatch'],
+    service: 'CloudWatch — ALB metrics (auto, no agent)',
+    why: 'ALB AUTOMATIK hantar metrics (request count, latency, HTTP response codes) ke CloudWatch. Buat alarm terus dari CW — tak perlu install apa-apa. CloudWatch Agent kumpul OS-level metrics DALAM EC2 (CPU/memory), BUKAN metrics ALB. X-Ray = trace dalam app, ALB tak native integrate.',
+    accent: 'c5',
+    domain: 'D3 · High-Perf',
+    slug: 'd3-infra-cloudwatch',
+  },
+  {
+    id: 'elasticache-realtime-kv',
+    keywords: ['real-time recommendation engine', 'low-latency read/write at scale', 'high-velocity user interactions', 'sub-millisecond key-value', 'in-memory personalized suggestions'],
+    service: 'ElastiCache for Redis (in-memory key-value)',
+    why: '"real-time" + "low-latency" + "high-velocity" + key-value at scale → ElastiCache Redis (sub-millisecond, in-memory). Redshift = analytics/BATCH (OLAP, lawan real-time). Aurora = relational, tak sepantas Redis. Neptune = graph DB, latency lebih tinggi, untuk hubungan kompleks bukan real-time KV.',
+    accent: 'c5',
+    domain: 'D3 · High-Perf',
+    slug: 'd4-database-elasticache',
+  },
+  {
+    id: 'rekognition-custom-labels-species',
+    keywords: ['identify specific animal species in images', 'camera trap species monitoring', 'automate image recognition without building from scratch', 'custom object recognition managed training', 'recognize custom/specific objects not generic labels'],
+    service: 'Rekognition Custom Labels (managed training)',
+    why: 'Kenal SPESIES/objek KHSUSUS → Custom Labels (label imej, Rekognition urus training & hosting — managed, bukan from-scratch). DetectLabels (Object/Scene Detection) = label GENERIK je ("animal", "outdoor"), tak kenal spesies. "from scratch" exclude SageMaker (D), BUKAN Custom Labels (A, managed). Facial Analysis = muka MANUSIA, bukan haiwan.',
+    accent: 'c6',
+    domain: 'D3 · High-Perf',
+    slug: 'd3-analytics-aws-ai-ml-services',
+  },
 ]
 
 // ── Pokok keputusan (decision tree) ─────────────────────────────────────────
@@ -629,5 +692,41 @@ export const trapRows: TrapRow[] = [
   {
     bait: 'DMS sahaja untuk Oracle → Aurora PostgreSQL',
     fix: 'Engine BEZA (heterogeneous) → wajib SCT convert schema/stored procedure dulu, baru DMS pindah data. DMS sorang cukup hanya kalau engine SAMA.',
+  },
+  {
+    bait: 'Evaluate Target Health = Yes untuk on-prem backup endpoint',
+    fix: 'Evaluate Target Health cuma untuk AWS resource (ALB, ELB, API Gateway…). On-prem BUKAN AWS resource → kena create custom Route 53 health check. DR failover juga perlu DUA record berasingan (primary+secondary), bukan satu record gabungan.',
+  },
+  {
+    bait: 'Stop/Start EC2 untuk preserve "same application state" & elak long init',
+    fix: 'Stop/Start = RAM HILANG, macam reboot, kena reinitialize. Nak simpan in-memory state (OS, processes, cache) + resume cepat → EC2 Hibernation (RAM → EBS root). AMI simpan disk je, bukan RAM.',
+  },
+  {
+    bait: 'Retention period untuk retain records "indefinitely"',
+    fix: 'Retention period = tempoh TETAP (fixed duration), bukan indefinite. "indefinitely / no expiration" → Legal Hold (tiada tempoh tamat). Dan compliance ketat → Vault LOCK policy (immutable), bukan Vault ACCESS policy (mutable, boleh ubah).',
+  },
+  {
+    bait: 'AWS PrivateLink untuk access EFS across VPC/region',
+    fix: 'PrivateLink TAK support EFS (ia untuk service-based connection, bukan file system). VPC beza region nak akses EFS private → inter-region VPC peering (+ Direct Connect untuk on-prem).',
+  },
+  {
+    bait: 'Same-region VPC peering untuk VPC di region berbeza',
+    fix: 'VPC peering biasa = same region. VPC di REGION berbeza → inter-region VPC peering (kalau tak, trafik tak mengalir private). VPN = mahal + latency, bukan optimum.',
+  },
+  {
+    bait: 'Install CloudWatch Agent pada EC2 untuk collect ALB metrics',
+    fix: 'ALB AUTOMATIK hantar metrics (request, latency, HTTP codes) ke CloudWatch — tak perlu agent. CW Agent kumpul metrics OS-level DALAM EC2 (CPU/memory/disk), bukan metrics load balancer.',
+  },
+  {
+    bait: 'Redshift untuk real-time recommendation / low-latency read-write',
+    fix: 'Redshift = data warehouse OLAP untuk analytics/BATCH, bukan real-time (lambat). Real-time + sub-millisecond + key-value at scale → ElastiCache for Redis. Aurora = relational, Neptune = graph — dua-dua tak sepantas Redis utk real-time KV.',
+  },
+  {
+    bait: 'Rekognition Object/Scene Detection untuk identify specific animal species',
+    fix: 'DetectLabels bagi label GENERIK ("animal", "outdoor") — tak kenal spesies tertentu (harimau Malaya vs Benggala). Spesies/objek khusus → Rekognition Custom Labels (label imej, Rekognition urus training — managed). Jangan anggap "train" = "from scratch"; SageMaker je yang from-scratch.',
+  },
+  {
+    bait: 'Rekognition Facial Analysis untuk detect animals via facial features',
+    fix: 'Facial Analysis direka untuk MUKA MANUSIA (emosi, umur, jantina, landmark). Bukan untuk haiwan langsung. Kenal objek/haiwan → Object/Scene Detection (generik) atau Custom Labels (spesifik).',
   },
 ]
