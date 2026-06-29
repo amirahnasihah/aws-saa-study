@@ -4841,33 +4841,73 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Deploy app tanpa urus server',
             fungsi: 'Mengurus deployment, scaling dan monitoring aplikasi secara automatik',
             sebabApa: "Developer nak deploy app cepat tapi tak nak setup EC2 + ALB + Auto Scaling + health monitoring satu-satu secara manual. Elastic Beanstalk wujud sebagai PaaS: kau hantar code (.zip/.war), ia auto-bina & urus semua infra bawah, tapi kau MASIH boleh akses & tweak resource tu (beza dengan Lambda yang fully abstracted). Pain yang ia buang: deploy app tanpa jadi expert infra, tapi tak hilang kawalan.",
-            sifir: ["Beanstalk = PaaS; hantar code, ia auto-create EC2 + ALB + ASG + health monitoring", "Beanstalk PERCUMA; bayar resource bawah (EC2, ALB) yang ia provision", "Beanstalk = opinionated deploy APP; CloudFormation = IaC general semua resource", "Beanstalk = app run atas server (kau nampak EC2); Lambda = no server, event-driven", "JANGAN keliru: EBS = Elastic Block Store (disk) ≠ Elastic Beanstalk (deploy app)"],
-            perangkap: [{"soalan": "Developer nak deploy web app cepat, tak nak urus infra, TAPI masih nak boleh tweak EC2/scaling settings. Pilih apa?", "umpan": "AWS Lambda — serverless senang, tapi Lambda fully abstracted (no server akses) + had 15 min, bukan untuk app web sentiasa run.", "betul": "Elastic Beanstalk — keyword 'deploy app fast + still control underlying EC2/scaling' = Beanstalk (PaaS)."}, {"soalan": "Soalan sebut 'EBS' untuk deploy aplikasi. Maksudnya Elastic Beanstalk?", "umpan": "Ya, EBS = Elastic Beanstalk — singkatan menipu, kedua start 'EB'.", "betul": "TIDAK — EBS = Elastic Block Store (disk storage). Deploy app = Elastic Beanstalk (jarang disingkat EBS dalam exam)."}],
+            sifir: ["Beanstalk = PaaS; hantar code, ia auto-create EC2 + ALB + ASG + health monitoring", "Beanstalk PERCUMA; bayar resource bawah (EC2, ALB) yang ia provision", "Beanstalk = opinionated deploy APP; CloudFormation = IaC general semua resource", "Beanstalk = app run atas server (kau nampak EC2); Lambda = no server, event-driven", "JANGAN keliru: EBS = Elastic Block Store (disk) ≠ Elastic Beanstalk (deploy app)", "Deploy: All-at-once = laju+murah TAPI downtime; Rolling = batch demi batch (capacity turun sekejap); Rolling+additional batch = capacity PENUH kekal; Immutable = ASG baru penuh, rollback paling selamat (terminate je)", "Blue/Green = environment baru + SWAP URL (CNAME) → zero downtime + rollback senang (swap balik); SATU-SATUNYA yang libatkan DNS change", "2 environment tier: Web Server (handle HTTP, depan ALB) vs Worker (proses background job, baca SQS guna daemon sqsd)"],
+            perangkap: [{"soalan": "Developer nak deploy web app cepat, tak nak urus infra, TAPI masih nak boleh tweak EC2/scaling settings. Pilih apa?", "umpan": "AWS Lambda — serverless senang, tapi Lambda fully abstracted (no server akses) + had 15 min, bukan untuk app web sentiasa run.", "betul": "Elastic Beanstalk — keyword 'deploy app fast + still control underlying EC2/scaling' = Beanstalk (PaaS)."}, {"soalan": "Soalan sebut 'EBS' untuk deploy aplikasi. Maksudnya Elastic Beanstalk?", "umpan": "Ya, EBS = Elastic Beanstalk — singkatan menipu, kedua start 'EB'.", "betul": "TIDAK — EBS = Elastic Block Store (disk storage). Deploy app = Elastic Beanstalk (jarang disingkat EBS dalam exam)."}, {"soalan": "Nak deploy versi baru TANPA downtime DAN kekal kapasiti PENUH sepanjang masa, kos paling rendah. Pilih deployment policy mana?", "umpan": "Immutable — bunyi paling selamat/zero downtime, TAPI ia paling lambat + buka ASG kedua PENUH (double instance sementara) = bukan 'kos paling rendah'.", "betul": "Rolling with additional batch — keyword 'no downtime + maintain FULL capacity + jimat' = launch SATU batch tambahan je (bukan ASG penuh), capacity penuh kekal. (Rolling biasa = capacity turun sekejap.)"}, {"soalan": "App Beanstalk perlu proses background/async job dari satu queue. Guna tier mana?", "umpan": "Web Server tier + tulis kod poll SQS sendiri — boleh jalan tapi bukan cara Beanstalk; Web tier direka untuk handle HTTP request.", "betul": "Worker environment tier — Beanstalk auto-pasang daemon sqsd yang baca SQS & POST ke app kau. Keyword 'background/async job dari queue / decouple' = Worker tier."}],
             contohGuna: 'Deploy Node.js / Python app tanpa urus EC2 sendiri',
-            compare: {
-              label: 'JANGAN KELIRU — semua "Elastic ___" & short form yang serupa',
-              headers: ['Short form', 'Nama penuh', 'Ia apa SEBENARNYA'],
-              rows: [
-                ['Elastic Beanstalk', 'AWS Elastic Beanstalk', '🚀 PaaS — hantar code, AWS auto-bina EC2 + ALB + ASG. Platform untuk DEPLOY app'],
-                ['EBS', 'Elastic Block Store', '💾 Disk (block storage) yang attach ke EC2. STORAGE — bukan deploy!'],
-                ['EFS', 'Elastic File System', '📁 Shared file storage (NFS) — banyak EC2 mount serentak'],
-                ['ELB', 'Elastic Load Balancing', '⚖️ Service load balancer (payung untuk ALB/NLB/GWLB/CLB)'],
-                ['ALB / NLB / GWLB', 'Application / Network / Gateway LB', 'Jenis ELB: ALB = L7 HTTP, NLB = L4 TCP/UDP + static IP, GWLB = security appliance'],
-                ['EC2', 'Elastic Compute Cloud', '🖥️ Virtual server (compute)'],
-                ['ECS / EKS / ECR', 'Container Service / Kubernetes / Registry', 'ECS = run Docker · EKS = run Kubernetes · ECR = simpan image Docker'],
-                ['ElastiCache', 'Amazon ElastiCache', '⚡ In-memory cache (Redis/Memcached) — bukan storage kekal'],
-              ],
-              takeaway: 'Trick: nama ada "Store/Storage/System/File" = SIMPAN data (EBS, EFS). "Beanstalk" = Bina & deploy APP. "Load Balancing/ALB/NLB" = edar trafik. "Compute/EC2" = server. Yang paling kerap tertukar: EBS (disk) vs Elastic Beanstalk (deploy) — keduanya start "EB" tapi langsung tak sama!',
+            detailsLabel: 'Elastic Beanstalk — komponen & anatomy',
+            storageDetails: 'Application → bekas teratas (umbrella) untuk app kau — pegang banyak version + environment\nApplication Version → satu source bundle (.zip/.war) yang dilabel & disimpan dalam S3. Deploy = pilih version untuk satu environment\nEnvironment → set resource AWS (EC2 + ALB + ASG + health monitoring) yang menjalankan SATU version. Satu app boleh ada banyak environment (dev/test/prod)\nEnvironment Tier → Web Server tier (handle HTTP request, depan ALB) ATAU Worker tier (proses background job — baca SQS guna daemon sqsd, POST ke app)\nPlatform → runtime + OS yang Beanstalk uruskan (Node, Python, Java, .NET, Go, Ruby, Docker). Managed platform updates auto-patch\n.ebextensions → fail config YAML/JSON untuk customize resource & option (env var, packages, instance type) tanpa keluar Beanstalk\nSaved Configuration → snapshot setting yang boleh guna semula untuk launch environment serupa',
+            compare: [
+              {
+                label: 'JANGAN KELIRU — semua "Elastic ___" & short form yang serupa',
+                headers: ['Short form', 'Nama penuh', 'Ia apa SEBENARNYA'],
+                rows: [
+                  ['Elastic Beanstalk', 'AWS Elastic Beanstalk', '🚀 PaaS — hantar code, AWS auto-bina EC2 + ALB + ASG. Platform untuk DEPLOY app'],
+                  ['EBS', 'Elastic Block Store', '💾 Disk (block storage) yang attach ke EC2. STORAGE — bukan deploy!'],
+                  ['EFS', 'Elastic File System', '📁 Shared file storage (NFS) — banyak EC2 mount serentak'],
+                  ['ELB', 'Elastic Load Balancing', '⚖️ Service load balancer (payung untuk ALB/NLB/GWLB/CLB)'],
+                  ['ALB / NLB / GWLB', 'Application / Network / Gateway LB', 'Jenis ELB: ALB = L7 HTTP, NLB = L4 TCP/UDP + static IP, GWLB = security appliance'],
+                  ['EC2', 'Elastic Compute Cloud', '🖥️ Virtual server (compute)'],
+                  ['ECS / EKS / ECR', 'Container Service / Kubernetes / Registry', 'ECS = run Docker · EKS = run Kubernetes · ECR = simpan image Docker'],
+                  ['ElastiCache', 'Amazon ElastiCache', '⚡ In-memory cache (Redis/Memcached) — bukan storage kekal'],
+                ],
+                takeaway: 'Trick: nama ada "Store/Storage/System/File" = SIMPAN data (EBS, EFS). "Beanstalk" = Bina & deploy APP. "Load Balancing/ALB/NLB" = edar trafik. "Compute/EC2" = server. Yang paling kerap tertukar: EBS (disk) vs Elastic Beanstalk (deploy) — keduanya start "EB" tapi langsung tak sama!',
+              },
+              {
+                label: 'Deployment policies — paling kerap ditanya exam',
+                headers: ['Policy', 'Downtime?', 'Capacity masa deploy', 'Laju (1=cepat·4=lambat)', 'Rollback', 'Deploy ke'],
+                rows: [
+                  ['All at once', '🔴 Ada (semua sekali gus)', 'Penuh → 0 sekejap', '1 — paling laju + murah', 'Manual redeploy', 'Instance sedia ada'],
+                  ['Rolling', '🟢 Takda', '⬇️ Turun (batch keluar service)', '2 — sederhana', 'Manual redeploy', 'Instance sedia ada'],
+                  ['Rolling + additional batch', '🟢 Takda', '✅ PENUH kekal (launch batch tambahan)', '3 — lebih lambat', 'Manual redeploy', 'Instance baru + sedia ada'],
+                  ['Immutable', '🟢 Takda', '✅ Penuh (ASG kedua penuh)', '4 — paling lambat', '✅ Senang: terminate instance baru', 'Instance baru sahaja'],
+                  ['Traffic splitting (canary)', '🟢 Takda', '✅ Penuh + % trafik ke versi baru', '4 — paling lambat', 'Reroute trafik + terminate baru', 'Instance baru sahaja'],
+                  ['Blue/Green (swap URL)', '🟢 Takda', '✅ Environment berasingan', '4 — paling lambat', '✅ Swap CNAME balik', 'Environment baru (DNS change!)'],
+                ],
+                takeaway: 'Exam discriminator: "paling laju/murah, boleh terima sikit downtime" = All-at-once. "no downtime, jimat, tak kisah capacity turun sikit" = Rolling. "maintain FULL capacity sepanjang deploy" = Rolling + additional batch. "paling selamat, rollback senang, instance baru je, satu env" = Immutable. "zero downtime + instant rollback + tukar environment" = Blue/Green (libatkan DNS/CNAME swap). "test versi baru dengan % trafik" = Traffic splitting (canary).',
+              },
+            ],
+            mermaid: {
+              label: 'Pilih deployment policy Beanstalk',
+              source: `flowchart TD
+  START["🚀 Deploy versi baru Beanstalk<br/>pilih policy?"] --> Q1{"Boleh terima<br/>downtime sekejap?"}
+  Q1 -->|"Ya — nak PALING laju + murah"| AAO["⚡ All at once<br/>semua instance sekali gus<br/>(ada downtime)"]
+  Q1 -->|"Tak boleh downtime"| Q2{"Mesti kekal<br/>FULL capacity?"}
+  Q2 -->|"Tak kisah turun sikit"| ROLL["🔄 Rolling<br/>batch demi batch<br/>(takda kos tambahan)"]
+  Q2 -->|"Ya, full capacity kekal"| Q3{"Mahu instance<br/>100% baru +<br/>rollback selamat?"}
+  Q3 -->|"Cukup tambah 1 batch"| RAB["➕ Rolling + additional batch<br/>launch batch tambahan dulu"]
+  Q3 -->|"Ya, instance baru penuh"| Q4{"Sanggup tukar<br/>environment URL<br/>(DNS change)?"}
+  Q4 -->|"Tak — dalam env sama"| IMM["🛡️ Immutable<br/>ASG kedua penuh<br/>rollback = terminate baru"]
+  Q4 -->|"Ya — swap URL"| BG["🔵🟢 Blue/Green<br/>env baru + swap CNAME<br/>rollback = swap balik"]`,
+              caption: 'INGAT exam: downtime OK + murah = All-at-once · no downtime jimat = Rolling · full capacity = Rolling+batch · paling selamat satu env = Immutable · swap environment = Blue/Green (DNS change).',
             },
             tips: [
               'Beanstalk = PaaS: kau hantar code (.zip/.war), ia auto-create EC2 + ALB + Auto Scaling + health monitoring. Kau MASIH boleh akses & tweak resource bawah (beza dengan Lambda yang fully managed)',
-              'Beanstalk PERCUMA — bayar hanya resource bawah (EC2, ALB, dll) yang ia provision',
-              'Beanstalk vs CloudFormation: Beanstalk = deploy APP cepat (opinionated); CloudFormation = IaC general untuk SEMUA jenis resource',
+              'PRICING: Elastic Beanstalk PERCUMA — kau bayar HANYA resource bawah yang ia provision (EC2, ALB ~$0.0225/hr + $0.008/LCU-hr, EBS volume, data transfer). Single-instance environment (no ALB) = lebih murah untuk dev/test',
+              'Deployment policy: All at once = paling laju + murah TAPI ada downtime (semua instance sekali gus). Rolling = no downtime tapi capacity turun sekejap (batch demi batch). Rolling + additional batch = capacity PENUH kekal (launch 1 batch tambahan dulu). Immutable = paling selamat, ASG kedua penuh, rollback = terminate instance baru je',
+              'Blue/Green = BUKAN deployment policy biasa — kau launch environment KEDUA (baru), test, lepas tu SWAP CNAME/URL. Zero downtime + rollback = swap balik. Satu-satunya cara yang libatkan DNS change. Exam: "zero downtime + instant rollback + tukar environment" = Blue/Green',
+              'Environment tier: Web Server tier = handle HTTP (depan ALB). Worker tier = proses background/async job — Beanstalk pasang daemon sqsd yang baca mesej dari SQS & POST ke aplikasi. Exam keyword "background job / decouple / long-running task from queue" → Worker environment',
+              '.ebextensions = folder config (YAML/JSON) untuk customize resource Beanstalk (env var, packages, instance type) tanpa keluar dari Beanstalk. Managed platform updates = auto-patch OS/runtime (boleh jadual maintenance window)',
+              'Beanstalk vs CloudFormation: Beanstalk = deploy APP cepat (opinionated, behind-the-scenes Beanstalk SENDIRI guna CloudFormation); CloudFormation = IaC general untuk SEMUA jenis resource',
               'Beanstalk vs Lambda: Beanstalk = app sentiasa run atas server (kau nampak EC2); Lambda = event-driven, no server',
               'INGAT: EBS = disk storage. Elastic Beanstalk = deploy app. Exam suka uji kekeliruan ni!',
             ],
-            scenario: 'Sebut "developer nak deploy web app cepat, ada CI/CD, tak nak urus infra TAPI masih nak kawalan ke atas EC2/scaling" → Elastic Beanstalk. "Fully serverless, no server langsung" → Lambda/Fargate. "Attach disk ke EC2" → itu EBS, bukan Beanstalk.',
-            keywords: ['PaaS', 'deploy app', 'developer friendly', 'auto EC2+ALB+ASG', 'free service'],
+            scenario: 'Sebut "developer nak deploy web app cepat, ada CI/CD, tak nak urus infra TAPI masih nak kawalan ke atas EC2/scaling" → Elastic Beanstalk. "Fully serverless, no server langsung" → Lambda/Fargate. "Attach disk ke EC2" → itu EBS, bukan Beanstalk. "deploy tanpa downtime + maintain FULL capacity" → Rolling with additional batch. "zero downtime + instant rollback + swap environment URL" → Blue/Green. "process background job from queue" → Worker environment tier (sqsd).',
+            docs: [
+              { label: 'Deploying applications (deployment policies + methods table)', url: 'https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.deploy-existing-version.html' },
+              { label: 'Deployment policies & settings (rolling/immutable detail)', url: 'https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features.rolling-version-deploy.html' },
+              { label: 'Environment tiers — Web Server vs Worker', url: 'https://docs.aws.amazon.com/elasticbeanstalk/latest/dg/using-features-managing-env-tiers.html' },
+            ],
+            keywords: ['PaaS', 'deploy app', 'developer friendly', 'auto EC2+ALB+ASG', 'free service', 'deployment policy', 'all at once', 'rolling', 'rolling with additional batch', 'immutable deployment', 'blue green', 'blue/green CNAME swap', 'traffic splitting', 'canary', 'web server tier', 'worker tier', 'sqsd', '.ebextensions', 'managed platform updates', 'zero downtime deployment', 'pricing'],
           },
           {
             shortName: 'ECS',
