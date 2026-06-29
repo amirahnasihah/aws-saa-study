@@ -15,6 +15,44 @@ export type ChangeEntry = {
 
 export const changelog: ChangeEntry[] = [
   {
+    id: '2026-06-30',
+    date: '2026-06-30',
+    changes: [
+      { type: 'feat', text: 'Deep Notes — DataSync incremental transfer sifir + S3 Lifecycle "all storage classes" rule line' },
+    ],
+  },
+  {
+    id: '2026-06-29',
+    date: '2026-06-29',
+    changes: [
+      { type: 'feat', text: 'Deep Notes — full GWLB card (ALB recipe depth); NLB enriched to match ALB; Lambda fungsi rewritten to Manglish plain-meaning + compute-vs-router framing' },
+      { type: 'feat', text: 'Deep Notes — Elastic Beanstalk enriched to Lambda depth (deployment policies, tiers, perangkap)' },
+      { type: 'feat', text: 'RDS encryption-at-rest — Deep Notes guidance + glossary entry (snapshot→copy→restore, RR inherits source); trigger words for unencrypted instances' },
+      { type: 'feat', text: 'Trigger words — ELB Health Check row; Ingress=Inbound terminology module on Peta Besar' },
+      { type: 'feat', text: 'Exam guide — auto-generated service index from awsServices; STUDY-CHECKLIST extended' },
+      { type: 'refactor', text: 'Practice page — question loading state + improved error handling' },
+    ],
+  },
+  {
+    id: '2026-06-28',
+    date: '2026-06-28',
+    changes: [
+      { type: 'feat', text: 'Trigger words — Peta Besar mermaid, decision trees, core-pattern modules; Migration & Transfer, Threat detection & protection, deregistration-delay, RDS Segitiga Emas, CMK, Kinesis Video, confused-pair rows' },
+      { type: 'feat', text: 'Deep Notes §5 Security — capstone overview card; Security Hub, Firewall Manager, IAM Roles Anywhere, Artifact; IAM Access Analyzer + RAM; KMS symmetric vs asymmetric + digital signing' },
+      { type: 'feat', text: 'Deep Notes §5 IAM — ABAC vs RBAC, Permissions Boundary traps, 4-layer permission + cross-account decision mermaids; Confused Deputy + Credential Report' },
+      { type: 'feat', text: 'Deep Notes §6 Database — Timestream, MemoryDB, DocumentDB, Neptune, Keyspaces to full recipe; RDS TDE engine list (Oracle+SQL Server); at-rest/in-transit peta row' },
+      { type: 'feat', text: 'Deep Notes §9 Networking — ALB full enrichment (anatomy, Spot+ASG connection draining); Load Balancer docs + glossary; ADS/Inspector/WAF anatomy' },
+      { type: 'feat', text: 'Deep Notes §2 Compute — EC2 Hibernation 8/8; User Data + Metadata (IMDSv1/v2 SSRF); high-yield thin cards (Shield, Client VPN, Recycle Bin, DynamoDB On-Demand)' },
+      { type: 'feat', text: 'Deep Notes storage — EBS Volume Types decision-tree + kenderaan analogy; Snapshots enrichment; Pilih Storage tree on /trigger-words; Region & AZ card; Storage Gateway FBT mnemonic' },
+      { type: 'feat', text: 'Deep Notes containers — ECS/Fargate storage cross-refs (EFS/EBS/bind mount); EKS persistent storage (EBS/EFS/FSx, RWO vs RWX)' },
+      { type: 'feat', text: 'Deep Notes D2 resilience — AWS Elastic Disaster Recovery (DRS) card; DR strategy + Monolithic/Legacy lifecycle cards' },
+      { type: 'feat', text: 'Deep Notes skim-tier enrichments — MSK, Kendra, SageMaker, AppSync, AppFlow, CI/CD, Rekognition + practice question; §7 AI services update' },
+      { type: 'feat', text: 'Exam-confusion gap-fill across §5/§9/§10/§11/§14; SSM enhancements; search relevance ranking fix; SQS write-heavy perangkap' },
+      { type: 'feat', text: 'CFN helper scripts + VPC endpoint condition keys; merged duplicate Penetration Testing cards' },
+      { type: 'fix', text: 'Trigger words page — layout and responsiveness improvements' },
+    ],
+  },
+  {
     id: '2026-06-27',
     date: '2026-06-27',
     changes: [
@@ -32,6 +70,11 @@ export const changelog: ChangeEntry[] = [
       { type: 'chore', text: 'CLAUDE.md — Mermaid syntax rules for Deep Notes authoring; NACL rule numbers clarified as priorities not codes' },
       { type: 'feat', text: 'Glossary: ECMP, VGW, TGW, Private NAT GW, ephemeral ports, Fault tolerance terms' },
       { type: 'fix', text: 'Mermaid label parsing for edge cases in LearnCard renderer' },
+      { type: 'feat', text: 'Trigger words page (/trigger-words) — keyword→service cheat sheet launched with domain grouping' },
+      { type: 'feat', text: 'STS card — Kaunter Pengawal / temporary-pass analogy mermaid (AssumeRole); SQS cross-account "Dua Kunci" + DLQ coverage (maxReceiveCount, Redrive)' },
+      { type: 'feat', text: 'Cross-account "Dua Kunci" pattern + Organizations account-hierarchy diagram; Control Tower + AWS Config anatomy; Principal:"*" public-access trap' },
+      { type: 'feat', text: 'Lake Formation + Data Lake vs Warehouse coverage; HA vs FT vs Scalability vs Elasticity vs Throughput concepts' },
+      { type: 'feat', text: 'Firebase↔Amplify BaaS mapping; Route 53 + SQS 4-option perangkap' },
     ],
   },
   {

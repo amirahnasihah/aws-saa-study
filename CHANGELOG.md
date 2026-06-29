@@ -5,6 +5,35 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 
 ---
 
+## 2026-06-30
+
+- **feat** Deep Notes — DataSync incremental transfer sifir + S3 Lifecycle "all storage classes" rule line
+
+## 2026-06-29
+
+- **feat** Deep Notes — full GWLB card (ALB recipe depth); NLB enriched to match ALB; Lambda fungsi rewritten to Manglish plain-meaning + compute-vs-router framing
+- **feat** Deep Notes — Elastic Beanstalk enriched to Lambda depth (deployment policies, tiers, perangkap)
+- **feat** RDS encryption-at-rest — Deep Notes guidance + glossary entry (snapshot→copy→restore, RR inherits source); trigger words for unencrypted instances
+- **feat** Trigger words — ELB Health Check row; Ingress=Inbound terminology module on Peta Besar
+- **feat** Exam guide — auto-generated service index from awsServices; STUDY-CHECKLIST extended
+- **refactor** Practice page — question loading state + improved error handling
+
+## 2026-06-28
+
+- **feat** Trigger words — Peta Besar mermaid, decision trees, core-pattern modules; Migration & Transfer, Threat detection & protection, deregistration-delay, RDS Segitiga Emas, CMK, Kinesis Video, confused-pair rows
+- **feat** Deep Notes §5 Security — capstone overview card; Security Hub, Firewall Manager, IAM Roles Anywhere, Artifact; IAM Access Analyzer + RAM; KMS symmetric vs asymmetric + digital signing
+- **feat** Deep Notes §5 IAM — ABAC vs RBAC, Permissions Boundary traps, 4-layer permission + cross-account decision mermaids; Confused Deputy + Credential Report
+- **feat** Deep Notes §6 Database — Timestream, MemoryDB, DocumentDB, Neptune, Keyspaces to full recipe; RDS TDE engine list (Oracle+SQL Server); at-rest/in-transit peta row
+- **feat** Deep Notes §9 Networking — ALB full enrichment (anatomy, Spot+ASG connection draining); Load Balancer docs + glossary; ADS/Inspector/WAF anatomy
+- **feat** Deep Notes §2 Compute — EC2 Hibernation 8/8; User Data + Metadata (IMDSv1/v2 SSRF); high-yield thin cards (Shield, Client VPN, Recycle Bin, DynamoDB On-Demand)
+- **feat** Deep Notes storage — EBS Volume Types decision-tree + kenderaan analogy; Snapshots enrichment; Pilih Storage tree on /trigger-words; Region & AZ card; Storage Gateway FBT mnemonic
+- **feat** Deep Notes containers — ECS/Fargate storage cross-refs (EFS/EBS/bind mount); EKS persistent storage (EBS/EFS/FSx, RWO vs RWX)
+- **feat** Deep Notes D2 resilience — AWS Elastic Disaster Recovery (DRS) card; DR strategy + Monolithic/Legacy lifecycle cards
+- **feat** Deep Notes skim-tier enrichments — MSK, Kendra, SageMaker, AppSync, AppFlow, CI/CD, Rekognition + practice question; §7 AI services update
+- **feat** Exam-confusion gap-fill across §5/§9/§10/§11/§14; SSM enhancements; search relevance ranking fix; SQS write-heavy perangkap
+- **feat** CFN helper scripts + VPC endpoint condition keys; merged duplicate Penetration Testing cards
+- **fix** Trigger words page — layout and responsiveness improvements
+
 ## 2026-06-27
 
 - **refactor** Trap-question field renamed jebakan → umpan (proper Bahasa Melayu) across awsServices data model + LearnCard
@@ -21,6 +50,11 @@ The changelog page at `/changelog` is the canonical version — this file mirror
 - **chore** CLAUDE.md — Mermaid syntax rules for Deep Notes authoring; NACL rule numbers clarified as priorities not codes
 - **feat** Glossary: ECMP, VGW, TGW, Private NAT GW, ephemeral ports, Fault tolerance terms
 - **fix** Mermaid label parsing for edge cases in LearnCard renderer
+- **feat** Trigger words page (/trigger-words) — keyword→service cheat sheet launched with domain grouping
+- **feat** STS card — Kaunter Pengawal / temporary-pass analogy mermaid (AssumeRole); SQS cross-account "Dua Kunci" + DLQ coverage (maxReceiveCount, Redrive)
+- **feat** Cross-account "Dua Kunci" pattern + Organizations account-hierarchy diagram; Control Tower + AWS Config anatomy; Principal:"*" public-access trap
+- **feat** Lake Formation + Data Lake vs Warehouse coverage; HA vs FT vs Scalability vs Elasticity vs Throughput concepts
+- **feat** Firebase↔Amplify BaaS mapping; Route 53 + SQS 4-option perangkap
 
 ## 2026-06-26
 
