@@ -201,7 +201,7 @@ export default function TriggerWordsPage() {
             <span className="text-aws-muted/70"> (garis putus-putus = vs, pilih satu · anak panah pejal = aliran / mengandungi · garis tebal = dua-dua perlu)</span>
           </p>
 
-          <div className="grid gap-3 md:grid-cols-2">
+          <div className="grid gap-3 lg:grid-cols-2">
             {petaModules.map((m) => (
               <div key={m.num} className="min-w-0 rounded-lg border border-aws-border bg-aws-card/40 p-3.5">
                 <div className="flex items-baseline gap-2 mb-3">
@@ -212,18 +212,19 @@ export default function TriggerWordsPage() {
                   <MermaidDiagram source={m.mermaid} />
                 </div>
                 {m.rows.length > 0 && (
-                  <table className="w-full mt-3 border-collapse">
-                    <tbody>
-                      {m.rows.map((row) => (
-                        <tr key={row.left + row.right} className="border-t border-aws-border/40 align-top">
-                          <td className="py-1.5 pr-3 font-space-mono text-[0.68rem] leading-snug text-aws-text whitespace-nowrap">
-                            {row.left} <span className={accentText[m.accent]}>{row.rel}</span> {row.right}
-                          </td>
-                          <td className="py-1.5 text-[0.68rem] leading-relaxed text-aws-muted">{row.note}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
+                  <div className="mt-3">
+                    {m.rows.map((row) => (
+                      <div
+                        key={row.left + row.right}
+                        className="border-t border-aws-border/40 py-2 sm:grid sm:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)] sm:gap-3 sm:items-baseline"
+                      >
+                        <div className="font-space-mono text-[0.68rem] leading-snug text-aws-text mb-1 sm:mb-0 break-words">
+                          {row.left} <span className={accentText[m.accent]}>{row.rel}</span> {row.right}
+                        </div>
+                        <p className="text-[0.68rem] leading-relaxed text-aws-muted">{row.note}</p>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             ))}
