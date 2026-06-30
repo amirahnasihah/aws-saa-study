@@ -1328,7 +1328,7 @@ export const searchIndex: SearchIndexDoc[] = [
     "category": "storage",
     "shortLower": "efs",
     "fullLower": "elastic file system",
-    "keywordsLower": "shared storage multiple ec2 nfs general purpose max i/o provisioned throughput bursting throughput elastic throughput tls 1.2 mount helper -o tls tcp 2049 cross-vpc efs efs mount target readwritemany rwx readwriteonce rwo efs csi driver eks shared storage pods different nodes kubernetes persistent volume efs storage classes one zone-ia standard-ia efs one zone rarely accessed single az re-creatable regenerated if lost low-cost cheapest efs redundant storage high-throughput",
+    "keywordsLower": "shared storage multiple ec2 nfs general purpose max i/o provisioned throughput bursting throughput elastic throughput tls 1.2 mount helper -o tls tcp 2049 cross-vpc efs efs mount target readwritemany rwx readwriteonce rwo efs csi driver eks shared storage pods different nodes kubernetes persistent volume efs storage classes one zone-ia standard-ia efs one zone rarely accessed single az re-creatable regenerated if lost low-cost cheapest efs redundant storage high-throughput efs lifecycle 365 days max vs s3 lifecycle 730 days",
     "descLower": "managed nfs (network file system) that scales automatically. multiple ec2 instances across azs can mount and read/write the same file system at the same time. web content serving across 20 ec2 instances, shared config files, content management systems multi-ec2 shared storage → efs. single-instance persistent block storage → ebs. object storage (images, backups) → s3. pilih kelas efs: \"rarely accessed + single az + can be regenerated/re-creatable + low-cost\" → one zone-ia (paling murah); \"frequently accessed + highly available / multi-az\" → standard; \"infrequent access tapi masih perlu multi-az redundancy\" → standard-ia; \"active data tapi re-creatable / dev-test, nak jimat\" → one zone."
   },
   {
@@ -1342,7 +1342,7 @@ export const searchIndex: SearchIndexDoc[] = [
     "category": "storage",
     "shortLower": "s3",
     "fullLower": "simple storage service",
-    "keywordsLower": "object storage 11 nines durability strong consistency bucket policy block public access versioning crr srr sse-s3 sse-kms sse-c multipart upload 5tb transfer acceleration 503 slow down prefix static website event notification",
+    "keywordsLower": "object storage 11 nines durability strong consistency bucket policy block public access versioning crr srr sse-s3 sse-kms sse-c multipart upload 5tb transfer acceleration 503 slow down prefix static website event notification lifecycle policy 2 years 730 days standard-ia glacier global upload",
     "descLower": "object storage tanpa had — simpan apa-apa jenis fail sebagai object dalam bucket. bukan block (ebs) bukan file system (efs). tiap object ada key (nama penuh), value (data), metadata, version id. bucket nama global unik. max 1 object = 5tb. 11 nines durability (99.999999999%) sebab tiap object auto-replicate across ≥3 az. store images/video, backup & restore, data lake untuk athena/redshift, static website hosting, log storage, distribute software app tetiba dapat banyak http 503 \"slow down\" masa upload laju → bukan kena scale apa-apa, s3 tengah auto-scale; agih objek across multiple prefix (3,500 put / 5,500 get per prefix/saat, prefix tak terhad). nak hantar fail besar laju merentas benua → s3 transfer acceleration (guna edge cloudfront). fail >100mb → guna multipart upload (wajib >5gb)."
   },
   {
@@ -1398,7 +1398,7 @@ export const searchIndex: SearchIndexDoc[] = [
     "category": "storage",
     "shortLower": "s3 lifecycle",
     "fullLower": "s3 lifecycle management",
-    "keywordsLower": "lifecycle transition rule expiration rule auto-move auto-delete age-based storage class transition noncurrent version versioning cleanup s3 lifecycle policy cost optimization prefix filter tag filter",
+    "keywordsLower": "lifecycle transition rule expiration rule auto-move auto-delete age-based storage class transition transition waterfall noncurrent version versioning cleanup s3 lifecycle policy cost optimization prefix filter tag filter 2 years 730 days efs lifecycle 365 max",
     "descLower": "lifecycle rules automatik pindah object ke storage class yang lebih murah berdasarkan umur (days sejak creation), dan boleh auto-expire (delete) object lama. dua jenis rule: transition (pindah ke class lain) dan expiration (padam object). rules boleh untuk whole bucket atau specific prefix/tags. log file masuk standard → 30 hari pindah ke standard-ia → 90 hari pindah ke glacier flexible → 365 hari pindah deep archive → 2555 hari (7 tahun) auto-delete. \"automatically move log files from standard to ia after 30 days, to glacier after 90 days, delete after 1 year\" → s3 lifecycle policy. \"don't know access pattern, want s3 to auto-choose tier\" → intelligent-tiering (bukan lifecycle). \"clean up old versions of objects after 30 days\" → noncurrent version expiration rule."
   },
   {
