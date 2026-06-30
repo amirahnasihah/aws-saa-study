@@ -576,6 +576,27 @@ export interface PetaModule {
 
 export const petaModules: PetaModule[] = [
   {
+    num: '00',
+    title: 'Master Index — 4 Domain × Category (overview kt atas)',
+    accent: 'c5',
+    mermaid: `flowchart TD
+  EXAM["AWS SAA-C03 — 4 Domain"]
+  EXAM --> D1["Domain 1 · Secure<br/>30%"]
+  EXAM --> D2["Domain 2 · Resilient<br/>26%"]
+  EXAM --> D3["Domain 3 · High-Performing<br/>24%"]
+  EXAM --> D4["Domain 4 · Cost-Optimized<br/>20%"]
+  D1 --> D1a["Identity · NetworkSec · Data Protection · Connectivity · VPC"]
+  D2 --> D2a["HA/Scaling · DR patterns · Backup/Migration"]
+  D3 --> D3a["Compute · Storage · Network/Delivery · Messaging · DB/Analytics · AI/ML"]
+  D4 --> D4a["EC2 Pricing · RI/Savings Plans · Billing/Cost"]`,
+    rows: [
+      { left: 'D1 Secure 30%', rel: '→', right: 'Identity · NetSec · Data · Connect · VPC', note: 'MNEMONIC: IAM=siapa buat apa, Directory=senarai pekerja, Cognito=login app, Organizations=payung akaun, RAM=kongsi resource. SG Satu Gate stateful suka-allow; NACL kena List nombor boleh Lock (deny). GIM Detect (GuardDuty/Inspector/Macie), WAS Protect (WAF/Shield). KMS=Kongsi (managed), HSM=Hardware Sendiri (single-tenant). Direct Connect=dedicated, Client VPN=remote-user, Site-to-Site=network-ke-network. Peer-server, End-service, NAT-net.' },
+      { left: 'D2 Resilient 26%', rel: '→', right: 'HA/Scaling · DR · Backup/Migration', note: 'MNEMONIC: Region=bandar, AZ=lokasi berasingan dalam bandar. Multi-AZ=SELAMAT (failover), Read Replica=LAJU (agih baca). DR 4 pattern makin mahal makin laju: Backup&Restore → Pilot Light → Warm Standby → Multi-Site Active/Active. RTO=berapa cepat pulih (downtime), RPO=berapa banyak data boleh hilang. Server→MGN, DB→DMS(+SCT), file→DataSync, offline besar→Snow.' },
+      { left: 'D3 High-Perf 24%', rel: '→', right: 'Compute · Storage · Net · Msg · DB · AI/ML', note: 'MNEMONIC: Lambda=serverless event, ECS/EKS=container (Fargate=serverless container), EC2=full control. EBS=SSD laptop (1 mesin), EFS=folder kongsi (ramai), S3=Google Drive (object). ALB=App L7 path-routing, NLB=Network L4 laju static IP, GLB=Gate firewall pihak3. SQS=Queue 1 consumer, SNS=Pub-sub ramai, Kinesis=Stream. RDS/Aurora=SQL, DynamoDB=NoSQL, Redshift=warehouse OLAP, ElastiCache=cache, Athena=query S3 serverless. Rekognition=imej, Comprehend=teks, SageMaker=bina model sendiri.' },
+      { left: 'D4 Cost 20%', rel: '→', right: 'EC2 Pricing · RI/SP · Billing', note: 'MNEMONIC: On-Demand=teksi (bayar guna, mahal), RI=sewa kontrak (komit instance type), SP=komit DUIT per jam (flexible), Spot=tiket standby (murah s/h 90%, boleh ditarik 2 min). RI=komit instance type (kurang flexible), SP=komit $/jam — Compute SP merangkumi EC2+Fargate+Lambda (paling flexible). Cost Explorer=visualize+forecast 12bln, Budgets=alert+Budget Actions, CUR=detail line-item ke S3+Athena, Cost Anomaly Detection=ML spike, Compute Optimizer=rightsize ML, Trusted Advisor=broad checks.' },
+    ],
+  },
+  {
     num: '01',
     title: 'Security & multi-account',
     accent: 'c3',
