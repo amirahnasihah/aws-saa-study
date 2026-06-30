@@ -754,6 +754,37 @@ export const petaModules: PetaModule[] = [
       { left: 'Kubernetes Ingress', rel: '→', right: 'AWS ALB', note: 'Pasang K8s Ingress dalam EKS → AWS Load Balancer Controller AUTO-create sebiji ALB di belakang tabir untuk agih trafik HTTP ikut path/host. Ingress Controller = "polis trafik / pengagih URL" = kerja sama macam ALB. Mereka berkawan baik.' },
     ],
   },
+  {
+    num: '12',
+    title: 'NetSec — mnemonics + master decision',
+    accent: 'c4',
+    mermaid: `flowchart TD
+  Start["Baca soalan networking/security"] --> Q1{"Pasal apa?"}
+  Q1 -->|"Kawal trafik subnet/instance"| Q2{"Stateful atau perlu DENY?"}
+  Q2 -->|"Stateful, allow je"| SG["Security Group<br/>(instance · stateful)"]
+  Q2 -->|"Stateless, perlu deny/block IP"| NACL["NACL<br/>(subnet · boleh DENY)"]
+  Q1 -->|"Sambung VPC/servis"| Q3{"Destinasi?"}
+  Q3 -->|"VPC lain"| Peer["VPC Peering"]
+  Q3 -->|"S3/DynamoDB (FREE)"| GE["Gateway Endpoint"]
+  Q3 -->|"SQS/SNS/KMS (bayar)"| IE["Interface Endpoint"]
+  Q3 -->|"Internet dari private"| NAT["NAT Gateway"]
+  Q3 -->|"On-prem laju"| DC["Direct Connect"]
+  Q3 -->|"On-prem murah"| VPN["VPN"]
+  Q1 -->|"Lindung dari serangan"| Q4{"Jenis serangan?"}
+  Q4 -->|"DDoS"| SH["Shield Std/Adv"]
+  Q4 -->|"App layer SQLi/XSS"| WAF["WAF"]
+  Q4 -->|"Kesan ancaman/threat"| GD["GuardDuty"]
+  Q1 -->|"Encryption"| Q5{"Tenant?"}
+  Q5 -->|"Shared, senang"| KMS["KMS"]
+  Q5 -->|"Dedicated, FIPS L3"| HSM["CloudHSM"]`,
+    rows: [
+      { left: 'Security Group', rel: 'vs', right: 'NACL', note: 'MNEMONIC SNAP: SG = Satu Gate (instance), Stateful, Suka (allow je, tak boleh deny). NACL = Net Access Control List, kena List nombor (lowest dulu), boleh Lock (DENY). Block specific IP at subnet → NACL; stateful instance-level allow → SG. Stateful = "saya ingat awak" (response auto keluar); Stateless = "saya lupa" (define in & out dua arah). Table penuh ada kat card NACL / SG vs NACL.' },
+      { left: '7-layer defense', rel: '→', right: 'Resource', note: 'Internet → Route 53 (DNS) → Shield+WAF → CloudFront (CDN) → VPC (IGW/NAT) → NACL (subnet) → Security Group (instance) → IAM → Resource. MNEMONIC: "Dulu Shield, CDN Veto, Net Security, Identity".' },
+      { left: 'Detection GIM', rel: '+', right: 'Protection WAS', note: 'GIM = GuardDuty (ancaman/malicious), Inspector (vulnerability/CVE), Macie (data sensitif PII dalam S3). WAS = WAF (L7 SQLi/XSS), Advanced Shield (DDoS+ mitigation), Shield Standard (DDoS asas, FREE auto). Ingat: GuardDuty jaga Gate, Inspector cari Illness, Macie cari Maklumat sulit.' },
+      { left: 'KMS', rel: 'vs', right: 'CloudHSM', note: 'MNEMONIC: KMS = Kongsi (multi-tenant, AWS urus, FIPS 140-2 L2). CloudHSM = Hardware Sendiri Milik (single-tenant dedicated, kau urus, FIPS L3, compliance ketat bank/regulasi).' },
+      { left: 'VPC Endpoint', rel: 'Gateway vs Interface', right: 'free vs bayar', note: 'Gateway Endpoint = S3 & DynamoDB SAHAJA, PERCUMA (route table entry). Interface Endpoint = semua servis lain (SQS/SNS/KMS/dll), BERBAYAR (ENI dalam subnet). MNEMONIC: "S3 dan Dynamo = FREE Gate".' },
+    ],
+  },
 ]
 
 export const trapRows: TrapRow[] = [
