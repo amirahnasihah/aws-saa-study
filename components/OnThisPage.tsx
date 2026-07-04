@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { navDomains } from '@/data/awsServices'
+import { navDomains } from '@/data/awsMeta'
 
 const stripHash = (href: string): string => href.replace(/^#/, '')
 

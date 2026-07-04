@@ -27,7 +27,7 @@ export default async function LabDetailPage({ params }: PageProps) {
   return (
     <>
       <Nav activePage="labs" />
-      <LabDetailClient slug={slug} />
+      <LabDetailClient slug={slug} initialLab={findLabFallback(slug)} />
     </>
   )
 }

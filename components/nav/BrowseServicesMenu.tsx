@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState } from 'react'
-import { navDomains } from '@/data/awsServices'
+import { navDomains } from '@/data/awsMeta'
 import { ChevronDown } from './icons'
 import { useDismissable } from './useDismissable'
 

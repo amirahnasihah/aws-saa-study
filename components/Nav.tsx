@@ -3,7 +3,7 @@
 import { useState, useEffect, type CSSProperties } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { navDomains } from '@/data/awsServices'
+import { navDomains } from '@/data/awsMeta'
 import { navTransitionTypes } from '@/lib/nav-transition'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 import FloatingBar from './FloatingBar'

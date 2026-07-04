@@ -21,7 +21,6 @@ import {
   librarySections,
 } from '@/lib/labs-library'
 import { labsLibraryTotal } from '@/data/labsLibraryOrder'
-import { allLabsFallback } from '@/lib/labs-fallback'
 import type { ChecklistSectionId } from '@/data/labsChecklistOrder'
 import type { LibrarySectionId } from '@/data/labsLibraryOrder'
 import type { Lab } from '@/lib/labs'
@@ -45,7 +44,10 @@ const viewToggleClass = (active: boolean) =>
   ].join(' ')
 
 export default function LabsPageClient() {
-  const [labs, setLabs] = useState<Lab[]>(allLabsFallback())
+  // Starts empty and fills from the network — importing the 2.6MB labsCatalog
+  // here would ship it as client JS on the /labs page. The static JSON fallback
+  // is generated into /public by scripts/generate-ai-link-indexes.ts.
+  const [labs, setLabs] = useState<Lab[]>([])
   const [query, setQuery] = useState('')
   const [view, setView] = useState<LabsView>('domain')
   const [activeDomainCategory, setActiveDomainCategory] = useState(labDomainTabs[0]?.id ?? '')
@@ -53,14 +55,24 @@ export default function LabsPageClient() {
   const [activeLibrarySection, setActiveLibrarySection] = useState<LibrarySectionId>('guided')
 
   useEffect(() => {
+    const loadStaticFallback = () =>
+      fetch('/data/labs-fallback.json')
+        .then((r) => r.json())
+        .then((data: unknown) => {
+          if (Array.isArray(data) && data.length > 0) setLabs(data as Lab[])
+        })
+        .catch(() => {})
+
     fetch('/api/labs')
       .then((r) => r.json())
       .then((data: unknown) => {
         if (Array.isArray(data) && data.length > 0) {
           setLabs(data as Lab[])
+        } else {
+          void loadStaticFallback()
         }
       })
-      .catch(() => setLabs(allLabsFallback()))
+      .catch(loadStaticFallback)
   }, [])
 
   const domainSection = useMemo(

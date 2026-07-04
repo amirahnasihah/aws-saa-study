@@ -4,7 +4,8 @@ import Link from 'next/link'
 import { useBookmarksCtx } from './BookmarksContext'
 import { useAnswerBookmarksCtx } from './AnswerBookmarksContext'
 import BookmarkIcon from '@/components/bookmarks/BookmarkIcon'
-import { domains, categoryStyles } from '@/data/awsServices'
+import { categoryStyles } from '@/data/awsMeta'
+import { bookmarkIndex } from '@/data/bookmarkIndex'
 import { bookmarksToMarkdown, downloadTextFile, exportFilenames } from '@/lib/export'
 
 interface BookmarksPanelProps {
@@ -12,11 +13,9 @@ interface BookmarksPanelProps {
   onClose: () => void
 }
 
-const allServices = domains.flatMap((d) =>
-  d.sections.flatMap((s) =>
-    s.services.map((svc) => ({ ...svc, category: s.category, sectionId: s.id }))
-  )
-)
+// Slim generated index — never import the full domains array here: this panel
+// ships on every page (Nav → FloatingBar) and would drag 1MB+ into each bundle.
+const allServices = bookmarkIndex
 
 const savedDate = (ts: number) => new Date(ts).toISOString().slice(0, 10)
 

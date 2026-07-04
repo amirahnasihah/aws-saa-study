@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import SiteFooter from '@/components/SiteFooter'
 import LabStepList from '@/components/labs/LabStepList'
-import { allLabsFallback, findLabFallback } from '@/lib/labs-fallback'
 import type { Lab } from '@/lib/labs'
 
 const levelColor: Record<string, string> = {
@@ -15,12 +14,15 @@ const levelColor: Record<string, string> = {
 
 type LabDetailClientProps = {
   slug: string
+  // Resolved server-side from the labs catalog — importing the catalog here
+  // would bundle 2.6MB of lab data into the client chunk.
+  initialLab?: Lab
 }
 
 const taskAnchor = (index: number): string => `task-${index + 1}`
 
-export default function LabDetailClient({ slug }: LabDetailClientProps) {
-  const [lab, setLab] = useState<Lab | undefined>(() => findLabFallback(slug))
+export default function LabDetailClient({ slug, initialLab }: LabDetailClientProps) {
+  const [lab, setLab] = useState<Lab | undefined>(initialLab)
   const [notFound, setNotFound] = useState(false)
 
   useEffect(() => {
@@ -39,11 +41,10 @@ export default function LabDetailClient({ slug }: LabDetailClientProps) {
         }
       })
       .catch(() => {
-        const fb = findLabFallback(slug)
-        setLab(fb)
-        setNotFound(!fb)
+        // API unreachable — keep showing the server-provided catalog copy.
+        if (!initialLab) setNotFound(true)
       })
-  }, [slug])
+  }, [slug, initialLab])
 
   if (notFound || !lab) {
     return (

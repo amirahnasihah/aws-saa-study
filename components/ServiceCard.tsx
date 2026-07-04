@@ -1,6 +1,6 @@
 'use client'
 
-import { ServiceCard as ServiceCardData, ColorCategory, categoryStyles, domainPill, serviceSlug } from '@/data/awsServices'
+import { ServiceCard as ServiceCardData, ColorCategory, categoryStyles, domainPill, serviceSlug } from '@/data/awsMeta'
 import Link from 'next/link'
 import { useBookmarksCtx } from './BookmarksContext'
 

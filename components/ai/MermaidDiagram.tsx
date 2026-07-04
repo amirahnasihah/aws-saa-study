@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useId, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 
 interface MermaidDiagramProps {
   source: string
@@ -85,8 +85,33 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
   // state in the effect body (which triggers cascading renders).
   const [rendered, setRendered] = useState<{ source: string; svg: string } | null>(null)
   const [failedSource, setFailedSource] = useState<string | null>(null)
+  // Render only when near the viewport — /learn mounts 100+ of these at once
+  // and rendering them all up front locks the main thread for seconds.
+  const containerRef = useRef<HTMLDivElement | null>(null)
+  const [inView, setInView] = useState(false)
 
   useEffect(() => {
+    const el = containerRef.current
+    if (!el || inView) return
+    if (typeof IntersectionObserver === 'undefined') {
+      setInView(true)
+      return
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setInView(true)
+          observer.disconnect()
+        }
+      },
+      { rootMargin: '600px 0px' }
+    )
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [inView])
+
+  useEffect(() => {
+    if (!inView) return
     let cancelled = false
 
     void (async () => {
@@ -119,7 +144,7 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
     return () => {
       cancelled = true
     }
-  }, [reactId, source])
+  }, [reactId, source, inView])
 
   const isFailed = failedSource === source
   const isLoading = !isFailed && rendered?.source !== source
@@ -139,7 +164,10 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
 
   if (isLoading) {
     return (
-      <div className="mb-2 rounded-xl bg-aws-card border border-aws-border/60 p-3 font-space-mono text-[0.6rem] text-aws-muted/60 last:mb-0">
+      <div
+        ref={containerRef}
+        className="mb-2 rounded-xl bg-aws-card border border-aws-border/60 p-3 font-space-mono text-[0.6rem] text-aws-muted/60 last:mb-0"
+      >
         Rendering diagram…
       </div>
     )

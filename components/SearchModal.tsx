@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { categoryStyles, type ColorCategory } from '@/data/awsServices'
+import { categoryStyles, type ColorCategory } from '@/data/awsMeta'
 
 // Search now runs server-side via /api/search so the full awsServices `domains`
 // dataset (1.2 MB) is NOT shipped to the client bundle. The modal only renders the
