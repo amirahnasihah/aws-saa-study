@@ -1,4 +1,5 @@
 import { ServiceCard, CompareTable, FlowDiagram, MermaidSpec, CardImage, TrapQuestion, DiagramTone, ColorCategory, categoryStyles, domainPill, serviceSlug } from '@/data/awsServices'
+import BookmarkStar from './BookmarkStar'
 import GlossaryText from './GlossaryText'
 import MermaidDiagram from './ai/MermaidDiagram'
 
@@ -208,9 +209,12 @@ export default function LearnCard({ service, category, sectionId, domainId }: Le
             <h3 className={`font-space-mono text-base font-bold ${styles.title}`}>{service.shortName}</h3>
             <p className="font-space-mono text-[0.7rem] text-aws-muted">{service.fullName}</p>
           </div>
-          <span className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-[0.72rem] text-slate-300 italic min-w-0 break-words">
-            {service.ingat}
-          </span>
+          <div className="flex items-center gap-2 min-w-0">
+            <span className="bg-white/5 border border-white/10 rounded-lg px-3 py-1 text-[0.72rem] text-slate-300 italic min-w-0 break-words">
+              {service.ingat}
+            </span>
+            <BookmarkStar shortName={service.shortName} />
+          </div>
         </div>
 
         {/* explanation prose */}

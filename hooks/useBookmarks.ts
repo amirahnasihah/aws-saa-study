@@ -28,21 +28,14 @@ export function useBookmarks() {
   useEffect(() => {
     const supabase = createSupabaseBrowserClient()
 
-    const init = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-
-      if (!user) {
-        setBookmarks(loadLocal())
-        return
-      }
-
-      userIdRef.current = user.id
+    const syncWithDb = async (userId: string) => {
+      userIdRef.current = userId
 
       const { data, error } = await supabase
         .schema(SCHEMA)
         .from(TABLE)
         .select('short_name')
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
 
       if (error) console.error('[bookmarks] failed to load from db', error)
 
@@ -54,7 +47,7 @@ export function useBookmarks() {
         if (local.size > 0 && ![...local].every((s) => remote.has(s))) {
           const toInsert = [...local]
             .filter((s) => !remote.has(s))
-            .map((short_name) => ({ user_id: user.id, short_name }))
+            .map((short_name) => ({ user_id: userId, short_name }))
           if (toInsert.length > 0) {
             const { error: upErr } = await supabase
               .schema(SCHEMA)
@@ -69,7 +62,7 @@ export function useBookmarks() {
       } else {
         const local = loadLocal()
         if (local.size > 0) {
-          const toInsert = [...local].map((short_name) => ({ user_id: user.id, short_name }))
+          const toInsert = [...local].map((short_name) => ({ user_id: userId, short_name }))
           const { error: upErr } = await supabase
             .schema(SCHEMA)
             .from(TABLE)
@@ -80,7 +73,32 @@ export function useBookmarks() {
       }
     }
 
+    const init = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) {
+        setBookmarks(loadLocal())
+        return
+      }
+
+      await syncWithDb(user.id)
+    }
+
     init()
+
+    // The provider lives in the root layout, which survives client-side
+    // navigation — without this listener, signing in via /auth/login leaves
+    // userIdRef null until a hard reload and every toggle stays local-only.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user && userIdRef.current !== session.user.id) {
+        syncWithDb(session.user.id)
+      }
+      if (event === 'SIGNED_OUT') {
+        userIdRef.current = null
+      }
+    })
+
+    return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 

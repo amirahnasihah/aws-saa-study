@@ -9,7 +9,8 @@ import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
 
 const messageFromError = (error: string | null): string => {
   if (error === 'missing_code') return 'Sign-in link missing code. Please try again.'
-  if (error === 'exchange_failed') return 'Sign-in failed. Please try again.'
+  if (error === 'exchange_failed')
+    return 'Sign-in link expired or already used — request a new code below.'
   return ''
 }
 
@@ -43,7 +44,15 @@ function LoginForm() {
     setErrorMessage('')
 
     const supabase = createSupabaseBrowserClient()
-    const { error } = await supabase.auth.signInWithOtp({ email })
+    // emailRedirectTo routes the emailed fallback link through /auth/callback
+    // (PKCE code exchange); without it GoTrue redirects to the project Site URL
+    // root, which never exchanges the code.
+    const { error } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/auth/callback?next=${encodeURIComponent(safeNextPath)}`,
+      },
+    })
 
     if (error) {
       if (error.message.toLowerCase().includes('rate limit')) {
@@ -79,6 +88,7 @@ function LoginForm() {
     }
 
     router.push(safeNextPath)
+    router.refresh()
   }
 
   const onVerifyCode = async (event: FormEvent<HTMLFormElement>) => {
@@ -98,7 +108,7 @@ function LoginForm() {
       title={step === 'email' ? 'Sign In' : 'Enter Code'}
       subtitle={
         step === 'email'
-          ? 'Enter your email and we will send a 6-digit code.'
+          ? 'Enter your email and we will send a 6-digit code. First time here? Same flow — your account is created automatically.'
           : `We sent a code to ${email}`
       }
       footer={

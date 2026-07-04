@@ -64,21 +64,14 @@ export function useAnswerBookmarks() {
   useEffect(() => {
     const supabase = createSupabaseBrowserClient()
 
-    const init = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-
-      if (!user) {
-        setAnswers(loadLocal())
-        return
-      }
-
-      userIdRef.current = user.id
+    const syncWithDb = async (userId: string) => {
+      userIdRef.current = userId
 
       const { data } = await supabase
         .schema(SCHEMA)
         .from(TABLE)
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', userId)
         .order('created_at', { ascending: false })
 
       if (data && data.length > 0) {
@@ -89,7 +82,7 @@ export function useAnswerBookmarks() {
 
         if (localOnly.length > 0) {
           const toInsert = localOnly.map((l) => ({
-            user_id: user.id,
+            user_id: userId,
             question: l.question,
             answer: l.answer,
             aws_docs_url: l.awsDocsUrl ?? null,
@@ -105,7 +98,7 @@ export function useAnswerBookmarks() {
         const local = loadLocal()
         if (local.length > 0) {
           const toInsert = local.map((l) => ({
-            user_id: user.id,
+            user_id: userId,
             question: l.question,
             answer: l.answer,
             aws_docs_url: l.awsDocsUrl ?? null,
@@ -117,7 +110,32 @@ export function useAnswerBookmarks() {
       }
     }
 
+    const init = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (!user) {
+        setAnswers(loadLocal())
+        return
+      }
+
+      await syncWithDb(user.id)
+    }
+
     init()
+
+    // The provider lives in the root layout, which survives client-side
+    // navigation — without this listener, signing in via /auth/login leaves
+    // userIdRef null until a hard reload and every save stays local-only.
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user && userIdRef.current !== session.user.id) {
+        syncWithDb(session.user.id)
+      }
+      if (event === 'SIGNED_OUT') {
+        userIdRef.current = null
+      }
+    })
+
+    return () => subscription.unsubscribe()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
