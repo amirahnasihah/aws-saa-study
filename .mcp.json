@@ -8,7 +8,7 @@
     },
     "supabase": {
       "type": "http",
-      "url": "https://mcp.supabase.com/mcp?project_ref=neifhjhgwyxpruziazin"
+      "url": "https://mcp.supabase.com/mcp?project_ref=neifhjhgwyxpruziazin&features=docs%2Caccount%2Cdatabase%2Cfunctions%2Cdevelopment%2Cdebugging%2Cbranching%2Cstorage"
     },
     "playwright": {
       "command": "bunx",
