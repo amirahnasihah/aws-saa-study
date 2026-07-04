@@ -102,6 +102,31 @@ export interface ServiceCard {
   keywords: string[]
 }
 
+// Slim projection for the home-page Quick Reference. ServiceCard.tsx is a
+// client component — every prop field is serialized into the page's RSC
+// payload, so passing full cards ships all Deep Notes content (~2MB) to the
+// browser. Only these fields are actually rendered on the cheatsheet.
+export type ServiceCardSummary = Pick<
+  ServiceCard,
+  'shortName' | 'fullName' | 'ingat' | 'gunaUntuk' | 'storageDetails' | 'keywords'
+>
+
+export const toServiceCardSummary = ({
+  shortName,
+  fullName,
+  ingat,
+  gunaUntuk,
+  storageDetails,
+  keywords,
+}: ServiceCard): ServiceCardSummary => ({
+  shortName,
+  fullName,
+  ingat,
+  gunaUntuk,
+  storageDetails,
+  keywords,
+})
+
 export interface SectionData {
   id: string
   icon: string

@@ -1,4 +1,4 @@
-import { SectionData, categoryStyles, learnHref } from '@/data/awsServices'
+import { SectionData, categoryStyles, learnHref, toServiceCardSummary } from '@/data/awsServices'
 import Link from 'next/link'
 import ServiceCard from './ServiceCard'
 
@@ -26,7 +26,7 @@ export default function Section({ section, domainId }: SectionProps) {
       </div>
 
       {section.services.map((service) => (
-        <ServiceCard key={service.shortName} service={service} category={section.category} sectionId={section.id} domainId={domainId} />
+        <ServiceCard key={service.shortName} service={toServiceCardSummary(service)} category={section.category} sectionId={section.id} domainId={domainId} />
       ))}
     </section>
   )

@@ -1,11 +1,11 @@
 'use client'
 
-import { ServiceCard as ServiceCardData, ColorCategory, categoryStyles, domainPill, serviceSlug } from '@/data/awsMeta'
+import { ServiceCardSummary, ColorCategory, categoryStyles, domainPill, serviceSlug } from '@/data/awsMeta'
 import Link from 'next/link'
 import { useBookmarksCtx } from './BookmarksContext'
 
 interface ServiceCardProps {
-  service: ServiceCardData
+  service: ServiceCardSummary
   category: ColorCategory
   sectionId: string
   domainId: string
