@@ -3,7 +3,15 @@
 import { useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { useAIProvider } from '@/hooks/useAIProvider'
-import AIChatView from '@/components/ai/AIChatView'
+import dynamic from 'next/dynamic'
+
+// Lazy — see FloatingBar: only load the chat bundle when the panel opens.
+const AIChatView = dynamic(() => import('@/components/ai/AIChatView'), {
+  ssr: false,
+  loading: () => (
+    <p className="pt-6 text-center font-space-mono text-[0.7rem] text-aws-muted">Loading chat…</p>
+  ),
+})
 
 const fabShellClass =
   'rounded-full border border-aws-border/80 bg-aws-card/95 font-space-mono text-[0.65rem] text-aws-text shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md transition-all duration-150'

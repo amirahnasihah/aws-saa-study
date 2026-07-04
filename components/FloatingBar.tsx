@@ -7,7 +7,16 @@ import BookmarksPanel from './BookmarksPanel'
 import { useBookmarksCtx } from './BookmarksContext'
 import { useAnswerBookmarksCtx } from './AnswerBookmarksContext'
 import { useAIProvider } from '@/hooks/useAIProvider'
-import AIChatView from '@/components/ai/AIChatView'
+import dynamic from 'next/dynamic'
+
+// Lazy — AIChatView pulls in react-markdown (~148KB); only load when the
+// chat panel actually opens, not on every page that renders the Nav.
+const AIChatView = dynamic(() => import('@/components/ai/AIChatView'), {
+  ssr: false,
+  loading: () => (
+    <p className="pt-6 text-center font-space-mono text-[0.7rem] text-aws-muted">Loading chat…</p>
+  ),
+})
 import { PRACTICE_QUESTION_PICKER_EVENT } from '@/lib/practice-picker'
 
 interface FloatingBarProps {
