@@ -1,16 +1,9 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { navDomains } from '@/data/awsMeta'
 
 const stripHash = (href: string): string => href.replace(/^#/, '')
-
-// Section ids in document order — drives the scrollspy. Mirrors the ids rendered
-// by `Section` / `DomainHeader`, so this component is correct on any page that
-// renders `domains` (Cheat Sheet and Deep Notes today).
-const sectionIds: string[] = navDomains.flatMap((domain) =>
-  domain.items.map((item) => stripHash(item.href))
-)
 
 function scrollToSection(id: string): void {
   const el = document.getElementById(id)
@@ -19,8 +12,26 @@ function scrollToSection(id: string): void {
   history.replaceState(null, '', `#${id}`)
 }
 
-export default function OnThisPage() {
+type OnThisPageProps = {
+  // Restrict to one domain (its navDomains `href`, e.g. '#domain1') for the
+  // per-domain Deep Notes pages. Omit to show all domains (Cheat Sheet).
+  only?: string
+}
+
+export default function OnThisPage({ only }: OnThisPageProps) {
   const [activeId, setActiveId] = useState('')
+
+  const shownDomains = useMemo(
+    () => (only ? navDomains.filter((domain) => domain.href === only) : navDomains),
+    [only],
+  )
+
+  // Section ids in document order — drives the scrollspy. Mirrors the ids
+  // rendered by `Section` / `DomainHeader` on the current page.
+  const sectionIds = useMemo(
+    () => shownDomains.flatMap((domain) => domain.items.map((item) => stripHash(item.href))),
+    [shownDomains],
+  )
 
   useEffect(() => {
     const elements = sectionIds
@@ -44,7 +55,9 @@ export default function OnThisPage() {
     )
     elements.forEach((el) => observer.observe(el))
     return () => observer.disconnect()
-  }, [])
+  }, [sectionIds])
+
+  if (shownDomains.length === 0) return null
 
   return (
     <>
@@ -55,7 +68,7 @@ export default function OnThisPage() {
       >
         <p className="font-space-mono text-[0.6rem] uppercase tracking-widest text-aws-muted mb-3 pl-3">On this page</p>
         <ul className="space-y-3">
-          {navDomains.map((domain) => (
+          {shownDomains.map((domain) => (
             <li key={domain.href}>
               <button
                 type="button"
@@ -97,7 +110,7 @@ export default function OnThisPage() {
         className="min-[1400px]:hidden sticky top-14 z-30 -mx-4 mb-6 border-b border-aws-border/60 bg-aws-bg/85 backdrop-blur-md"
       >
         <div className="nav-scroll flex items-center gap-1.5 overflow-x-auto px-4 py-2.5">
-          {navDomains.map((domain, index) => (
+          {shownDomains.map((domain, index) => (
             <div key={domain.href} className="flex items-center gap-1.5">
               {index > 0 && (
                 <span aria-hidden className="mx-1 h-4 w-px shrink-0 bg-aws-border/60" />

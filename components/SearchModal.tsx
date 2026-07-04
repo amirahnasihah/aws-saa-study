@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { categoryStyles, type ColorCategory } from '@/data/awsMeta'
+import { categoryStyles, learnHref, type ColorCategory } from '@/data/awsMeta'
 
 // Search now runs server-side via /api/search so the full awsServices `domains`
 // dataset (1.2 MB) is NOT shipped to the client bundle. The modal only renders the
@@ -75,10 +75,13 @@ export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
     onClose()
     setQuery('')
 
-    // Per-service anchors only exist on the cheatsheet (/) and Deep Notes (/learn).
-    // From any other page, route to Deep Notes so the anchor actually resolves.
-    if (pathname !== '/' && pathname !== '/learn') {
-      router.push(`/learn#${result.slug}`)
+    // Per-service anchors only exist on the cheatsheet (/) and the per-domain
+    // Deep Notes pages. From any other page, route to the domain page that
+    // renders this anchor so it actually resolves.
+    const target = learnHref(result.slug)
+    const targetPath = target.split('#')[0]
+    if (pathname !== '/' && pathname !== targetPath) {
+      router.push(target)
       return
     }
 

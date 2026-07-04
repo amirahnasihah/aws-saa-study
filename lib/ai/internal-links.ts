@@ -1,4 +1,5 @@
 import { labsLinkIndex } from '@/data/labsLinkIndex'
+import { learnHref } from '@/data/awsMeta'
 
 export type InternalLink = {
   url: string
@@ -121,7 +122,7 @@ function matchNotes(terms: string[]): InternalLink | null {
 
   if (!best) return null
   return {
-    url: `/learn#${best.anchor}`,
+    url: learnHref(best.anchor),
     label: 'Study Notes',
     sublabel: best.title,
     icon: '📓',

@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import TopikSearch from '@/components/TopikSearch'
-import { domains, categoryStyles, serviceSlug } from '@/data/awsServices'
+import { domains, categoryStyles, learnHref, serviceSlug } from '@/data/awsServices'
 
 export const metadata: Metadata = {
   title: 'Topik Index — AWS SAA-C03 Study',
@@ -75,7 +75,7 @@ export default function TopikPage() {
                           return (
                             <Link
                               key={`${section.id}-${service.shortName}`}
-                              href={`/learn#${slug}`}
+                              href={learnHref(slug)}
                               data-topik-card
                               data-group={groupId}
                               data-search={hay}

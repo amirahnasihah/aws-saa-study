@@ -1,4 +1,4 @@
-import { SectionData, categoryStyles } from '@/data/awsServices'
+import { SectionData, categoryStyles, learnHref } from '@/data/awsServices'
 import Link from 'next/link'
 import ServiceCard from './ServiceCard'
 
@@ -17,7 +17,7 @@ export default function Section({ section, domainId }: SectionProps) {
         <span className={`text-sm font-extrabold uppercase tracking-[0.05em] ${styles.title}`}>
           {section.title}
         </span>
-        <Link href={`/learn#${section.id}`} className="font-space-mono text-[0.6rem] text-aws-muted hover:text-aws-text transition-colors ml-2 border border-aws-border/50 rounded-full px-2 py-0.5 hover:border-aws-border">
+        <Link href={learnHref(section.id)} className="font-space-mono text-[0.6rem] text-aws-muted hover:text-aws-text transition-colors ml-2 border border-aws-border/50 rounded-full px-2 py-0.5 hover:border-aws-border">
           Deep Notes →
         </Link>
         <a href="#top" className="ml-auto font-space-mono text-[0.65rem] text-aws-muted hover:text-aws-text transition-colors">

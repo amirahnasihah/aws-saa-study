@@ -3,7 +3,7 @@ import Link from 'next/link'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import { registerSteps, delivery, deliveryAccent, duringTesting, studyChecklist, checklistStatus } from '@/data/exam'
-import { domains as deepNoteDomains, serviceSlug } from '@/data/awsServices'
+import { domains as deepNoteDomains, learnHref, serviceSlug } from '@/data/awsServices'
 
 export const metadata: Metadata = {
   title: 'Exam Guide — AWS SAA-C03 Study',
@@ -411,7 +411,7 @@ export default function ExamGuidePage() {
                             {s.services.map((svc) => (
                               <Link
                                 key={svc.shortName}
-                                href={`/learn#${serviceSlug(s.id, svc.shortName)}`}
+                                href={learnHref(serviceSlug(s.id, svc.shortName))}
                                 className="group block rounded-lg -mx-2 px-2 py-1 hover:bg-white/5 transition-colors"
                               >
                                 <span className="flex items-baseline gap-1.5">

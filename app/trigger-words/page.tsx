@@ -3,6 +3,7 @@ import Link from 'next/link'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import MermaidDiagram from '@/components/ai/MermaidDiagram'
+import { learnHref } from '@/data/awsMeta'
 import {
   triggerRows,
   trapRows,
@@ -129,7 +130,7 @@ export default function TriggerWordsPage() {
               {g.rows.map((row) => (
                 <Link
                   key={row.id}
-                  href={`/learn#${row.slug}`}
+                  href={learnHref(row.slug)}
                   aria-label={`${row.service} — Deep Notes`}
                   className="group block border-b border-aws-border/50 last:border-0 py-3 px-3 -mx-3 transition-colors hover:bg-white/[0.025] md:grid md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] md:gap-6 md:items-baseline"
                 >

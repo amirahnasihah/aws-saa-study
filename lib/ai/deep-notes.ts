@@ -1,4 +1,5 @@
 import { deepNotesLinkIndex } from '@/data/deepNotesLinkIndex'
+import { learnHref } from '@/data/awsMeta'
 
 export type DeepNotesMatch = {
   url: string
@@ -51,7 +52,7 @@ export function findDeepNotesMatch(terms: string[]): DeepNotesMatch {
 
   const { item } = best
   return {
-    url: `/learn#${item.sectionId}`,
+    url: learnHref(item.sectionId),
     serviceName: item.shortName,
     sectionTitle: item.sectionTitle,
     sectionIcon: item.sectionIcon,

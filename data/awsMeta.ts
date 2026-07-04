@@ -160,6 +160,42 @@ export const domainPill: Record<string, { label: string; cls: string }> = {
   'domain-extras': { label: 'Extra · not in exam', cls: 'text-aws-muted border-white/15 bg-white/5' },
 }
 
+// Deep Notes is split into per-domain routes (/learn/d1 … /learn/d4, /learn/extras).
+// Every anchor on those pages is prefixed (d1-, d2-, wa-, extras-, or a domain id),
+// so a bare anchor is enough to compute which page renders it.
+export const learnDomainSlugs = ['d1', 'd2', 'd3', 'd4', 'extras'] as const
+export type LearnDomainSlug = (typeof learnDomainSlugs)[number]
+
+export const learnDomainIds: Record<LearnDomainSlug, string[]> = {
+  d1: ['domain1'],
+  d2: ['domain2'],
+  d3: ['domain3'],
+  d4: ['domain4'],
+  extras: ['domain-well-architected', 'domain-extras'],
+}
+
+const anchorDomainSlug: Record<string, LearnDomainSlug> = {
+  d1: 'd1',
+  d2: 'd2',
+  d3: 'd3',
+  d4: 'd4',
+  wa: 'extras',
+  extras: 'extras',
+  domain1: 'd1',
+  domain2: 'd2',
+  domain3: 'd3',
+  domain4: 'd4',
+  'domain-well-architected': 'extras',
+  'domain-extras': 'extras',
+}
+
+/** Href for a Deep Notes anchor (section id, domain id, or serviceSlug). */
+export const learnHref = (anchor?: string): string => {
+  if (!anchor) return '/learn'
+  const slug = anchorDomainSlug[anchor] ?? anchorDomainSlug[anchor.split('-')[0] ?? '']
+  return slug ? `/learn/${slug}#${anchor}` : '/learn'
+}
+
 export interface NavItem {
   href: string
   label: string

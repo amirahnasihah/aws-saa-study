@@ -1530,7 +1530,7 @@ export default function VpcPage() {
                   <a href="/visual" className="flex items-center gap-2 text-[0.75rem] text-c4 hover:text-aws-text transition-colors">
                     <span>→</span> VPC Subnets & CIDR Diagram (Visual page)
                   </a>
-                  <a href="/learn#d1-vpc" className="flex items-center gap-2 text-[0.75rem] text-c4 hover:text-aws-text transition-colors">
+                  <a href="/learn/d1#d1-vpc" className="flex items-center gap-2 text-[0.75rem] text-c4 hover:text-aws-text transition-colors">
                     <span>→</span> VPC Deep Notes (Learn page)
                   </a>
                   <a href="/practice" className="flex items-center gap-2 text-[0.75rem] text-c4 hover:text-aws-text transition-colors">
