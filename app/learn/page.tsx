@@ -4,6 +4,7 @@ import {
   categoryStyles,
   learnDomainIds,
   learnDomainSlugs,
+  learnHref,
   type LearnDomainSlug,
 } from '@/data/awsMeta'
 import Nav from '@/components/Nav'
@@ -63,7 +64,7 @@ export default function LearnPage() {
                       {d.sections.map((section) => (
                         <Link
                           key={section.id}
-                          href={`/learn/${slug}#${section.id}`}
+                          href={learnHref(section.id)}
                           className={`font-space-mono text-[0.62rem] px-2 py-0.5 rounded-full border transition-all hover:bg-white/6 ${categoryStyles[section.category].nav}`}
                         >
                           {section.icon} {section.title}

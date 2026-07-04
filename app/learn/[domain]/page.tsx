@@ -11,6 +11,7 @@ import {
 import Nav from '@/components/Nav'
 import DomainHeader from '@/components/DomainHeader'
 import LearnCard from '@/components/LearnCard'
+import LearnHashRedirect from '@/components/LearnHashRedirect'
 import OnThisPage from '@/components/OnThisPage'
 import SiteFooter from '@/components/SiteFooter'
 
@@ -51,12 +52,16 @@ export default async function LearnDomainPage({ params }: PageProps) {
   const pageDomains = domains.filter((d) => learnDomainIds[domain].includes(d.id))
   if (pageDomains.length === 0) notFound()
 
+  // Domain 3 is split into per-section pages — /learn/d3 is a section index.
+  const isD3Index = domain === 'd3'
+
   return (
     <>
       <Nav activePage="learn" />
+      {isD3Index && <LearnHashRedirect />}
 
       <main id="top" className="max-w-[860px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-20 md:pb-16">
-        <OnThisPage only={`#${pageDomains[0].id}`} />
+        {!isD3Index && <OnThisPage only={`#${pageDomains[0].id}`} />}
 
         {/* domain switcher */}
         <div className="flex flex-wrap items-center justify-center gap-2 mb-8">
@@ -80,7 +85,32 @@ export default async function LearnDomainPage({ params }: PageProps) {
           ))}
         </div>
 
-        {pageDomains.map((d, index) => (
+        {isD3Index ? (
+          <>
+            <DomainHeader domain={pageDomains[0]} />
+            <div className="grid gap-3 sm:grid-cols-2">
+              {pageDomains[0].sections.map((section) => {
+                const styles = categoryStyles[section.category]
+                return (
+                  <Link
+                    key={section.id}
+                    href={`/learn/d3/${section.id.replace(/^d3-/, '')}`}
+                    className="block bg-aws-card border border-aws-border rounded-xl p-4 transition-all duration-200 hover:-translate-y-0.5 hover:border-white/15"
+                  >
+                    <span className="text-xl">{section.icon}</span>
+                    <p className={`text-sm font-extrabold uppercase tracking-[0.05em] mt-1 ${styles.title}`}>
+                      {section.title}
+                    </p>
+                    <p className="font-space-mono text-[0.62rem] text-aws-muted mt-1.5">
+                      {section.services.length} services →
+                    </p>
+                  </Link>
+                )
+              })}
+            </div>
+          </>
+        ) : (
+          pageDomains.map((d, index) => (
           <div key={d.id}>
             {index > 0 && d.extra && (
               <div className="relative my-14">
@@ -114,7 +144,8 @@ export default async function LearnDomainPage({ params }: PageProps) {
               )
             })}
           </div>
-        ))}
+          ))
+        )}
 
         <SiteFooter tagline="AWS SAA-C03 · Deep Notes · Good luck! 💪" />
       </main>

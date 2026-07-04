@@ -214,10 +214,31 @@ const anchorDomainSlug: Record<string, LearnDomainSlug> = {
   'domain-extras': 'extras',
 }
 
+// Domain 3 is the largest domain, so its Deep Notes are split one level
+// further into per-section pages (/learn/d3/<section>). Must mirror the
+// `d3-*` section ids in data/awsServices.ts domain3.
+export const learnD3SectionSlugs = [
+  'compute',
+  'storage',
+  'network',
+  'messaging',
+  'infra',
+  'db',
+  'analytics',
+] as const
+export type LearnD3SectionSlug = (typeof learnD3SectionSlugs)[number]
+
+export const isLearnD3SectionSlug = (value: string): value is LearnD3SectionSlug =>
+  (learnD3SectionSlugs as readonly string[]).includes(value)
+
 /** Href for a Deep Notes anchor (section id, domain id, or serviceSlug). */
 export const learnHref = (anchor?: string): string => {
   if (!anchor) return '/learn'
-  const slug = anchorDomainSlug[anchor] ?? anchorDomainSlug[anchor.split('-')[0] ?? '']
+  const [head, second] = anchor.split('-')
+  if (head === 'd3' && second && isLearnD3SectionSlug(second)) {
+    return `/learn/d3/${second}#${anchor}`
+  }
+  const slug = anchorDomainSlug[anchor] ?? anchorDomainSlug[head ?? '']
   return slug ? `/learn/${slug}#${anchor}` : '/learn'
 }
 
