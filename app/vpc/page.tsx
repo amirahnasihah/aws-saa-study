@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback, type ReactNode } from 'react'
+import Link from 'next/link'
 import Nav from '@/components/Nav'
 import GlossaryText from '@/components/GlossaryText'
 import SiteFooter from '@/components/SiteFooter'
@@ -1527,15 +1528,15 @@ export default function VpcPage() {
               <div className="mt-4 pt-3 border-t border-aws-border/60">
                 <p className="font-space-mono text-[0.62rem] uppercase tracking-widest text-aws-muted mb-2">Also in this app</p>
                 <div className="space-y-1.5">
-                  <a href="/visual" className="flex items-center gap-2 text-[0.75rem] text-c4 hover:text-aws-text transition-colors">
+                  <Link href="/visual" className="flex items-center gap-2 text-[0.75rem] text-c4 hover:text-aws-text transition-colors">
                     <span>→</span> VPC Subnets & CIDR Diagram (Visual page)
-                  </a>
-                  <a href="/learn/d1#d1-vpc" className="flex items-center gap-2 text-[0.75rem] text-c4 hover:text-aws-text transition-colors">
+                  </Link>
+                  <Link href="/learn/d1#d1-vpc" className="flex items-center gap-2 text-[0.75rem] text-c4 hover:text-aws-text transition-colors">
                     <span>→</span> VPC Deep Notes (Learn page)
-                  </a>
-                  <a href="/practice" className="flex items-center gap-2 text-[0.75rem] text-c4 hover:text-aws-text transition-colors">
+                  </Link>
+                  <Link href="/practice" className="flex items-center gap-2 text-[0.75rem] text-c4 hover:text-aws-text transition-colors">
                     <span>→</span> VPC Practice Questions (Practice page)
-                  </a>
+                  </Link>
                 </div>
               </div>
             </div>

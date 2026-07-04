@@ -94,8 +94,10 @@ export default function MermaidDiagram({ source }: MermaidDiagramProps) {
     const el = containerRef.current
     if (!el || inView) return
     if (typeof IntersectionObserver === 'undefined') {
-      setInView(true)
-      return
+      // Defer so the fallback doesn't set state synchronously inside the
+      // effect body (cascading-render lint) — behavior is unchanged.
+      const fallback = setTimeout(() => setInView(true), 0)
+      return () => clearTimeout(fallback)
     }
     const observer = new IntersectionObserver(
       (entries) => {

@@ -99,7 +99,6 @@ export function useBookmarks() {
     })
 
     return () => subscription.unsubscribe()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const toggle = useCallback((shortName: string) => {

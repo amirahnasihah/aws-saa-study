@@ -136,7 +136,6 @@ export function useAnswerBookmarks() {
     })
 
     return () => subscription.unsubscribe()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const toggle = useCallback((entry: Omit<AnswerBookmark, 'id' | 'savedAt'>) => {
