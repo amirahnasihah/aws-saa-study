@@ -62,7 +62,7 @@
     "@cloudflare/next-on-pages": "^1.13.16",
     "@cloudflare/workers-types": "^4.20260519.1",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^25",
+    "@types/node": "^26",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^10",
