@@ -2247,7 +2247,7 @@ export const domains: DomainData[] = [
             gunaUntuk: 'Plan IP address ranges — VPC perlu CIDR sebelum boleh buat subnets',
             fungsi: 'CIDR (Classless Inter-Domain Routing) tentukan berapa banyak IP dalam sesebuah network. Format: <network address>/<prefix length>, contoh 172.31.0.0/16.\n\nNombor IP (e.g. 172.31.0.0) — kau yang pilih masa create VPC, dari RFC 1918 private ranges:\n• 10.0.0.0/8 — besar, enterprise\n• 172.16.0.0/12 → 172.16–31.x.x — AWS default VPC guna 172.31.0.0/16\n• 192.168.0.0/16 — rumah/pejabat kecil\nRanges ni tak boleh route kat internet — private sahaja, sebab tu EC2 private subnet pakai IP macam ni.\n\nNombor selepas slash (/16, /24) = prefix length = berapa bits "dikunci" sebagai network. IPv4 ada 32 bits total. Baki bits = hosts.\n• /16 → 16 bits kunci, 16 bits bebas → 2^16 = 65,536 IPs\n• /24 → 24 bits kunci, 8 bits bebas → 2^8 = 256 IPs\n• /25 → 25 bits kunci, 7 bits bebas → 2^7 = 128 IPs\n\nAWS reserve 5 IPs setiap subnet: .0 network, .1 VPC router, .2 DNS, .3 future, .255 broadcast.',
             sebabApa: "Wujud sebab sebelum boleh letak apa-apa dalam VPC, kau kena tetapkan berapa besar rangkaian (berapa IP) dan bahagikannya jadi subnet — silap kira, subnet jadi terlalu kecil (kehabisan IP) atau bertindih. CIDR ialah cara ringkas tulis saiz rangkaian (/16, /24) dan exam suka uji 'berapa usable IP'. AWS reserve 5 IP setiap subnet, jadi kira tepat penting supaya kau plan IP betul tanpa terkejut kehabisan alamat.",
-            sifir: ["Formula: 32 − prefix = bits bebas; 2^bits = total IP; tolak 5 = usable", "AWS reserve 5 IP/subnet: .0 network, .1 router, .2 DNS, .3 future, .255 broadcast", "/24 = 251 usable, /26 = 59 usable, /27 = 27 usable (hafal 3 ni)", "AWS minimum subnet = /28 (11 usable je)", "Private ranges (RFC 1918): 10.0.0.0/8, 172.16-31.x, 192.168.0.0/16", "Nombor lepas slash = bits dikunci, BUKAN bilangan IP"],
+            sifir: ["Formula: 32 − prefix = bits bebas; 2^bits = total IP; tolak 5 = usable", "AWS reserve 5 IP/subnet: .0 network, .1 router, .2 DNS, .3 future, .255 broadcast", "/24 = 251 usable, /26 = 59 usable, /27 = 27 usable (hafal 3 ni)", "Allowed block VPC/subnet = /16 (MAX, 65,536) sampai /28 (MIN, 16) — /28 minimum, BUKAN /27", "Private ranges (RFC 1918): 10.0.0.0/8, 172.16-31.x, 192.168.0.0/16", "Nombor lepas slash = bits dikunci, BUKAN bilangan IP"],
             perangkap: [{"soalan": "Berapa usable IP address dalam subnet /27?", "umpan": "32 — sebab 2^(32−27) = 2^5 = 32 total IP. Nampak betul sebab dah kira 2^bits. SALAH: lupa AWS reserve 5 IP setiap subnet.", "betul": "27 usable — 32 total tolak 5 reserved. Keyword 'usable = total − 5 (AWS reserved)'."}, {"soalan": "Kau nak subnet sekecil mungkin untuk segelintir host. Saiz prefix paling kecil yang AWS benarkan?", "umpan": "/30 (4 IP) atau /32 (1 IP) sebab itu paling kecil dalam networking biasa. Nampak betul sebab 'paling kecil'. SALAH: AWS ada minimum tersendiri.", "betul": "/28 — minimum subnet AWS (16 total, 11 usable). Keyword 'AWS minimum subnet = /28'."}],
             contohGuna: '192.168.0.0/26 → 32−26=6 bits, 2^6=64 IPs, tolak 5 = 59 usable. VPC /16 boleh dibahagi kepada banyak subnets /24 atau /26.',
             storageDetails: '/16 → 65,536 total → 65,531 usable (guna untuk VPC range)\n/24 → 256 total → 251 usable (subnet standard)\n/25 → 128 total → 123 usable\n/26 → 64 total → 59 usable\n/27 → 32 total → 27 usable (exam favourite)\n/28 → 16 total → 11 usable (AWS minimum)',
@@ -2261,6 +2261,7 @@ export const domains: DomainData[] = [
               'Hafal 3 ni cukup: /24 = 251, /26 = 59, /27 = 27 usable',
               '5 reserved: .0 (network) .1 (router) .2 (DNS) .3 (future) .255 (broadcast)',
               'AWS minimum subnet = /28 (hanya 11 usable IPs)',
+              'Allowed block size VPC & subnet: /16 (MAX = 65,536 IP) hingga /28 (MIN = 16 IP). Exam suka umpan "/27" sebagai minimum — SALAH, /28 minimum. Kalau soalan bagi "/16 hingga /27" = jawapan tipu.',
             ],
             docs: [
               { label: 'VPC CIDR Blocks', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-cidr-blocks.html' },
@@ -2536,23 +2537,52 @@ export const domains: DomainData[] = [
             fullName: 'VPC Route Tables',
             ingat: '"Papan tanda jalan — arah ke mana traffic pergi"',
             gunaUntuk: 'Control traffic direction: public subnet → IGW, private subnet → NAT GW',
-            fungsi: 'Setiap subnet mesti associate dengan satu route table. Route table ada rules yang tentukan ke mana traffic pergi. Tanpa route yang betul, internet tak boleh reach walaupun ada IGW. Main route table (default) dan custom route tables boleh ada dalam satu VPC.',
-            sebabApa: "Wujud sebab dalam VPC, ada IGW atau NAT GW sahaja TAK CUKUP — traffic tak tahu nak pergi mana melainkan route table beritahu arahnya. Route table = papan tanda jalan: ia tetapkan destinasi (cth 0.0.0.0/0) pergi ke target mana (IGW untuk public, NAT GW untuk private outbound). Ini sebab punca paling biasa 'subnet takde internet walaupun ada IGW' ialah route table salah/tak associate.",
-            sifir: ["Setiap subnet WAJIB associate dengan SATU route table", "Public subnet: 0.0.0.0/0 → IGW. Private outbound: 0.0.0.0/0 → NAT GW", "Local route (CIDR VPC → local) auto ada, tak boleh delete", "Satu subnet → satu route table; satu route table → boleh banyak subnet", "No internet? Check: (1) route 0.0.0.0/0 ada? (2) subnet associate betul? (3) EC2 ada public IP?"],
-            perangkap: [{"soalan": "EC2 dalam public subnet ada public IP, IGW dah attach ke VPC, tapi masih tak boleh akses internet. Apa paling mungkin punca?", "umpan": "Security Group block outbound — kena tambah outbound rule. Nampak betul sebab 'SG kawal traffic'. SALAH: SG default outbound allow-all; lagi mungkin punca lain.", "betul": "Route table subnet tiada route 0.0.0.0/0 → IGW (atau subnet associate route table salah). Keyword 'ada IGW tapi takde internet' = check route table dulu."}],
+            fungsi: 'Setiap subnet mesti associate dengan satu route table. Route table ada rules yang tentukan ke mana traffic pergi. Tanpa route yang betul, internet tak boleh reach walaupun ada IGW. Setiap VPC auto-cipta SATU main route table. Subnet BARU yang kau tak associate secara manual akan IMPLICITLY guna main route table ni (default) — sampai kau EXPLICITLY associate dia dengan custom route table.',
+            sebabApa: "Wujud sebab dalam VPC, ada IGW atau NAT GW sahaja TAK CUKUP — traffic tak tahu nak pergi mana melainkan route table beritahu arahnya. Route table = papan tanda jalan: ia tetapkan destinasi (cth 0.0.0.0/0) pergi ke target mana (IGW untuk public, NAT GW untuk private outbound). Ini sebab punca paling biasa 'subnet takde internet walaupun ada IGW' ialah route table salah/tak associate. Sebab subnet baru auto-jatuh ke main route table, best practice = biar main route table KEKAL private (takde 0.0.0.0/0→IGW) supaya subnet yang kau terlupa configure default jadi private (fail-safe), bukan terdedah ke internet.",
+            sifir: ["Setiap subnet WAJIB associate dengan SATU route table", "Subnet BARU → IMPLICITLY guna MAIN route table (default) sampai kau associate custom", "Setiap VPC ada 1 main route table (auto-cipta, tak boleh delete)", "Public subnet: 0.0.0.0/0 → IGW. Private outbound: 0.0.0.0/0 → NAT GW", "Local route (CIDR VPC → local) auto ada, tak boleh delete", "Satu subnet → satu route table; satu route table → boleh banyak subnet", "No internet? Check: (1) route 0.0.0.0/0 ada? (2) subnet associate betul? (3) EC2 ada public IP?"],
+            perangkap: [{"soalan": "Kau create subnet BARU dalam VPC tapi TAK associate dengan mana-mana route table. Subnet tu guna routing apa?", "umpan": "Takde routing / subnet tak boleh route apa-apa sampai kau tetapkan — sangka subnet 'kosong' tanpa route table. SALAH: subnet tak pernah tak-berouting.", "betul": "Ia IMPLICITLY associate dengan MAIN route table VPC (default). Subnet sentiasa ada route table — kalau kau tak explicit associate custom, ia guna main. Keyword 'new subnet by default' → main route table."}, {"soalan": "EC2 dalam public subnet ada public IP, IGW dah attach ke VPC, tapi masih tak boleh akses internet. Apa paling mungkin punca?", "umpan": "Security Group block outbound — kena tambah outbound rule. Nampak betul sebab 'SG kawal traffic'. SALAH: SG default outbound allow-all; lagi mungkin punca lain.", "betul": "Route table subnet tiada route 0.0.0.0/0 → IGW (atau subnet masih guna main route table yang takde route IGW). Keyword 'ada IGW tapi takde internet' = check route table dulu."}],
             contohGuna: 'Public RT: 172.16.0.0/16 → local, 0.0.0.0/0 → igw. Private RT: 172.16.0.0/16 → local, 0.0.0.0/0 → nat-gw.',
             storageDetails: 'Local → traffic dalam VPC sendiri (auto, tak boleh delete)\n0.0.0.0/0 → igw-xxx (public subnet — keluar ke internet)\n0.0.0.0/0 → nat-xxx (private subnet — outbound je)\n10.0.0.0/16 → pcx-xxx (VPC peering route)',
             detailsLabel: 'Common Routes',
-            scenario: '"Subnet tak dapat access internet walaupun ada IGW" → check route table! Ada 0.0.0.0/0 → IGW? Subnet dah associate dengan route table tu?',
+            compare: [
+              {
+                label: 'Main vs Custom route table — implicit vs explicit association',
+                headers: ['Aspect', 'Main route table', 'Custom route table'],
+                rows: [
+                  ['Asal', 'Auto-cipta bersama VPC (1 setiap VPC)', 'Kau cipta sendiri bila perlu'],
+                  ['Association subnet', '🟢 IMPLICIT — subnet yang TAK diassociate lain jatuh ke sini', 'EXPLICIT — kau associate subnet secara manual'],
+                  ['Boleh delete?', '🔴 Tak boleh (kekal selagi VPC wujud)', '🟢 Boleh (asal takde subnet associate)'],
+                  ['Guna biasa', 'Best practice: biar minimal/private (local je)', 'Public subnet (0.0.0.0/0→IGW) atau private (→NAT GW)'],
+                  ['Exam keyword', '"new subnet by default / not explicitly associated"', '"public subnet routing / different routing per subnet"'],
+                ],
+                takeaway: 'Subnet BARU yang kau tak sentuh = IMPLICITLY guna main route table (default). Nak routing lain (public → IGW) → cipta CUSTOM route table + associate EXPLICITLY. INGAT exam: "newly created subnet is by default linked to..." → MAIN route table. Best practice: main route table biar private supaya subnet terlupa configure = fail-safe (no internet), bukan terdedah.',
+              },
+            ],
+            mermaid: {
+              label: 'Implicit (main) vs explicit (custom) subnet association',
+              source: `flowchart TD
+  VPC["🏙️ VPC dicipta"] --> MAIN["🗺️ Main Route Table<br/>(auto-cipta, tak boleh delete)"]
+  NEW["➕ Subnet baru<br/>(tak associate apa-apa)"] -.->|"IMPLICIT<br/>(default)"| MAIN
+  PRIV["🔒 Private Subnet<br/>(DB, app)"] -.->|"IMPLICIT — biar<br/>guna main (private)"| MAIN
+  CUSTOM["🗺️ Custom Route Table<br/>0.0.0.0/0 → IGW"]
+  PUB["🌐 Public Subnet<br/>(web server)"] -->|"EXPLICIT<br/>associate manual"| CUSTOM
+  CUSTOM --> IGW["🚪 Internet Gateway"]`,
+              caption: 'Setiap VPC ada SATU main route table auto-cipta. Subnet yang kau TAK associate secara manual (garis putus) akan IMPLICITLY guna main route table — inilah "new subnet by default linked to main route table". Untuk public subnet, kau cipta CUSTOM route table (0.0.0.0/0→IGW) & associate EXPLICITLY. INGAT exam: main = implicit/default; custom = explicit. Biar main table private = fail-safe.',
+            },
+            scenario: '"Newly created subnet is by default linked to which route table?" → MAIN route table (implicit association). "Subnet tak dapat access internet walaupun ada IGW" → check route table! Ada 0.0.0.0/0 → IGW? Subnet masih guna main route table (private) atau dah associate custom? "Different routing per subnet (public vs private)" → cipta custom route table + associate explicitly.',
             tips: [
+              'Subnet BARU = IMPLICITLY associate dengan MAIN route table (default) sampai kau EXPLICITLY associate custom route table. Subnet tak pernah "tanpa route table".',
+              'Setiap VPC auto-cipta 1 main route table — TAK boleh delete (kekal selagi VPC ada). Custom route table boleh delete (asal takde subnet associate).',
+              'Best practice keselamatan: biar MAIN route table minimal (local route je, tiada 0.0.0.0/0→IGW). Buat custom route table untuk public subnet. Sebab: subnet yang kau terlupa configure default jatuh ke main → jadi private (fail-safe), bukan terdedah ke internet.',
               'Troubleshoot no internet: (1) route 0.0.0.0/0 ada? (2) subnet associate route table betul? (3) EC2 ada public IP?',
               'Local route (e.g. 172.16.0.0/16 → local) auto ada — tak boleh delete',
               'Satu subnet → satu route table je. Satu route table → boleh serve banyak subnets',
             ],
             docs: [
               { label: 'Route Tables', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Route_Tables.html' },
+              { label: 'Subnet route table association', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/subnet-route-tables.html' },
             ],
-            keywords: ['route table', 'routing', '0.0.0.0/0', 'local route', 'subnet association', 'main route table'],
+            keywords: ['route table', 'routing', '0.0.0.0/0', 'local route', 'subnet association', 'main route table', 'custom route table', 'implicit association', 'explicit association', 'new subnet default', 'default route table'],
           },
           {
             shortName: 'SG vs NACL',
