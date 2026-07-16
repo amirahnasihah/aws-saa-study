@@ -827,14 +827,24 @@ export const domains: DomainData[] = [
             fungsi: 'Mengawal inbound dan outbound traffic pada peringkat EC2 secara stateful. Custom SG baru: tiada inbound rules (semua inbound ditolak secara implicit), ada satu default outbound rule yang allow semua traffic ke 0.0.0.0/0. Default SG (yang auto-create bersama VPC): ada inbound allow dari dalam group yang sama.',
             sebabApa: 'Wujud sebab setiap EC2 perlu firewall sendiri di pintu instance — kalau bergantung pada NACL (subnet) je, semua instance dalam subnet sama dapat rule yang sama, tak boleh tailor per-server. SG bagi kau "web boleh kena 443, DB cuma kena 3306 dari web je". Dia STATEFUL supaya kau tak payah fikir return traffic — bagi masuk = auto bagi balik, kurang silap manusia (lupa allow ephemeral port macam NACL).',
             contohGuna: 'Web server SG: allow port 443 dari 0.0.0.0/0. DB SG: allow port 3306 dari Web-SG je — DB hanya boleh diakses dari web servers, bukan dari internet.',
+            detailsLabel: 'Anatomy satu SG rule — 4 bahagian',
+            storageDetails: 'Type / Protocol → jenis trafik: SSH = TCP port 22, HTTP = TCP 80, HTTPS = TCP 443, RDP = TCP 3389, MySQL = TCP 3306, ping = ICMP. NOTA: SSH & RDP = TCP (BUKAN UDP) — soalan letak "UDP 22" untuk tipu\nPort range → port tujuan (cth 22, 443, atau range 1024-65535 untuk ephemeral)\nSource (Inbound rule SAHAJA) → SIAPA boleh hantar trafik MASUK ke instance. Boleh CIDR (0.0.0.0/0), single IP (/32), atau SG lain (cth web-sg)\nDestination (Outbound rule SAHAJA) → KE MANA instance boleh hantar trafik KELUAR. Inbound guna "Source", Outbound guna "Destination" — JANGAN keliru dua ni\nCIDR notation → /32 = SATU IP je (cth 203.0.113.5/32 = admin sorang); /0 = SEMUA IP (0.0.0.0/0 = seluruh internet). Makin kecil nombor selepas / = makin luas',
             sifir: [
               'SG = STATEFUL (ingat connection, reply auto-allow). NACL = stateless',
               'SG = ALLOW only — tak boleh deny IP. Nak block IP → NACL',
               'SG level = instance/ENI. NACL level = subnet',
               'Custom SG baru: inbound KOSONG (deny all), outbound allow all',
+              'Inbound rule pakai SOURCE (siapa masuk); Outbound rule pakai DESTINATION (ke mana keluar)',
+              'SSH = TCP port 22 (BUKAN UDP); RDP = TCP 3389; HTTPS = TCP 443',
+              '/32 = 1 IP tunggal (203.0.113.5/32); /0 = semua IP (0.0.0.0/0 = internet)',
               'SG boleh reference SG lain sebagai source — "allow FROM web-sg", bukan hardcode IP',
             ],
             perangkap: [
+              {
+                soalan: 'Admin nak SSH ke EC2 dari alamat IP pejabat dia SAHAJA (203.0.113.5). Rule mana & CIDR apa?',
+                umpan: 'Outbound rule TCP 22 ke 203.0.113.5/32 — sebab ada perkataan "SSH keluar-masuk", org silap letak kat Outbound. Atau letak Source 203.0.113.5/0 (salah CIDR).',
+                betul: 'INBOUND rule, Type SSH (TCP 22), Source 203.0.113.5/32. "Diakses DARI IP ni" = trafik MASUK = Inbound + Source. /32 = kunci ke satu IP je. Reply keluar auto-allow (stateful) — TAK payah Outbound rule.',
+              },
               {
                 soalan: 'EC2 punya SG: inbound allow 443, TIADA outbound rule yang allow balik ke client. Boleh ke user dapat response web?',
                 umpan: 'Tak boleh — sebab outbound kena ada rule untuk reply keluar (cara fikir NACL/stateless).',
@@ -846,9 +856,35 @@ export const domains: DomainData[] = [
                 betul: 'Guna NACL — letak Deny rule untuk 1.2.3.4 (nombor rule kecil). SG allow-only, jadi tak boleh block IP tertentu.',
               },
             ],
-            scenario: 'Exam: "New custom SG, no rules — what is default state?" → Inbound: NO rules = ALL DENIED. Outbound: default rule = ALL ALLOWED to 0.0.0.0/0. Jangan confuse dengan default SG (berbeza).',
+            scenario: 'Exam: "New custom SG, no rules — what is default state?" → Inbound: NO rules = ALL DENIED. Outbound: default rule = ALL ALLOWED to 0.0.0.0/0. "Server must be accessed FROM this IP" → INBOUND rule + Source (bukan Outbound). "Allow only one admin IP" → Source x.x.x.x/32. "Allow whole internet" → 0.0.0.0/0. Jangan confuse dengan default SG (berbeza).',
+            compare: [
+              {
+                label: 'Inbound vs Outbound rule — Source atau Destination?',
+                headers: ['Aspect', 'Inbound rule', 'Outbound rule'],
+                rows: [
+                  ['Kawal apa', 'Trafik MASUK ke instance', 'Trafik KELUAR dari instance'],
+                  ['Guna field', '🟢 SOURCE (siapa boleh hubungi aku)', '🟢 DESTINATION (ke mana aku boleh hubungi)'],
+                  ['Custom SG default', '🔴 KOSONG — semua masuk ditolak', '🟢 Allow all ke 0.0.0.0/0'],
+                  ['Contoh', 'Type SSH · TCP 22 · Source 203.0.113.5/32', 'Type HTTPS · TCP 443 · Destination 0.0.0.0/0'],
+                  ['Exam keyword', '"accessed FROM / reachable from / who can connect"', '"instance connects OUT to / reach external API"'],
+                ],
+                takeaway: 'Soalan sebut "diakses DARI IP X / who can reach the server" → INBOUND + Source. Sebut "instance kena panggil KELUAR ke API/endpoint" → OUTBOUND + Destination. Sebab SG stateful, kau JARANG perlu touch Outbound untuk reply — reply auto-allow. /32 = satu IP; /0 = semua.',
+              },
+            ],
+            mermaid: {
+              label: 'Arah trafik — Inbound guna Source, Outbound guna Destination',
+              source: `flowchart LR
+  ADMIN["👤 Admin<br/>203.0.113.5"] -->|"SSH TCP 22<br/>INBOUND rule<br/>Source = 203.0.113.5/32"| EC2["🖥️ EC2<br/>(Security Group stateful)"]
+  EC2 -.->|"reply SSH<br/>AUTO-allow ✅<br/>(tak perlu Outbound rule)"| ADMIN
+  EC2 -->|"HTTPS TCP 443<br/>OUTBOUND rule<br/>Destination = 0.0.0.0/0"| API["🌐 External API"]
+  NET["🌍 Internet 0.0.0.0/0"] -->|"HTTPS TCP 443<br/>INBOUND rule<br/>Source = 0.0.0.0/0"| EC2`,
+              caption: 'Ingat arah: rule MASUK (Inbound) pakai SOURCE = "siapa dibenarkan hubungi aku"; rule KELUAR (Outbound) pakai DESTINATION = "ke mana aku boleh pergi". Sebab SG STATEFUL, trafik reply (garis putus-putus) auto-dibenarkan — TAK perlu Outbound rule berasingan. INGAT exam: "server accessed FROM admin IP" → Inbound + Source x.x.x.x/32; "one IP only" → /32; "whole internet" → /0. SSH & RDP = TCP (bukan UDP).',
+            },
             tips: [
               'Custom SG default: NO inbound rules (deny all) + 1 outbound rule (allow all to 0.0.0.0/0)',
+              'Inbound rule = field SOURCE (siapa boleh masuk); Outbound rule = field DESTINATION (ke mana boleh keluar). Soalan "accessed FROM IP" → Inbound + Source, BUKAN Outbound',
+              'CIDR: /32 = 1 IP tunggal (kunci ke admin sorang); /0 = 0.0.0.0/0 = semua IP (seluruh internet). Makin kecil nombor lepas "/" = makin ramai IP dibenarkan',
+              'SSH = TCP port 22, RDP = TCP 3389, HTTP = TCP 80, HTTPS = TCP 443, MySQL/Aurora = TCP 3306, PostgreSQL = TCP 5432. SSH/RDP guna TCP — jangan tertipu pilihan "UDP 22"',
               'Default SG vs Custom SG: Default SG ada inbound rule allow dari same SG. Custom SG starts empty.',
               'Stateful = SG ingat connections. Outbound reply auto dibenarkan — tak perlu explicit outbound rule',
               'SG = allow only. Nak deny specific IP? → Guna NACL',
@@ -858,7 +894,7 @@ export const domains: DomainData[] = [
             docs: [
               { label: 'Security Groups', url: 'https://docs.aws.amazon.com/vpc/latest/userguide/vpc-security-groups.html' },
             ],
-            keywords: ['stateful', 'instance-level', 'allow only', 'custom SG default', 'inbound denied', 'outbound allowed'],
+            keywords: ['stateful', 'instance-level', 'allow only', 'custom SG default', 'inbound denied', 'outbound allowed', 'inbound rule', 'outbound rule', 'source', 'destination', 'CIDR', '/32', '/0', '0.0.0.0/0', 'single IP', 'SSH TCP 22', 'RDP 3389', 'port range', 'protocol', 'accessed from', 'reference security group'],
           },
           {
             shortName: 'NACLs',
@@ -3357,6 +3393,11 @@ export const domains: DomainData[] = [
                 umpan: 'B (instance lebih besar) & D (Read Replica) nampak betul sebab query "lembab" → org ingat masalah compute/read. C (Multi-AZ) umpan untuk yang baca "hampir limit" sebagai isu availability. Semua SALAH puncanya: punca = bilangan CONNECTION dari ASG yang naik-turun, bukan CPU, bukan read load, bukan HA.',
                 betul: 'A — RDS Proxy. Dia POOL & reuse connection, jadi walaupun ASG tambah/buang EC2, RDS nampak sikit connection je → idle connection hilang, limit tak cecah. Keyword: "Auto Scaling + idle/too many connections" → RDS Proxy.',
               },
+              {
+                soalan: 'Lambda scale ke ribuan invocation & bagi "too many connections" ke RDS. Team cadang: (A) naikkan Lambda RESERVED CONCURRENCY, (B) turunkan/HAD-kan Lambda concurrency, (C) RDS Proxy. Mana betul?',
+                umpan: 'A (naikkan concurrency) nampak macam "bagi lebih kuasa" — tapi lagi ramai Lambda serentak = LAGI banyak connection = makin teruk. B (hadkan concurrency) memang kurangkan connection TAPI ia korbankan throughput/scalability app (throttle sengaja) — patch, bukan fix.',
+                betul: 'C — RDS Proxy. Dia pool & reuse connection tanpa hadkan berapa Lambda boleh jalan → app kekal scale penuh, RDS pula nampak sikit connection je. Naikkan concurrency = salah arah; hadkan concurrency = korbankan performance. Keyword "Lambda + too many connections tanpa korban scalability" → RDS Proxy.',
+              },
             ],
             scenario: '"Lambda functions causing too many RDS connections" → RDS Proxy. "Idle connections from Auto Scaling EC2" → RDS Proxy. Read Replicas = read scaling. Multi-AZ = HA. RDS Proxy = connection management.',
             mermaid: {
@@ -3543,6 +3584,7 @@ export const domains: DomainData[] = [
               'Aurora Global Database failover: secondary region promote jadi primary automatically bila primary region down — minimal manual effort',
               'Exam: "cross-region DR, downtime < 1 minit, minimal manual ops" → Aurora Global Database. Bukan Multi-AZ (same region). Bukan manual snapshot restore (kena buat sendiri)',
               'Multi-AZ Aurora Replicas = same region HA (failover dalam AZ, bukan region)',
+              'Aurora Global Database = ACTIVE-PASSIVE (1 writer region + secondary read-only; promote secondary bila outage). BEZA dengan DynamoDB Global Tables = ACTIVE-ACTIVE (semua region boleh WRITE serentak). Exam: "multi-region WRITES / write from any region" → DynamoDB Global Tables (NoSQL), BUKAN Aurora. "relational cross-region DR, 1 writer, promote on outage" → Aurora Global Database. Lihat kad DynamoDB untuk perbandingan penuh.',
               'JANGAN keliru Aurora cluster dengan RDS Multi-AZ DB Cluster: Aurora = engine berasingan, shared cluster volume (6 copies/3 AZ, storage terpisah dari compute), ≤15 reader, ~5x throughput. Multi-AZ DB Cluster = standard RDS engine (MySQL/PostgreSQL je), setiap node ada LOCAL storage sendiri, tepat 2 readable standby, semisynchronous, failover <35s. Lihat kad "RDS Multi-AZ" untuk DB Instance vs DB Cluster.',
             ],
             docs: [
@@ -3684,6 +3726,11 @@ export const domains: DomainData[] = [
                 umpan: 'ElastiCache — cache umum. Boleh secara teori tapi kena tulis cache logic sendiri & bukan jawapan exam.',
                 betul: 'DAX (drop-in, microsecond, khusus DynamoDB). Keyword "microsecond + DynamoDB" → DAX.',
               },
+              {
+                soalan: 'App global perlu user boleh TULIS ke database dari mana-mana region (US, EU, Asia) dengan latency rendah, semua region boleh accept write serentak. Pilih.',
+                umpan: 'Aurora Global Database — nampak macam "multi-region database". SALAH: Aurora Global DB = ACTIVE-PASSIVE (1 writer region je; secondary read-only sampai kena promote). Tak boleh tulis serentak banyak region.',
+                betul: 'DynamoDB Global Tables — ACTIVE-ACTIVE: setiap region boleh accept read & WRITE serentak, auto-replicate. Keyword "multi-region writes / write from any region / active-active" → DynamoDB Global Tables (BUKAN Aurora Global DB yang active-passive).',
+              },
             ],
             contohGuna: 'Shopping cart, user sessions, real-time leaderboards, gaming scores — workloads yang perlu high throughput, low latency, dan serverless.',
             scenario: '"Serverless NoSQL millisecond latency at any scale" → DynamoDB. "Microsecond reads for DynamoDB" → DAX. "Multi-region active-active database" → DynamoDB Global Tables. "Capture DynamoDB changes → trigger Lambda" → DynamoDB Streams.',
@@ -3726,6 +3773,20 @@ export const domains: DomainData[] = [
                   ['Limit per table', '5', '20'],
                 ],
                 takeaway: '"Alternate sort order, must define at creation, same partition key" → LSI. "New query pattern, create anytime, own capacity" → GSI.',
+              },
+              {
+                label: 'DynamoDB vs Aurora — NoSQL serverless lawan relational (exam favourite)',
+                headers: ['Aspect', 'DynamoDB', 'Aurora'],
+                rows: [
+                  ['Model', 'NoSQL key-value/document (schemaless)', 'Relational SQL (MySQL/PostgreSQL compatible)'],
+                  ['Query', 'Akses by key; design GSI/LSI awal', '🟢 SQL penuh — JOIN, aggregate, ad-hoc'],
+                  ['Scaling', '🟢 Serverless, auto horizontal, scale-to-zero (On-Demand)', 'Cluster: 1 writer + ≤15 reader; scale compute (Serverless v2 ada)'],
+                  ['Latency', '🟢 Single-digit ms konsisten at any scale (DAX = microsecond)', 'Bergantung instance & query (laju untuk relational)'],
+                  ['Multi-region', '🟢 Global Tables = ACTIVE-ACTIVE (tulis di mana-mana region)', 'Global Database = ACTIVE-PASSIVE (1 writer region, secondary read-only)'],
+                  ['Transaction', 'ACID (single/multi-item, dalam had)', '🟢 Full ACID relational (JOIN, foreign key)'],
+                  ['Exam keyword', '"serverless / millisecond / NoSQL / any scale / active-active multi-region"', '"relational / JOIN / SQL / MySQL-PostgreSQL / 6 copies / active-passive DR"'],
+                ],
+                takeaway: 'Serverless NoSQL, latency tetap walau traffic meletup, atau MULTI-REGION ACTIVE-ACTIVE (tulis serentak banyak region) → DynamoDB Global Tables. Perlu JOIN/SQL kompleks/relationship, atau cross-region DR ACTIVE-PASSIVE → Aurora (Global Database). KUNCI: "multi-region WRITES / active-active" → DynamoDB Global Tables; "cross-region DR, 1 writer, promote on outage / active-passive" → Aurora Global Database.',
               },
             ],
             mermaid: {
@@ -4713,10 +4774,10 @@ export const domains: DomainData[] = [
             fungsi: 'Bayangkan Lambda macam fungsi JavaScript/Python kau (cth `const proses = (data) => {...}`) tapi diletak atas cloud: kau campak KOD je, tak payah sewa/patch/scale server. Dia jenis TIDUR — bangun bila ada event (S3 upload, API call, webhook), jalankan kod kau beberapa saat, lepas tu mati balik. Bayar per milisaat masa kod jalan je. PENTING jangan keliru: Lambda = TUKANG MASAK (compute — tempat letak LOGIK/kod kau), BUKAN pelayan pintu yang agih trafik (itu kerja ELB/ALB — networking). Sebab tu dalam soalan "route trafik masuk ke EKS ikut URL path", Lambda SALAH — itu kerja router (ALB), bukan worker.',
             sebabApa: "Untuk kerja kecil & event-driven (resize image bila upload, handle webhook), sewa EC2 24/7 = bayar walau idle + kena patch/scale server sendiri. Lambda wujud supaya kau hantar code je, AWS run bila ada event, scale auto, dan kau bayar HANYA bila code jalan (scale to zero bila takda trafik). Pain yang ia buang: tak payah provision/patch/scale server untuk kerja pendek bersifat event-driven.",
             sifir: ["Lambda = serverless event-driven; bayar bila run je (scale to zero)", "Maks 15 minit (900s) per invocation; lebih lama → Fargate / AWS Batch / Step Functions", "Memory 128MB–10,240MB; CPU naik IKUT memory (1,769MB = 1 vCPU penuh)", "Reserved Concurrency = cap/jamin kuota (PERCUMA, masih cold start); Provisioned Concurrency = buang cold start (BAYAR per jam)", "SnapStart = snapshot env yang dah init → resume sub-second; Java 11+/Python 3.12+/.NET 8+ SAHAJA (no Node/Ruby/container), murah", "Default 1,000 concurrent execution/region (soft); /tmp 512MB default sampai 10GB", "Throttle (429) masa burst? Letak SQS depan Lambda → buffer burst, smooth → no throttle (SNS tak buffer)"],
-            perangkap: [{"soalan": "App Java event-driven kerap kena cold start & outlier latency. Nak kurangkan dengan kos PALING rendah (most cost-effective). Pilih apa?", "umpan": "Provisioned Concurrency — ia memang hapus cold start, TAPI bayar per jam walau idle = mahal, jadi bukan 'most cost-effective'.", "betul": "Lambda SnapStart — Java/Python/.NET + cold start + cost-effective = SnapStart (snapshot env yang dah init, murah). Provisioned Concurrency baru relevan kalau runtime Node/Ruby/container ATAU perlu strict zero cold start."}, {"soalan": "API Gateway → Lambda terima JSON, simpan ke Aurora. Banyak throttling error masa burst, terpaksa naikkan concurrent execution berkali-kali. Macam mana scale elok?", "umpan": "Pecah jadi 2 function + SNS antara keduanya — SNS push TERUS, tak buffer, jadi burst masih banjir function kedua = masih throttle.", "betul": "Pecah jadi 2 function + SQS di tengah — SQS BUFFER burst, Lambda poll ikut kadar yang dia mampu → smooth, no throttle. Keyword 'throttling / decouple / buffer burst' = SQS, BUKAN SNS."}, {"soalan": "API latency-sensitive ada spike trafik boleh dijangka pagi setiap hari, mesti respond tanpa cold start (runtime Node.js). Pilih apa?", "umpan": "Reserved Concurrency — bunyi macam 'reserve capacity siap sedia', tapi Reserved cuma HADKAN/jamin kuota, MASIH ada cold start. (SnapStart pula tak support Node.js.)", "betul": "Provisioned Concurrency — keyword 'no cold start / pre-warmed / predictable spike' + runtime bukan Java/Python/.NET = Provisioned Concurrency."}, {"soalan": "Job pemprosesan ambil masa 30 minit setiap run. Lambda sesuai ke?", "umpan": "Ya, tambah memory & Provisioned Concurrency — orang ingat naik resource boleh extend masa, tapi hard limit 15 min tetap kekal.", "betul": "TIDAK — Lambda hard cap 15 minit. Keyword '>15 min / long-running' → Fargate, AWS Batch, atau Step Functions."}],
+            perangkap: [{"soalan": "App Java event-driven kerap kena cold start & outlier latency. Nak kurangkan dengan kos PALING rendah (most cost-effective). Pilih apa?", "umpan": "Provisioned Concurrency — ia memang hapus cold start, TAPI bayar per jam walau idle = mahal, jadi bukan 'most cost-effective'.", "betul": "Lambda SnapStart — Java/Python/.NET + cold start + cost-effective = SnapStart (snapshot env yang dah init, murah). Provisioned Concurrency baru relevan kalau runtime Node/Ruby/container ATAU perlu strict zero cold start."}, {"soalan": "API Gateway → Lambda terima JSON, simpan ke Aurora. Banyak throttling error masa burst, terpaksa naikkan concurrent execution berkali-kali. Macam mana scale elok?", "umpan": "Pecah jadi 2 function + SNS antara keduanya — SNS push TERUS, tak buffer, jadi burst masih banjir function kedua = masih throttle.", "betul": "Pecah jadi 2 function + SQS di tengah — SQS BUFFER burst, Lambda poll ikut kadar yang dia mampu → smooth, no throttle. Keyword 'throttling / decouple / buffer burst' = SQS, BUKAN SNS."}, {"soalan": "API latency-sensitive ada spike trafik boleh dijangka pagi setiap hari, mesti respond tanpa cold start (runtime Node.js). Pilih apa?", "umpan": "Reserved Concurrency — bunyi macam 'reserve capacity siap sedia', tapi Reserved cuma HADKAN/jamin kuota, MASIH ada cold start. (SnapStart pula tak support Node.js.)", "betul": "Provisioned Concurrency — keyword 'no cold start / pre-warmed / predictable spike' + runtime bukan Java/Python/.NET = Provisioned Concurrency."}, {"soalan": "Job pemprosesan ambil masa 30 minit setiap run. Lambda sesuai ke?", "umpan": "Ya, tambah memory & Provisioned Concurrency — orang ingat naik resource boleh extend masa, tapi hard limit 15 min tetap kekal.", "betul": "TIDAK — Lambda hard cap 15 minit. Keyword '>15 min / long-running' → Fargate, AWS Batch, atau Step Functions."}, {"soalan": "S3 upload event kena trigger Lambda, dan Lambda tu kena tulis metadata ke DynamoDB. Apa yang kena configure supaya SEMUA ni jalan?", "umpan": "Cuma tambah s3:PutObject & dynamodb:PutItem pada execution role — sangka satu role selesai semua. SALAH: itu urus arah KELUAR je (Lambda → DynamoDB), tak bagi S3 kebenaran untuk INVOKE Lambda.", "betul": "DUA benda: (1) Resource-based policy pada Lambda bagi S3 invoke (arah MASUK) + (2) Execution role dengan dynamodb:PutItem untuk tulis DynamoDB (arah KELUAR). 'Siapa boleh invoke' = resource policy; 'apa Lambda boleh akses' = execution role."}, {"soalan": "Lambda kena baca env var yang di-encrypt dengan customer managed KMS key (CMK). Dah tambah kms:Decrypt pada execution role tapi masih AccessDenied. Apa lagi kena set?", "umpan": "Naikkan memory / tambah Provisioned Concurrency — sangka isu runtime. Atau sangka execution role sahaja cukup untuk KMS.", "betul": "KMS KEY POLICY kena authorize execution role tu juga. CMK = dua-hala: (1) IAM execution role perlu kms:Decrypt DAN (2) key policy (resource-based pada KMS key) mesti benarkan principal role tu. Default AWS-managed key tak perlu ni; CMK perlu kedua-dua."}],
             contohGuna: 'Resize image bila upload ke S3, webhook handler, scheduled tasks',
             detailsLabel: 'Lambda — komponen & anatomy',
-            storageDetails: 'Function → unit code + config (memory, timeout, runtime, env vars, role). Ini benda yang kau deploy\nHandler → entry point: method yang Lambda panggil tiap kali invoke (cth handler(event, context))\nExecution Environment → micro-VM (Firecracker) yang isolate + run code. Init sekali (= COLD START), lepas tu di-reuse (WARM)\nTrigger / Event Source → benda yang cetus Lambda: S3 upload, API Gateway, EventBridge, SQS, DynamoDB Streams, dll\nEvent Source Mapping → untuk POLL-based source (SQS · Kinesis · DynamoDB Streams) — Lambda yang POLL & batch source, bukan source push. Resource ini kawal batch size + concurrency\nExecution Role (IAM) → role Lambda assume masa run untuk akses AWS lain (S3, DynamoDB). Sama konsep macam EC2 instance role — JANGAN hardcode key\nLayers → pakej .zip shared (library/dependency/custom runtime) yang dikongsi antara function. Max 5/function. NOTA: BUKAN cold-start fix\nDestinations → hala hasil ASYNC invoke (onSuccess / onFailure) ke SQS · SNS · Lambda · EventBridge. Lebih kaya context dari DLQ lama\nConcurrency → berapa invocation serentak. Reserved = cap kuota (percuma); Provisioned = pre-warm (bayar)\nVersions & Aliases → Version = snapshot immutable code+config; Alias = pointer ke version (cth "prod" → v5). Weighted alias untuk canary deployment\nFunction URL → HTTPS endpoint terus ke function (tanpa API Gateway) untuk kes simple / response streaming',
+            storageDetails: 'Function → unit code + config (memory, timeout, runtime, env vars, role). Ini benda yang kau deploy\nHandler → entry point: method yang Lambda panggil tiap kali invoke (cth handler(event, context))\nExecution Environment → micro-VM (Firecracker) yang isolate + run code. Init sekali (= COLD START), lepas tu di-reuse (WARM)\nTrigger / Event Source → benda yang cetus Lambda: S3 upload, API Gateway, EventBridge, SQS, DynamoDB Streams, dll\nEvent Source Mapping → untuk POLL-based source (SQS · Kinesis · DynamoDB Streams) — Lambda yang POLL & batch source, bukan source push. Resource ini kawal batch size + concurrency\nExecution Role (IAM) → role Lambda ASSUME masa run untuk akses AWS lain (S3, DynamoDB, KMS). Ini arah KELUAR (outbound): apa Lambda BOLEH buat. Sama konsep macam EC2 instance role — JANGAN hardcode key\nResource-based Policy → policy JSON yang melekat pada function itu sendiri, tetapkan SIAPA boleh INVOKE Lambda (arah MASUK/inbound). Contoh: bagi API Gateway / S3 / EventBridge / account lain panggil function. Set guna lambda:AddPermission. Beza tegas dengan Execution Role (outbound)\nLayers → pakej .zip shared (library/dependency/custom runtime) yang dikongsi antara function. Max 5/function. NOTA: BUKAN cold-start fix\nDestinations → hala hasil ASYNC invoke (onSuccess / onFailure) ke SQS · SNS · Lambda · EventBridge. Lebih kaya context dari DLQ lama\nConcurrency → berapa invocation serentak. Reserved = cap kuota (percuma); Provisioned = pre-warm (bayar)\nVersions & Aliases → Version = snapshot immutable code+config; Alias = pointer ke version (cth "prod" → v5). Weighted alias untuk canary deployment\nFunction URL → HTTPS endpoint terus ke function (tanpa API Gateway) untuk kes simple / response streaming',
             compare: [
               {
                 label: 'Reserved vs Provisioned Concurrency — selalu tertukar',
@@ -4751,6 +4812,31 @@ export const domains: DomainData[] = [
                   ['Poll-based (Event Source Mapping)', 'SQS · Kinesis · DynamoDB Streams', 'Lambda POLL & batch; SQS buffer burst → kawal concurrency, elak throttle'],
                 ],
                 takeaway: 'Sebut "S3/SNS/EventBridge cetus Lambda" = ASYNC (ada retry + DLQ/Destinations). Sebut "SQS/Kinesis/DynamoDB Streams" = POLL-based via Event Source Mapping (Lambda TARIK, bukan ditolak). Throttling masa burst → masukkan SQS depan Lambda untuk buffer.',
+              },
+              {
+                label: 'Execution Role vs Resource-based Policy — arah KELUAR vs MASUK (exam trap!)',
+                headers: ['Aspect', 'Execution Role (IAM role)', 'Resource-based Policy'],
+                rows: [
+                  ['Jawab soalan', 'Apa Lambda BOLEH akses?', 'SIAPA boleh INVOKE Lambda?'],
+                  ['Arah', '🟢 OUTBOUND — Lambda → AWS lain (S3, DynamoDB, KMS)', '🟢 INBOUND — caller → Lambda'],
+                  ['Melekat pada', 'IAM role yang Lambda ASSUME masa run', 'Function itu sendiri (policy JSON pada resource)'],
+                  ['Set guna', 'Attach IAM policy pada execution role', 'lambda:AddPermission (auto bila kau wire trigger di console)'],
+                  ['Contoh guna', 'Lambda kena baca S3 bucket → role perlu s3:GetObject', 'API Gateway / S3 / EventBridge nak trigger Lambda → resource policy allow principal tu'],
+                  ['Exam keyword', '"function needs to access / read / write to <service>"', '"allow API Gateway/S3/EventBridge/another account TO INVOKE"'],
+                ],
+                takeaway: 'Lambda nak GUNA service lain (baca S3, tulis DynamoDB, decrypt KMS) → Execution Role (outbound). Service/akaun lain nak PANGGIL Lambda → Resource-based Policy (inbound). Keyword "function accesses X" = execution role; "allow X to invoke the function" = resource-based policy. Dua-dua wujud serentak pada satu Lambda.',
+              },
+              {
+                label: 'Siapa guna apa — Execution Role vs Resource Policy vs Instance Profile',
+                headers: ['Service', 'Identity/outbound', 'Resource-based policy (inbound)?'],
+                rows: [
+                  ['Lambda', '🟢 Execution role (assume masa run)', '🟢 Ya — kawal siapa boleh invoke'],
+                  ['EC2', '🟢 Instance profile (bungkus IAM role)', '🔴 Tiada — guna Security Group untuk inbound'],
+                  ['S3', '— (bukan compute)', '🟢 Bucket policy — siapa boleh akses objek'],
+                  ['SQS / SNS', '— ', '🟢 Queue/topic policy — siapa boleh send/subscribe'],
+                  ['KMS', '— ', '🟢 Key policy — WAJIB authorize principal (lengkapi IAM)'],
+                ],
+                takeaway: 'Compute yang ASSUME identity: Lambda = execution role, EC2 = instance profile (kedua bungkus IAM role, JANGAN hardcode key). Resource yang ada policy sendiri untuk kawal inbound: Lambda, S3 (bucket policy), SQS/SNS (queue/topic policy), KMS (key policy). EC2 TAKDE resource-based policy — inbound EC2 dikawal Security Group.',
               },
             ],
             mermaid: [
@@ -4802,6 +4888,8 @@ export const domains: DomainData[] = [
               'Exam: "1 million free requests per month forever" → Lambda free tier. "pay per request + duration" → Lambda pricing model. "Provisioned Concurrency has hourly cost" → yes, separate from execution.',
               'Environment variables: tukar CONFIGURATION (endpoint URL, flag toggle, feature switch) INSTANT tanpa ubah code Lambda — set di console, Lambda pakai nilai baru invocation seterusnya. Secure env var sensitif (API key/password) guna ENCRYPTION HELPERS (KMS) — Lambda auto-decrypt masa runtime. JANGAN pass config via request header (user boleh manipulate). Lambda Layers = shared library/dependency BUKAN config; Aliases = label version BUKAN config. Exam: "modify config instantly without code change + securely" → env vars + encryption helpers (KMS).',
               'Exam pairing: "Lambda + RDS too many connections" → RDS Proxy (pool connection). "Lambda react to DynamoDB changes" → DynamoDB Streams + Event Source Mapping.',
+              'PERMISSIONS 2-hala: Execution Role = arah KELUAR (apa Lambda boleh akses — attach IAM policy cth s3:GetObject, dynamodb:PutItem). Resource-based Policy = arah MASUK (siapa boleh INVOKE Lambda — cth benarkan API Gateway/S3/EventBridge/account lain; set guna lambda:AddPermission). Exam: "function needs to read S3" → execution role; "allow S3/API Gateway to invoke the function" → resource-based policy.',
+              'KMS decrypt (CMK): kalau Lambda decrypt data/env var guna CUSTOMER MANAGED KEY, perlu DUA: (1) execution role ada kms:Decrypt, DAN (2) KMS KEY POLICY (resource-based pada key) authorize role tu. Default AWS-managed key tak perlu extra permission; CMK wajib kedua-dua. Exam: "Lambda AccessDenied decrypting with CMK walau role dah ada kms:Decrypt" → key policy belum authorize role.',
             ],
             scenario: 'Sebut "predictable spike, mesti respond cepat TANPA cold start" → Provisioned Concurrency. Sebut "Java/Python/.NET cold start + paling jimat kos (most cost-effective)" → SnapStart (BUKAN Provisioned Concurrency yang bayar per jam). Sebut "Node.js/Ruby/container nak zero cold start" → Provisioned Concurrency (SnapStart tak support runtime tu). Sebut "Lambda throttling masa burst / decouple / buffer / smooth load" → letak SQS depan Lambda (SQS buffer; SNS tidak). Sebut "satu function jangan habiskan semua kuota / jamin kuota function kritikal" → Reserved Concurrency. Sebut "job ambil masa lebih 15 minit" → Lambda TAK sesuai (guna Fargate/Batch/Step Functions). STORAGE: "persistent / shared storage across invocations" atau "data > 10 GB / ML model besar" → mount Amazon EFS (function dalam VPC). "scratch sementara dalam satu run" → /tmp (512 MB–10 GB).',
             docs: [
@@ -4810,7 +4898,7 @@ export const domains: DomainData[] = [
               { label: 'Invocation & Event Source Mapping', url: 'https://docs.aws.amazon.com/lambda/latest/dg/lambda-invocation.html' },
               { label: 'Lambda Layers', url: 'https://docs.aws.amazon.com/lambda/latest/dg/chapter-layers.html' },
             ],
-            keywords: ['serverless', 'event-driven', '15-min max', 'reserved concurrency', 'provisioned concurrency', 'cold start', 'snapstart', 'Lambda SnapStart', 'Firecracker snapshot', 'Java cold start', 'event source mapping', 'invocation model', 'asynchronous invocation', 'synchronous invocation', 'poll-based', 'Lambda destinations', 'DLQ', 'dead letter queue', 'Lambda layers', 'response streaming', 'SQS decouple', 'throttling', '429', 'execution environment', 'execution role', '/tmp ephemeral storage', 'EFS mount', 'Lambda EFS', 'persistent storage', 'shared storage', 'function URL', 'environment variables', 'encryption helpers', 'KMS env var'],
+            keywords: ['serverless', 'event-driven', '15-min max', 'reserved concurrency', 'provisioned concurrency', 'cold start', 'snapstart', 'Lambda SnapStart', 'Firecracker snapshot', 'Java cold start', 'event source mapping', 'invocation model', 'asynchronous invocation', 'synchronous invocation', 'poll-based', 'Lambda destinations', 'DLQ', 'dead letter queue', 'Lambda layers', 'response streaming', 'SQS decouple', 'throttling', '429', 'execution environment', 'execution role', 'resource-based policy', 'resource policy', 'AddPermission', 'who can invoke', 'inbound permission', 'outbound permission', 'lambda:InvokeFunction', 'instance profile', 'kms:Decrypt', 'KMS key policy', 'customer managed key', 'CMK', '/tmp ephemeral storage', 'EFS mount', 'Lambda EFS', 'persistent storage', 'shared storage', 'function URL', 'environment variables', 'encryption helpers', 'KMS env var'],
           },
           {
             shortName: 'Elastic Beanstalk',
@@ -7796,7 +7884,7 @@ export const domains: DomainData[] = [
                 rows: [
                   ['Resources', 'Define resource nak dicipta (EC2/S3/VPC/RDS...)', '🔴 WAJIB — satu-satunya', '"the only required section"'],
                   ['Parameters', 'Input DINAMIK masa launch (user pilih env/saiz)', 'Optional', '"user chooses env / instance size"'],
-                  ['Mappings', 'Lookup table STATIC (region → AMI ID)', 'Optional', '"region-specific AMI / static lookup"'],
+                  ['Mappings', 'Lookup table STATIC (region → AMI ID); baca guna Fn::FindInMap', 'Optional', '"region-specific AMI / static lookup / Fn::FindInMap"'],
                   ['Conditions', 'Cipta resource bersyarat (if prod → buat X)', 'Optional', '"create only if / conditional logic"'],
                   ['Outputs', 'EXPORT value keluar untuk stack lain import', 'Optional', '"share between stacks → Fn::ImportValue"'],
                   ['Metadata', 'Info tambahan + config untuk cfn-init', 'Optional', 'jarang keluar — kenal nama je'],
@@ -7865,6 +7953,8 @@ export const domains: DomainData[] = [
               'Bukan SNS/SQS untuk AMI lookup — SNS = notifications, SQS = queuing, bukan dynamic lookup',
               'Exam: "single CloudFormation template for multiple regions, auto-select correct AMI ID" → Lambda-backed custom resource',
               'Mappings: static key-value lookup tables dalam template (e.g. region → AMI ID). Tak perlu user input, hardcoded dalam template',
+              'Fn::FindInMap: intrinsic function yang AMBIL nilai dari Mappings. Syntax: !FindInMap [ MapName, TopLevelKey, SecondLevelKey ] — cth !FindInMap [ RegionMap, !Ref "AWS::Region", AMI ]. Pair dengan pseudo parameter AWS::Region untuk auto-pilih AMI ikut region tanpa user input. Exam: "look up value from Mappings by region" → Fn::FindInMap + AWS::Region',
+              'Pseudo parameters = nilai auto-sedia dari CloudFormation (tak payah declare): AWS::Region (region semasa), AWS::AccountId, AWS::StackName, AWS::NoValue. Selalu berpasangan dengan Fn::FindInMap / Ref',
               'Outputs: export values dari stack untuk cross-stack reference. Consuming stack guna Fn::ImportValue untuk import',
               'Parameters: user input masa stack launch (dynamic). Conditions: conditional resource creation berdasarkan parameter values',
               'EXAM KEY: "region-specific AMI selection" → Mappings. "Share values between stacks" → Outputs + ImportValue. "User chooses env" → Parameters',
@@ -7891,7 +7981,7 @@ export const domains: DomainData[] = [
               'Termination Protection: setting di STACK level yang halang stack itu sendiri daripada dipadam (mesti disable dulu sebelum boleh delete). BEZA: Termination Protection = halang stack DELETE; DeletionPolicy: Retain = kalau stack memang dipadam, kekalkan resource tertentu. Exam: "prevent the stack from being deleted" → Termination Protection; "keep the database if the stack is deleted" → DeletionPolicy: Retain.',
               'INGAT 3-cara keliru: Termination Protection (halang stack delete) · DeletionPolicy (nasib resource bila stack DELETE) · Stack Policy (lindung resource masa stack UPDATE).',
             ],
-            keywords: ['IaC', 'Infrastructure as Code', 'template', 'stack', 'rollback', 'repeatable deployment', 'Lambda-backed custom resource', 'AMI lookup', 'dynamic parameters', 'multi-region template', 'Mappings', 'Outputs', 'cross-stack reference', 'Fn::ImportValue', 'cfn-init', 'cfn-signal', 'cfn-hup', 'cfn-get-metadata', 'change set', 'drift detection', 'stack rollback', 'DeletionPolicy', 'nested stacks', 'AWS::CloudFormation::Stack', 'modular templates', 'StackSets', 'free', 'pricing', 'no additional charge', 'Resources', 'Transform', 'SAM', 'Serverless Application Model', 'Stack Policy', 'Termination Protection', 'Metadata', 'template sections', 'Conditions', 'Parameters'],
+            keywords: ['IaC', 'Infrastructure as Code', 'template', 'stack', 'rollback', 'repeatable deployment', 'Lambda-backed custom resource', 'AMI lookup', 'dynamic parameters', 'multi-region template', 'Mappings', 'Fn::FindInMap', 'FindInMap', 'AWS::Region', 'pseudo parameter', 'intrinsic function', 'Outputs', 'cross-stack reference', 'Fn::ImportValue', 'cfn-init', 'cfn-signal', 'cfn-hup', 'cfn-get-metadata', 'change set', 'drift detection', 'stack rollback', 'DeletionPolicy', 'nested stacks', 'AWS::CloudFormation::Stack', 'modular templates', 'StackSets', 'free', 'pricing', 'no additional charge', 'Resources', 'Transform', 'SAM', 'Serverless Application Model', 'Stack Policy', 'Termination Protection', 'Metadata', 'template sections', 'Conditions', 'Parameters'],
           },
           {
             shortName: 'SSM',
