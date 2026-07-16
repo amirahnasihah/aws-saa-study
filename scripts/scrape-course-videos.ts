@@ -1,18 +1,28 @@
 /**
- * Video course scraper — course-section API → video-index.json
+ * Video course scraper — course-section API → video-index.json + local topic archive
  *
  *   bun run scrape:videos
- *   bun run scrape:videos -- --course "<video-tab-url>" [--from-raw scripts/course/video-raw.json]
+ *   bun run scrape:videos -- --from-raw scripts/course/video-raw.json
+ *   bun run course:archive
  *
  * Auth: same as scrape:lab (--cdp-endpoint chrome | scripts/.playwright-storage-state.json)
  *
  * Env:
- *   COURSE_VIDEO_URL — base video tab URL (no query string); used to build per-lecture links
+ *   COURSE_VIDEO_URL — base video tab URL (no query string)
+ *   COURSE_ARCHIVE_DIR — local topic archive root (default ~/Documents/aws-saa-course)
  */
 
 import { chromium, type BrowserContext, type Page } from 'playwright'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import { resolve } from 'path'
+import {
+  DEFAULT_ARCHIVE_DIR,
+  exportCourseArchive,
+  type VideoArchiveIndex,
+  type VideoIndexEntry,
+} from './lib/course-archive'
+
+export type { VideoIndexEntry } from './lib/course-archive'
 
 type CourseItem = {
   order_by: number
@@ -30,32 +40,15 @@ type CourseItem = {
   video_status?: string | null
 }
 
-export type VideoIndexEntry = {
-  index: number
-  title: string
-  section: string
-  orderBy: number
-  duration: string | null
-  videoId: number | null
-  layoutId: number | null
-  vimeoId: string | null
-  url: string
-  status: string | null
-}
-
-type VideoIndex = {
-  discoveredAt: string
-  courseUrl: string
-  total: number
-  videos: VideoIndexEntry[]
-}
-
 type CliArgs = {
   courseUrl: string
   fromRaw?: string
+  exportOnly: boolean
   headless: boolean
   cdpEndpoint?: string
   markdown: boolean
+  outDir?: string
+  mirrorLabs: boolean
 }
 
 const STORAGE_STATE = resolve('scripts/.playwright-storage-state.json')
@@ -82,12 +75,18 @@ const parseArgs = (): CliArgs => {
     process.env.COURSE_VIDEO_URL ??
     'https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video'
 
+  const outDirRaw = get('--out-dir') ?? process.env.COURSE_ARCHIVE_DIR
+  const outDir = outDirRaw?.replace(/^~(?=\/|$)/, process.env.HOME ?? '')
+
   return {
     courseUrl: courseUrl.split('?')[0] ?? courseUrl,
     fromRaw: get('--from-raw'),
+    exportOnly: args.includes('--export-only'),
     headless: args.includes('--headless'),
     cdpEndpoint: resolveCdpEndpoint(get('--cdp-endpoint')),
     markdown: args.includes('--markdown'),
+    outDir,
+    mirrorLabs: !args.includes('--no-mirror-labs'),
   }
 }
 
@@ -114,7 +113,7 @@ const videoUrl = (courseUrl: string, layoutId: number | null | undefined): strin
   return `${courseUrl}?layoutId=${layoutId}`
 }
 
-const buildIndex = (items: CourseItem[], courseUrl: string): VideoIndex => {
+const buildIndex = (items: CourseItem[], courseUrl: string): VideoArchiveIndex => {
   let section = 'Uncategorized'
   let videoCount = 0
 
@@ -149,7 +148,7 @@ const buildIndex = (items: CourseItem[], courseUrl: string): VideoIndex => {
   }
 }
 
-const writeMarkdown = (index: VideoIndex, path: string): void => {
+const writeMarkdown = (index: VideoArchiveIndex, path: string): void => {
   const lines = [
     `# Video course index (${index.total} lectures)`,
     '',
@@ -212,31 +211,42 @@ const loadFromRaw = (path: string): CourseItem[] => {
   return payload.data ?? []
 }
 
+const loadExistingIndex = (): VideoArchiveIndex =>
+  JSON.parse(readFileSync(INDEX_PATH, 'utf8')) as VideoArchiveIndex
+
 const main = async (): Promise<void> => {
   const args = parseArgs()
   mkdirSync(COURSE_DIR, { recursive: true })
 
-  const items = args.fromRaw
-    ? loadFromRaw(resolve(args.fromRaw))
+  const index = args.exportOnly
+    ? loadExistingIndex()
     : await (async () => {
-        const { context, close } = await launchBrowser(args.headless, args.cdpEndpoint)
-        const page = await context.newPage()
-        console.log(`Fetching course outline from ${args.courseUrl}…`)
-        const fetched = await fetchCourseItems(page, args.courseUrl)
-        writeFileSync(RAW_PATH, JSON.stringify({ data: fetched }, null, 2))
-        await context.storageState({ path: STORAGE_STATE })
-        await close()
-        console.log(`  Raw API dump → ${RAW_PATH} (${fetched.length} rows)`)
-        return fetched
-      })()
+        const items = args.fromRaw
+          ? loadFromRaw(resolve(args.fromRaw))
+          : await (async () => {
+              const { context, close } = await launchBrowser(args.headless, args.cdpEndpoint)
+              const page = await context.newPage()
+              console.log(`Fetching course outline from ${args.courseUrl}…`)
+              const fetched = await fetchCourseItems(page, args.courseUrl)
+              writeFileSync(RAW_PATH, JSON.stringify({ data: fetched }, null, 2))
+              await context.storageState({ path: STORAGE_STATE })
+              await close()
+              console.log(`  Raw API dump → ${RAW_PATH} (${fetched.length} rows)`)
+              return fetched
+            })()
 
-  const index = buildIndex(items, args.courseUrl)
-  writeFileSync(INDEX_PATH, JSON.stringify(index, null, 2))
+        const built = buildIndex(items, args.courseUrl)
+        writeFileSync(INDEX_PATH, JSON.stringify(built, null, 2))
+        return built
+      })()
 
   if (args.markdown) {
     writeMarkdown(index, resolve('scripts/course/video-index.md'))
-    console.log(`  Markdown → scripts/course/video-index.md`)
+    console.log('  Markdown → scripts/course/video-index.md')
   }
+
+  const archiveDir = args.outDir ?? DEFAULT_ARCHIVE_DIR
+  exportCourseArchive(index, archiveDir, { mirrorLabs: args.mirrorLabs })
 
   console.log(`\n✓ ${index.total} videos → ${INDEX_PATH}`)
   index.videos.slice(0, 8).forEach((v) => {

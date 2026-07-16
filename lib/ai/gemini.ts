@@ -20,7 +20,8 @@ export async function callGemini(
   systemPrompt: string,
   messages: GeminiMessage[],
   geminiApiKey: string,
-  maxTokens: number
+  maxTokens: number,
+  jsonMode = true
 ): Promise<{ text: string } | { error: string; status: number }> {
   let res: Response
   try {
@@ -33,7 +34,7 @@ export async function callGemini(
       body: JSON.stringify({
         model: GEMINI_MODEL,
         max_tokens: maxTokens,
-        response_format: { type: 'json_object' },
+        ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
         messages: [{ role: 'system', content: systemPrompt }, ...messages],
       }),
     })

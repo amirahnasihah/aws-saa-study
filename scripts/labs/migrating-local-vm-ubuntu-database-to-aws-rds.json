@@ -215,7 +215,7 @@
           "text": "Master username. : Enter admin"
         },
         {
-          "text": "Master password and Confirm password: Enter lab123"
+          "text": "Master password and Confirm password: Enter <example-password>"
         },
         {
           "text": "DB instance class : Select Burstable classes db.t3.micro — 2 vCPUs, 1 GiB RAM"
@@ -301,7 +301,7 @@
           "text": "To replace your RDS Endpoint"
         },
         {
-          "text": "Enter password : lab123"
+          "text": "Enter password : <example-password>"
         },
         {
           "text": "Task 6: Connect an RDS database to a local Ubuntu VM"
@@ -331,7 +331,7 @@
           "text": "use the MySQL client to import the database dump using the following command"
         },
         {
-          "text": "Enter password : lab123"
+          "text": "Enter password : <example-password>"
         },
         {
           "text": "Task 6: Connect an RDS database to a local Ubuntu VM"

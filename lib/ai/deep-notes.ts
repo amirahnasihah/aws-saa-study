@@ -1,4 +1,5 @@
-import { domains } from '@/data/awsServices'
+import { deepNotesLinkIndex } from '@/data/deepNotesLinkIndex'
+import { learnHref } from '@/data/awsMeta'
 
 export type DeepNotesMatch = {
   url: string
@@ -15,27 +16,7 @@ type IndexedService = {
   searchBlob: string
 }
 
-const deepNotesIndex: IndexedService[] = domains.flatMap((domain) =>
-  domain.sections.flatMap((section) =>
-    section.services.map((service) => ({
-      sectionId: section.id,
-      sectionTitle: section.title,
-      sectionIcon: section.icon,
-      shortName: service.shortName,
-      searchBlob: [
-        service.shortName,
-        service.fullName,
-        ...(service.keywords ?? []),
-        service.fungsi,
-        service.contohGuna ?? '',
-        service.scenario ?? '',
-        section.title,
-      ]
-        .join(' ')
-        .toLowerCase(),
-    }))
-  )
-)
+const deepNotesIndex: IndexedService[] = [...deepNotesLinkIndex]
 
 function scoreTerms(blob: string, terms: string[]): number {
   return terms.reduce((score, term) => {
@@ -71,7 +52,7 @@ export function findDeepNotesMatch(terms: string[]): DeepNotesMatch {
 
   const { item } = best
   return {
-    url: `/learn#${item.sectionId}`,
+    url: learnHref(item.sectionId),
     serviceName: item.shortName,
     sectionTitle: item.sectionTitle,
     sectionIcon: item.sectionIcon,

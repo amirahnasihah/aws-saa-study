@@ -40,6 +40,21 @@ bun install
 bun dev
 ```
 
+### Supabase Magic Link auth (optional)
+
+Add these env vars for `/auth/login`:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=...
+```
+
+In Supabase Dashboard:
+- Auth → Providers → Email: enable email sign-in (magic link)
+- Auth → URL Configuration: add redirect URL
+  - `http://localhost:3000/auth/callback`
+  - your production domain `/auth/callback`
+
 ## Deploy
 
 Push to `main` — Cloudflare Pages builds and deploys automatically using `wrangler.jsonc` config.

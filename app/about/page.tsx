@@ -129,6 +129,14 @@ export default function AboutPage() {
                 </div>
               </div>
 
+              {/* Link to full exam guide page */}
+              <Link
+                href="/exam-guide"
+                className="block text-right font-space-mono text-[0.53rem] text-c1/80 hover:text-c1 hover:underline -mt-1 mb-3 transition-colors"
+              >
+                Full guide →
+              </Link>
+
               {/* Exam meta pills */}
               <div className="flex flex-wrap gap-1 mb-4 pb-4 border-b border-aws-border">
                 {['65 questions', '50 scored + 15 unscored', '~130 min'].map((m) => (

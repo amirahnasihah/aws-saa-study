@@ -14,7 +14,9 @@ Respond ONLY with valid JSON — no markdown, no code fences, no explanation out
   "trafficFlow": ["short step 1", "short step 2", "short step 3", "short step 4"],
   "examRelevance": "1-2 sentences on why this service matters for SAA-C03 and which domain it falls under",
   "examTraps": ["short exam trap or common mistake 1", "short exam trap or common mistake 2", "short exam trap 3"]
-}`
+}
+
+Write the human-readable string VALUES in the same language as the user's question/context (Malay or English); default to English if unclear. Keep JSON keys, AWS service names, and technical terms in English.`
 
 const SYSTEM_DIAGRAM = `You are an AWS Solutions Architect exam tutor. Analyze an AWS architecture pattern.
 
@@ -24,7 +26,9 @@ Respond ONLY with valid JSON — no markdown, no code fences, no explanation out
   "trafficFlow": ["short step 1 of the data flow", "short step 2", "short step 3", "short step 4"],
   "examRelevance": "1-2 sentences on what SAA-C03 domain this demonstrates and why it appears on the exam",
   "examTraps": ["short exam trap or common mistake 1", "short exam trap 2", "short exam trap 3"]
-}`
+}
+
+Write the human-readable string VALUES in the same language as the user's question/context (Malay or English); default to English if unclear. Keep JSON keys, AWS service names, and technical terms in English.`
 
 export interface ExplainSections {
   whatItDoes: string

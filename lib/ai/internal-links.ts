@@ -1,4 +1,5 @@
-import { allLabsFallback } from '@/lib/labs-fallback'
+import { labsLinkIndex } from '@/data/labsLinkIndex'
+import { learnHref } from '@/data/awsMeta'
 
 export type InternalLink = {
   url: string
@@ -56,7 +57,7 @@ type IndexedLab = {
   titleWords: string[]     // lower-cased, non-generic words from the lab title
 }
 
-const labsIndex: IndexedLab[] = allLabsFallback().map((lab) => ({
+const labsIndex: IndexedLab[] = labsLinkIndex.map((lab) => ({
   slug: lab.slug,
   title: lab.title,
   titleWords: lab.title
@@ -121,7 +122,7 @@ function matchNotes(terms: string[]): InternalLink | null {
 
   if (!best) return null
   return {
-    url: `/learn#${best.anchor}`,
+    url: learnHref(best.anchor),
     label: 'Study Notes',
     sublabel: best.title,
     icon: '📓',

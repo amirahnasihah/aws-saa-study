@@ -13,6 +13,9 @@
  * Re-scrape labs that have steps but no step images yet:
  *   bun run scrape:lab -- --batch --missing-images [--offset 0] [--limit 10]
  *
+ * Re-scrape guided labs with too few images (partial scrapes):
+ *   bun run scrape:lab -- --batch --under-scraped --guided-only --headless
+ *
  * Auth (pick one):
  *   --cdp-endpoint chrome     Use your open Chrome (enable chrome://inspect/#remote-debugging)
  *   --cdp-endpoint http://127.0.0.1:9222
@@ -45,10 +48,9 @@ type CourseIndex = {
 }
 
 const labUrlForEntry = (entry: { slug: string; url?: string }): string => {
-  const base = process.env.LAB_BASE_URL?.replace(/\/$/, '')
-  if (base) return `${base}/labs/${entry.slug}`
   if (entry.url) return entry.url
-  throw new Error(`Missing lab URL for ${entry.slug}. Set LAB_BASE_URL or re-discover with --course.`)
+  const base = process.env.LAB_BASE_URL?.replace(/\/$/, '') ?? 'https://business.whizlabs.com/labs'
+  return `${base}/${entry.slug}`
 }
 
 interface CliArgs {
@@ -63,6 +65,9 @@ interface CliArgs {
   limit?: number
   skipExisting: boolean
   missingImages: boolean
+  underScraped: boolean
+  guidedOnly: boolean
+  compile: boolean
   cdpEndpoint?: string
 }
 
@@ -96,7 +101,7 @@ const parseArgs = (): CliArgs => {
   --url <lab-url>              Scrape one lab
   --course <course-url>        Discover labs (+ --list-only to skip scrape)
   --batch                      Scrape from ${COURSE_INDEX_PATH}
-  [--offset N] [--limit N] [--skip-existing] [--missing-images] [--headless] [--no-seed] [--slug <id>]
+  [--offset N] [--limit N] [--skip-existing] [--missing-images] [--under-scraped] [--guided-only] [--compile] [--headless] [--no-seed] [--slug <id>]
   [--cdp-endpoint chrome|http://127.0.0.1:9222]`)
     process.exit(1)
   }
@@ -113,6 +118,9 @@ const parseArgs = (): CliArgs => {
     limit: get('--limit') ? parseInt(get('--limit')!, 10) : undefined,
     skipExisting: args.includes('--skip-existing'),
     missingImages: args.includes('--missing-images'),
+    underScraped: args.includes('--under-scraped'),
+    guidedOnly: args.includes('--guided-only'),
+    compile: args.includes('--compile'),
     cdpEndpoint: resolveCdpEndpoint(get('--cdp-endpoint')),
   }
 }
@@ -523,8 +531,13 @@ const scrapeMetadata = async (page: Page): Promise<{
 
 export const scrapeLab = async (page: Page, url: string, slug: string, imageDir: string): Promise<Lab> => {
   console.log(`\n[${slug}] ${url}`)
-  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60_000 })
+  await page.goto(url, { waitUntil: 'networkidle', timeout: 90_000 })
   await page.waitForSelector('h1, [class*="lab"]', { timeout: 20_000 }).catch(() => undefined)
+  await page
+    .locator('[role="tab"]:has-text("Lab Steps"), button:has-text("Lab Steps")')
+    .first()
+    .waitFor({ state: 'visible', timeout: 30_000 })
+    .catch(() => undefined)
   await page.waitForTimeout(1500)
 
   const meta = await scrapeMetadata(page)
@@ -554,6 +567,7 @@ export const scrapeLab = async (page: Page, url: string, slug: string, imageDir:
       await rawStep.imageUrls.reduce(async (imagePrev, src) => {
         await imagePrev
         const imgUrl = absolutizeUrl(src, url)
+        if (!/labresources\.whizlabs\.com/i.test(imgUrl)) return
         imgCounter += 1
         const ext = imgUrl.match(/\.(png|jpe?g|gif|webp)(\?|$)/i)?.[1]?.toLowerCase() ?? 'png'
         const filename = `step-${String(imgCounter).padStart(2, '0')}.${ext}`
@@ -602,6 +616,34 @@ export const labJsonHasImages = (slug: string): boolean => {
     task.steps?.some((step) => (step.images?.length ?? 0) > 0),
   ) ?? false
 }
+
+export const labImageStats = (slug: string): { steps: number; images: number } => {
+  const jsonPath = join(LABS_DIR, `${slug}.json`)
+  if (!existsSync(jsonPath)) return { steps: 0, images: 0 }
+  const lab = JSON.parse(readFileSync(jsonPath, 'utf8')) as Lab
+  const steps = lab.tasks?.reduce(
+    (sum, task) => sum + (task.steps?.length ?? 0),
+    0,
+  ) ?? 0
+  const images = lab.tasks?.reduce(
+    (sum, task) => sum + (task.steps?.reduce(
+      (inner, step) => inner + (step.images?.length ?? 0),
+      0,
+    ) ?? 0),
+    0,
+  ) ?? 0
+  return { steps, images }
+}
+
+export const labNeedsImageRescrape = (slug: string): boolean => {
+  const { steps, images } = labImageStats(slug)
+  if (steps === 0) return !existsSync(join(LABS_DIR, `${slug}.json`))
+  if (images === 0) return true
+  return images < Math.max(3, Math.floor(steps * 0.4))
+}
+
+export const isGuidedCourseLab = (entry: CourseLabEntry): boolean =>
+  !entry.category.includes('Challenge') && !entry.category.includes('Project')
 
 export const persistLab = (lab: Lab, seed: boolean): void => {
   const clean = sanitizeLab(lab)
@@ -674,9 +716,14 @@ const main = async (): Promise<void> => {
     }
   }
 
-  const entries: CourseIndex['labs'] = args.batch || args.course
-    ? loadCourseIndex().labs
-    : []
+  const entries: CourseLabEntry[] = (args.batch || args.course
+    ? loadCourseIndex().labs.map((entry) => ({ ...entry, url: labUrlForEntry(entry) }))
+    : [])
+    .filter((entry) => !args.guidedOnly || isGuidedCourseLab(entry))
+    .filter((entry) => {
+      if (args.underScraped) return labNeedsImageRescrape(entry.slug)
+      return true
+    })
 
   if (args.url) {
     const slug = args.slug ?? slugFromLabUrl(args.url)
@@ -689,7 +736,11 @@ const main = async (): Promise<void> => {
   }
 
   const slice = entries.slice(args.offset, args.limit ? args.offset + args.limit : undefined)
-  const modeLabel = args.missingImages ? 'missing-images' : 'batch'
+  const modeLabel = args.underScraped
+    ? 'under-scraped'
+    : args.missingImages
+      ? 'missing-images'
+      : 'batch'
   console.log(`\n${modeLabel}: ${slice.length} labs (offset ${args.offset})`)
 
   if (slice.length === 0) {
@@ -706,8 +757,12 @@ const main = async (): Promise<void> => {
   await slice.reduce(async (prev, entry) => {
     await prev
     const jsonPath = join(LABS_DIR, `${entry.slug}.json`)
-    if (args.missingImages && labJsonHasImages(entry.slug)) {
+    if (args.missingImages && !args.underScraped && labJsonHasImages(entry.slug)) {
       console.log(`\n[skip has images] ${entry.slug}`)
+      return
+    }
+    if (args.underScraped && !labNeedsImageRescrape(entry.slug)) {
+      console.log(`\n[skip enough images] ${entry.slug}`)
       return
     }
     if (args.skipExisting && existsSync(jsonPath) && !args.missingImages) {
@@ -737,6 +792,16 @@ const main = async (): Promise<void> => {
   }
 
   if (failures.length) console.warn(`\n⚠ Failed: ${failures.join(', ')}`)
+
+  if (args.compile && sqlRows.length > 0) {
+    const proc = Bun.spawn(['bun', 'run', 'labs:compile'], {
+      cwd: resolve('.'),
+      stdout: 'inherit',
+      stderr: 'inherit',
+    })
+    const code = await proc.exited
+    if (code !== 0) throw new Error(`labs:compile exited with code ${code}`)
+  }
 
   await close()
 }

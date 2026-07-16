@@ -1592,4 +1592,29 @@ export const practiceQuestions: PracticeQuestion[] = [
     },
     keywords: ['Cost Explorer', 'cost analysis', 'RI recommendations', 'spending trends', 'visualization'],
   },
+  {
+    id: 'q-rekognition-custom-labels-species',
+    domain: 'd3',
+    domainLabel: 'High-Performing Architectures',
+    difficulty: 'Hard',
+    scenario:
+      'A wildlife conservation organization wants to analyze camera trap images stored in Amazon S3 to monitor animal species in protected areas. They want to automate image recognition without building and training a custom model from scratch. Which solution meets these requirements?',
+    options: [
+      { id: 'a', text: 'Use Amazon Rekognition Custom Labels to train a model with labeled animal images in S3' },
+      { id: 'b', text: 'Use Rekognition\'s general Object and Scene Detection for automatic species identification' },
+      { id: 'c', text: 'Use Rekognition\'s Facial Analysis to detect animals via facial features' },
+      { id: 'd', text: 'Copy images to Amazon SageMaker and build a custom deep learning model' },
+    ],
+    correctId: 'a',
+    explanation: {
+      correct:
+        'Amazon Rekognition Custom Labels is correct. The key word is SPECIES — identifying specific animals (e.g. a Malayan tiger vs a Bengal tiger) requires a model trained on labeled images of those species. Custom Labels lets you upload labeled images to S3, and Rekognition manages the training and hosting for you — you need no deep ML expertise. Crucially, "without building and training a custom model FROM SCRATCH" excludes only SageMaker (raw model building), NOT Custom Labels (managed training). So A satisfies the constraint while delivering species-level recognition.',
+      incorrects: {
+        b: 'Object and Scene Detection (DetectLabels) is the strongest-looking bait. It is pre-trained and needs no training, which seems to match "no custom model." But DetectLabels returns GENERIC labels like "Animal", "Mammal", "outdoor" — it cannot reliably distinguish specific species. The exam word "species" is the giveaway that generic detection is insufficient. Correct for generic object/scene tagging, not for species identification.',
+        c: 'Facial Analysis is incorrect. Rekognition Facial Analysis is designed for HUMAN faces — detecting emotion, estimated age, gender, and facial landmarks. It is not built to recognize animals at all. "Detect animals via facial features" is technically nonsensical for this feature.',
+        d: 'SageMaker is incorrect. Building a custom deep learning model on SageMaker IS "building and training a custom model from scratch" — exactly what the scenario says to avoid. It also requires the most ML expertise, data engineering, and operational overhead. This is the option the "from scratch" clause is designed to exclude.',
+      },
+    },
+    keywords: ['Rekognition', 'Custom Labels', 'Object and Scene Detection', 'DetectLabels', 'Facial Analysis', 'SageMaker', 'image recognition', 'species identification', 'camera trap', 'wildlife', 'without custom model from scratch', 'pre-trained vs custom training'],
+  },
 ]

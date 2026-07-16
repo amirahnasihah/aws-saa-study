@@ -222,13 +222,13 @@
           "text": "Please follow the steps in SSH into EC2 Instance for more options to SSH."
         },
         {
-          "text": "For Mac/Linux users, SSH into the lab_instance by opening the terminal in your local system and execute the command below:ssh lab_user@<Your IPv4 Public IP address> Password : Enter lab@321"
+          "text": "For Mac/Linux users, SSH into the lab_instance by opening the terminal in your local system and execute the command below:ssh lab_user@<Your IPv4 Public IP address> Password : Enter <example-password>"
         },
         {
           "text": "For Mac/Linux users, SSH into the lab_instance by opening the terminal in your local system and execute the command below:"
         },
         {
-          "text": "Password : Enter lab@321"
+          "text": "Password : Enter <example-password>"
         },
         {
           "text": "Task 4: Creating an Application Load Balancer in AWS CLI",
@@ -246,7 +246,7 @@
           "text": "Click on Accept"
         },
         {
-          "text": "Enter password : lab@321"
+          "text": "Enter password : <example-password>"
         },
         {
           "text": "Port : 22"

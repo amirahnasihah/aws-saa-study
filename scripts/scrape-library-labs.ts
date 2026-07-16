@@ -14,6 +14,7 @@ import { sanitizeLab } from '../lib/sanitize-lab'
 import {
   ensureAuth,
   labJsonHasImages,
+  labNeedsImageRescrape,
   launchBrowser,
   persistLab,
   scrapeLab,
@@ -22,7 +23,7 @@ import {
 const LABS_DIR = resolve('scripts/labs')
 const LIBRARY_INDEX = join(LABS_DIR, 'library-index.json')
 
-type ScrapeMode = 'incomplete' | 'missing-only' | 'missing-images' | 'all'
+type ScrapeMode = 'incomplete' | 'missing-only' | 'missing-images' | 'under-scraped' | 'all'
 
 type LibraryEntry = {
   slug: string
@@ -39,6 +40,7 @@ type CliArgs = {
   seed: boolean
   offset: number
   limit?: number
+  guidedOnly: boolean
   cdpEndpoint?: string
 }
 
@@ -60,9 +62,11 @@ const parseArgs = (): CliArgs => {
     ? 'all'
     : args.includes('--missing-only')
       ? 'missing-only'
-      : args.includes('--missing-images')
-        ? 'missing-images'
-        : 'incomplete'
+      : args.includes('--under-scraped')
+        ? 'under-scraped'
+        : args.includes('--missing-images')
+          ? 'missing-images'
+          : 'incomplete'
 
   return {
     mode,
@@ -72,6 +76,7 @@ const parseArgs = (): CliArgs => {
     seed: !args.includes('--no-seed'),
     offset: parseInt(get('--offset') ?? '0', 10),
     limit: get('--limit') ? parseInt(get('--limit')!, 10) : undefined,
+    guidedOnly: args.includes('--guided-only'),
     cdpEndpoint: resolveCdpEndpoint(get('--cdp-endpoint')),
   }
 }
@@ -86,12 +91,16 @@ const loadLibrary = (): LibraryEntry[] => {
 
 const jsonPathFor = (slug: string) => join(LABS_DIR, `${slug}.json`)
 
-const entryStatus = (entry: LibraryEntry): 'missing' | 'no-images' | 'ready' => {
+const entryStatus = (entry: LibraryEntry): 'missing' | 'no-images' | 'under-scraped' | 'ready' => {
   const jsonPath = jsonPathFor(entry.slug)
   if (!existsSync(jsonPath)) return 'missing'
   if (!labJsonHasImages(entry.slug)) return 'no-images'
+  if (labNeedsImageRescrape(entry.slug)) return 'under-scraped'
   return 'ready'
 }
+
+const isGuidedLibraryLab = (entry: LibraryEntry): boolean =>
+  !entry.slug.includes('challenge') && !entry.title.toLowerCase().includes('challenge')
 
 const shouldScrape = (entry: LibraryEntry, mode: ScrapeMode): boolean => {
   const status = entryStatus(entry)
@@ -99,6 +108,7 @@ const shouldScrape = (entry: LibraryEntry, mode: ScrapeMode): boolean => {
     all: true,
     'missing-only': status === 'missing',
     'missing-images': status === 'no-images',
+    'under-scraped': status === 'missing' || status === 'no-images' || status === 'under-scraped',
     incomplete: status !== 'ready',
   }
   return matchers[mode]
@@ -118,7 +128,7 @@ const main = async (): Promise<void> => {
   const args = parseArgs()
   mkdirSync(LABS_DIR, { recursive: true })
 
-  const entries = loadLibrary()
+  const entries = loadLibrary().filter((entry) => !args.guidedOnly || isGuidedLibraryLab(entry))
   const targets = entries
     .filter((entry) => shouldScrape(entry, args.mode))
     .slice(args.offset, args.limit ? args.offset + args.limit : undefined)

@@ -1,22 +1,23 @@
-import { SectionData, categoryStyles } from '@/data/awsServices'
+import { SectionData, categoryStyles, learnHref, toServiceCardSummary } from '@/data/awsServices'
 import Link from 'next/link'
 import ServiceCard from './ServiceCard'
 
 interface SectionProps {
   section: SectionData
+  domainId: string
 }
 
-export default function Section({ section }: SectionProps) {
+export default function Section({ section, domainId }: SectionProps) {
   const styles = categoryStyles[section.category]
 
   return (
-    <section id={section.id} className="mb-10">
+    <section id={section.id} className="mb-10 scroll-mt-20">
       <div className="flex items-center gap-2 mb-4 pb-3 border-b border-aws-border">
         <span className="text-xl">{section.icon}</span>
         <span className={`text-sm font-extrabold uppercase tracking-[0.05em] ${styles.title}`}>
           {section.title}
         </span>
-        <Link href={`/learn#${section.id}`} className="font-space-mono text-[0.6rem] text-aws-muted hover:text-aws-text transition-colors ml-2 border border-aws-border/50 rounded-full px-2 py-0.5 hover:border-aws-border">
+        <Link href={learnHref(section.id)} className="font-space-mono text-[0.6rem] text-aws-muted hover:text-aws-text transition-colors ml-2 border border-aws-border/50 rounded-full px-2 py-0.5 hover:border-aws-border">
           Deep Notes →
         </Link>
         <a href="#top" className="ml-auto font-space-mono text-[0.65rem] text-aws-muted hover:text-aws-text transition-colors">
@@ -25,7 +26,7 @@ export default function Section({ section }: SectionProps) {
       </div>
 
       {section.services.map((service) => (
-        <ServiceCard key={service.shortName} service={service} category={section.category} sectionId={section.id} />
+        <ServiceCard key={service.shortName} service={toServiceCardSummary(service)} category={section.category} sectionId={section.id} domainId={domainId} />
       ))}
     </section>
   )

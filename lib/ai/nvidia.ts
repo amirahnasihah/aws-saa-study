@@ -9,7 +9,8 @@ export async function callNvidia(
   apiKey: string,
   systemPrompt: string,
   messages: Array<{ role: 'user' | 'assistant'; content: string }>,
-  maxTokens: number
+  maxTokens: number,
+  jsonMode = true
 ): Promise<{ text: string } | { error: string; status: number }> {
   let res: Response
   try {
@@ -22,7 +23,7 @@ export async function callNvidia(
       body: JSON.stringify({
         model: NVIDIA_MODEL,
         max_tokens: maxTokens,
-        response_format: { type: 'json_object' },
+        ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
         messages: [{ role: 'system', content: systemPrompt }, ...messages],
       }),
     })

@@ -21,7 +21,6 @@ import {
   librarySections,
 } from '@/lib/labs-library'
 import { labsLibraryTotal } from '@/data/labsLibraryOrder'
-import { allLabsFallback } from '@/lib/labs-fallback'
 import type { ChecklistSectionId } from '@/data/labsChecklistOrder'
 import type { LibrarySectionId } from '@/data/labsLibraryOrder'
 import type { Lab } from '@/lib/labs'
@@ -45,7 +44,10 @@ const viewToggleClass = (active: boolean) =>
   ].join(' ')
 
 export default function LabsPageClient() {
-  const [labs, setLabs] = useState<Lab[]>(allLabsFallback())
+  // Starts empty and fills from the network — importing the 2.6MB labsCatalog
+  // here would ship it as client JS on the /labs page. The static JSON fallback
+  // is generated into /public by scripts/generate-ai-link-indexes.ts.
+  const [labs, setLabs] = useState<Lab[]>([])
   const [query, setQuery] = useState('')
   const [view, setView] = useState<LabsView>('domain')
   const [activeDomainCategory, setActiveDomainCategory] = useState(labDomainTabs[0]?.id ?? '')
@@ -53,14 +55,24 @@ export default function LabsPageClient() {
   const [activeLibrarySection, setActiveLibrarySection] = useState<LibrarySectionId>('guided')
 
   useEffect(() => {
+    const loadStaticFallback = () =>
+      fetch('/data/labs-fallback.json')
+        .then((r) => r.json())
+        .then((data: unknown) => {
+          if (Array.isArray(data) && data.length > 0) setLabs(data as Lab[])
+        })
+        .catch(() => {})
+
     fetch('/api/labs')
       .then((r) => r.json())
       .then((data: unknown) => {
         if (Array.isArray(data) && data.length > 0) {
           setLabs(data as Lab[])
+        } else {
+          void loadStaticFallback()
         }
       })
-      .catch(() => setLabs(allLabsFallback()))
+      .catch(loadStaticFallback)
   }, [])
 
   const domainSection = useMemo(
@@ -156,7 +168,7 @@ export default function LabsPageClient() {
     domain: {
       total: labsCourseTotal,
       imported: domainAvailableTotal,
-      blurb: `${labsCourseTotal} Whizlabs course labs · exam domain order`,
+      blurb: `${labsCourseTotal} Core course labs · exam domain order`,
     },
     checklist: {
       total: labsChecklistTotal,
@@ -166,7 +178,7 @@ export default function LabsPageClient() {
     library: {
       total: labsLibraryTotal,
       imported: libraryAvailableTotal,
-      blurb: `${labsLibraryTotal} other SAA-C03 Whizlabs library labs · not in domain or checklist`,
+      blurb: `${labsLibraryTotal} other SAA-C03 library labs · not in domain or checklist`,
     },
   }[view]
 
@@ -179,19 +191,49 @@ export default function LabsPageClient() {
   return (
     <main id="top" className="max-w-[920px] mx-auto px-5 sm:px-6 md:px-8 pt-20 pb-20 md:pb-16">
       <header className="mb-8">
-        <p className="font-space-mono text-[0.62rem] uppercase tracking-[0.14em] text-c2 mb-2">
-          AWS Solutions Architect Associate (SAA-C03)
-        </p>
-        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 mb-6">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-aws-text">Hands-on Labs</h1>
-            <p className="font-space-mono text-[0.72rem] text-aws-muted mt-1.5">
-              {viewMeta.blurb}
-            </p>
+        {/* eyebrow + external "more labs" link */}
+        <div className="flex items-center justify-between gap-3 mb-3">
+          <p className="font-space-mono text-[0.62rem] uppercase tracking-[0.14em] text-c2">
+            AWS Solutions Architect Associate (SAA-C03)
+          </p>
+          <a
+            href="https://cloud.amrhnshh.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex items-center gap-1.5 font-space-mono text-[0.58rem] text-aws-muted hover:text-c1 transition-colors"
+          >
+            <span className="uppercase tracking-[0.12em]">more labs</span>
+            <svg width="9" height="9" viewBox="0 0 10 10" fill="none" className="text-c1/70 group-hover:text-c1 transition-colors" aria-hidden>
+              <path d="M3 1h6v6M9 1L1 9" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+            </svg>
+          </a>
+        </div>
+
+        {/* title + live metrics panel */}
+        <div className="relative rounded-2xl border border-aws-border bg-gradient-to-br from-aws-card/90 to-aws-bg/30 px-5 py-5 sm:px-6 sm:py-6 mb-6 overflow-hidden">
+          <div className="pointer-events-none absolute -top-20 -right-12 h-44 w-44 rounded-full bg-c1/10 blur-3xl" aria-hidden />
+          <div className="relative flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div className="min-w-0">
+              <h1 className="text-2xl sm:text-[1.95rem] font-extrabold text-aws-text leading-tight">
+                Hands-on Labs
+              </h1>
+              <p className="font-space-mono text-[0.72rem] text-aws-muted mt-2 max-w-md">
+                {viewMeta.blurb}
+              </p>
+            </div>
+            <div className="flex items-stretch gap-2 shrink-0">
+              <MetricTile
+                label="Imported"
+                value={`${viewMeta.imported}/${viewMeta.total}`}
+                tone="c1"
+              />
+              <MetricTile
+                label="Shown"
+                value={visibleCount}
+                tone="c4"
+              />
+            </div>
           </div>
-          <span className="self-start font-space-mono text-[0.62rem] text-aws-muted bg-aws-card border border-aws-border px-2.5 py-1 rounded-full">
-            {viewMeta.imported}/{viewMeta.total} imported · {visibleCount} shown
-          </span>
         </div>
 
         <div
@@ -322,5 +364,29 @@ export default function LabsPageClient() {
 
       <SiteFooter tagline="AWS SAA-C03 · Hands-on Labs · Domain catalog + study checklist + library" />
     </main>
+  )
+}
+
+function MetricTile({
+  label,
+  value,
+  tone,
+}: {
+  label: string
+  value: string | number
+  tone: 'c1' | 'c4'
+}) {
+  const valueColor = tone === 'c1' ? 'text-c1' : 'text-c4'
+  const dotColor = tone === 'c1' ? 'bg-c1' : 'bg-c4'
+  return (
+    <div className="flex flex-col items-end justify-center rounded-xl border border-aws-border bg-aws-bg/50 px-3.5 py-2 min-w-[5.5rem]">
+      <span className={`font-space-mono text-[0.95rem] font-bold tabular-nums leading-none ${valueColor}`}>
+        {value}
+      </span>
+      <span className="mt-1 flex items-center gap-1 font-space-mono text-[0.5rem] uppercase tracking-[0.14em] text-aws-muted">
+        <span className={`h-1 w-1 rounded-full ${dotColor}`} aria-hidden />
+        {label}
+      </span>
+    </div>
   )
 }

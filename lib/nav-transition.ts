@@ -12,6 +12,8 @@ export const PRIMARY_NAV_PATHS = [
 const normalizePath = (path: string): string => {
   const base = path.split('?')[0]?.split('#')[0] ?? '/'
   if (base === '/') return '/'
+  // Per-domain Deep Notes pages count as /learn for nav direction.
+  if (base.startsWith('/learn/')) return '/learn'
   return base.replace(/\/$/, '') || '/'
 }
 

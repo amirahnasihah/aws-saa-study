@@ -38,11 +38,12 @@ function isRateLimitedOrDown(r: FreeResult): boolean {
 async function completeFree(
   systemPrompt: string,
   messages: Array<{ role: 'user' | 'assistant'; content: string }>,
-  maxTokens: number
+  maxTokens: number,
+  jsonMode: boolean
 ): Promise<FreeResult> {
   const nvidiaKey = readNvidiaApiKey()
   if (nvidiaKey) {
-    const r = await callNvidia(nvidiaKey, systemPrompt, messages, maxTokens)
+    const r = await callNvidia(nvidiaKey, systemPrompt, messages, maxTokens, jsonMode)
     if (!isRateLimitedOrDown(r)) return r
   }
 
@@ -54,7 +55,7 @@ async function completeFree(
 
   const geminiKey = readGeminiApiKey()
   if (geminiKey) {
-    return callGemini(systemPrompt, messages, geminiKey, maxTokens)
+    return callGemini(systemPrompt, messages, geminiKey, maxTokens, jsonMode)
   }
 
   return {
@@ -72,7 +73,7 @@ export async function completeJson(
 ): Promise<{ text: string } | { error: string; status: number }> {
   const msgs = [{ role: 'user' as const, content: userPrompt }]
 
-  if (provider === 'free') return completeFree(systemPrompt, msgs, maxTokens)
+  if (provider === 'free') return completeFree(systemPrompt, msgs, maxTokens, true)
 
   if (provider === 'groq') {
     const key = readGroqApiKey()
@@ -112,12 +113,13 @@ export async function completeChatMessages(
   messages: Array<{ role: 'user' | 'assistant'; content: string }>,
   maxTokens: number
 ): Promise<{ text: string } | { error: string; status: number }> {
-  if (provider === 'free') return completeFree(systemPrompt, messages, maxTokens)
+  // The chat route streams raw Markdown — never force a JSON response shape here.
+  if (provider === 'free') return completeFree(systemPrompt, messages, maxTokens, false)
 
   if (provider === 'groq') {
     const key = readGroqApiKey()
     if (!key) return { error: 'GROQ_API_KEY not configured.', status: 503 }
-    return callGroq(systemPrompt, messages, key, maxTokens)
+    return callGroq(systemPrompt, messages, key, maxTokens, false)
   }
   if (provider === 'ilmu') {
     const key = readIlmuApiKey()
@@ -127,12 +129,12 @@ export async function completeChatMessages(
   if (provider === 'nvidia') {
     const key = readNvidiaApiKey()
     if (!key) return { error: 'NVIDIA_API_KEY not configured.', status: 503 }
-    return callNvidia(key, systemPrompt, messages, maxTokens)
+    return callNvidia(key, systemPrompt, messages, maxTokens, false)
   }
   if (provider === 'gemini') {
     const key = readGeminiApiKey()
     if (!key) return { error: 'GEMINI_API_KEY not configured.', status: 503 }
-    return callGemini(systemPrompt, messages, key, maxTokens)
+    return callGemini(systemPrompt, messages, key, maxTokens, false)
   }
 
   const byok: ByokProvider = isByokProvider(provider) ? provider : 'anthropic'
@@ -140,7 +142,7 @@ export async function completeChatMessages(
   if (keyError) return { error: keyError, status: 400 }
 
   if (byok === 'ollama') return callOllamaChat(apiKey, systemPrompt, messages, maxTokens)
-  if (byok === 'openrouter') return callOpenRouter(apiKey, systemPrompt, messages, maxTokens)
+  if (byok === 'openrouter') return callOpenRouter(apiKey, systemPrompt, messages, maxTokens, false)
 
   return callByokChatMessages(byok, apiKey, systemPrompt, messages, maxTokens, readGatewayBase())
 }

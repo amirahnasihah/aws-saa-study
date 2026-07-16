@@ -160,7 +160,7 @@
           "text": "Master username : mydatabaseuser"
         },
         {
-          "text": "Master password and Confirm password: mydatabasepassword Note: This is the username/password combo used to log onto your database. Please make note of them somewhere safe.",
+          "text": "Master password and Confirm password: <example-password> Note: This is the username/password combo used to log onto your database. Please make note of them somewhere safe.",
           "images": [
             "/labs/introduction-to-aws-relational-database-service/step-11.png"
           ]
@@ -327,7 +327,7 @@
           "text": "You need both the endpoint and the port number to connect to the DB instance."
         },
         {
-          "text": "Open MySQL Workbench. Click on the plus icon aside on MySQL Connections Connection Name: Enter a sample name MyDatabseConnection Host Name: Past the Endpoint that you copied Port : 3306 Username : mydatabaseuser Password : Click on Store in keychain and enter password mydatabasepassword Click on ok."
+          "text": "Open MySQL Workbench. Click on the plus icon aside on MySQL Connections Connection Name: Enter a sample name MyDatabseConnection Host Name: Past the Endpoint that you copied Port : 3306 Username : mydatabaseuser Password : Click on Store in keychain and enter password <example-password> Click on ok."
         },
         {
           "text": "Open MySQL Workbench. Click on the plus icon aside on MySQL Connections"
@@ -345,7 +345,7 @@
           "text": "Username : mydatabaseuser"
         },
         {
-          "text": "Password : Click on Store in keychain and enter password mydatabasepassword Click on ok."
+          "text": "Password : Click on Store in keychain and enter password <example-password> Click on ok."
         },
         {
           "text": "Task 4 : Connecting to RDS Database on a DB Instance using the MySQL Workbench",
@@ -410,7 +410,10 @@
           "text": "Sample output :"
         },
         {
-          "text": "Task 5 : Validation Test"
+          "text": "Task 5 : Validation Test",
+          "images": [
+            "/labs/introduction-to-aws-relational-database-service/step-33.gif"
+          ]
         },
         {
           "text": "You have successfully used AWS management console to create RDS MySQL database instance."
