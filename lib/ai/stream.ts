@@ -4,7 +4,7 @@ import {
   buildDocsSearchPhrase,
   resolveAwsDocLink,
 } from '@/lib/ai/aws-knowledge'
-import { completeChatMessages } from '@/lib/ai/complete-json'
+import { completeChatMessages, streamFree } from '@/lib/ai/complete-json'
 import { readGatewayBase } from '@/lib/ai/env'
 import { findInternalLinks, type InternalLink } from '@/lib/ai/internal-links'
 import {
@@ -301,11 +301,21 @@ async function streamFallback(
 }
 
 async function runProvider(opts: StreamChatOptions, emit: Emit): Promise<ProviderResult> {
-  if (opts.provider !== 'anthropic') return streamFallback(opts, emit)
+  if (opts.provider === 'anthropic') {
+    const keyError = validateByokKey('anthropic', opts.apiKey)
+    if (keyError) return { error: keyError, status: 400 }
+    return streamAnthropic(opts.apiKey, opts.systemPrompt, opts.messages, opts.maxTokens, emit)
+  }
 
-  const keyError = validateByokKey('anthropic', opts.apiKey)
-  if (keyError) return { error: keyError, status: 400 }
-  return streamAnthropic(opts.apiKey, opts.systemPrompt, opts.messages, opts.maxTokens, emit)
+  // Free chain (NVIDIA → ILMU → Gemini) streams token-by-token like Anthropic.
+  if (opts.provider === 'free') {
+    return streamFree(opts.systemPrompt, opts.messages, opts.maxTokens, (text) =>
+      emit('delta', { text })
+    )
+  }
+
+  // Other BYOK providers still emit the whole reply as one delta.
+  return streamFallback(opts, emit)
 }
 
 /**
