@@ -1,3 +1,5 @@
+import { streamAnthropicContent } from '@/lib/ai/sse'
+
 const ILMU_URL = 'https://api.ilmu.ai/anthropic/v1/messages'
 const ILMU_MODEL = 'ilmu-nemo-nano'
 
@@ -50,4 +52,41 @@ export async function callIlmu(
   }
   const data = (await res.json()) as IlmuResponse
   return { text: data.content.find((c) => c.type === 'text')?.text ?? '' }
+}
+
+/** Streaming variant: emits each token via `onText` as it arrives. */
+export async function streamIlmu(
+  systemPrompt: string,
+  messages: IlmuMessage[],
+  ilmuApiKey: string,
+  maxTokens: number,
+  onText: (text: string) => void
+): Promise<{ text: string } | { error: string; status: number }> {
+  let res: Response
+  try {
+    res = await fetch(ILMU_URL, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        'x-api-key': ilmuApiKey.trim(),
+        'anthropic-version': '2023-06-01',
+      },
+      body: JSON.stringify({
+        model: ILMU_MODEL,
+        max_tokens: maxTokens,
+        stream: true,
+        system: systemPrompt,
+        messages,
+      }),
+    })
+  } catch {
+    return { error: 'Free AI is temporarily unavailable. Try again.', status: 503 }
+  }
+
+  if (!res.ok || !res.body) {
+    return { error: classifyIlmuError(res.status), status: res.status }
+  }
+
+  const text = await streamAnthropicContent(res.body, onText)
+  return { text }
 }

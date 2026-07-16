@@ -14,10 +14,10 @@ import {
   readNvidiaApiKey,
 } from '@/lib/ai/env'
 import { callGroq } from '@/lib/ai/groq'
-import { callGemini } from '@/lib/ai/gemini'
-import { callIlmu } from '@/lib/ai/ilmu'
+import { callGemini, streamGemini } from '@/lib/ai/gemini'
+import { callIlmu, streamIlmu } from '@/lib/ai/ilmu'
 import { callByokMessages, callByokChatMessages } from '@/lib/ai/messages'
-import { callNvidia } from '@/lib/ai/nvidia'
+import { callNvidia, streamNvidia } from '@/lib/ai/nvidia'
 import { callOllamaChat } from '@/lib/ai/ollama'
 import { callOpenRouter } from '@/lib/ai/openrouter'
 
@@ -56,6 +56,42 @@ async function completeFree(
   const geminiKey = readGeminiApiKey()
   if (geminiKey) {
     return callGemini(systemPrompt, messages, geminiKey, maxTokens, jsonMode)
+  }
+
+  return {
+    error: 'Free AI is unavailable right now. Try BYOK (OpenRouter, Ollama).',
+    status: 503,
+  }
+}
+
+/**
+ * Streaming NVIDIA → ILMU → Gemini fallback. Mirrors {@link completeFree} but
+ * emits each token via `onText` as it arrives so the chat UI types live instead
+ * of waiting for the whole reply. Fallback stays intact for pre-stream failures:
+ * a provider that returns a non-ok status (rate-limited / down) hasn't emitted
+ * anything yet, so we drop to the next one; once tokens flow we commit to it.
+ */
+export async function streamFree(
+  systemPrompt: string,
+  messages: Array<{ role: 'user' | 'assistant'; content: string }>,
+  maxTokens: number,
+  onText: (text: string) => void
+): Promise<FreeResult> {
+  const nvidiaKey = readNvidiaApiKey()
+  if (nvidiaKey) {
+    const r = await streamNvidia(nvidiaKey, systemPrompt, messages, maxTokens, onText)
+    if (!isRateLimitedOrDown(r)) return r
+  }
+
+  const ilmuKey = readIlmuApiKey()
+  if (ilmuKey) {
+    const r = await streamIlmu(systemPrompt, messages, ilmuKey, maxTokens, onText)
+    if (!isRateLimitedOrDown(r)) return r
+  }
+
+  const geminiKey = readGeminiApiKey()
+  if (geminiKey) {
+    return streamGemini(systemPrompt, messages, geminiKey, maxTokens, onText)
   }
 
   return {

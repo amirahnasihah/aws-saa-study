@@ -1,3 +1,5 @@
+import { streamOpenAiContent } from '@/lib/ai/sse'
+
 const GEMINI_URL =
   'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'
 const GEMINI_MODEL = 'gemini-2.5-flash'
@@ -51,4 +53,39 @@ export async function callGemini(
   }
   const data = (await res.json()) as GeminiResponse
   return { text: data.choices[0]?.message?.content ?? '' }
+}
+
+/** Streaming variant: emits each token via `onText` as it arrives. */
+export async function streamGemini(
+  systemPrompt: string,
+  messages: GeminiMessage[],
+  geminiApiKey: string,
+  maxTokens: number,
+  onText: (text: string) => void
+): Promise<{ text: string } | { error: string; status: number }> {
+  let res: Response
+  try {
+    res = await fetch(GEMINI_URL, {
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json',
+        authorization: `Bearer ${geminiApiKey}`,
+      },
+      body: JSON.stringify({
+        model: GEMINI_MODEL,
+        max_tokens: maxTokens,
+        stream: true,
+        messages: [{ role: 'system', content: systemPrompt }, ...messages],
+      }),
+    })
+  } catch {
+    return { error: 'Free AI is temporarily unavailable. Try again.', status: 503 }
+  }
+
+  if (!res.ok || !res.body) {
+    return { error: classifyGeminiError(res.status), status: res.status }
+  }
+
+  const text = await streamOpenAiContent(res.body, onText)
+  return { text }
 }
