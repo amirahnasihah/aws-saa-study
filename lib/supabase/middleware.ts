@@ -1,0 +1,36 @@
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
+
+export function createSupabaseMiddlewareClient(request: NextRequest) {
+  // Next 16 validates that `request.headers` is a genuine Headers instance.
+  // Wrap in `new Headers(...)` so it passes regardless of the runtime's shape
+  // (Turbopack/Node proxy runtime can hand back a non-Headers object).
+  let response = NextResponse.next({
+    request: { headers: new Headers(request.headers) },
+  })
+
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value),
+          )
+          response = NextResponse.next({
+            request: { headers: new Headers(request.headers) },
+          })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            response.cookies.set(name, value, options),
+          )
+        },
+      },
+    },
+  )
+
+  return { supabase, response }
+}

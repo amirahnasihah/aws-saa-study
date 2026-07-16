@@ -98,7 +98,7 @@
           "text": "Credentials management: select Self managed"
         },
         {
-          "text": "Master password and Confirm master password: Enter lab123"
+          "text": "Master password and Confirm master password: Enter <example-password>"
         },
         {
           "text": "Task 2: Create an RDS DB Instance (without enabling the Encryption)",

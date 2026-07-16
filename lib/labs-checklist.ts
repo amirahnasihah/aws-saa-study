@@ -3,11 +3,15 @@ import {
   labsChecklistOrder,
   type ChecklistSectionId,
 } from '@/data/labsChecklistOrder'
-import { findLabFallback } from '@/lib/labs-fallback'
+import { labsLinkIndex } from '@/data/labsLinkIndex'
 import type { LabRowItem } from '@/lib/labs-list-item'
 import type { Lab } from '@/lib/labs'
 
 export { checklistSections, labsChecklistOrder }
+
+// Slugs with a local lab page, from the generated slim index — checking via
+// findLabFallback would pull the 2.6MB labsCatalog into the client bundle.
+const catalogSlugs = new Set<string>(labsLinkIndex.map((lab) => lab.slug))
 
 export type ChecklistLabSection = {
   sectionId: ChecklistSectionId
@@ -40,10 +44,8 @@ export const buildChecklistLabSection = (
   const items = labsChecklistOrder
     .filter((entry) => entry.sectionId === activeSectionId)
     .map((entry): LabRowItem => {
-      const lab = entry.slug
-        ? bySlug.get(entry.slug) ?? findLabFallback(entry.slug) ?? null
-        : null
-      const hasLocal = Boolean(entry.slug && lab)
+      const lab = entry.slug ? bySlug.get(entry.slug) ?? null : null
+      const hasLocal = Boolean(entry.slug && (lab || catalogSlugs.has(entry.slug)))
       return {
         index: entry.index,
         title: entry.title,
@@ -71,6 +73,6 @@ export const countChecklistLabsWithLocalPage = (
 ): number =>
   labsChecklistOrder.filter(
     (entry) => entry.slug && (
-      labs.some((lab) => lab.slug === entry.slug) || Boolean(findLabFallback(entry.slug))
+      labs.some((lab) => lab.slug === entry.slug) || catalogSlugs.has(entry.slug)
     ),
   ).length

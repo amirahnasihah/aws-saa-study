@@ -436,10 +436,7 @@
           ]
         },
         {
-          "text": "Task 6 : Purge Queue and Verify the same",
-          "images": [
-            "/labs/introduction-to-simple-queuing-service-sqs/step-26.png"
-          ]
+          "text": "Task 6 : Purge Queue and Verify the same"
         },
         {
           "text": "Once you select the purge option it will ask for a confirmation. Enter the phrase purge and click on purge.",

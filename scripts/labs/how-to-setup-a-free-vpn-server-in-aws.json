@@ -282,7 +282,7 @@
           "text": "Press ENTER for default [yes]: Click the [enter] button."
         },
         {
-          "text": "Do you wish to log in to the Admin UI as \"openvpn\"? Press ENTER for default [yes]: Click the [enter] button. Type a password for the 'openvpn' account: Enter Whizvpn123@ and press [enter] and then enter the same password to confirm the password."
+          "text": "Do you wish to log in to the Admin UI as \"openvpn\"? Press ENTER for default [yes]: Click the [enter] button. Type a password for the 'openvpn' account: Enter <example-password> and press [enter] and then enter the same password to confirm the password."
         },
         {
           "text": "Do you wish to log in to the Admin UI as \"openvpn\"?"
@@ -291,7 +291,7 @@
           "text": "Press ENTER for default [yes]: Click the [enter] button."
         },
         {
-          "text": "Type a password for the 'openvpn' account: Enter Whizvpn123@ and press [enter] and then enter the same password to confirm the password."
+          "text": "Type a password for the 'openvpn' account: Enter <example-password> and press [enter] and then enter the same password to confirm the password."
         },
         {
           "text": "Please specify your Activation key (or leave blank to specify later): Click the [enter] button."
@@ -348,7 +348,7 @@
           ]
         },
         {
-          "text": "Login to the VPN Admin page : Username: Enter openvpn Password: Enter Whizvpn123@ Now click on the Sign in button."
+          "text": "Login to the VPN Admin page : Username: Enter openvpn Password: Enter <example-password> Now click on the Sign in button."
         },
         {
           "text": "Login to the VPN Admin page :"
@@ -357,7 +357,7 @@
           "text": "Username: Enter openvpn"
         },
         {
-          "text": "Password: Enter Whizvpn123@"
+          "text": "Password: Enter <example-password>"
         },
         {
           "text": "Now click on the Sign in button."
@@ -401,7 +401,7 @@
           "text": "Paste the url https://<IPv4 Public IP>/ Example : https://100.26.97.202/"
         },
         {
-          "text": "Login to the VPN User Page : Username: Enter openvpn Password: Enter Whizvpn123@ Now click on the Sign in button."
+          "text": "Login to the VPN User Page : Username: Enter openvpn Password: Enter <example-password> Now click on the Sign in button."
         },
         {
           "text": "Login to the VPN User Page :"
@@ -410,7 +410,7 @@
           "text": "Username: Enter openvpn"
         },
         {
-          "text": "Password: Enter Whizvpn123@"
+          "text": "Password: Enter <example-password>"
         },
         {
           "text": "Now click on the Sign in button."
@@ -434,7 +434,7 @@
           ]
         },
         {
-          "text": "Now again enter the username and password. Username: Enter openvpn Password: Enter Whizvpn123@ Click on the OK button."
+          "text": "Now again enter the username and password. Username: Enter openvpn Password: Enter <example-password> Click on the OK button."
         },
         {
           "text": "Now again enter the username and password."
@@ -443,7 +443,7 @@
           "text": "Username: Enter openvpn"
         },
         {
-          "text": "Password: Enter Whizvpn123@"
+          "text": "Password: Enter <example-password>"
         },
         {
           "text": "Click on the OK button."

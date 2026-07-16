@@ -9,7 +9,8 @@ export async function callOpenRouter(
   apiKey: string,
   systemPrompt: string,
   messages: Array<{ role: 'user' | 'assistant'; content: string }>,
-  maxTokens: number
+  maxTokens: number,
+  jsonMode = true
 ): Promise<{ text: string } | { error: string; status: number }> {
   const allMessages = [
     { role: 'system' as const, content: systemPrompt },
@@ -29,7 +30,7 @@ export async function callOpenRouter(
       body: JSON.stringify({
         model: OPENROUTER_MODEL,
         max_tokens: maxTokens,
-        response_format: { type: 'json_object' },
+        ...(jsonMode ? { response_format: { type: 'json_object' } } : {}),
         messages: allMessages,
       }),
     })

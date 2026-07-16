@@ -18,11 +18,11 @@
 
 html {
   scroll-behavior: smooth;
-  overflow-x: hidden;
+  overflow-x: clip;
 }
 
 body {
-  overflow-x: hidden;
+  overflow-x: clip;
   background-color: var(--color-aws-bg);
   color: var(--color-aws-text);
   font-family: var(--font-inter), sans-serif;
@@ -110,6 +110,26 @@ body {
 .animate-sparkle-b    { animation: sparkle-b 2.4s ease-in-out infinite; }
 .animate-sparkle-c    { animation: sparkle-c 2.4s ease-in-out infinite; }
 
+/* auth icon animations — arrow nudges through the doorway on hover */
+@keyframes door-enter {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(4px); opacity: 0.5; }
+  100% { transform: translateX(0); }
+}
+@keyframes door-exit {
+  0%   { transform: translateX(0); }
+  50%  { transform: translateX(4px); opacity: 0.5; }
+  100% { transform: translateX(0); }
+}
+.signin-btn:hover .signin-arrow,
+.signin-btn:focus-visible .signin-arrow {
+  animation: door-enter 0.55s ease-in-out;
+}
+.signout-item:hover .signout-arrow,
+.signout-item:focus-visible .signout-arrow {
+  animation: door-exit 0.55s ease-in-out;
+}
+
 /* View Transitions API — https://nextjs.org/docs/app/guides/view-transitions */
 :root {
   --vt-duration-exit: 150ms;
@@ -193,6 +213,9 @@ body {
   .animate-sparkle-a,
   .animate-sparkle-b,
   .animate-sparkle-c { animation: none; opacity: 1; }
+
+  .signin-arrow,
+  .signout-arrow { animation: none !important; }
 }
 
 /* ReactFlow controls — dark theme override */

@@ -1,47 +1,22 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
-import { domains, categoryStyles, ColorCategory, serviceSlug } from '@/data/awsServices'
+import { categoryStyles, learnHref, type ColorCategory } from '@/data/awsMeta'
 
+// Search now runs server-side via /api/search so the full awsServices `domains`
+// dataset (1.2 MB) is NOT shipped to the client bundle. The modal only renders the
+// small JSON results the edge route returns.
 interface SearchResult {
   shortName: string
   fullName: string
-  ingat: string
   domainBadge: string
-  domainVariant: string
+  domainVariant: 'd1' | 'd2' | 'd3' | 'd4'
   slug: string
   sectionTitle: string
   sectionIcon: string
   category: ColorCategory
-  searchText: string
 }
-
-const searchIndex: SearchResult[] = domains.flatMap((domain) =>
-  domain.sections.flatMap((section) =>
-    section.services.map((service) => ({
-      shortName: service.shortName,
-      fullName: service.fullName,
-      ingat: service.ingat,
-      domainBadge: domain.badge.split('·')[0].trim(),
-      domainVariant: domain.variant,
-      slug: serviceSlug(section.id, service.shortName),
-      sectionTitle: section.title,
-      sectionIcon: section.icon,
-      category: section.category,
-      searchText: [
-        service.shortName,
-        service.fullName,
-        ...(service.keywords ?? []),
-        service.fungsi,
-        service.contohGuna ?? '',
-        service.scenario ?? '',
-      ]
-        .join(' ')
-        .toLowerCase(),
-    }))
-  )
-)
 
 const domainColors: Record<string, string> = {
   d1: 'text-c3',
@@ -57,27 +32,56 @@ interface SearchModalProps {
 
 export default function SearchModal({ isOpen, onClose }: SearchModalProps) {
   const [query, setQuery] = useState('')
+  const [results, setResults] = useState<SearchResult[]>([])
   const [active, setActive] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
   const pathname = usePathname()
 
-  const results = useMemo(() =>
-    query.trim().length > 0
-      ? searchIndex.filter((r) => r.searchText.includes(query.toLowerCase().trim())).slice(0, 8)
-      : [],
-    [query]
-  )
+  // Debounced server search — only fires after the user stops typing for ~120ms,
+  // and aborts in-flight requests when the query changes (AbortController).
+  useEffect(() => {
+    const q = query.toLowerCase().trim()
+    const controller = new AbortController()
+    // All setState lives inside the timeout callback so nothing is called
+    // synchronously in the effect body (avoids cascading renders / lint error).
+    const t = setTimeout(
+      () => {
+        if (q.length === 0) {
+          setResults([])
+          setActive(0)
+          return
+        }
+        fetch(`/api/search?q=${encodeURIComponent(query)}`, { signal: controller.signal })
+          .then((r) => (r.ok ? r.json() : []))
+          .then((data: unknown) => {
+            setResults(Array.isArray(data) ? (data as SearchResult[]) : [])
+            setActive(0)
+          })
+          .catch(() => {
+            // aborted or network error — leave current results untouched
+          })
+      },
+      q.length === 0 ? 0 : 120,
+    )
+    return () => {
+      clearTimeout(t)
+      controller.abort()
+    }
+  }, [query])
 
   const navigate = useCallback((result: SearchResult) => {
     onClose()
     setQuery('')
 
-    // Per-service anchors only exist on the cheatsheet (/) and Deep Notes (/learn).
-    // From any other page, route to Deep Notes so the anchor actually resolves.
-    if (pathname !== '/' && pathname !== '/learn') {
-      router.push(`/learn#${result.slug}`)
+    // Per-service anchors only exist on the cheatsheet (/) and the per-domain
+    // Deep Notes pages. From any other page, route to the domain page that
+    // renders this anchor so it actually resolves.
+    const target = learnHref(result.slug)
+    const targetPath = target.split('#')[0]
+    if (pathname !== '/' && pathname !== targetPath) {
+      router.push(target)
       return
     }
 

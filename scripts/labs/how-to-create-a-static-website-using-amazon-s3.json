@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12-digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -35,40 +38,67 @@
           "text": "In this task, we are going to create a new S3 bucket in the US East (N. Virginia) region with a unique name disabling ACLs, and allowing public access for hosting the static website."
         },
         {
-          "text": "Navigate to S3 by clicking on the Services menu at the top, then click on S3 in the Storage section."
+          "text": "Navigate to S3 by clicking on the Services menu at the top, then click on S3 in the Storage section."
         },
         {
-          "text": "In the S3 dashboard, click on the Create Bucket button."
+          "text": "In the S3 dashboard, click on the Create Bucket button."
         },
         {
           "text": "In the General Configuration,"
         },
         {
-          "text": "Select Bucket Type : General purpose"
+          "text": "Select Bucket Type : General purpose"
         },
         {
-          "text": "Bucket name: Enter lab1230"
+          "text": "Bucket name: Enter <example-password>0 Note: S3 bucket name is globally unique, choose a name that is available."
         },
         {
-          "text": "Note: S3 bucket name is globally unique, choose a name that is available."
+          "text": "Bucket name: Enter <example-password>0"
         },
         {
-          "text": "AWS Region: Select US East (N. Virginia) us-east-1"
+          "text": "Note: S3 bucket name is globally unique, choose a name that is available."
         },
         {
-          "text": "Object ownership: Select ACLs disabled (recommended) option"
+          "text": "AWS Region: Select US East (N. Virginia) us-east-1",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-01.png"
+          ]
         },
         {
-          "text": "In the option of Block Public Access settings for this bucket, Uncheck the option of Block all public access."
+          "text": "Object ownership: Select ACLs disabled (recommended) option"
         },
         {
-          "text": "Check the I acknowledge that the current settings might result in this bucket and the objects within becoming public checkbox."
+          "text": "In the option of Block Public Access settings for this bucket, Uncheck the option of Block all public access. Check the I acknowledge that the current settings might result in this bucket and the objects within becoming public checkbox."
         },
         {
-          "text": "Keep everything default and click on Create Bucket button."
+          "text": "In the option of Block Public Access settings for this bucket, Uncheck the option of Block all public access."
+        },
+        {
+          "text": "Check the I acknowledge that the current settings might result in this bucket and the objects within becoming public checkbox."
+        },
+        {
+          "text": "Task 2: Creating a S3 Bucket",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-02.png"
+          ]
+        },
+        {
+          "text": "Keep everything default and click on Create Bucket button."
+        },
+        {
+          "text": "Task 2: Creating a S3 Bucket",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-03.png"
+          ]
         },
         {
           "text": "Kindly ignore the permission error if it appears during the process."
+        },
+        {
+          "text": "Task 2: Creating a S3 Bucket",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-04.png"
+          ]
         }
       ]
     },
@@ -82,7 +112,16 @@
           "text": "To proceed, go to the S3 bucket name that you created and click on it. After that, navigate to the Properties tab which can be found at the top of the screen."
         },
         {
-          "text": "Scroll down to the Static website hosting section and click on Edit button."
+          "text": "Scroll down to the Static website hosting section and click on Edit button.",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-05.png"
+          ]
+        },
+        {
+          "text": "Task 3: Enable Static Website Hosting settings",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-06.png"
+          ]
         },
         {
           "text": "In the Static website hosting dialog box"
@@ -100,7 +139,16 @@
           "text": "Error document: Type error.html"
         },
         {
-          "text": "Click on Save Changes."
+          "text": "Click on Save Changes.",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-07.png"
+          ]
+        },
+        {
+          "text": "Task 3: Enable Static Website Hosting settings",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-08.png"
+          ]
         },
         {
           "text": "Go to the Properties tab of your S3 bucket, and find the Static website hosting section. Copy the Endpoint provided in this section to your clipboard and save it for future reference."
@@ -109,10 +157,22 @@
           "text": "The next step is to download the zip file by clicking on the link, extract it, and upload two files named index.html and error.html to the S3 bucket you created earlier."
         },
         {
+          "text": "Task 3: Enable Static Website Hosting settings",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-09.png"
+          ]
+        },
+        {
           "text": "To configure your S3 bucket, access the Permissions tab and make the necessary configurations."
         },
         {
-          "text": "In the Permissions tab, Click on the Edit button beside the Bucket Policy."
+          "text": "In the Permissions tab, Click on the Edit button beside the Bucket Policy."
+        },
+        {
+          "text": "Task 3: Enable Static Website Hosting settings",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-10.png"
+          ]
         },
         {
           "text": "You will be able to see a Blank policy editor."
@@ -121,55 +181,16 @@
           "text": "Before creating the policy, you will need to copy the ARN (Amazon Resource Name) of your bucket."
         },
         {
-          "text": "Copy the ARN of your bucket to the clipboard. It is displayed at the top of the policy editor. it will look like ARN:“arn:aws:s3:::your-bucket-name\"."
+          "text": "Copy the ARN of your bucket to the clipboard. It is displayed at the top of the policy editor. it will look like ARN:“arn:aws:s3:::your-bucket-name\"."
         },
         {
           "text": "In the policy below, Update the bucket ARN on the Resource key value and paste the below policy code in the editor."
         },
         {
-          "text": "{"
-        },
-        {
-          "text": "\"Id\": \"Policy1\","
-        },
-        {
-          "text": "\"Version\": \"2012-10-17\","
-        },
-        {
-          "text": "\"Statement\": ["
-        },
-        {
-          "text": "{"
-        },
-        {
-          "text": "\"Sid\": \"Stmt1\","
-        },
-        {
-          "text": "\"Action\": ["
-        },
-        {
-          "text": "\"s3:GetObject\""
-        },
-        {
-          "text": "],"
-        },
-        {
-          "text": "\"Effect\": \"Allow\","
-        },
-        {
-          "text": "\"Resource\": \"replace-this-string-with-your-bucket-arn/*\","
-        },
-        {
-          "text": "\"Principal\": \"*\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "]"
-        },
-        {
-          "text": "}"
+          "text": "Task 3: Enable Static Website Hosting settings",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-11.gif"
+          ]
         },
         {
           "text": "Click on Save changes button."
@@ -181,6 +202,12 @@
       "steps": [
         {
           "text": "Now copy the static website URL (that we saved earlier) and run it in your browser. You will be able to see the index.html file's text. A sample screenshot is attached below:"
+        },
+        {
+          "text": "Task 4: Test the website",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-12.png"
+          ]
         }
       ]
     },
@@ -191,7 +218,10 @@
           "text": "Copy the static website URL (which we saved earlier) , but this time, add some random characters to the end of the url to break it. When satisfied, hit [Enter]. You will be redirected to the error.html page automatically."
         },
         {
-          "text": "Do You Know?"
+          "text": "Task 5: Test the website's error page",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-13.png"
+          ]
         },
         {
           "text": "Amazon S3 provides 11 nines of durability, which means that the probability of losing a file is 0.0000000001%. The maximum size of a single file that can be uploaded to Amazon S3 is 5 terabytes (TB)."
@@ -202,16 +232,19 @@
       "title": "Task 6: Validation of the Lab",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
-          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
+          "text": "This will validate the resources in the AWS account and shows you whether you have completed this lab successfully or not."
         },
         {
           "text": "Sample output :"
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 6: Validation of the Lab",
+          "images": [
+            "/labs/how-to-create-a-static-website-using-amazon-s3/step-14.gif"
+          ]
         },
         {
           "text": "You have successfully created and launched an Amazon S3 bucket."
@@ -229,16 +262,13 @@
           "text": "You have successfully validated the lab."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
+          "text": "Once you completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
         }
       ]
     }

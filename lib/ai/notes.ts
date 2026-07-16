@@ -2,6 +2,8 @@
 // `id` anchor (see app/learn/page.tsx), so we deep-link straight to the relevant
 // topic. Keeping these in-app means every cited link resolves within this
 // deployment — no external site that can 404.
+import { learnHref } from '@/data/awsMeta'
+
 export const NOTES_BASE = '/learn'
 
 export const NOTES_SLUGS: Record<string, string> = {
@@ -39,7 +41,9 @@ export function findNotesUrl(keywords: string[]): string {
   const lower = keywords.map((k) => k.toLowerCase())
   for (const kw of lower) {
     for (const [key, slug] of Object.entries(NOTES_SLUGS)) {
-      if (kw.includes(key) || key.includes(kw)) return NOTES_BASE + slug
+      // Anchors live on the per-domain pages now — learnHref maps '#d3-storage'
+      // to '/learn/d3#d3-storage'. Empty slug = guide root.
+      if (kw.includes(key) || key.includes(kw)) return slug ? learnHref(slug.slice(1)) : NOTES_BASE
     }
   }
   return NOTES_BASE

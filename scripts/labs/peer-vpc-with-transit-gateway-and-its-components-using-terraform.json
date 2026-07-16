@@ -12,7 +12,7 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +21,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button"
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -35,10 +35,13 @@
           "text": "Open the visual studio code."
         },
         {
+          "text": "If you have already installed and using Visual studio code, open a new window.Note: Ensure Terraform is installed on your system before starting this lab."
+        },
+        {
           "text": "If you have already installed and using Visual studio code, open a new window."
         },
         {
-          "text": "Note: Ensure Terraform is installed on your system before starting this lab."
+          "text": "Note: Ensure Terraform is installed on your system before starting this lab."
         },
         {
           "text": "A new window will open a new file and release notes page (only if you have installed or updated Visual Studio Code recently). Close the Release notes tab."
@@ -50,28 +53,28 @@
           "text": "It may take up to 2 minutes to open the terminal window."
         },
         {
+          "text": "Once the terminal is ready, let us navigate to the Desktop.cd Desktop"
+        },
+        {
           "text": "Once the terminal is ready, let us navigate to the Desktop."
         },
         {
-          "text": "cd Desktop"
+          "text": "Create a new folder by running the below command.mkdir task_13081"
         },
         {
           "text": "Create a new folder by running the below command."
         },
         {
-          "text": "mkdir task_13081"
+          "text": "Change your present working directory to use the newly created folder by running the below command:cd task_13081"
         },
         {
           "text": "Change your present working directory to use the newly created folder by running the below command:"
         },
         {
-          "text": "cd task_13081"
+          "text": "Get the location of the present working directory by running the below command:pwd"
         },
         {
           "text": "Get the location of the present working directory by running the below command:"
-        },
-        {
-          "text": "pwd"
         },
         {
           "text": "Note down the location, as you will open the same in the next steps."
@@ -80,7 +83,7 @@
           "text": "Now click on the first icon Explorer present on the left sidebar."
         },
         {
-          "text": "Click on the button called Open folder and navigate to the location of folder task_13081."
+          "text": "Click on the button called Open folder and navigate to the location of folder task_13081."
         },
         {
           "text": "(Optional) Click on Authorize button for allowing Visual Studio Code to use the task_13081 folder. This will only be asked when you have been using Visual Studio code for a while as you are allowing a new folder to be accessed by VSC."
@@ -97,67 +100,31 @@
           "text": "In this task, you will create variable files where you will declare all the global variables with a short description and a default value."
         },
         {
-          "text": "To create a variable file, expand the folder task_13081 and click on the New File icon to add the file."
+          "text": "To create a variable file, expand the folder task_13081 and click on the New File icon to add the file."
         },
         {
-          "text": "Name the file as variables.tf and press Enter to save it."
+          "text": "Name the file as variables.tf and press Enter to save it."
         },
         {
-          "text": "Note: Don't change the location of the new file, keep it default, i.e. inside the task_13081 folder."
+          "text": "Note: Don't change the location of the new file, keep it default, i.e. inside the task_13081 folder."
         },
         {
-          "text": "Paste the below contents in variables.tf file."
-        },
-        {
-          "text": "variable \"access_key\" {"
-        },
-        {
-          "text": "description = \"Access key to AWS console\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "variable \"secret_key\" {"
-        },
-        {
-          "text": "description = \"Secret key to AWS console\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "variable \"region\" {"
-        },
-        {
-          "text": "description = \"AWS region\""
-        },
-        {
-          "text": "}"
+          "text": "Paste the below contents in variables.tf file."
         },
         {
           "text": "In the above content, you are declaring a variable called, access_key, secret_key, and region with a short description of all 3."
         },
         {
-          "text": "After pasting the above contents, save the file by pressing ctrl + S."
+          "text": "After pasting the above contents, save the file by pressing ctrl + S."
         },
         {
-          "text": "Now expand the folder task_13081 and click on the New File icon to add the file."
+          "text": "Now expand the folder task_13081 and click on the New File icon to add the file."
         },
         {
-          "text": "Name the file as terraform.tfvars and press Enter to save it."
+          "text": "Name the file as terraform.tfvars and press Enter to save it."
         },
         {
-          "text": "Paste the below content into the terraform.tfvars file."
-        },
-        {
-          "text": "region = \"us-east-1\""
-        },
-        {
-          "text": "access_key = \"<YOUR AWS CONSOLE ACCESS ID>\""
-        },
-        {
-          "text": "secret_key = \"<YOUR AWS CONSOLE SECRET KEY>\""
+          "text": "Paste the below content into the terraform.tfvars file."
         },
         {
           "text": "In the above code, you are defining the dynamic values of variables declared earlier."
@@ -167,6 +134,9 @@
         },
         {
           "text": "After replacing the values of access_key and secret_key, save the file by pressing Ctrl + S."
+        },
+        {
+          "text": "Task 3: Create a variable file"
         }
       ]
     },
@@ -183,10 +153,13 @@
           "text": "Select Key Pair type as RSA"
         },
         {
-          "text": "Private key format as .pem and click on Create Key Pair."
+          "text": "Private key format as .pem and click on Create Key Pair."
         },
         {
-          "text": "MySSHKey will be created."
+          "text": "Task 4: Create the key pair from EC2 Console"
+        },
+        {
+          "text": "MySSHKey will be created."
         }
       ]
     },
@@ -194,31 +167,16 @@
       "title": "Task 5: Create the first VPC in main.tf file",
       "steps": [
         {
-          "text": "In this task, you will create a main.tf file where you will add details of the provider and resources."
+          "text": "In this task, you will create a main.tf file where you will add details of the provider and resources."
         },
         {
-          "text": "To create a main.tf file, expand the folder task_13081 and click on the New File icon to add the file."
+          "text": "To create a main.tf file, expand the folder task_13081 and click on the New File icon to add the file."
         },
         {
-          "text": "Name the file as main.tf and press Enter to save it."
+          "text": "Name the file as main.tf and press Enter to save it."
         },
         {
-          "text": "Paste the below content into the main.tf file."
-        },
-        {
-          "text": "provider \"aws\" {"
-        },
-        {
-          "text": "region = \"${var.region}\""
-        },
-        {
-          "text": "access_key = \"${var.access_key}\""
-        },
-        {
-          "text": "secret_key = \"${var.secret_key}\""
-        },
-        {
-          "text": "}"
+          "text": "Paste the below content into the main.tf file."
         },
         {
           "text": "In the above code, you are defining the provider as aws."
@@ -227,34 +185,7 @@
           "text": "Next, we want to tell Terraform to create a first VPC"
         },
         {
-          "text": "To create an First VPC Paste the below content into the main.tf file after the provider."
-        },
-        {
-          "text": "# Create first VPC"
-        },
-        {
-          "text": "resource \"aws_vpc\" \"first_vpc\" {"
-        },
-        {
-          "text": "cidr_block = \"10.0.0.0/24\""
-        },
-        {
-          "text": "enable_dns_support = true"
-        },
-        {
-          "text": "enable_dns_hostnames = true"
-        },
-        {
-          "text": "tags = {"
-        },
-        {
-          "text": "Name = \"First_VPC\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
+          "text": "To create an First VPC Paste the below content into the main.tf file after the provider."
         }
       ]
     },
@@ -268,33 +199,6 @@
           "text": "To create a public subnet in first vpc add another block of code just below the vpc creation into the main.tf file."
         },
         {
-          "text": "# Create public subnet for first vpc"
-        },
-        {
-          "text": "resource \"aws_subnet\" \"public_subnet_first_vpc\" {"
-        },
-        {
-          "text": "vpc_id = aws_vpc.first_vpc.id"
-        },
-        {
-          "text": "cidr_block = \"10.0.0.0/25\""
-        },
-        {
-          "text": "availability_zone = \"us-east-1a\""
-        },
-        {
-          "text": "tags = {"
-        },
-        {
-          "text": "Name = \"Public_subnet_first_VPC\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
-        },
-        {
           "text": "Save the file by pressing Ctrl + S."
         }
       ]
@@ -306,76 +210,7 @@
           "text": "In this task, you will create a Internet Gateway and Route table in main.tf file"
         },
         {
-          "text": "To create a Internet Gateway and Route Table add another block of code just below the public subnet code into the main.tf file"
-        },
-        {
-          "text": "# Create Internet Gateway"
-        },
-        {
-          "text": "resource \"aws_internet_gateway\" \"igw\" {"
-        },
-        {
-          "text": "vpc_id = aws_vpc.first_vpc.id"
-        },
-        {
-          "text": "tags = {"
-        },
-        {
-          "text": "Name = \"IGW\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Create Public Route table and attach to internet gateway"
-        },
-        {
-          "text": "resource \"aws_route_table\" \"public_rt\" {"
-        },
-        {
-          "text": "vpc_id = aws_vpc.first_vpc.id"
-        },
-        {
-          "text": "route {"
-        },
-        {
-          "text": "cidr_block = \"0.0.0.0/0\""
-        },
-        {
-          "text": "gateway_id = aws_internet_gateway.igw.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "tags = {"
-        },
-        {
-          "text": "Name = \"PublicRT\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Associate Public subnet table with public route table"
-        },
-        {
-          "text": "resource \"aws_route_table_association\" \"public_subnet_association\" {"
-        },
-        {
-          "text": "subnet_id = aws_subnet.public_subnet_first_vpc.id"
-        },
-        {
-          "text": "route_table_id = aws_route_table.public_rt.id"
-        },
-        {
-          "text": "}"
+          "text": "To create a Internet Gateway and Route Table add another block of code just below the public subnet code into the main.tf file"
         }
       ]
     },
@@ -386,109 +221,10 @@
           "text": "In this task, you will create a Security group EC2 instance in main.tf file"
         },
         {
-          "text": "To create a security group Paste the below content into the main.tf file after the route table association."
+          "text": "To create a security group Paste the below content into the main.tf file after the route table association."
         },
         {
-          "text": "# Create Security group for EC2"
-        },
-        {
-          "text": "resource \"aws_security_group\" \"ec2sg\" {"
-        },
-        {
-          "text": "name = \"whiz_sg\""
-        },
-        {
-          "text": "description = \"labsecuritygroup\""
-        },
-        {
-          "text": "vpc_id = aws_vpc.first_vpc.id"
-        },
-        {
-          "text": "ingress {"
-        },
-        {
-          "text": "from_port = 22"
-        },
-        {
-          "text": "to_port = 22"
-        },
-        {
-          "text": "protocol = \"tcp\""
-        },
-        {
-          "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "ingress {"
-        },
-        {
-          "text": "from_port = 80"
-        },
-        {
-          "text": "to_port = 80"
-        },
-        {
-          "text": "protocol = \"tcp\""
-        },
-        {
-          "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "ingress {"
-        },
-        {
-          "text": "from_port = 443"
-        },
-        {
-          "text": "to_port = 443"
-        },
-        {
-          "text": "protocol = \"tcp\""
-        },
-        {
-          "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "egress {"
-        },
-        {
-          "text": "from_port = 0"
-        },
-        {
-          "text": "to_port = 0"
-        },
-        {
-          "text": "protocol = \"-1\""
-        },
-        {
-          "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "tags = {"
-        },
-        {
-          "text": "Name = \"whiz_sg\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "Save the file by pressing Ctrl + S."
+          "text": "Save the file by pressing Ctrl + S."
         }
       ]
     },
@@ -499,76 +235,7 @@
           "text": "In this task, we are going to launch an EC2 instance in the first VPC's public subnet. This EC2 instance will be used to test the connectivity between the VPCs after peering them using the Transit Gateway."
         },
         {
-          "text": "To Launch an EC2 Instance add another block of code just below the security group code into the main.tf file"
-        },
-        {
-          "text": "# Create first VPC for EC2"
-        },
-        {
-          "text": "resource \"aws_instance\" \"first_vpc_ec2\" {"
-        },
-        {
-          "text": "ami = \"ami-0b09ffb6d8b58ca91\""
-        },
-        {
-          "text": "instance_type = \"t2.micro\""
-        },
-        {
-          "text": "key_name = \"MySSHKey\" # Make sure you use the same Key pair that you created earlier"
-        },
-        {
-          "text": "vpc_security_group_ids = [\"${aws_security_group.ec2sg.id}\"]"
-        },
-        {
-          "text": "subnet_id = aws_subnet.public_subnet_first_vpc.id"
-        },
-        {
-          "text": "iam_instance_profile = \"ContainerInstanceEC2Role\""
-        },
-        {
-          "text": "associate_public_ip_address = true"
-        },
-        {
-          "text": "user_data = <<-EOF"
-        },
-        {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "sudo su"
-        },
-        {
-          "text": "dnf update -y"
-        },
-        {
-          "text": "dnf install httpd -y"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable httpd"
-        },
-        {
-          "text": "echo \"<html><h1> Welcome to lab Public Server</h1><html>\" >"
-        },
-        {
-          "text": "/var/www/html/index.html"
-        },
-        {
-          "text": "EOF"
-        },
-        {
-          "text": "tags = {"
-        },
-        {
-          "text": "Name = \"First_VPCs_EC2\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
+          "text": "To Launch an EC2 Instance add another block of code just below the security group code into the main.tf file"
         }
       ]
     },
@@ -579,34 +246,7 @@
           "text": "In this task, we are going to create the second VPC, which will be the other VPC that is peered with the first VPC using the Transit Gateway."
         },
         {
-          "text": "To create an Second VPC Paste the below content into the main.tf file after the EC2 creation."
-        },
-        {
-          "text": "# Create Second VPC"
-        },
-        {
-          "text": "resource \"aws_vpc\" \"second_vpc\" {"
-        },
-        {
-          "text": "cidr_block = \"20.0.0.0/24\""
-        },
-        {
-          "text": "enable_dns_support = true"
-        },
-        {
-          "text": "enable_dns_hostnames = true"
-        },
-        {
-          "text": "tags = {"
-        },
-        {
-          "text": "Name = \"Second_VPC\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
+          "text": "To create an Second VPC Paste the below content into the main.tf file after the EC2 creation."
         }
       ]
     },
@@ -617,25 +257,7 @@
           "text": "In this task, we are going to create a private subnet within the second VPC. The private subnet will be used for launching an EC2 instance that will not have direct internet connectivity."
         },
         {
-          "text": "To create a private subnet in first vpc add another block of code just below the vpc creation into the main.tf file."
-        },
-        {
-          "text": "# Create private subnet for second vpc"
-        },
-        {
-          "text": "resource \"aws_subnet\" \"private_subnet_second_vpc\" {"
-        },
-        {
-          "text": "vpc_id = aws_vpc.second_vpc.id"
-        },
-        {
-          "text": "cidr_block = \"20.0.0.0/25\""
-        },
-        {
-          "text": "availability_zone = \"us-east-1a\""
-        },
-        {
-          "text": "}"
+          "text": "To create a private subnet in first vpc add another block of code just below the vpc creation into the main.tf file."
         }
       ]
     },
@@ -646,73 +268,10 @@
           "text": "In this task, you will create a Security group EC2 instance in main.tf file"
         },
         {
-          "text": "1. To create a security group Paste the below content into the main.tf file after the private subnet creation."
+          "text": "To create a security group Paste the below content into the main.tf file after the private subnet creation."
         },
         {
-          "text": "# Create second Security group for EC2"
-        },
-        {
-          "text": "resource \"aws_security_group\" \"privateec2sg\" {"
-        },
-        {
-          "text": "name = \"whiz_sg2\""
-        },
-        {
-          "text": "description = \"labsecuritygroup\""
-        },
-        {
-          "text": "vpc_id = aws_vpc.second_vpc.id"
-        },
-        {
-          "text": "ingress {"
-        },
-        {
-          "text": "from_port = 22"
-        },
-        {
-          "text": "to_port = 22"
-        },
-        {
-          "text": "protocol = \"tcp\""
-        },
-        {
-          "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "egress {"
-        },
-        {
-          "text": "from_port = 0"
-        },
-        {
-          "text": "to_port = 0"
-        },
-        {
-          "text": "protocol = \"-1\""
-        },
-        {
-          "text": "cidr_blocks = [\"0.0.0.0/0\"]"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "tags = {"
-        },
-        {
-          "text": "Name = \"whiz_sg\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "Save the file by pressing Ctrl + S."
+          "text": "Save the file by pressing Ctrl + S."
         }
       ]
     },
@@ -723,67 +282,7 @@
           "text": "In this task, we are going to launch an EC2 instance in the Second VPC's private subnet. This EC2 instance will be used to test the connectivity between the VPCs after peering them using the Transit Gateway."
         },
         {
-          "text": "To Launch an EC2 Instance add another block of code just below the security group code into the main.tf file"
-        },
-        {
-          "text": "resource \"aws_instance\" \"second_vpc_ec2\" {"
-        },
-        {
-          "text": "ami = \"ami-0b09ffb6d8b58ca91\""
-        },
-        {
-          "text": "instance_type = \"t2.micro\""
-        },
-        {
-          "text": "key_name = \"MySSHKey\""
-        },
-        {
-          "text": "vpc_security_group_ids = [\"${aws_security_group.privateec2sg.id}\"]"
-        },
-        {
-          "text": "subnet_id = aws_subnet.private_subnet_second_vpc.id"
-        },
-        {
-          "text": "associate_public_ip_address = false"
-        },
-        {
-          "text": "user_data = <<-EOF"
-        },
-        {
-          "text": "#!/bin/bash"
-        },
-        {
-          "text": "sudo su"
-        },
-        {
-          "text": "dnf update -y"
-        },
-        {
-          "text": "dnf install httpd -y"
-        },
-        {
-          "text": "systemctl start httpd"
-        },
-        {
-          "text": "systemctl enable httpd"
-        },
-        {
-          "text": "echo \"<html><h1> Welcome to lab Private Server</h1><html>\" > /var/www/html/index.html"
-        },
-        {
-          "text": "EOF"
-        },
-        {
-          "text": "tags = {"
-        },
-        {
-          "text": "Name = \"Second_VPCs_EC2\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
+          "text": "To Launch an EC2 Instance add another block of code just below the security group code into the main.tf file"
         }
       ]
     },
@@ -794,25 +293,7 @@
           "text": "In this task, we are going to create a Transit Gateway, which acts as a central hub for connecting multiple VPCs and on-premises networks. The Transit Gateway simplifies the network architecture and facilitates the peering between VPCs."
         },
         {
-          "text": "To create a private subnet in first vpc add another block of code just below the ec2 creation into the main.tf file."
-        },
-        {
-          "text": "resource \"aws_ec2_transit_gateway\" \"demo_tg\" {"
-        },
-        {
-          "text": "description = \"TG for peering two VPCs\""
-        },
-        {
-          "text": "tags = {"
-        },
-        {
-          "text": "Name = \"DemoTG\""
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "}"
+          "text": "To create a private subnet in first vpc add another block of code just below the ec2 creation into the main.tf file."
         }
       ]
     },
@@ -823,37 +304,7 @@
           "text": "In this task, we are going to create two Transit Gateway attachments, one for each of the VPCs created. These attachments establish the peering between the VPCs and the Transit Gateway."
         },
         {
-          "text": "To create a private subnet in first vpc add another block of code just below the transit gateway into the main.tf file."
-        },
-        {
-          "text": "resource \"aws_ec2_transit_gateway_vpc_attachment\" \"first_vpc_tga\" {"
-        },
-        {
-          "text": "transit_gateway_id = aws_ec2_transit_gateway.demo_tg.id"
-        },
-        {
-          "text": "vpc_id = aws_vpc.first_vpc.id"
-        },
-        {
-          "text": "subnet_ids = [aws_subnet.public_subnet_first_vpc.id]"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "resource \"aws_ec2_transit_gateway_vpc_attachment\" \"second_vpc_tga\" {"
-        },
-        {
-          "text": "transit_gateway_id = aws_ec2_transit_gateway.demo_tg.id"
-        },
-        {
-          "text": "vpc_id = aws_vpc.second_vpc.id"
-        },
-        {
-          "text": "subnet_ids = [aws_subnet.private_subnet_second_vpc.id]"
-        },
-        {
-          "text": "}"
+          "text": "To create a private subnet in first vpc add another block of code just below the transit gateway into the main.tf file."
         }
       ]
     },
@@ -861,51 +312,7 @@
       "title": "Task 16: Add the routes in the route table",
       "steps": [
         {
-          "text": "To create a private subnet in first vpc add another block of code just below the tranist gateway attachment creation into the main.tf file."
-        },
-        {
-          "text": "resource \"aws_route\" \"first_vpc_route_to_second_vpc\" {"
-        },
-        {
-          "text": "route_table_id = aws_route_table.public_rt.id"
-        },
-        {
-          "text": "destination_cidr_block = aws_vpc.second_vpc.cidr_block"
-        },
-        {
-          "text": "transit_gateway_id = aws_ec2_transit_gateway.demo_tg.id"
-        },
-        {
-          "text": "depends_on = [aws_ec2_transit_gateway_vpc_attachment.second_vpc_tga]"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "resource \"aws_route\" \"second_vpc_route_to_first_vpc\" {"
-        },
-        {
-          "text": "route_table_id = aws_vpc.second_vpc.main_route_table_id"
-        },
-        {
-          "text": "destination_cidr_block = aws_vpc.first_vpc.cidr_block"
-        },
-        {
-          "text": "transit_gateway_id = aws_ec2_transit_gateway.demo_tg.id"
-        },
-        {
-          "text": "depends_on = [aws_ec2_transit_gateway_vpc_attachment.first_vpc_tga]"
-        },
-        {
-          "text": "}"
-        }
-      ]
-    },
-    {
-      "title": "Task 16:",
-      "steps": [
-        {
-          "text": "Add the routes in the route table"
+          "text": "To create a private subnet in first vpc add another block of code just below the tranist gateway attachment creation into the main.tf file."
         }
       ]
     },
@@ -913,220 +320,10 @@
       "title": "Task 17: Create Output File",
       "steps": [
         {
-          "text": "In this task, you will create an output.tf file where you add details of the output you want to display.To create an output.tf file, expand the folder task_13081 and click on the New File icon to add the file."
+          "text": "In this task, you will create an output.tf file where you add details of the output you want to display.To create an output.tf file, expand the folder task_13081 and click on the New File icon to add the file."
         },
         {
           "text": "Name the file as output.tf and press Enter to save it.Paste the below content into the output.tf file."
-        },
-        {
-          "text": "# Output the First VPC ID"
-        },
-        {
-          "text": "output \"first_vpc_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the First VPC\""
-        },
-        {
-          "text": "value = aws_vpc.first_vpc.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Second VPC ID"
-        },
-        {
-          "text": "output \"second_vpc_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the Second VPC\""
-        },
-        {
-          "text": "value = aws_vpc.second_vpc.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Public Subnet ID in the First VPC"
-        },
-        {
-          "text": "output \"public_subnet_first_vpc_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the public subnet in the First VPC\""
-        },
-        {
-          "text": "value = aws_subnet.public_subnet_first_vpc.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Private Subnet ID in the Second VPC"
-        },
-        {
-          "text": "output \"private_subnet_second_vpc_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the private subnet in the Second VPC\""
-        },
-        {
-          "text": "value = aws_subnet.private_subnet_second_vpc.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Internet Gateway ID"
-        },
-        {
-          "text": "output \"internet_gateway_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the Internet Gateway for the First VPC\""
-        },
-        {
-          "text": "value = aws_internet_gateway.igw.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Route Table ID"
-        },
-        {
-          "text": "output \"public_route_table_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the public route table for the First VPC\""
-        },
-        {
-          "text": "value = aws_route_table.public_rt.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Security Group ID for Public EC2 instance"
-        },
-        {
-          "text": "output \"public_ec2_sg_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the Security Group for the public EC2 instance\""
-        },
-        {
-          "text": "value = aws_security_group.ec2sg.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Security Group ID for Private EC2 instance"
-        },
-        {
-          "text": "output \"private_ec2_sg_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the Security Group for the private EC2 instance\""
-        },
-        {
-          "text": "value = aws_security_group.privateec2sg.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Public EC2 Instance ID"
-        },
-        {
-          "text": "output \"public_ec2_instance_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the public EC2 instance\""
-        },
-        {
-          "text": "value = aws_instance.first_vpc_ec2.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Public EC2 Instance Public IP"
-        },
-        {
-          "text": "output \"public_ec2_instance_public_ip\" {"
-        },
-        {
-          "text": "description = \"The Public IP address of the public EC2 instance\""
-        },
-        {
-          "text": "value = aws_instance.first_vpc_ec2.public_ip"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Private EC2 Instance ID"
-        },
-        {
-          "text": "output \"private_ec2_instance_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the private EC2 instance\""
-        },
-        {
-          "text": "value = aws_instance.second_vpc_ec2.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Transit Gateway ID"
-        },
-        {
-          "text": "output \"transit_gateway_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the Transit Gateway\""
-        },
-        {
-          "text": "value = aws_ec2_transit_gateway.demo_tg.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Transit Gateway Attachment ID for the First VPC"
-        },
-        {
-          "text": "output \"transit_gateway_attachment_first_vpc_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the Transit Gateway attachment for the First VPC\""
-        },
-        {
-          "text": "value = aws_ec2_transit_gateway_vpc_attachment.first_vpc_tga.id"
-        },
-        {
-          "text": "}"
-        },
-        {
-          "text": "# Output the Transit Gateway Attachment ID for the Second VPC"
-        },
-        {
-          "text": "output \"transit_gateway_attachment_second_vpc_id\" {"
-        },
-        {
-          "text": "description = \"The ID of the Transit Gateway attachment for the Second VPC\""
-        },
-        {
-          "text": "value = aws_ec2_transit_gateway_vpc_attachment.second_vpc_tga.id"
-        },
-        {
-          "text": "}"
         }
       ]
     },
@@ -1134,19 +331,16 @@
       "title": "Task 18: Confirm the installation of Terraform by checking the version",
       "steps": [
         {
-          "text": "In the Visual Studio Code, open Terminal by selecting View from the Menu bar and choose Terminal."
+          "text": "In the Visual Studio Code, open Terminal by selecting View from the Menu bar and choose Terminal."
+        },
+        {
+          "text": "If you are not in the newly created folder change your present working directory by running the below command.cd task_13081"
         },
         {
           "text": "If you are not in the newly created folder change your present working directory by running the below command."
         },
         {
-          "text": "cd task_13081"
-        },
-        {
           "text": "To confirm the installation of Terraform, run the below command to check the version:"
-        },
-        {
-          "text": "terraform version"
         },
         {
           "text": "If you are getting output as command not found: terraform, this means that terraform is not installed on your system, To install terraform follow the official guide link provided in the Prerequisite section above."
@@ -1157,28 +351,31 @@
       "title": "Task 19: Apply terraform configurations",
       "steps": [
         {
+          "text": "Initialize Terraform by running the below command,terraform init"
+        },
+        {
           "text": "Initialize Terraform by running the below command,"
         },
         {
-          "text": "terraform init"
+          "text": "Note: terraform init will check for all the plugin dependencies and download them if required, this will be used for creating a deployment plan"
         },
         {
-          "text": "Note: terraform init will check for all the plugin dependencies and download them if required, this will be used for creating a deployment plan"
+          "text": "To generate the action plans run the below command,terraform plan"
         },
         {
           "text": "To generate the action plans run the below command,"
         },
         {
-          "text": "terraform plan"
+          "text": "Task 19: Apply terraform configurations"
         },
         {
           "text": "To create all the resources declared in main.tf configuration file, run the below command:"
         },
         {
-          "text": "terraform apply"
+          "text": "Approve the creation of all the resources by entering yes."
         },
         {
-          "text": "Approve the creation of all the resources by entering yes."
+          "text": "Task 19: Apply terraform configurations"
         },
         {
           "text": "It may take up to 2-5 minutes for the terraform apply command to create the resources."
@@ -1192,76 +389,82 @@
       "title": "Task 20 : Test the connectivity between two VPCs",
       "steps": [
         {
-          "text": "In this task, we are going to test the connectivity between the EC2 instances in both VPCs. This step confirms that the VPCs have been successfully peered using the Transit Gateway, and the EC2 instances can communicate with each other."
+          "text": "In this task, we are going to test the connectivity between the EC2 instances in both VPCs. This step confirms that the VPCs have been successfully peered using the Transit Gateway, and the EC2 instances can communicate with each other."
         },
         {
-          "text": "You have copied the IPv4 Public IP of the EC2 instance created in the First VPC."
+          "text": "You have copied the IPv4 Public IP of the EC2 instance created in the First VPC."
         },
         {
-          "text": "Please follow the steps for Session manager to connect into First_VPCs_EC2"
+          "text": "Please follow the steps for Session manager to connect into First_VPCs_EC2 Select First_VPCs_EC2 and click on Connect button."
         },
         {
-          "text": "Select First_VPCs_EC2 and click on Connect button."
+          "text": "Please follow the steps for Session manager to connect into First_VPCs_EC2"
         },
         {
-          "text": "Go to Session Manager and click Connect"
+          "text": "Select First_VPCs_EC2 and click on Connect button."
+        },
+        {
+          "text": "Go to Session Manager and click Connect"
         },
         {
           "text": "Once you have successfully connected in to EC2, run the following commands :"
         },
         {
+          "text": "Switch to root user :sudo su"
+        },
+        {
           "text": "Switch to root user :"
         },
         {
-          "text": "sudo su"
+          "text": "Update server repository :yum update -y"
         },
         {
           "text": "Update server repository :"
         },
         {
-          "text": "yum update -y"
+          "text": "Now we need to copy the .pem key of the EC2 instance created."
         },
         {
-          "text": "Now we need to copy the .pem key of the EC2 instance created."
+          "text": "Create a file :vi MySSHKey.pem"
         },
         {
           "text": "Create a file :"
         },
         {
-          "text": "vi MySSHKey.pem"
+          "text": "Task 20 : Test the connectivity between two VPCs"
         },
         {
-          "text": "Open the .pem key of EC2 MySSHKey in your local editor and paste it in the terminal file."
+          "text": "Open the .pem key of EC2 MySSHKey in your local editor and paste it in the terminal file."
         },
         {
           "text": "Press :wq"
         },
         {
-          "text": "File Name : No changes, press [Enter] key in your keyboard"
+          "text": "File Name : No changes, press [Enter] key in your keyboard"
         },
         {
           "text": "Change the .pem key permission"
         },
         {
-          "text": "chmod 400 MySSHKey.pem"
-        },
-        {
-          "text": "SSH into the Private EC2 MySSHKey"
-        },
-        {
-          "text": "ssh ec2-user@<IPv4 private Ip> -i ec2_ssh_key.pem"
+          "text": "SSH into the Private EC2 MySSHKey"
         },
         {
           "text": "Copy the Private IP of First_VPCs_EC2"
         },
         {
-          "text": "Example : ssh ec2-user@20.0.0.11 -i MySSHKey.pem"
+          "text": "Example : ssh ec2-user@20.0.0.11 -i MySSHKey.pem"
         },
         {
-          "text": "If the connection prompts a message to confirm connect enter yes"
+          "text": "If the connection prompts a message to confirm connect enter yes"
+        },
+        {
+          "text": "Task 20 : Test the connectivity between two VPCs"
         },
         {
           "text": "As you can see the IP address is changed to private ec2 private IP 30.0.1.154"
+        },
+        {
+          "text": "Task 20 : Test the connectivity between two VPCs"
         }
       ]
     },
@@ -1272,22 +475,16 @@
           "text": "To delete the resources, open Terminal again."
         },
         {
+          "text": "Run the below command to delete all the resources.terraform destroy"
+        },
+        {
           "text": "Run the below command to delete all the resources."
         },
         {
-          "text": "terraform destroy"
+          "text": "Approve the creation of all the resources by entering yes. You can see the Destroy complete! message."
         },
         {
-          "text": "Approve the creation of all the resources by entering yes. You can see the Destroy complete! message."
-        },
-        {
-          "text": "Do You Know?"
-        },
-        {
-          "text": "With Transit Gateway, you can easily add or remove VPC connections as your network grows or changes, without impacting existing connections. It provides a flexible and scalable solution for interconnecting VPCs and simplifies network administration, routing, and security."
-        },
-        {
-          "text": "Completion and Conclusion"
+          "text": "Task 21: Delete AWS Resources"
         },
         {
           "text": "You have successfully created a VPC with a public subnet & internet gateway and Launched an EC2 instance."
@@ -1305,16 +502,13 @@
           "text": "You have successfully tested the connectivity of VPC after peering using the Transit gateway."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from the lab console."
+          "text": "Once you have completed the steps, click on End Lab from the lab console."
         }
       ]
     }

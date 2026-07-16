@@ -404,7 +404,10 @@
           ]
         },
         {
-          "text": "Task 6: Validation Test"
+          "text": "Task 6: Validation Test",
+          "images": [
+            "/labs/introduction-to-amazon-auto-scaling/step-28.gif"
+          ]
         },
         {
           "text": "You have successfully used the AWS management console to create a Launch Template."

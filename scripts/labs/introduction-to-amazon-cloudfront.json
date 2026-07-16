@@ -44,7 +44,7 @@
           "text": "Navigate to the Services menu at the top. Click on S3 in the Storage section."
         },
         {
-          "text": "In the S3 dashboard, click on the Create bucket and fill in the bucket details. Bucket name: Enter lab1234567 Note: S3 Bucket names are globally unique, choose a name that is available. Object Ownership: Select ACLs enabled option and choose Object writer as Object owner Scroll down to Block Public Access settings for this bucket and Uncheck the Block all Public Access and acknowledge the change.",
+          "text": "In the S3 dashboard, click on the Create bucket and fill in the bucket details. Bucket name: Enter <example-password>4567 Note: S3 Bucket names are globally unique, choose a name that is available. Object Ownership: Select ACLs enabled option and choose Object writer as Object owner Scroll down to Block Public Access settings for this bucket and Uncheck the Block all Public Access and acknowledge the change.",
           "images": [
             "/labs/introduction-to-amazon-cloudfront/step-01.png",
             "/labs/introduction-to-amazon-cloudfront/step-02.png"
@@ -54,10 +54,10 @@
           "text": "In the S3 dashboard, click on the Create bucket and fill in the bucket details."
         },
         {
-          "text": "Bucket name: Enter lab1234567 Note: S3 Bucket names are globally unique, choose a name that is available."
+          "text": "Bucket name: Enter <example-password>4567 Note: S3 Bucket names are globally unique, choose a name that is available."
         },
         {
-          "text": "Bucket name: Enter lab1234567"
+          "text": "Bucket name: Enter <example-password>4567"
         },
         {
           "text": "Note: S3 Bucket names are globally unique, choose a name that is available."
@@ -351,13 +351,13 @@
           "text": "Copy the Object URL and paste it into a new tab."
         },
         {
-          "text": "Example: https://lab1234567.s3.amazonaws.com/lab_logo_58_32.png You will see the AccessDenied message, meaning the object is not publicly accessible.lab_logo_58_32.png",
+          "text": "Example: https://<example-password>4567.s3.amazonaws.com/lab_logo_58_32.png You will see the AccessDenied message, meaning the object is not publicly accessible.lab_logo_58_32.png",
           "images": [
             "/labs/introduction-to-amazon-cloudfront/step-21.png"
           ]
         },
         {
-          "text": "Example: https://lab1234567.s3.amazonaws.com/lab_logo_58_32.png"
+          "text": "Example: https://<example-password>4567.s3.amazonaws.com/lab_logo_58_32.png"
         },
         {
           "text": "You will see the AccessDenied message, meaning the object is not publicly accessible.lab_logo_58_32.png",

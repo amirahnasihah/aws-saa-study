@@ -68,7 +68,7 @@ export const labTopics: Array<{ id: LabTopicId; label: string }> = [
   }
 ]
 
-/** Whizlabs hands-on library (course tab) */
+/** Core hands-on library (course tab) */
 export const labsCourseTotal = 110
 
 /** Course library + video-embedded labs from the lecture outline */

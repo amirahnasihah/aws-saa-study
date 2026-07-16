@@ -45,6 +45,9 @@ next-env.d.ts
 # cloudflare wrangler local state
 .wrangler/
 
+# generated at build/dev — keeps ~2.6 MB labs catalog out of the Worker bundle
+public/data/labs-fallback.json
+
 # ---------------------------------------------------------------------------
 # scripts/ — generated outputs (regenerate from *.ts or labs/*.json)
 # Commit: *.ts tooling, labs/*.json, labs/course-index.json, labs-schema.sql

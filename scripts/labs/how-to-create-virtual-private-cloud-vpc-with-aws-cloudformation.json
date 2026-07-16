@@ -41,7 +41,7 @@
           "text": "In this task , we will be creating VPC stack using the pre-created cloudformation template in the S3 bucket."
         },
         {
-          "text": "Search for S3 by click on Services in the top menu, then click on S3 in the Storage section. You will see a bucket name starting with \"lab\" with numeric digits appended to the end, like lab1234564543. Open that bucket and click on the object named VPC_template.json. Next, copy the Object URL to the clipboard for use in the CloudFormation template.",
+          "text": "Search for S3 by click on Services in the top menu, then click on S3 in the Storage section. You will see a bucket name starting with \"lab\" with numeric digits appended to the end, like <example-password>4564543. Open that bucket and click on the object named VPC_template.json. Next, copy the Object URL to the clipboard for use in the CloudFormation template.",
           "images": [
             "/labs/how-to-create-virtual-private-cloud-vpc-with-aws-cloudformation/step-01.png"
           ]
@@ -50,7 +50,7 @@
           "text": "Search for S3 by click on Services in the top menu, then click on S3 in the Storage section."
         },
         {
-          "text": "You will see a bucket name starting with \"lab\" with numeric digits appended to the end, like lab1234564543."
+          "text": "You will see a bucket name starting with \"lab\" with numeric digits appended to the end, like <example-password>4564543."
         },
         {
           "text": "Open that bucket and click on the object named VPC_template.json."
@@ -145,7 +145,7 @@
       "title": "Task 3: Creating Subnets using the VPC II Template cloudformation stack",
       "steps": [
         {
-          "text": "Search for S3 by clicking on Services in the top menu, then click on S3 in the Storage section. You will see a bucket name starting with lab with numeric digits appended to the end, like lab1234564543. Open that bucket and click on the object named VPC_II_template.json. Now, copy the Object URL to the clipboard for use in CloudFormation template.",
+          "text": "Search for S3 by clicking on Services in the top menu, then click on S3 in the Storage section. You will see a bucket name starting with lab with numeric digits appended to the end, like <example-password>4564543. Open that bucket and click on the object named VPC_II_template.json. Now, copy the Object URL to the clipboard for use in CloudFormation template.",
           "images": [
             "/labs/how-to-create-virtual-private-cloud-vpc-with-aws-cloudformation/step-11.png"
           ]
@@ -154,7 +154,7 @@
           "text": "Search for S3 by clicking on Services in the top menu, then click on S3 in the Storage section."
         },
         {
-          "text": "You will see a bucket name starting with lab with numeric digits appended to the end, like lab1234564543."
+          "text": "You will see a bucket name starting with lab with numeric digits appended to the end, like <example-password>4564543."
         },
         {
           "text": "Open that bucket and click on the object named VPC_II_template.json."

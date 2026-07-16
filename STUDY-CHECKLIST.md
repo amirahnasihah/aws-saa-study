@@ -7,15 +7,19 @@
 🎯 **Remaining:** §5–§14 below (+ practice exams at the end)
 
 ### How to use this
+
 Tick items in **Course outline** as you complete each lecture, lab, or quiz on Whizlabs. The **Must be able to answer** items (§5–§14) are the real exam test — if you can't answer one out loud without notes, rewatch. Don't move on until that section's quiz is ≥80%.
 
 ### Exam domain weights (what to protect if time runs short)
-| Domain | Weight | Where it lives below |
-|--------|--------|----------------------|
-| 1 · Design Secure Architectures | **30%** | §5, IAM/KMS everywhere |
-| 2 · Design Resilient Architectures | **26%** | §6 DB, §9 Networking, Multi-AZ |
-| 3 · Design High-Performing Architectures | **24%** | §6, §9, §10, caching/scaling |
-| 4 · Design Cost-Optimized Architectures | **20%** | §14, purchasing options |
+
+
+| Domain                                   | Weight  | Where it lives below           |
+| ---------------------------------------- | ------- | ------------------------------ |
+| 1 · Design Secure Architectures          | **30%** | §5, IAM/KMS everywhere         |
+| 2 · Design Resilient Architectures       | **26%** | §6 DB, §9 Networking, Multi-AZ |
+| 3 · Design High-Performing Architectures | **24%** | §6, §9, §10, caching/scaling   |
+| 4 · Design Cost-Optimized Architectures  | **20%** | §14, purchasing options        |
+
 
 Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 know-what-it-does
 
@@ -24,6 +28,7 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 ## 1. Introduction — ✅ done · 2 lectures
 
 ### Course outline
+
 - [x] [Welcome to the Course](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24489) (3m 57s)
 - [x] [Why Cloud Computing?](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4475) (6m 44s)
 
@@ -32,17 +37,27 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 ## 2. Getting Started With AWS — ✅ done · 5 lectures
 
 ### Course outline
+
 - [x] [Why AWS?](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4476) (3m 55s)
 - [x] [Overview of the Exam](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24501) (9m 56s)
 - [x] [Overview of this Course](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24509) (11m 18s)
 - [x] [Setting up free-tier AWS account](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24549) (9m 54s)
 - [x] [Getting Familiar with AWS Console](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=26889) (9m 25s)
 
+### Must be able to answer
+
+- [x] SAA-C03 format: **65 questions / 130 min**; pass = **720/1000**; multiple-choice + multiple-response
+- [x] The 4 domains + weights: **Secure 30% · Resilient 26% · High-Performing 24% · Cost-Optimized 20%**
+- [x] Free-tier account setup, the AWS Console, regions vs AZs basics
+
 ---
 
 ## 3. Compute — ✅ done · 28 lectures · 4 labs
 
+> **Pricing quick-reference (us-east-1):** EC2 On-Demand per-second (Linux, min 60s) · Reserved up to 72% off · Spot up to 90% off · Dedicated Instance +$2/hr · Dedicated Host per-host · **Lambda: 1M req + 400K GB-s free forever, then $0.20/1M req + $0.00001667/GB-s** · **ALB $0.0225/hr + $0.008/LCU-hr** · **NLB $0.0225/hr + $0.006/NLCU-hr** · **GWLB $0.0135/hr + $0.0035/GWLCU-hr** · **ASG free (pay for EC2)** · Instance Store free · Cross-zone: ALB always ON (free), NLB OFF by default ($0.02/GB inter-AZ to enable)
+
 ### Course outline
+
 - [x] [Amazon EC2 Fundamentals: Instance Types](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=26890) (6m 12s)
 - [x] [Amazon EC2 Fundamentals: Purchasing Options, Saving plans and Tenancy](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=26891) (9m 51s)
 - [x] [Amazon EC2: Volumes and Encryption](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=25904) (5m 45s)
@@ -77,11 +92,29 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 - [x] [AWS Outposts](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24490) (7m 49s)
 - [x] Compute (Quiz) (15Q) — ≥80%
 
+### Must be able to answer
+
+- [x] EC2 instance families: General (M/T) vs Compute (C) vs Memory (R/X) vs Storage (I/D) vs Accelerated (P/G) — match family to workload
+- [x] Purchasing: On-Demand vs **Reserved (Standard ≤72% vs Convertible)** vs Savings Plans vs **Spot (≤90%, 2-min interrupt)** vs Dedicated Host/Instance — pick per workload
+- [x] Tenancy: Shared vs Dedicated Instance (isolated HW) vs **Dedicated Host (BYOL + socket/core visibility, compliance)**
+- [x] **Instance Store (ephemeral, lost on stop/terminate, highest IOPS)** vs EBS-backed (persistent, survives stop)
+- [x] Placement Groups: **Cluster (low latency, 1 AZ, HPC)** vs **Spread (max 7/AZ, critical HA)** vs **Partition (big data, HDFS/Kafka)**
+- [x] Public vs Private vs **Elastic IP (static, charged when NOT attached)**
+- [x] **ENI** (move IP/failover) vs **ENA** (enhanced networking, 10–100 Gbps) vs **EFA** (HPC, OS-bypass, ultra-low latency)
+- [x] ELB: **ALB (L7 HTTP, path/host)** vs **NLB (L4 TCP/UDP, static IP, millions req/s)** vs **GWLB (L3, security appliances)** vs CLB (legacy)
+- [x] Cross-zone load balancing: **ALB always ON + free**; **NLB OFF by default** (data charge if on)
+- [x] ELB stickiness (session affinity); health checks; SSL termination
+- [x] ASG: launch template, scaling policies (**target tracking / step / scheduled**), cooldown, termination policy, health-check replace
+- [x] Lambda (event-driven, 15-min max, cold start, concurrency) · **Lambda@Edge** (CloudFront edge) · **Beanstalk** (PaaS) · **Outposts** (AWS HW on-prem)
+
 ---
 
 ## 4. Storage — ✅ done · 34 lectures · 1 labs
 
+> **Pricing quick-reference (us-east-1):** **S3 Standard $0.023/GB** · Standard-IA $0.0125/GB · One Zone-IA $0.01/GB · Intelligent-Tiering $0.023/GB + $0.0025 monitoring · **Glacier Instant $0.004/GB (ms)** · Glacier Flexible $0.0036/GB (min-hr restore) · **Deep Archive $0.00099/GB (cheapest, 12-48hr)** · **EBS gp3 $0.08/GB** · io2 $0.125/GB + IOPS · st1 $0.045/GB · **sc1 $0.015/GB (cheapest EBS)** · Snapshots $0.05/GB · **EFS Standard $0.30/GB** · One Zone $0.16/GB · EFS IA $0.016/GB · Storage Gateway $0.06/GB cached
+
 ### Course outline
+
 - [x] [Amazon Simple Storage Service Overview](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34325) (6m 48s)
 - [x] [Amazon Simple Storage Service: Versioning & Features](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34326) (3m 58s)
 - [x] [Amazon S3 - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34327) (6m 43s)
@@ -119,12 +152,28 @@ Priority legend: 🔴 master fully · 🟠 important · 🟡 moderate · 🟢 kn
 - [x] [AWS Backup](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=23023) (5m 45s)
 - [x] Storage (Quiz) (10Q) — ≥80%
 
+### Must be able to answer
+
+- [x] S3 storage classes: Standard vs Standard-IA vs One Zone-IA vs Intelligent-Tiering vs Glacier Instant/Flexible/Deep Archive — by access pattern + **min-duration (IA 30d, Glacier 90d, Deep 180d)**
+- [x] S3 lifecycle: transition rules + expiration; auto-move cold data down the tiers
+- [x] S3 **versioning (+ MFA delete)** — required before replication works
+- [x] S3 replication: **CRR (cross-region, DR/latency)** vs **SRR (same-region)** — async, needs versioning both sides
+- [x] S3 encryption: **SSE-S3** vs **SSE-KMS (audit/rotation)** vs SSE-C vs client-side; enforce HTTPS via **aws:SecureTransport**
+- [x] S3 access control: **IAM** (identity) vs **Bucket Policy** (cross-account/resource) vs ACL (legacy) vs **Block Public Access**
+- [x] S3 CORS · **Pre-Signed URL** (temporary object access without making it public)
+- [x] EBS volume types: **gp3/gp2 (general SSD)** vs **io1/io2 (high IOPS, Multi-Attach)** vs **st1 (throughput HDD)** vs **sc1 (cold HDD, cheapest)**
+- [x] EBS snapshots (incremental → S3, cross-region copy), encryption, **resizing live (Elastic Volumes)**, DeleteOnTermination
+- [x] **EFS (managed NFS, multi-AZ, Linux)** vs **EBS (single-AZ block, 1 instance)** vs **S3 (object)** — when each
+- [x] Storage Gateway: **File (NFS/SMB→S3)** vs **Volume (iSCSI cached/stored)** vs **Tape (VTL backup)** — hybrid bridge
+- [x] AWS Backup: centralized cross-service backup plans, scheduling, retention, cross-region/account copy
+
 ---
 
 ## 5. Security, Identity and Compliance — 🔴 Domain 1 (30%) · 23 lectures · 2 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS IAM: Users, Groups, Policies & MFA](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=40380) (6m 54s)
 - [ ] [IAM Users and IAM Groups - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=28476) (6m 8s)
@@ -154,6 +203,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Security, Identity, and Compliance (Quiz) (12Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] IAM policy evaluation: default deny, **explicit deny always wins** over allow
 - [ ] IAM role vs IAM user vs resource-based policy — and cross-account access via roles
 - [ ] IAM Identity Center (SSO) + permission sets — when over plain IAM users?
@@ -172,7 +222,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 6. Database — 🟠 Domains 2 & 3 · 17 lectures · 2 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [Amazon RDS Overview](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=40368) (8m 36s)
 - [ ] [Creating an Amazon RDS Instance](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=12820) (19m 17s)
@@ -196,6 +247,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Database Services (Quiz) (8Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] **Multi-AZ (sync, HA, auto-failover, same region) vs Read Replicas (async, read scaling, cross-region)** — and when you'd use both
 - [ ] RDS backups: automated vs manual snapshots; what RTO and RPO actually mean
 - [ ] RDS Proxy: connection pooling, the Lambda use case, faster failover
@@ -213,7 +265,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 7. Machine Learning — 🟢 know-what-it-does · 6 lectures
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [Amazon Polly](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24491) (5m 23s)
 - [ ] [Amazon Polly - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24492) (5m 56s)
@@ -224,6 +277,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Machine Learning (Quiz) (3Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] Polly = text→speech · Translate = language translation
 - [ ] Comprehend = NLP / sentiment / entities (Comprehend Medical)
 - [ ] Rekognition = image/video analysis, face detection, moderation
@@ -237,7 +291,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 8. Management and Governance — 🟡 · 17 lectures · 4 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS Organizations - Overview](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=7554) (6m 56s)
 - [ ] [AWS Organizations - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=7555) (7m 16s)
@@ -263,13 +318,15 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Management and Governance (Quiz) (5Q) — target ≥80%
 
 ### Must be able to answer
-- [ ] Organizations: OUs, **SCPs (set boundaries — don't grant)**, consolidated billing
-- [ ] CloudWatch: standard (5min) vs detailed (1min) metrics; **EC2 memory/disk need the CloudWatch agent**; alarms, Logs Insights
-- [ ] **CloudTrail (API audit) vs CloudWatch (performance) vs Config (config state + compliance)** — the classic triad
+
+- [ ] Organizations: OUs, **SCPs (set boundaries — don't grant)**, consolidated billing — **FREE**
+- [ ] CloudWatch: standard (5min) vs detailed (1min) metrics; **EC2 memory/disk need the CloudWatch agent**; alarms, Logs Insights — **Free tier: 10 metrics, 10 alarms, 5GB logs, 3 dashboards/mo. Detailed $0.015/inst/hr. Custom metrics $0.30/1K/mo**
+- [ ] **CloudTrail (API audit) vs CloudWatch (performance) vs Config (config state + compliance)** — the classic triad — **CloudTrail mgmt events FREE. Data events $0.10/100K. Config $0.003/item + $0.001/rule eval**
 - [ ] Config rules + remediation; conformance packs
-- [ ] CloudFormation: change sets, drift detection, nested stacks, **StackSets (multi-account/region)**
-- [ ] Trusted Advisor 5 categories (cost, security, fault tolerance, performance, service limits)
-- [ ] Systems Manager: **Session Manager (no SSH/bastion)**, Parameter Store, Patch Manager, Run Command
+- [ ] CloudFormation: change sets, drift detection, nested stacks, **StackSets (multi-account/region)** — **FREE (pay for resources only)**
+- [ ] Trusted Advisor 5 categories (cost, security, fault tolerance, performance, service limits) — **7 free checks. Full checks need Business/Enterprise support**
+- [ ] Systems Manager: **Session Manager (no SSH/bastion)**, Parameter Store, Patch Manager, Run Command — **Free tier: 2K activations, 1K instances. Standard params free (10K). Advanced $0.05/param/mo. Session Manager free**
+- [ ] Compute Optimizer: ML rightsizing — **FREE**
 
 ---
 
@@ -278,7 +335,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 9. Networking & Content Delivery — 🔴 heavily tested · 27 lectures · 5 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] 🧪 [Build Amazon VPC with Public and Private Subnets from Scratch](https://business.whizlabs.com/labs/build-amazon-vpc-with-public-and-private-subnets-from-scratch) (30m)
 - [ ] [AWS VPC Overview: Subnets & CIDR](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=40373) (6m 58s)
@@ -293,7 +351,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] [AWS VPC - PrivateLink](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=10960) (7m 11s)
 - [ ] [AWS VPC - Transit Gateway](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=10962) (4m 49s)
 - [ ] [AWS VPN](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=11197) (5m 48s)
-- [ ] [AWS Direct Connect ](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=38131) (5m 53s)
+- [ ] [AWS Direct Connect](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=38131)  (5m 53s)
 - [ ] [AWS API Gateway](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=38132) (7m)
 - [ ] 🧪 [Peer VPC with Transit Gateway and its components](https://business.whizlabs.com/labs/peer-vpc-with-transit-gateway-and-its-components) (1h 15m)
 - [ ] [Amazon CloudFront and Edge locations Overview](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=36591) (4m 9s)
@@ -307,7 +365,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] [Amazon Route 53: Create A Record](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=29137) (10m 9s)
 - [ ] [Simple Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4763) (3m 41s)
 - [ ] [Weighted Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4764) (5m 38s)
-- [ ] [Latency Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4765) (7m 8s)
+- [ ] [Latency Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4765) (7m 8s)a
 - [ ] [Failover Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4767) (9m 48s)
 - [ ] [Multivalue Answer Routing Policy - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4768) (6m 31s)
 - [ ] [3rd Party Domain Integration with Route 53 & Cleanup](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=29139) (5m 10s)
@@ -315,6 +373,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Networking and Content Delivery (Quiz) (10Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] VPC CIDR sizing; public vs private subnet (= route to IGW or not); 5 reserved IPs per subnet
 - [ ] **Security Groups (stateful, allow-only, instance) vs NACLs (stateless, allow+deny, subnet, ordered)**
 - [ ] IGW vs **NAT Gateway** (managed, AZ-resilient, outbound for private) vs NAT Instance
@@ -334,7 +393,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 10. Analytics — 🟢/🟡 · 16 lectures · 2 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [Amazon Redshift](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=4752) (8m 52s)
 - [ ] [Amazon EMR](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34333) (9m 23s)
@@ -357,6 +417,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Analytics (Quiz) (5Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] **Kinesis Data Streams** (real-time, shards, custom consumers) vs **Firehose** (near-real-time, managed delivery, no code)
 - [ ] Redshift — data warehouse / OLAP / columnar; Redshift Spectrum (query S3)
 - [ ] Glue — serverless ETL + Data Catalog + Crawlers
@@ -369,7 +430,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 11. Application Integration — 🟠 SQS/SNS tested · 10 lectures
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS Step Functions](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=11560) (16m 36s)
 - [ ] [Amazon MQ](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=11549) (9m 32s)
@@ -384,6 +446,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Application Integration (Quiz) (6Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] SQS **Standard** (at-least-once, best-effort order) vs **FIFO** (exactly-once, ordered)
 - [ ] Visibility timeout, dead-letter queue, long polling — what each solves
 - [ ] **SQS vs SNS vs EventBridge** — when to reach for each
@@ -397,7 +460,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 12. Containers — 🟡 · 7 lectures · 2 labs
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS ECS](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=11551) (5m 24s)
 - [ ] [Amazon ECS - Creating an ECS Cluster](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34339) (8m 25s)
@@ -411,6 +475,7 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Containers (Quiz) (5Q) — target ≥80%
 
 ### Must be able to answer
+
 - [ ] ECS **EC2 launch type (you manage instances) vs Fargate (serverless)**
 - [ ] Task definition vs service vs task
 - [ ] Task placement strategies: binpack, spread, random
@@ -423,7 +488,8 @@ _Whizlabs order — labs appear where the platform places them._
 ## 13. Migration & Transfer — 🟢 · 5 lectures
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS Snow Family](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=24840) (5m 10s)
 - [ ] [AWS Database Migration Service](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=7826) (17m 6s)
@@ -433,18 +499,21 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] Migration & Transfer (Quiz) (5Q) — target ≥80%
 
 ### Must be able to answer
-- [ ] Snow Family: Snowcone / Snowball Edge / Snowmobile — pick by data size; when vs network transfer
-- [ ] **DMS**: homogeneous vs heterogeneous (+ Schema Conversion Tool); continuous replication
-- [ ] **DataSync**: online on-prem (NFS/SMB) → S3/EFS/FSx, scheduled
-- [ ] Transfer Family: SFTP/FTPS/FTP into S3/EFS
-- [ ] Migration Hub — tracks migrations across tools
+
+- [ ] Snow Family: Snowcone (8-14TB) / Snowball Edge Storage (210TB) / Compute (28TB, 104 vCPUs) — pick by data size + compute need; >1 week via internet → Snow
+- [ ] **DMS**: homogeneous vs heterogeneous (+ Schema Conversion Tool); CDC for continuous replication; Multi-AZ replication instance
+- [ ] **DataSync**: online on-prem (NFS/SMB/HDFS) → S3/EFS/FSx; EFS cross-region replication via private network; scheduled + auto-verify
+- [ ] Transfer Family: managed SFTP/FTPS/FTP/AS2 endpoints → S3/EFS; legacy protocol support, no code change
+- [ ] Migration Hub: tracks migrations across tools (DMS, MGN, DataSync) — does NOT migrate; home region; Strategy Recommendations; Orchestrator
+- [ ] **MGN vs DMS vs DataSync**: MGN = server lift-and-shift; DMS = database; DataSync = file/object transfer
 
 ---
 
 ## 14. AWS Cost Management — 🟠 Domain 4 (20%) · 2 lectures · 1 reading
 
 ### Course outline
-_Whizlabs order — labs appear where the platform places them._
+
+*Whizlabs order — labs appear where the platform places them.*
 
 - [ ] [AWS Cost Explorer](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=34343) (9m 20s)
 - [ ] [AWS Cost Explorer - Demo](https://business.whizlabs.com/learn/course/aws-solutions-architect-associate/153/video?layoutId=29306) (9m 51s)
@@ -452,11 +521,14 @@ _Whizlabs order — labs appear where the platform places them._
 - [ ] 📄 AWS SAA-C03 Exam-Prep Cheat Sheet
 
 ### Must be able to answer
-- [ ] Cost Explorer (visualize/forecast) vs AWS Budgets (alert on cost/usage threshold)
-- [ ] Cost allocation tags
+
+- [ ] Cost Explorer (visualize/forecast up to 12 months, anomaly detection, RI/SP recommendations) vs AWS Budgets (ALERT on cost/usage threshold, Budget Actions)
+- [ ] Cost allocation tags (user-defined + AWS-generated, activate in billing console)
 - [ ] **On-Demand vs Reserved Instances vs Savings Plans vs Spot** — pick per workload
-- [ ] Consolidated billing (Organizations): volume discounts, shared RIs
+- [ ] Consolidated billing (Organizations): volume discounts, shared RIs across accounts
 - [ ] Storage cost levers: S3 lifecycle, Intelligent-Tiering (cross-ref Storage)
+- [ ] Cost and Usage Report (CUR): most detailed line-item billing data → S3 → Athena/QuickSight for deep analysis
+- [ ] Compute Optimizer (ML-based rightsizing) vs Trusted Advisor (broad checks: cost, security, perf, limits)
 
 ---
 

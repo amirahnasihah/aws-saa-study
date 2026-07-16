@@ -18,6 +18,9 @@ const eslintConfig = defineConfig([
     "build/**",
     "next-env.d.ts",
     ".vercel/**",
+    // Third-party agent skills installed by `npx skills add` — not app code.
+    ".agents/**",
+    ".claude/**",
   ]),
 ]);
 

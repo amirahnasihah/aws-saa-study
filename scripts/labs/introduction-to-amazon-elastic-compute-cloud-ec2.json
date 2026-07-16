@@ -12,7 +12,10 @@
       "title": "Task 1: Sign in to AWS Management Console",
       "steps": [
         {
-          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+          "text": "Click on the Open Console button, and you will get redirected to AWS Console in a new browser tab."
+        },
+        {
+          "text": "On the AWS sign-in page, Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab. Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
           "text": "On the AWS sign-in page,"
@@ -21,10 +24,10 @@
           "text": "Leave the Account ID as default. Never edit/remove the 12 digit Account ID present in the AWS Console. otherwise, you cannot proceed with the lab."
         },
         {
-          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
+          "text": "Now copy your User Name and Password in the Lab Console to the IAM Username and Password in AWS Console and click on the Sign in button."
         },
         {
-          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
+          "text": "Once Signed In to the AWS Management Console, Make the default AWS Region as US East (N. Virginia) us-east-1."
         }
       ]
     },
@@ -32,39 +35,55 @@
       "title": "Task 2: Provision Default VPC",
       "steps": [
         {
-          "text": "Navigate to VPC by clicking on the Services menu in the top, then click on VPC or Open the Amazon VPC console via https://console.aws.amazon.com/vpc/."
+          "text": "Navigate to VPC by clicking on the Services menu in the top, then click on VPC or Open the Amazon VPC console via https://console.aws.amazon.com/vpc/."
         },
         {
-          "text": "Delete the default VPC by following the below steps:"
+          "text": "Delete the default VPC by following the below steps: In the navigation pane, choose Your VPCs. Select the VPC with value as yes in default VPC column.",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-01.png"
+          ]
         },
         {
-          "text": "In the navigation pane, choose Your VPCs."
+          "text": "In the navigation pane, choose Your VPCs."
         },
         {
-          "text": "Select the VPC with value as yes in default VPC column."
+          "text": "Select the VPC with value as yes in default VPC column.",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-02.png"
+          ]
         },
         {
-          "text": "Go to actions button and click on delete VPC button."
+          "text": "Go to actions button and click on delete VPC button."
+        },
+        {
+          "text": "Task 2: Provision Default VPC",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-03.png"
+          ]
         },
         {
           "text": "Check I acknowledge that I want to delete my default VPC option."
         },
         {
-          "text": "Type default delete VPC and click on Delete button."
+          "text": "Type default delete VPC and click on Delete button."
         },
         {
-          "text": "Now to provision Default VPC again, Refresh your console go to actions and click Create default VPC"
-        },
-        {
-          "text": "Click Create default VPC button and your default VPC will get created",
+          "text": "Task 2: Provision Default VPC",
           "images": [
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-01.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-02.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-03.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-04.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-05.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-06.png"
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-04.png"
           ]
+        },
+        {
+          "text": "Now to provision Default VPC again, Refresh your console go to actions and click Create default VPC"
+        },
+        {
+          "text": "Task 2: Provision Default VPC",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-05.png"
+          ]
+        },
+        {
+          "text": "Click Create default VPC button and your default VPC will get created"
         }
       ]
     },
@@ -75,25 +94,58 @@
           "text": "Ensure you are in the US East (N. Virginia) us-east-1 Region to begin launching an EC2 instance in the Amazon cloud."
         },
         {
-          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
+          "text": "Navigate to EC2 by clicking on the Services menu in the top, then click on EC2 in the Compute section."
         },
         {
-          "text": "Click on the Instances option on the left panel, and then click on the Launch Instances button."
+          "text": "Click on the Instances option on the left panel, and then click on the Launch Instances button."
         },
         {
-          "text": "Name : Enter MyEC2Server"
+          "text": "Name : Enter MyEC2Server",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-06.png"
+          ]
         },
         {
-          "text": "Select Amazon Linux 2023 AMI from the dropdown."
+          "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-07.png"
+          ]
         },
         {
-          "text": "Note: if there are two AMI's present for Amazon Linux 2o23 kernel-6.1 AMI."
+          "text": "Select Amazon Linux 2023 AMI from the dropdown. Note: if there are two AMI's present for Amazon Linux 2o23 kernel-6.1 AMI.",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-08.png"
+          ]
+        },
+        {
+          "text": "Select Amazon Linux 2023 AMI from the dropdown."
+        },
+        {
+          "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-09.png"
+          ]
+        },
+        {
+          "text": "An instance type in AWS refers to a virtual server configuration that determines the computing resources, such as CPU, memory, and storage, available to an instance. It is the basic building block for creating an EC2 instance in the AWS cloud. For Instance Type: Select t2.micro",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-10.png"
+          ]
         },
         {
           "text": "An instance type in AWS refers to a virtual server configuration that determines the computing resources, such as CPU, memory, and storage, available to an instance. It is the basic building block for creating an EC2 instance in the AWS cloud."
         },
         {
-          "text": "For Instance Type: Select t2.micro"
+          "text": "For Instance Type: Select t2.micro",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-11.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-12.png"
+          ]
         },
         {
           "text": "t2.micro is an instance type in AWS that comes with 1 vCPU, and 1GB memory and is suitable for low-traffic web servers, small development environments, and other lightweight applications."
@@ -102,16 +154,16 @@
           "text": "AWS key pair is a secure pair of keys used for login and access to EC2 instances. It includes a public key placed on the instance and a private key kept on the user's local computer, used for authentication to prevent unauthorized access."
         },
         {
-          "text": "For Key pair(login): Select Create a new key pair Button"
+          "text": "For Key pair(login): Select Create a new key pair Button"
         },
         {
-          "text": "Key pair name: WhizKey"
+          "text": "Key pair name: WhizKey"
         },
         {
-          "text": "Key pair type: RSA"
+          "text": "Key pair type: RSA"
         },
         {
-          "text": "Private key file format: .pem"
+          "text": "Private key file format: .pem"
         },
         {
           "text": "In Network Settings, Click on Edit Button:"
@@ -129,39 +181,57 @@
           "text": "Description: Enter Security Group to allow traffic to EC2."
         },
         {
-          "text": "We will now add the security group rules. SSH will already be present there."
+          "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-13.png"
+          ]
         },
         {
-          "text": "For HTTP, Select Add security group rule Button"
+          "text": "For HTTP, Select Add security group rule Button"
         },
         {
-          "text": "Choose Type: Select HTTP"
+          "text": "Choose Type: Select HTTP"
         },
         {
-          "text": "Source: Select Anywhere"
+          "text": "Source: Select Anywhere"
+        },
+        {
+          "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-14.png"
+          ]
         },
         {
           "text": "A security group is a virtual firewall that controls the inbound and outbound traffic for instances in a particular network in a cloud computing environment. Here we have selected SSH and HTTP rules that will allow incoming SSH and HTTP traffic to instances that are associated with the security group."
         },
         {
-          "text": "Proceed with launching the instance while leaving all other settings as default. Simply click on the Launch Instance without modifying any other configuration."
+          "text": "Proceed with launching the instance while leaving all other settings as default. Simply click on the Launch Instance without modifying any other configuration."
         },
         {
-          "text": "To view the instance that you have created, choose the View all Instances option."
+          "text": "To view the instance that you have created, choose the View all Instances option."
         },
         {
-          "text": "Launch Status: Once you have initiated the instance launch process, Go to the Instances page from the left menu and wait for your EC2 instance to become \"Running\" while ensuring the health check status is 2/2 checks passed for optimal performance."
-        },
-        {
-          "text": "Select the instance that you have created and copy the public IPv4 address within the details section and paste it into the editor for later use. An example of this process is depicted in the screenshot provided.",
+          "text": "Launch Status: Once you have initiated the instance launch process, Go to the Instances page from the left menu and wait for your EC2 instance to become \"Running\" while ensuring the health check status is 2/2 checks passed for optimal performance.",
           "images": [
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-07.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-08.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-09.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-10.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-11.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-12.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-13.png"
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-15.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-16.png"
+          ]
+        },
+        {
+          "text": "Select the instance that you have created and copy the public IPv4 address within the details section and paste it into the editor for later use. An example of this process is depicted in the screenshot provided.",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-17.png"
+          ]
+        },
+        {
+          "text": "Task 3 : Launch an EC2 Instance with desired specifications",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-18.png"
           ]
         }
       ]
@@ -170,19 +240,30 @@
       "title": "Task 4 : SSH into EC2 Instance using the key pair",
       "steps": [
         {
-          "text": "Select your EC2 instance (MyEC2Server) and click on the Connect button."
+          "text": "Select your EC2 instance (MyEC2Server) and click on the Connect button.",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-19.png"
+          ]
         },
         {
-          "text": "Select EC2 Instance Connect option and click on Connect button. Keep everything else as default."
+          "text": "Task 4 : SSH into EC2 Instance using the key pair",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-20.png"
+          ]
+        },
+        {
+          "text": "Select EC2 Instance Connect option and click on Connect button. Keep everything else as default."
         },
         {
           "text": "A new tab will open in the browser where you can execute the Linux Commands."
         },
         {
-          "text": "Please follow the steps in SSH into EC2 Instance for more options to SSH.",
+          "text": "Please follow the steps in SSH into EC2 Instance for more options to SSH."
+        },
+        {
+          "text": "Task 4 : SSH into EC2 Instance using the key pair",
           "images": [
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-14.png",
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-15.png"
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-21.png"
           ]
         }
       ]
@@ -194,16 +275,13 @@
           "text": "In this task, our goal is to configure an Amazon EC2 instance to run an Apache Web Server and verify its functionality by accessing the web server via a web browser using the instance's public IPv4 address."
         },
         {
+          "text": "Switch to root user:sudo su"
+        },
+        {
           "text": "Switch to root user:"
         },
         {
-          "text": "sudo su"
-        },
-        {
           "text": "Now run the updates using the following command:"
-        },
-        {
-          "text": "dnf update -y"
         },
         {
           "text": "Once completed, lets install and run an apache server"
@@ -212,31 +290,19 @@
           "text": "Install the Apache web server:"
         },
         {
-          "text": "dnf install httpd -y"
-        },
-        {
           "text": "Start the web server:"
-        },
-        {
-          "text": "systemctl start httpd"
         },
         {
           "text": "Now Enable httpd:"
         },
         {
-          "text": "systemctl enable httpd"
-        },
-        {
           "text": "Check the webserver status"
-        },
-        {
-          "text": "systemctl status httpd"
         },
         {
           "text": "You can see Active status is running."
         },
         {
-          "text": "You can test that your web server is properly installed and started by entering the public IPv4 address of your EC2 instance in the address bar of a web browser. If your web server is running, then you see the Apache test page. If you don't see the Apache test page, then verify whether you followed the above steps properly and check your inbound rules for the security group that you created."
+          "text": "You can test that your web server is properly installed and started by entering the public IPv4 address of your EC2 instance in the address bar of a web browser. If your web server is running, then you see the Apache test page. If you don't see the Apache test page, then verify whether you followed the above steps properly and check your inbound rules for the security group that you created."
         }
       ]
     },
@@ -247,19 +313,16 @@
           "text": "In this task, you will add content to the index.html file using the \"echo\" command and restart the webserver. Then, you can view the content by entering the public IPv4 address followed by \"/index.html\" in a web browser, ensuring that the URL protocol is HTTP."
         },
         {
-          "text": "To add the contents into index.html file using echo, copy and paste the below command to shell."
+          "text": "To add the contents into index.html file using echo, copy and paste the below command to shell.echo \"<html>Hi Lab, I am a public page</html>\" > /var/www/html/index.html"
         },
         {
-          "text": "echo \"<html>Hi Lab, I am a public page</html>\" > /var/www/html/index.html"
+          "text": "To add the contents into index.html file using echo, copy and paste the below command to shell."
         },
         {
           "text": "Restart the webserver by using the following command:"
         },
         {
-          "text": "systemctl restart httpd"
-        },
-        {
-          "text": "Now enter the file name, /index.html after the public IPv4 Address which you got when you created the ec2 instance in the browser, and you can see your HTML content."
+          "text": "Now enter the file name, /index.html after the public IPv4 Address which you got when you created the ec2 instance in the browser, and you can see your HTML content."
         },
         {
           "text": "Make sure URL Protocol is http not https."
@@ -274,16 +337,16 @@
           "text": "Note: If the index.html page is not loading, try removing s from the link, it should be HTTP."
         },
         {
+          "text": "Task 6 : Create a web page and publish it on the instance",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-22.png"
+          ]
+        },
+        {
           "text": "If you can see the above text in the browser, then you have successfully completed the lab."
         },
         {
-          "text": "Do You Know?"
-        },
-        {
-          "text": "The Amazon EC2 P4d instance is the most powerful EC2 instance type available, with eight NVIDIA A100 Tensor Core GPUs, 1.1 TB of NVMe storage, and 400 Gbps network bandwidth, making it ideal for large-scale machine learning and HPC workloads.",
-          "images": [
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-16.png"
-          ]
+          "text": "The Amazon EC2 P4d instance is the most powerful EC2 instance type available, with eight NVIDIA A100 Tensor Core GPUs, 1.1 TB of NVMe storage, and 400 Gbps network bandwidth, making it ideal for large-scale machine learning and HPC workloads."
         }
       ]
     },
@@ -291,7 +354,7 @@
       "title": "Task 7 : Validation of the Lab",
       "steps": [
         {
-          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
+          "text": "Once the lab steps are completed, please click on the Validation button on the left side panel."
         },
         {
           "text": "This will validate the resources in the AWS account and displays whether you have completed this lab successfully or not."
@@ -300,7 +363,10 @@
           "text": "Sample output :"
         },
         {
-          "text": "Completion and Conclusion"
+          "text": "Task 7 : Validation of the Lab",
+          "images": [
+            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-23.gif"
+          ]
         },
         {
           "text": "You have successfully created and launched an Amazon EC2 instance"
@@ -318,19 +384,13 @@
           "text": "You have successfully validated the lab."
         },
         {
-          "text": "End Lab"
-        },
-        {
           "text": "Sign out of AWS Account."
         },
         {
           "text": "You have successfully completed the lab."
         },
         {
-          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed.",
-          "images": [
-            "/labs/introduction-to-amazon-elastic-compute-cloud-ec2/step-17.gif"
-          ]
+          "text": "Once you have completed the steps, click on End Lab from your lab lab console and wait till the process gets completed."
         }
       ]
     }

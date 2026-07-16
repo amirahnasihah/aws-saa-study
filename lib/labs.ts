@@ -87,7 +87,7 @@ const rowToLabRaw = (row: LabDBRow): Lab => ({
 export const rowToLab = (row: LabDBRow): Lab => sanitizeLab(rowToLabRaw(row))
 
 export const labToInsertSql = (lab: Lab, extra?: { sourceUrl?: string; scrapedAt?: string }): string => {
-  const esc = (s: string): string => s.replace(/'/g, "''")
+  const esc = (s: string | undefined): string => (s ?? '').replace(/'/g, "''")
   const tasks = JSON.stringify(lab.tasks)
   const services = JSON.stringify(lab.services)
   const takeaways = JSON.stringify(lab.takeaways)

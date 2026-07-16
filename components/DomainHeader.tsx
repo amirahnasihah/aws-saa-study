@@ -31,7 +31,7 @@ export default function DomainHeader({ domain }: DomainHeaderProps) {
   const styles = variantStyles[domain.variant]
 
   return (
-    <div id={domain.id} className={`text-center mb-8 px-4 py-8 rounded-2xl border ${styles.wrapper}`}>
+    <div id={domain.id} className={`text-center mb-8 px-4 py-8 rounded-2xl border scroll-mt-20 ${styles.wrapper}`}>
       <span className={`inline-block font-space-mono text-[0.65rem] px-4 py-1 rounded-full tracking-[0.15em] mb-3 ${styles.badge}`}>
         {domain.badge}
       </span>

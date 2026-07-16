@@ -32,7 +32,8 @@ Rules:
 - studyKeywords: exactly 3-5 key AWS terms
 - explanation: why correct answer is right (2-3 sentences) + why wrong answers were wrong (1-2 sentences)
 - docsSearchPhrase: phrase to search official AWS documentation
-- Do not mention YouTube`
+- Do not mention YouTube
+- Write the human-readable string VALUES in the same language as the question (Malay or English). Keep JSON keys, AWS service names, technical terms, and docsSearchPhrase in English.`
 
 interface ExplainJson {
   conceptName?: string

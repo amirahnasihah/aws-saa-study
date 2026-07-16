@@ -2,7 +2,21 @@
   "mcpServers": {
     "aws-documentation": {
       "command": "uvx",
-      "args": ["awslabs.aws-documentation-mcp-server@latest"]
+      "args": [
+        "awslabs.aws-documentation-mcp-server@latest"
+      ]
+    },
+    "supabase": {
+      "type": "http",
+      "url": "https://mcp.supabase.com/mcp?project_ref=neifhjhgwyxpruziazin&features=docs%2Caccount%2Cdatabase%2Cfunctions%2Cdevelopment%2Cdebugging%2Cbranching%2Cstorage"
+    },
+    "playwright": {
+      "command": "bunx",
+      "args": ["@playwright/mcp@latest"]
+    },
+    "chrome-devtools": {
+      "command": "bunx",
+      "args": ["chrome-devtools-mcp@latest"]
     }
   }
 }

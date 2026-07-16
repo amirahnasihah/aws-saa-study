@@ -31,7 +31,8 @@ Be extremely concise:
 - howToTackle: 2-3 bullets only, max 14 words each — how to eliminate wrong options (no answer letters)
 - docsSearchPhrase: AWS doc search phrase
 - NEVER reveal the correct MCQ option or letter
-- No YouTube`
+- No YouTube
+- Write the human-readable string VALUES in the same language as the question (Malay or English). Keep JSON keys, AWS service names, technical terms, and docsSearchPhrase in English.`
 
 interface HintJson {
   conceptName?: string

@@ -1,12 +1,13 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect, useRef, type ReactNode } from 'react'
 import Nav from '@/components/Nav'
 import SiteFooter from '@/components/SiteFooter'
 import KeywordHighlightedText from '@/components/practice/KeywordHighlightedText'
 import PracticeQuestionHint from '@/components/practice/PracticeQuestionHint'
-import { practiceQuestions, PracticeQuestion } from '@/data/practiceQuestions'
+import type { PracticeQuestion } from '@/data/practiceQuestions'
 import { PRACTICE_SESSION_KEY, readSessionJson, writeSessionJson } from '@/lib/ai/session-persist'
+import { setPracticeQuestionPickerOpen } from '@/lib/practice-picker'
 
 const domainColors: Record<string, string> = {
   d1: 'text-c3',
@@ -23,6 +24,7 @@ const difficultyColors: Record<string, string> = {
 
 type QuizState = 'question' | 'revealed'
 type PageMode = 'quiz' | 'review'
+type AnswerRecord = { selected: string }
 
 type FilterSource = 'all' | 'core' | 'others'
 type FilterDomain = 'all' | 'd1' | 'd2' | 'd3' | 'd4'
@@ -81,15 +83,27 @@ export default function PracticePage() {
   // True while the questions fetch should restore position/answer state instead of resetting it.
   const skipNextResetRef = useRef(false)
 
-  const [questions, setQuestions] = useState<PracticeQuestion[]>(practiceQuestions)
+  const [questions, setQuestions] = useState<PracticeQuestion[]>([])
   const [filters, setFilters] = useState<FilterState>(DEFAULT_FILTERS)
   const [mode, setMode] = useState<PageMode>('quiz')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [reviewIndex, setReviewIndex] = useState(0)
   const [selected, setSelected] = useState<string | null>(null)
   const [quizState, setQuizState] = useState<QuizState>('question')
-  const [score, setScore] = useState({ correct: 0, total: 0 })
+  const [answers, setAnswers] = useState<Record<number, AnswerRecord>>({})
   const [finished, setFinished] = useState(false)
+
+  const score = Object.entries(answers).reduce(
+    (acc, [idx, ans]) => {
+      const question = questions[Number(idx)]
+      if (!question) return acc
+      return {
+        total: acc.total + 1,
+        correct: acc.correct + (ans.selected === question.correctId ? 1 : 0),
+      }
+    },
+    { correct: 0, total: 0 },
+  )
 
   // Persist session state on every change.
   useEffect(() => {
@@ -97,6 +111,15 @@ export default function PracticePage() {
       filters, mode, currentIndex, reviewIndex, selected, quizState, score, finished,
     } satisfies PracticeSessionState)
   }, [filters, mode, currentIndex, reviewIndex, selected, quizState, score, finished])
+
+  const goToQuestion = useCallback((index: number, answerMap: Record<number, AnswerRecord>) => {
+    const clamped = Math.min(Math.max(index, 0), Math.max(questions.length - 1, 0))
+    const saved = answerMap[clamped]
+    setCurrentIndex(clamped)
+    setSelected(saved?.selected ?? null)
+    setQuizState(saved ? 'revealed' : 'question')
+    setFinished(false)
+  }, [questions.length])
 
   useEffect(() => {
     // Apply persisted session state once, on the very first effect run. This re-triggers
@@ -111,7 +134,6 @@ export default function PracticePage() {
         setCurrentIndex(p.currentIndex ?? 0)
         setSelected(p.selected ?? null)
         setQuizState(p.quizState ?? 'question')
-        setScore(p.score ?? { correct: 0, total: 0 })
         setFinished(p.finished ?? false)
         skipNextResetRef.current = true
         return
@@ -136,68 +158,59 @@ export default function PracticePage() {
         return null
       })
       .catch(() => {
-        let qs = [...practiceQuestions]
-        if (filters.source !== 'all') qs = qs.filter((q) => q.source === filters.source)
-        if (filters.domain !== 'all') qs = qs.filter((q) => q.domain === filters.domain)
-        if (filters.difficulty !== 'all') qs = qs.filter((q) => q.difficulty === filters.difficulty)
-        if (filters.set === 'pt')      qs = qs.filter((q) => /^wz\d/.test(q.id))
-        if (filters.set === 'section') qs = qs.filter((q) => q.id.startsWith('wzs'))
-        if (filters.set === 'final')   qs = qs.filter((q) => q.id.startsWith('wzf'))
-        const finalQs = qs.length ? qs : practiceQuestions
-        setQuestions(filters.shuffle ? shuffleArray(finalQs) : finalQs)
-        return finalQs
+        // /api/questions (Cloudflare D1) is the source of truth on the edge.
+        // No client-side static fallback is shipped; on failure just clear so the
+        // loading guard shows rather than rendering stale/undefined state.
+        setQuestions([])
+        return null
       })
       .then((qs) => {
         if (skipNextResetRef.current) {
           // Restoring a session: keep the persisted position/answer state, just clamp it to bounds.
           skipNextResetRef.current = false
-          const total = qs?.length ?? practiceQuestions.length
+          const total = qs?.length ?? 0
           setCurrentIndex((i) => Math.min(Math.max(i, 0), Math.max(total - 1, 0)))
         } else {
           setCurrentIndex(0)
           setSelected(null)
           setQuizState('question')
-          setScore({ correct: 0, total: 0 })
+          setAnswers({})
           setFinished(false)
         }
       })
   }, [filters])
 
-  const q = questions[Math.min(currentIndex, questions.length - 1)]
-  const isCorrect = selected === q.correctId
+  const q = questions.length ? questions[Math.min(currentIndex, questions.length - 1)] : null
+  const isCorrect = q ? selected === q.correctId : false
 
   const handleSelect = useCallback((id: string) => {
     if (quizState === 'revealed') return
+    setAnswers((prev) => ({ ...prev, [currentIndex]: { selected: id } }))
     setSelected(id)
     setQuizState('revealed')
-    setScore((prev) => ({
-      correct: prev.correct + (id === q.correctId ? 1 : 0),
-      total: prev.total + 1,
-    }))
-  }, [quizState, q.correctId])
+  }, [quizState, currentIndex])
 
   const handleNext = useCallback(() => {
     if (currentIndex + 1 >= questions.length) {
       setFinished(true)
-    } else {
-      setCurrentIndex((i) => i + 1)
-      setSelected(null)
-      setQuizState('question')
+      return
     }
-  }, [currentIndex, questions.length])
+    goToQuestion(currentIndex + 1, answers)
+  }, [currentIndex, questions.length, answers, goToQuestion])
+
+  const handlePrev = useCallback(() => {
+    goToQuestion(currentIndex - 1, answers)
+  }, [currentIndex, answers, goToQuestion])
 
   const handleJump = useCallback((i: number) => {
-    setCurrentIndex(i)
-    setSelected(null)
-    setQuizState('question')
-    setFinished(false)
-  }, [])
+    goToQuestion(i, answers)
+  }, [answers, goToQuestion])
 
   const handleRestart = useCallback(() => {
     setCurrentIndex(0)
     setSelected(null)
     setQuizState('question')
-    setScore({ correct: 0, total: 0 })
+    setAnswers({})
     setFinished(false)
   }, [])
 
@@ -206,47 +219,47 @@ export default function PracticePage() {
     handleRestart()
   }, [handleRestart])
 
+  const inSession = (mode === 'quiz' && !finished) || mode === 'review'
+
+  if (!q) {
+    return (
+      <>
+        <Nav activePage="practice" />
+        <main className="mx-auto max-w-[1280px] px-4 pt-[calc(3.5rem+1.5rem)] pb-28">
+          <div className="flex flex-col items-center justify-center min-h-[50vh] gap-3 text-aws-muted">
+            <div className="w-8 h-8 border-2 border-aws-border border-t-aws-orange rounded-full animate-spin" />
+            <p className="font-space-mono text-xs">Loading questions…</p>
+          </div>
+        </main>
+        <SiteFooter tagline="AWS SAA-C03 · Practice Questions · Good luck! 💪" />
+      </>
+    )
+  }
+
   return (
     <>
       <Nav activePage="practice" />
-      <main className="max-w-[720px] mx-auto px-4 pt-[calc(3.5rem+1.5rem)] pb-28">
-        {/* header */}
+      <main
+        className={`mx-auto max-w-[1280px] px-4 pt-[calc(3.5rem+1.5rem)] pb-28 ${
+          inSession ? 'md:pb-12' : ''
+        }`}
+      >
         <div className="mb-8 flex items-start justify-between gap-4">
           <div>
             <h1 className="font-space-mono text-2xl font-bold text-aws-text mb-1">Practice Questions</h1>
             <p className="text-aws-muted text-sm">AWS SAA-C03 · MCQ · Scenario-based · With full explanations</p>
           </div>
-
-          {/* mode toggle */}
-          <div className="flex shrink-0 items-center gap-1 bg-white/4 border border-aws-border rounded-lg p-1">
-            <button
-              onClick={() => handleModeSwitch('quiz')}
-              className={`font-space-mono text-[0.65rem] font-bold px-3 py-1.5 rounded-md transition-all duration-150 ${
-                mode === 'quiz'
-                  ? 'bg-c1/20 border border-c1/40 text-c1'
-                  : 'text-aws-muted hover:text-aws-text'
-              }`}
-            >
-              Quiz
-            </button>
-            <button
-              onClick={() => handleModeSwitch('review')}
-              className={`font-space-mono text-[0.65rem] font-bold px-3 py-1.5 rounded-md transition-all duration-150 ${
-                mode === 'review'
-                  ? 'bg-c1/20 border border-c1/40 text-c1'
-                  : 'text-aws-muted hover:text-aws-text'
-              }`}
-            >
-              Review
-            </button>
-          </div>
+          <PracticeModeToggle mode={mode} onSwitch={handleModeSwitch} />
         </div>
 
-        {/* filter bar */}
         <FilterBar filters={filters} onChange={setFilters} />
 
         {mode === 'review' ? (
-          <ReviewMode questions={questions} index={reviewIndex} onIndexChange={setReviewIndex} />
+          <ReviewMode
+            questions={questions}
+            index={reviewIndex}
+            onIndexChange={setReviewIndex}
+          />
         ) : finished ? (
           <FinishedScreen score={score} onRestart={handleRestart} />
         ) : (
@@ -258,8 +271,10 @@ export default function PracticePage() {
             quizState={quizState}
             isCorrect={isCorrect}
             score={score}
+            answers={answers}
             onSelect={handleSelect}
             onNext={handleNext}
+            onPrev={handlePrev}
             onJump={handleJump}
           />
         )}
@@ -360,49 +375,324 @@ function FilterBar({ filters, onChange }: { filters: FilterState; onChange: (f: 
   )
 }
 
-function QuestionGrid({
+function PracticeModeToggle({
+  mode,
+  onSwitch,
+}: {
+  mode: PageMode
+  onSwitch: (next: PageMode) => void
+}) {
+  return (
+    <div className="flex shrink-0 items-center gap-1 bg-white/4 border border-aws-border rounded-lg p-1">
+      <button
+        type="button"
+        onClick={() => onSwitch('quiz')}
+        className={`font-space-mono text-[0.65rem] font-bold px-3 py-1.5 rounded-md transition-all duration-150 ${
+          mode === 'quiz'
+            ? 'bg-c1/20 border border-c1/40 text-c1'
+            : 'text-aws-muted hover:text-aws-text'
+        }`}
+      >
+        Quiz
+      </button>
+      <button
+        type="button"
+        onClick={() => onSwitch('review')}
+        className={`font-space-mono text-[0.65rem] font-bold px-3 py-1.5 rounded-md transition-all duration-150 ${
+          mode === 'review'
+            ? 'bg-c1/20 border border-c1/40 text-c1'
+            : 'text-aws-muted hover:text-aws-text'
+        }`}
+      >
+        Review
+      </button>
+    </div>
+  )
+}
+
+function QuestionNavSidebar({
   current,
   total,
+  answeredIndices,
   onSelect,
-  onClose,
 }: {
   current: number
   total: number
+  answeredIndices: Set<number>
   onSelect: (i: number) => void
-  onClose: () => void
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-end justify-center px-4 pb-24">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-      <div className="relative bg-aws-card border border-aws-border rounded-2xl p-4 w-full max-w-[720px] shadow-2xl">
-        <div className="flex items-center justify-between mb-3">
-          <span className="font-space-mono text-[0.65rem] text-aws-muted uppercase tracking-widest">
-            Jump to question
-          </span>
-          <button
-            onClick={onClose}
-            className="font-space-mono text-xs text-aws-muted hover:text-aws-text transition-colors"
-          >
-            ✕
-          </button>
-        </div>
-        <div className="grid grid-cols-8 gap-1.5 max-h-52 overflow-y-auto pr-1">
+    <aside className="sticky top-[calc(3.5rem+1rem)] max-h-[calc(100dvh-5rem)]">
+      <div className="bg-aws-card border border-aws-border rounded-xl p-3 shadow-lg flex flex-col min-h-0 max-h-[calc(100dvh-5rem)]">
+        <p className="font-space-mono text-[0.52rem] uppercase tracking-wider text-aws-muted/50 mb-2 shrink-0">
+          {total} questions
+        </p>
+        <QuestionNumberGrid
+          current={current}
+          total={total}
+          answeredIndices={answeredIndices}
+          onSelect={onSelect}
+          variant="sidebar"
+        />
+      </div>
+    </aside>
+  )
+}
+
+function QuestionNumberGrid({
+  current,
+  total,
+  answeredIndices,
+  onSelect,
+  variant = 'modal',
+}: {
+  current: number
+  total: number
+  answeredIndices: Set<number>
+  onSelect: (i: number) => void
+  variant?: 'modal' | 'sidebar'
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (variant !== 'sidebar') return
+    const active = scrollRef.current?.querySelector<HTMLElement>('[data-current="true"]')
+    active?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+  }, [current, variant])
+
+  const cellClass = (i: number) => {
+    const answered = answeredIndices.has(i)
+    const isCurrent = i === current
+    if (variant === 'sidebar') {
+      return [
+        'flex h-7 w-7 items-center justify-center rounded-full border font-space-mono text-[0.62rem] transition-all duration-150 shrink-0',
+        isCurrent
+          ? 'border-c1 bg-c1/15 text-c1 font-bold ring-2 ring-c1/30'
+          : answered
+            ? 'border-emerald-500/40 bg-emerald-500/10 text-emerald-300'
+            : 'border-aws-border/50 bg-white/3 text-aws-muted hover:border-aws-border hover:text-aws-text',
+      ].join(' ')
+    }
+    return [
+      'font-space-mono text-[0.65rem] py-1.5 rounded-lg border transition-all duration-150',
+      isCurrent
+        ? 'bg-c1/20 border-c1/40 text-c1 font-bold'
+        : answered
+          ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-300'
+          : 'bg-white/3 border-aws-border/40 text-aws-muted hover:bg-white/8 hover:text-aws-text',
+    ].join(' ')
+  }
+
+  if (variant === 'sidebar') {
+    return (
+      <div
+        ref={scrollRef}
+        className="nav-scroll flex-1 min-h-0 overflow-y-auto pr-1 -mr-1"
+      >
+        <div className="grid grid-cols-7 gap-1.5">
           {Array.from({ length: total }, (_, i) => (
             <button
               key={i}
-              onClick={() => { onSelect(i); onClose() }}
-              className={`font-space-mono text-[0.65rem] py-1.5 rounded-lg border transition-all duration-150 ${
-                i === current
-                  ? 'bg-c1/20 border-c1/40 text-c1 font-bold'
-                  : 'bg-white/3 border-aws-border/40 text-aws-muted hover:bg-white/8 hover:text-aws-text'
-              }`}
+              type="button"
+              onClick={() => onSelect(i)}
+              aria-label={`Question ${i + 1}`}
+              aria-current={i === current ? 'step' : undefined}
+              data-current={i === current ? 'true' : undefined}
+              className={cellClass(i)}
             >
               {i + 1}
             </button>
           ))}
         </div>
       </div>
+    )
+  }
+
+  return (
+    <div className="nav-scroll grid grid-cols-8 gap-1.5 max-h-[min(40vh,16rem)] overflow-y-auto pr-1">
+      {Array.from({ length: total }, (_, i) => (
+        <button
+          key={i}
+          type="button"
+          onClick={() => onSelect(i)}
+          className={cellClass(i)}
+        >
+          {i + 1}
+        </button>
+      ))}
     </div>
+  )
+}
+
+function QuestionGrid({
+  current,
+  total,
+  answeredIndices,
+  onSelect,
+  onClose,
+}: {
+  current: number
+  total: number
+  answeredIndices: Set<number>
+  onSelect: (i: number) => void
+  onClose: () => void
+}) {
+  useEffect(() => {
+    setPracticeQuestionPickerOpen(true)
+    return () => setPracticeQuestionPickerOpen(false)
+  }, [])
+
+  return (
+    <div className="fixed inset-0 z-[60] flex items-end justify-center px-4 pb-6 md:pb-24">
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
+      <div className="relative bg-aws-card border border-aws-border rounded-2xl p-4 w-full max-w-[1280px] shadow-2xl">
+        <div className="flex items-center justify-between mb-3">
+          <span className="font-space-mono text-[0.65rem] text-aws-muted uppercase tracking-widest">
+            Jump to question
+          </span>
+          <button
+            type="button"
+            onClick={onClose}
+            className="font-space-mono text-xs text-aws-muted hover:text-aws-text transition-colors"
+          >
+            ✕
+          </button>
+        </div>
+        <QuestionNumberGrid
+          current={current}
+          total={total}
+          answeredIndices={answeredIndices}
+          onSelect={(i) => { onSelect(i); onClose() }}
+          variant="modal"
+        />
+      </div>
+    </div>
+  )
+}
+
+function QuestionProgressStrip({
+  index,
+  total,
+  onOpenPicker,
+  score,
+  badge,
+}: {
+  index: number
+  total: number
+  onOpenPicker: () => void
+  score?: { correct: number; total: number }
+  badge?: React.ReactNode
+}) {
+  return (
+    <div className="flex items-center gap-3 mb-5">
+      <div className="flex-1 h-1.5 bg-white/6 rounded-full overflow-hidden">
+        <div
+          className="h-full bg-gradient-to-r from-c1 to-c5 rounded-full transition-all duration-500"
+          style={{ width: `${((index + 1) / total) * 100}%` }}
+        />
+      </div>
+      <button
+        type="button"
+        onClick={onOpenPicker}
+        className="font-space-mono text-[0.65rem] text-aws-muted hover:text-aws-text whitespace-nowrap transition-colors"
+        title="Jump to question"
+      >
+        {index + 1} / {total}
+      </button>
+      {score ? (
+        <span className="font-space-mono text-[0.65rem] text-emerald-400 whitespace-nowrap">
+          {score.correct}/{score.total} correct
+        </span>
+      ) : null}
+      {badge}
+    </div>
+  )
+}
+
+function InlineQuizFooter({
+  index,
+  onPrev,
+  onNext,
+  nextDisabled,
+  nextLabel = 'Next →',
+}: {
+  index: number
+  onPrev: () => void
+  onNext: () => void
+  nextDisabled: boolean
+  nextLabel?: string
+}) {
+  return (
+    <div className="flex items-center justify-between gap-4 mt-6 pt-4 border-t border-aws-border/60">
+      <button
+        type="button"
+        onClick={onPrev}
+        disabled={index === 0}
+        className="inline-flex items-center gap-2 font-space-mono text-[0.72rem] font-bold px-5 py-2.5 rounded-lg border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-emerald-500/15 border-emerald-500/35 text-emerald-300 hover:bg-emerald-500/25"
+      >
+        ← Prev
+      </button>
+      <button
+        type="button"
+        onClick={onNext}
+        disabled={nextDisabled}
+        className="inline-flex items-center gap-2 font-space-mono text-[0.72rem] font-bold px-6 py-2.5 rounded-lg border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-emerald-500/15 border-emerald-500/35 text-emerald-300 hover:bg-emerald-500/25"
+      >
+        {nextLabel}
+      </button>
+    </div>
+  )
+}
+
+function FloatingQuizNav({
+  index,
+  total,
+  onPrev,
+  onNext,
+  onOpenPicker,
+  nextDisabled,
+  nextLabel = 'Next →',
+}: {
+  index: number
+  total: number
+  onPrev: () => void
+  onNext: () => void
+  onOpenPicker: () => void
+  nextDisabled: boolean
+  nextLabel?: string
+}) {
+  return (
+    <>
+      <div className="h-28 md:h-24" />
+      <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] md:bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[1280px] px-4 z-50">
+        <div className="flex gap-2 bg-aws-card/80 backdrop-blur-md border border-aws-border rounded-2xl p-2 shadow-xl">
+          <button
+            type="button"
+            onClick={onPrev}
+            disabled={index === 0}
+            className="flex-1 py-2.5 rounded-xl font-space-mono text-sm font-bold border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-white/4 border-aws-border text-aws-muted hover:text-aws-text hover:bg-white/8"
+          >
+            ← Prev
+          </button>
+          <button
+            type="button"
+            onClick={onOpenPicker}
+            className="px-4 py-2.5 rounded-xl font-space-mono text-[0.65rem] font-bold border border-aws-border/50 text-aws-muted hover:text-aws-text hover:bg-white/6 transition-all duration-150 whitespace-nowrap"
+            title="Jump to question"
+          >
+            {index + 1} / {total}
+          </button>
+          <button
+            type="button"
+            onClick={onNext}
+            disabled={nextDisabled}
+            className="flex-1 py-2.5 rounded-xl font-space-mono text-sm font-bold border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-c1/15 border-c1/40 text-c1 hover:bg-c1/25"
+          >
+            {nextLabel}
+          </button>
+        </div>
+      </div>
+    </>
   )
 }
 
@@ -420,34 +710,24 @@ function ReviewMode({
   const clampedIndex = Math.min(Math.max(index, 0), Math.max(total - 1, 0))
   const q = questions[clampedIndex]
   const [hintHighlight, setHintHighlight] = useQuestionHintHighlight(q.id)
+  const isLast = clampedIndex + 1 >= total
 
-  return (
-    <div>
-      {/* progress bar */}
-      <div className="mb-5">
-        <div className="h-1.5 bg-white/6 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-c1 to-c5 rounded-full transition-all duration-500"
-            style={{ width: `${((clampedIndex + 1) / total) * 100}%` }}
-          />
-        </div>
-      </div>
-
-      {/* question card */}
-      <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-3">
-        <div className="flex items-center gap-2 px-5 py-3 border-b border-aws-border/60 bg-white/2">
-          <span className="font-space-mono text-[0.58rem] text-aws-muted">Q{clampedIndex + 1}</span>
-          <span className="text-aws-border">·</span>
-          <span className={`font-space-mono text-[0.6rem] font-bold uppercase tracking-widest ${domainColors[q.domain]}`}>
-            {q.domainLabel}
-          </span>
-          <span className="text-aws-border">·</span>
-          <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
-            {q.difficulty}
-          </span>
+  const questionMain = (
+    <>
+      <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-4">
+        <div className="px-5 py-4 border-b border-aws-border/60 bg-white/2 md:px-6 md:py-5">
+          <p className="font-space-mono text-[0.72rem] font-bold text-aws-text mb-2">
+            Domain: {q.domainLabel}
+          </p>
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
+              {q.difficulty}
+            </span>
+            <span className="font-space-mono text-[0.58rem] text-emerald-400/90">Correct answer shown</span>
+          </div>
         </div>
 
-        <div className="px-5 py-5">
+        <div className="px-5 py-5 md:px-6 md:py-6">
           {q.screenshotUrl && (
             <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -476,10 +756,10 @@ function ReviewMode({
               text={q.scenario}
               studyKeywords={hintHighlight}
               bankKeywords={q.keywords}
-              className="text-[0.92rem] text-aws-text leading-relaxed"
+              className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed"
             />
           ) : (
-            <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
+            <p className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed">{q.scenario}</p>
           )}
         </div>
 
@@ -494,66 +774,90 @@ function ReviewMode({
           onHintActive={(_active, terms) => setHintHighlight(terms)}
         />
 
-        <div className="px-5 pb-5 space-y-2.5">
-          {q.options.map((opt) => {
-            const correct = opt.id === q.correctId
-            return (
-              <div
-                key={opt.id}
-                className={`w-full px-4 py-3 rounded-xl border text-[0.88rem] leading-snug ${
-                  correct
-                    ? 'bg-emerald-500/12 border-emerald-500/50 text-emerald-300 font-semibold'
-                    : 'bg-white/2 border-aws-border/40 text-aws-muted'
-                }`}
-              >
-                <span className="flex items-start gap-3">
-                  <span className="font-space-mono text-[0.65rem] font-bold mt-0.5 shrink-0 opacity-60">
-                    {opt.id.toUpperCase()}
-                  </span>
-                  <span>{opt.text}</span>
-                  {correct && <span className="ml-auto shrink-0 text-emerald-400">✓</span>}
-                </span>
-              </div>
-            )
-          })}
+        <div className="px-5 pb-5 md:px-6 md:pb-6 space-y-3">
+          {q.options.map((opt) => (
+            <OptionButton
+              key={opt.id}
+              opt={opt}
+              selected={q.correctId}
+              correctId={q.correctId}
+              quizState="revealed"
+              onSelect={() => undefined}
+              desktopStyle
+            />
+          ))}
         </div>
       </div>
 
-      {/* bottom padding so content doesn't hide behind floating bar */}
       <ExplanationBlock q={q} selected={q.correctId} isCorrect={true} reviewMode={true} />
-      <div className="h-28 md:h-24" />
+    </>
+  )
 
-      {/* floating nav bar — z-50; FABs sit above on mobile (see FloatingSearch) */}
-      <div className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] md:bottom-6 left-1/2 -translate-x-1/2 w-full max-w-[720px] px-4 z-50">
-        <div className="flex gap-2 bg-aws-card/80 backdrop-blur-md border border-aws-border rounded-2xl p-2 shadow-xl">
-          <button
-            onClick={() => onIndexChange(clampedIndex - 1)}
-            disabled={clampedIndex === 0}
-            className="flex-1 py-2.5 rounded-xl font-space-mono text-sm font-bold border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-white/4 border-aws-border text-aws-muted hover:text-aws-text hover:bg-white/8"
-          >
-            ← Prev
-          </button>
-          <button
-            onClick={() => setShowPicker(true)}
-            className="px-4 py-2.5 rounded-xl font-space-mono text-[0.65rem] font-bold border border-aws-border/50 text-aws-muted hover:text-aws-text hover:bg-white/6 transition-all duration-150 whitespace-nowrap"
-            title="Jump to question"
-          >
-            {clampedIndex + 1} / {total}
-          </button>
-          <button
-            onClick={() => onIndexChange(clampedIndex + 1)}
-            disabled={clampedIndex + 1 >= total}
-            className="flex-1 py-2.5 rounded-xl font-space-mono text-sm font-bold border transition-all duration-150 disabled:opacity-25 disabled:cursor-not-allowed bg-c1/15 border-c1/40 text-c1 hover:bg-c1/25"
-          >
-            Next →
-          </button>
+  return (
+    <div>
+      <div className="hidden md:flex items-center justify-between gap-4 mb-5 px-1">
+        <p className="font-space-mono text-[0.85rem] font-bold text-aws-text">
+          Question {clampedIndex + 1} of {total}
+        </p>
+        <span className="font-space-mono text-[0.62rem] uppercase tracking-widest px-2.5 py-1 rounded-md border border-c3/35 bg-c3/10 text-c3">
+          Review
+        </span>
+      </div>
+
+      <div className="md:hidden">
+        <QuestionProgressStrip
+          index={clampedIndex}
+          total={total}
+          onOpenPicker={() => setShowPicker(true)}
+          badge={
+            <span className="font-space-mono text-[0.62rem] uppercase tracking-widest px-2 py-0.5 rounded border border-c3/35 bg-c3/10 text-c3 whitespace-nowrap">
+              Review
+            </span>
+          }
+        />
+      </div>
+
+      <div className="md:grid md:grid-cols-[minmax(0,1fr)_18rem] md:gap-6 md:items-start">
+        <div className="min-w-0">
+          {questionMain}
+          <div className="hidden md:block">
+            <InlineQuizFooter
+              index={clampedIndex}
+              onPrev={() => onIndexChange(clampedIndex - 1)}
+              onNext={() => onIndexChange(clampedIndex + 1)}
+              nextDisabled={isLast}
+              nextLabel={isLast ? 'End of review' : 'Next →'}
+            />
+          </div>
+        </div>
+        <div className="hidden md:block">
+          <QuestionNavSidebar
+            current={clampedIndex}
+            total={total}
+            answeredIndices={new Set()}
+            onSelect={onIndexChange}
+          />
         </div>
       </div>
+
+      {!showPicker && (
+        <div className="md:hidden">
+          <FloatingQuizNav
+            index={clampedIndex}
+            total={total}
+            onPrev={() => onIndexChange(clampedIndex - 1)}
+            onNext={() => onIndexChange(clampedIndex + 1)}
+            onOpenPicker={() => setShowPicker(true)}
+            nextDisabled={isLast}
+          />
+        </div>
+      )}
 
       {showPicker && (
         <QuestionGrid
           current={clampedIndex}
           total={total}
+          answeredIndices={new Set()}
           onSelect={onIndexChange}
           onClose={() => setShowPicker(false)}
         />
@@ -570,8 +874,10 @@ function QuestionCard({
   quizState,
   isCorrect,
   score,
+  answers,
   onSelect,
   onNext,
+  onPrev,
   onJump,
 }: {
   q: PracticeQuestion
@@ -581,39 +887,21 @@ function QuestionCard({
   quizState: QuizState
   isCorrect: boolean
   score: { correct: number; total: number }
+  answers: Record<number, AnswerRecord>
   onSelect: (id: string) => void
   onNext: () => void
+  onPrev: () => void
   onJump: (i: number) => void
 }) {
   const [showPicker, setShowPicker] = useState(false)
   const [hintHighlight, setHintHighlight] = useQuestionHintHighlight(q.id)
+  const answeredIndices = new Set(Object.keys(answers).map(Number))
+  const isLast = index + 1 >= total
 
-  return (
-    <div>
-      {/* progress bar */}
-      <div className="flex items-center gap-3 mb-5">
-        <div className="flex-1 h-1.5 bg-white/6 rounded-full overflow-hidden">
-          <div
-            className="h-full bg-gradient-to-r from-c1 to-c5 rounded-full transition-all duration-500"
-            style={{ width: `${((index + 1) / total) * 100}%` }}
-          />
-        </div>
-        <button
-          onClick={() => setShowPicker(true)}
-          className="font-space-mono text-[0.65rem] text-aws-muted hover:text-aws-text whitespace-nowrap transition-colors"
-          title="Jump to question"
-        >
-          {index + 1} / {total}
-        </button>
-        <span className="font-space-mono text-[0.65rem] text-emerald-400 whitespace-nowrap">
-          {score.correct}/{score.total} correct
-        </span>
-      </div>
-
-      {/* question card */}
-      <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-4">
-        {/* meta row */}
-        <div className="flex items-center gap-2 px-5 py-3 border-b border-aws-border/60 bg-white/2">
+  const cardHeader = (
+    <>
+      <div className="px-5 py-4 border-b border-aws-border/60 bg-white/2 md:hidden">
+        <div className="flex items-center gap-2 flex-wrap">
           <span className={`font-space-mono text-[0.6rem] font-bold uppercase tracking-widest ${domainColors[q.domain]}`}>
             {q.domainLabel}
           </span>
@@ -621,11 +909,30 @@ function QuestionCard({
           <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
             {q.difficulty}
           </span>
-          <span className="ml-auto font-space-mono text-[0.58rem] text-aws-muted">Select one answer</span>
+          <span className="text-aws-border">·</span>
+          <span className="font-space-mono text-[0.58rem] text-aws-muted">Select one answer</span>
         </div>
+      </div>
+      <div className="hidden md:block px-5 py-4 border-b border-aws-border/60 bg-white/2 md:px-6 md:py-5">
+        <p className="font-space-mono text-[0.72rem] font-bold text-aws-text mb-2">
+          Domain: {q.domainLabel}
+        </p>
+        <div className="flex items-center gap-2 flex-wrap">
+          <span className={`font-space-mono text-[0.6rem] px-2 py-0.5 rounded-full border ${difficultyColors[q.difficulty]}`}>
+            {q.difficulty}
+          </span>
+          <span className="font-space-mono text-[0.58rem] text-aws-muted">Select one answer</span>
+        </div>
+      </div>
+    </>
+  )
 
-        {/* scenario */}
-        <div className="px-5 py-5">
+  const questionMain = (
+    <>
+      <div className="bg-aws-card border border-aws-border rounded-xl overflow-hidden mb-4">
+        {cardHeader}
+
+        <div className="px-5 py-5 md:px-6 md:py-6">
           {q.screenshotUrl && (
             <figure className="mb-4 rounded-lg overflow-hidden border border-aws-border/60 bg-black/20">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -654,10 +961,10 @@ function QuestionCard({
               text={q.scenario}
               studyKeywords={hintHighlight}
               bankKeywords={q.keywords}
-              className="text-[0.92rem] text-aws-text leading-relaxed"
+              className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed"
             />
           ) : (
-            <p className="text-[0.92rem] text-aws-text leading-relaxed">{q.scenario}</p>
+            <p className="text-[0.92rem] md:text-[0.95rem] text-aws-text leading-relaxed">{q.scenario}</p>
           )}
         </div>
 
@@ -672,8 +979,7 @@ function QuestionCard({
           />
         )}
 
-        {/* options */}
-        <div className="px-5 pb-5 space-y-2.5">
+        <div className="px-5 pb-5 md:px-6 md:pb-6 space-y-3">
           {q.options.map((opt) => (
             <OptionButton
               key={opt.id}
@@ -682,30 +988,80 @@ function QuestionCard({
               correctId={q.correctId}
               quizState={quizState}
               onSelect={onSelect}
+              desktopStyle
             />
           ))}
         </div>
       </div>
 
-      {/* explanation */}
       {quizState === 'revealed' && selected && (
         <ExplanationBlock q={q} selected={selected} isCorrect={isCorrect} />
       )}
+    </>
+  )
 
-      {/* next button */}
-      {quizState === 'revealed' && (
-        <button
-          onClick={onNext}
-          className="w-full mt-4 py-3 rounded-xl font-space-mono text-sm font-bold bg-c1/15 border border-c1/40 text-c1 hover:bg-c1/25 transition-all duration-150"
-        >
-          {index + 1 >= total ? 'See Results →' : 'Next Question →'}
-        </button>
+  return (
+    <div>
+      <div className="hidden md:flex items-center justify-between gap-4 mb-5 px-1">
+        <p className="font-space-mono text-[0.85rem] font-bold text-aws-text">
+          Question {index + 1} of {total}
+        </p>
+        <span className="font-space-mono text-[0.65rem] text-emerald-400">
+          {score.correct}/{score.total} correct
+        </span>
+      </div>
+
+      <div className="md:hidden">
+        <QuestionProgressStrip
+          index={index}
+          total={total}
+          score={score}
+          onOpenPicker={() => setShowPicker(true)}
+        />
+      </div>
+
+      <div className="md:grid md:grid-cols-[minmax(0,1fr)_18rem] md:gap-6 md:items-start">
+        <div className="min-w-0">
+          {questionMain}
+          <div className="hidden md:block">
+            <InlineQuizFooter
+              index={index}
+              onPrev={onPrev}
+              onNext={onNext}
+              nextDisabled={quizState !== 'revealed'}
+              nextLabel={isLast ? 'See Results' : 'Next →'}
+            />
+          </div>
+        </div>
+        <div className="hidden md:block">
+          <QuestionNavSidebar
+            current={index}
+            total={total}
+            answeredIndices={answeredIndices}
+            onSelect={onJump}
+          />
+        </div>
+      </div>
+
+      {!showPicker && (
+        <div className="md:hidden">
+          <FloatingQuizNav
+            index={index}
+            total={total}
+            onPrev={onPrev}
+            onNext={onNext}
+            onOpenPicker={() => setShowPicker(true)}
+            nextDisabled={quizState !== 'revealed'}
+            nextLabel={isLast ? 'Results →' : 'Next →'}
+          />
+        </div>
       )}
 
       {showPicker && (
         <QuestionGrid
           current={index}
           total={total}
+          answeredIndices={answeredIndices}
           onSelect={(i) => { onJump(i); setShowPicker(false) }}
           onClose={() => setShowPicker(false)}
         />
@@ -720,22 +1076,32 @@ function OptionButton({
   correctId,
   quizState,
   onSelect,
+  desktopStyle = false,
 }: {
   opt: { id: string; text: string }
   selected: string | null
   correctId: string
   quizState: QuizState
   onSelect: (id: string) => void
+  desktopStyle?: boolean
 }) {
   const isSelected = selected === opt.id
   const isCorrect = opt.id === correctId
   const revealed = quizState === 'revealed'
 
   let className =
-    'w-full text-left px-4 py-3 rounded-xl border text-[0.88rem] leading-snug transition-all duration-200 '
+    'w-full text-left border text-[0.88rem] leading-snug transition-all duration-200 '
+
+  if (desktopStyle) {
+    className += 'px-4 py-3.5 rounded-lg flex items-center gap-3 '
+  } else {
+    className += 'px-4 py-3 rounded-xl '
+  }
 
   if (!revealed) {
-    className += 'bg-white/3 border-aws-border text-aws-text hover:border-white/20 hover:bg-white/6 cursor-pointer'
+    className += desktopStyle
+      ? 'bg-white/4 border-aws-border/70 text-aws-text hover:border-c1/30 hover:bg-white/6 cursor-pointer'
+      : 'bg-white/3 border-aws-border text-aws-text hover:border-white/20 hover:bg-white/6 cursor-pointer'
   } else if (isCorrect) {
     className += 'bg-emerald-500/12 border-emerald-500/50 text-emerald-300 font-semibold'
   } else if (isSelected && !isCorrect) {
@@ -744,16 +1110,42 @@ function OptionButton({
     className += 'bg-white/2 border-aws-border/40 text-aws-muted'
   }
 
+  const radioClass = revealed
+    ? isCorrect
+      ? 'border-emerald-400 bg-emerald-400'
+      : isSelected
+        ? 'border-red-400 bg-red-400'
+        : 'border-aws-border/50 bg-transparent'
+    : isSelected
+      ? 'border-c1 bg-c1'
+      : 'border-aws-border/60 bg-transparent'
+
   return (
-    <button className={className} onClick={() => onSelect(opt.id)} disabled={revealed}>
-      <span className="flex items-start gap-3">
-        <span className="font-space-mono text-[0.65rem] font-bold mt-0.5 shrink-0 opacity-60">
-          {opt.id.toUpperCase()}
+    <button type="button" className={className} onClick={() => onSelect(opt.id)} disabled={revealed}>
+      {desktopStyle ? (
+        <>
+          <span
+            className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 ${radioClass}`}
+            aria-hidden
+          >
+            {isSelected && !revealed && <span className="h-2 w-2 rounded-full bg-aws-bg" />}
+          </span>
+          <span className="flex-1 min-w-0">
+            <span className="font-semibold">{opt.id.toUpperCase()}.</span> {opt.text}
+          </span>
+          {revealed && isCorrect && <span className="ml-auto shrink-0 text-emerald-400">✓</span>}
+          {revealed && isSelected && !isCorrect && <span className="ml-auto shrink-0 text-red-400">✗</span>}
+        </>
+      ) : (
+        <span className="flex items-start gap-3">
+          <span className="font-space-mono text-[0.65rem] font-bold mt-0.5 shrink-0 opacity-60">
+            {opt.id.toUpperCase()}
+          </span>
+          <span>{opt.text}</span>
+          {revealed && isCorrect && <span className="ml-auto shrink-0 text-emerald-400">✓</span>}
+          {revealed && isSelected && !isCorrect && <span className="ml-auto shrink-0 text-red-400">✗</span>}
         </span>
-        <span>{opt.text}</span>
-        {revealed && isCorrect && <span className="ml-auto shrink-0 text-emerald-400">✓</span>}
-        {revealed && isSelected && !isCorrect && <span className="ml-auto shrink-0 text-red-400">✗</span>}
-      </span>
+      )}
     </button>
   )
 }
