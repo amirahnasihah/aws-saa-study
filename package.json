@@ -47,7 +47,7 @@
     "@supabase/supabase-js": "^2.108.2",
     "@xyflow/react": "^12.10.2",
     "mermaid": "^11.15.0",
-    "motion": "^12.40.0",
+    "motion": "^13.1.1",
     "next": "16.2.4",
     "postcss": "^8.5.13",
     "react": "19.3.0-canary-43bcbf80-20260603",
